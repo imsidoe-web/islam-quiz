@@ -1,0 +1,26 @@
+{  
+ "rules": {  
+ ".read": false,  
+ ".write": false,  
+ "groups": {  
+ "$code": {  
+ "meta": {  
+ ".read": "auth != null",  
+ ".write": "auth != null && (!data.exists() || data.child('owner').val() === auth.uid || !root.child('groups').child($code).child('members').exists())",  
+ ".validate": "newData.hasChildren(['owner'])"  
+ },  
+ "members": {  
+ ".read": "auth != null",  
+ "$mid": {  
+ ".write": "auth != null && $mid.beginsWith(auth.uid + '-') && root.child('groups').child($code).child('meta').exists()",  
+ ".validate": "newData.hasChildren(['name']) && newData.child('name').isString() && newData.child('name').val().length <= 14"  
+ }  
+ },  
+ "duel": {  
+ ".read": "auth != null",  
+ ".write": "auth != null"  
+ }  
+ }  
+ }  
+ }  
+}
