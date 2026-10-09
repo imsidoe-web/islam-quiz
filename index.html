@@ -1,311 +1,3014 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Islam Quiz</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#2D6A4F">
+  <title>Islam Quiz – Leer en speel</title>
+  <meta name="description" content="Een leuke Islamitische quiz in het Nederlands voor kinderen en volwassenen.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+:root {
+  --emerald: #2d6a4f;
+  --emerald-dark: #1b4332;
+  --emerald-soft: #d8f3dc;
+  --gold: #d9a05b;
+  --gold-soft: #fbefd9;
+  --mint: #74c69d;
+  --bg: #faf8f5;
+  --ink: #1f2a24;
+  --muted: #66756c;
+  --card: #ffffff;
+  --line: #ece6dc;
+  --ok: #2d6a4f;
+  --ok-bg: #d8f3dc;
+  --bad: #d9534f;
+  --bad-bg: #fde3e1;
+  --shadow: 0 6px 20px rgba(45, 106, 79, 0.10);
+  --shadow-lift: 0 10px 28px rgba(45, 106, 79, 0.18);
+  --accent: var(--emerald);
+}
 
-    body {
-      background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-    .container {
-      background: #ffffff;
-      width: 100%;
-      max-width: 480px;
-      border-radius: 20px;
-      padding: 25px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-      position: relative;
-    }
+html { font-size: 16px; }
 
-    h1, h2 {
-      color: #1b5e20;
-      text-align: center;
-      margin-bottom: 20px;
-    }
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Nunito", "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 12% -5%, rgba(116, 198, 157, 0.28), transparent 38%),
+    radial-gradient(circle at 105% 8%, rgba(217, 160, 91, 0.22), transparent 34%),
+    var(--bg);
+  background-attachment: fixed;
+  line-height: 1.5;
+}
 
-    .btn {
-      width: 100%;
-      background-color: #2e7d32;
-      color: white;
-      border: none;
-      padding: 14px;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
-    }
+#app {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px 16px 48px;
+}
 
-    .btn:hover {
-      background-color: #1b5e20;
-      transform: translateY(-1px);
-    }
+h1, h2, h3 { margin: 0; line-height: 1.2; }
+p { margin: 0; }
 
-    /* Modal Overlay voor Disclaimer */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(20, 50, 25, 0.65);
-      backdrop-filter: blur(4px);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      padding: 20px;
-    }
+.ic { flex: none; vertical-align: middle; }
+.ic.fill { fill: currentColor; }
 
-    .modal-content {
-      background: #ffffff;
-      padding: 30px 25px;
-      border-radius: 20px;
-      max-width: 420px;
-      text-align: center;
-      border: 2px solid #a5d6a7;
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-    }
+/* ───── Arabic typography ───── */
+.arabic {
+  font-family: "Amiri", "Scheherazade New", "Noto Naskh Arabic", "Traditional Arabic", serif;
+  direction: rtl;
+  unicode-bidi: isolate;
+  text-align: right;
+  font-size: 1.65rem;
+  line-height: 2.25;
+  white-space: pre-line;
+  color: var(--emerald-dark);
+}
+.arabic-inline { font-size: 1.2em; }
+.arabic.big { font-size: 2rem; text-align: center; }
 
-    .modal-icon {
-      font-size: 38px;
-      margin-bottom: 10px;
-    }
+/* ───── Buttons ───── */
+.btn {
+  appearance: none;
+  border: 0;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  border-radius: 20px;
+  padding: 14px 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #fff;
+  background: var(--emerald);
+  box-shadow: 0 5px 0 var(--emerald-dark);
+  transition: transform .12s ease, box-shadow .12s ease, filter .12s;
+  text-align: center;
+  -webkit-user-select: none; user-select: none;
+}
+.btn:hover { filter: brightness(1.06); }
+.btn:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--emerald-dark); }
+.btn:focus-visible, .option:focus-visible, .cat-card:focus-visible, .icon-btn:focus-visible, .daily:focus-visible, .mode-card:focus-visible {
+  outline: 3px solid var(--gold); outline-offset: 3px;
+}
+.btn.gold { background: var(--gold); box-shadow: 0 5px 0 #a8742f; color: #3a2606; }
+.btn.gold:active { box-shadow: 0 1px 0 #a8742f; }
+.btn.ghost { background: #fff; color: var(--emerald-dark); box-shadow: 0 5px 0 var(--line); border: 2px solid var(--line); }
+.btn.ghost:active { box-shadow: 0 1px 0 var(--line); }
+.btn.block { width: 100%; }
 
-    .modal-content h3 {
-      color: #1b5e20;
-      font-size: 20px;
-      margin-bottom: 14px;
-    }
+.icon-btn {
+  appearance: none; border: 0; background: #fff; color: var(--emerald-dark);
+  width: 44px; height: 44px; border-radius: 16px;
+  display: inline-flex; align-items: center; justify-content: center;
+  cursor: pointer; box-shadow: var(--shadow);
+  transition: transform .12s ease;
+}
+.icon-btn:active { transform: scale(.88); }
 
-    .modal-content p {
-      color: #37474f;
-      font-size: 14px;
-      line-height: 1.6;
-      margin-bottom: 22px;
-      background: #f1f8e9;
-      padding: 15px;
-      border-radius: 12px;
-      border-left: 4px solid #2e7d32;
-      text-align: left;
-    }
+/* ───── Welcome (level selection) ───── */
+.welcome { text-align: center; padding-top: 12px; animation: fadeUp .5s ease both; }
+.logo {
+  width: 84px; height: 84px; margin: 8px auto 12px;
+  border-radius: 28px;
+  background: linear-gradient(135deg, var(--emerald), var(--mint));
+  color: #fff; display: grid; place-items: center;
+  box-shadow: var(--shadow-lift);
+  transform: rotate(-6deg);
+  animation: wobble 4s ease-in-out infinite;
+}
+.welcome h1 { font-size: 2rem; color: var(--emerald-dark); }
+.welcome .greet { margin-top: 6px; color: var(--muted); font-weight: 600; }
+.welcome .arabic { text-align: center; font-size: 1.9rem; line-height: 2; margin-top: 6px; }
+.welcome h2 { margin: 22px 0 12px; font-size: 1.15rem; color: var(--emerald-dark); }
 
-    /* Spelerslijst */
-    .player-input-group {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
+.mode-grid { display: grid; gap: 14px; }
+.mode-card {
+  text-align: left; font: inherit; cursor: pointer;
+  border: 3px solid transparent;
+  background: var(--card);
+  border-radius: 28px; padding: 18px;
+  display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: center;
+  box-shadow: var(--shadow);
+  transition: transform .15s ease, box-shadow .15s ease, border-color .15s;
+}
+.mode-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); }
+.mode-card:active { transform: scale(.97); }
+.mode-card .badge {
+  width: 64px; height: 64px; border-radius: 22px; display: grid; place-items: center; color: #fff;
+}
+.mode-card.junior .badge { background: linear-gradient(135deg, var(--gold), #f0c27f); }
+.mode-card.expert .badge { background: linear-gradient(135deg, var(--emerald), var(--mint)); }
+.mode-card h3 { font-size: 1.2rem; color: var(--emerald-dark); }
+.mode-card .sub { font-weight: 800; font-size: .85rem; color: var(--gold); text-transform: uppercase; letter-spacing: .04em; }
+.mode-card.expert .sub { color: var(--emerald); }
+.mode-card p { color: var(--muted); font-size: .95rem; margin-top: 4px; }
 
-    input[type="text"] {
-      flex: 1;
-      padding: 12px 15px;
-      border: 2px solid #a5d6a7;
-      border-radius: 10px;
-      font-size: 15px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
+/* ───── Home ───── */
+.topbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 1.25rem; color: var(--emerald-dark); }
+.brand .mini-logo { width: 40px; height: 40px; border-radius: 14px; background: linear-gradient(135deg, var(--emerald), var(--mint)); color: #fff; display: grid; place-items: center; }
+.top-actions { display: flex; gap: 8px; align-items: center; }
+.mode-chip {
+  appearance: none; border: 0; cursor: pointer; font: inherit; font-weight: 800; font-size: .85rem;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 14px; border-radius: 999px; color: #fff;
+  box-shadow: var(--shadow);
+}
+.mode-chip.junior { background: var(--gold); color: #3a2606; }
+.mode-chip.expert { background: var(--emerald); }
+.mode-chip:active { transform: scale(.94); }
 
-    input[type="text"]:focus {
-      border-color: #2e7d32;
-    }
+.hello { margin: 4px 0 14px; }
+.hello h1 { font-size: 1.6rem; color: var(--emerald-dark); }
+.hello p { color: var(--muted); font-weight: 600; }
 
-    .player-list {
-      list-style: none;
-      margin-bottom: 20px;
-    }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+.stat {
+  background: var(--card); border-radius: 22px; padding: 12px 8px; text-align: center; box-shadow: var(--shadow);
+  animation: fadeUp .5s ease both;
+}
+.stat .ic { margin-bottom: 2px; }
+.stat b { display: block; font-size: 1.5rem; line-height: 1.1; color: var(--emerald-dark); }
+.stat span { font-size: .78rem; color: var(--muted); font-weight: 700; }
+.stat.streak .ic { color: #f08a3c; }
+.stat.stars .ic { color: var(--gold); }
+.stat.played .ic { color: var(--emerald); }
 
-    .player-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #f1f8e9;
-      padding: 12px 16px;
-      border-radius: 12px;
-      margin-bottom: 8px;
-      border: 1px solid #c8e6c9;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
+.daily {
+  width: 100%; border: 0; cursor: pointer; font: inherit; text-align: left;
+  color: #3a2606;
+  background: linear-gradient(135deg, #f6c27a, var(--gold));
+  border-radius: 28px; padding: 18px 18px;
+  display: grid; grid-template-columns: 56px 1fr auto; gap: 14px; align-items: center;
+  box-shadow: 0 6px 0 #a8742f, var(--shadow);
+  transition: transform .12s ease, box-shadow .12s ease;
+  margin-bottom: 18px;
+}
+.daily:active { transform: translateY(5px); box-shadow: 0 1px 0 #a8742f; }
+.daily .badge { width: 56px; height: 56px; border-radius: 20px; background: rgba(255,255,255,.55); display: grid; place-items: center; }
+.daily h2 { font-size: 1.15rem; }
+.daily p { font-size: .9rem; font-weight: 700; opacity: .85; }
+.daily .go { background: #fff; border-radius: 50%; width: 40px; height: 40px; display: grid; place-items: center; color: #a8742f; }
+.daily.done { background: linear-gradient(135deg, #f2e2c6, #e7cfa4); }
 
-    .player-item:hover {
-      border-color: #81c784;
-    }
+.section-title { font-size: 1.05rem; font-weight: 900; color: var(--emerald-dark); margin: 4px 2px 10px; display: flex; align-items: center; gap: 8px; }
 
-    .player-name {
-      font-weight: 600;
-      color: #1b5e20;
-    }
+.timer-toggle {
+  display: flex; align-items: center; gap: 12px; background: var(--card);
+  border-radius: 22px; padding: 12px 16px; box-shadow: var(--shadow); margin-bottom: 18px;
+}
+.timer-toggle .txt { flex: 1; font-weight: 800; color: var(--emerald-dark); }
+.timer-toggle .txt small { display: block; color: var(--muted); font-weight: 600; font-size: .8rem; }
+.switch { position: relative; width: 54px; height: 32px; flex: none; }
+.switch input { appearance: none; -webkit-appearance: none; width: 100%; height: 100%; margin: 0; border-radius: 999px; background: #d9d4ca; cursor: pointer; transition: background .2s; }
+.switch input:checked { background: var(--emerald); }
+.switch::after { content: ""; position: absolute; top: 4px; left: 4px; width: 24px; height: 24px; border-radius: 50%; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,.2); transition: transform .2s; pointer-events: none; }
+.switch:has(input:checked)::after { transform: translateX(22px); }
 
-    .delete-btn {
-      background: none;
-      border: none;
-      color: #d32f2f;
-      font-size: 18px;
-      cursor: pointer;
-      padding: 6px 10px;
-      border-radius: 8px;
-      transition: background 0.2s;
-    }
+.cat-grid { display: grid; gap: 12px; }
+.cat-card {
+  border: 0; font: inherit; text-align: left; cursor: pointer; width: 100%;
+  background: var(--card); border-radius: 26px; padding: 14px 16px;
+  display: grid; grid-template-columns: 56px 1fr auto; gap: 14px; align-items: center;
+  box-shadow: var(--shadow);
+  border-left: 8px solid var(--accent);
+  transition: transform .15s ease, box-shadow .15s ease;
+  animation: fadeUp .5s ease both;
+}
+.cat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); }
+.cat-card:active { transform: scale(.97); }
+.cat-card .badge { width: 56px; height: 56px; border-radius: 20px; display: grid; place-items: center; color: #fff; background: var(--accent); }
+.cat-card h3 { font-size: 1.05rem; color: var(--emerald-dark); }
+.cat-card p { font-size: .85rem; color: var(--muted); font-weight: 600; }
+.cat-card .meta { text-align: right; }
+.mini-stars { display: inline-flex; gap: 1px; color: #e3ddd0; }
+.mini-stars .on { color: var(--gold); }
+.cat-card .best { font-size: .75rem; font-weight: 800; color: var(--muted); margin-top: 2px; }
+.cat-card .done-tick { color: var(--ok); }
 
-    .delete-btn:hover {
-      background: #ffebee;
-    }
+.footer-actions { margin-top: 26px; display: flex; justify-content: center; }
+.link-btn { background: none; border: 0; font: inherit; color: var(--muted); font-weight: 700; text-decoration: underline; cursor: pointer; padding: 8px; }
 
-    .hidden {
-      display: none !important;
-    }
-  </style>
+/* ───── Quiz ───── */
+.quiz-top { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.cat-badge {
+  display: inline-flex; align-items: center; gap: 6px; flex: 1; min-width: 0;
+  background: var(--accent); color: #fff; border-radius: 999px; padding: 8px 14px; font-weight: 800; font-size: .85rem;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.score-pill {
+  display: inline-flex; align-items: center; gap: 6px; background: var(--gold-soft); color: #7a4d0f;
+  border-radius: 999px; padding: 8px 14px; font-weight: 900; font-size: .9rem;
+}
+.score-pill.bump { animation: pop .4s ease; }
+
+.progress-row { display: flex; align-items: center; justify-content: space-between; font-weight: 800; font-size: .85rem; color: var(--muted); margin-bottom: 6px; }
+.bar { height: 14px; background: #ece6dc; border-radius: 999px; overflow: hidden; }
+.bar > i { display: block; height: 100%; width: 0; border-radius: 999px; background: linear-gradient(90deg, var(--mint), var(--emerald)); transition: width .45s cubic-bezier(.3,1.2,.5,1); }
+.timer { margin-top: 8px; height: 8px; }
+.timer > i { background: linear-gradient(90deg, var(--gold), #e9724c); transition: none; }
+.timer-label { font-size: .8rem; font-weight: 800; color: #b5651f; display: flex; align-items: center; gap: 4px; margin-top: 4px; }
+
+.q-card {
+  position: relative; background: var(--card); border-radius: 30px; padding: 20px 18px;
+  box-shadow: var(--shadow); margin: 16px 0; animation: fadeUp .35s ease both;
+  overflow: hidden;
+}
+.q-card .q-num { font-size: .8rem; font-weight: 900; text-transform: uppercase; letter-spacing: .06em; color: var(--gold); }
+.q-card h2 { font-size: 1.28rem; color: var(--ink); margin-top: 4px; }
+.q-card .arabic { text-align: center; background: var(--emerald-soft); border-radius: 20px; padding: 6px 12px; margin-top: 14px; font-size: 1.9rem; }
+.expert .q-card h2 { font-size: 1.18rem; }
+
+.options { display: grid; gap: 10px; }
+.option {
+  appearance: none; font: inherit; text-align: left; cursor: pointer; width: 100%;
+  display: grid; grid-template-columns: 38px 1fr 26px; gap: 12px; align-items: center;
+  background: #fff; border: 3px solid var(--line); border-radius: 22px; padding: 12px 14px;
+  font-weight: 700; color: var(--ink);
+  box-shadow: 0 4px 0 var(--line);
+  transition: transform .12s ease, box-shadow .12s ease, border-color .15s, background .15s;
+  animation: fadeUp .4s ease both;
+}
+.option .letter { width: 38px; height: 38px; border-radius: 14px; background: var(--emerald-soft); color: var(--emerald-dark); display: grid; place-items: center; font-weight: 900; }
+.option .mark { display: none; }
+.option:hover:not(:disabled) { border-color: var(--mint); }
+.option:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 0 0 var(--line); }
+.option:disabled { cursor: default; }
+.option.correct { background: var(--ok-bg); border-color: var(--ok); box-shadow: 0 4px 0 var(--ok); animation: pop .4s ease; }
+.option.correct .letter { background: var(--ok); color: #fff; }
+.option.wrong { background: var(--bad-bg); border-color: var(--bad); box-shadow: 0 4px 0 #e9a7a4; animation: shake .45s ease; }
+.option.wrong .letter { background: var(--bad); color: #fff; }
+.option.correct .mark, .option.wrong .mark { display: block; }
+.option.correct .mark { color: var(--ok); }
+.option.wrong .mark { color: var(--bad); }
+.option.dim { opacity: .55; }
+
+.feedback {
+  border-radius: 24px; padding: 16px 18px; margin-top: 16px; animation: fadeUp .35s ease both;
+  border: 3px solid transparent;
+}
+.feedback.good { background: var(--ok-bg); border-color: var(--mint); }
+.feedback.bad { background: var(--bad-bg); border-color: #f1b3b0; }
+.feedback .head { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 1.15rem; }
+.feedback.good .head { color: var(--emerald-dark); }
+.feedback.bad .head { color: #a53b37; }
+.feedback .why { margin-top: 8px; font-weight: 600; }
+.feedback .correct-is { margin-top: 8px; font-weight: 800; }
+
+.ref {
+  margin-top: 14px; background: #fffdf8; border: 2px dashed var(--gold); border-radius: 20px; padding: 10px 14px 12px;
+}
+.ref .ref-label { font-size: .75rem; font-weight: 900; text-transform: uppercase; letter-spacing: .06em; color: #a8742f; display: flex; align-items: center; gap: 6px; }
+.ref .tr { font-style: italic; font-weight: 600; color: #3b4a41; white-space: pre-line; }
+.ref .src { margin-top: 6px; font-size: .82rem; font-weight: 800; color: var(--emerald); }
+
+.next-row { margin-top: 16px; display: flex; justify-content: flex-end; }
+
+/* burst stars */
+.burst { position: absolute; inset: 0; pointer-events: none; display: grid; place-items: center; }
+.burst span { position: absolute; color: var(--gold); animation: fly .9s ease-out forwards; opacity: 0; }
+.praise-pop {
+  position: absolute; top: 10px; right: 14px; background: var(--gold); color: #3a2606; font-weight: 900;
+  padding: 6px 14px; border-radius: 999px; animation: pop .5s ease both; box-shadow: var(--shadow);
+}
+
+/* ───── Result ───── */
+.result { text-align: center; animation: fadeUp .45s ease both; padding-top: 8px; }
+.stars-row { display: flex; justify-content: center; gap: 6px; margin: 10px 0 4px; }
+.stars-row .ic { color: #e3ddd0; transform: scale(.6); opacity: .5; }
+.stars-row .ic.on { color: var(--gold); animation: starIn .6s cubic-bezier(.3,1.6,.5,1) both; }
+.stars-row .ic.on:nth-child(2) { animation-delay: .25s; }
+.stars-row .ic.on:nth-child(3) { animation-delay: .5s; }
+.stars-row .ic:nth-child(2) { margin-top: -14px; }
+.big-score { font-size: 3.2rem; font-weight: 900; color: var(--emerald-dark); line-height: 1.1; }
+.big-score small { font-size: 1.3rem; color: var(--muted); }
+.result h1 { font-size: 1.6rem; color: var(--emerald-dark); margin-top: 8px; }
+.result .msg { color: var(--muted); font-weight: 700; margin-top: 6px; }
+.result .arabic { text-align: center; font-size: 2rem; margin-top: 4px; }
+.badge-new { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; background: var(--gold-soft); color: #7a4d0f; font-weight: 900; padding: 8px 14px; border-radius: 999px; animation: pop .6s ease both; }
+.result-actions { display: grid; gap: 14px; margin-top: 24px; }
+
+/* ───── Review ───── */
+.review h1 { font-size: 1.4rem; color: var(--emerald-dark); margin: 6px 0 14px; }
+.rev-item { background: var(--card); border-radius: 26px; padding: 16px; box-shadow: var(--shadow); margin-bottom: 14px; border-left: 8px solid var(--ok); }
+.rev-item.bad { border-left-color: var(--bad); }
+.rev-item .qn { font-size: .78rem; font-weight: 900; color: var(--gold); text-transform: uppercase; letter-spacing: .05em; display: flex; align-items: center; gap: 6px; }
+.rev-item h3 { font-size: 1.05rem; margin: 4px 0 8px; }
+.rev-item .arabic { background: var(--emerald-soft); border-radius: 16px; padding: 4px 12px; text-align: center; margin-bottom: 8px; }
+.rev-line { font-weight: 700; font-size: .95rem; display: flex; gap: 8px; align-items: flex-start; margin: 4px 0; }
+.rev-line.ok { color: var(--emerald-dark); }
+.rev-line.no { color: #a53b37; }
+.rev-line .ic { margin-top: 3px; }
+.rev-expl { margin-top: 8px; color: #3b4a41; font-weight: 600; font-size: .95rem; }
+
+/* ───── Dialog ───── */
+.dialog-wrap { position: fixed; inset: 0; background: rgba(27,67,50,.45); display: grid; place-items: center; padding: 20px; z-index: 50; animation: fade .2s ease both; }
+.dialog { background: #fff; border-radius: 28px; padding: 22px; max-width: 380px; width: 100%; box-shadow: var(--shadow-lift); animation: pop .3s ease both; }
+.dialog h3 { color: var(--emerald-dark); font-size: 1.2rem; }
+.dialog p { color: var(--muted); font-weight: 600; margin: 8px 0 18px; }
+.dialog .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* ───── Animations ───── */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pop { 0% { transform: scale(.85); } 55% { transform: scale(1.06); } 100% { transform: scale(1); } }
+@keyframes shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-7px); } 40% { transform: translateX(6px); } 60% { transform: translateX(-4px); } 80% { transform: translateX(3px); } }
+@keyframes wobble { 0%,100% { transform: rotate(-6deg); } 50% { transform: rotate(4deg) scale(1.04); } }
+@keyframes starIn { 0% { transform: scale(.2) rotate(-40deg); opacity: 0; } 100% { transform: scale(1) rotate(0); opacity: 1; } }
+@keyframes fly { 0% { transform: translate(0,0) scale(.4) rotate(0); opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) scale(1.1) rotate(160deg); opacity: 0; } }
+
+.cat-card:nth-child(2) { animation-delay: .05s; }
+.cat-card:nth-child(3) { animation-delay: .1s; }
+.cat-card:nth-child(4) { animation-delay: .15s; }
+.cat-card:nth-child(5) { animation-delay: .2s; }
+.option:nth-child(2) { animation-delay: .04s; }
+.option:nth-child(3) { animation-delay: .08s; }
+.option:nth-child(4) { animation-delay: .12s; }
+
+@media (min-width: 600px) {
+  #app { padding-top: 28px; }
+  .mode-grid { grid-template-columns: 1fr 1fr; }
+  .mode-card { grid-template-columns: 1fr; text-align: center; justify-items: center; }
+  .result-actions { grid-template-columns: repeat(3, 1fr); }
+  .q-card h2 { font-size: 1.45rem; }
+  .arabic { font-size: 1.85rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+
+.options.answered .option:not(.correct):not(.wrong) { animation: none; }
+.q-card.static { animation: none; }
+
+/* kleine schermen */
+.cat-card { grid-template-columns: 56px minmax(0, 1fr) auto; }
+.daily { grid-template-columns: 56px minmax(0, 1fr) auto; }
+.cat-card h3, .cat-card p { overflow-wrap: anywhere; }
+@media (max-width: 360px) {
+  .cat-card, .daily { gap: 10px; padding: 12px; grid-template-columns: 46px minmax(0, 1fr) auto; }
+  .cat-card .badge, .daily .badge { width: 46px; height: 46px; border-radius: 16px; }
+  .cat-card .best { display: none; }
+}
+
+/* scores */
+.scores-btn { width:100%; border:0; cursor:pointer; font:inherit; font-weight:900; color:var(--emerald-dark); background:#fff; border-radius:22px; padding:14px 18px; display:flex; align-items:center; gap:12px; box-shadow:var(--shadow); margin-bottom:18px; transition:transform .12s; }
+.scores-btn span { flex:1; text-align:left; }
+.scores-btn .ic:first-child { color:var(--gold); }
+.scores-btn:active { transform:scale(.97); }
+.score-note { text-align:center; color:var(--muted); font-weight:700; margin:-4px 0 14px; }
+.score-list { display:grid; gap:10px; margin-bottom:20px; }
+.score-row { background:var(--card); border-radius:20px; padding:12px 14px; box-shadow:var(--shadow); border-left:8px solid var(--accent, var(--gold)); }
+.score-head { display:flex; justify-content:space-between; align-items:center; gap:8px; font-weight:800; color:var(--emerald-dark); margin-bottom:6px; }
+.score-sub { font-size:.82rem; font-weight:700; color:var(--muted); margin-top:6px; }
+.score-row .bar { height:10px; }
+.daily-row { --accent: var(--gold); }
+
+/* ───── spelers ───── */
+.hello { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.hello > div { min-width: 0; }
+.hello h1 { overflow-wrap: anywhere; }
+.player-chip { appearance: none; border: 0; cursor: pointer; font: inherit; font-weight: 800; font-size: .8rem; color: var(--emerald-dark); background: #fff; border-radius: 18px; padding: 6px 10px 6px 6px; display: inline-flex; align-items: center; gap: 6px; box-shadow: var(--shadow); flex: none; transition: transform .12s; }
+.player-chip:active { transform: scale(.93); }
+.avatar { display: inline-grid; place-items: center; border-radius: 50%; background: var(--c, var(--emerald)); color: #fff; font-weight: 900; flex: none; line-height: 1; }
+.btn-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 18px; }
+.btn-row .scores-btn { margin-bottom: 0; }
+.stack { display: grid; gap: 14px; margin-top: 22px; }
+.field { text-align: left; margin-top: 18px; }
+.field label { display: block; font-weight: 800; color: var(--emerald-dark); margin-bottom: 6px; }
+.field input { width: 100%; font: inherit; font-weight: 700; font-size: 1.1rem; padding: 14px 16px; border-radius: 18px; border: 3px solid var(--line); background: #fff; color: var(--ink); }
+.field input:focus { outline: none; border-color: var(--mint); }
+.swatches { display: flex; flex-wrap: wrap; gap: 12px; }
+.swatch { appearance: none; border: 3px solid transparent; width: 46px; height: 46px; border-radius: 50%; background: var(--c); color: #fff; cursor: pointer; display: grid; place-items: center; box-shadow: var(--shadow); transition: transform .12s; }
+.swatch .ic { opacity: 0; }
+.swatch.on { border-color: var(--ink); transform: scale(1.1); }
+.swatch.on .ic { opacity: 1; }
+.swatch:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+.player-list { display: grid; gap: 12px; }
+.player-card { display: flex; align-items: center; gap: 8px; background: var(--card); border-radius: 24px; padding: 8px 10px 8px 8px; box-shadow: var(--shadow); border: 3px solid transparent; }
+.player-card.active { border-color: var(--mint); }
+.player-main { appearance: none; border: 0; background: none; font: inherit; text-align: left; cursor: pointer; flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; padding: 6px; border-radius: 18px; }
+.player-main:active { transform: scale(.97); }
+.pinfo { min-width: 0; display: grid; }
+.pinfo b { font-size: 1.1rem; color: var(--emerald-dark); overflow-wrap: anywhere; }
+.pinfo small { color: var(--muted); font-weight: 700; font-size: .82rem; }
+.icon-btn.small { width: 36px; height: 36px; border-radius: 12px; color: var(--muted); box-shadow: none; background: var(--bg); flex: none; }
+.tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: #ece6dc; padding: 5px; border-radius: 20px; margin-bottom: 14px; }
+.tab { appearance: none; border: 0; font: inherit; font-weight: 800; padding: 10px; border-radius: 16px; background: transparent; color: var(--muted); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+.tab.on { background: #fff; color: var(--emerald-dark); box-shadow: var(--shadow); }
+.rank-list { display: grid; gap: 10px; margin-bottom: 20px; }
+.rank-row { display: flex; align-items: center; gap: 10px; background: var(--card); border-radius: 22px; padding: 10px 14px 10px 10px; box-shadow: var(--shadow); }
+.rank-row.first { background: var(--gold-soft); }
+.rank-n { width: 28px; text-align: center; font-weight: 900; font-size: 1.2rem; color: var(--gold); flex: none; }
+.rank-row .pinfo { flex: 1; }
+.rank-stars { display: inline-flex; align-items: center; gap: 4px; font-weight: 900; font-size: 1.2rem; color: var(--emerald-dark); flex: none; }
+.rank-stars .ic { color: var(--gold); }
+.table-wrap { overflow-x: auto; background: var(--card); border-radius: 22px; box-shadow: var(--shadow); }
+table.board { border-collapse: collapse; width: 100%; font-weight: 700; font-size: .9rem; }
+table.board th, table.board td { padding: 10px 12px; text-align: center; border-bottom: 1px solid var(--line); white-space: nowrap; }
+table.board thead th { color: var(--emerald-dark); font-size: .8rem; vertical-align: bottom; }
+table.board thead th span { display: block; margin-top: 4px; }
+table.board tbody th { text-align: left; color: var(--emerald-dark); border-left: 6px solid var(--accent); white-space: normal; min-width: 120px; }
+table.board td.top { color: var(--emerald); background: var(--emerald-soft); font-weight: 900; }
+table.board tr:last-child th, table.board tr:last-child td { border-bottom: 0; }
+.footer-actions { flex-direction: column; align-items: center; }
+.dialog-body ol { margin: 10px 0 8px; padding-left: 22px; color: var(--ink); font-weight: 600; }
+.dialog-body li { margin: 6px 0; }
+.dialog-body p { margin: 8px 0 16px; }
+
+table.board thead th .avatar { display: grid; margin: 0 auto; }
+
+/* ───────── Groep & duel ───────── */
+.notice { background: var(--bad-bg); color: #8a2f2c; border-radius: 18px; padding: 12px 16px; font-weight: 700; margin-bottom: 14px; }
+.group-intro { display: grid; gap: 12px; }
+.lead { font-size: 1.05rem; font-weight: 700; color: var(--emerald-dark); margin: 4px 0 6px; line-height: 1.45; }
+.or { display: flex; align-items: center; gap: 10px; color: var(--muted); font-weight: 800; font-size: .9rem; margin-top: 8px; }
+.or::before, .or::after { content: ""; flex: 1; height: 2px; background: var(--line); }
+.fine { color: var(--muted); font-size: .88rem; line-height: 1.45; margin: 4px 0; }
+.center { text-align: center; }
+.btn.small { padding: 10px 16px; font-size: .95rem; box-shadow: 0 3px 0 var(--emerald-dark); text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
+.btn.ghost.small { box-shadow: 0 3px 0 var(--line); }
+.btn[disabled] { opacity: .55; cursor: not-allowed; filter: none; }
+.code-card { background: var(--emerald); color: #fff; border-radius: 26px; padding: 18px 16px; text-align: center; margin-bottom: 16px; box-shadow: var(--shadow-lift); display: grid; gap: 8px; }
+.code-label { font-weight: 800; opacity: .85; font-size: .9rem; }
+.code-big { font-size: 2.4rem; letter-spacing: .14em; font-weight: 900; color: var(--gold-soft); }
+.code-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.code-card .btn.small { background: var(--gold); color: #3a2606; box-shadow: 0 3px 0 #a8742f; }
+.code-card .btn.ghost.small { background: #fff; color: var(--emerald-dark); box-shadow: 0 3px 0 rgba(0,0,0,.2); }
+.status { font-size: .82rem; font-weight: 700; opacity: .9; }
+.status.online::before { content: "● "; color: var(--mint); }
+.status.offline::before { content: "● "; color: #ffb4a8; }
+.duel-card { background: var(--card); border-radius: 26px; padding: 16px; box-shadow: var(--shadow); margin: 6px 0 18px; display: grid; gap: 12px; border: 3px solid var(--gold-soft); }
+.duel-head { display: flex; align-items: center; gap: 10px; color: var(--gold); }
+.duel-head h2 { margin: 0; color: var(--emerald-dark); font-size: 1.25rem; }
+.duel-card p { margin: 0; line-height: 1.45; }
+.duel-players { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; background: var(--emerald-soft); color: var(--emerald-dark); border-radius: 999px; padding: 4px 12px 4px 4px; font-weight: 800; font-size: .88rem; }
+.opp-strip { display: grid; gap: 6px; margin: 10px 0 4px; }
+.opp-strip:empty { display: none; }
+.opp { display: grid; grid-template-columns: minmax(70px, 30%) 1fr auto; align-items: center; gap: 8px; font-size: .82rem; font-weight: 800; color: var(--emerald-dark); }
+.opp-name { display: flex; align-items: center; gap: 6px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.opp-bar { height: 10px; background: #ece6dc; border-radius: 99px; overflow: hidden; }
+.opp-bar i { display: block; height: 100%; border-radius: 99px; transition: width .4s; }
+.opp-score { white-space: nowrap; color: var(--muted); }
+.me { font-style: normal; font-size: .7rem; background: var(--gold); color: #3a2606; border-radius: 99px; padding: 1px 7px; vertical-align: middle; }
+
+/* ───────── Niveaus ───────── */
+.tier-list { display: grid; gap: 10px; margin: 0 0 14px; }
+.tier-btn { display: flex; align-items: center; gap: 10px; width: 100%; font: inherit; text-align: left; background: var(--emerald-soft); border: 0; border-radius: 20px; padding: 12px 14px; cursor: pointer; color: var(--emerald-dark); box-shadow: 0 4px 0 #b7e4c7; }
+.tier-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #b7e4c7; }
+.tier-n { font-weight: 900; font-size: 1.05rem; }
+.tier-d { flex: 1; font-weight: 700; color: var(--muted); font-size: .9rem; }
+.tier-tag { display: inline-block; background: var(--gold-soft); color: #7a4d10; font-weight: 900; border-radius: 99px; padding: 4px 14px; margin: -4px 0 8px; }
+.levelup { display: grid; justify-items: center; gap: 2px; background: var(--gold-soft); color: #7a4d10; border-radius: 22px; padding: 12px; text-align: center; }
+.levelup b { font-size: 1.15rem; }
+.levelup span { font-weight: 700; font-size: .9rem; }
+.tier-pick { display: flex; align-items: center; gap: 8px; font-weight: 800; color: var(--emerald-dark); }
+.tier-chip { width: 44px; height: 44px; border-radius: 14px; border: 3px solid var(--line); background: #fff; font: inherit; font-weight: 900; font-size: 1.05rem; color: var(--emerald-dark); cursor: pointer; }
+.tier-chip.on { background: var(--emerald); border-color: var(--emerald); color: #fff; }
+
+</style>
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Islam Quiz">
+  <meta property="og:locale" content="nl_NL">
+  <meta property="og:title" content="Islam Quiz">
+  <meta property="og:description" content="Leer en speel met plezier! Een Islamitische quiz voor kinderen en volwassenen.">
+  <meta property="og:url" content="https://islam-quiz-nl.netlify.app/">
+  <meta property="og:image" content="https://islam-quiz-nl.netlify.app/og-image.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Islam Quiz – groene maan-logo">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://islam-quiz-nl.netlify.app/og-image.jpg">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" href="icon-192.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Islam Quiz">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
 </head>
 <body>
-
-  <!-- Disclaimer Modal -->
-  <div id="disclaimerModal" class="modal-overlay">
-    <div class="modal-content">
-      <div class="modal-icon">📜</div>
-      <h3>Belangrijke Mededeling</h3>
-      <p>
-        Dit spel bevat koranteksten en islamitische inhoud. Speel dit spel niet op onreine plekken (zoals het toilet of de badkamer).
-        <br><br>
-        De maker is hiervoor niet verantwoordelijk; de verantwoordelijkheid ligt bij de speler zelf.
-      </p>
-      <button class="btn" onclick="acceptDisclaimer()">Gelezen & Akkoord</button>
-    </div>
-  </div>
-
-  <!-- Main Container -->
-  <div class="container">
-    <h1>Islam Quiz</h1>
-
-    <!-- Speler Selectie / Beheer -->
-    <div id="playerSection">
-      <h2>Wie speelt er?</h2>
-      
-      <div class="player-input-group">
-        <input type="text" id="newPlayerName" placeholder="Voer je naam in...">
-        <button class="btn" style="width: auto;" onclick="addPlayer()">Toevoegen</button>
-      </div>
-
-      <ul id="playerList" class="player-list"></ul>
-
-      <button id="startGameBtn" class="btn hidden" onclick="startGame()">Spel beginnen!</button>
-    </div>
-
-    <!-- Quiz Scherm (Voorbereid) -->
-    <div id="quizSection" class="hidden">
-      <h2 id="welcomeHeader"></h2>
-      <p style="text-align: center; color: #555; margin-top: 15px;">De quizvragen worden hier geladen...</p>
-      <button class="btn" style="margin-top: 30px; background-color: #546e7a;" onclick="resetToPlayers()">Terug naar spelers</button>
-    </div>
-  </div>
-
+  <div id="app" aria-live="polite"></div>
+  <noscript>Deze quiz heeft JavaScript nodig. Zet JavaScript aan in je browser.</noscript>
   <script>
-    let players = JSON.parse(localStorage.getItem('islamQuizPlayers')) || [];
-    let selectedPlayer = null;
+var QuizData=(function(){var exports={};
+"use strict";
+// ============================================================
+//  Islam Quiz – vragenbestand
+//  Voeg gerust nieuwe vragen toe aan de lijst `questions`.
+//  - level:  'junior' (kinderen) of 'expert' (volwassenen)  = de doelgroep
+//  - tier:   moeilijkheidsniveau 1 (basis), 2 (gemiddeld) of 3 (gevorderd); weggelaten = 1
+//            In de app heet dit simpelweg 'Niveau 1/2/3'.
+//  - answer: index (0-3) van het juiste antwoord in `options`
+//            (de app schudt de volgorde bij elke vraag zelf)
+//  - arabic: optionele Arabische tekst (met harakat) + vertaling + bron
+//  - questionArabic: optionele Arabische tekst die in de vraag zelf getoond wordt
+//  Na wijzigingen: voer `./build.sh` uit om questions.js te vernieuwen.
+// ============================================================
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.questions = exports.categories = void 0;
+exports.categories = [
+    { id: "profeten", title: "Profetenverhalen", subtitle: "Verhalen over de Profeten", icon: "sparkles", color: "#74C69D" },
+    { id: "zuilen", title: "De 5 Zuilen & Aqeeda", subtitle: "Basis van het geloof", icon: "landmark", color: "#D9A05B" },
+    { id: "seerah", title: "Seerah & Metgezellen", subtitle: "Het leven van de Profeet ﷺ en de Sahaba", icon: "users", color: "#F4978E" },
+    { id: "koran", title: "Koran & Kennis", subtitle: "Soera’s en verzen met vertaling", icon: "book-open", color: "#2D6A4F" },
+    { id: "akhlaaq", title: "Akhlaaq & Du’a", subtitle: "Goede manieren, smeekbedes en rituelen", icon: "heart", color: "#B589D6" },
+];
+exports.questions = [
+    // ───────────────────── 1. PROFETENVERHALEN · JUNIOR ─────────────────────
+    {
+        id: "p-j1", category: "profeten", level: "junior",
+        question: "Wie was de eerste mens en ook de eerste profeet?",
+        options: ["Adam (a.s.)", "Nuh (a.s.)", "Ibrahim (a.s.)", "Musa (a.s.)"], answer: 0,
+        explanation: "Allah schiep Adam (a.s.) als eerste mens en maakte hem ook de eerste profeet. Adam en zijn vrouw Hawa deden iets wat niet mocht. Ze waren er heel spijtig over en vroegen Allah om vergeving. Allah vergaf hen!",
+        arabic: {
+            text: "رَبَّنَا ظَلَمْنَا أَنفُسَنَا وَإِن لَّمْ تَغْفِرْ لَنَا وَتَرْحَمْنَا لَنَكُونَنَّ مِنَ الْخَاسِرِينَ",
+            translation: "Onze Heer, wij hebben onszelf onrecht aangedaan. Als U ons niet vergeeft en ons geen barmhartigheid toont, dan behoren wij zeker tot de verliezers.",
+            source: "Soera Al-A’raaf 7:23",
+        },
+    },
+    {
+        id: "p-j2", category: "profeten", level: "junior",
+        question: "Welke profeet bouwde op bevel van Allah een enorm groot schip, de ark?",
+        options: ["Hud (a.s.)", "Nuh (a.s.)", "Salih (a.s.)", "Yusuf (a.s.)"], answer: 1,
+        explanation: "Nuh (a.s.) riep zijn volk jarenlang op om alleen Allah te aanbidden. Toen de grote vloed kwam, redde Allah Nuh en de gelovigen in de ark, samen met van elk dier een paar.",
+        arabic: {
+            text: "بِسْمِ اللَّهِ مَجْرَاهَا وَمُرْسَاهَا إِنَّ رَبِّي لَغَفُورٌ رَّحِيمٌ",
+            translation: "In de naam van Allah zij haar vaart en haar aanmeren. Voorwaar, mijn Heer is Vergevensgezind en Barmhartig.",
+            source: "Soera Hoed 11:41",
+        },
+    },
+    {
+        id: "p-j3", category: "profeten", level: "junior",
+        question: "Wat gebeurde er toen Ibrahim (a.s.) in het grote vuur werd gegooid?",
+        options: ["Hij rende snel weg", "Het vuur werd koel en veilig", "Het vuur werd nog groter", "Het begon te regenen"], answer: 1,
+        explanation: "Het volk van Ibrahim gooide hem in een enorm vuur, omdat hij hun afgoden had gebroken. Maar Allah beval het vuur: wees koel en veilig voor Ibrahim! En zo gebeurde het.",
+        arabic: {
+            text: "يَا نَارُ كُونِي بَرْدًا وَسَلَامًا عَلَىٰ إِبْرَاهِيمَ",
+            translation: "O vuur, wees koelte en veiligheid voor Ibrahim!",
+            source: "Soera Al-Anbiyaa 21:69",
+        },
+    },
+    {
+        id: "p-j4", category: "profeten", level: "junior",
+        question: "Welke profeet werd door een grote vis ingeslikt en riep toen tot Allah?",
+        options: ["Ayyub (a.s.)", "Idris (a.s.)", "Yunus (a.s.)", "Zakariyya (a.s.)"], answer: 2,
+        explanation: "Yunus (a.s.) zat in de buik van de vis, in het donker. Hij riep Allah aan met deze mooie smeekbede. Allah verhoorde hem en bracht hem veilig terug aan land.",
+        arabic: {
+            text: "لَّا إِلَٰهَ إِلَّا أَنتَ سُبْحَانَكَ إِنِّي كُنتُ مِنَ الظَّالِمِينَ",
+            translation: "Er is geen god dan U. Glorierijk bent U! Voorwaar, ik was onder de onrechtplegers.",
+            source: "Soera Al-Anbiyaa 21:87",
+        },
+    },
+    {
+        id: "p-j5", category: "profeten", level: "junior",
+        question: "Waar legde de moeder van baby Musa (a.s.) hem in, toen ze hem op de rivier de Nijl zette?",
+        options: ["In een mandje (kistje)", "In een diepe put", "In een holle boom", "In een groot schip"], answer: 0,
+        explanation: "Farao wilde alle jongetjes doden. Allah zei tegen Musa’s moeder: leg hem in een kistje op de rivier en wees niet bang. Allah beloofde hem bij haar terug te brengen, en dat deed Hij!",
+        arabic: {
+            text: "فَإِذَا خِفْتِ عَلَيْهِ فَأَلْقِيهِ فِي الْيَمِّ وَلَا تَخَافِي وَلَا تَحْزَنِي إِنَّا رَادُّوهُ إِلَيْكِ",
+            translation: "Wanneer je voor hem vreest, werp hem dan in de rivier en wees niet bang en niet bedroefd. Voorwaar, Wij brengen hem naar je terug.",
+            source: "Soera Al-Qasas 28:7",
+        },
+    },
+    {
+        id: "p-j6", category: "profeten", level: "junior",
+        question: "Welke profeet kon praten met vogels en dieren, en was ook een wijze koning?",
+        options: ["Sulayman (a.s.)", "Isa (a.s.)", "Yaqub (a.s.)", "Lut (a.s.)"], answer: 0,
+        explanation: "Allah gaf Sulayman (a.s.) een bijzondere gave: hij begreep de taal van vogels en andere dieren. Hij was dankbaar en gebruikte zijn macht om goed te doen.",
+        arabic: {
+            text: "يَا أَيُّهَا النَّاسُ عُلِّمْنَا مَنطِقَ الطَّيْرِ",
+            translation: "O mensen, ons is de taal van de vogels geleerd.",
+            source: "Soera An-Naml 27:16",
+        },
+    },
+    // ───────────────────── 1. PROFETENVERHALEN · EXPERT ─────────────────────
+    {
+        id: "p-e1", category: "profeten", level: "expert",
+        question: "Hoeveel profeten worden er bij naam in de Koran genoemd?",
+        options: ["12", "25", "40", "124"], answer: 1,
+        explanation: "In de Koran worden 25 profeten bij naam genoemd, van Adam tot Muhammad ﷺ. Er zijn er volgens de overlevering veel meer gezonden; sommigen zijn ons niet bij naam bekend.",
+        arabic: {
+            text: "وَرُسُلًا قَدْ قَصَصْنَاهُمْ عَلَيْكَ مِن قَبْلُ وَرُسُلًا لَّمْ نَقْصُصْهُمْ عَلَيْكَ",
+            translation: "En boodschappers over wie Wij je eerder hebben verteld, en boodschappers over wie Wij je niet hebben verteld.",
+            source: "Soera An-Nisaa 4:164",
+        },
+    },
+    {
+        id: "p-e2", category: "profeten", level: "expert",
+        question: "De ‘Ulul-‘Azm’ zijn de vijf profeten met een bijzonder grote vastberadenheid. Wie van de volgende behoort NIET tot hen?",
+        options: ["Nuh (a.s.)", "Ibrahim (a.s.)", "Musa (a.s.)", "Yusuf (a.s.)"], answer: 3,
+        explanation: "De Ulul-‘Azm zijn Nuh, Ibrahim, Musa, Isa en Muhammad ﷺ. Yusuf (a.s.) was een geliefde profeet, maar behoort volgens de geleerden niet tot deze vijf.",
+        arabic: {
+            text: "فَاصْبِرْ كَمَا صَبَرَ أُولُو الْعَزْمِ مِنَ الرُّسُلِ",
+            translation: "Wees dus geduldig, zoals de boodschappers met vastberadenheid geduldig waren.",
+            source: "Soera Al-Ahqaaf 46:35",
+        },
+    },
+    {
+        id: "p-e3", category: "profeten", level: "expert",
+        question: "Over welke soera zegt Allah dat zij ‘het mooiste verhaal’ vertelt?",
+        options: ["Soera Maryam", "Soera Yusuf", "Soera Al-Kahf", "Soera Taa-Haa"], answer: 1,
+        explanation: "Soera Yusuf (12) vertelt in één keer het volledige verhaal van Yusuf (a.s.): zijn droom, het verraad van zijn broers, de put, slavernij, onrechtvaardige gevangenschap en uiteindelijk zijn hoge positie in Egypte. Een verhaal vol geduld (sabr) en vertrouwen in Allah.",
+        arabic: {
+            text: "نَحْنُ نَقُصُّ عَلَيْكَ أَحْسَنَ الْقَصَصِ",
+            translation: "Wij vertellen jou het mooiste verhaal.",
+            source: "Soera Yusuf 12:3",
+        },
+    },
+    {
+        id: "p-e4", category: "profeten", level: "expert",
+        question: "Ibrahim (a.s.) zag in een droom dat hij zijn zoon moest offeren. Welke zoon was dit volgens de overwegende mening van de geleerden?",
+        options: ["Ishaaq (a.s.)", "Ismaïl (a.s.)", "Yaqub (a.s.)", "Madyan"], answer: 1,
+        explanation: "Volgens de overwegende mening was het Ismaïl (a.s.). Beiden toonden volledige overgave aan Allah; daarna verving Allah de zoon door een groot offerdier. Hieraan herinnert het Offerfeest (‘Eid al-Adha).",
+        arabic: {
+            text: "يَا بُنَيَّ إِنِّي أَرَىٰ فِي الْمَنَامِ أَنِّي أَذْبَحُكَ فَانظُرْ مَاذَا تَرَىٰ ۚ قَالَ يَا أَبَتِ افْعَلْ مَا تُؤْمَرُ",
+            translation: "O mijn zoon, ik zie in de droom dat ik je offer. Bedenk wat jij ervan vindt. Hij zei: O mijn vader, doe wat je bevolen wordt.",
+            source: "Soera As-Saaffaat 37:102",
+        },
+    },
+    {
+        id: "p-e5", category: "profeten", level: "expert",
+        question: "Welke profeet staat bekend als symbool van geduld bij ziekte en verlies?",
+        options: ["Ayyub (a.s.)", "Dawud (a.s.)", "Harun (a.s.)", "Ilyas (a.s.)"], answer: 0,
+        explanation: "Ayyub (a.s.) werd getroffen door ziekte en het verlies van bezit en geliefden, maar bleef dankbaar en geduldig. Zijn smeekbede is een voorbeeld hoe wij Allah in moeilijke tijden kunnen aanroepen. Allah genas hem en schonk hem veel terug.",
+        arabic: {
+            text: "وَأَيُّوبَ إِذْ نَادَىٰ رَبَّهُ أَنِّي مَسَّنِيَ الضُّرُّ وَأَنتَ أَرْحَمُ الرَّاحِمِينَ",
+            translation: "En Ayyub, toen hij zijn Heer aanriep: Voorwaar, nood heeft mij getroffen en U bent de Barmhartigste der barmhartigen.",
+            source: "Soera Al-Anbiyaa 21:83",
+        },
+    },
+    {
+        id: "p-e6", category: "profeten", level: "expert",
+        question: "In welke soera staat het verhaal van de ontmoeting tussen Musa (a.s.) en de wijze dienaar Al-Khidr?",
+        options: ["Soera Al-Kahf", "Soera Al-Baqarah", "Soera Al-A’raaf", "Soera Ibrahim"], answer: 0,
+        explanation: "In Soera Al-Kahf (18) leest men hoe Musa een reis maakt om kennis te vergaren van Al-Khidr. Dit verhaal leert ons dat Allah’s wijsheid verder reikt dan ons begrip en dat geduld vereist is.",
+        arabic: {
+            text: "قَالَ لَهُ مُوسَىٰ هَلْ أَتَّبِعُكَ عَلَىٰ أَن تُعَلِّمَنِ مِمَّا عُلِّمْتَ رُشْدًا",
+            translation: "Musa zei tegen hem: Mag ik je volgen, opdat je mij leert van wat jou aan juiste leiding geleerd is?",
+            source: "Soera Al-Kahf 18:66",
+        },
+    },
+    // ───────────────────── 2. DE 5 ZUILEN & AQEEDA · JUNIOR ─────────────────────
+    {
+        id: "z-j1", category: "zuilen", level: "junior",
+        question: "Hoeveel zuilen heeft de Islam?",
+        options: ["3", "4", "5", "7"], answer: 2,
+        explanation: "De Islam heeft 5 zuilen: de Shahada (geloofsgetuigenis), het gebed (Salaat), de aalmoes (Zakaat), het vasten in Ramadan en de bedevaart (Hadj) naar Mekka.",
+        arabic: {
+            text: "بُنِيَ الْإِسْلَامُ عَلَىٰ خَمْسٍ",
+            translation: "De Islam is gebouwd op vijf (zuilen).",
+            source: "Hadith – Bukhari & Moslim",
+        },
+    },
+    {
+        id: "z-j2", category: "zuilen", level: "junior",
+        question: "Hoeveel keer per dag bidden moslims de verplichte gebeden?",
+        options: ["2 keer", "3 keer", "5 keer", "10 keer"], answer: 2,
+        explanation: "Moslims bidden vijf keer per dag: Fajr (voor zonsopgang), Dhuhr (middag), ‘Asr (namiddag), Maghrib (zonsondergang) en ‘Ishaa (nacht). Zo zijn we de hele dag verbonden met Allah.",
+        arabic: {
+            text: "وَأَقِيمُوا الصَّلَاةَ وَآتُوا الزَّكَاةَ",
+            translation: "En verricht het gebed en geef de zakaat.",
+            source: "Soera Al-Baqarah 2:43",
+        },
+    },
+    {
+        id: "z-j3", category: "zuilen", level: "junior",
+        question: "In welke maand vasten moslims van zonsopgang tot zonsondergang?",
+        options: ["Muharram", "Ramadan", "Shawwal", "Rajab"], answer: 1,
+        explanation: "In de maand Ramadan eten en drinken we niet van de ochtendgloed tot zonsondergang. Zo leren we geduld, dankbaarheid en medeleven met mensen die honger hebben.",
+        arabic: {
+            text: "يَا أَيُّهَا الَّذِينَ آمَنُوا كُتِبَ عَلَيْكُمُ الصِّيَامُ",
+            translation: "O jullie die geloven, het vasten is jullie voorgeschreven.",
+            source: "Soera Al-Baqarah 2:183",
+        },
+    },
+    {
+        id: "z-j4", category: "zuilen", level: "junior",
+        question: "Naar welke stad gaan moslims op bedevaart (Hadj)?",
+        options: ["Medina", "Jeruzalem", "Mekka", "Caïro"], answer: 2,
+        explanation: "Moslims die er de gezondheid en middelen voor hebben, gaan minstens één keer in hun leven naar Mekka. Daar lopen ze rond de Ka’ba, het huis van Allah.",
+        arabic: {
+            text: "وَلِلَّهِ عَلَى النَّاسِ حِجُّ الْبَيْتِ مَنِ اسْتَطَاعَ إِلَيْهِ سَبِيلًا",
+            translation: "En voor Allah rust op de mensen de plicht van de bedevaart naar het Huis, voor wie daartoe de mogelijkheid heeft.",
+            source: "Soera Aal ‘Imraan 3:97",
+        },
+    },
+    {
+        id: "z-j5", category: "zuilen", level: "junior",
+        question: "Welke zin zeg je om moslim te worden? Het is de eerste zuil.",
+        options: ["Bismillah", "De Shahada", "Alhamdulillah", "Subhanallah"], answer: 1,
+        explanation: "De Shahada is het geloofsgetuigenis: we getuigen dat er niemand het recht heeft aanbeden te worden behalve Allah, en dat Muhammad ﷺ Zijn boodschapper is.",
+        arabic: {
+            text: "أَشْهَدُ أَنْ لَا إِلَٰهَ إِلَّا اللَّهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا رَسُولُ اللَّهِ",
+            translation: "Ik getuig dat er geen god is dan Allah, en ik getuig dat Muhammad de boodschapper van Allah is.",
+            source: "Shahada – de eerste zuil",
+        },
+    },
+    {
+        id: "z-j6", category: "zuilen", level: "junior",
+        question: "Welke woorden zeggen we aan het begin van het gebed, als we onze handen heffen?",
+        options: ["As-salaamu ‘alaykum", "Allahu Akbar", "Alhamdulillah", "Insha’Allah"], answer: 1,
+        explanation: "‘Allahu Akbar’ betekent: Allah is de Grootste. Met deze woorden beginnen we het gebed. Vanaf dat moment richten we ons helemaal op Allah.",
+        arabic: {
+            text: "اللَّهُ أَكْبَرُ",
+            translation: "Allah is de Grootste.",
+            source: "Takbir – begin van het gebed",
+        },
+    },
+    // ───────────────────── 2. DE 5 ZUILEN & AQEEDA · EXPERT ─────────────────────
+    {
+        id: "z-e1", category: "zuilen", level: "expert",
+        question: "Hoeveel zuilen van het Imaan (geloof) zijn er volgens de bekende Hadith van Jibriel?",
+        options: ["4", "5", "6", "8"], answer: 2,
+        explanation: "De zes zuilen van Imaan zijn: geloof in Allah, Zijn engelen, Zijn boeken, Zijn boodschappers, de Laatste Dag en de goddelijke bepaling (Qadar), zowel het goede als het kwade daarin.",
+        arabic: {
+            text: "أَنْ تُؤْمِنَ بِاللَّهِ وَمَلَائِكَتِهِ وَكُتُبِهِ وَرُسُلِهِ وَالْيَوْمِ الْآخِرِ وَتُؤْمِنَ بِالْقَدَرِ خَيْرِهِ وَشَرِّهِ",
+            translation: "Dat je gelooft in Allah, Zijn engelen, Zijn boeken, Zijn boodschappers, de Laatste Dag, en gelooft in de bepaling, zowel het goede als het kwade ervan.",
+            source: "Hadith van Jibriel – Moslim",
+        },
+    },
+    {
+        id: "z-e2", category: "zuilen", level: "expert",
+        question: "Hoe omschreef de Profeet ﷺ ‘Ihsaan’ (voortreffelijkheid in de eredienst) in de Hadith van Jibriel?",
+        options: [
+            "Zoveel mogelijk vrijwillige gebeden verrichten",
+            "Allah aanbidden alsof je Hem ziet",
+            "Alleen halal eten",
+            "Kennis zoeken tot aan het einde van je leven",
+        ], answer: 1,
+        explanation: "Ihsaan is het hoogste niveau: bewust van Allah’s aanwezigheid zijn. Zie je Hem niet, bedenk dan dat Hij jou wél ziet. Dit besef verfijnt gebed, karakter en gedrag.",
+        arabic: {
+            text: "أَنْ تَعْبُدَ اللَّهَ كَأَنَّكَ تَرَاهُ فَإِنْ لَمْ تَكُنْ تَرَاهُ فَإِنَّهُ يَرَاكَ",
+            translation: "Dat je Allah aanbidt alsof je Hem ziet; en als je Hem niet ziet, dan ziet Hij jou voorzeker.",
+            source: "Hadith van Jibriel – Moslim",
+        },
+    },
+    {
+        id: "z-e3", category: "zuilen", level: "expert",
+        question: "Hoeveel rak’ahs (gebedseenheden) omvatten de vijf verplichte dagelijkse gebeden samen?",
+        options: ["15", "17", "19", "21"], answer: 1,
+        explanation: "Fajr 2 + Dhuhr 4 + ‘Asr 4 + Maghrib 3 + ‘Ishaa 4 = 17 rak’ahs. Op reis mogen de viertallen ingekort worden tot twee.",
+        arabic: {
+            text: "إِنَّ الصَّلَاةَ كَانَتْ عَلَى الْمُؤْمِنِينَ كِتَابًا مَّوْقُوتًا",
+            translation: "Voorwaar, het gebed is voor de gelovigen een voorschrift op vastgestelde tijden.",
+            source: "Soera An-Nisaa 4:103",
+        },
+    },
+    {
+        id: "z-e4", category: "zuilen", level: "expert",
+        question: "Over welke nacht zegt Allah dat zij ‘beter is dan duizend maanden’?",
+        options: ["Laylat al-Baraa’ah", "Laylat al-Qadr", "Laylat al-Isra", "De nacht van ‘Arafah"], answer: 1,
+        explanation: "Laylat al-Qadr (de Nacht van de Beschikking) valt in de laatste tien nachten van Ramadan, in de oneven nachten. In deze nacht begon de openbaring van de Koran.",
+        arabic: {
+            text: "لَيْلَةُ الْقَدْرِ خَيْرٌ مِّنْ أَلْفِ شَهْرٍ",
+            translation: "De Nacht van de Beschikking is beter dan duizend maanden.",
+            source: "Soera Al-Qadr 97:3",
+        },
+    },
+    {
+        id: "z-e5", category: "zuilen", level: "expert",
+        question: "Welke zonde wordt in de Koran omschreven als ‘een geweldig onrecht’ en is de ergste vorm van onrecht?",
+        options: ["Liegen", "Shirk (Allah deelgenoten toekennen)", "Roddelen", "Verspilling"], answer: 1,
+        explanation: "Shirk staat tegenover Tawhied (de eenheid van Allah). Het is onrecht omdat men het recht van de Schepper geeft aan Zijn schepping. Zonder berouw wordt het niet vergeven.",
+        arabic: {
+            text: "إِنَّ الشِّرْكَ لَظُلْمٌ عَظِيمٌ",
+            translation: "Voorwaar, het toekennen van deelgenoten is zeker een geweldig onrecht.",
+            source: "Soera Luqmaan 31:13",
+        },
+    },
+    {
+        id: "z-e6", category: "zuilen", level: "expert",
+        question: "Hoeveel bedraagt de Zakaat op spaargeld dat boven het nisaab-bedrag uitkomt, na een vol jaar bezit?",
+        options: ["1%", "2,5%", "5%", "10%"], answer: 1,
+        explanation: "De Zakaat op spaargeld en handelswaar is 2,5%. Ze zuivert het bezit en de ziel van de gever, en ondersteunt mensen in nood, zoals de acht groepen in de Koran.",
+        arabic: {
+            text: "خُذْ مِنْ أَمْوَالِهِمْ صَدَقَةً تُطَهِّرُهُمْ وَتُزَكِّيهِم بِهَا",
+            translation: "Neem van hun bezittingen een aalmoes, waarmee je hen reinigt en zuivert.",
+            source: "Soera At-Tawbah 9:103",
+        },
+    },
+    // ───────────────────── 3. SEERAH & METGEZELLEN · JUNIOR ─────────────────────
+    {
+        id: "s-j1", category: "seerah", level: "junior",
+        question: "In welke stad werd de Profeet Muhammad ﷺ geboren?",
+        options: ["Medina", "Mekka", "Taïf", "Damascus"], answer: 1,
+        explanation: "De Profeet ﷺ werd geboren in Mekka, in het ‘Jaar van de Olifant’. Zijn vader Abdullah was voor zijn geboorte al overleden.",
+    },
+    {
+        id: "s-j2", category: "seerah", level: "junior",
+        question: "Hoe heette de eerste vrouw van de Profeet ﷺ, die als eerste in hem geloofde?",
+        options: ["‘Aaisha (r.a.)", "Khadija (r.a.)", "Fatima (r.a.)", "Hafsa (r.a.)"], answer: 1,
+        explanation: "Khadija (r.a.) was een eerlijke en slimme zakenvrouw. Zij steunde de Profeet ﷺ vanaf het begin, en was de allereerste die geloofde in zijn boodschap.",
+    },
+    {
+        id: "s-j3", category: "seerah", level: "junior",
+        question: "Wie was de beste vriend van de Profeet ﷺ en de eerste kalief na hem?",
+        options: ["Abu Bakr (r.a.)", "Umar (r.a.)", "Uthman (r.a.)", "Bilal (r.a.)"], answer: 0,
+        explanation: "Abu Bakr as-Siddiq (r.a.) geloofde de Profeet ﷺ meteen en stond altijd aan zijn zijde. Hij reisde met hem mee tijdens de Hijra en verborg zich met hem in een grot.",
+        arabic: {
+            text: "إِذْ يَقُولُ لِصَاحِبِهِ لَا تَحْزَنْ إِنَّ اللَّهَ مَعَنَا",
+            translation: "Toen hij tegen zijn metgezel zei: Wees niet bedroefd, voorwaar Allah is met ons.",
+            source: "Soera At-Tawbah 9:40",
+        },
+    },
+    {
+        id: "s-j4", category: "seerah", level: "junior",
+        question: "Wie was de eerste mu’addin (degene die de adhaan, de oproep tot gebed, deed)?",
+        options: ["Bilal ibn Rabaah (r.a.)", "Hamza (r.a.)", "Ali (r.a.)", "Anas (r.a.)"], answer: 0,
+        explanation: "Bilal (r.a.) had een prachtige, krachtige stem. De Profeet ﷺ koos hem als eerste mu’addin in Medina. Zo klonk de oproep tot gebed voor het eerst.",
+        arabic: {
+            text: "اللَّهُ أَكْبَرُ اللَّهُ أَكْبَرُ، أَشْهَدُ أَنْ لَا إِلَٰهَ إِلَّا اللَّهُ",
+            translation: "Allah is de Grootste, Allah is de Grootste. Ik getuig dat er geen god is dan Allah.",
+            source: "Begin van de Adhaan",
+        },
+    },
+    {
+        id: "s-j5", category: "seerah", level: "junior",
+        question: "Naar welke stad emigreerde de Profeet ﷺ met zijn metgezellen? Dit heet de Hijra.",
+        options: ["Jeruzalem", "Medina", "Basra", "Jemen"], answer: 1,
+        explanation: "In Mekka werden de moslims onderdrukt. Daarom vertrokken ze naar Medina, waar de bevolking hen warm ontving. De mensen van Medina heten de Ansaar (de helpers).",
+    },
+    {
+        id: "s-j6", category: "seerah", level: "junior",
+        question: "Welke bijnaam kreeg de Profeet ﷺ al als jongeman, omdat iedereen hem vertrouwde?",
+        options: ["Al-Amien (de Betrouwbare)", "Al-Faaroeq", "As-Siddiq", "Saif Allah"], answer: 0,
+        explanation: "De mensen van Mekka noemden hem ‘Al-Amien’ (de Betrouwbare) en ‘As-Saadiq’ (de Waarheidsgetrouwe). Hij loog nooit en gaf alles trouw terug wat men hem toevertrouwde.",
+        arabic: {
+            text: "وَإِنَّكَ لَعَلَىٰ خُلُقٍ عَظِيمٍ",
+            translation: "En voorwaar, jij bezit een groots karakter.",
+            source: "Soera Al-Qalam 68:4",
+        },
+    },
+    // ───────────────────── 3. SEERAH & METGEZELLEN · EXPERT ─────────────────────
+    {
+        id: "s-e1", category: "seerah", level: "expert",
+        question: "In welke grot ontving de Profeet ﷺ de eerste openbaring van de Koran?",
+        options: ["Grot Thawr", "Grot Hira", "Grot Uhud", "Grot Arqam"], answer: 1,
+        explanation: "In de nacht van Laylat al-Qadr, in Ramadan, kwam de engel Jibriel naar de Profeet ﷺ in de Hira-grot op de Berg an-Nuur. Het eerste woord was: ‘Iqra’ – Lees!",
+        arabic: {
+            text: "اقْرَأْ بِاسْمِ رَبِّكَ الَّذِي خَلَقَ",
+            translation: "Lees in de naam van jouw Heer Die geschapen heeft.",
+            source: "Soera Al-‘Alaq 96:1",
+        },
+    },
+    {
+        id: "s-e2", category: "seerah", level: "expert",
+        question: "Met hoeveel mannen trokken de moslims ten strijde in de Slag bij Badr (2 n.H.)?",
+        options: ["313", "700", "1000", "3000"], answer: 0,
+        explanation: "Ongeveer 313 moslims stonden tegenover zo’n duizend Quraysh-strijders. Met Allah’s hulp behaalden zij de overwinning. Badr is een les in vertrouwen op Allah ondanks beperkte middelen.",
+        arabic: {
+            text: "وَلَقَدْ نَصَرَكُمُ اللَّهُ بِبَدْرٍ وَأَنتُمْ أَذِلَّةٌ",
+            translation: "En voorzeker, Allah heeft jullie bij Badr geholpen toen jullie zwak waren.",
+            source: "Soera Aal ‘Imraan 3:123",
+        },
+    },
+    {
+        id: "s-e3", category: "seerah", level: "expert",
+        question: "Wat was het Verdrag van Hudaybiyya (6 n.H.)?",
+        options: [
+            "Een bondgenootschap met de Romeinen",
+            "Een vredesverdrag tussen de moslims en de Quraysh",
+            "Een handelsverdrag met Jemen",
+            "Het verdrag van de Ansaar en de Muhajirun",
+        ], answer: 1,
+        explanation: "Het verdrag leek eerst nadelig voor de moslims, maar Allah noemt het een ‘duidelijke overwinning’. De vrede maakte dat veel mensen zich bij de Islam aansloten, en leidde twee jaar later tot de vreedzame inname van Mekka.",
+        arabic: {
+            text: "إِنَّا فَتَحْنَا لَكَ فَتْحًا مُّبِينًا",
+            translation: "Voorwaar, Wij hebben jou een duidelijke overwinning geschonken.",
+            source: "Soera Al-Fath 48:1",
+        },
+    },
+    {
+        id: "s-e4", category: "seerah", level: "expert",
+        question: "Wat werd er tijdens de gebeurtenis van Isra en Mi’raaj aan de Profeet ﷺ en zijn volgelingen voorgeschreven?",
+        options: ["De zakaat", "Het vasten in Ramadan", "De vijf dagelijkse gebeden", "De Hadj"], answer: 2,
+        explanation: "Tijdens de nachtreis van Mekka naar Al-Aqsa (Isra) en de hemelvaart (Mi’raaj) werden de vijf dagelijkse gebeden voorgeschreven. Aanvankelijk waren het er vijftig; uit barmhartigheid werden het er vijf, met de beloning van vijftig.",
+        arabic: {
+            text: "سُبْحَانَ الَّذِي أَسْرَىٰ بِعَبْدِهِ لَيْلًا مِّنَ الْمَسْجِدِ الْحَرَامِ إِلَى الْمَسْجِدِ الْأَقْصَى",
+            translation: "Verheerlijkt zij Hij Die Zijn dienaar bij nacht heeft laten reizen van de Heilige Moskee naar de verste Moskee.",
+            source: "Soera Al-Israa 17:1",
+        },
+    },
+    {
+        id: "s-e5", category: "seerah", level: "expert",
+        question: "Onder welke kalief werd de Koran in een standaard mushaf vastgelegd en verspreid naar de grote steden?",
+        options: ["Abu Bakr (r.a.)", "Umar (r.a.)", "Uthman ibn Affan (r.a.)", "Ali (r.a.)"], answer: 2,
+        explanation: "Abu Bakr liet de Koran verzamelen in één geschrift. Uthman (r.a.) liet daarvan standaardkopieën maken en naar de grote steden sturen, om één lezing en schrijfwijze te bewaren. Zo bewaarde Allah Zijn belofte.",
+        arabic: {
+            text: "إِنَّا نَحْنُ نَزَّلْنَا الذِّكْرَ وَإِنَّا لَهُ لَحَافِظُونَ",
+            translation: "Voorwaar, Wij hebben de Vermaning neergezonden en Wij zullen haar zeker beschermen.",
+            source: "Soera Al-Hidjr 15:9",
+        },
+    },
+    {
+        id: "s-e6", category: "seerah", level: "expert",
+        question: "Welke bijnaam gaf de Profeet ﷺ aan Umar ibn al-Khattaab (r.a.), omdat hij waarheid van onwaarheid onderscheidde?",
+        options: ["As-Siddiq", "Al-Faaroeq", "Dhun-Nurayn", "Al-Murtadaa"], answer: 1,
+        explanation: "‘Al-Faaroeq’ betekent ‘degene die onderscheidt’. Umar was de tweede kalief, bekend om zijn rechtvaardigheid. Onder zijn bestuur breidde de moslimgemeenschap zich sterk uit. Abu Bakr was ‘As-Siddiq’ en Uthman ‘Dhun-Nurayn’.",
+    },
+    // ───────────────────── 4. KORAN & KENNIS · JUNIOR ─────────────────────
+    {
+        id: "k-j1", category: "koran", level: "junior",
+        question: "Hoeveel soera’s (hoofdstukken) heeft de Koran?",
+        options: ["30", "99", "114", "200"], answer: 2,
+        explanation: "De Koran heeft 114 soera’s. De eerste is Al-Faatiha en de laatste is An-Naas. Sommige soera’s zijn heel kort, andere zijn erg lang.",
+    },
+    {
+        id: "k-j2", category: "koran", level: "junior",
+        question: "Hoe heet de eerste soera van de Koran, die we in elk gebed lezen?",
+        options: ["Al-Baqarah", "Al-Ikhlaas", "Al-Faatiha", "An-Naas"], answer: 2,
+        explanation: "Al-Faatiha betekent ‘de Opening’ en heeft zeven verzen. Het is een gebed waarin we Allah prijzen en Hem om leiding vragen.",
+        arabic: {
+            text: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ ۝ الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ",
+            translation: "In de naam van Allah, de Barmhartige, de Genadevolle. Alle lof komt Allah toe, de Heer van de werelden.",
+            source: "Soera Al-Faatiha 1:1-2",
+        },
+    },
+    {
+        id: "k-j3", category: "koran", level: "junior",
+        question: "Welke soera begint met deze woorden?",
+        questionArabic: "قُلْ هُوَ اللَّهُ أَحَدٌ",
+        options: ["Soera Al-Falaq", "Soera Al-Ikhlaas", "Soera Al-Kawthar", "Soera Al-Asr"], answer: 1,
+        explanation: "Dit is Soera Al-Ikhlaas. Ze vertelt dat Allah Eén is. Hij heeft geen kinderen en geen ouders, en niemand is aan Hem gelijk.",
+        arabic: {
+            text: "قُلْ هُوَ اللَّهُ أَحَدٌ ۝ اللَّهُ الصَّمَدُ ۝ لَمْ يَلِدْ وَلَمْ يُولَدْ ۝ وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ",
+            translation: "Zeg: Hij is Allah, de Enige. Allah, de Zelfgenoegzame. Hij heeft niet verwekt en is niet verwekt. En niemand is Hem gelijk.",
+            source: "Soera Al-Ikhlaas 112:1-4",
+        },
+    },
+    {
+        id: "k-j4", category: "koran", level: "junior",
+        question: "Wat is de kortste soera van de Koran, met maar drie verzen?",
+        options: ["Soera Al-Kawthar", "Soera Al-Baqarah", "Soera Yaa-Siin", "Soera Al-Mulk"], answer: 0,
+        explanation: "Soera Al-Kawthar heeft maar drie verzen. Allah belooft de Profeet ﷺ daarin ‘Al-Kawthar’: een overvloed aan goedheid, ook een rivier in het Paradijs.",
+        arabic: {
+            text: "إِنَّا أَعْطَيْنَاكَ الْكَوْثَرَ",
+            translation: "Voorwaar, Wij hebben jou Al-Kawthar (overvloed) gegeven.",
+            source: "Soera Al-Kawthar 108:1",
+        },
+    },
+    {
+        id: "k-j5", category: "koran", level: "junior",
+        question: "In welke taal werd de Koran geopenbaard?",
+        options: ["Hebreeuws", "Arabisch", "Latijn", "Perzisch"], answer: 1,
+        explanation: "De Koran werd in het Arabisch geopenbaard. Daarom leren moslims overal ter wereld de Arabische woorden lezen, ook als hun eigen taal een andere is.",
+        arabic: {
+            text: "إِنَّا أَنزَلْنَاهُ قُرْآنًا عَرَبِيًّا لَّعَلَّكُمْ تَعْقِلُونَ",
+            translation: "Voorwaar, Wij hebben hem als een Arabische Koran neergezonden, opdat jullie begrijpen.",
+            source: "Soera Yusuf 12:2",
+        },
+    },
+    {
+        id: "k-j6", category: "koran", level: "junior",
+        question: "Welke engel bracht de Koran van Allah naar de Profeet ﷺ?",
+        options: ["Mikaa’iel", "Israafiel", "Jibriel", "Maalik"], answer: 2,
+        explanation: "Jibriel (a.s.), de engel van de openbaring, bracht de Koran in stukjes naar de Profeet ﷺ. Dat duurde ongeveer 23 jaar.",
+        arabic: {
+            text: "نَزَلَ بِهِ الرُّوحُ الْأَمِينُ ۝ عَلَىٰ قَلْبِكَ",
+            translation: "De Betrouwbare Geest (Jibriel) heeft hem neergebracht op jouw hart.",
+            source: "Soera Ash-Shu’araa 26:193-194",
+        },
+    },
+    // ───────────────────── 4. KORAN & KENNIS · EXPERT ─────────────────────
+    {
+        id: "k-e1", category: "koran", level: "expert",
+        question: "Wat is de langste soera van de Koran?",
+        options: ["Soera Aal ‘Imraan", "Soera Al-Baqarah", "Soera An-Nisaa", "Soera Al-A’raaf"], answer: 1,
+        explanation: "Soera Al-Baqarah heeft 286 verzen en is de langste soera. Ze bevat veel wetten en lessen, zoals Ayat al-Kursi (vers 255) en de laatste twee verzen.",
+        arabic: {
+            text: "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ",
+            translation: "Allah, er is geen god dan Hij, de Levende, de Zelfstandig Bestaande. Sluimer overmant Hem niet, noch slaap.",
+            source: "Soera Al-Baqarah 2:255 (Ayat al-Kursi)",
+        },
+    },
+    {
+        id: "k-e2", category: "koran", level: "expert",
+        question: "Welke soera heeft als refrein dat 31 keer herhaald wordt, in de vraag ‘Welke van de gunsten van jullie Heer ontkennen jullie dan?’",
+        options: ["Soera Ar-Rahmaan", "Soera Al-Waaqi’a", "Soera Al-Mulk", "Soera Ya-Siin"], answer: 0,
+        explanation: "In Soera Ar-Rahmaan roept het refrein op tot dankbaarheid voor Allah’s gunsten, gericht aan mensen en djinn.",
+        arabic: {
+            text: "فَبِأَيِّ آلَاءِ رَبِّكُمَا تُكَذِّبَانِ",
+            translation: "Welke van de gunsten van jullie Heer ontkennen jullie dan?",
+            source: "Soera Ar-Rahmaan 55 (o.a. vers 13)",
+        },
+    },
+    {
+        id: "k-e3", category: "koran", level: "expert",
+        question: "Welke soera is de enige die NIET begint met de ‘Bismillah’?",
+        options: ["Soera Al-Anfaal", "Soera At-Tawbah", "Soera Yunus", "Soera Al-Ahzaab"], answer: 1,
+        explanation: "Soera At-Tawbah (9) begint zonder Bismillah. Wel komt de Bismillah in Soera An-Naml (27:30) als onderdeel van een vers voor, zodat het totaal van 114 Bismillah’s in de Koran toch klopt.",
+        arabic: {
+            text: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+            translation: "In de naam van Allah, de Barmhartige, de Genadevolle.",
+            source: "Soera An-Naml 27:30",
+        },
+    },
+    {
+        id: "k-e4", category: "koran", level: "expert",
+        question: "Over welke periode werd de Koran geleidelijk geopenbaard?",
+        options: ["Ongeveer 10 jaar", "Ongeveer 23 jaar", "Ongeveer 40 jaar", "Eén enkele nacht, zonder verdere openbaring"], answer: 1,
+        explanation: "De openbaring begon toen de Profeet ﷺ 40 was en duurde ongeveer 23 jaar: ongeveer 13 jaar in Mekka en 10 jaar in Medina. Zo kon de Profeet ﷺ en zijn gemeenschap stap voor stap onderwezen worden.",
+        arabic: {
+            text: "وَقُرْآنًا فَرَقْنَاهُ لِتَقْرَأَهُ عَلَى النَّاسِ عَلَىٰ مُكْثٍ وَنَزَّلْنَاهُ تَنزِيلًا",
+            translation: "En een Koran die Wij in delen verdeeld hebben, opdat jij hem op je gemak aan de mensen voorleest. En Wij hebben hem stuk voor stuk neergezonden.",
+            source: "Soera Al-Israa 17:106",
+        },
+    },
+    {
+        id: "k-e5", category: "koran", level: "expert",
+        question: "Wat betekent het woord waarmee deze soera begint, en hoe heet ze?",
+        questionArabic: "وَالْعَصْرِ ۝ إِنَّ الْإِنسَانَ لَفِي خُسْرٍ",
+        options: [
+            "Bij de dageraad – Soera Al-Fajr",
+            "Bij de tijd – Soera Al-‘Asr",
+            "Bij de nacht – Soera Al-Layl",
+            "Bij de ochtend – Soera Ad-Duhaa",
+        ], answer: 1,
+        explanation: "Soera Al-‘Asr zweert bij ‘de tijd’ (of het middagtijdperk) en zegt dat de mens in verlies verkeert, behalve wie gelooft, goede daden verricht en elkaar vermaant tot waarheid en geduld. Imam Ash-Shafi’i zei: als dit de enige soera was geweest, was het genoeg.",
+        arabic: {
+            text: "إِلَّا الَّذِينَ آمَنُوا وَعَمِلُوا الصَّالِحَاتِ وَتَوَاصَوْا بِالْحَقِّ وَتَوَاصَوْا بِالصَّبْرِ",
+            translation: "Behalve zij die geloven, goede daden verrichten en elkaar tot de waarheid aansporen en elkaar tot geduld aansporen.",
+            source: "Soera Al-‘Asr 103:3",
+        },
+    },
+    {
+        id: "k-e6", category: "koran", level: "expert",
+        question: "Hoeveel juz’ (delen) is de Koran verdeeld in, ter ondersteuning van de lezer?",
+        options: ["20", "30", "40", "60"], answer: 1,
+        explanation: "De Koran wordt verdeeld in 30 juz’, zodat men hem in een maand kan uitlezen, bijvoorbeeld in Ramadan. De 30e juz’ heet ‘Juz’ ‘Amma’ en bevat veel korte soera’s.",
+        arabic: {
+            text: "خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ",
+            translation: "De besten onder jullie zijn degenen die de Koran leren en hem onderwijzen.",
+            source: "Hadith – Bukhari",
+        },
+    },
+    // ───────────────────── 5. AKHLAAQ & DU’A · JUNIOR ─────────────────────
+    {
+        id: "a-j1", category: "akhlaaq", level: "junior",
+        question: "Wat zeggen we voordat we gaan eten?",
+        options: ["Bismillah", "Alhamdulillah", "Astaghfirullah", "Subhanallah"], answer: 0,
+        explanation: "Voor het eten zeggen we ‘Bismillah’: in de naam van Allah. Zo vragen we zegen over ons eten. Vergeten we het? Dan zeggen we: ‘Bismillahi awwalahu wa aakhirahu’.",
+        arabic: {
+            text: "بِسْمِ اللَّهِ",
+            translation: "In de naam van Allah.",
+            source: "Hadith – Abu Dawud & Tirmidhi",
+        },
+    },
+    {
+        id: "a-j2", category: "akhlaaq", level: "junior",
+        question: "Wat zeggen we nadat we klaar zijn met eten?",
+        options: ["Bismillah", "Insha’Allah", "Alhamdulillah (de dankzegging)", "La ilaha illallah"], answer: 2,
+        explanation: "Na het eten bedanken we Allah dat Hij ons te eten en te drinken gaf. Dankbaarheid is een prachtige eigenschap en maakt je blij.",
+        arabic: {
+            text: "الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنَا وَسَقَانَا وَجَعَلَنَا مُسْلِمِينَ",
+            translation: "Alle lof is voor Allah, Die ons te eten en te drinken heeft gegeven en ons moslims heeft gemaakt.",
+            source: "Hadith – Abu Dawud",
+        },
+    },
+    {
+        id: "a-j3", category: "akhlaaq", level: "junior",
+        question: "Welke groet zeggen moslims tegen elkaar, en wat is het antwoord?",
+        options: [
+            "Hallo – Hallo",
+            "As-salaamu ‘alaykum – Wa ‘alaykum as-salaam",
+            "Goedemorgen – Goedemorgen",
+            "Bismillah – Alhamdulillah",
+        ], answer: 1,
+        explanation: "‘As-salaamu ‘alaykum’ betekent: vrede zij met jou. Het antwoord is ‘Wa ‘alaykum as-salaam’. Je mag er meer aan toevoegen voor extra beloning: wa rahmatullahi wa barakaatuh.",
+        arabic: {
+            text: "السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ",
+            translation: "Vrede zij met jullie, en Allah’s barmhartigheid en Zijn zegeningen.",
+            source: "Hadith – Abu Dawud & Tirmidhi",
+        },
+    },
+    {
+        id: "a-j4", category: "akhlaaq", level: "junior",
+        question: "Wat zeg je als je niest?",
+        options: ["Alhamdulillah", "Bismillah", "Allahu Akbar", "Masha’Allah"], answer: 0,
+        explanation: "Als je niest zeg je ‘Alhamdulillah’. Wie het hoort, zegt ‘Yarhamukallah’ (Allah zij je barmhartig). En jij antwoordt: ‘Yahdiekumullah wa yuslihu baalakum’.",
+        arabic: {
+            text: "الْحَمْدُ لِلَّهِ\nيَرْحَمُكَ اللَّهُ\nيَهْدِيكُمُ اللَّهُ وَيُصْلِحُ بَالَكُمْ",
+            translation: "Jij: Alle lof is voor Allah.\nDe ander: Allah zij je barmhartig.\nJij: Allah leide jullie en verbetere jullie toestand.",
+            source: "Hadith – Bukhari & Abu Dawud",
+        },
+    },
+    {
+        id: "a-j5", category: "akhlaaq", level: "junior",
+        question: "Hoe moeten we met onze ouders omgaan?",
+        options: [
+            "Boos kijken als ze iets vragen",
+            "Vriendelijk en respectvol, en nooit ‘foei’ tegen hen zeggen",
+            "Alleen luisteren als we zin hebben",
+            "Hen negeren",
+        ], answer: 1,
+        explanation: "Allah beveelt ons goed te zijn voor onze ouders. We praten vriendelijk, helpen thuis, en bidden voor hen. Dit is een van de liefste daden voor Allah.",
+        arabic: {
+            text: "فَلَا تَقُل لَّهُمَا أُفٍّ وَلَا تَنْهَرْهُمَا وَقُل لَّهُمَا قَوْلًا كَرِيمًا",
+            translation: "Zeg dus geen ‘foei’ tegen hen, en wijs hen niet af, maar spreek tot hen met respectvolle woorden.",
+            source: "Soera Al-Israa 17:23",
+        },
+    },
+    {
+        id: "a-j6", category: "akhlaaq", level: "junior",
+        question: "Wat zei de Profeet ﷺ over een glimlach naar je broer of zus?",
+        options: ["Het is verboden", "Het is een sadaqa (goede daad)", "Het is niet belangrijk", "Het mag alleen op vrijdag"], answer: 1,
+        explanation: "Een vriendelijke glimlach maakt iemand blij en is bij Allah een goede daad. Het kost niets, maar het is veel waard!",
+        arabic: {
+            text: "تَبَسُّمُكَ فِي وَجْهِ أَخِيكَ لَكَ صَدَقَةٌ",
+            translation: "Je glimlach naar het gezicht van je broeder is voor jou een sadaqa.",
+            source: "Hadith – Tirmidhi",
+        },
+    },
+    // ───────────────────── 5. AKHLAAQ & DU’A · EXPERT ─────────────────────
+    {
+        id: "a-e1", category: "akhlaaq", level: "expert",
+        question: "Welke bekende Hadith benadrukt het belang van de intentie (niyya) bij onze daden?",
+        options: [
+            "‘De daden zijn slechts door de intenties.’",
+            "‘Reinheid is de helft van het geloof.’",
+            "‘Het geloof is dat men zegt: Allah is mijn Heer.’",
+            "‘Wie zwijgt, is gered.’",
+        ], answer: 0,
+        explanation: "Dit is de eerste Hadith van Imam An-Nawawi’s ‘Veertig Hadith’. Dezelfde handeling, zoals werken of eten, kan aanbidding worden door de juiste bedoeling: Allah’s welbehagen.",
+        arabic: {
+            text: "إِنَّمَا الْأَعْمَالُ بِالنِّيَّاتِ وَإِنَّمَا لِكُلِّ امْرِئٍ مَا نَوَىٰ",
+            translation: "De daden zijn slechts naar de intenties, en ieder mens krijgt slechts wat hij beoogd heeft.",
+            source: "Hadith – Bukhari & Moslim",
+        },
+    },
+    {
+        id: "a-e2", category: "akhlaaq", level: "expert",
+        question: "Hoe vergelijkt de Koran het roddelen (ghiebah) over een ander?",
+        options: [
+            "Met het stelen van geld",
+            "Met het eten van het vlees van je dode broeder",
+            "Met een kleine, onbelangrijke fout",
+            "Met het breken van een belofte",
+        ], answer: 1,
+        explanation: "Allah geeft een weerzinwekkend beeld om ons ervan te weerhouden: roddelen is als het vlees van je overleden broeder eten. Een gelovige beschermt de eer van zijn medemens, ook als die er niet bij is.",
+        arabic: {
+            text: "وَلَا يَغْتَب بَّعْضُكُم بَعْضًا ۚ أَيُحِبُّ أَحَدُكُمْ أَن يَأْكُلَ لَحْمَ أَخِيهِ مَيْتًا فَكَرِهْتُمُوهُ",
+            translation: "En roddel niet over elkaar. Zou iemand van jullie graag het vlees van zijn dode broeder eten? Dat zou jullie weerzinwekkend vinden.",
+            source: "Soera Al-Hujuraat 49:12",
+        },
+    },
+    {
+        id: "a-e3", category: "akhlaaq", level: "expert",
+        question: "Welke smeekbede spreekt de Profeet ﷺ uit voordat hij gaat slapen?",
+        options: [
+            "‘Bismika Allahumma amoetu wa ahyaa’",
+            "‘Rabbi zidni ‘ilma’",
+            "‘Hasbunallahu wa ni’mal wakiel’",
+            "‘Allahumma inni as’aluka al-jannah’",
+        ], answer: 0,
+        explanation: "Voor het slapen spreken we deze du’a uit. Slaap wordt de ‘kleine dood’ genoemd, en bij het ontwaken bedanken we Allah dat Hij ons weer het leven teruggaf met: ‘Alhamdulillahi alladhi ahyaanaa ba’da maa amaatanaa wa ilayhin-nushoer’.",
+        arabic: {
+            text: "بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا",
+            translation: "In Uw naam, o Allah, sterf ik en leef ik.",
+            source: "Hadith – Bukhari",
+        },
+    },
+    {
+        id: "a-e4", category: "akhlaaq", level: "expert",
+        question: "Welke bekende Hadith beschrijft het hoogste niveau van broederschap en liefde onder gelovigen?",
+        options: [
+            "‘Niemand van jullie gelooft werkelijk totdat hij voor zijn broeder liefheeft wat hij voor zichzelf liefheeft.’",
+            "‘Wie de meeste bezittingen heeft, is het gelukkigst.’",
+            "‘Ieder voor zich.’",
+            "‘Vergelding is beter dan vergeving.’",
+        ], answer: 0,
+        explanation: "Echt geloof laat zich zien in zorg voor anderen. Wat je voor jezelf wenst aan goeds, wens je ook anderen. Zo ontstaan jaloezie en egoïsme niet.",
+        arabic: {
+            text: "لَا يُؤْمِنُ أَحَدُكُمْ حَتَّىٰ يُحِبَّ لِأَخِيهِ مَا يُحِبُّ لِنَفْسِهِ",
+            translation: "Niemand van jullie gelooft, totdat hij voor zijn broeder liefheeft wat hij voor zichzelf liefheeft.",
+            source: "Hadith – Bukhari & Moslim",
+        },
+    },
+    {
+        id: "a-e5", category: "akhlaaq", level: "expert",
+        question: "Welke belofte doet Allah in Soera Ash-Sharh voor wie het moeilijk heeft?",
+        options: [
+            "Dat moeilijkheden altijd blijven",
+            "Dat er met de moeilijkheid ook verlichting is",
+            "Dat moeilijkheden een straf zijn",
+            "Dat geduld nutteloos is",
+        ], answer: 1,
+        explanation: "Allah herhaalt de belofte twee keer: bij elke moeilijkheid is er verlichting. Een gelovige blijft geduldig (sabr) en hoopvol, wetend dat Allah met de geduldigen is.",
+        arabic: {
+            text: "فَإِنَّ مَعَ الْعُسْرِ يُسْرًا ۝ إِنَّ مَعَ الْعُسْرِ يُسْرًا",
+            translation: "Voorwaar, met de moeilijkheid is er verlichting. Voorwaar, met de moeilijkheid is er verlichting.",
+            source: "Soera Ash-Sharh 94:5-6",
+        },
+    },
+    {
+        id: "a-e6", category: "akhlaaq", level: "expert",
+        question: "Welke du’a zegt de moslim bij het verlaten van zijn huis?",
+        options: [
+            "‘Bismillah, tawakkaltu ‘alallah, wa laa hawla wa laa quwwata illa billah’",
+            "‘Rabbana atina fid-dunya hasana’",
+            "‘Allahumma barik lana fima razaqtana’",
+            "‘Subhanakallahumma wa bihamdika’",
+        ], answer: 0,
+        explanation: "Met deze du’a leggen we ons vertrouwen in Allah en vragen we bescherming. Volgens de overlevering wordt wie dit zegt geleid, beschermd en voorzien, en wijkt de duivel van hem af.",
+        arabic: {
+            text: "بِسْمِ اللَّهِ تَوَكَّلْتُ عَلَى اللَّهِ وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ",
+            translation: "In de naam van Allah, ik vertrouw op Allah; er is geen kracht en geen macht behalve bij Allah.",
+            source: "Hadith – Abu Dawud & Tirmidhi",
+        },
+    },
+    {
+        id: "a-e7", category: "akhlaaq", level: "expert", tier: 2,
+        question: "Je bent vergeten om aan het begin van de maaltijd ‘Bismillah’ te zeggen. Wat zeg je zodra je het je herinnert?",
+        options: [
+            "‘Alhamdulillahilladhi at‘amana wa saqana’",
+            "‘Bismillahi awwalahu wa akhirahu’",
+            "‘Astaghfirullah’",
+            "‘Allahu akbar’",
+        ], answer: 1,
+        explanation: "De Profeet ﷺ leerde dat wie vergeet Allah’s naam te noemen aan het begin van het eten, dit mag zeggen zodra hij het zich herinnert. Optie A zeg je juist ná de maaltijd.",
+        arabic: {
+            text: "بِسْمِ اللَّهِ أَوَّلَهُ وَآخِرَهُ",
+            translation: "In de naam van Allah, aan het begin en aan het einde ervan.",
+            source: "Hadith – Abu Dawud & Tirmidhi",
+        },
+    },
+    {
+        id: "a-e8", category: "akhlaaq", level: "expert", tier: 2,
+        question: "Welke du’a spreekt de moslim uit bij het binnengaan van de moskee?",
+        options: [
+            "‘Allahumma inni as’aluka min fadlika’",
+            "‘Allahumma iftah li abwaba rahmatika’",
+            "‘Rabbi zidni ‘ilma’",
+            "‘Hasbunallahu wa ni‘mal wakil’",
+        ], answer: 1,
+        explanation: "Bij het binnengaan vragen we Allah om de deuren van Zijn barmhartigheid te openen. Bij het verlaten zeggen we de du’a uit optie A: we vragen dan om Zijn gunst (fadl), om daarbuiten voorzien te worden.",
+        arabic: {
+            text: "اللَّهُمَّ افْتَحْ لِي أَبْوَابَ رَحْمَتِكَ",
+            translation: "O Allah, open voor mij de deuren van Uw barmhartigheid.",
+            source: "Hadith – Moslim",
+        },
+    },
+    {
+        id: "a-e9", category: "akhlaaq", level: "expert", tier: 2,
+        question: "Wat is ghiebah (kwaadspreken) volgens de Profeet ﷺ?",
+        options: [
+            "Je broer noemen met iets wat hij onaangenaam vindt, ook als het waar is",
+            "Alleen leugens over iemand verspreiden",
+            "Iemand in zijn gezicht uitschelden",
+            "Een toevertrouwd geheim bewaren",
+        ], answer: 0,
+        explanation: "Op de vraag ‘En als het waar is wat ik zeg?’ antwoordde de Profeet ﷺ: dan heb je ghiebah gepleegd. Is het niet waar, dan is het buhtan (laster), en dat is nog erger. Een geheim bewaren heet amanah en is juist lovenswaardig.",
+        arabic: {
+            text: "ذِكْرُكَ أَخَاكَ بِمَا يَكْرَهُ",
+            translation: "Dat je je broer noemt met iets wat hij onaangenaam vindt.",
+            source: "Hadith – Moslim",
+        },
+    },
+    {
+        id: "a-e10", category: "akhlaaq", level: "expert", tier: 3,
+        question: "Geleerden onderscheiden in de Koran drie stadia van de nafs. Welke term hoort bij de ziel waarbij Allah zweert en die zichzelf verwijt na het kwade?",
+        options: [
+            "An-nafs al-ammarah",
+            "An-nafs al-mutma’innah",
+            "An-nafs al-mulhamah",
+            "An-nafs al-lawwamah",
+        ], answer: 3,
+        explanation: "De drie koranische stadia zijn ammarah (aanzettend tot het kwade, 12:53), lawwamah (zelfverwijtend, 75:2) en mutma’innah (tot rust gekomen, 89:27). De term mulhamah komt uit latere geschriften en staat niet als zodanig in de Koran.",
+        arabic: {
+            text: "وَلَا أُقْسِمُ بِالنَّفْسِ اللَّوَّامَةِ",
+            translation: "En Ik zweer bij de zelfverwijtende ziel.",
+            source: "Soera Al-Qiyamah 75:2",
+        },
+    },
+    {
+        id: "a-e11", category: "akhlaaq", level: "expert", tier: 3,
+        question: "In de Sayyid al-istighfar staat: ‘abu’u laka bi-ni‘matika ‘alayya wa abu’u bi-dhanbi’. Wat betekent dit?",
+        options: [
+            "Ik erken Uw gunst aan mij en ik erken mijn zonde",
+            "Ik vraag U in het geheim om vergeving",
+            "Ik getuig dat U mij hebt geschapen",
+            "Ik zoek toevlucht bij U tegen het kwaad van wat ik deed",
+        ], answer: 0,
+        explanation: "Abu’u betekent ‘ik erken en ik neem op mij’. De dienaar erkent twee dingen: Allah’s gunst en zijn eigen tekortkoming. De andere opties zijn andere zinnen uit dezelfde du’a (khalaqtani en a‘udhu bika). Wie deze du’a ’s ochtends met overtuiging zegt en die dag sterft, is een bewoner van het Paradijs.",
+        arabic: {
+            text: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ لَكَ بِذَنْبِي فَاغْفِرْ لِي، فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ",
+            translation: "O Allah, U bent mijn Heer, er is geen god dan U. U hebt mij geschapen en ik ben Uw dienaar. Ik houd mij aan mijn verbond met U en Uw belofte, zoveel ik kan. Ik zoek toevlucht bij U tegen het kwaad van wat ik gedaan heb. Ik erken Uw gunst aan mij en ik erken mijn zonde. Vergeef mij dus, want niemand vergeeft de zonden behalve U.",
+            source: "Hadith – Bukhari",
+        },
+    },
+    {
+        id: "a-e12", category: "akhlaaq", level: "expert", tier: 3,
+        question: "Hoe definieert de Profeet ﷺ in het hadith van An-Nawwas ibn Sam‘an het begrip birr (rechtschapenheid)?",
+        options: [
+            "Veel vrijwillig vasten",
+            "Het bezit van veel kennis",
+            "Goed karakter (husn al-khuluq)",
+            "Een teruggetrokken leven zonder omgang met mensen",
+        ], answer: 2,
+        explanation: "De Profeet ﷺ koppelt rechtschapenheid aan karakter, niet aan een aparte daad van aanbidding. Zonde (ithm) is wat onrust in je ziel wekt en waarvan je niet wilt dat mensen het weten. Geleerden gebruiken dit hadith om het geweten (fitrah) als kompas te bespreken.",
+        arabic: {
+            text: "الْبِرُّ حُسْنُ الْخُلُقِ، وَالْإِثْمُ مَا حَاكَ فِي نَفْسِكَ وَكَرِهْتَ أَنْ يَطَّلِعَ عَلَيْهِ النَّاسُ",
+            translation: "Rechtschapenheid is goed karakter; zonde is wat onrust in je ziel wekt en waarvan je afkeert dat mensen het te weten komen.",
+            source: "Hadith – Moslim",
+        },
+    },
+    {
+        id: "p-e7", category: "profeten", level: "expert", tier: 2,
+        question: "Welke eretitel kreeg Ibrahim (a.s.) van Allah?",
+        options: [
+            "Kalimullah (hij die met Allah sprak)",
+            "Khalilullah (de vriend van Allah)",
+            "Ruhullah (de Geest van Allah)",
+            "Safiyyullah (de uitverkorene van Allah)",
+        ], answer: 1,
+        explanation: "Allah noemt Ibrahim (a.s.) in de Koran Zijn ‘khalil’, Zijn nauwe vriend, vanwege zijn volledige overgave en gehoorzaamheid. ‘Kalimullah’ is de titel van Musa (a.s.).",
+        arabic: {
+            text: "وَاتَّخَذَ اللَّهُ إِبْرَاهِيمَ خَلِيلًا",
+            translation: "En Allah nam Ibrahim tot vriend.",
+            source: "Soera An-Nisa 4:125",
+        },
+    },
+    {
+        id: "p-e8", category: "profeten", level: "expert", tier: 2,
+        question: "Welk heilig boek werd aan Dawud (a.s.) geschonken?",
+        options: [
+            "De Tawraat",
+            "De Indjiel",
+            "De Soehoef",
+            "De Zaboer",
+        ], answer: 3,
+        explanation: "Aan Dawud (a.s.) werd de Zaboer (Psalmen) gegeven. De Tawraat werd aan Musa (a.s.) geopenbaard en de Indjiel aan Isa (a.s.).",
+        arabic: {
+            text: "وَآتَيْنَا دَاوُودَ زَبُورًا",
+            translation: "En aan Dawud gaven Wij de Zaboer.",
+            source: "Soera An-Nisa 4:163",
+        },
+    },
+    {
+        id: "p-e9", category: "profeten", level: "expert", tier: 2,
+        question: "Hoe lang bleef Nuh (a.s.) volgens de Koran onder zijn volk om hen tot Allah op te roepen?",
+        options: [
+            "40 jaar",
+            "120 jaar",
+            "950 jaar",
+            "300 jaar",
+        ], answer: 2,
+        explanation: "De Koran vermeldt dat Nuh (a.s.) duizend jaar min vijftig jaar onder zijn volk verbleef. Ondanks die lange tijd geloofden slechts weinigen. Hij is een voorbeeld van volharding in de da‘wah.",
+        arabic: {
+            text: "فَلَبِثَ فِيهِمْ أَلْفَ سَنَةٍ إِلَّا خَمْسِينَ عَامًا",
+            translation: "En hij bleef onder hen duizend jaar min vijftig jaar.",
+            source: "Soera Al-‘Ankabuut 29:14",
+        },
+    },
+    {
+        id: "p-e10", category: "profeten", level: "expert", tier: 3,
+        question: "Welke profeet wordt in de Koran het vaakst bij naam genoemd?",
+        options: [
+            "Ibrahim (a.s.)",
+            "Nuh (a.s.)",
+            "Isa (a.s.)",
+            "Musa (a.s.)",
+        ], answer: 3,
+        explanation: "De naam van Musa (a.s.) komt in de Koran ruim 130 keer voor, vaker dan die van enige andere profeet. Zijn verhaal met Fir‘awn en de Israëlieten wordt in veel soera’s vanuit verschillende kanten belicht.",
+    },
+    {
+        id: "p-e11", category: "profeten", level: "expert", tier: 3,
+        question: "Welke woorden sprak Yunus (a.s.) in de buik van de vis uit, zoals vermeld in Soera Al-Anbiya?",
+        options: [
+            "‘Er is geen god dan U, glorie aan U, voorwaar ik behoorde tot de onrechtplegers’",
+            "‘Mijn Heer, vergroot mijn kennis’",
+            "‘Allah is ons genoeg en een uitstekende Beschermer’",
+            "‘Mijn Heer, ik zoek toevlucht bij U tegen de influisteringen van de duivels’",
+        ], answer: 0,
+        explanation: "Dit is de du’a van Yunus (a.s.) in de drievoudige duisternis: de nacht, de zee en de buik van de vis. De Profeet ﷺ zei dat elke moslim die hiermee tot Allah smeekt, door Hem wordt verhoord.",
+        arabic: {
+            text: "لَا إِلَٰهَ إِلَّا أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ",
+            translation: "Er is geen god dan U, glorie aan U, voorwaar ik behoorde tot de onrechtplegers.",
+            source: "Soera Al-Anbiya 21:87",
+        },
+    },
+    {
+        id: "p-e12", category: "profeten", level: "expert", tier: 3,
+        question: "Hoe heet de koningin van Saba in de Koran, die door Sulayman (a.s.) tot de tawhid werd geroepen?",
+        options: [
+            "Bilqis",
+            "Zulaykha",
+            "Hajar",
+            "Haar naam wordt in de Koran niet genoemd",
+        ], answer: 3,
+        explanation: "De Koran noemt haar niet bij naam. De naam Bilqis komt uit latere overleveringen. Haar verhaal staat in Soera An-Naml. Zij kwam tot geloof nadat zij het koninkrijk en de macht van Sulayman (a.s.) had gezien.",
+        arabic: {
+            text: "إِنِّي وَجَدْتُ امْرَأَةً تَمْلِكُهُمْ وَأُوتِيَتْ مِنْ كُلِّ شَيْءٍ",
+            translation: "Ik trof een vrouw aan die over hen heerst, haar is van alles gegeven.",
+            source: "Soera An-Naml 27:23",
+        },
+    },
+    {
+        id: "z-e7", category: "zuilen", level: "expert", tier: 2,
+        question: "In welke gebeden reciteert de imam de Koran in de eerste twee rak‘ahs hardop?",
+        options: [
+            "Dhuhr en ‘Asr",
+            "Fajr, Maghrib en ‘Isha",
+            "Alleen Fajr",
+            "Alle vijf de gebeden",
+        ], answer: 1,
+        explanation: "In Fajr, Maghrib en ‘Isha wordt in de eerste twee rak‘ahs hardop gereciteerd. In Dhuhr en ‘Asr gebeurt dat zacht. Bij Maghrib en ‘Isha is de rest van het gebed stil.",
+    },
+    {
+        id: "z-e8", category: "zuilen", level: "expert", tier: 2,
+        question: "Welk onderdeel van de Hadj noemde de Profeet ﷺ als het belangrijkste?",
+        options: [
+            "Het verblijf op ‘Arafah",
+            "De tawaaf rond de Ka‘bah",
+            "Het stenigen van de pilaren",
+            "Het drinken van Zamzam",
+        ], answer: 0,
+        explanation: "De Profeet ﷺ zei: ‘De Hadj is ‘Arafah’. Wie het verblijf (wuquf) op ‘Arafah op de 9e van Dhul-Hijjah mist, heeft zijn Hadj gemist.",
+        arabic: {
+            text: "الْحَجُّ عَرَفَةُ",
+            translation: "De Hadj is ‘Arafah.",
+            source: "Hadith – Abu Dawud & Tirmidhi",
+        },
+    },
+    {
+        id: "z-e9", category: "zuilen", level: "expert", tier: 2,
+        question: "Wat betekent Tawhid ar-Rububiyyah?",
+        options: [
+            "Alleen Allah aanbidden",
+            "Geloof in Allah’s namen en eigenschappen",
+            "Geloof dat Allah de enige Heer, Schepper en Onderhouder is",
+            "Geloof in alle profeten",
+        ], answer: 2,
+        explanation: "Tawhid ar-Rububiyyah is de eenheid van Allah in Zijn heerschappij: Hij alleen schept, onderhoudt en bestuurt. De andere twee delen zijn Tawhid al-Uluhiyyah (alleen Hem aanbidden) en Tawhid al-Asma’ was-Sifat (Zijn namen en eigenschappen).",
+        arabic: {
+            text: "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ",
+            translation: "Alle lof is voor Allah, de Heer der werelden.",
+            source: "Soera Al-Fatiha 1:2",
+        },
+    },
+    {
+        id: "z-e10", category: "zuilen", level: "expert", tier: 3,
+        question: "Welke vorm van shirk noemde de Profeet ﷺ de ‘kleine shirk’, waarvoor hij zijn volgelingen het meest vreesde?",
+        options: [
+            "Het uitspreken van een vloek",
+            "Het uitstellen van het gebed",
+            "Riya (vertoon: goede daden doen om door mensen gezien te worden)",
+            "Het niet uitgeven van aalmoezen",
+        ], answer: 2,
+        explanation: "Riya is het verrichten van aanbidding om door mensen geprezen te worden in plaats van voor Allah alleen. Het is ‘klein’ in omvang van de zonde, maar het kan goede daden ongeldig maken. Ikhlas (oprechtheid) is het tegenovergestelde.",
+        arabic: {
+            text: "إِنَّ أَخْوَفَ مَا أَخَافُ عَلَيْكُمُ الشِّرْكُ الْأَصْغَرُ",
+            translation: "Het meest vrees ik voor jullie de kleine shirk. (Gevraagd wat dat is, zei hij: riya, vertoon.)",
+            source: "Hadith – Ahmad",
+        },
+    },
+    {
+        id: "z-e11", category: "zuilen", level: "expert", tier: 3,
+        question: "Hoeveel categorieën ontvangers van zakaat noemt de Koran in Soera At-Tawbah?",
+        options: [
+            "5",
+            "7",
+            "10",
+            "8",
+        ], answer: 3,
+        explanation: "Het zijn er acht: de armen, de behoeftigen, de zakaatbeheerders, zij wier harten gewonnen moeten worden, het vrijkopen van slaven, de schuldenaren, de zaak van Allah en de reiziger. Vers 9:60 beschrijft dit als een plicht van Allah.",
+        arabic: {
+            text: "إِنَّمَا الصَّدَقَاتُ لِلْفُقَرَاءِ وَالْمَسَاكِينِ وَالْعَامِلِينَ عَلَيْهَا وَالْمُؤَلَّفَةِ قُلُوبُهُمْ وَفِي الرِّقَابِ وَالْغَارِمِينَ وَفِي سَبِيلِ اللَّهِ وَابْنِ السَّبِيلِ",
+            translation: "De aalmoezen zijn voor de armen, de behoeftigen, de beheerders ervan, hen wier harten gewonnen moeten worden, het vrijkopen van slaven, de schuldenaren, de zaak van Allah en de reiziger.",
+            source: "Soera At-Tawbah 9:60",
+        },
+    },
+    {
+        id: "z-e12", category: "zuilen", level: "expert", tier: 3,
+        question: "Welke vier niveaus onderscheiden geleerden in het geloof in Al-Qadar (Allah’s voorbeschikking)?",
+        options: [
+            "Gebed, vasten, zakaat en hadj",
+            "Kennis, daad, intentie en beloning",
+            "Wil, wet, straf en beloning",
+            "Kennis (‘ilm), opschrijving (kitabah), wil (mashi’ah) en schepping (khalq)",
+        ], answer: 3,
+        explanation: "Het geloof in Al-Qadar omvat: Allah’s kennis van alles, het opschrijven daarvan in de Beschermde Tafel, Zijn wil waarmee alles gebeurt, en Zijn schepping van alles. Dit sluit niet uit dat de mens verantwoordelijk is voor zijn keuzes.",
+        arabic: {
+            text: "إِنَّا كُلَّ شَيْءٍ خَلَقْنَاهُ بِقَدَرٍ",
+            translation: "Voorwaar, Wij hebben alles naar een (vastgestelde) maat geschapen.",
+            source: "Soera Al-Qamar 54:49",
+        },
+    },
+    {
+        id: "s-e7", category: "seerah", level: "expert", tier: 2,
+        question: "In welke grot schuilden de Profeet ﷺ en Abu Bakr (r.a.) drie nachten tijdens de Hijra?",
+        options: [
+            "De grot Hira",
+            "De grot Thawr",
+            "De grot Uhud",
+            "De grot van Kahf",
+        ], answer: 1,
+        explanation: "Op weg naar Medina verborgen zij zich drie nachten in de grot Thawr, ten zuiden van Mekka, terwijl de Quraysh hen zochten. De Profeet ﷺ stelde Abu Bakr gerust met deze woorden.",
+        arabic: {
+            text: "لَا تَحْزَنْ إِنَّ اللَّهَ مَعَنَا",
+            translation: "Wees niet bedroefd, Allah is met ons.",
+            source: "Soera At-Tawbah 9:40",
+        },
+    },
+    {
+        id: "s-e8", category: "seerah", level: "expert", tier: 2,
+        question: "Welke moskee werd als eerste gebouwd na de aankomst van de Profeet ﷺ nabij Medina?",
+        options: [
+            "Masjid Quba",
+            "Masjid an-Nabawi",
+            "Masjid al-Aqsa",
+            "Masjid al-Qiblatayn",
+        ], answer: 0,
+        explanation: "Bij aankomst in Quba bouwde de Profeet ﷺ de eerste moskee van de moslimgemeenschap. Daarna trok hij verder naar Medina, waar de Masjid an-Nabawi werd gebouwd.",
+    },
+    {
+        id: "s-e9", category: "seerah", level: "expert", tier: 2,
+        question: "Welke twee dierbare personen verloor de Profeet ﷺ kort na elkaar in het ‘Jaar van het Verdriet’ (‘Aam al-Huzn)?",
+        options: [
+            "Zijn oom Hamza en Mus‘ab ibn ‘Umayr",
+            "Zijn moeder Aminah en grootvader ‘Abdul-Muttalib",
+            "Zijn vrouw Khadijah (r.a.) en zijn oom Abu Talib",
+            "Zijn dochters Zaynab en Ruqayyah",
+        ], answer: 2,
+        explanation: "Kort voor de Hijra stierven zijn trouwe vrouw Khadijah (r.a.) en zijn beschermer Abu Talib. Het jaar werd daarom het ‘Jaar van het Verdriet’ genoemd. Kort daarna volgde de reis naar Ta’if en de Isra en Mi‘raaj.",
+    },
+    {
+        id: "s-e10", category: "seerah", level: "expert", tier: 3,
+        question: "Hoe heet het document waarin de Profeet ﷺ de onderlinge rechten en plichten van moslims, joden en andere groepen in Medina vastlegde?",
+        options: [
+            "Het Verdrag van Hudaybiyyah",
+            "Sahifat al-Madinah (het Handvest van Medina)",
+            "De Eed van Ridwan",
+            "De Afscheidspreek",
+        ], answer: 1,
+        explanation: "Het Handvest van Medina regelde samenleven, onderlinge verdediging en vrijheid van godsdienst in de nieuwe stad. Het geldt als een van de vroegste geschreven afspraken voor een samenleving met meerdere gemeenschappen.",
+    },
+    {
+        id: "s-e11", category: "seerah", level: "expert", tier: 3,
+        question: "In welk islamitisch jaar (na de Hijra) hield de Profeet ﷺ zijn Afscheidspreek tijdens zijn enige Hadj?",
+        options: [
+            "8 n.H.",
+            "9 n.H.",
+            "10 n.H.",
+            "11 n.H.",
+        ], answer: 2,
+        explanation: "De Afscheidshadj (Hajjat al-Wada‘) vond plaats in 10 n.H. Op ‘Arafah riep de Profeet ﷺ op tot gelijkheid, eerlijkheid en het vasthouden aan de Koran en de Soennah. Hij overleed in 11 n.H.",
+    },
+    {
+        id: "s-e12", category: "seerah", level: "expert", tier: 3,
+        question: "Welke metgezel noemde de Profeet ﷺ ‘de betrouwbare van deze gemeenschap’ (Amin al-Ummah)?",
+        options: [
+            "Salman al-Farisi (r.a.)",
+            "Zayd ibn Thabit (r.a.)",
+            "Mus‘ab ibn ‘Umayr (r.a.)",
+            "Abu ‘Ubaydah ibn al-Jarrah (r.a.)",
+        ], answer: 3,
+        explanation: "Abu ‘Ubaydah ibn al-Jarrah (r.a.) was een van de tien aan wie het Paradijs werd beloofd. Hij werd bekend om zijn betrouwbaarheid en eerlijkheid en leidde later de moslimlegers in Sham.",
+        arabic: {
+            text: "لِكُلِّ أُمَّةٍ أَمِينٌ، وَأَمِينُنَا أَيَّتُهَا الْأُمَّةُ أَبُو عُبَيْدَةَ بْنُ الْجَرَّاحِ",
+            translation: "Elk volk heeft een betrouwbare; en onze betrouwbare, o gemeenschap, is Abu ‘Ubaydah ibn al-Jarrah.",
+            source: "Hadith – Bukhari & Moslim",
+        },
+    },
+    {
+        id: "k-e7", category: "koran", level: "expert", tier: 2,
+        question: "Uit hoeveel verzen bestaat Soera Al-Fatiha, die ook ‘De zeven herhaalde (verzen)’ wordt genoemd?",
+        options: [
+            "5",
+            "6",
+            "7",
+            "9",
+        ], answer: 2,
+        explanation: "Al-Fatiha bestaat uit zeven verzen en wordt in elk gebed gereciteerd, vandaar de naam ‘As-Sab‘ul-Mathani’: de zeven die herhaald worden. Ze is de opening van de Koran.",
+        arabic: {
+            text: "وَلَقَدْ آتَيْنَاكَ سَبْعًا مِنَ الْمَثَانِي وَالْقُرْآنَ الْعَظِيمَ",
+            translation: "En Wij hebben jou de zeven herhaalde (verzen) en de grootse Koran gegeven.",
+            source: "Soera Al-Hijr 15:87",
+        },
+    },
+    {
+        id: "k-e8", category: "koran", level: "expert", tier: 2,
+        question: "Over welke soera zei de Profeet ﷺ dat zij in waarde gelijk is aan een derde van de Koran?",
+        options: [
+            "Soera Al-Ikhlas",
+            "Soera Al-Fatiha",
+            "Soera Al-Kafiroen",
+            "Soera An-Nas",
+        ], answer: 0,
+        explanation: "Soera Al-Ikhlas gaat geheel over de eenheid van Allah (tawhid), een van de drie hoofdthema’s van de Koran, naast de verhalen en de wetten. Daarom wordt haar belang zo benadrukt.",
+        arabic: {
+            text: "قُلْ هُوَ اللَّهُ أَحَدٌ",
+            translation: "Zeg: Hij is Allah, de Enige.",
+            source: "Soera Al-Ikhlas 112:1",
+        },
+    },
+    {
+        id: "k-e9", category: "koran", level: "expert", tier: 2,
+        question: "Met welk woord begon de eerste openbaring die de Profeet ﷺ in de grot Hira ontving?",
+        options: [
+            "‘Ya ayyuhal-muddaththir’ (O jij die bedekt bent)",
+            "‘Iqra’’ (Lees!)",
+            "‘Ya ayyuhal-muzzammil’ (O jij die omhuld bent)",
+            "‘Alhamdulillahi rabbil-‘alamin’",
+        ], answer: 1,
+        explanation: "De eerste vijf verzen van Soera Al-‘Alaq begonnen met het gebod ‘Lees!’. Dit onderstreept het belang van kennis in de islam, vanaf het allereerste begin van de openbaring.",
+        arabic: {
+            text: "اقْرَأْ بِاسْمِ رَبِّكَ الَّذِي خَلَقَ",
+            translation: "Lees in de naam van jouw Heer, Die schiep.",
+            source: "Soera Al-‘Alaq 96:1",
+        },
+    },
+    {
+        id: "k-e10", category: "koran", level: "expert", tier: 3,
+        question: "Wat betekent de term ‘Asbab an-Nuzul’ in de wetenschap van de Koran (‘Uloem al-Qur’an)?",
+        options: [
+            "De aanleidingen en omstandigheden waarin verzen werden geopenbaard",
+            "De volgorde van de soera’s in de mushaf",
+            "De regels voor de correcte recitatie",
+            "Het opheffen van een voorschrift door een later vers",
+        ], answer: 0,
+        explanation: "Asbab an-Nuzul helpt om de context van een vers te begrijpen. Het opheffen van een voorschrift heet ‘naskh’, en de regels voor recitatie vormen de tajwid. Betrouwbare overleveringen over de aanleiding zijn hierbij essentieel.",
+    },
+    {
+        id: "k-e11", category: "koran", level: "expert", tier: 3,
+        question: "Op grond waarvan noemen de meeste geleerden een soera ‘Makki’ of ‘Madani’?",
+        options: [
+            "Op de plaats waar zij werd geopenbaard",
+            "Op het aantal verzen",
+            "Op de taal van het vers",
+            "Op het tijdstip: vóór of na de Hijra",
+        ], answer: 3,
+        explanation: "Volgens de meest gebruikte opvatting is een soera Makki als zij vóór de Hijra werd geopenbaard en Madani als dat erna gebeurde, ook al was de plaats Mekka of Medina niet. Makkiyya soera’s gaan vaak over tawhid en het Hiernamaals, Madaniyya soera’s vaker over wetten en samenleving.",
+    },
+    {
+        id: "k-e12", category: "koran", level: "expert", tier: 3,
+        question: "Welke overlevering van de recitatie (riwaya) wordt het meest gebruikt in gedrukte mushafs wereldwijd?",
+        options: [
+            "Warsh ‘an Nafi‘",
+            "Qalun ‘an Nafi‘",
+            "Ad-Duri ‘an Abi ‘Amr",
+            "Hafs ‘an ‘Asim",
+        ], answer: 3,
+        explanation: "De Koran is door de Profeet ﷺ in meerdere erkende wijzen van recitatie (qira’at) onderwezen. De overlevering van Hafs van ‘Asim is nu de meest verspreide, naast bijvoorbeeld Warsh in delen van Noord- en West-Afrika. Alle erkende riwayat gaan terug op de Profeet ﷺ.",
+    },
+];
+return exports;})();
 
-    // Disclaimer sluiten
-    function acceptDisclaimer() {
-      document.getElementById('disclaimerModal').classList.add('hidden');
+</script>
+  <script>
+/* Islam Quiz – applicatielogica (vanilla JS, geen afhankelijkheden) */
+(function () {
+  "use strict";
+
+  const CATEGORIES = QuizData.categories;
+  const QUESTIONS = QuizData.questions;
+  const STORAGE_KEY = "islam-quiz-v2";
+  const OLD_KEY = "islam-quiz-v1";
+  const TIMER_SECONDS = 20;
+  const LETTERS = ["A", "B", "C", "D"];
+
+  /* ───────────── Iconen (lucide-stijl, inline SVG) ───────────── */
+  const ICONS = {
+    star: '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',
+    flame: '<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>',
+    trophy: '<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>',
+    home: '<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
+    retry: '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>',
+    check: '<polyline points="20 6 9 17 4 12"/>',
+    x: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+    right: '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+    left: '<path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>',
+    sound: '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>',
+    mute: '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/>',
+    timer: '<line x1="10" x2="14" y1="2" y2="2"/><line x1="12" x2="15" y1="14" y2="11"/><circle cx="12" cy="14" r="8"/>',
+    calendar: '<rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/><path d="m9 16 2 2 4-4"/>',
+    sparkles: '<path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>',
+    book: '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>',
+    smile: '<circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" x2="9.01" y1="9" y2="9"/><line x1="15" x2="15.01" y1="9" y2="9"/>',
+    cap: '<path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/>',
+    heart: '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>',
+    list: '<line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/>',
+    users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+    landmark: '<line x1="3" x2="21" y1="22" y2="22"/><line x1="6" x2="6" y1="18" y2="11"/><line x1="10" x2="10" y1="18" y2="11"/><line x1="14" x2="14" y1="18" y2="11"/><line x1="18" x2="18" y1="18" y2="11"/><polygon points="12 2 20 7 4 7"/>',
+    moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
+    layers: '<path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/>',
+  };
+  const CAT_ICON = { sparkles: "sparkles", landmark: "landmark", users: "users", "book-open": "book", heart: "heart" };
+
+  function icon(name, size, cls) {
+    size = size || 20;
+    return '<svg class="ic ' + (cls || "") + '" width="' + size + '" height="' + size +
+      '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      (ICONS[name] || "") + "</svg>";
+  }
+
+  /* ───────────── Hulpfuncties ───────────── */
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  const ar = function (text, cls) {
+    return '<div class="arabic ' + (cls || "") + '" dir="rtl" lang="ar">' + esc(text) + "</div>";
+  };
+  function catById(id) { return CATEGORIES.find(function (c) { return c.id === id; }); }
+
+  function dateStr(d) {
+    const y = d.getFullYear(), m = String(d.getMonth() + 1).padStart(2, "0"), day = String(d.getDate()).padStart(2, "0");
+    return y + "-" + m + "-" + day;
+  }
+  const todayStr = function () { return dateStr(new Date()); };
+  const yesterdayStr = function () { const d = new Date(); d.setDate(d.getDate() - 1); return dateStr(d); };
+
+  function hashString(str) {
+    let h = 2166136261;
+    for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return h >>> 0;
+  }
+  function mulberry32(a) {
+    return function () {
+      a |= 0; a = (a + 0x6d2b79f5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function shuffle(arr, rnd) {
+    rnd = rnd || Math.random;
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(rnd() * (i + 1));
+      const t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+  function starsFor(score, total) {
+    const p = total ? score / total : 0;
+    return p >= 0.9 ? 3 : p >= 0.6 ? 2 : 1;
+  }
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+  /* ───────────── Opslag (localStorage, per apparaat) ─────────────
+     Meerdere spelers per apparaat: S.players[] met eigen scores, reeks en niveau. */
+  const AVATAR_COLORS = ["#2D6A4F", "#D9A05B", "#F4978E", "#B589D6", "#4C9BE8", "#E76F51"];
+  const MAX_PLAYERS = 8;
+
+  function newPlayer(name, color) {
+    return {
+      id: "p" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      name: name, color: color, mode: null,
+      best: { junior: {}, expert: {} },     // best[level][catId] = {score,total,stars}
+      daily: { junior: {}, expert: {} },    // daily[level][YYYY-MM-DD] = {score,total}
+      streak: { count: 0, last: null, max: 0 },
+      played: 0,
+      group: null,                          // {code, mid} als de speler in een groep zit
+    };
+  }
+  function normalizePlayer(p) {
+    const d = newPlayer(p.name || "Speler", p.color || AVATAR_COLORS[0]);
+    return Object.assign(d, p, {
+      best: Object.assign(d.best, p.best || {}),
+      daily: Object.assign(d.daily, p.daily || {}),
+      streak: Object.assign(d.streak, p.streak || {}),
+    });
+  }
+  function defaultState() { return { v: 2, sound: true, timer: false, players: [], current: null }; }
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const s = Object.assign(defaultState(), JSON.parse(raw));
+        s.players = (s.players || []).map(normalizePlayer);
+        if (!s.players.some(function (p) { return p.id === s.current; })) s.current = s.players[0] ? s.players[0].id : null;
+        return s;
+      }
+      const old = localStorage.getItem(OLD_KEY); // migratie vanaf versie 1 (één speler)
+      if (old) {
+        const o = JSON.parse(old), s = defaultState();
+        s.sound = o.sound !== false; s.timer = !!o.timer;
+        const p = normalizePlayer({ name: "Speler 1", color: AVATAR_COLORS[0], mode: o.mode || null, best: o.best, daily: o.daily, streak: o.streak, played: o.played || 0 });
+        s.players = [p]; s.current = p.id;
+        return s;
+      }
+    } catch (e) { /* beschadigde of ontoegankelijke opslag: begin opnieuw */ }
+    return defaultState();
+  }
+  function saveState() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(S)); } catch (e) { /* opslag niet beschikbaar */ }
+  }
+  let S = loadState();
+  function currentPlayer() { return S.players.find(function (p) { return p.id === S.current; }) || null; }
+  let P = currentPlayer();
+
+  /* ───────────── Geluid (Web Audio API) ───────────── */
+  let audioCtx = null;
+  function ctx() {
+    if (!audioCtx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (AC) audioCtx = new AC();
+    }
+    if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+    return audioCtx;
+  }
+  function tone(freq, start, dur, type, vol) {
+    const c = ctx(); if (!c) return;
+    const o = c.createOscillator(), g = c.createGain();
+    o.type = type || "sine"; o.frequency.value = freq;
+    const t0 = c.currentTime + start;
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(vol || 0.15, t0 + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    o.connect(g); g.connect(c.destination);
+    o.start(t0); o.stop(t0 + dur + 0.05);
+  }
+  const sfx = {
+    correct() { tone(523.25, 0, 0.18); tone(659.25, 0.12, 0.18); tone(783.99, 0.24, 0.32); },
+    wrong() { tone(260, 0, 0.22, "triangle", 0.12); tone(207.65, 0.18, 0.34, "triangle", 0.1); },
+    click() { tone(660, 0, 0.06, "sine", 0.06); },
+    win() { [523.25, 659.25, 783.99, 1046.5].forEach(function (f, i) { tone(f, i * 0.14, 0.28); }); },
+    lose() { tone(392, 0, 0.25, "triangle", 0.1); tone(329.63, 0.22, 0.4, "triangle", 0.1); },
+  };
+  function play(name) { if (S.sound) { try { sfx[name](); } catch (e) {} } }
+
+  /* ───────────── App-toestand ───────────── */
+  const app = document.getElementById("app");
+  let screen = !P ? "newplayer" : S.players.length > 1 ? "players" : P.mode ? "home" : "welcome";
+  const urlCode = normCode(new URLSearchParams(location.search).get("groep"));
+  if (urlCode && P && P.mode && S.players.length === 1) screen = "group";
+  let draftColor = AVATAR_COLORS[0];
+  let boardLevel = "junior";
+  let quiz = null;
+  let result = null;
+  let timerHandle = null;
+
+  function stopTimer() { if (timerHandle) { clearInterval(timerHandle); timerHandle = null; } }
+
+  const MIN_TIER_Q = 3;   // minimaal aantal vragen om een niveau aan te bieden
+  function qTier(q) { return q.tier || 1; }
+  function poolFor(level, catId, tier) {
+    return QUESTIONS.filter(function (q) { return q.level === level && (!catId || q.category === catId) && (!tier || qTier(q) === tier); });
+  }
+  /* beschikbare niveaus (1-3) voor een doelgroep, optioneel per categorie */
+  function tiersFor(level, catId) {
+    return [1, 2, 3].filter(function (t) { return t === 1 || poolFor(level, catId, t).length >= MIN_TIER_Q; });
+  }
+  /* opslagsleutel voor beste score: niveau 1 = catId (zoals voorheen), niveau 2/3 = catId@2 / catId@3 */
+  function bkey(catId, tier) { return tier > 1 ? catId + "@" + tier : catId; }
+  /* doorstroom (alleen solo): na 3 sterren naar het volgende niveau, als dat bestaat */
+  function nextTier(q, stars) {
+    if (q.kind !== "category" || stars < 3 || q.tier >= 3) return null;
+    return poolFor(q.level, q.catId, q.tier + 1).length >= MIN_TIER_Q ? q.tier + 1 : null;
+  }
+
+  function makeItems(questions) {
+    return questions.map(function (q) {
+      return { q: q, order: shuffle([0, 1, 2, 3]), picked: null, correct: null, timedOut: false };
+    });
+  }
+
+  function startQuiz(kind, catId, tier) {
+    const level = P.mode;
+    tier = kind === "category" ? (tier || 1) : null;
+    let questions;
+    if (kind === "daily") {
+      const rnd = mulberry32(hashString(todayStr() + "|" + level));
+      questions = [];
+      shuffle(CATEGORIES, rnd).forEach(function (c) {
+        const p = shuffle(poolFor(level, c.id), rnd);
+        if (p.length) questions.push(p[0]);
+      });
+      questions = shuffle(questions, rnd);
+    } else {
+      questions = shuffle(poolFor(level, catId, tier));
+    }
+    quiz = {
+      kind: kind, catId: kind === "daily" ? null : catId, level: level, tier: tier,
+      items: makeItems(questions), idx: 0, score: 0, answered: false, timeLeft: TIMER_SECONDS,
+    };
+    screen = "quiz";
+    render();
+  }
+
+  /* ───────────── Weergave ───────────── */
+  function render() {
+    stopTimer();
+    document.body.className = "";
+    const inDuelQuiz = screen === "quiz" && quiz && quiz.kind === "duel";
+    if (P && P.group && (screen === "group" || screen === "duelresult" || inDuelQuiz)) openGroupSub();
+    else closeGroupSub();
+    if (screen === "welcome") app.innerHTML = viewWelcome();
+    else if (screen === "home") app.innerHTML = viewHome();
+    else if (screen === "quiz") { app.innerHTML = viewQuiz(); afterQuizRender(); }
+    else if (screen === "result") { app.innerHTML = viewResult(); if (result.next && !result.noAuto) startAutoNext(); }
+    else if (screen === "review") app.innerHTML = viewReview();
+    else if (screen === "scores") app.innerHTML = viewScores();
+    else if (screen === "newplayer") { app.innerHTML = viewNewPlayer(); }
+    else if (screen === "players") app.innerHTML = viewPlayers();
+    else if (screen === "board") app.innerHTML = viewBoard();
+    else if (screen === "group") app.innerHTML = viewGroup();
+    else if (screen === "duelresult") app.innerHTML = viewDuelResult();
+    window.scrollTo({ top: 0 });
+  }
+
+  function startAutoNext() {
+    let left = 8;
+    timerHandle = setInterval(function () {
+      left--;
+      if (left <= 0) { stopTimer(); const r = result; startQuiz("category", r.catId, r.next); return; }
+      const t = document.getElementById("autoTxt");
+      if (t) t.textContent = "Ga door naar Niveau " + result.next + " (" + left + ")";
+    }, 1000);
+  }
+
+  /* niveau-keuze voor een categorie */
+  function tierDialog(catId) {
+    const c = catById(catId), lv = P.mode, ts = tiersFor(lv, catId);
+    const w = document.createElement("div");
+    w.className = "dialog-wrap";
+    let h = '<div class="dialog" role="dialog" aria-modal="true"><h3>' + esc(c.title) + "</h3><p>Kies een niveau. Haal je 3 sterren, dan ga je vanzelf door naar het volgende niveau.</p><div class=\"tier-list\">";
+    ts.forEach(function (t) {
+      const b = P.best[lv][bkey(catId, t)];
+      h += '<button class="tier-btn" data-act="start-tier" data-cat="' + catId + '" data-tier="' + t + '"><span class="tier-n">Niveau ' + t + "</span>" +
+        '<span class="tier-d">' + ["Basis", "Gemiddeld", "Gevorderd"][t - 1] + "</span>" + miniStars(b ? b.stars : 0) + "</button>";
+    });
+    h += '</div><button class="btn ghost block" data-d="no">Annuleren</button></div>';
+    w.innerHTML = h;
+    w.addEventListener("click", function (e) { if (e.target === w || e.target.closest('[data-d="no"]')) w.remove(); });
+    document.body.appendChild(w);
+  }
+
+  function viewWelcome() {
+    return '<section class="welcome">' +
+      '<div class="logo">' + icon("moon", 44) + "</div>" +
+      "<h1>Islam Quiz</h1>" +
+      ar("السَّلَامُ عَلَيْكُمْ") +
+      '<p class="greet">Welkom, ' + esc(P.name) + '! Leer en speel met plezier, Insha’Allah.</p>' +
+      "<h2>Kies jouw niveau</h2>" +
+      '<div class="mode-grid">' +
+      '<button class="mode-card junior" data-act="pick-mode" data-mode="junior">' +
+      '<span class="badge">' + icon("smile", 34) + "</span><span>" +
+      '<span class="sub">Voor kinderen</span><h3>Junior Modus</h3>' +
+      "<p>Vrolijk, zonder tijdsdruk, met eenvoudige vragen en leuke beloningen!</p></span></button>" +
+      '<button class="mode-card expert" data-act="pick-mode" data-mode="expert">' +
+      '<span class="badge">' + icon("cap", 34) + "</span><span>" +
+      '<span class="sub">Voor volwassenen</span><h3>Expert Modus</h3>' +
+      "<p>Diepere vragen met optionele timer en bronnen: verzen en Hadith in het Arabisch.</p></span></button>" +
+      "</div></section>";
+  }
+
+  function miniStars(n) {
+    let s = '<span class="mini-stars" aria-hidden="true">';
+    for (let i = 1; i <= 3; i++) s += '<span class="' + (i <= n ? "on" : "") + '">' + icon("star", 16, "fill") + "</span>";
+    return s + "</span>";
+  }
+
+  function totalStars() {
+    let t = 0;
+    ["junior", "expert"].forEach(function (l) {
+      Object.keys(P.best[l]).forEach(function (k) { t += P.best[l][k].stars || 0; });
+    });
+    return t;
+  }
+
+  function currentStreak() {
+    const s = P.streak;
+    if (s.last === todayStr() || s.last === yesterdayStr()) return s.count;
+    return 0;
+  }
+
+  function viewHome() {
+    const level = P.mode, isJunior = level === "junior";
+    const daily = P.daily[level][todayStr()];
+    let h = '<div class="topbar"><div class="brand"><span class="mini-logo">' + icon("moon", 22) + "</span>Islam Quiz</div>" +
+      '<div class="top-actions">' +
+      '<button class="icon-btn" data-act="toggle-sound" aria-label="' + (S.sound ? "Geluid uitzetten" : "Geluid aanzetten") + '">' + icon(S.sound ? "sound" : "mute", 22) + "</button>" +
+      '<button class="mode-chip ' + level + '" data-act="switch-mode" aria-label="Wissel van niveau">' +
+      icon(isJunior ? "smile" : "cap", 18) + (isJunior ? "Junior" : "Expert") + "</button></div></div>";
+
+    h += '<div class="hello"><div><h1>' + (isJunior ? "Hoi, " : "Assalamu ‘alaykum, ") + esc(P.name) + "!</h1>" +
+      "<p>" + (isJunior ? "Wat wil je vandaag leren?" : "Klaar om je kennis te testen?") + "</p></div>" +
+      '<button class="player-chip" data-act="players" aria-label="Wissel van speler">' + avatarHtml(P, 34) + "<span>Wissel</span></button></div>";
+
+    h += '<div class="stats">' +
+      '<div class="stat streak">' + icon("flame", 26) + "<b>" + currentStreak() + "</b><span>Dagen op rij</span></div>" +
+      '<div class="stat stars">' + icon("star", 26, "fill") + "<b>" + totalStars() + "</b><span>Sterren</span></div>" +
+      '<div class="stat played">' + icon("trophy", 26) + "<b>" + P.played + "</b><span>Quizzen</span></div></div>";
+
+    h += '<button class="daily' + (daily ? " done" : "") + '" data-act="start-daily">' +
+      '<span class="badge">' + icon("calendar", 30) + "</span><span>" +
+      "<h2>Quiz van de Dag</h2><p>" +
+      (daily ? "Vandaag gespeeld: " + daily.score + "/" + daily.total + ". Speel opnieuw!" : "5 vragen, elke dag nieuw!") +
+      '</p></span><span class="go">' + icon("right", 22) + "</span></button>";
+
+    h += '<div class="btn-row"><button class="scores-btn" data-act="scores">' + icon("trophy", 22) + "<span>Mijn Scores</span>" + icon("right", 20) + "</button>" +
+      (S.players.length > 1 ? '<button class="scores-btn" data-act="board">' + icon("users", 22) + "<span>Scorebord</span>" + icon("right", 20) + "</button>" : "") +
+      '<button class="scores-btn" data-act="group">' + icon("users", 22) + "<span>" + (P.group ? "Mijn groep" : "Groep & duel") + "</span>" + icon("right", 20) + "</button></div>";
+
+    if (!isJunior) {
+      h += '<label class="timer-toggle"><span style="color:#b5651f">' + icon("timer", 26) + "</span>" +
+        '<span class="txt">Timer per vraag<small>' + TIMER_SECONDS + " seconden per vraag (optioneel)</small></span>" +
+        '<span class="switch"><input type="checkbox" data-act="toggle-timer" ' + (S.timer ? "checked" : "") + ' aria-label="Timer per vraag"></span></label>';
     }
 
-    // Spelers tonen
-    function renderPlayers() {
-      const listEl = document.getElementById('playerList');
-      const startBtn = document.getElementById('startGameBtn');
-      listEl.innerHTML = '';
+    h += '<div class="section-title">' + icon("layers", 20) + "Kies een categorie</div><div class=\"cat-grid\">";
+    CATEGORIES.forEach(function (c) {
+      const b = P.best[level][c.id];
+      const nt = tiersFor(level, c.id).length;
+      const n = poolFor(level, c.id, 1).length;
+      h += '<button class="cat-card" style="--accent:' + c.color + '" data-act="start-cat" data-cat="' + c.id + '">' +
+        '<span class="badge">' + icon(CAT_ICON[c.icon] || "sparkles", 28) + "</span>" +
+        "<span><h3>" + esc(c.title) + "</h3><p>" + esc(c.subtitle) + "</p></span>" +
+        '<span class="meta">' + miniStars(b ? b.stars : 0) +
+        '<div class="best">' + (nt > 1 ? nt + " niveaus" : b ? "Beste: " + b.score + "/" + b.total : n + " vragen") + "</div></span></button>";
+    });
+    h += "</div>";
+    h += '<div class="footer-actions">' + (isStandalone() ? "" : '<button class="link-btn" data-act="install">Zet op beginscherm</button>') +
+      '<button class="link-btn" data-act="reset">Voortgang van ' + esc(P.name) + " wissen</button></div>";
+    return h;
+  }
 
-      if (players.length === 0) {
-        listEl.innerHTML = '<li style="text-align: center; color: #757575; padding: 10px;">Nog geen spelers. Voeg er een toe!</li>';
-        startBtn.classList.add('hidden');
-        return;
+  function viewQuiz() {
+    const it = quiz.items[quiz.idx], q = it.q, total = quiz.items.length;
+    const cat = catById(q.category);
+    const isDaily = quiz.kind === "daily", isDuel = quiz.kind === "duel";
+    const label = isDaily ? "Quiz van de Dag" : isDuel ? "Duel" : cat.title + (tiersFor(quiz.level, quiz.catId).length > 1 ? " · Niveau " + quiz.tier : "");
+    const pct = ((quiz.idx + (quiz.answered ? 1 : 0)) / total) * 100;
+    document.body.className = quiz.level;
+
+    let h = '<div class="quiz-top"><button class="icon-btn" data-act="leave" aria-label="Stoppen met de quiz">' + icon("left", 22) + "</button>" +
+      '<span class="cat-badge" style="--accent:' + cat.color + '">' + icon(CAT_ICON[cat.icon], 16) + "<span>" + esc(isDaily || isDuel ? label + " · " + cat.title : label) + "</span></span>" +
+      '<span class="score-pill" id="scorePill">' + icon("star", 16, "fill") + '<span id="scoreVal">' + quiz.score + "/" + total + "</span></span></div>";
+
+    h += '<div class="progress-row"><span>Vraag ' + (quiz.idx + 1) + " van " + total + "</span><span>" + Math.round(pct) + "%</span></div>" +
+      '<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + Math.round(pct) + '"><i style="width:' + pct + '%"></i></div>';
+    if (isDuel) h += '<div class="opp-strip" id="oppStrip">' + oppStripHtml() + "</div>";
+
+    if (quiz.level === "expert" && S.timer && !isDuel) {
+      h += '<div class="bar timer"><i id="timerBar" style="width:' + (quiz.answered ? 0 : 100) + '%"></i></div>' +
+        '<div class="timer-label">' + icon("timer", 14) + '<span id="timerTxt">' + (quiz.answered ? "" : TIMER_SECONDS + " sec") + "</span></div>";
+    }
+
+    h += '<div class="q-card' + (quiz.answered ? " static" : "") + '" id="qcard"><div class="q-num">' + (isDaily ? "Dagelijkse vraag " : "Vraag ") + (quiz.idx + 1) + "</div>" +
+      "<h2>" + esc(q.question) + "</h2>" + (q.questionArabic ? ar(q.questionArabic) : "") + "</div>";
+
+    h += '<div class="options' + (quiz.answered ? " answered" : "") + '" role="group" aria-label="Antwoordopties">';
+    it.order.forEach(function (orig, pos) {
+      let cls = "option", mark = "";
+      if (quiz.answered) {
+        if (orig === q.answer) { cls += " correct"; mark = icon("check", 24); }
+        else if (it.picked === orig) { cls += " wrong"; mark = icon("x", 24); }
+        else cls += " dim";
       }
+      h += '<button class="' + cls + '" data-act="answer" data-pos="' + pos + '" ' + (quiz.answered ? "disabled" : "") + ">" +
+        '<span class="letter">' + LETTERS[pos] + "</span><span>" + esc(q.options[orig]) + '</span><span class="mark">' + mark + "</span></button>";
+    });
+    h += "</div>";
 
-      players.forEach((player, index) => {
-        const li = document.createElement('li');
-        li.className = 'player-item';
-        
-        li.innerHTML = `
-          <span class="player-name">${player}</span>
-          <button class="delete-btn" title="Verwijder profiel" onclick="deletePlayer(${index}, event)">🗑️</button>
-        `;
+    if (quiz.answered) h += feedbackHtml(it);
+    return h;
+  }
 
-        li.onclick = (e) => {
-          if (e.target.tagName !== 'BUTTON') {
-            selectedPlayer = player;
-            highlightSelectedPlayer(li);
+  function refHtml(ref) {
+    if (!ref) return "";
+    return '<div class="ref"><div class="ref-label">' + icon("book", 14) + "Arabische tekst</div>" + ar(ref.text) +
+      '<div class="tr">' + esc(ref.translation) + "</div>" +
+      (ref.source ? '<div class="src">' + esc(ref.source) + "</div>" : "") + "</div>";
+  }
+
+  const PRAISE = ["Masha’Allah!", "Super goed!", "Fantastisch!", "Barakallahu fiek!", "Wat slim!", "Geweldig!"];
+  const TRYAGAIN = ["Bijna! Je leert het, Insha’Allah.", "Geen zorgen, we leren samen!", "Goed geprobeerd!"];
+  let lastPraise = "", lastTry = "";
+
+  function feedbackHtml(it) {
+    const q = it.q, ok = it.correct, junior = quiz.level === "junior";
+    const last = quiz.idx === quiz.items.length - 1;
+    let head;
+    if (ok) head = junior ? lastPraise : "Correct! Masha’Allah.";
+    else if (it.timedOut) head = "De tijd is op!";
+    else head = junior ? lastTry : "Helaas, niet juist.";
+    let h = '<div class="feedback ' + (ok ? "good" : "bad") + '" id="feedback"><div class="head">' + icon(ok ? "check" : "x", 26) + "<span>" + esc(head) + "</span></div>";
+    if (!ok) h += '<div class="correct-is">Het juiste antwoord: ' + esc(q.options[q.answer]) + "</div>";
+    h += '<p class="why">' + esc(q.explanation) + "</p>" + refHtml(q.arabic) + "</div>";
+    h += '<div class="next-row"><button class="btn ' + (last ? "gold" : "") + '" data-act="next" id="nextBtn">' +
+      (last ? "Bekijk resultaat" : "Volgende vraag") + icon("right", 20) + "</button></div>";
+    return h;
+  }
+
+  function afterQuizRender() {
+    if (quiz.answered) {
+      const fb = document.getElementById("feedback");
+      if (fb && fb.scrollIntoView) setTimeout(function () { fb.scrollIntoView({ behavior: "smooth", block: "center" }); }, 80);
+    } else if (quiz.level === "expert" && S.timer && quiz.kind !== "duel") startTimer();
+  }
+
+  function startTimer() {
+    quiz.timeLeft = TIMER_SECONDS;
+    const t0 = Date.now();
+    timerHandle = setInterval(function () {
+      const left = TIMER_SECONDS - (Date.now() - t0) / 1000;
+      const bar = document.getElementById("timerBar"), txt = document.getElementById("timerTxt");
+      if (left <= 0) { stopTimer(); answer(null); return; }
+      if (bar) bar.style.width = (left / TIMER_SECONDS) * 100 + "%";
+      if (txt) txt.textContent = Math.ceil(left) + " sec";
+    }, 100);
+  }
+
+  function answer(pos) {
+    if (!quiz || quiz.answered) return;
+    stopTimer();
+    const it = quiz.items[quiz.idx];
+    it.timedOut = pos === null;
+    it.picked = pos === null ? null : it.order[pos];
+    it.correct = it.picked === it.q.answer;
+    quiz.answered = true;
+    if (quiz.kind === "duel") { quiz.ms += Date.now() - quiz.qStart; pushDuelProgress(); }
+    if (it.correct) {
+      quiz.score++;
+      lastPraise = pick(PRAISE);
+      play("correct");
+    } else {
+      lastTry = pick(TRYAGAIN);
+      play("wrong");
+    }
+    render();
+    if (it.correct) {
+      const sp = document.getElementById("scorePill");
+      if (sp) sp.classList.add("bump");
+      if (quiz.level === "junior") burst();
+    }
+  }
+
+  function burst() {
+    const card = document.getElementById("qcard");
+    if (!card) return;
+    const wrap = document.createElement("div");
+    wrap.className = "burst";
+    for (let i = 0; i < 10; i++) {
+      const a = (Math.PI * 2 * i) / 10, r = 90 + Math.random() * 50;
+      const s = document.createElement("span");
+      s.style.setProperty("--dx", Math.cos(a) * r + "px");
+      s.style.setProperty("--dy", Math.sin(a) * r * 0.6 + "px");
+      s.innerHTML = icon("star", 20 + Math.random() * 12, "fill");
+      wrap.appendChild(s);
+    }
+    const pop = document.createElement("div");
+    pop.className = "praise-pop"; pop.textContent = lastPraise;
+    card.appendChild(wrap); card.appendChild(pop);
+    setTimeout(function () { wrap.remove(); }, 1100);
+  }
+
+  function next() {
+    if (!quiz || !quiz.answered) return;
+    if (quiz.idx < quiz.items.length - 1) {
+      quiz.idx++; quiz.answered = false; quiz.qStart = Date.now();
+      play("click");
+      render();
+    } else if (quiz.kind === "duel") { play("win"); finishDuel(); }
+    else finishQuiz();
+  }
+
+  function finishQuiz() {
+    const total = quiz.items.length, score = quiz.score, stars = starsFor(score, total);
+    let isRecord = false;
+
+    if (quiz.kind === "daily") {
+      const prev = P.daily[quiz.level][todayStr()];
+      if (!prev || score > prev.score) P.daily[quiz.level][todayStr()] = { score: score, total: total };
+    } else {
+      const bk = bkey(quiz.catId, quiz.tier || 1), prev = P.best[quiz.level][bk];
+      if (!prev || score > prev.score) {
+        isRecord = !!prev || score === total; // nieuw record t.o.v. eerdere poging
+        P.best[quiz.level][bk] = { score: score, total: total, stars: stars };
+      }
+    }
+    P.played++;
+
+    // reeks (streak): opeenvolgende dagen met minstens één afgeronde quiz
+    const t = todayStr();
+    if (P.streak.last !== t) {
+      P.streak.count = P.streak.last === yesterdayStr() ? P.streak.count + 1 : 1;
+      P.streak.last = t;
+      P.streak.max = Math.max(P.streak.max || 0, P.streak.count);
+    }
+    saveState();
+    pushMember();
+
+    result = { kind: quiz.kind, catId: quiz.catId, level: quiz.level, tier: quiz.tier || 1, next: nextTier(quiz, stars), score: score, total: total, stars: stars, record: isRecord, items: quiz.items };
+    screen = "result";
+    play(stars >= 2 ? "win" : "lose");
+    render();
+  }
+
+  function viewResult() {
+    const r = result, junior = r.level === "junior";
+    let title, msg, arabicTxt;
+    if (r.stars === 3) { title = "Masha’Allah! Super goed gedaan!"; msg = junior ? "Je bent een echte ster! Alles (bijna) goed!" : "Uitstekend! Moge Allah je kennis vermeerderen."; arabicTxt = "مَا شَاءَ ٱللَّهُ"; }
+    else if (r.stars === 2) { title = "Barakallahu fiek! Goed bezig!"; msg = junior ? "Heel mooi! Nog een keer en je haalt alle sterren." : "Goed gedaan. Met wat herhaling haal je de volle score."; arabicTxt = "بَارَكَ ٱللَّهُ فِيكَ"; }
+    else { title = "Blijf leren, Insha’Allah!"; msg = junior ? "Niet erg! Oefening baart kunst. Probeer het nog eens!" : "Kennis groeit stap voor stap. Bekijk de antwoorden en probeer opnieuw."; arabicTxt = "إِنْ شَاءَ ٱللَّهُ"; }
+
+    let h = '<section class="result"><div class="stars-row" role="img" aria-label="' + r.stars + ' van 3 sterren">';
+    for (let i = 1; i <= 3; i++) h += icon("star", i === 2 ? 84 : 68, "fill" + (i <= r.stars ? " on" : ""));
+    h += "</div>";
+    h += '<div class="big-score">' + r.score + "<small> / " + r.total + "</small></div>";
+    if (r.kind === "category" && tiersFor(r.level, r.catId).length > 1) h += '<div class="tier-tag">Niveau ' + r.tier + "</div>";
+    h += ar(arabicTxt) + "<h1>" + esc(title) + '</h1><p class="msg">' + esc(msg) + "</p>";
+    if (r.record && r.kind !== "daily") h += '<div class="badge-new">' + icon("trophy", 18) + "Nieuw record!</div>";
+    if (r.kind === "daily") h += '<div class="badge-new">' + icon("flame", 18) + currentStreak() + (currentStreak() === 1 ? " dag" : " dagen") + " op rij</div>";
+
+    h += '<div class="result-actions">';
+    if (r.next && !r.noAuto) {
+      h += '<div class="levelup">' + icon("sparkles", 22) + "<b>Niveau " + r.next + " vrijgespeld!</b><span>Je gaat vanzelf door…</span></div>" +
+        '<button class="btn gold" data-act="go-next-tier">' + icon("right", 20) + '<span id="autoTxt">Ga door naar Niveau ' + r.next + " (8)</span></button>" +
+        '<button class="btn ghost" data-act="home">' + icon("left", 20) + "Stoppen en naar hoofdscherm</button>" +
+        '<button class="btn ghost" data-act="review">' + icon("list", 20) + "Bekijk Antwoorden</button></div></section>";
+      return h;
+    }
+    if (r.next) h += '<button class="btn gold" data-act="go-next-tier">' + icon("right", 20) + "Ga door naar Niveau " + r.next + "</button>";
+    h += '<button class="btn" data-act="retry">' + icon("retry", 20) + "Opnieuw Proberen</button>" +
+      '<button class="btn gold" data-act="home">' + icon("layers", 20) + "Kies Andere Categorie</button>" +
+      '<button class="btn ghost" data-act="review">' + icon("list", 20) + "Bekijk Antwoorden</button></div></section>";
+    return h;
+  }
+
+
+  function viewScores() {
+    const levels = [["junior", "Junior Modus", "smile"], ["expert", "Expert Modus", "cap"]];
+    let h = '<div class="topbar"><button class="icon-btn" data-act="home" aria-label="Terug naar home">' + icon("left", 22) + "</button>" +
+      '<div class="brand">' + icon("trophy", 24) + "Mijn Scores</div><span style=\"width:44px\"></span></div>";
+    h += '<div class="stats">' +
+      '<div class="stat streak">' + icon("flame", 26) + "<b>" + currentStreak() + "</b><span>Reeks nu</span></div>" +
+      '<div class="stat stars">' + icon("star", 26, "fill") + "<b>" + totalStars() + "</b><span>Sterren</span></div>" +
+      '<div class="stat played">' + icon("trophy", 26) + "<b>" + P.played + "</b><span>Quizzen</span></div></div>";
+    h += '<p class="score-note">Langste reeks: <b>' + (P.streak.max || 0) + (P.streak.max === 1 ? " dag" : " dagen") + "</b></p>";
+    levels.forEach(function (L) {
+      const lv = L[0], d = P.daily[lv][todayStr()];
+      h += '<div class="section-title">' + icon(L[2], 20) + L[1] + '</div><div class="score-list">';
+      CATEGORIES.forEach(function (c) {
+        const ts = tiersFor(lv, c.id);
+        ts.forEach(function (t) {
+          const b = P.best[lv][bkey(c.id, t)], pct = b ? Math.round((b.score / b.total) * 100) : 0;
+          h += '<div class="score-row" style="--accent:' + c.color + '"><div class="score-head"><span>' + esc(c.title) + (ts.length > 1 ? " · Niveau " + t : "") + "</span>" +
+            miniStars(b ? b.stars : 0) + '</div><div class="bar"><i style="width:' + pct + '%"></i></div>' +
+            '<div class="score-sub">' + (b ? "Beste score: " + b.score + "/" + b.total + " (" + pct + "%)" : "Nog niet gespeeld") + "</div></div>";
+        });
+      });
+      h += '<div class="score-row daily-row"><div class="score-head"><span>Quiz van de Dag (vandaag)</span>' + icon("calendar", 18) + "</div>" +
+        '<div class="score-sub">' + (d ? d.score + "/" + d.total + " goed" : "Nog niet gespeeld") + "</div></div></div>";
+    });
+    return h;
+  }
+
+  /* ───────────── Spelers ───────────── */
+  function avatarHtml(p, size) {
+    const initial = esc((p.name || "?").trim().charAt(0).toUpperCase());
+    return '<span class="avatar" style="--c:' + p.color + ';width:' + size + 'px;height:' + size + 'px;font-size:' + Math.round(size * 0.46) + 'px">' + initial + "</span>";
+  }
+  function starsAt(p, lv) {
+    let t = 0; Object.keys(p.best[lv]).forEach(function (k) { t += p.best[lv][k].stars || 0; });
+    return t;
+  }
+  function allStars(p) { return starsAt(p, "junior") + starsAt(p, "expert"); }
+  function avgPct(p, lv) {
+    const ks = Object.keys(p.best[lv]);
+    if (!ks.length) return null;
+    let t = 0; ks.forEach(function (k) { t += p.best[lv][k].score / p.best[lv][k].total; });
+    return Math.round((t / ks.length) * 100);
+  }
+  function streakOf(p) { return p.streak.last === todayStr() || p.streak.last === yesterdayStr() ? p.streak.count : 0; }
+
+  function viewNewPlayer() {
+    const first = S.players.length === 0;
+    let h = '<section class="welcome">' +
+      '<div class="logo">' + icon(first ? "moon" : "smile", 44) + "</div>" +
+      "<h1>" + (first ? "Welkom bij Islam Quiz" : "Nieuwe speler") + "</h1>" +
+      (first ? ar("السَّلَامُ عَلَيْكُمْ") : "") +
+      '<p class="greet">' + (first ? "Hoe heet je? Dan bewaren we jouw scores." : "Wie gaat er meespelen?") + "</p>" +
+      '<div class="field"><label for="pname">Naam</label><input id="pname" type="text" maxlength="14" autocomplete="off" placeholder="Bijvoorbeeld Aisha"></div>' +
+      '<div class="field"><label>Kies een kleur</label><div class="swatches" role="radiogroup" aria-label="Kleur">';
+    AVATAR_COLORS.forEach(function (c) {
+      h += '<button type="button" class="swatch' + (c === draftColor ? " on" : "") + '" style="--c:' + c + '" data-act="pick-color" data-color="' + c + '" role="radio" aria-checked="' + (c === draftColor) + '" aria-label="Kleur ' + c + '">' + icon("check", 18) + "</button>";
+    });
+    h += '</div></div><div class="stack">' +
+      '<button class="btn block" data-act="create-player">Verder' + icon("right", 20) + "</button>" +
+      (first ? "" : '<button class="btn ghost block" data-act="players">Annuleren</button>') + "</div></section>";
+    return h;
+  }
+
+  function viewPlayers() {
+    let h = '<div class="topbar">' + (P && P.mode ? '<button class="icon-btn" data-act="home" aria-label="Terug naar home">' + icon("left", 22) + "</button>" : '<span style="width:44px"></span>') +
+      '<div class="brand">' + icon("users", 24) + "Wie speelt er?</div><span style=\"width:44px\"></span></div>";
+    h += '<div class="player-list">';
+    S.players.forEach(function (p) {
+      h += '<div class="player-card' + (p.id === S.current ? " active" : "") + '">' +
+        '<button class="player-main" data-act="select-player" data-id="' + p.id + '">' + avatarHtml(p, 52) +
+        '<span class="pinfo"><b>' + esc(p.name) + "</b><small>" + allStars(p) + (allStars(p) === 1 ? " ster" : " sterren") + " · " + p.played + (p.played === 1 ? " quiz" : " quizzen") + (p.mode ? " · " + (p.mode === "junior" ? "Junior" : "Expert") : "") + "</small></span></button>" +
+        (S.players.length > 1 ? '<button class="icon-btn small" data-act="remove-player" data-id="' + p.id + '" aria-label="Verwijder ' + esc(p.name) + '">' + icon("x", 18) + "</button>" : "") + "</div>";
+    });
+    h += "</div>";
+    h += '<div class="stack">' +
+      (S.players.length < MAX_PLAYERS ? '<button class="btn gold block" data-act="add-player">' + icon("smile", 20) + "Nieuwe speler</button>" : "") +
+      (S.players.length > 1 ? '<button class="btn block" data-act="board">' + icon("trophy", 20) + "Scorebord</button>" : "") + "</div>";
+    return h;
+  }
+
+  function viewBoard() {
+    const lv = boardLevel;
+    const ranked = S.players.slice().sort(function (a, b) {
+      return starsAt(b, lv) - starsAt(a, lv) || (avgPct(b, lv) || 0) - (avgPct(a, lv) || 0);
+    });
+    let h = '<div class="topbar"><button class="icon-btn" data-act="players" aria-label="Terug naar spelers">' + icon("left", 22) + "</button>" +
+      '<div class="brand">' + icon("trophy", 24) + "Scorebord</div><span style=\"width:44px\"></span></div>";
+    h += '<div class="tabs" role="tablist"><button class="tab' + (lv === "junior" ? " on" : "") + '" data-act="board-level" data-level="junior" role="tab" aria-selected="' + (lv === "junior") + '">' + icon("smile", 18) + "Junior</button>" +
+      '<button class="tab' + (lv === "expert" ? " on" : "") + '" data-act="board-level" data-level="expert" role="tab" aria-selected="' + (lv === "expert") + '">' + icon("cap", 18) + "Expert</button></div>";
+    h += '<div class="rank-list">';
+    ranked.forEach(function (p, i) {
+      const pct = avgPct(p, lv);
+      h += '<div class="rank-row' + (i === 0 && starsAt(p, lv) > 0 ? " first" : "") + '"><span class="rank-n">' + (i + 1) + "</span>" + avatarHtml(p, 44) +
+        '<span class="pinfo"><b>' + esc(p.name) + "</b><small>" + (pct === null ? "Nog niet gespeeld" : "Gemiddeld " + pct + "% · reeks " + streakOf(p) + (streakOf(p) === 1 ? " dag" : " dagen")) + "</small></span>" +
+        '<span class="rank-stars">' + icon("star", 20, "fill") + starsAt(p, lv) + "</span></div>";
+    });
+    h += "</div>";
+    h += '<div class="section-title">' + icon("layers", 20) + "Beste score per categorie</div>" +
+      '<div class="table-wrap"><table class="board"><thead><tr><th scope="col">Categorie</th>';
+    ranked.forEach(function (p) { h += '<th scope="col">' + avatarHtml(p, 28) + "<span>" + esc(p.name) + "</span></th>"; });
+    h += "</tr></thead><tbody>";
+    CATEGORIES.forEach(function (c) {
+      h += '<tr><th scope="row" style="--accent:' + c.color + '">' + esc(c.title) + "</th>";
+      let top = -1;
+      ranked.forEach(function (p) { const b = p.best[lv][c.id]; if (b) top = Math.max(top, b.score / b.total); });
+      ranked.forEach(function (p) {
+        const b = p.best[lv][c.id];
+        h += "<td" + (b && b.score / b.total === top ? ' class="top"' : "") + ">" + (b ? b.score + "/" + b.total : "–") + "</td>";
+      });
+      h += "</tr>";
+    });
+    h += "</tbody></table></div>";
+    return h;
+  }
+
+  function selectPlayer(id) {
+    closeGroupSub(); startedDuelId = null;
+    S.current = id; P = currentPlayer(); saveState();
+    screen = P.mode ? (pendingCode ? "group" : "home") : "welcome"; render();
+  }
+
+  /* ───────────── Groep & duel: schermen ───────────── */
+  function errText(e) {
+    if (e && e.kind === "notfound") return "Deze code bestaat niet. Controleer de code en probeer het opnieuw.";
+    if (e && e.kind === "full") return "Deze groep zit vol (maximaal " + MAX_GROUP + " spelers).";
+    if (e && (e.status === 401 || e.status === 403)) return "Geen toegang. Probeer het over een poosje nog eens.";
+    if (e && e.name === "TypeError") return "Geen verbinding. Controleer je internet en probeer het opnieuw.";
+    return "Er ging iets mis. Probeer het opnieuw.";
+  }
+  function runCloud(fn) {
+    groupBusy = true; groupMsg = ""; render();
+    return Promise.resolve().then(fn).catch(function (e) { groupMsg = errText(e); }).then(function () { groupBusy = false; render(); });
+  }
+  function shareUrl(code) { return SITE_URL + "?groep=" + code; }
+  function shareText(code) { return "Doe mee met mijn Islam Quiz groep! Code: " + showCode(code) + "\n" + shareUrl(code); }
+
+  function viewGroup() {
+    const g = P.group;
+    let h = '<div class="topbar"><button class="icon-btn" data-act="home" aria-label="Terug naar home">' + icon("left", 22) + "</button>" +
+      '<div class="brand">' + icon("users", 24) + "Groep</div><span style=\"width:44px\"></span></div>";
+    if (groupMsg) h += '<div class="notice" role="alert">' + esc(groupMsg) + "</div>";
+
+    if (!g) {
+      h += '<section class="group-intro"><p class="lead">Speel met familie of vrienden op je eigen telefoon. Jullie zien elkaars scores en kunnen een live duel spelen.</p>' +
+        '<button class="btn gold block" data-act="group-create"' + (groupBusy ? " disabled" : "") + ">" + icon("users", 20) + (groupBusy ? "Even wachten…" : "Nieuwe groep maken") + "</button>" +
+        '<div class="or"><span>of doe mee met een code</span></div>' +
+        '<div class="field"><label for="gcode">Groepscode</label><input id="gcode" type="text" inputmode="text" autocapitalize="characters" autocomplete="off" maxlength="8" placeholder="Bijvoorbeeld KRM-7QX" value="' + esc(pendingCode ? showCode(pendingCode) : "") + '"></div>' +
+        '<button class="btn block" data-act="group-join"' + (groupBusy ? " disabled" : "") + ">Meedoen" + icon("right", 20) + "</button>" +
+        '<p class="fine">Alleen je bijnaam, sterren en scores worden met de groep gedeeld. Gebruik geen echte naam of andere persoonlijke gegevens.</p></section>';
+      return h;
+    }
+
+    h += '<div class="code-card"><span class="code-label">Groepscode</span><b class="code-big">' + esc(showCode(g.code)) + "</b>" +
+      '<div class="code-actions"><a class="btn small" href="https://wa.me/?text=' + encodeURIComponent(shareText(g.code)) + '" target="_blank" rel="noopener">Deel via WhatsApp</a>' +
+      '<button class="btn ghost small" data-act="copy-code">Kopieer</button></div>' +
+      '<span class="status ' + cloudStatus + '">' + (cloudStatus === "online" ? "Verbonden" : cloudStatus === "offline" ? "Geen verbinding, we proberen het opnieuw…" : "Verbinding maken…") + "</span></div>";
+
+    if (groupLoaded && groupData === null) {
+      h += '<div class="notice">Deze groep bestaat niet meer.</div><button class="btn ghost block" data-act="group-leave-now">Verwijder uit mijn lijst</button>';
+      return h;
+    }
+    if (!groupData) return h + '<p class="fine center">Groep laden…</p>';
+
+    const lv = boardLevel, members = Object.keys(groupData.members || {}).map(function (k) { const m = groupData.members[k]; m.mid = k; return m; });
+    const sv = function (m) { return (m.stars && m.stars[lv]) || 0; }, av = function (m) { return (m.avg && m.avg[lv]) || 0; };
+    members.sort(function (a, b) { return sv(b) - sv(a) || av(b) - av(a); });
+
+    h += '<div class="tabs" role="tablist"><button class="tab' + (lv === "junior" ? " on" : "") + '" data-act="board-level" data-level="junior" role="tab" aria-selected="' + (lv === "junior") + '">' + icon("smile", 18) + "Junior</button>" +
+      '<button class="tab' + (lv === "expert" ? " on" : "") + '" data-act="board-level" data-level="expert" role="tab" aria-selected="' + (lv === "expert") + '">' + icon("cap", 18) + "Expert</button></div>";
+    h += '<div class="rank-list">';
+    members.forEach(function (m, i) {
+      const me = m.mid === g.mid, today = m.day === todayStr() && m.daily && m.daily[lv];
+      h += '<div class="rank-row' + (i === 0 && sv(m) > 0 ? " first" : "") + '"><span class="rank-n">' + (i + 1) + "</span>" + avatarHtml(m, 44) +
+        '<span class="pinfo"><b>' + esc(m.name) + (me ? ' <em class="me">jij</em>' : "") + "</b><small>" +
+        (m.avg && m.avg[lv] !== undefined ? "Gemiddeld " + m.avg[lv] + "%" : "Nog niet gespeeld") + " · reeks " + (m.streak || 0) + (today ? " · vandaag " + esc(m.daily[lv]) : "") + "</small></span>" +
+        '<span class="rank-stars">' + icon("star", 20, "fill") + sv(m) + "</span></div>";
+    });
+    h += "</div>";
+
+    h += duelPanelHtml(activeDuel(), members.length);
+    h += '<div class="footer-actions"><button class="link-btn" data-act="group-leave">Groep verlaten</button></div>';
+    return h;
+  }
+
+  function duelPanelHtml(d, memberCount) {
+    const g = P.group, mid = g.mid, dis = groupBusy ? " disabled" : "";
+    let h = '<section class="duel-card"><div class="duel-head">' + icon("trophy", 22) + "<h2>Live duel</h2></div>";
+    if (!d) {
+      h += "<p>Speel tegelijk met je groep. Jullie krijgen dezelfde vragen en zien live hoe de anderen ervoor staan.</p>" + tierPickHtml() +
+        '<button class="btn block" data-act="duel-start"' + dis + ">" + icon("right", 20) + "Start een duel (" + (P.mode === "expert" ? "Expert" : "Junior") + (duelTiers().length > 1 ? " · Niveau " + duelTierNow() : "") + ")</button>";
+      return h + "</section>";
+    }
+    const ps = duelPlayers(d), me = d.players && d.players[mid], lvName = (d.level === "expert" ? "Expert" : "Junior") + ((d.tier || 1) > 1 || tiersFor(d.level).length > 1 ? " · Niveau " + (d.tier || 1) : "");
+    h += '<p class="duel-sub">Duel van <b>' + esc(d.hostName || "?") + "</b> · " + lvName + " · " + (d.n || DUEL_N) + " vragen</p><div class=\"duel-players\">" +
+      ps.map(function (p) {
+        return '<span class="chip">' + avatarHtml(p, 24) + esc(p.name) + (d.status !== "lobby" ? " · " + (p.done ? "klaar" : (p.idx || 0) + "/" + (d.n || DUEL_N)) : "") + "</span>";
+      }).join("") + "</div>";
+    if (d.status === "lobby") {
+      if (!me) h += '<button class="btn gold block" data-act="duel-join"' + dis + ">Doe mee met de duel</button>";
+      else if (d.host === mid) {
+        h += '<button class="btn block" data-act="duel-begin"' + (ps.length < 2 || groupBusy ? " disabled" : "") + ">" + (ps.length < 2 ? "Wacht op een meespeler…" : "Start de duel!") + "</button>" +
+          '<button class="btn ghost block" data-act="duel-stop"' + dis + ">Duel annuleren</button>";
+      } else h += '<p class="fine center">Je doet mee. Wachten tot ' + esc(d.hostName || "de starter") + " de duel start…</p>";
+    } else if (d.status === "playing") {
+      if (me) h += '<button class="btn block" data-act="duel-open">' + (me.done ? "Bekijk de stand" : "Verder met de duel") + icon("right", 20) + "</button>";
+      else h += '<p class="fine center">De duel is al bezig. Je kunt de volgende keer meedoen.</p>';
+      if (d.host === mid) h += '<button class="btn ghost block" data-act="duel-stop"' + dis + ">Duel stoppen</button>";
+    } else {
+      if (me) h += '<button class="btn gold block" data-act="duel-open">Bekijk de uitslag</button>';
+      h += tierPickHtml() + '<button class="btn block" data-act="duel-start"' + dis + ">Nieuwe duel starten</button>";
+    }
+    return h + "</section>";
+  }
+
+  function viewDuelResult() {
+    const d = activeDuel(), g = P.group;
+    let h = '<div class="topbar"><button class="icon-btn" data-act="group-back" aria-label="Terug naar groep">' + icon("left", 22) + "</button>" +
+      '<div class="brand">' + icon("trophy", 24) + "Duel</div><span style=\"width:44px\"></span></div>";
+    if (!d || !g) return h + '<p class="fine center">Deze duel is er niet meer.</p><button class="btn block" data-act="group-back">Terug naar groep</button>';
+    const n = d.n || DUEL_N, ps = duelPlayers(d);
+    const live = ps.filter(function (p) { return !isStale(p, d); });
+    const allDone = d.status === "done" || (live.length > 0 && live.every(function (p) { return p.done; }));
+    ps.sort(function (a, b) { return (b.done ? 1 : 0) - (a.done ? 1 : 0) || (b.score || 0) - (a.score || 0) || (a.ms || 0) - (b.ms || 0); });
+    const finished = ps.filter(function (p) { return p.done; });
+    let title = "Wachten op de anderen…", sub = "Je ziet de stand live bijwerken.";
+    if (allDone && finished.length) {
+      const w = finished[0], tie = finished.length > 1 && finished[1].score === w.score;
+      title = w.mid === g.mid ? "Jij wint, Masha’Allah!" : esc(w.name) + " wint!";
+      sub = tie ? "Evenveel goed, " + esc(w.name) + " was het snelst." : "Goed gespeeld allemaal!";
+    }
+    h += '<section class="result"><h1>' + title + '</h1><p class="msg">' + sub + "</p></section><div class=\"rank-list\">";
+    ps.forEach(function (p, i) {
+      const stale = isStale(p, d), state = p.done ? (p.score || 0) + "/" + n + " goed · " + ((p.ms || 0) / 1000).toFixed(1) + " sec" : stale ? "afgehaakt" : "bezig · vraag " + Math.min(n, (p.idx || 0) + 1) + "/" + n;
+      h += '<div class="rank-row' + (allDone && i === 0 && p.done ? " first" : "") + '"><span class="rank-n">' + (allDone && p.done ? i + 1 : "·") + "</span>" + avatarHtml(p, 44) +
+        '<span class="pinfo"><b>' + esc(p.name) + (p.mid === g.mid ? ' <em class="me">jij</em>' : "") + "</b><small>" + esc(state) + "</small></span>" +
+        '<span class="rank-stars">' + (p.done ? icon("check", 22) : "") + "</span></div>";
+    });
+    h += '</div><div class="stack"><button class="btn gold block" data-act="group-back">' + (allDone ? "Terug naar de lobby (kies het niveau)" : "Terug naar groep") + "</button></div>";
+    return h;
+  }
+
+
+  function viewReview() {
+    let h = '<div class="topbar"><button class="icon-btn" data-act="back-result" aria-label="Terug naar resultaat">' + icon("left", 22) + "</button>" +
+      '<button class="btn ghost" data-act="home">' + icon("home", 18) + "Home</button></div>";
+    h += '<section class="review"><h1>Jouw antwoorden</h1>';
+    result.items.forEach(function (it, i) {
+      const q = it.q;
+      h += '<article class="rev-item ' + (it.correct ? "" : "bad") + '"><div class="qn">' + icon(it.correct ? "check" : "x", 16) +
+        "Vraag " + (i + 1) + " · " + esc(catById(q.category).title) + "</div><h3>" + esc(q.question) + "</h3>" +
+        (q.questionArabic ? ar(q.questionArabic) : "");
+      if (it.correct) h += '<div class="rev-line ok">' + icon("check", 18) + "<span>Jouw antwoord (goed): " + esc(q.options[q.answer]) + "</span></div>";
+      else {
+        h += '<div class="rev-line no">' + icon("x", 18) + "<span>Jouw antwoord: " + (it.picked === null ? "geen antwoord (tijd op)" : esc(q.options[it.picked])) + "</span></div>" +
+          '<div class="rev-line ok">' + icon("check", 18) + "<span>Juiste antwoord: " + esc(q.options[q.answer]) + "</span></div>";
+      }
+      h += '<p class="rev-expl">' + esc(q.explanation) + "</p>" + refHtml(q.arabic) + "</article>";
+    });
+    h += '<div class="result-actions"><button class="btn" data-act="retry">' + icon("retry", 20) + "Opnieuw Proberen</button>" +
+      '<button class="btn gold" data-act="home">' + icon("layers", 20) + "Kies Andere Categorie</button></div></section>";
+    return h;
+  }
+
+  /* ───────────── Dialoog ───────────── */
+  function confirmDialog(title, text, okLabel, onOk) {
+    const w = document.createElement("div");
+    w.className = "dialog-wrap";
+    w.innerHTML = '<div class="dialog" role="dialog" aria-modal="true"><h3>' + esc(title) + "</h3><p>" + esc(text) + '</p><div class="row">' +
+      '<button class="btn ghost" data-d="no">Annuleren</button><button class="btn gold" data-d="yes">' + esc(okLabel) + "</button></div></div>";
+    w.addEventListener("click", function (e) {
+      const d = e.target.closest("[data-d]");
+      if (d || e.target === w) { w.remove(); if (d && d.dataset.d === "yes") onOk(); }
+    });
+    document.body.appendChild(w);
+    const yes = w.querySelector('[data-d="yes"]'); if (yes) yes.focus();
+  }
+
+  function createPlayer() {
+    const input = document.getElementById("pname");
+    let name = ((input && input.value) || "").trim().replace(/\s+/g, " ").slice(0, 14);
+    if (!name) name = "Speler " + (S.players.length + 1);
+    const base = name; let n = 2;
+    while (S.players.some(function (p) { return p.name.toLowerCase() === name.toLowerCase(); })) name = base + " " + n++;
+    const p = newPlayer(name, draftColor);
+    S.players.push(p); S.current = p.id; P = p; saveState();
+    play("click"); screen = "welcome"; render();
+  }
+
+  /* ───────────── Groepen & duel (Firebase Realtime Database via REST) ─────────────
+     Geen SDK nodig: anonieme login en database werken via gewone fetch-aanroepen,
+     live updates via Server-Sent Events. Alleen bijnamen en scores worden opgeslagen. */
+  const FB = window.__FB_TEST || {
+    apiKey: "AIzaSyCnpxQWxTP540cnkKjU9xyB8ILkgBGs83I",
+    db: "https://islam-quiz-40597-default-rtdb.europe-west1.firebasedatabase.app",
+    signUpUrl: "https://identitytoolkit.googleapis.com/v1/accounts:signUp",
+    tokenUrl: "https://securetoken.googleapis.com/v1/token",
+  };
+  const SITE_URL = "https://islam-quiz-nl.netlify.app/";
+  const AUTH_KEY = "islam-quiz-auth";
+  const CODE_CHARS = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+  const DUEL_N = 6;
+  const MAX_GROUP = 8;
+  const SV = { ".sv": "timestamp" };
+  const QV = QUESTIONS.length + ":" + hashString(QUESTIONS.map(function (q) { return q.id; }).join(","));
+
+  const cloud = { auth: null, pending: null };
+
+  function loadAuth() { try { return JSON.parse(localStorage.getItem(AUTH_KEY)); } catch (e) { return null; } }
+  function saveAuth(a) { try { localStorage.setItem(AUTH_KEY, JSON.stringify(a)); } catch (e) { /* opslag niet beschikbaar */ } }
+
+  function cloudAuth() {
+    if (!cloud.auth) cloud.auth = loadAuth();
+    const a = cloud.auth;
+    if (a && a.exp > Date.now() + 60000) return Promise.resolve(a);
+    if (cloud.pending) return cloud.pending;
+    cloud.pending = (async function () {
+      try {
+        if (a && a.refreshToken) {
+          const r = await fetch(FB.tokenUrl + "?key=" + FB.apiKey, {
+            method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: "grant_type=refresh_token&refresh_token=" + encodeURIComponent(a.refreshToken),
+          });
+          if (r.ok) {
+            const j = await r.json();
+            cloud.auth = { idToken: j.id_token, refreshToken: j.refresh_token, uid: j.user_id, exp: Date.now() + (parseInt(j.expires_in, 10) || 3600) * 1000 };
+            saveAuth(cloud.auth); return cloud.auth;
           }
-        };
+        }
+        const r2 = await fetch(FB.signUpUrl + "?key=" + FB.apiKey, {
+          method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ returnSecureToken: true }),
+        });
+        if (!r2.ok) { const e = new Error("auth"); e.status = r2.status; throw e; }
+        const j2 = await r2.json();
+        cloud.auth = { idToken: j2.idToken, refreshToken: j2.refreshToken, uid: j2.localId, exp: Date.now() + (parseInt(j2.expiresIn, 10) || 3600) * 1000 };
+        saveAuth(cloud.auth); return cloud.auth;
+      } finally { cloud.pending = null; }
+    })();
+    return cloud.pending;
+  }
 
-        listEl.appendChild(li);
-      });
+  async function dbReq(method, path, body, query) {
+    const auth = await cloudAuth();
+    const url = FB.db + "/" + path + ".json?auth=" + encodeURIComponent(auth.idToken) + (query ? "&" + query : "");
+    const opt = { method: method };
+    if (body !== undefined) { opt.headers = { "Content-Type": "application/json" }; opt.body = JSON.stringify(body); }
+    const r = await fetch(url, opt);
+    if (!r.ok) { const e = new Error("db " + r.status); e.status = r.status; throw e; }
+    return r.json();
+  }
 
-      startBtn.classList.remove('hidden');
+  /* live luisteren naar een pad; geeft {close()} terug */
+  function listen(path, onData, onState) {
+    let es = null, cache = null, closed = false, timer = null;
+    function setAt(p, val) {
+      const parts = String(p).split("/").filter(Boolean);
+      if (!parts.length) { cache = val; return; }
+      if (cache === null || typeof cache !== "object") cache = {};
+      let node = cache;
+      for (let i = 0; i < parts.length - 1; i++) {
+        if (node[parts[i]] === null || typeof node[parts[i]] !== "object") node[parts[i]] = {};
+        node = node[parts[i]];
+      }
+      const last = parts[parts.length - 1];
+      if (val === null) delete node[last]; else node[last] = val;
     }
-
-    function highlightSelectedPlayer(selectedLi) {
-      document.querySelectorAll('.player-item').forEach(el => {
-        el.style.borderColor = '#c8e6c9';
-        el.style.backgroundColor = '#f1f8e9';
-      });
-      selectedLi.style.borderColor = '#2e7d32';
-      selectedLi.style.backgroundColor = '#c8e6c9';
+    async function open() {
+      if (closed) return;
+      try {
+        const auth = await cloudAuth();
+        if (closed) return;
+        es = new EventSource(FB.db + "/" + path + ".json?auth=" + encodeURIComponent(auth.idToken));
+        es.addEventListener("put", function (e) {
+          const m = JSON.parse(e.data); setAt(m.path, m.data);
+          if (onState) onState("online"); onData(cache);
+        });
+        es.addEventListener("patch", function (e) {
+          const m = JSON.parse(e.data);
+          Object.keys(m.data || {}).forEach(function (k) { setAt((m.path === "/" ? "" : m.path) + "/" + k, m.data[k]); });
+          onData(cache);
+        });
+        es.addEventListener("auth_revoked", function () { reopen(); });
+        es.addEventListener("cancel", function () { reopen(); });
+        es.onerror = function () { if (onState) onState("offline"); reopen(); };
+      } catch (err) { if (onState) onState("offline"); reopen(); }
     }
+    function reopen() {
+      if (es) { es.close(); es = null; }
+      if (closed || timer) return;
+      timer = setTimeout(function () { timer = null; cache = null; open(); }, 3000);
+    }
+    open();
+    return { close: function () { closed = true; if (es) es.close(); if (timer) clearTimeout(timer); } };
+  }
 
-    // Speler toevoegen
-    function addPlayer() {
-      const input = document.getElementById('newPlayerName');
-      const name = input.value.trim();
+  /* groepscode */
+  function normCode(s) { return String(s || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6); }
+  function showCode(c) { return c.length > 3 ? c.slice(0, 3) + "-" + c.slice(3) : c; }
+  function genCode() {
+    const a = new Uint32Array(6);
+    (window.crypto || window.msCrypto).getRandomValues(a);
+    let c = ""; for (let i = 0; i < 6; i++) c += CODE_CHARS[a[i] % CODE_CHARS.length];
+    return c;
+  }
 
-      if (name) {
-        players.push(name);
-        localStorage.setItem('islamQuizPlayers', JSON.stringify(players));
-        input.value = '';
-        renderPlayers();
+  function memberPayload(p) {
+    const best = { junior: {}, expert: {} };
+    ["junior", "expert"].forEach(function (lv) {
+      Object.keys(p.best[lv]).forEach(function (k) { best[lv][k] = Math.round((p.best[lv][k].score / p.best[lv][k].total) * 100); });
+    });
+    const day = {};
+    ["junior", "expert"].forEach(function (lv) { const d = p.daily[lv][todayStr()]; if (d) day[lv] = d.score + "/" + d.total; });
+    const o = {
+      name: p.name, color: p.color, updated: SV, played: p.played, streak: streakOf(p), day: todayStr(),
+      stars: { junior: starsAt(p, "junior"), expert: starsAt(p, "expert") }, best: best, daily: day,
+    };
+    ["junior", "expert"].forEach(function (lv) { const a = avgPct(p, lv); if (a !== null) { o.avg = o.avg || {}; o.avg[lv] = a; } });
+    return o;
+  }
+
+  async function pushMember() {
+    if (!P || !P.group) return;
+    try { await dbReq("PUT", "groups/" + P.group.code + "/members/" + P.group.mid, memberPayload(P)); } catch (e) { /* offline: volgende keer */ }
+  }
+
+  async function createGroup() {
+    const auth = await cloudAuth();
+    for (let i = 0; i < 6; i++) {
+      const code = genCode();
+      try {
+        await dbReq("PUT", "groups/" + code + "/meta", { created: SV, owner: auth.uid, v: 1 });
+      } catch (e) { if (e.status === 401 || e.status === 403) continue; throw e; }
+      P.group = { code: code, mid: auth.uid + "-" + P.id }; saveState();
+      await dbReq("PUT", "groups/" + code + "/members/" + P.group.mid, memberPayload(P));
+      return code;
+    }
+    throw new Error("geen vrije code");
+  }
+
+  async function joinGroup(code) {
+    const auth = await cloudAuth();
+    const meta = await dbReq("GET", "groups/" + code + "/meta");
+    if (!meta) { const e = new Error("niet gevonden"); e.kind = "notfound"; throw e; }
+    const mid = auth.uid + "-" + P.id;
+    const keys = (await dbReq("GET", "groups/" + code + "/members", undefined, "shallow=true")) || {};
+    if (Object.keys(keys).length >= MAX_GROUP && !keys[mid]) { const e = new Error("vol"); e.kind = "full"; throw e; }
+    P.group = { code: code, mid: mid }; saveState();
+    await dbReq("PUT", "groups/" + code + "/members/" + mid, memberPayload(P));
+  }
+
+  async function leaveGroup(player) {
+    const g = player.group; if (!g) return;
+    player.group = null; saveState();
+    try {
+      await dbReq("DELETE", "groups/" + g.code + "/members/" + g.mid);
+      const left = await dbReq("GET", "groups/" + g.code + "/members", undefined, "shallow=true");
+      if (!left || !Object.keys(left).length) {
+        await dbReq("DELETE", "groups/" + g.code + "/duel");
+        await dbReq("DELETE", "groups/" + g.code + "/meta");
+      }
+    } catch (e) { /* offline: de lokale koppeling is al verwijderd */ }
+  }
+
+  /* ── groepsscherm: live data ── */
+  let groupSub = null, groupData = null, groupLoaded = false, cloudStatus = "", groupMsg = "", groupBusy = false, startedDuelId = null;
+  let pendingCode = normCode(new URLSearchParams(location.search).get("groep"));
+
+  function openGroupSub() {
+    if (groupSub || !P || !P.group) return;
+    cloudStatus = "connecting"; groupLoaded = false;
+    groupSub = listen("groups/" + P.group.code, onGroupData, function (st) {
+      if (st !== cloudStatus) { cloudStatus = st; if (screen === "group") render(); }
+    });
+  }
+  function closeGroupSub() { if (groupSub) { groupSub.close(); groupSub = null; } groupData = null; groupLoaded = false; }
+
+  function activeDuel() {
+    const d = groupData && groupData.duel;
+    if (!d || !d.id) return null;
+    if (typeof d.created === "number" && Date.now() - d.created > 3 * 3600 * 1000) return null;
+    return d;
+  }
+  function duelPlayers(d) {
+    return Object.keys((d && d.players) || {}).map(function (k) { const p = d.players[k]; p.mid = k; return p; });
+  }
+  function isStale(p, d) { return d.status !== "done" && !p.done && Date.now() - (p.t || 0) > 120000; }
+
+  function onGroupData(data) {
+    groupData = data; groupLoaded = true; cloudStatus = "online";
+    const d = activeDuel(), mid = P && P.group && P.group.mid;
+    if (d && mid) {
+      const me = d.players && d.players[mid];
+      if (d.status === "playing" && me && startedDuelId !== d.id && screen === "group") {
+        startedDuelId = d.id; startDuelQuiz(d); return;
+      }
+      if (d.status === "playing" && d.host === mid) {
+        const ps = duelPlayers(d).filter(function (p) { return !isStale(p, d); });
+        if (ps.length && ps.every(function (p) { return p.done; })) dbReq("PATCH", "groups/" + P.group.code + "/duel", { status: "done" }).catch(function () {});
       }
     }
+    if (screen === "group" || screen === "duelresult") render();
+    else if (screen === "quiz" && quiz && quiz.kind === "duel") updateOppStrip();
+  }
 
-    // Speler verwijderen
-    function deletePlayer(index, event) {
-      event.stopPropagation();
-      players.splice(index, 1);
-      localStorage.setItem('islamQuizPlayers', JSON.stringify(players));
-      renderPlayers();
-    }
+  /* ── duel ── */
+  function duelItems(seed, level, n, tier) {
+    const rnd = mulberry32(seed), picked = [], used = {};
+    shuffle(CATEGORIES, rnd).forEach(function (c) {
+      const p = shuffle(poolFor(level, c.id, tier), rnd);
+      if (p.length) { picked.push(p[0]); used[p[0].id] = true; }
+    });
+    const rest = shuffle(poolFor(level, null, tier).filter(function (q) { return !used[q.id]; }), rnd);
+    while (picked.length < n && rest.length) picked.push(rest.shift());
+    return shuffle(picked, rnd).slice(0, n).map(function (q) {
+      return { q: q, order: shuffle([0, 1, 2, 3], rnd), picked: null, correct: null, timedOut: false };
+    });
+  }
+  function duelPlayerObj() { return { name: P.name, color: P.color, idx: 0, score: 0, ms: 0, done: false, t: Date.now() }; }
 
-    // Spel starten
-    function startGame() {
-      if (!selectedPlayer && players.length > 0) {
-        selectedPlayer = players[0];
+  let duelTier = 1;
+  function duelTiers() { return tiersFor(P.mode || "junior"); }
+  function duelTierNow() { return duelTiers().indexOf(duelTier) >= 0 ? duelTier : 1; }
+  function tierPickHtml() {
+    const ts = duelTiers(); if (ts.length < 2) return "";
+    return '<div class="tier-pick" role="group" aria-label="Niveau van de duel"><span>Niveau</span>' + ts.map(function (t) {
+      return '<button class="tier-chip' + (t === duelTierNow() ? " on" : "") + '" data-act="duel-tier" data-tier="' + t + '">' + t + "</button>";
+    }).join("") + "</div>";
+  }
+  async function startDuel() {
+    const g = P.group;
+    const duel = {
+      id: Date.now().toString(36) + Math.random().toString(36).slice(2, 5), host: g.mid, hostName: P.name, status: "lobby",
+      level: P.mode || "junior", tier: duelTierNow(), seed: Math.floor(Math.random() * 2147483647), n: Math.min(DUEL_N, poolFor(P.mode || "junior", null, duelTierNow()).length), qv: QV, created: SV,
+      players: {},
+    };
+    duel.players[g.mid] = duelPlayerObj();
+    await dbReq("PUT", "groups/" + g.code + "/duel", duel);
+  }
+  async function joinDuel() { await dbReq("PUT", "groups/" + P.group.code + "/duel/players/" + P.group.mid, duelPlayerObj()); }
+  async function beginDuel() { await dbReq("PATCH", "groups/" + P.group.code + "/duel", { status: "playing", startedAt: SV }); }
+  async function stopDuel() { await dbReq("PATCH", "groups/" + P.group.code + "/duel", { status: "done" }); }
+
+  function startDuelQuiz(d) {
+    if (d.qv !== QV) { groupMsg = "Deze duel gebruikt andere vragen. Ververs de app (sluit en open opnieuw) en probeer het nog eens."; screen = "group"; render(); return; }
+    quiz = {
+      kind: "duel", catId: null, level: d.level, tier: d.tier || 1, items: duelItems(d.seed, d.level, d.n, d.tier || 1), idx: 0, score: 0,
+      answered: false, timeLeft: 0, ms: 0, qStart: Date.now(), duelId: d.id,
+    };
+    screen = "quiz"; render();
+  }
+  function pushDuelProgress() {
+    if (!quiz || quiz.kind !== "duel" || !P.group) return;
+    const done = quiz.idx + 1 >= quiz.items.length;
+    const body = { idx: quiz.idx + 1, score: quiz.score, ms: quiz.ms, done: done, t: Date.now() };
+    const path = "groups/" + P.group.code + "/duel/players/" + P.group.mid;
+    dbReq("PATCH", path, body).catch(function () { if (done) setTimeout(function () { dbReq("PATCH", path, body).catch(function () {}); }, 2500); });
+  }
+  function finishDuel() { screen = "duelresult"; render(); }
+
+  function oppStripHtml() {
+    const d = activeDuel(); if (!d || !quiz) return "";
+    const total = d.n || quiz.items.length, mid = P.group.mid;
+    return duelPlayers(d).filter(function (p) { return p.mid !== mid; }).map(function (p) {
+      const pct = Math.min(100, Math.round(((p.idx || 0) / total) * 100));
+      return '<div class="opp"><span class="opp-name">' + avatarHtml(p, 22) + esc(p.name) + '</span><span class="opp-bar"><i style="width:' + pct + '%;background:' + esc(p.color || "#74c69d") + '"></i></span>' +
+        '<span class="opp-score">' + (p.done ? "klaar · " : "") + (p.score || 0) + " goed</span></div>";
+    }).join("");
+  }
+  function updateOppStrip() { const el = document.getElementById("oppStrip"); if (el) el.innerHTML = oppStripHtml(); }
+
+
+  /* ───────────── Installeren als app ───────────── */
+  let deferredInstall = null;
+  function isStandalone() {
+    return (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || window.navigator.standalone === true;
+  }
+  window.addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); deferredInstall = e; });
+  window.addEventListener("appinstalled", function () { deferredInstall = null; if (screen === "home") render(); });
+
+  function infoDialog(title, html) {
+    const w = document.createElement("div");
+    w.className = "dialog-wrap";
+    w.innerHTML = '<div class="dialog" role="dialog" aria-modal="true"><h3>' + esc(title) + "</h3><div class=\"dialog-body\">" + html + '</div><button class="btn block" data-d="ok">Begrepen</button></div>';
+    w.addEventListener("click", function (e) { if (e.target === w || e.target.closest("[data-d]")) w.remove(); });
+    document.body.appendChild(w);
+    const b = w.querySelector("button"); if (b) b.focus();
+  }
+  function installHelp() {
+    const ua = navigator.userAgent || "";
+    const ios = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    const android = /Android/.test(ua);
+    let steps;
+    if (ios) steps = ["Open deze pagina in <b>Safari</b>.", "Tik op de knop <b>Deel</b> (vierkant met pijl omhoog).", "Kies <b>Zet op beginscherm</b>.", "Tik op <b>Voeg toe</b>."];
+    else if (android) steps = ["Open deze pagina in <b>Chrome</b>.", "Tik rechtsboven op het menu <b>⋮</b>.", "Kies <b>App installeren</b> of <b>Toevoegen aan startscherm</b>.", "Bevestig met <b>Installeren</b>."];
+    else steps = ["Gebruik <b>Chrome</b> of <b>Edge</b>.", "Klik rechts in de adresbalk op het <b>installeer-icoon</b>, of open het menu.", "Kies <b>Islam Quiz installeren</b>."];
+    infoDialog("Zet Islam Quiz op je beginscherm", "<ol>" + steps.map(function (t) { return "<li>" + t + "</li>"; }).join("") + "</ol><p>Daarna opent de quiz als een gewone app, ook zonder internet.</p>");
+  }
+
+  /* ───────────── Events ───────────── */
+  document.addEventListener("click", function (e) {
+    const el = e.target.closest("[data-act]");
+    if (!el || el.tagName === "INPUT") return;
+    const act = el.dataset.act;
+    switch (act) {
+      case "pick-mode": P.mode = el.dataset.mode; saveState(); play("click"); screen = pendingCode ? "group" : "home"; render(); break;
+      case "switch-mode": P.mode = P.mode === "junior" ? "expert" : "junior"; saveState(); play("click"); render(); break;
+      case "toggle-sound": S.sound = !S.sound; saveState(); if (S.sound) play("click"); render(); break;
+      case "start-cat":
+        play("click");
+        if (tiersFor(P.mode, el.dataset.cat).length > 1) tierDialog(el.dataset.cat); else startQuiz("category", el.dataset.cat, 1);
+        break;
+      case "start-tier": { play("click"); const dw = document.querySelector(".dialog-wrap"); if (dw) dw.remove(); startQuiz("category", el.dataset.cat, parseInt(el.dataset.tier, 10)); break; }
+      case "go-next-tier": play("click"); stopTimer(); startQuiz("category", result.catId, result.next); break;
+      case "start-daily": play("click"); startQuiz("daily"); break;
+      case "answer": answer(parseInt(el.dataset.pos, 10)); break;
+      case "next": next(); break;
+      case "retry":
+        play("click");
+        if (result && result.kind === "daily") startQuiz("daily"); else startQuiz("category", result.catId, result.tier);
+        break;
+      case "home": play("click"); stopTimer(); screen = "home"; render(); break;
+      case "scores": play("click"); screen = "scores"; render(); break;
+      case "review": play("click"); if (result) result.noAuto = true; screen = "review"; render(); break;
+      case "back-result": screen = "result"; render(); break;
+      case "leave":
+        stopTimer();
+        confirmDialog("Quiz stoppen?", quiz && quiz.kind === "duel" ? "Je verlaat de duel. De anderen spelen verder." : "Je voortgang in deze ronde gaat verloren.", "Ja, stoppen", function () { screen = quiz && quiz.kind === "duel" ? "group" : "home"; render(); });
+        if (quiz && !quiz.answered && quiz.level === "expert" && S.timer && quiz.kind !== "duel") { /* timer is gepauzeerd; herstart bij annuleren */
+          const d = document.querySelector(".dialog-wrap");
+          if (d) d.addEventListener("click", function (ev) { if (ev.target.closest('[data-d="no"]') || ev.target === d) { if (screen === "quiz" && !quiz.answered) startTimer(); } });
+        }
+        break;
+      case "reset":
+        confirmDialog("Voortgang wissen?", "Alle scores, sterren en de reeks van " + P.name + " worden verwijderd. Andere spelers blijven staan.", "Ja, wissen", function () {
+          const fresh = newPlayer(P.name, P.color);
+          P.best = fresh.best; P.daily = fresh.daily; P.streak = fresh.streak; P.played = 0; saveState(); render();
+        });
+        break;
+      case "install":
+        if (deferredInstall) { deferredInstall.prompt(); deferredInstall = null; } else installHelp();
+        break;
+      case "players": play("click"); stopTimer(); screen = "players"; render(); break;
+      case "add-player": play("click"); draftColor = AVATAR_COLORS[S.players.length % AVATAR_COLORS.length]; screen = "newplayer"; render(); break;
+      case "pick-color":
+        draftColor = el.dataset.color;
+        document.querySelectorAll(".swatch").forEach(function (b) { const on = b.dataset.color === draftColor; b.classList.toggle("on", on); b.setAttribute("aria-checked", on); });
+        break;
+      case "create-player": createPlayer(); break;
+      case "select-player": play("click"); selectPlayer(el.dataset.id); break;
+      case "remove-player": {
+        const victim = S.players.find(function (p) { return p.id === el.dataset.id; });
+        if (!victim) break;
+        confirmDialog("Speler verwijderen?", "Alle scores van " + victim.name + " worden gewist. Dit kan niet ongedaan gemaakt worden.", "Ja, verwijderen", function () {
+          closeGroupSub(); leaveGroup(victim);
+          S.players = S.players.filter(function (p) { return p.id !== victim.id; });
+          if (S.current === victim.id) { S.current = S.players[0].id; P = currentPlayer(); }
+          saveState(); render();
+        });
+        break;
       }
-      
-      document.getElementById('playerSection').classList.add('hidden');
-      document.getElementById('quizSection').classList.remove('hidden');
-      document.getElementById('welcomeHeader').innerText = `Veel succes, ${selectedPlayer}!`;
+      case "group": play("click"); groupMsg = ""; screen = "group"; render(); break;
+      case "group-back": play("click"); groupMsg = ""; screen = "group"; render(); break;
+      case "group-create": play("click"); runCloud(function () { return createGroup().then(function () { pendingCode = ""; }); }); break;
+      case "group-join": {
+        const inp = document.getElementById("gcode");
+        pendingCode = normCode(inp ? inp.value : pendingCode);
+        if (pendingCode.length !== 6) { groupMsg = "Een groepscode heeft 6 tekens, bijvoorbeeld KRM-7QX."; render(); break; }
+        play("click");
+        const code = pendingCode;
+        runCloud(function () { return joinGroup(code).then(function () { pendingCode = ""; }); });
+        break;
+      }
+      case "copy-code": {
+        const txt = shareText(P.group.code);
+        const done = function () { const b = el; b.textContent = "Gekopieerd!"; setTimeout(function () { if (b.isConnected) b.textContent = "Kopieer"; }, 1600); };
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done, function () { window.prompt("Kopieer deze tekst:", txt); });
+        else window.prompt("Kopieer deze tekst:", txt);
+        break;
+      }
+      case "group-leave":
+        confirmDialog("Groep verlaten?", "Je verdwijnt uit het scorebord van de groep. Je eigen scores op dit toestel blijven staan.", "Ja, verlaten", function () {
+          closeGroupSub(); const who = P; leaveGroup(who); startedDuelId = null; groupMsg = ""; render();
+        });
+        break;
+      case "group-leave-now": closeGroupSub(); leaveGroup(P); groupMsg = ""; render(); break;
+      case "duel-start": play("click"); runCloud(startDuel); break;
+      case "duel-tier": play("click"); duelTier = parseInt(el.dataset.tier, 10); render(); break;
+      case "duel-join": play("click"); runCloud(joinDuel); break;
+      case "duel-begin": play("click"); runCloud(beginDuel); break;
+      case "duel-stop": runCloud(stopDuel); break;
+      case "duel-open": {
+        const d = activeDuel(), me = d && d.players && d.players[P.group.mid];
+        play("click");
+        if (d && me && d.status === "playing" && !me.done) {
+          if (quiz && quiz.kind === "duel" && quiz.duelId === d.id) { screen = "quiz"; render(); }
+          else { startedDuelId = d.id; startDuelQuiz(d); }
+        } else { screen = "duelresult"; render(); }
+        break;
+      }
+      case "board": play("click"); boardLevel = (P && P.mode) || boardLevel; screen = "board"; render(); break;
+      case "board-level": boardLevel = el.dataset.level; render(); break;
     }
+  });
 
-    function resetToPlayers() {
-      document.getElementById('quizSection').classList.add('hidden');
-      document.getElementById('playerSection').classList.remove('hidden');
-    }
+  document.addEventListener("change", function (e) {
+    const el = e.target;
+    if (el && el.dataset && el.dataset.act === "toggle-timer") { S.timer = el.checked; saveState(); play("click"); }
+  });
 
-    // Initialiseren
-    renderPlayers();
-  </script>
+  document.addEventListener("keydown", function (e) {
+    if (screen === "newplayer" && e.key === "Enter") { createPlayer(); return; }
+    if (screen !== "quiz" || !quiz || document.querySelector(".dialog-wrap")) return;
+    if (!quiz.answered && /^[1-4]$/.test(e.key)) answer(parseInt(e.key, 10) - 1);
+    else if (quiz.answered && e.key === "Enter" && document.activeElement.tagName !== "BUTTON") next();
+  });
+
+  // zorg dat geluid werkt op mobiel na de eerste aanraking
+  document.addEventListener("pointerdown", function () { if (S.sound) ctx(); }, { once: true });
+
+  render();
+})();
+
+</script>
+<script>
+if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+  window.addEventListener("load", function () { navigator.serviceWorker.register("sw.js").catch(function () {}); });
+}
+</script>
 </body>
 </html>
