@@ -515,8 +515,57 @@ table.board thead th .avatar { display: grid; margin: 0 auto; }
 .tier-pick { display: flex; align-items: center; gap: 8px; font-weight: 800; color: var(--emerald-dark); }
 .tier-chip { width: 44px; height: 44px; border-radius: 14px; border: 3px solid var(--line); background: #fff; font: inherit; font-weight: 900; font-size: 1.05rem; color: var(--emerald-dark); cursor: pointer; }
 .tier-chip.on { background: var(--emerald); border-color: var(--emerald); color: #fff; }
+/* Modal Overlay voor Disclaimer */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(20, 50, 25, 0.65);
+      backdrop-filter: blur(4px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 20px;
+    }
 
-</style>
+    .modal-content {
+      background: #ffffff;
+      padding: 30px 25px;
+      border-radius: 20px;
+      max-width: 420px;
+      text-align: center;
+      border: 2px solid #a5d6a7;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .modal-icon {
+      font-size: 38px;
+      margin-bottom: 10px;
+    }
+
+    .modal-content h3 {
+      color: #1b5e20;
+      font-size: 20px;
+      margin-bottom: 14px;
+    }
+
+    .modal-content p {
+      color: #37474f;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 22px;
+      background: #f1f8e9;
+      padding: 15px;
+      border-radius: 12px;
+      border-left: 4px solid #2e7d32;
+      text-align: left;
+    }
+   .hidden {display:none !important;
+   }
+   </style>
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Islam Quiz">
   <meta property="og:locale" content="nl_NL">
@@ -539,9 +588,28 @@ table.board thead th .avatar { display: grid; margin: 0 auto; }
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
 </head>
 <body>
+  <!-- Disclaimer Modal -->
+  <div id="disclaimerModal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-icon">📜</div>
+      <h3>Belangrijke Mededeling</h3>
+      <p>
+        Dit spel bevat koranteksten en islamitische inhoud. Speel dit spel niet op onreine plekken (zoals het toilet of de badkamer).
+        <br><br>
+        De maker is hiervoor niet verantwoordelijk; de verantwoordelijkheid ligt bij de speler zelf.
+      </p>
+      <button class="btn" onclick="acceptDisclaimer()">Gelezen & Akkoord</button>
+    </div>
+  </div>
   <div id="app" aria-live="polite"></div>
   <noscript>Deze quiz heeft JavaScript nodig. Zet JavaScript aan in je browser.</noscript>
   <script>
+    function acceptDisclaimer() {
+    const modal = document.getElementById('disclaimerModal');
+    if (modal) {
+      modal.classList.add('hidden');
+    }
+  }
 var QuizData=(function(){var exports={};
 "use strict";
 // ============================================================
