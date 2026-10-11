@@ -1,45 +1,35 @@
-/* Islam Quiz – service worker: laat de app offline werken.
-   20261007201611 wordt bij het bouwen vervangen, zodat een nieuwe versie de oude cache vervangt. */
-const CACHE = "islam-quiz-20261007201611";
-const CORE = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
+/* Islam Quiz – service worker (netwerk eerst, cache als terugval)
+   Verhoog CACHE_VERSION bij elke release. Zo zien bezoekers altijd meteen de nieuwste versie. */
+const CACHE_VERSION = "islam-quiz-v3";
 
-self.addEventListener("install", (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(CORE)).then(() => self.skipWaiting()));
+self.addEventListener("install", (event) => { event.waitUntil(self.skipWaiting()); });
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(keys.filter((k) => k !== CACHE_VERSION).map((k) => caches.delete(k)));
+    await self.clients.claim();
+  })());
 });
 
-self.addEventListener("activate", (e) => {
-  e.waitUntil(
-    caches.keys()
-      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
-      .then(() => self.clients.claim())
-  );
-});
-
-self.addEventListener("fetch", (e) => {
-  const req = e.request;
+self.addEventListener("fetch", (event) => {
+  const req = event.request;
   if (req.method !== "GET") return;
   const url = new URL(req.url);
-  const sameOrigin = url.origin === self.location.origin;
-  const fonts = url.hostname === "fonts.googleapis.com" || url.hostname === "fonts.gstatic.com";
-  if (!sameOrigin && !fonts) return;
+  if (url.origin !== self.location.origin) return;                 // Firebase, lettertypen enz. rechtstreeks
+  if (req.headers.has("range")) return;
 
-  // Pagina's: eerst het netwerk (nieuwste versie), anders de cache
-  if (req.mode === "navigate") {
-    e.respondWith(
-      fetch(req)
-        .then((res) => { const copy = res.clone(); caches.open(CACHE).then((c) => c.put("./index.html", copy)); return res; })
-        .catch(() => caches.match("./index.html"))
-    );
-    return;
-  }
-  // Overig (afbeeldingen, lettertypen): cache eerst, op de achtergrond verversen
-  e.respondWith(
-    caches.match(req).then((hit) => {
-      const net = fetch(req).then((res) => {
-        if (res && (res.ok || res.type === "opaque")) { const copy = res.clone(); caches.open(CACHE).then((c) => c.put(req, copy)); }
-        return res;
-      }).catch(() => hit);
-      return hit || net;
-    })
-  );
+  event.respondWith((async () => {
+    try {
+      const res = await fetch(req, { cache: "no-cache" });          // altijd eerst de verse versie ophalen
+      if (res.ok && res.type === "basic") {
+        const cache = await caches.open(CACHE_VERSION);
+        cache.put(req, res.clone());
+      }
+      return res;
+    } catch (e) {
+      const hit = (await caches.match(req, { ignoreSearch: true })) || (req.mode === "navigate" ? await caches.match("index.html") || await caches.match("./") : null);
+      return hit || new Response("Geen verbinding. Probeer het later opnieuw.", { status: 503, headers: { "Content-Type": "text/plain; charset=utf-8" } });
+    }
+  })());
 });
