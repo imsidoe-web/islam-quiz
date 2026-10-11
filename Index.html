@@ -749,6 +749,23 @@ table.board thead th .avatar { display: grid; margin: 0 auto; }
   color: #9CA3AF;
   border: 1px solid #6B7280;
 }
+
+.tier-btn.locked { opacity: .55; cursor: not-allowed; filter: grayscale(.6); box-shadow: none; }
+.tier-btn.locked:active { transform: none; }
+.badge-section { grid-column: 1 / -1; color: #D9A05B; font-weight: 800; letter-spacing: .5px; margin-top: 8px; }
+.badge-card.unlocked.master { border-color: #cfd8dc; box-shadow: 0 4px 15px rgba(207, 216, 220, .3); }
+.badge-card.unlocked.master .badge-icon { border-color: #cfd8dc; background: rgba(207, 216, 220, .15); }
+.badge-card.unlocked.master .badge-title { color: #e3e9ec; }
+.badge-card.unlocked.grand { border-color: #ffd54f; box-shadow: 0 4px 22px rgba(255, 213, 79, .45); }
+.badge-earned { display: flex; align-items: center; gap: 12px; margin-top: 12px; padding: 12px 16px; border-radius: 18px; text-align: left; animation: pop .6s ease both; }
+.badge-earned b { display: block; }
+.badge-earned .be-icon { font-size: 2rem; }
+.badge-earned.master { background: linear-gradient(135deg, #eceff1, #cfd8dc); color: #263238; }
+.badge-earned.grand { background: linear-gradient(135deg, #fff3c4, #ffd54f); color: #5a3d00; }
+.lock-note { margin-top: 12px; padding: 10px 14px; border-radius: 14px; background: #f1f3f4; color: #455a64; font-weight: 700; font-size: .9rem; }
+.option.selected { background: var(--gold-soft); border-color: var(--gold); box-shadow: 0 4px 0 var(--gold); }
+.option.selected .letter { background: var(--gold); color: #fff; }
+.multi-hint { margin-top: 8px; font-weight: 800; font-size: .85rem; color: #7a4d10; background: var(--gold-soft); border-radius: 12px; padding: 6px 10px; display: inline-block; }
    </style>
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Islam Quiz">
@@ -786,7 +803,7 @@ table.board thead th .avatar { display: grid; margin: 0 auto; }
     </div>
   </div>
   <!-- Knop voor Achievements / Badges -->
-<div style="text-align: center; margin: 15px auto; max-width: 400px; padding: 0 15px;">
+<div id="badgesBtnWrap" style="display:none; text-align: center; margin: 15px auto; max-width: 400px; padding: 0 15px;">
   <button class="btn-achievements" onclick="openBadgesModal()">
     <span>🏆</span> Mijn Prestaties & Badges
   </button>
@@ -821,8 +838,8 @@ var QuizData=(function(){var exports={};
 //  Islam Quiz – vragenbestand
 //  Voeg gerust nieuwe vragen toe aan de lijst `questions`.
 //  - level:  'junior' (kinderen) of 'expert' (volwassenen)  = de doelgroep
-//  - tier:   moeilijkheidsniveau 1 (basis), 2 (gemiddeld) of 3 (gevorderd); weggelaten = 1
-//            In de app heet dit simpelweg 'Niveau 1/2/3'.
+//  - tier:   moeilijkheidsniveau 1 (basis), 2 (gemiddeld) of 3 (gevorderd) of 4 (expert); weggelaten = 1
+//            In de app heet dit simpelweg 'Niveau 1/2/3/4'.
 //  - answer: index (0-3) van het juiste antwoord in `options`
 //            (de app schudt de volgorde bij elke vraag zelf)
 //  - arabic: optionele Arabische tekst (met harakat) + vertaling + bron
@@ -1112,6 +1129,84 @@ exports.questions = [
             source: "Soera At-Tawbah 9:103",
         },
     },
+    // ---------- 2. DE 5 ZUILEN & AQEEDA · NIVEAU 4 ----------
+{
+    id: "z-l4-1", category: "zuilen", level: "expert", tier: 4, type: "multi",
+    question: "Volgens welke wetscholen (Madhhabs) verbreekt het aanraken van een persoon van het andere geslacht (zonder barrière) de wudhu?",
+    options: ["Hanafi", "Maliki", "Shafi'i", "Hanbali"], answer: [2],
+    explanation: "Bij de Shafi'i-wetschool verbreekt elk direct contact tussen man en vrouw de wudhu. Bij Maliki en Hanbali alleen bij verlangen, en bij Hanafi verbreekt het de wudhu niet.",
+    arabic: {
+        text: "أَوْ لَامَسْتُمُ النِّسَاءَ",
+        translation: "Of wanneer jullie in aanraking zijn geweest met vrouwen.",
+        source: "Soera An-Nisa 4:43"
+    }
+},
+{
+    id: "z-l4-2", category: "zuilen", level: "expert", tier: 4, type: "multi",
+    question: "Volgens welke wetscholen (Madhhabs) is het verbreken van de wudhu verplicht bij het eten van kameelvlees?",
+    options: ["Hanafi", "Maliki", "Shafi'i", "Hanbali"], answer: [3],
+    explanation: "Alleen binnen de Hanbali-wetschool verbreekt het eten van kameelvlees de wudhu, gebaseerd op de specifieke Hadith hierover.",
+    arabic: {
+        text: "تَوَضَّأُوا مِنْ لُحُومِ الإِبِلِ",
+        translation: "Verricht de wudhu na het eten van kameelvlees.",
+        source: "Sahih Muslim"
+    }
+},
+{
+    id: "z-l4-3", category: "zuilen", level: "expert", tier: 4, type: "multi",
+    question: "Volgens welke wetscholen is het opzeggen van de Basmalah (Bismillah) een verplicht onderdeel (Rukn/Wajib) van Soera Al-Fatiha in het gebed?",
+    options: ["Hanafi", "Maliki", "Shafi'i", "Hanbali"], answer: [2, 3],
+    explanation: "Bij de Shafi'i en Hanbali wetscholen wordt de Basmalah als een essentieel vers van Al-Fatiha beschouwd dat hardop of zacht opgezegd dient te worden.",
+    arabic: {
+        text: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+        translation: "In de naam van Allah, de Erbarmer, de Genadevolle.",
+        source: "Soera Al-Fatiha 1:1"
+    }
+},
+{
+    id: "z-l4-4", category: "zuilen", level: "expert", tier: 4,
+    question: "Wat is het belangrijkste verschil tussen Tawheed ar-Ruboobiyyah en Tawheed al-Uloohiyyah?",
+    options: ["Ruboobiyyah betreft de daden van Allah (Schepper/Heerser), Uloohiyyah betreft de daden van de dienaar (aanbidding alleen aan Allah)", "Ruboobiyyah is voor engelen en Uloohiyyah voor profeten", "Ruboobiyyah gaat over Fiqh en Uloohiyyah over Hadith", "Er is geen enkel verschil tussen deze twee begrippen"], answer: 0,
+    explanation: "Tawheed ar-Ruboobiyyah is het erkennen van Allah als de enige Schepper en Onderhouder. Tawheed al-Uloohiyyah vereist dat alle aanbidding uitsluitend aan Hem wordt gericht.",
+    arabic: {
+        text: "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ",
+        translation: "Alle lof zij Allah, de Heer der Werelden.",
+        source: "Soera Al-Fatiha 1:2"
+    }
+},
+{
+    id: "z-l4-5", category: "zuilen", level: "expert", tier: 4,
+    question: "Wat verstaat men onder de term 'Al-Ghaib' in de Islamitische Aqeeda?",
+    options: ["Het ongeziene/verborgene dat alleen Allah volledig kent", "Kennis over geschiedenis en oude volkeren", "De kennis die de engelen zelfstandig hebben opgebouwd", "Dromen die mensen uitleggen"], answer: 0,
+    explanation: "Al-Ghaib omvat zaken zoals het Uur, het Hiernamaals en de engelen, waarvan de kennis uitsluitend bij Allah rust.",
+    arabic: {
+        text: "وَعِندَهُ مَفَاتِحُ الْغَيْبِ لَا يَعْلَمُهَا إِلَّا هُوَ",
+        translation: "En bij Hem rusten de sleutels van het ongeziene; niemand kent deze behalve Hij.",
+        source: "Soera Al-An'am 6:59"
+    }
+},
+{
+    id: "z-l4-6", category: "zuilen", level: "expert", tier: 4,
+    question: "Wat is de nisab (drempelwaarde) voor het verplicht betalen van Zakat over goud?",
+    options: ["85 gram zuiver goud", "50 gram zuiver goud", "100 gram zuiver goud", "200 gram zuiver goud"], answer: 0,
+    explanation: "Wanneer iemand gedurende een heel maanjaar bezit heeft dat gelijk staat aan minstens 85 gram zuiver goud, wordt 2,5% Zakat verplicht.",
+    arabic: {
+        text: "وَأَقِيمُوا الصَّلَاةَ وَآتُوا الزَّكَاةَ",
+        translation: "En onderhoud het gebed en geef de Zakat.",
+        source: "Soera Al-Baqarah 2:43"
+    }
+},
+{
+    id: "z-l4-7", category: "zuilen", level: "expert", tier: 4,
+    question: "Welke categorie van mensen heeft volgens Soera At-Tawbah (vers 60) géén recht op het ontvangen van Zakat?",
+    options: ["Rijke mensen die in hun eigen onderhoud kunnen voorzien", "Armen (Al-Fuqara)", "Behoeftigen (Al-Masakin)", "Mensen met schulden (Al-Gharimun)"], answer: 0,
+    explanation: "In Soera At-Tawbah worden 8 specifieke categorieën genoemd die Zakat mogen ontvangen; vermogenden horen hier niet bij.",
+    arabic: {
+        text: "إِنَّمَا الصَّدَقَاتُ لِلْفُقَرَاءِ وَالْمَسَاكِينِ",
+        translation: "Voorwaar, de aalmoezen zijn slechts voor de armen en de behoeftigen...",
+        source: "Soera At-Tawbah 9:60"
+    }
+},
     // ───────────────────── 3. SEERAH & METGEZELLEN · JUNIOR ─────────────────────
     {
         id: "s-j1", category: "seerah", level: "junior",
@@ -1231,6 +1326,84 @@ exports.questions = [
         options: ["As-Siddiq", "Al-Faaroeq", "Dhun-Nurayn", "Al-Murtadaa"], answer: 1,
         explanation: "‘Al-Faaroeq’ betekent ‘degene die onderscheidt’. Umar was de tweede kalief, bekend om zijn rechtvaardigheid. Onder zijn bestuur breidde de moslimgemeenschap zich sterk uit. Abu Bakr was ‘As-Siddiq’ en Uthman ‘Dhun-Nurayn’.",
     },
+   // ---------- 3. SEERAH & METGEZELLEN · NIVEAU 4 ----------
+  {
+    id: "s-l4-1", category: "seerah", level: "expert", tier: 4,
+    question: "Welke bekende veldslag vond plaats in het 3e jaar na de Hijrah, waarin de moslims beproefd werden na een initiële overwinning?",
+    options: ["Slag bij Uhud", "Slag bij Badr", "Slag bij Hunayn", "Slag bij Tabuk"], answer: 0,
+    explanation: "De Slag bij Uhud vond plaats in 3 A.H. De moslims leden verliezen nadat de boogschutters hun aangewezen posities op de berg verlieten.",
+    arabic: {
+        text: "إِذْ تُصْعِدُونَ وَلَا تَلْوُونَ عَلَىٰ أَحَدٍ",
+        translation: "Toen jullie wegrenden en naar niemand omkeken...",
+        source: "Soera Ali 'Imran 3:153"
+    }
+},
+  {
+    id: "s-l4-2", category: "seerah", level: "expert", tier: 4,
+    question: "Wat was de naam van het verdrag dat in 6 A.H. werd gesloten tussen de moslims en Quraish, wat leidde tot een periode van vrede?",
+    options: ["Verdrag van Hudaybiyyah", "Pact van Madinah", "Eed van Ridwan", "Verdrag van Ta'if"], answer: 0,
+    explanation: "Het Verdrag van Hudaybiyyah bleek een grote strategische en spirituele overwinning te zijn, door de Koran aangeduid als 'Fath mubeen'.",
+    arabic: {
+        text: "إِنَّا فَتَحْنَا لَكَ فَتْحًا مُّبِينًا",
+        translation: "Voorwaar, Wij hebben jou een duidelijke overwinning geschonken.",
+        source: "Soera Al-Fath 48:1"
+    }
+  },
+  {
+    id: "s-l4-3", category: "seerah", level: "expert", tier: 4,
+    question: "Welke metgezel stond bekend om zijn bijnaam 'Dhun-Noorayn' (Eigenaar van de twee lichten) omdat hij met twee dochters van de Profeet ﷺ was getrouwd?",
+    options: ["Uthman ibn Affan (r.a.)", "Ali ibn Abi Talib (r.a.)", "Abu Bakr as-Siddiq (r.a.)", "Umar ibn al-Khattab (r.a.)"], answer: 0,
+    explanation: "Uthman (r.a.) trouwde eerst met Ruqayyah en na haar overlijden met Umm Kulthum, beide dochters van de Profeet ﷺ.",
+    arabic: {
+        text: "وَالسَّابِقُونَ الْأَوَّلُونَ مِنَ الْمُهَاجِرِينَ وَالْأَنصَارِ",
+        translation: "En de pioniers, de eersten van de Emigranten en de Helpers...",
+        source: "Soera At-Tawbah 9:100"
+    }
+  },
+  {
+    id: "s-l4-4", category: "seerah", level: "expert", tier: 4,
+    question: "In welk jaar vond de Inname van Makkah (Fath Makkah) plaats zonder dat er grootschalig bloedvergieten aan te pas kwam?",
+    options: ["8 Hijri", "6 Hijri", "10 Hijri", "2 Hijri"], answer: 0,
+    explanation: "In het jaar 8 A.H. trok de Profeet ﷺ met een leger van 10.000 moslims Makkah binnen en schonk algehele genade aan de inwoners.",
+    arabic: {
+        text: "إِذَا جَاءَ نَصْرُ اللَّهِ وَالْفَتْحُ",
+        translation: "Wanneer de hulp van Allah en de overwinning komen...",
+        source: "Soera An-Nasr 110:1"
+    }
+  },
+  {
+    id: "s-l4-5", category: "seerah", level: "expert", tier: 4,
+    question: "Welke metgezel adviseerde de Profeet ﷺ om een diepe greppel (Khandaq) te graven ter verdediging van Madinah?",
+    options: ["Salman al-Farsi (r.a.)", "Abu Dharr al-Ghifari (r.a.)", "Bilal ibn Rabah (r.a.)", "Mu'adh ibn Jabal (r.a.)"], answer: 0,
+    explanation: "Salman al-Farsi (r.a.) stelde deze Perzische verdedigingstactiek voor, wat de aanval van de bondgenoten (Al-Ahzab) blokkeerde.",
+    arabic: {
+        text: "وَرَدَّ اللَّهُ الَّذِينَ كَفَرُوا بِغَيْظِهِمْ لَمْ يَنَالُوا خَيْرًا",
+        translation: "En Allah sloeg de ongelovigen terug in hun woede; zij behaalden geen enkel voordeel.",
+        source: "Soera Al-Ahzab 33:25"
+    }
+  },
+  {
+    id: "s-l4-6", category: "seerah", level: "expert", tier: 4,
+    question: "Welke afgezant werd door de Profeet ﷺ naar Madinah gestuurd vóór de Hijrah om de mensen de Koran en de Islam te onderwijzen?",
+    options: ["Mus'ab ibn 'Umair (r.a.)", "Zayd ibn Harithah (r.a.)", "Sa'd ibn Mu'adh (r.a.)", "Abdullah ibn Mas'ud (r.a.)"], answer: 0,
+    explanation: "Mus'ab ibn 'Umair (r.a.) was de eerste ambassadeur van de Islam en bereidde Madinah voor op de komst van de Profeet ﷺ.",
+    arabic: {
+        text: "مِّنَ الْمُؤْمِنِينَ رِجَالٌ صَدَقُوا مَا عَاهَدُوا اللَّهَ عَلَيْهِ",
+        translation: "Onder de gelovigen zijn er mannen die hun belofte aan Allah getrouw zijn nagekomen.",
+        source: "Soera Al-Ahzab 33:23"
+    }
+  },
+  {
+    id: "s-l4-7", category: "seerah", level: "expert", tier: 4,
+    question: "Wat was de naam van het verbond waarbij stamhoofden in Makkah (vóór de Islam) afspraken om de onderdrukten en vreemdelingen te beschermen?",
+    options: ["Hilf al-Fudul", "Dar al-Arqam", "Hilf al-Ahabish", "Bay'at al-'Aqabah"], answer: 0,
+    explanation: "Hilf al-Fudul was een rechtvaardigheidsverbond waarbij de Profeet ﷺ in zijn jeugd aanwezig was en dat hij ook tijdens de Islam prees.",
+    arabic: {
+        text: "وَتَعَاوَنُوا عَلَى الْبِرِّ وَالتَّقْوَىٰ",
+        translation: "En helpt elkaar in goedheid en godsvrucht...",
+        source: "Soera Al-Ma'idah 5:2"
+    }
+  },
     // ───────────────────── 4. KORAN & KENNIS · JUNIOR ─────────────────────
     {
         id: "k-j1", category: "koran", level: "junior",
@@ -1294,6 +1467,7 @@ exports.questions = [
             source: "Soera Ash-Shu’araa 26:193-194",
         },
     },
+    
     // ───────────────────── 4. KORAN & KENNIS · EXPERT ─────────────────────
     {
         id: "k-e1", category: "koran", level: "expert",
@@ -1367,6 +1541,84 @@ exports.questions = [
             source: "Hadith – Bukhari",
         },
     },
+  // ---------- 4. KORAN & KENNIS · NIVEAU 4 ----------
+ {
+    id: "k-l4-1", category: "koran", level: "expert", tier: 4,
+    question: "Welke Soera in de Koran bevat geen Basmalah (Bismillah ar-Rahman ar-Rahim) aan het begin?",
+    options: ["Soera At-Tawbah", "Soera An-Naml", "Soera Yasin", "Soera Al-Anfal"], answer: 0,
+    explanation: "Soera At-Tawbah is de enige Soera die niet begint met de Basmalah, voornamelijk vanwege de strenge waarschuwingen aan de afgodendienaars.",
+    arabic: {
+      text: "بَرَاءَةٌ مِّنَ اللَّهِ وَرَسُولِهِ إِلَى الَّذِينَ عَاهَدتُّم مِّنَ الْمُشْرِكِينَ",
+      translation: "Een opzegging door Allah en Zijn Boodschapper aan degenen van de afgodendienaars met wie jullie een verdrag sloten.",
+      source: "Soera At-Tawbah 9:1"
+    }
+  },
+  {
+    id: "k-l4-2", category: "koran", level: "expert", tier: 4,
+    question: "In welke Soera komt de Basmalah twee keer voor (één keer aan het begin en één keer in de tekst zelf)?",
+    options: ["Soera An-Naml", "Soera Al-Baqarah", "Soera Hud", "Soera Ar-Rahman"], answer: 0,
+    explanation: "In Soera An-Naml staat de Basmalah aan het begin én in vers 30, als onderdeel van de brief van Profeet Sulayman (a.s.) aan de koningin van Saba.",
+    arabic: {
+      text: "إِنَّهُ مِن سُلَيْمَانَ وَإِنَّهُ بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+      translation: "Voorwaar, het is van Sulayman en voorwaar, het luidt: In de naam van Allah, de Erbarmer, de Meest Barmhartige.",
+      source: "Soera An-Naml 27:30"
+    }
+  },
+  {
+    id: "k-l4-3", category: "koran", level: "expert", tier: 4,
+    question: "Wat wordt bedoeld met de term 'Makki Soerahs' in de Koranwetenschappen?",
+    options: ["Openbaringen die zijn geopenbaard vóór de Hijrah naar Madinah", "Soera's die uitsluitend binnen de grenzen van Makkah zijn geopenbaard", "Soera's die korter zijn dan 10 verzen", "Soera's die alleen over regelgeving (Fiqh) gaan"], answer: 0,
+    explanation: "Volgens de sterkste opinie van de geleerden zijn Makki Soerahs alle openbaringen die vóór de Hijrah plaatsvonden, ongeacht de locatie.",
+    arabic: {
+      text: "وَوَحْيُ اللَّهِ يُتْلَىٰ",
+      translation: "En de openbaring van Allah wordt gereciteerd.",
+      source: "Soera Al-Hajj 22:73"
+    }
+  },
+  {
+    id: "k-l4-4", category: "koran", level: "expert", tier: 4,
+    question: "Welke Soera in de Koran wordt beschouwd als het hart van de Koran (Qalb al-Qur'an)?",
+    options: ["Soera Yasin", "Soera Al-Mulk", "Soera Al-Fatiha", "Soera Ar-Rahman"], answer: 0,
+    explanation: "Soera Yasin wordt in bekende overleveringen aangeduid als het hart van de Koran vanwege de krachtige vermaningen over de Opstanding.",
+    arabic: {
+      text: "يس وَالْقُرْآنِ الْحَكِيمِ",
+      translation: "Yasin. Bij de wijze Koran.",
+      source: "Soera Yasin 36:1-2"
+    }
+  },
+  {
+    id: "k-l4-5", category: "koran", level: "expert", tier: 4,
+    question: "Wat is de langste Soera in de Koran, bestaande uit 286 verzen?",
+    options: ["Soera Al-Baqarah", "Soera Ali 'Imran", "Soera An-Nisa", "Soera Al-Ma'idah"], answer: 0,
+    explanation: "Soera Al-Baqarah is de langste Soera en bevat onder meer Ayat al-Kursi en het langste vers (Vers van de schuld, 2:282).",
+    arabic: {
+      text: "الم ذَٰلِكَ الْكِتَابُ لَا رَيْبَ ۛ فِيهِ ۛ هُدًى لِّلْمُتَّقِينَ",
+      translation: "Alif Laam Meem. Dit is het Boek waaraan geen twijfel is, een leiding voor de godvrezenden.",
+      source: "Soera Al-Baqarah 2:1-2"
+    }
+  },
+  {
+    id: "k-l4-6", category: "koran", level: "expert", tier: 4,
+    question: "Welke twee Soera's worden samen 'Al-Mu'awwidhatayn' (de twee beschermende Soera's) genoemd?",
+    options: ["Soera Al-Falaq en Soera An-Nas", "Soera Al-Ikhlas en Soera Al-Falaq", "Soera Al-Fatiha en Soera Al-Ikhlas", "Soera Al-Kafirun en Soera Al-Ikhlas"], answer: 0,
+    explanation: "Soera Al-Falaq en Soera An-Nas worden zo genoemd omdat men hiermee bescherming zoekt bij Allah tegen allerlei kwaad.",
+    arabic: {
+      text: "قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ",
+      translation: "Zeg: Ik zoek mijn refuge bij de Heer van de dageraad.",
+      source: "Soera Al-Falaq 113:1"
+    }
+  },
+  {
+    id: "k-l4-7", category: "koran", level: "expert", tier: 4,
+    question: "Wat is de naam van de Sahabi die als enige namentlijk in de Koran wordt genoemd?",
+    options: ["Zayd ibn Harithah (r.a.)", "Abu Bakr as-Siddiq (r.a.)", "Bilal ibn Rabah (r.a.)", "Umar ibn al-Khattab (r.a.)"], answer: 0,
+    explanation: "Zayd ibn Harithah (r.a.) is de enige metgezel wiens naam expliciet vermeld staat in Soera Al-Ahzab (33:37).",
+    arabic: {
+      text: "فَلَمَّا قَضَىٰ زَيْدٌ مِّنْهَا وَطَرًا زَوَّجْنَاكَهَا",
+      translation: "Toen Zayd zijn betrekking met haar had beëindigd, huwelijkten Wij haar aan jou uit.",
+      source: "Soera Al-Ahzab 33:37"
+    }
+  },
     // ───────────────────── 5. AKHLAAQ & DU’A · JUNIOR ─────────────────────
     {
         id: "a-j1", category: "akhlaaq", level: "junior",
@@ -1444,9 +1696,9 @@ exports.questions = [
             source: "Hadith – Tirmidhi",
         },
     },
-    // ───────────────────── 5. AKHLAAQ & DU’A · EXPERT ─────────────────────
+// ───────────────────── 5. AKHLAAQ & DU’A ─────────────────────
     {
-        id: "a-e1", category: "akhlaaq", level: "expert",
+        id: "a-e1", category: "akhlaaq", level: "expert", tier: 1,
         question: "Welke bekende Hadith benadrukt het belang van de intentie (niyya) bij onze daden?",
         options: [
             "‘De daden zijn slechts door de intenties.’",
@@ -1462,7 +1714,7 @@ exports.questions = [
         },
     },
     {
-        id: "a-e2", category: "akhlaaq", level: "expert",
+        id: "a-e2", category: "akhlaaq", level: "expert", tier: 1,
         question: "Hoe vergelijkt de Koran het roddelen (ghiebah) over een ander?",
         options: [
             "Met het stelen van geld",
@@ -1478,7 +1730,7 @@ exports.questions = [
         },
     },
     {
-        id: "a-e3", category: "akhlaaq", level: "expert",
+        id: "a-e3", category: "akhlaaq", level: "expert", tier: 1,
         question: "Welke smeekbede spreekt de Profeet ﷺ uit voordat hij gaat slapen?",
         options: [
             "‘Bismika Allahumma amoetu wa ahyaa’",
@@ -1494,7 +1746,7 @@ exports.questions = [
         },
     },
     {
-        id: "a-e4", category: "akhlaaq", level: "expert",
+        id: "a-e4", category: "akhlaaq", level: "expert", tier: 1,
         question: "Welke bekende Hadith beschrijft het hoogste niveau van broederschap en liefde onder gelovigen?",
         options: [
             "‘Niemand van jullie gelooft werkelijk totdat hij voor zijn broeder liefheeft wat hij voor zichzelf liefheeft.’",
@@ -1510,7 +1762,7 @@ exports.questions = [
         },
     },
     {
-        id: "a-e5", category: "akhlaaq", level: "expert",
+        id: "a-e5", category: "akhlaaq", level: "expert", tier: 1,
         question: "Welke belofte doet Allah in Soera Ash-Sharh voor wie het moeilijk heeft?",
         options: [
             "Dat moeilijkheden altijd blijven",
@@ -1526,7 +1778,7 @@ exports.questions = [
         },
     },
     {
-        id: "a-e6", category: "akhlaaq", level: "expert",
+        id: "a-e6", category: "akhlaaq", level: "expert", tier: 1,
         question: "Welke du’a zegt de moslim bij het verlaten van zijn huis?",
         options: [
             "‘Bismillah, tawakkaltu ‘alallah, wa laa hawla wa laa quwwata illa billah’",
@@ -1637,6 +1889,185 @@ exports.questions = [
             source: "Hadith – Moslim",
         },
     },
+    // ---------- 5. AKHLAAQ & DU’A · NIVEAU 4 ----------
+    {
+        id: "a-e13", category: "akhlaaq", level: "expert", tier: 4,
+        question: "Welk beeld gebruikt de Profeet ﷺ in de Hadith van An-Nu’man ibn Bashir (Veertig Hadith nr. 6) voor wie zich in twijfelachtige zaken (mushtabihaat) begeeft?",
+        options: [
+            "Een herder die zijn kudde rond een beschermd weiland laat grazen en er bijna in terechtkomt",
+            "Een reiziger die zijn weg kwijtraakt in een woestijn zonder water",
+            "Een koopman die zijn winst steeds verder laat oplopen",
+            "Een bouwer die een muur bouwt zonder fundament",
+        ], answer: 0,
+        explanation: "Het halal is duidelijk en het haram is duidelijk, en daartussen liggen twijfelachtige zaken die veel mensen niet kennen. Wie zich ervoor hoedt, heeft zijn geloof en eer beschermd; wie erin vervalt, is als de herder rond het verboden weiland (hima), die bijna binnen graast. Daarna volgt de bekende les over het stukje vlees (het hart).",
+        arabic: {
+            text: "كَالرَّاعِي يَرْعَىٰ حَوْلَ الْحِمَىٰ يُوشِكُ أَنْ يَرْتَعَ فِيهِ",
+            translation: "Zoals de herder die rond een beschermd weiland graast: het scheelt weinig of hij graast erin.",
+            source: "Hadith – Bukhari & Moslim",
+        },
+    },
+    {
+        id: "a-e14", category: "akhlaaq", level: "expert", tier: 4,
+        question: "Welke twee verboden noemt Soera Al-Hujurat 49:12 direct naast het mijden van veel verdenking (zann)?",
+        options: [
+            "Spioneren (tajassus) en kwaadspreken (ghiba)",
+            "Liegen en bedriegen",
+            "Afgunst en hoogmoed",
+            "Spotten en bijnamen geven",
+        ], answer: 0,
+        explanation: "In 49:12 verbiedt Allah veel verdenking, het bespioneren van anderen en het kwaadspreken, en vergelijkt dat laatste met het eten van het vlees van je dode broer. Spotten en bijnamen geven staan in het vers daarvoor (49:11), en zijn dus een bekende afleider.",
+        arabic: {
+            text: "وَلَا تَجَسَّسُوا وَلَا يَغْتَب بَّعْضُكُم بَعْضًا",
+            translation: "En bespioneer elkaar niet en spreek niet kwaad over elkaar.",
+            source: "Soera Al-Hujurat 49:12",
+        },
+    },
+    {
+        id: "a-e15", category: "akhlaaq", level: "expert", tier: 4,
+        question: "Wat is volgens de Hadith in Sahih Moslim het verschil tussen ghiba (kwaadspreken) en buhtan (laster)?",
+        options: [
+            "Ghiba is iets waars zeggen wat hij onprettig vindt; buhtan is iets zeggen wat niet waar is",
+            "Ghiba gebeurt alleen schriftelijk; buhtan alleen mondeling",
+            "Ghiba is zonde tegenover moslims; buhtan tegenover niet-moslims",
+            "Ghiba is het herhalen van geruchten; buhtan is het verzinnen van een grap",
+        ], answer: 0,
+        explanation: "De Profeet ﷺ omschreef ghiba als ‘je broeder noemen met iets wat hij onprettig vindt’. Als wat je zegt in hem zit, is het ghiba; zit het niet in hem, dan is het buhtan, en dat is nog erger omdat het ook leugen is.",
+        arabic: {
+            text: "فَإِنْ كَانَ فِيهِ مَا تَقُولُ فَقَدِ اغْتَبْتَهُ وَإِنْ لَمْ يَكُنْ فِيهِ فَقَدْ بَهَتَّهُ",
+            translation: "Als in hem is wat je zegt, dan heb je kwaad over hem gesproken; en als het niet in hem is, dan heb je hem belasterd.",
+            source: "Hadith – Moslim",
+        },
+    },
+    {
+        id: "a-e16", category: "akhlaaq", level: "expert", tier: 4,
+        question: "Welke Koranvers belooft dat iemand met wie je vijandschap had door het kwade af te weren met het betere, kan worden als een ‘warme vriend’ (waliyyun hamim)?",
+        options: [
+            "Soera Fussilat 41:34",
+            "Soera Al-Mu’minun 23:96",
+            "Soera Al ‘Imran 3:134",
+            "Soera Al-Furqan 25:63",
+        ], answer: 0,
+        explanation: "Fussilat 41:34 noemt als enige van deze verzen de ‘warme vriend’. Al-Mu’minun 23:96 gebiedt eveneens het kwade met het betere af te weren, Al ‘Imran 3:134 prijst wie zijn woede inhoudt en vergeeft, en Al-Furqan 25:63 beschrijft de dienaren van de Barmhartige die ‘Vrede’ zeggen tegen de onwetenden.",
+        arabic: {
+            text: "ادْفَعْ بِالَّتِي هِيَ أَحْسَنُ فَإِذَا الَّذِي بَيْنَكَ وَبَيْنَهُ عَدَاوَةٌ كَأَنَّهُ وَلِيٌّ حَمِيمٌ",
+            translation: "Weer af met wat beter is; dan wordt hij tussen wie en jou vijandschap was, als een warme vriend.",
+            source: "Soera Fussilat 41:34",
+        },
+    },
+    {
+        id: "a-e17", category: "akhlaaq", level: "expert", tier: 4,
+        question: "Wie noemt de Profeet ﷺ in de Hadith over ‘al-muflis’ (de bankroetier) van zijn gemeenschap?",
+        options: [
+            "Wie op de Dag des Oordeels met gebed, vasten en zakat komt, maar anderen heeft beledigd, beschuldigd, hun bezit opgegeten of hen geslagen",
+            "Wie al zijn bezit aan de armen heeft gegeven en daarna zelf schulden heeft",
+            "Wie veel zondigt maar zich daarna nooit tot Allah keert",
+            "Wie zijn gebed uitstelt tot het einde van de tijd",
+        ], answer: 0,
+        explanation: "Zijn goede daden worden verdeeld onder de mensen die hij onrecht heeft aangedaan. Raken ze op voordat het recht hersteld is, dan worden hun zonden op hem geladen en wordt hij in het Vuur geworpen. De Hadith leert dat rechten van mensen (huquq al-‘ibad) zwaar wegen.",
+        arabic: {
+            text: "أَتَدْرُونَ مَا الْمُفْلِسُ؟",
+            translation: "Weten jullie wie de bankroetier is?",
+            source: "Hadith – Moslim",
+        },
+    },
+    {
+        id: "a-e18", category: "akhlaaq", level: "expert", tier: 4,
+        question: "Wat belooft de Profeet ﷺ volgens de Hadith van Shaddad ibn Aws aan wie Sayyid al-Istighfar (‘de meester van het vergeving vragen’) ’s avonds met vast geloof reciteert en in die nacht sterft?",
+        options: [
+            "Dat hij tot de bewoners van het Paradijs behoort",
+            "Dat al zijn zonden ooit al waren vergeven vóór zijn geboorte",
+            "Dat hij de beloning van een shahid (martelaar) krijgt",
+            "Dat hij nooit meer een zonde zal begaan",
+        ], answer: 0,
+        explanation: "Wie het ’s avonds met vast geloof zegt en sterft vóór de ochtend, behoort tot de mensen van het Paradijs; hetzelfde geldt voor wie het overdag zegt en vóór de avond sterft. De du’a begint met ‘Allahumma anta Rabbi, la ilaha illa anta, khalaqtani wa ana ‘abduka…’.",
+        arabic: {
+            text: "أَنْتَ رَبِّي لَا إِلَٰهَ إِلَّا أَنْتَ خَلَقْتَنِي وَأَنَا عَبْدُكَ",
+            translation: "U bent mijn Heer, er is geen god behalve U; U hebt mij geschapen en ik ben Uw dienaar.",
+            source: "Hadith – Bukhari",
+        },
+    },
+    {
+        id: "a-e19", category: "akhlaaq", level: "expert", tier: 4,
+        question: "Welke drie dingen verbiedt Allah in Soera An-Nahl 16:90, het vers dat ook aan het einde van de vrijdagpreek wordt voorgelezen?",
+        options: [
+            "Schaamteloosheid (fahsha’), het verwerpelijke (munkar) en onrechtmatige overheersing (baghy)",
+            "Gierigheid, hoogmoed en afgunst",
+            "Liegen, stelen en verraad",
+            "Kwaadspreken, spioneren en spotten",
+        ], answer: 0,
+        explanation: "Het vers gebiedt eerst rechtvaardigheid (‘adl), weldoen (ihsan) en vrijgevigheid jegens verwanten, en verbiedt dan fahsha’, munkar en baghy. Veel imams sluiten de khutba ermee af, omdat het in één vers de kern van goed karakter samenvat.",
+        arabic: {
+            text: "إِنَّ اللَّهَ يَأْمُرُ بِالْعَدْلِ وَالْإِحْسَانِ وَإِيتَاءِ ذِي الْقُرْبَىٰ وَيَنْهَىٰ عَنِ الْفَحْشَاءِ وَالْمُنكَرِ وَالْبَغْيِ",
+            translation: "Voorwaar, Allah gebiedt rechtvaardigheid, weldoen en vrijgevigheid jegens verwanten, en Hij verbiedt schaamteloosheid, het verwerpelijke en onrechtmatige overheersing.",
+            source: "Soera An-Nahl 16:90",
+        },
+    },
+    {
+        id: "a-e20", category: "akhlaaq", level: "expert", tier: 4,
+        question: "Welke twee raadgevingen geeft Luqman aan zijn zoon over zijn manier van lopen en spreken (Soera Luqman 31:19)?",
+        options: [
+            "Wees gematigd in je gang en verlaag je stem",
+            "Loop snel en spreek altijd kort",
+            "Loop met opgeheven hoofd en spreek met gezag",
+            "Loop zonder om te kijken en zwijg in gezelschap",
+        ], answer: 0,
+        explanation: "Luqman waarschuwt vlak daarvoor tegen hoogmoed (31:18). In 31:19 volgt de gematigdheid in de gang en een lagere stem, ‘want de onaangenaamste stem is zeker de stem van de ezel’. Zo vormen uiterlijk gedrag en innerlijke nederigheid één geheel.",
+        arabic: {
+            text: "وَاقْصِدْ فِي مَشْيِكَ وَاغْضُضْ مِن صَوْتِكَ",
+            translation: "Wees gematigd in je gang en verlaag je stem.",
+            source: "Soera Luqman 31:19",
+        },
+    },
+    // ---------- PROFETENVERHALEN · NIVEAU 4 ----------
+{
+    id: "p-l4-1", category: "profeten", level: "expert", tier: 4,
+    question: "Welke Profeet wordt in de Koran aangeduid met de titel 'Khaaleelullah' (de Boezemvriend van Allah)?",
+    options: ["Profeet Ibrahim (a.s.)", "Profeet Musa (a.s.)", "Profeet Isa (a.s.)", "Profeet Muhammad ﷺ"], answer: 0,
+    explanation: "Allah nam Ibrahim (a.s.) als een boezemvriend vanwege zijn absolute overgave en beproevingen.",
+    arabic: { text: "وَاتَّخَذَ اللَّهُ إِبْرَاهِيمَ خَلِيلًا", translation: "En Allah nam Ibrahim als boezemvriend.", source: "Soera An-Nisa 4:125" }
+},
+{
+    id: "p-l4-2", category: "profeten", level: "expert", tier: 4,
+    question: "Welke Profeet bouwde de Ark op bevel van Allah toen zijn volk weigerde te geloven?",
+    options: ["Profeet Nuh (a.s.)", "Profeet Hud (a.s.)", "Profeet Salih (a.s.)", "Profeet Yunus (a.s.)"], answer: 0,
+    explanation: "Profeet Nuh (a.s.) predikte 950 jaar lang en bouwde de Ark als redding voor de gelovigen.",
+    arabic: { text: "وَاصْنَعِ الْفُلْكَ بِأَعْيُنِنَا وَوَحْيِنَا", translation: "En bouw de Ark onder Onze Ogen en Onze Openbaring.", source: "Soera Hud 11:37" }
+},
+{
+    id: "p-l4-3", category: "profeten", level: "expert", tier: 4,
+    question: "Naar welk volk werd Profeet Salih (a.s.) gestuurd met het teken van de goddelijke kamelenvrouw (Naqatullah)?",
+    options: ["Volk van Thamud", "Volk van 'Aad", "Volk van Madyan", "Volk van Firaun"], answer: 0,
+    explanation: "Profeet Salih (a.s.) werd gestuurd naar het volk van Thamud, die de kameel helaas doodden en gestraft werden.",
+    arabic: { text: "هَٰذِهِ نَاقَةُ اللَّهِ لَكُمْ آيَةً", translation: "Dit is de kameel van Allah, een teken voor jullie.", source: "Soera Al-A'raf 7:73" }
+},
+{
+    id: "p-l4-4", category: "profeten", level: "expert", tier: 4,
+    question: "Welke Profeet kon met dieren spreken en heerste met de wil van Allah over de wind en djinns?",
+    options: ["Profeet Sulayman (a.s.)", "Profeet Dawud (a.s.)", "Profeet Yusuf (a.s.)", "Profeet Yahya (a.s.)"], answer: 0,
+    explanation: "Profeet Sulayman (a.s.) kreeg unieke krachten en kon de taal van vogels en mieren begrijpen.",
+    arabic: { text: "وَعُلِّمْنَا مَنطِقَ الطَّيْرِ", translation: "En aan ons is de taal van de vogels onderwezen.", source: "Soera An-Naml 27:16" }
+},
+{
+    id: "p-l4-5", category: "profeten", level: "expert", tier: 4,
+    question: "In welk land werd Profeet Yusuf (a.s.) uiteindelijk aangesteld als beheerder van de schatkamers?",
+    options: ["Egypte (Misr)", "Palestijns gebied (Shaam)", "Jemen", "Irak"], answer: 0,
+    explanation: "Na zijn beproevingen in de put en de gevangenis werd Yusuf (a.s.) de vertrouweling en schatbewaarder van Egypte.",
+    arabic: { text: "اجْعَلْنِي عَلَىٰ خَزَائِنِ الْأَرْضِ", translation: "Plaats mij over de schatkamers van het land.", source: "Soera Yusuf 12:55" }
+},
+{
+    id: "p-l4-6", category: "profeten", level: "expert", tier: 4,
+    question: "Welke Profeet werd beproefd met een ernstige ziekte en het verlies van bezit en kinderen, maar bleef standvastig geduldig?",
+    options: ["Profeet Ayyub (a.s.)", "Profeet Ya'qub (a.s.)", "Profeet Zakariya (a.s.)", "Profeet Shu'ayb (a.s.)"], answer: 0,
+    explanation: "Profeet Ayyub (a.s.) staat in de islamitische geschiedenis bekend als het ultieme symbool van Sabr (geduld).",
+    arabic: { text: "إِنَّا وَجَدْنَاهُ صَابِرًا ۚ نِعْمَ الْعَبْدُ", translation: "Voorwaar, Wij vonden hem geduldig. Wat een voortreffelijke dienaar!", source: "Soera Sad 38:44" }
+},
+{
+    id: "p-l4-7", category: "profeten", level: "expert", tier: 4,
+    question: "Welke Profeet werd door Allah rechtstreeks toegesproken bij de berg Toor?",
+    options: ["Profeet Musa (a.s.)", "Profeet Isa (a.s.)", "Profeet Harun (a.s.)", "Profeet Lut (a.s.)"], answer: 0,
+    explanation: "Profeet Musa (a.s.) draagt daarom de eretitel 'Kaleemullah' (Degene aan wie Allah sprak).",
+    arabic: { text: "وَكَلَّمَ اللَّهُ مُوسَىٰ تَكْلِيمًا", translation: "En Allah sprak rechtstreeks tot Musa.", source: "Soera An-Nisa 4:164" }
+},
     {
         id: "p-e7", category: "profeten", level: "expert", tier: 2,
         question: "Welke eretitel kreeg Ibrahim (a.s.) van Allah?",
@@ -2086,6 +2517,7 @@ return exports;})();
       daily: { junior: {}, expert: {} },    // daily[level][YYYY-MM-DD] = {score,total}
       streak: { count: 0, last: null, max: 0 },
       played: 0,
+      badges: {},                           // badges[id] = tijdstempel; id = level:cat:master|grand
       group: null,                          // {code, mid} als de speler in een groep zit
     };
   }
@@ -2095,6 +2527,7 @@ return exports;})();
       best: Object.assign(d.best, p.best || {}),
       daily: Object.assign(d.daily, p.daily || {}),
       streak: Object.assign(d.streak, p.streak || {}),
+      badges: Object.assign({}, p.badges || {}),
     });
   }
   function defaultState() { return { v: 2, sound: true, timer: false, players: [], current: null }; }
@@ -2170,20 +2603,99 @@ return exports;})();
 
   const MIN_TIER_Q = 3;   // minimaal aantal vragen om een niveau aan te bieden
   function qTier(q) { return q.tier || 1; }
+  /* meerdere juiste antwoorden: answer is een lijst, bv. [2, 3]; de speler vinkt aan en klikt op Controleer */
+  function isMulti(q) { return Array.isArray(q.answer); }
+  function answerSet(q) { return isMulti(q) ? q.answer.slice() : [q.answer]; }
+  function sameSet(a, b) { return a.length === b.length && a.every(function (x) { return b.indexOf(x) !== -1; }); }
+  function correctText(q) { return answerSet(q).map(function (i) { return q.options[i]; }).join(" + "); }
+  function pickedText(it) {
+    const p = it.picked;
+    if (p === null || (Array.isArray(p) && !p.length)) return "geen antwoord" + (it.timedOut ? " (tijd op)" : "");
+    return (Array.isArray(p) ? p : [p]).map(function (i) { return it.q.options[i]; }).join(" + ");
+  }
   function poolFor(level, catId, tier) {
     return QUESTIONS.filter(function (q) { return q.level === level && (!catId || q.category === catId) && (!tier || qTier(q) === tier); });
   }
   /* beschikbare niveaus (1-3) voor een doelgroep, optioneel per categorie */
   function tiersFor(level, catId) {
-    return [1, 2, 3].filter(function (t) { return t === 1 || poolFor(level, catId, t).length >= MIN_TIER_Q; });
-  }
+  return [1, 2, 3, 4].filter(function (t) { if (t === 4 && level !== "expert") return false; return t === 1 || poolFor(level, catId, t).length >= MIN_TIER_Q; });
+}
   /* opslagsleutel voor beste score: niveau 1 = catId (zoals voorheen), niveau 2/3 = catId@2 / catId@3 */
   function bkey(catId, tier) { return tier > 1 ? catId + "@" + tier : catId; }
   /* doorstroom (alleen solo): na 3 sterren naar het volgende niveau, als dat bestaat */
   function nextTier(q, stars) {
-    if (q.kind !== "category" || stars < 3 || q.tier >= 3) return null;
-    return poolFor(q.level, q.catId, q.tier + 1).length >= MIN_TIER_Q ? q.tier + 1 : null;
+  if (q.kind !== "category" || stars < 3 || q.tier >= 4) return null;
+  if (q.tier + 1 === 4 && !tier4Unlocked(q.level, q.catId)) return null;
+  return poolFor(q.level, q.catId, q.tier + 1).length >= MIN_TIER_Q ? q.tier + 1 : null;
+}
+
+  /* ───────────── Niveau 4 slot & badges ─────────────
+     Een niveau is "gehaald" bij minstens PASS_PCT goed (beste poging).
+     Niveau 4 gaat per categorie (en per Junior/Expert) pas open als álle bestaande niveaus 1-3 gehaald zijn.
+     Badge Meester (zilver) = niveau 1-3 gehaald; Grootmeester (goud) = niveau 4 gehaald. */
+  const PASS_PCT = 0.7;
+  const BADGE_META = {
+    master: { icon: "۞", title: "Meester", desc: "Niveau 1-3 gehaald" },
+    grand: { icon: "👑", title: "Grootmeester", desc: "Niveau 4 gehaald" },
+  };
+  function tierPassed(level, catId, tier) {
+    const b = P && P.best[level][bkey(catId, tier)];
+    return !!b && b.total > 0 && b.score / b.total >= PASS_PCT;
   }
+  function requiredTiers(level, catId) { return tiersFor(level, catId).filter(function (t) { return t <= 3; }); }
+  function hasTier4(level, catId) { return level === "expert" && poolFor(level, catId, 4).length >= MIN_TIER_Q; }
+  function tier4Unlocked(level, catId) {
+    return hasTier4(level, catId) && requiredTiers(level, catId).every(function (t) { return tierPassed(level, catId, t); });
+  }
+  function tierLocked(level, catId, tier) { return tier === 4 && !tier4Unlocked(level, catId); }
+  function badgeId(level, catId, kind) { return level + ":" + catId + ":" + kind; }
+  /* kent ontbrekende badges toe (ook met terugwerkende kracht); geeft de nieuw verdiende terug */
+  function syncBadges() {
+    const fresh = [];
+    if (!P) return fresh;
+    if (!P.badges) P.badges = {};
+    ["junior", "expert"].forEach(function (lv) {
+      CATEGORIES.forEach(function (c) {
+        const rt = requiredTiers(lv, c.id);
+        const want = [];
+        if (rt.length > 1 && rt.every(function (t) { return tierPassed(lv, c.id, t); })) want.push("master");
+        if (hasTier4(lv, c.id) && tierPassed(lv, c.id, 4) && tier4Unlocked(lv, c.id)) want.push("grand");
+        want.forEach(function (k) {
+          const id = badgeId(lv, c.id, k);
+          if (!P.badges[id]) { P.badges[id] = Date.now(); fresh.push({ id: id, kind: k, level: lv, catId: c.id }); }
+        });
+      });
+    });
+    return fresh;
+  }
+  function badgesHtml(list) {
+    return list.map(function (n) {
+      const m = BADGE_META[n.kind], c = catById(n.catId);
+      return '<div class="badge-earned ' + n.kind + '"><span class="be-icon">' + m.icon + '</span><span><b>' + (n.kind === "grand" ? "Grootmeester-badge verdiend!" : "Meester-badge verdiend!") + "</b>" +
+        esc(c.title) + (n.kind === "master" && hasTier4(n.level, n.catId) ? " · Niveau 4 is vrijgespeld" : "") + "</span></div>";
+    }).join("");
+  }
+  function renderBadges() {
+    const grid = document.getElementById("badgesGrid");
+    if (!grid || !P) return;
+    let h = "";
+    ["junior", "expert"].forEach(function (lv) {
+      h += '<div class="badge-section">' + (lv === "junior" ? "Junior Modus" : "Expert Modus") + "</div>";
+      CATEGORIES.forEach(function (c) {
+        ["master", "grand"].forEach(function (k) {
+          if (k === "master" && requiredTiers(lv, c.id).length < 2) return;
+          if (k === "grand" && !hasTier4(lv, c.id)) return;
+          const got = !!(P.badges && P.badges[badgeId(lv, c.id, k)]), m = BADGE_META[k];
+          h += '<div class="badge-card ' + (got ? "unlocked " + k : "locked") + '"><div class="badge-icon">' + (got ? m.icon : "🔒") + '</div>' +
+            '<div class="badge-title">' + m.title + '</div><div class="badge-desc">' + esc(c.title) + "<br>" + m.desc + "</div>" +
+            '<div class="badge-status-tag">' + (got ? "Behaald" : "Vergrendeld") + "</div></div>";
+        });
+      });
+    });
+    grid.innerHTML = h;
+  }
+  window.openBadgesModal = function () { renderBadges(); const m = document.getElementById("badgesModal"); if (m) m.classList.add("active"); };
+  window.closeBadgesModal = function () { const m = document.getElementById("badgesModal"); if (m) m.classList.remove("active"); };
 
   function makeItems(questions) {
     return questions.map(function (q) {
@@ -2232,6 +2744,8 @@ return exports;})();
     else if (screen === "board") app.innerHTML = viewBoard();
     else if (screen === "group") app.innerHTML = viewGroup();
     else if (screen === "duelresult") app.innerHTML = viewDuelResult();
+    const bw = document.getElementById("badgesBtnWrap");
+    if (bw) bw.style.display = (screen === "home" || screen === "scores") ? "" : "none";
     window.scrollTo({ top: 0 });
   }
 
@@ -2250,11 +2764,11 @@ return exports;})();
     const c = catById(catId), lv = P.mode, ts = tiersFor(lv, catId);
     const w = document.createElement("div");
     w.className = "dialog-wrap";
-    let h = '<div class="dialog" role="dialog" aria-modal="true"><h3>' + esc(c.title) + "</h3><p>Kies een niveau. Haal je 3 sterren, dan ga je vanzelf door naar het volgende niveau.</p><div class=\"tier-list\">";
+    let h = '<div class="dialog" role="dialog" aria-modal="true"><h3>' + esc(c.title) + "</h3><p>Kies een niveau. Haal je 3 sterren, dan ga je vanzelf door. Niveau 4 gaat open als je niveau 1-3 van deze categorie hebt gehaald (min. " + Math.round(PASS_PCT * 100) + "% goed).</p><div class=\"tier-list\">";
     ts.forEach(function (t) {
-      const b = P.best[lv][bkey(catId, t)];
-      h += '<button class="tier-btn" data-act="start-tier" data-cat="' + catId + '" data-tier="' + t + '"><span class="tier-n">Niveau ' + t + "</span>" +
-        '<span class="tier-d">' + ["Basis", "Gemiddeld", "Gevorderd"][t - 1] + "</span>" + miniStars(b ? b.stars : 0) + "</button>";
+      const b = P.best[lv][bkey(catId, t)], locked = tierLocked(lv, catId, t), ok = tierPassed(lv, catId, t);
+      h += '<button class="tier-btn' + (locked ? " locked" : "") + '"' + (locked ? " disabled" : ' data-act="start-tier" data-cat="' + catId + '" data-tier="' + t + '"') + '><span class="tier-n">' + (locked ? "🔒 " : "") + "Niveau " + t + "</span>" +
+        '<span class="tier-d">' + (locked ? "Haal eerst alle niveaus 1-3 (min. " + Math.round(PASS_PCT * 100) + "%)" : ["Basis", "Gemiddeld", "Gevorderd", "Expert"][t - 1] + (ok ? " · ✓ gehaald" : "")) + "</span>" + miniStars(b ? b.stars : 0) + "</button>";
     });
     h += '</div><button class="btn ghost block" data-d="no">Annuleren</button></div>';
     w.innerHTML = h;
@@ -2344,7 +2858,8 @@ return exports;})();
         '<span class="badge">' + icon(CAT_ICON[c.icon] || "sparkles", 28) + "</span>" +
         "<span><h3>" + esc(c.title) + "</h3><p>" + esc(c.subtitle) + "</p></span>" +
         '<span class="meta">' + miniStars(b ? b.stars : 0) +
-        '<div class="best">' + (nt > 1 ? nt + " niveaus" : b ? "Beste: " + b.score + "/" + b.total : n + " vragen") + "</div></span></button>";
+        '<div class="best">' + (nt > 1 ? nt + " niveaus" : b ? "Beste: " + b.score + "/" + b.total : n + " vragen") +
+        (P.badges && P.badges[badgeId(level, c.id, "master")] ? " ۞" : "") + (P.badges && P.badges[badgeId(level, c.id, "grand")] ? " 👑" : "") + "</div></span></button>";
     });
     h += "</div>";
     h += '<div class="footer-actions">' + (isStandalone() ? "" : '<button class="link-btn" data-act="install">Zet op beginscherm</button>') +
@@ -2374,20 +2889,22 @@ return exports;})();
     }
 
     h += '<div class="q-card' + (quiz.answered ? " static" : "") + '" id="qcard"><div class="q-num">' + (isDaily ? "Dagelijkse vraag " : "Vraag ") + (quiz.idx + 1) + "</div>" +
-      "<h2>" + esc(q.question) + "</h2>" + (q.questionArabic ? ar(q.questionArabic) : "") + "</div>";
+      "<h2>" + esc(q.question) + "</h2>" + (isMulti(q) ? '<div class="multi-hint">Meerdere antwoorden mogelijk: kies álle juiste antwoorden</div>' : "") + (q.questionArabic ? ar(q.questionArabic) : "") + "</div>";
 
     h += '<div class="options' + (quiz.answered ? " answered" : "") + '" role="group" aria-label="Antwoordopties">';
+    const multi = isMulti(q), aset = answerSet(q), pset = it.picked === null || it.picked === undefined ? [] : Array.isArray(it.picked) ? it.picked : [it.picked];
     it.order.forEach(function (orig, pos) {
       let cls = "option", mark = "";
       if (quiz.answered) {
-        if (orig === q.answer) { cls += " correct"; mark = icon("check", 24); }
-        else if (it.picked === orig) { cls += " wrong"; mark = icon("x", 24); }
+        if (aset.indexOf(orig) !== -1) { cls += " correct"; mark = icon("check", 24); }
+        else if (pset.indexOf(orig) !== -1) { cls += " wrong"; mark = icon("x", 24); }
         else cls += " dim";
-      }
-      h += '<button class="' + cls + '" data-act="answer" data-pos="' + pos + '" ' + (quiz.answered ? "disabled" : "") + ">" +
+      } else if (multi && (it.sel || []).indexOf(orig) !== -1) cls += " selected";
+      h += '<button class="' + cls + '" data-act="answer" data-pos="' + pos + '" ' + (quiz.answered ? "disabled" : (multi ? 'aria-pressed="' + ((it.sel || []).indexOf(orig) !== -1) + '"' : "")) + ">" +
         '<span class="letter">' + LETTERS[pos] + "</span><span>" + esc(q.options[orig]) + '</span><span class="mark">' + mark + "</span></button>";
     });
     h += "</div>";
+    if (multi && !quiz.answered) h += '<div class="next-row"><button class="btn" data-act="check-multi" id="checkBtn"' + ((it.sel || []).length ? "" : " disabled") + ">" + icon("check", 20) + "Controleer mijn antwoord</button></div>";
 
     if (quiz.answered) h += feedbackHtml(it);
     return h;
@@ -2412,7 +2929,7 @@ return exports;})();
     else if (it.timedOut) head = "De tijd is op!";
     else head = junior ? lastTry : "Helaas, niet juist.";
     let h = '<div class="feedback ' + (ok ? "good" : "bad") + '" id="feedback"><div class="head">' + icon(ok ? "check" : "x", 26) + "<span>" + esc(head) + "</span></div>";
-    if (!ok) h += '<div class="correct-is">Het juiste antwoord: ' + esc(q.options[q.answer]) + "</div>";
+    if (!ok) h += '<div class="correct-is">Het juiste antwoord: ' + esc(correctText(q)) + "</div>";
     h += '<p class="why">' + esc(q.explanation) + "</p>" + refHtml(q.arabic) + "</div>";
     h += '<div class="next-row"><button class="btn ' + (last ? "gold" : "") + '" data-act="next" id="nextBtn">' +
       (last ? "Bekijk resultaat" : "Volgende vraag") + icon("right", 20) + "</button></div>";
@@ -2442,9 +2959,22 @@ return exports;})();
     if (!quiz || quiz.answered) return;
     stopTimer();
     const it = quiz.items[quiz.idx];
+    if (isMulti(it.q) && pos !== null) {
+      if (pos !== "check") { /* aan- of uitvinken zonder het scherm opnieuw op te bouwen (timer blijft lopen) */
+        it.sel = it.sel || [];
+        const o = it.order[pos], k = it.sel.indexOf(o);
+        if (k === -1) it.sel.push(o); else it.sel.splice(k, 1);
+        play("click");
+        const btns = document.querySelectorAll('.option[data-act="answer"]');
+        if (btns[pos]) { btns[pos].classList.toggle("selected", k === -1); btns[pos].setAttribute("aria-pressed", k === -1); }
+        const cb = document.getElementById("checkBtn"); if (cb) cb.disabled = !it.sel.length;
+        return;
+      }
+      if (!(it.sel || []).length) return;
+    }
     it.timedOut = pos === null;
-    it.picked = pos === null ? null : it.order[pos];
-    it.correct = it.picked === it.q.answer;
+    if (isMulti(it.q)) { it.picked = (it.sel || []).slice(); it.correct = !it.timedOut && sameSet(it.picked, it.q.answer); }
+    else { it.picked = pos === null ? null : it.order[pos]; it.correct = it.picked === it.q.answer; }
     quiz.answered = true;
     if (quiz.kind === "duel") { quiz.ms += Date.now() - quiz.qStart; pushDuelProgress(); }
     if (it.correct) {
@@ -2507,6 +3037,8 @@ return exports;})();
       }
     }
     P.played++;
+    const newBadges = quiz.kind === "category" ? syncBadges() : [];
+    const open4 = quiz.kind === "category" && quiz.tier === 3 && tier4Unlocked(quiz.level, quiz.catId);
 
     // reeks (streak): opeenvolgende dagen met minstens één afgeronde quiz
     const t = todayStr();
@@ -2518,7 +3050,7 @@ return exports;})();
     saveState();
     pushMember();
 
-    result = { kind: quiz.kind, catId: quiz.catId, level: quiz.level, tier: quiz.tier || 1, next: nextTier(quiz, stars), score: score, total: total, stars: stars, record: isRecord, items: quiz.items };
+    result = { kind: quiz.kind, catId: quiz.catId, level: quiz.level, tier: quiz.tier || 1, next: nextTier(quiz, stars), score: score, total: total, stars: stars, record: isRecord, items: quiz.items, newBadges: newBadges, open4: open4 };
     screen = "result";
     play(stars >= 2 ? "win" : "lose");
     render();
@@ -2540,7 +3072,11 @@ return exports;})();
     if (r.record && r.kind !== "daily") h += '<div class="badge-new">' + icon("trophy", 18) + "Nieuw record!</div>";
     if (r.kind === "daily") h += '<div class="badge-new">' + icon("flame", 18) + currentStreak() + (currentStreak() === 1 ? " dag" : " dagen") + " op rij</div>";
 
+    h += badgesHtml(r.newBadges || []);
+    if (r.kind === "category" && r.tier === 3 && !tier4Unlocked(r.level, r.catId) && hasTier4(r.level, r.catId))
+      h += '<div class="lock-note">🔒 Niveau 4 gaat open zodra je alle niveaus 1-3 van deze categorie hebt gehaald (min. ' + Math.round(PASS_PCT * 100) + "% goed).</div>";
     h += '<div class="result-actions">';
+    if (r.open4 && !r.next) h += '<button class="btn gold" data-act="start-tier" data-cat="' + r.catId + '" data-tier="4">' + icon("sparkles", 20) + "Speel Niveau 4 (vrijgespeld!)</button>";
     if (r.next && !r.noAuto) {
       h += '<div class="levelup">' + icon("sparkles", 22) + "<b>Niveau " + r.next + " vrijgespeld!</b><span>Je gaat vanzelf door…</span></div>" +
         '<button class="btn gold" data-act="go-next-tier">' + icon("right", 20) + '<span id="autoTxt">Ga door naar Niveau ' + r.next + " (8)</span></button>" +
@@ -2574,7 +3110,7 @@ return exports;})();
           const b = P.best[lv][bkey(c.id, t)], pct = b ? Math.round((b.score / b.total) * 100) : 0;
           h += '<div class="score-row" style="--accent:' + c.color + '"><div class="score-head"><span>' + esc(c.title) + (ts.length > 1 ? " · Niveau " + t : "") + "</span>" +
             miniStars(b ? b.stars : 0) + '</div><div class="bar"><i style="width:' + pct + '%"></i></div>' +
-            '<div class="score-sub">' + (b ? "Beste score: " + b.score + "/" + b.total + " (" + pct + "%)" : "Nog niet gespeeld") + "</div></div>";
+            '<div class="score-sub">' + (b ? "Beste score: " + b.score + "/" + b.total + " (" + pct + "%)" : tierLocked(lv, c.id, t) ? "🔒 Vergrendeld: haal eerst niveau 1-3" : "Nog niet gespeeld") + "</div></div>";
         });
       });
       h += '<div class="score-row daily-row"><div class="score-head"><span>Quiz van de Dag (vandaag)</span>' + icon("calendar", 18) + "</div>" +
@@ -2807,10 +3343,10 @@ return exports;})();
       h += '<article class="rev-item ' + (it.correct ? "" : "bad") + '"><div class="qn">' + icon(it.correct ? "check" : "x", 16) +
         "Vraag " + (i + 1) + " · " + esc(catById(q.category).title) + "</div><h3>" + esc(q.question) + "</h3>" +
         (q.questionArabic ? ar(q.questionArabic) : "");
-      if (it.correct) h += '<div class="rev-line ok">' + icon("check", 18) + "<span>Jouw antwoord (goed): " + esc(q.options[q.answer]) + "</span></div>";
+      if (it.correct) h += '<div class="rev-line ok">' + icon("check", 18) + "<span>Jouw antwoord (goed): " + esc(correctText(q)) + "</span></div>";
       else {
-        h += '<div class="rev-line no">' + icon("x", 18) + "<span>Jouw antwoord: " + (it.picked === null ? "geen antwoord (tijd op)" : esc(q.options[it.picked])) + "</span></div>" +
-          '<div class="rev-line ok">' + icon("check", 18) + "<span>Juiste antwoord: " + esc(q.options[q.answer]) + "</span></div>";
+        h += '<div class="rev-line no">' + icon("x", 18) + "<span>Jouw antwoord: " + esc(pickedText(it)) + "</span></div>" +
+          '<div class="rev-line ok">' + icon("check", 18) + "<span>Juiste antwoord: " + esc(correctText(q)) + "</span></div>";
       }
       h += '<p class="rev-expl">' + esc(q.explanation) + "</p>" + refHtml(q.arabic) + "</article>";
     });
@@ -3166,10 +3702,11 @@ return exports;})();
         play("click");
         if (tiersFor(P.mode, el.dataset.cat).length > 1) tierDialog(el.dataset.cat); else startQuiz("category", el.dataset.cat, 1);
         break;
-      case "start-tier": { play("click"); const dw = document.querySelector(".dialog-wrap"); if (dw) dw.remove(); startQuiz("category", el.dataset.cat, parseInt(el.dataset.tier, 10)); break; }
+      case "start-tier": { play("click"); const dw = document.querySelector(".dialog-wrap"); if (dw) dw.remove(); const st = parseInt(el.dataset.tier, 10); if (tierLocked(P.mode, el.dataset.cat, st)) break; startQuiz("category", el.dataset.cat, st); break; }
       case "go-next-tier": play("click"); stopTimer(); startQuiz("category", result.catId, result.next); break;
       case "start-daily": play("click"); startQuiz("daily"); break;
       case "answer": answer(parseInt(el.dataset.pos, 10)); break;
+      case "check-multi": answer("check"); break;
       case "next": next(); break;
       case "retry":
         play("click");
@@ -3190,7 +3727,7 @@ return exports;})();
       case "reset":
         confirmDialog("Voortgang wissen?", "Alle scores, sterren en de reeks van " + P.name + " worden verwijderd. Andere spelers blijven staan.", "Ja, wissen", function () {
           const fresh = newPlayer(P.name, P.color);
-          P.best = fresh.best; P.daily = fresh.daily; P.streak = fresh.streak; P.played = 0; saveState(); render();
+          P.best = fresh.best; P.daily = fresh.daily; P.streak = fresh.streak; P.played = 0; P.badges = {}; saveState(); render();
         });
         break;
       case "install":
@@ -3268,134 +3805,16 @@ return exports;})();
     if (screen === "newplayer" && e.key === "Enter") { createPlayer(); return; }
     if (screen !== "quiz" || !quiz || document.querySelector(".dialog-wrap")) return;
     if (!quiz.answered && /^[1-4]$/.test(e.key)) answer(parseInt(e.key, 10) - 1);
+    else if (!quiz.answered && e.key === "Enter" && isMulti(quiz.items[quiz.idx].q) && document.activeElement.tagName !== "BUTTON") answer("check");
     else if (quiz.answered && e.key === "Enter" && document.activeElement.tagName !== "BUTTON") next();
   });
 
   // zorg dat geluid werkt op mobiel na de eerste aanraking
   document.addEventListener("pointerdown", function () { if (S.sound) ctx(); }, { once: true });
 
+  if (P && syncBadges().length) saveState();
   render();
 })();
-/* ==========================================
-   BADGES & ACHIEVEMENTS SYSTEM LOGIC
-   ========================================== */
-
-// 1. Definitie van alle badges in de app (Geen mens- of dierafbeeldingen)
-const APP_BADGES = [
-  {
-    id: "first_quiz",
-    icon: "🌟",
-    title: "Eerste Stap",
-    description: "Voltooi je allereerste quiz"
-  },
-  {
-    id: "quran_master",
-    icon: "📖",
-    title: "Koran Kenner",
-    description: "Behaal 100% op Soera's & Verzen"
-  },
-  {
-    id: "hadith_master",
-    icon: "📜",
-    title: "Hadith Expert",
-    description: "Behaal 100% op Overleveringen"
-  },
-  {
-    id: "fiqh_master",
-    icon: "🕌",
-    title: "Fiqh Geleerde",
-    description: "Behaal 100% op Rechtsleer"
-  },
-  {
-    id: "level_4_unlocked",
-    icon: "۞",
-    title: "Meester (Niveau 4)",
-    description: "Speel Niveau 4 vrij op Expert"
-  },
-  {
-    id: "streak_7",
-    icon: "🌙",
-    title: "Standvastig",
-    description: "Speel 7 dagen achter elkaar"
-  }
-];
-
-// 2. Haal behaalde badges op uit het geheugen (localStorage)
-function getUnlockedBadges() {
-  const saved = localStorage.getItem('islam_quiz_unlocked_badges');
-  return saved ? JSON.parse(saved) : [];
-}
-
-// 3. Functie om een nieuwe badge te ontgrendelen
-function unlockBadge(badgeId) {
-  let unlocked = getUnlockedBadges();
-  if (!unlocked.includes(badgeId)) {
-    unlocked.push(badgeId);
-    localStorage.setItem('islam_quiz_unlocked_badges', JSON.stringify(unlocked));
-    
-    const badge = APP_BADGES.find(b => b.id === badgeId);
-    if (badge) {
-      alert(`🎉 Gefeliciteerd! Je hebt de badge '${badge.title}' ontgrendeld!`);
-    }
-  }
-}
-
-// 4. Render de badges in de Grid
-function renderBadges() {
-  const grid = document.getElementById('badgesGrid');
-  const unlockedBadges = getUnlockedBadges();
-
-  if (!grid) return;
-  grid.innerHTML = '';
-
-  APP_BADGES.forEach(badge => {
-    const isUnlocked = unlockedBadges.includes(badge.id);
-
-    const badgeCard = document.createElement('div');
-    badgeCard.className = `badge-card ${isUnlocked ? 'unlocked' : 'locked'}`;
-    badgeCard.innerHTML = `
-      <div class="badge-icon">${isUnlocked ? badge.icon : '🔒'}</div>
-      <div class="badge-title">${badge.title}</div>
-      <div class="badge-desc">${badge.description}</div>
-      <div class="badge-status-tag">${isUnlocked ? 'Ontgrendeld' : 'Vergrendeld'}</div>
-    `;
-
-    grid.appendChild(badgeCard);
-  });
-}
-
-// 5. Open en Sluit functies voor de Modal
-function openBadgesModal() {
-  renderBadges();
-  const modal = document.getElementById('badgesModal');
-  if (modal) modal.classList.add('active');
-}
-
-function closeBadgesModal() {
-  const modal = document.getElementById('badgesModal');
-  if (modal) modal.classList.remove('active');
-}
-
-// 6. Automatische Check bij het afronden van een Quiz
-function checkQuizCompletionBadges(score, totalQuestions, categoryName, currentLevel) {
-  unlockBadge('first_quiz');
-
-  if (score === totalQuestions) {
-    if (categoryName === 'quran') unlockBadge('quran_master');
-    if (categoryName === 'hadith') unlockBadge('hadith_master');
-    if (categoryName === 'fiqh') unlockBadge('fiqh_master');
-  }
-
-  if (currentLevel >= 4) {
-    unlockBadge('level_4_unlocked');
-  }
-}
-document.addEventListener('click', function(e) {
-  const target = e.target.closest('[data-act]');
-  if (target && target.dataset.act === 'next' && typeof quiz !== 'undefined' && quiz) {
-    checkQuizCompletionBadges(quiz.score || 0, quiz.items ? quiz.items.length : 10, quiz.catId, quiz.level === 'expert' ? 4 : 1);
-  }
-});
 </script>
 <script>
 if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
