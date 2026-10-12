@@ -2822,6 +2822,41 @@ return exports;})();
   };
   function play(name) { if (S.sound) { try { sfx[name](); } catch (e) {} } }
 
+  /* ───────────── Presentator (echte stemclips) ─────────────
+     Zet mp3-bestanden in de map audio/ met de namen uit de opnamelijst (bijv. goed-1.mp3, goed-2.mp3 …).
+     Ontbreekt een bestand? Dan valt de app stil terug op de gewone geluidjes. */
+  const VOICE = { goed: 6, fout: 5, gehaald: 4, sterren: 3, oefenen: 4, badge: 3, niveau4: 3, reis: 3 };
+  const voiceMissing = {}, voiceLast = {};
+  let voiceEl = null, voiceTimer = null, voiceOnce = {};
+  function voiceUnlock() {
+    try {
+      if (!voiceEl) voiceEl = new Audio();
+      voiceEl.src = "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAABErAAABAAgAZGF0YQAAAAA=";
+      const pr = voiceEl.play(); if (pr && pr.catch) pr.catch(function () {});
+    } catch (e) {}
+  }
+  function voice(cat, chance, delay) {
+    if (!S.sound || !VOICE[cat]) return;
+    if (chance !== undefined && Math.random() > chance) return;
+    clearTimeout(voiceTimer);
+    voiceTimer = setTimeout(function () { voiceTry(cat); }, delay === undefined ? 450 : delay);
+  }
+  function voiceTry(cat) {
+    if (!S.sound) return;
+    try {
+      if (!voiceEl) voiceEl = new Audio();
+      const all = []; for (let i = 1; i <= VOICE[cat]; i++) if (!voiceMissing[cat + "-" + i]) all.push(i);
+      if (!all.length) return;
+      let pool = all.filter(function (i) { return i !== voiceLast[cat]; }); if (!pool.length) pool = all;
+      const n = pool[Math.floor(Math.random() * pool.length)], key = cat + "-" + n;
+      voiceEl.onerror = function () { voiceMissing[key] = true; voiceTry(cat); };   /* bestand ontbreekt: probeer een andere variant */
+      voiceEl.pause(); voiceEl.src = "audio/" + key + ".mp3"; voiceEl.volume = 1;
+      voiceLast[cat] = n;
+      const pr = voiceEl.play(); if (pr && pr.catch) pr.catch(function () {});
+    } catch (e) {}
+  }
+  function voiceStop() { clearTimeout(voiceTimer); try { if (voiceEl) voiceEl.pause(); } catch (e) {} }
+
   /* ───────────── App-toestand ───────────── */
   const app = document.getElementById("app");
   let screen = !P ? "newplayer" : S.players.length > 1 ? "players" : P.mode ? "home" : "welcome";
@@ -3227,10 +3262,10 @@ return exports;})();
     if (it.correct) {
       quiz.score++;
       lastPraise = pick(PRAISE);
-      play("correct");
+      play("correct"); voice("goed", 0.4);
     } else {
       lastTry = pick(TRYAGAIN);
-      play("wrong");
+      play("wrong"); voice("fout", 0.35);
     }
     render();
     if (it.correct) {
@@ -3300,6 +3335,9 @@ return exports;})();
     result = { kind: quiz.kind, catId: quiz.catId, level: quiz.level, tier: quiz.tier || 1, next: nextTier(quiz, stars), score: score, total: total, stars: stars, record: isRecord, items: quiz.items, newBadges: newBadges, open4: open4, noAuto: journeyReturn && quiz.kind === "category" };
     screen = "result";
     play(stars >= 2 ? "win" : "lose");
+    if (quiz.kind === "category" || quiz.kind === "daily") {
+      voice(open4 ? "niveau4" : newBadges.length ? "badge" : stars === 3 ? "sterren" : stars === 2 ? "gehaald" : "oefenen", undefined, 900);
+    }
     render();
   }
 
@@ -4370,7 +4408,7 @@ return exports;})();
     switch (act) {
       case "pick-mode": P.mode = el.dataset.mode; saveState(); play("click"); screen = pendingCode ? "group" : "home"; render(); break;
       case "switch-mode": P.mode = P.mode === "junior" ? "expert" : "junior"; saveState(); play("click"); render(); break;
-      case "toggle-sound": S.sound = !S.sound; saveState(); if (S.sound) play("click"); render(); break;
+      case "toggle-sound": S.sound = !S.sound; if (!S.sound) voiceStop(); saveState(); if (S.sound) play("click"); render(); break;
       case "start-cat":
         play("click");
         if (tiersFor(P.mode, el.dataset.cat).length > 1) tierDialog(el.dataset.cat); else startQuiz("category", el.dataset.cat, 1);
@@ -4386,7 +4424,7 @@ return exports;})();
         if (result && result.kind === "daily") startQuiz("daily"); else startQuiz("category", result.catId, result.tier);
         break;
       case "home": play("click"); stopTimer(); journeyReturn = false; screen = "home"; render(); break;
-      case "journey": play("click"); stopTimer(); journeyReturn = false; journeyLand = null; screen = "journey"; render(); break;
+      case "journey": play("click"); if (!voiceOnce.reis) { voiceOnce.reis = 1; voice("reis", undefined, 500); } stopTimer(); journeyReturn = false; journeyLand = null; screen = "journey"; render(); break;
       case "journey-back": play("click"); stopTimer(); screen = "journey"; render(); break;
       case "journey-land": play("click"); journeyLand = parseInt(el.dataset.i, 10); render(); break;
       case "journey-stop": {
@@ -4493,7 +4531,7 @@ return exports;})();
   });
 
   // zorg dat geluid werkt op mobiel na de eerste aanraking
-  document.addEventListener("pointerdown", function () { if (S.sound) ctx(); }, { once: true });
+  document.addEventListener("pointerdown", function () { if (S.sound) ctx(); voiceUnlock(); }, { once: true });
 
   if (P && syncBadges().length) saveState();
   render();
