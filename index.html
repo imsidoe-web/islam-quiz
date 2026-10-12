@@ -766,6 +766,33 @@ table.board thead th .avatar { display: grid; margin: 0 auto; }
 .option.selected { background: var(--gold-soft); border-color: var(--gold); box-shadow: 0 4px 0 var(--gold); }
 .option.selected .letter { background: var(--gold); color: #fff; }
 .multi-hint { margin-top: 8px; font-weight: 800; font-size: .85rem; color: #7a4d10; background: var(--gold-soft); border-radius: 12px; padding: 6px 10px; display: inline-block; }
+
+.journey-btn { appearance: none; border: 0; width: 100%; font: inherit; cursor: pointer; display: flex; align-items: center; gap: 14px; text-align: left; margin: 0 0 14px; padding: 14px 16px; border-radius: 24px; color: #fff; background: linear-gradient(135deg, #ff9f43 0%, #f0558a 55%, #7a5cf0 100%); box-shadow: 0 6px 0 rgba(90, 40, 120, .35), 0 12px 24px rgba(240, 85, 138, .25); transition: transform .12s; }
+.journey-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(90, 40, 120, .35); }
+.journey-btn .jb-ic { width: 52px; height: 52px; border-radius: 18px; background: rgba(255,255,255,.22); display: grid; place-items: center; flex: none; }
+.journey-btn .jb-tx { flex: 1; display: grid; gap: 2px; }
+.journey-btn b { font-size: 1.2rem; font-weight: 900; }
+.journey-btn small { font-weight: 700; opacity: .92; }
+.land-head { text-align: center; margin: 4px 0 12px; }
+.land-n { display: inline-block; background: var(--accent, var(--gold)); color: #fff; font-weight: 900; font-size: .75rem; letter-spacing: .6px; text-transform: uppercase; padding: 4px 12px; border-radius: 999px; }
+.land-head h2 { margin: 6px 0 2px; font-size: 1.5rem; color: var(--emerald-dark); }
+.land-head p { margin: 0; color: var(--muted); font-weight: 700; }
+.journey-map { border-radius: 30px; overflow: hidden; box-shadow: 0 10px 28px rgba(27, 67, 50, .25); border: 4px solid #fff; background: #fff; }
+.jsvg { display: block; width: 100%; height: auto; }
+.j-stop { cursor: pointer; outline: none; }
+.j-stop.locked { cursor: not-allowed; }
+.j-stop:hover:not(.locked) > circle:nth-last-of-type(n+1) { filter: brightness(1.05); }
+.j-stop:focus-visible circle:first-of-type { stroke: #1b4332; stroke-width: 4; }
+.j-glow { transform-box: fill-box; transform-origin: center; animation: jpulse 1.6s ease-in-out infinite; }
+@keyframes jpulse { 0%, 100% { transform: scale(.85); opacity: .35; } 50% { transform: scale(1.12); opacity: .8; } }
+.j-marker { transition: transform 1s cubic-bezier(.5, -0.3, .3, 1.3); pointer-events: none; }
+.j-bob { animation: jbob 1.2s ease-in-out infinite; }
+@keyframes jbob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+.land-next { margin: 14px 0 6px; padding: 14px; border-radius: 20px; background: #fff; box-shadow: var(--shadow); text-align: center; display: grid; gap: 2px; color: var(--emerald-dark); }
+.land-next small { color: var(--muted); font-weight: 700; }
+.j-toast { position: fixed; left: 50%; bottom: 22px; transform: translate(-50%, 30px); opacity: 0; pointer-events: none; background: #1b4332; color: #fff; font-weight: 800; padding: 12px 18px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,.3); transition: all .25s ease; z-index: 60; max-width: 90vw; text-align: center; }
+.j-toast.show { opacity: 1; transform: translate(-50%, 0); }
+@media (prefers-reduced-motion: reduce) { .j-glow, .j-bob { animation: none; } .j-marker { transition: none; } }
    </style>
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Islam Quiz">
@@ -1696,6 +1723,187 @@ exports.questions = [
             source: "Hadith – Tirmidhi",
         },
     },
+    // ---------- JUNIOR · NIVEAU 2 en 3 ----------
+    {
+        id: "p-j7", category: "profeten", level: "junior", tier: 2,
+        question: "Welk heilig boek kreeg profeet Musa (a.s.) van Allah?",
+        options: ["De Tora (Tawrat)", "De Injiel", "De Zabur", "De Koran"], answer: 0,
+        explanation: "Musa (a.s.) kreeg de Tora. De Injiel kreeg Isa (a.s.), de Zabur Dawud (a.s.) en de Koran kreeg de Profeet Muhammad ﷺ.",
+    },
+    {
+        id: "p-j8", category: "profeten", level: "junior", tier: 2,
+        question: "Welke profeet werd door zijn broers in een put gegooid, maar werd later een machtige en vriendelijke man?",
+        options: ["Yusuf (a.s.)", "Yunus (a.s.)", "Ismail (a.s.)", "Idris (a.s.)"], answer: 0,
+        explanation: "Yusuf (a.s.) werd door zijn broers in een put gegooid. Allah beschermde hem, en later vergaf hij zijn broers.",
+    },
+    {
+        id: "p-j9", category: "profeten", level: "junior", tier: 2,
+        question: "Welk boek, de Zabur, kreeg profeet Dawud (a.s.)?",
+        options: ["De Zabur (Psalmen)", "De Tora", "De Injiel", "De Koran"], answer: 0,
+        explanation: "Dawud (a.s.) kreeg de Zabur. Hij had ook een prachtige stem als hij tot Allah zong.",
+    },
+    {
+        id: "p-j10", category: "profeten", level: "junior", tier: 3,
+        question: "Welke profeet werd zonder vader geboren, en sprak al als baby tot de mensen?",
+        options: ["Isa (a.s.)", "Yahya (a.s.)", "Musa (a.s.)", "Yusuf (a.s.)"], answer: 0,
+        explanation: "Isa (a.s.) werd door een wonder van Allah geboren uit zijn moeder Maryam, en sprak al in de wieg.",
+    },
+    {
+        id: "p-j11", category: "profeten", level: "junior", tier: 3,
+        question: "Welke profeet bouwde samen met zijn zoon Ismail de Ka’ba in Mekka?",
+        options: ["Ibrahim (a.s.)", "Nuh (a.s.)", "Hud (a.s.)", "Adam (a.s.)"], answer: 0,
+        explanation: "Ibrahim (a.s.) en zijn zoon Ismail (a.s.) bouwden de Ka’ba, het huis van Allah in Mekka, waar moslims zich naartoe richten in het gebed.",
+    },
+    {
+        id: "p-j12", category: "profeten", level: "junior", tier: 3,
+        question: "Welke profeet werd ziek en verloor veel, maar bleef heel geduldig en dankbaar tegenover Allah?",
+        options: ["Ayyub (a.s.)", "Yunus (a.s.)", "Sulayman (a.s.)", "Harun (a.s.)"], answer: 0,
+        explanation: "Ayyub (a.s.) is het voorbeeld van geduld (sabr). Allah genas hem en gaf hem veel zegen.",
+    },
+    {
+        id: "z-j7", category: "zuilen", level: "junior", tier: 2,
+        question: "Hoe heet de verplichte aalmoes die moslims aan arme mensen geven?",
+        options: ["Zakaat", "Salaat", "Sawm", "Hadj"], answer: 0,
+        explanation: "Zakaat is de derde zuil van de Islam. We geven een deel van ons geld aan mensen die het nodig hebben.",
+    },
+    {
+        id: "z-j8", category: "zuilen", level: "junior", tier: 2,
+        question: "Hoe heet het grote feest na afloop van de maand Ramadan?",
+        options: ["Eid al-Fitr", "Eid al-Adha", "Moulid", "Laylat al-Qadr"], answer: 0,
+        explanation: "Na Ramadan vieren moslims Eid al-Fitr, met een speciaal gebed, lekker eten en cadeautjes.",
+    },
+    {
+        id: "z-j9", category: "zuilen", level: "junior", tier: 2,
+        question: "Hoe heet het wassen met water voor het gebed?",
+        options: ["Wudhu", "Ghusl", "Adhaan", "Sadaqa"], answer: 0,
+        explanation: "Voor het gebed doen we wudhu: handen, mond, neus, gezicht, armen, hoofd en voeten wassen.",
+    },
+    {
+        id: "z-j10", category: "zuilen", level: "junior", tier: 3,
+        question: "Welk verplicht gebed bidden we als eerste van de dag, vóór zonsopgang?",
+        options: ["Fajr", "Dhuhr", "Asr", "Maghrib"], answer: 0,
+        explanation: "Het Fajr-gebed bidden we als de dag begint. Daarna volgen Dhuhr, Asr, Maghrib en Isha.",
+    },
+    {
+        id: "z-j11", category: "zuilen", level: "junior", tier: 3,
+        question: "Naar welk gebouw in Mekka richten moslims zich als ze bidden?",
+        options: ["De Ka’ba", "De moskee van Medina", "De berg Arafat", "De berg Uhud"], answer: 0,
+        explanation: "Alle moslims bidden in de richting van de Ka’ba. Die richting heet de qibla.",
+    },
+    {
+        id: "z-j12", category: "zuilen", level: "junior", tier: 3,
+        question: "Hoeveel verplichte gebeden bidden moslims in totaal elke dag, en welk gebed is het laatste?",
+        options: ["5 gebeden, het laatste is Isha", "3 gebeden, het laatste is Maghrib", "5 gebeden, het laatste is Asr", "7 gebeden, het laatste is Isha"], answer: 0,
+        explanation: "Er zijn 5 verplichte gebeden: Fajr, Dhuhr, Asr, Maghrib en Isha. Isha is het laatste van de dag.",
+    },
+    {
+        id: "s-j7", category: "seerah", level: "junior", tier: 2,
+        question: "Hoe heette de moeder van de Profeet ﷺ?",
+        options: ["Amina", "Khadija", "Aisha", "Fatima"], answer: 0,
+        explanation: "De moeder van de Profeet ﷺ heette Amina bint Wahb.",
+    },
+    {
+        id: "s-j8", category: "seerah", level: "junior", tier: 2,
+        question: "In welke grot kreeg de Profeet ﷺ de eerste woorden van de Koran?",
+        options: ["De grot van Hira", "De grot van Thawr", "De grot van Uhud", "De grot van Kahf"], answer: 0,
+        explanation: "In de grot van Hira, op de Jabal an-Nur bij Mekka, kwam de engel Jibriel met het eerste woord: ‘Iqra’ (lees).",
+    },
+    {
+        id: "s-j9", category: "seerah", level: "junior", tier: 2,
+        question: "Wie was de tweede kalief na de Profeet ﷺ?",
+        options: ["Umar ibn al-Khattab (r.a.)", "Uthman ibn Affan (r.a.)", "Ali ibn Abi Talib (r.a.)", "Bilal (r.a.)"], answer: 0,
+        explanation: "De eerste kalief was Abu Bakr, de tweede Umar, de derde Uthman en de vierde Ali (moge Allah tevreden met hen zijn).",
+    },
+    {
+        id: "s-j10", category: "seerah", level: "junior", tier: 3,
+        question: "Welke oom zorgde voor de Profeet ﷺ toen zijn grootvader overleed?",
+        options: ["Abu Talib", "Abu Lahab", "Hamza", "Abbas"], answer: 0,
+        explanation: "Abu Talib zorgde voor de jonge Muhammad ﷺ en beschermde hem tegen mensen die hem kwaad wilden doen.",
+    },
+    {
+        id: "s-j11", category: "seerah", level: "junior", tier: 3,
+        question: "Hoe heet de moskee die de Profeet ﷺ samen met zijn metgezellen bouwde na de Hijra naar Medina?",
+        options: ["Masjid an-Nabawi", "Masjid al-Haram", "Masjid al-Aqsa", "Masjid Quba"], answer: 0,
+        explanation: "De Profeet ﷺ bouwde Masjid an-Nabawi in Medina. Daarvoor bouwde hij al de moskee van Quba, de eerste moskee in de Islam.",
+    },
+    {
+        id: "s-j12", category: "seerah", level: "junior", tier: 3,
+        question: "Hoe heette de dochter van de Profeet ﷺ die trouwde met Ali (r.a.)?",
+        options: ["Fatima (r.a.)", "Aisha (r.a.)", "Zaynab (r.a.)", "Umm Kulthum (r.a.)"], answer: 0,
+        explanation: "Fatima (r.a.) was de jongste dochter van de Profeet ﷺ en Khadija, en trouwde met Ali ibn Abi Talib (r.a.).",
+    },
+    {
+        id: "k-j7", category: "koran", level: "junior", tier: 2,
+        question: "Welke soera is de laatste soera van de Koran?",
+        options: ["Soera An-Naas", "Soera Al-Falaq", "Soera Al-Ikhlaas", "Soera Al-Faatiha"], answer: 0,
+        explanation: "Soera An-Naas (‘De Mensen’) is soera nummer 114, de laatste van de Koran.",
+    },
+    {
+        id: "k-j8", category: "koran", level: "junior", tier: 2,
+        question: "In welke maand werd de Koran voor het eerst geopenbaard?",
+        options: ["Ramadan", "Shawwal", "Muharram", "Rajab"], answer: 0,
+        explanation: "De Koran werd in de maand Ramadan voor het eerst gebracht, in de Nacht van de Voorbestemming (Laylat al-Qadr).",
+    },
+    {
+        id: "k-j9", category: "koran", level: "junior", tier: 2,
+        question: "Hoeveel verzen heeft de soera Al-Faatiha?",
+        options: ["7", "3", "10", "114"], answer: 0,
+        explanation: "Al-Faatiha heeft 7 verzen en we lezen haar in elk gebed.",
+    },
+    {
+        id: "k-j10", category: "koran", level: "junior", tier: 3,
+        question: "Wat is de langste soera van de Koran?",
+        options: ["Soera Al-Baqarah", "Soera Yaasien", "Soera Al-Kawthar", "Soera An-Naas"], answer: 0,
+        explanation: "Soera Al-Baqarah (‘De Koe’) is de langste soera van de Koran.",
+    },
+    {
+        id: "k-j11", category: "koran", level: "junior", tier: 3,
+        question: "Naar welke profeet is soera 12 van de Koran genoemd?",
+        options: ["Yusuf (a.s.)", "Nuh (a.s.)", "Musa (a.s.)", "Ibrahim (a.s.)"], answer: 0,
+        explanation: "Soera Yusuf vertelt het verhaal van profeet Yusuf (a.s.) en zijn broers.",
+    },
+    {
+        id: "k-j12", category: "koran", level: "junior", tier: 3,
+        question: "Hoe heten de regels om de Koran mooi en juist uit te spreken?",
+        options: ["Tajwied", "Wudhu", "Qibla", "Hijra"], answer: 0,
+        explanation: "Met tajwied leren we elke letter van de Koran goed uit te spreken, zoals die werd geopenbaard.",
+    },
+    {
+        id: "a-j7", category: "akhlaaq", level: "junior", tier: 2,
+        question: "Met welke hand eten we volgens de Sunnah?",
+        options: ["Met de rechterhand", "Met de linkerhand", "Met allebei", "Maakt niet uit"], answer: 0,
+        explanation: "De Profeet ﷺ leerde ons te eten met de rechterhand en te beginnen met Bismillah.",
+    },
+    {
+        id: "a-j8", category: "akhlaaq", level: "junior", tier: 2,
+        question: "Wat zeg je tegen iemand die iets goeds voor je doet? ‘Jazaakallahu khayran’ betekent:",
+        options: ["Moge Allah je met het goede belonen", "Tot ziens", "Ik ben boos", "Het is niet erg"], answer: 0,
+        explanation: "‘Jazaakallahu khayran’ is een mooie manier om te bedanken: moge Allah je met het goede belonen.",
+    },
+    {
+        id: "a-j9", category: "akhlaaq", level: "junior", tier: 2,
+        question: "Wat zeg je als je iets moois ziet en je er blij mee bent?",
+        options: ["MashaAllah", "Astaghfirullah", "Inna lillahi", "Bismillah"], answer: 0,
+        explanation: "Met ‘MashaAllah’ zeggen we dat het zo is gegaan zoals Allah het wilde. Zo geven we Allah de eer voor het mooie.",
+    },
+    {
+        id: "a-j10", category: "akhlaaq", level: "junior", tier: 3,
+        question: "Wat moet je doen als je een fout hebt gemaakt?",
+        options: ["Spijt tonen, sorry zeggen en Allah om vergeving vragen", "Doen alsof er niets is gebeurd", "Iemand anders de schuld geven", "Het snel vergeten"], answer: 0,
+        explanation: "Iedereen maakt fouten. Een goede moslim zegt sorry en vraagt Allah om vergeving (tawba).",
+    },
+    {
+        id: "a-j11", category: "akhlaaq", level: "junior", tier: 3,
+        question: "Hoe moeten we volgens de Profeet ﷺ met onze buren omgaan?",
+        options: ["Goed en vriendelijk", "We hoeven niets met ze te doen", "Alleen aardig zijn op feestdagen", "Ze liever mijden"], answer: 0,
+        explanation: "De Profeet ﷺ zei dat de engel Jibriel zo vaak over het goed behandelen van buren sprak, dat hij dacht dat ze erfgenamen zouden worden.",
+    },
+    {
+        id: "a-j12", category: "akhlaaq", level: "junior", tier: 3,
+        question: "Wat zeggen we als we beloven iets later te doen?",
+        options: ["In shaa Allah", "Alhamdulillah", "SubhanAllah", "Allahu Akbar"], answer: 0,
+        explanation: "‘In shaa Allah’ betekent ‘als Allah het wil’. Zo weten we dat alles alleen door Allah gebeurt.",
+    },
 // ───────────────────── 5. AKHLAAQ & DU’A ─────────────────────
     {
         id: "a-e1", category: "akhlaaq", level: "expert", tier: 1,
@@ -2431,6 +2639,8 @@ return exports;})();
     home: '<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
     retry: '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>',
     check: '<polyline points="20 6 9 17 4 12"/>',
+    trash: '<path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/>',
+    map: '<polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" x2="9" y1="3" y2="18"/><line x1="15" x2="15" y1="6" y2="21"/>',
     x: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
     right: '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
     left: '<path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>',
@@ -2594,6 +2804,8 @@ return exports;})();
   const urlCode = normCode(new URLSearchParams(location.search).get("groep"));
   if (urlCode && P && P.mode && S.players.length === 1) screen = "group";
   let draftColor = AVATAR_COLORS[0];
+  let journeyReturn = false;   /* quiz gestart vanaf De Reis: na afloop terug naar de kaart */
+  const journeyPos = {};       /* laatst getoonde stop per land, voor de sprong-animatie */
   let boardLevel = "junior";
   let quiz = null;
   let result = null;
@@ -2633,7 +2845,7 @@ return exports;})();
      Een niveau is "gehaald" bij minstens PASS_PCT goed (beste poging).
      Niveau 4 gaat per categorie (en per Junior/Expert) pas open als álle bestaande niveaus 1-3 gehaald zijn.
      Badge Meester (zilver) = niveau 1-3 gehaald; Grootmeester (goud) = niveau 4 gehaald. */
-  const PASS_PCT = 0.7;
+  const PASS_PCT = 0.6; // 2 sterren; bij 3 vragen (niveau 2/3) is dat 2 van de 3 goed
   const BADGE_META = {
     master: { icon: "۞", title: "Meester", desc: "Niveau 1-3 gehaald" },
     grand: { icon: "👑", title: "Grootmeester", desc: "Niveau 4 gehaald" },
@@ -2647,7 +2859,14 @@ return exports;})();
   function tier4Unlocked(level, catId) {
     return hasTier4(level, catId) && requiredTiers(level, catId).every(function (t) { return tierPassed(level, catId, t); });
   }
-  function tierLocked(level, catId, tier) { return tier === 4 && !tier4Unlocked(level, catId); }
+  function tierLocked(level, catId, tier) {
+    if (tier <= 1) return false;
+    if (tier === 4) return !tier4Unlocked(level, catId);
+    return !tierPassed(level, catId, tier - 1);          /* stap voor stap: niveau 2 na 1, niveau 3 na 2 */
+  }
+  function lockText(level, catId, tier) {
+    return tier === 4 ? "Haal eerst alle niveaus 1-3 (min. " + Math.round(PASS_PCT * 100) + "%)" : "Haal eerst niveau " + (tier - 1) + " (min. " + Math.round(PASS_PCT * 100) + "%)";
+  }
   function badgeId(level, catId, kind) { return level + ":" + catId + ":" + kind; }
   /* kent ontbrekende badges toe (ook met terugwerkende kracht); geeft de nieuw verdiende terug */
   function syncBadges() {
@@ -2744,9 +2963,11 @@ return exports;})();
     else if (screen === "board") app.innerHTML = viewBoard();
     else if (screen === "group") app.innerHTML = viewGroup();
     else if (screen === "duelresult") app.innerHTML = viewDuelResult();
+    else if (screen === "journey") app.innerHTML = viewJourney();
     const bw = document.getElementById("badgesBtnWrap");
     if (bw) bw.style.display = (screen === "home" || screen === "scores") ? "" : "none";
     window.scrollTo({ top: 0 });
+    if (screen === "journey") afterJourneyRender();
   }
 
   function startAutoNext() {
@@ -2764,11 +2985,11 @@ return exports;})();
     const c = catById(catId), lv = P.mode, ts = tiersFor(lv, catId);
     const w = document.createElement("div");
     w.className = "dialog-wrap";
-    let h = '<div class="dialog" role="dialog" aria-modal="true"><h3>' + esc(c.title) + "</h3><p>Kies een niveau. Haal je 3 sterren, dan ga je vanzelf door. Niveau 4 gaat open als je niveau 1-3 van deze categorie hebt gehaald (min. " + Math.round(PASS_PCT * 100) + "% goed).</p><div class=\"tier-list\">";
+    let h = '<div class="dialog" role="dialog" aria-modal="true"><h3>' + esc(c.title) + "</h3><p>Kies een niveau. Je speelt stap voor stap: haal een niveau (min. " + Math.round(PASS_PCT * 100) + "% goed) om het volgende te openen. " + (hasTier4(lv, catId) ? "Niveau 4 gaat open als je niveau 1-3 van deze categorie hebt gehaald (min. " + Math.round(PASS_PCT * 100) + "% goed)." : "Haal niveau 1-3 (min. " + Math.round(PASS_PCT * 100) + "% goed) voor de Meester-badge.") + "</p><div class=\"tier-list\">";
     ts.forEach(function (t) {
       const b = P.best[lv][bkey(catId, t)], locked = tierLocked(lv, catId, t), ok = tierPassed(lv, catId, t);
       h += '<button class="tier-btn' + (locked ? " locked" : "") + '"' + (locked ? " disabled" : ' data-act="start-tier" data-cat="' + catId + '" data-tier="' + t + '"') + '><span class="tier-n">' + (locked ? "🔒 " : "") + "Niveau " + t + "</span>" +
-        '<span class="tier-d">' + (locked ? "Haal eerst alle niveaus 1-3 (min. " + Math.round(PASS_PCT * 100) + "%)" : ["Basis", "Gemiddeld", "Gevorderd", "Expert"][t - 1] + (ok ? " · ✓ gehaald" : "")) + "</span>" + miniStars(b ? b.stars : 0) + "</button>";
+        '<span class="tier-d">' + (locked ? lockText(lv, catId, t) : ["Basis", "Gemiddeld", "Gevorderd", "Expert"][t - 1] + (ok ? " · ✓ gehaald" : "")) + "</span>" + miniStars(b ? b.stars : 0) + "</button>";
     });
     h += '</div><button class="btn ghost block" data-d="no">Annuleren</button></div>';
     w.innerHTML = h;
@@ -2839,6 +3060,7 @@ return exports;})();
       (daily ? "Vandaag gespeeld: " + daily.score + "/" + daily.total + ". Speel opnieuw!" : "5 vragen, elke dag nieuw!") +
       '</p></span><span class="go">' + icon("right", 22) + "</span></button>";
 
+    h += '<button class="journey-btn" data-act="journey"><span class="jb-ic">' + icon("map", 28) + '</span><span class="jb-tx"><b>Start de Reis</b><small>Nieuw: loop de route en verdien badges</small></span>' + icon("right", 22) + "</button>";
     h += '<div class="btn-row"><button class="scores-btn" data-act="scores">' + icon("trophy", 22) + "<span>Mijn Scores</span>" + icon("right", 20) + "</button>" +
       (S.players.length > 1 ? '<button class="scores-btn" data-act="board">' + icon("users", 22) + "<span>Scorebord</span>" + icon("right", 20) + "</button>" : "") +
       '<button class="scores-btn" data-act="group">' + icon("users", 22) + "<span>" + (P.group ? "Mijn groep" : "Groep & duel") + "</span>" + icon("right", 20) + "</button></div>";
@@ -3050,7 +3272,7 @@ return exports;})();
     saveState();
     pushMember();
 
-    result = { kind: quiz.kind, catId: quiz.catId, level: quiz.level, tier: quiz.tier || 1, next: nextTier(quiz, stars), score: score, total: total, stars: stars, record: isRecord, items: quiz.items, newBadges: newBadges, open4: open4 };
+    result = { kind: quiz.kind, catId: quiz.catId, level: quiz.level, tier: quiz.tier || 1, next: nextTier(quiz, stars), score: score, total: total, stars: stars, record: isRecord, items: quiz.items, newBadges: newBadges, open4: open4, noAuto: journeyReturn && quiz.kind === "category" };
     screen = "result";
     play(stars >= 2 ? "win" : "lose");
     render();
@@ -3085,6 +3307,7 @@ return exports;})();
       return h;
     }
     if (r.next) h += '<button class="btn gold" data-act="go-next-tier">' + icon("right", 20) + "Ga door naar Niveau " + r.next + "</button>";
+    if (journeyReturn && r.kind === "category") h += '<button class="btn gold" data-act="journey">' + icon("map", 20) + "Terug naar De Reis</button>";
     h += '<button class="btn" data-act="retry">' + icon("retry", 20) + "Opnieuw Proberen</button>" +
       '<button class="btn gold" data-act="home">' + icon("layers", 20) + "Kies Andere Categorie</button>" +
       '<button class="btn ghost" data-act="review">' + icon("list", 20) + "Bekijk Antwoorden</button></div></section>";
@@ -3110,7 +3333,7 @@ return exports;})();
           const b = P.best[lv][bkey(c.id, t)], pct = b ? Math.round((b.score / b.total) * 100) : 0;
           h += '<div class="score-row" style="--accent:' + c.color + '"><div class="score-head"><span>' + esc(c.title) + (ts.length > 1 ? " · Niveau " + t : "") + "</span>" +
             miniStars(b ? b.stars : 0) + '</div><div class="bar"><i style="width:' + pct + '%"></i></div>' +
-            '<div class="score-sub">' + (b ? "Beste score: " + b.score + "/" + b.total + " (" + pct + "%)" : tierLocked(lv, c.id, t) ? "🔒 Vergrendeld: haal eerst niveau 1-3" : "Nog niet gespeeld") + "</div></div>";
+            '<div class="score-sub">' + (b ? "Beste score: " + b.score + "/" + b.total + " (" + pct + "%)" : tierLocked(lv, c.id, t) ? "🔒 Vergrendeld: " + lockText(lv, c.id, t).toLowerCase() : "Nog niet gespeeld") + "</div></div>";
         });
       });
       h += '<div class="score-row daily-row"><div class="score-head"><span>Quiz van de Dag (vandaag)</span>' + icon("calendar", 18) + "</div>" +
@@ -3163,13 +3386,144 @@ return exports;})();
       h += '<div class="player-card' + (p.id === S.current ? " active" : "") + '">' +
         '<button class="player-main" data-act="select-player" data-id="' + p.id + '">' + avatarHtml(p, 52) +
         '<span class="pinfo"><b>' + esc(p.name) + "</b><small>" + allStars(p) + (allStars(p) === 1 ? " ster" : " sterren") + " · " + p.played + (p.played === 1 ? " quiz" : " quizzen") + (p.mode ? " · " + (p.mode === "junior" ? "Junior" : "Expert") : "") + "</small></span></button>" +
-        (S.players.length > 1 ? '<button class="icon-btn small" data-act="remove-player" data-id="' + p.id + '" aria-label="Verwijder ' + esc(p.name) + '">' + icon("x", 18) + "</button>" : "") + "</div>";
+        '<button class="icon-btn small" data-act="remove-player" data-id="' + p.id + '" aria-label="Verwijder ' + esc(p.name) + '" title="Verwijder ' + esc(p.name) + '">' + icon("trash", 18) + "</button></div>";
     });
     h += "</div>";
     h += '<div class="stack">' +
       (S.players.length < MAX_PLAYERS ? '<button class="btn gold block" data-act="add-player">' + icon("smile", 20) + "Nieuwe speler</button>" : "") +
       (S.players.length > 1 ? '<button class="btn block" data-act="board">' + icon("trophy", 20) + "Scorebord</button>" : "") + "</div>";
     return h;
+  }
+
+
+  /* ───────────── De Reis (routekaart) ───────────── */
+  const JTHEME = {
+    junior: { sky: ["#8fd8ff", "#d6f1ff", "#ffe9b0"], far: "#f7d9a0", mid: "#f0c27a", near: "#e6a95a", pond: "#37c3c0", pondIn: "#8ff0e6", leaf: "#2fa36b", leaf2: "#1f8a58", trunk: "#9a6a3a", path: "#fdf0cf", edge: "#d9a05b", sil: "#e9c58b", sun: true },
+    expert: { sky: ["#1b2a5c", "#6a4a86", "#f0a770"], far: "#b97a52", mid: "#9a5f3d", near: "#77442b", pond: "#2aa7b5", pondIn: "#7ee2ee", leaf: "#2a8f64", leaf2: "#1b7350", trunk: "#5a3a22", path: "#f6e2b8", edge: "#c98a52", sil: "#7a4a63", sun: false },
+  };
+  const JLAYOUT = { 3: [[110, 650], [250, 440], [125, 225]], 4: [[110, 690], [250, 540], [100, 385], [225, 190]] };
+  function starPoly(cx, cy, r) {
+    let pts = [];
+    for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + (i * Math.PI) / 5, rr = i % 2 ? r * 0.45 : r; pts.push((cx + Math.cos(a) * rr).toFixed(1) + "," + (cy + Math.sin(a) * rr).toFixed(1)); }
+    return pts.join(" ");
+  }
+  function palm(x, y, k, flip) {
+    const f = flip ? -1 : 1, th = JTHEME[P.mode];
+    let h = '<g transform="translate(' + x + " " + y + ") scale(" + k * f + " " + k + ')">' +
+      '<path d="M0 0 C 4 -26, 2 -52, 12 -78" fill="none" stroke="' + th.trunk + '" stroke-width="7" stroke-linecap="round"/>' +
+      '<path d="M2 -14 l8 -2 M3 -28 l8 -2 M5 -42 l8 -2 M8 -56 l7 -2" stroke="rgba(0,0,0,.18)" stroke-width="2" stroke-linecap="round"/>' +
+      '<g transform="translate(12 -78)">';
+    [[-60, -2], [-30, -30], [0, -40], [30, -30], [60, -2]].forEach(function (L, i) {
+      h += '<path d="M0 0 Q ' + L[0] * 0.5 + " " + (L[1] - 18) + " " + L[0] + " " + (L[1] + 14) + " Q " + L[0] * 0.5 + " " + (L[1] - 4) + ' 0 6Z" fill="' + (i % 2 ? th.leaf : th.leaf2) + '"/>';
+    });
+    return h + '<circle cx="-4" cy="6" r="4" fill="#8a4b1f"/><circle cx="5" cy="8" r="4" fill="#9c5a28"/></g></g>';
+  }
+  function sparkle(x, y, r, d) {
+    return '<path d="M' + x + " " + (y - r) + " Q " + x + " " + y + " " + (x + r) + " " + y + " Q " + x + " " + y + " " + x + " " + (y + r) + " Q " + x + " " + y + " " + (x - r) + " " + y + " Q " + x + " " + y + " " + x + " " + (y - r) + 'Z" fill="#fff" opacity=".9">' +
+      '<animate attributeName="opacity" values=".15;1;.15" dur="' + (2 + d) + 's" repeatCount="indefinite"/></path>';
+  }
+  function journeyStops(level, c) {
+    const ts = tiersFor(level, c.id), n = ts.length;
+    const pts = (JLAYOUT[n === 4 ? 4 : 3]).slice(0, n);
+    let curIdx = -1;
+    const stops = ts.map(function (t, i) {
+      const locked = tierLocked(level, c.id, t), passed = tierPassed(level, c.id, t), b = P.best[level][bkey(c.id, t)];
+      if (curIdx < 0 && !locked && !passed) curIdx = i;
+      return { tier: t, x: pts[i][0], y: pts[i][1], locked: locked, passed: passed, stars: b ? b.stars || 0 : 0, last: i === n - 1 };
+    });
+    if (curIdx < 0) curIdx = n - 1;
+    return { stops: stops, cur: curIdx };
+  }
+  function journeyMap(c) {
+    const level = P.mode, th = JTHEME[level], J = journeyStops(level, c), stops = J.stops, n = stops.length;
+    const uid = "j" + level[0];
+    const tierName = ["Basis", "Gemiddeld", "Gevorderd", "Expert"];
+    let h = '<svg class="jsvg" viewBox="0 0 360 800" role="group" aria-label="Routekaart ' + esc(c.title) + '" xmlns="http://www.w3.org/2000/svg"><defs>' +
+      '<linearGradient id="' + uid + 'sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + th.sky[0] + '"/><stop offset=".45" stop-color="' + th.sky[1] + '"/><stop offset="1" stop-color="' + th.sky[2] + '"/></linearGradient>' +
+      '<radialGradient id="' + uid + 'done" cx=".35" cy=".3"><stop offset="0" stop-color="#7ae6b4"/><stop offset="1" stop-color="#14935f"/></radialGradient>' +
+      '<radialGradient id="' + uid + 'cur" cx=".35" cy=".3"><stop offset="0" stop-color="#fff0a8"/><stop offset="1" stop-color="#f0a02e"/></radialGradient>' +
+      '<radialGradient id="' + uid + 'lock" cx=".35" cy=".3"><stop offset="0" stop-color="#dcd7cd"/><stop offset="1" stop-color="#9a9488"/></radialGradient>' +
+      '<radialGradient id="' + uid + 'gold" cx=".35" cy=".3"><stop offset="0" stop-color="#fff3b0"/><stop offset="1" stop-color="#e0a100"/></radialGradient></defs>';
+    h += '<rect width="360" height="800" fill="url(#' + uid + 'sky)"/>';
+    // zon of maan + sterren/wolken
+    if (th.sun) {
+      h += '<circle cx="296" cy="70" r="34" fill="#fff6c8"/><circle cx="296" cy="70" r="24" fill="#ffd95a"/>' +
+        '<g fill="#fff" opacity=".95"><ellipse cx="70" cy="80" rx="34" ry="12"/><ellipse cx="92" cy="70" rx="22" ry="13"/><ellipse cx="190" cy="130" rx="30" ry="10"/><ellipse cx="208" cy="122" rx="18" ry="11"/></g>';
+    } else {
+      h += '<path d="M300 40 a30 30 0 1 0 22 52 a24 24 0 1 1 -22 -52Z" fill="#fff4c9"/>' + sparkle(60, 60, 7, 0) + sparkle(150, 100, 5, .6) + sparkle(230, 50, 6, 1.1) + sparkle(120, 30, 4, .3) + sparkle(30, 140, 5, .9);
+    }
+    // verre moskee-silhouet
+    h += '<g fill="' + th.sil + '" opacity=".8"><rect x="40" y="168" width="64" height="30"/><path d="M44 168 a28 28 0 0 1 56 0Z"/><rect x="104" y="128" width="7" height="70"/><path d="M103 128 l4.5 -14 l4.5 14Z"/><rect x="30" y="148" width="6" height="50"/><path d="M29 148 l4 -12 l4 12Z"/></g>';
+    // duinen
+    h += '<path d="M0 235 C 80 190, 160 225, 240 200 S 340 205, 360 190 L360 800 L0 800Z" fill="' + th.far + '"/>' +
+      '<path d="M0 420 C 90 365, 170 405, 250 372 S 340 355, 360 370 L360 800 L0 800Z" fill="' + th.mid + '"/>' +
+      '<path d="M0 610 C 100 565, 200 612, 300 572 S 350 560, 360 566 L360 800 L0 800Z" fill="' + th.near + '"/>';
+    // vijver
+    h += '<ellipse cx="292" cy="468" rx="62" ry="24" fill="' + th.pond + '"/><ellipse cx="288" cy="465" rx="46" ry="15" fill="' + th.pondIn + '" opacity=".7"/>' + sparkle(276, 462, 5, 0.2) + sparkle(304, 470, 4, 0.9);
+    h += palm(332, 462, 0.95, false) + palm(250, 470, 0.7, true) + palm(32, 330, 0.9, false) + palm(46, 585, 1.0, false) + palm(326, 655, 1.05, true) + palm(28, 735, 0.85, false) + palm(305, 335, 0.6, true);
+    if (th.sun) h += sparkle(200, 300, 6, .2) + sparkle(60, 480, 5, .7) + sparkle(250, 120, 5, 1);
+    // pad
+    const seg = function (a, b) { const ym = (a.y + b.y) / 2; return "M" + a.x + " " + a.y + " C" + a.x + " " + ym + " " + b.x + " " + ym + " " + b.x + " " + b.y; };
+    const s0 = stops[0];
+    let paths = "M" + (s0.x - 80) + " 800 C" + (s0.x - 80) + " " + (s0.y + 70) + " " + s0.x + " " + (s0.y + 90) + " " + s0.x + " " + s0.y;
+    let segs = [[paths, true]];
+    for (let i = 0; i < n - 1; i++) segs.push([seg(stops[i], stops[i + 1]), stops[i].passed]);
+    segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="' + th.edge + '" stroke-width="30" stroke-linecap="round"/>'; });
+    segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="' + (S[1] ? "#ffe08a" : th.path) + '" stroke-width="22" stroke-linecap="round"/>'; });
+    segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 11"/>'; });
+    // stops
+    stops.forEach(function (st, i) {
+      const R = st.last ? 36 : 30, state = st.locked ? "locked" : st.passed ? "done" : "current";
+      const fill = state === "locked" ? "lock" : state === "done" ? (st.last && st.stars === 3 ? "gold" : "done") : "cur";
+      const name = "Niveau " + st.tier + " · " + tierName[st.tier - 1] + (st.locked ? " (vergrendeld)" : st.passed ? " (gehaald, " + st.stars + " van 3 sterren)" : "");
+      h += '<g class="j-stop ' + state + (i === J.cur ? " j-current" : "") + '" data-act="journey-stop" data-cat="' + c.id + '" data-tier="' + st.tier + '" role="button" tabindex="0" aria-label="' + name + '" transform="translate(' + st.x + " " + st.y + ')">';
+      if (state === "current") h += '<circle class="j-glow" r="' + (R + 14) + '" fill="#ffe08a" opacity=".55"/>';
+      h += '<circle r="' + (R + 5) + '" fill="#fff"/><circle r="' + R + '" fill="url(#' + uid + fill + ')"/>';
+      if (st.last) h += '<circle r="' + (R - 7) + '" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="2" stroke-dasharray="3 5"/>';
+      if (state === "locked") h += '<g transform="translate(-9 -11)" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><rect x="0" y="9" width="18" height="14" rx="3" fill="#fff" stroke="none"/><path d="M4 9 V5 a5 5 0 0 1 10 0 V9"/></g>';
+      else if (state === "done") h += '<polyline points="-10,1 -3,8 11,-8" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>';
+      else h += '<text y="9" text-anchor="middle" font-size="26" font-weight="900" fill="#fff" stroke="#c77d12" stroke-width="1">' + st.tier + "</text>";
+      for (let k = 0; k < 3; k++) h += '<polygon points="' + starPoly((k - 1) * 22, R + 20, 9.5) + '" fill="' + (k < st.stars ? "#ffc928" : "rgba(0,0,0,.18)") + '" stroke="' + (k < st.stars ? "#d98e00" : "none") + '" stroke-width="1"/>';
+      h += '<text y="' + (R + 46) + '" text-anchor="middle" font-size="13" font-weight="900" fill="#fff" stroke="rgba(0,0,0,.35)" stroke-width="3" paint-order="stroke">Niveau ' + st.tier + "</text>";
+      // beloningen: Meester-zegel bij niveau 3, kroon bij niveau 4
+      const bm = P.badges && P.badges[badgeId(level, c.id, "master")], bg = P.badges && P.badges[badgeId(level, c.id, "grand")];
+      if (st.tier === 3 && bm) h += '<g transform="translate(' + (R - 4) + " " + (-R + 2) + ')"><circle r="14" fill="#eceff1" stroke="#90a4ae" stroke-width="2"/><text y="7" text-anchor="middle" font-size="19" fill="#455a64">۞</text></g>';
+      if (st.tier === 4 && bg) h += '<text y="' + (-R - 8) + '" text-anchor="middle" font-size="28">👑</text>';
+      if (st.tier === 4 && !bg) h += '<text y="' + (-R - 8) + '" text-anchor="middle" font-size="24" opacity="' + (st.locked ? ".45" : "1") + '">🏰</text>';
+      h += "</g>";
+    });
+    // avatar-marker
+    const cs = stops[J.cur], key = level + ":" + c.id, prev = journeyPos[key] !== undefined ? journeyPos[key] : J.cur, ps = stops[Math.min(prev, n - 1)];
+    h += '<g id="jMarker" class="j-marker" data-from="' + ps.x + "," + (ps.y - 52) + '" data-to="' + cs.x + "," + (cs.y - 52) + '" style="transform:translate(' + ps.x + "px," + (ps.y - 52) + 'px)"><g class="j-bob">' +
+      '<path d="M-7 12 L0 24 L7 12Z" fill="#fff"/><circle r="16" fill="#fff"/><circle r="13" fill="' + P.color + '"/><text y="6" text-anchor="middle" font-size="16" font-weight="900" fill="#fff">' + esc((P.name || "?").trim().charAt(0).toUpperCase()) + "</text></g></g>";
+    journeyPos[key] = J.cur;
+    return h + "</svg>";
+  }
+  function viewJourney() {
+    const c = CATEGORIES[0], level = P.mode;
+    let h = '<div class="topbar"><button class="icon-btn" data-act="home" aria-label="Terug naar home">' + icon("left", 22) + "</button>" +
+      '<div class="brand">' + icon("map", 24) + 'De Reis</div><span style="width:44px"></span></div>';
+    h += '<div class="land-head" style="--accent:' + c.color + '"><span class="land-n">Land 1</span><h2>' + esc(c.title) + "</h2><p>" + esc(c.subtitle) + "</p></div>";
+    h += '<div class="journey-map">' + journeyMap(c) + "</div>";
+    h += '<div class="land-next"><span>' + icon("map", 20) + "</span><b>Meer landen volgen</b><small>" + CATEGORIES.slice(1).map(function (x) { return esc(x.title); }).join(" · ") + "</small></div>";
+    h += '<div class="j-toast" id="jToast" role="status"></div>';
+    return h;
+  }
+  let jToastTimer = null;
+  function jToast(msg) {
+    const t = document.getElementById("jToast");
+    if (!t) return;
+    t.textContent = msg; t.classList.add("show");
+    clearTimeout(jToastTimer); jToastTimer = setTimeout(function () { t.classList.remove("show"); }, 2600);
+  }
+  function afterJourneyRender() {
+    const m = document.getElementById("jMarker");
+    if (m) {
+      const to = m.dataset.to.split(",");
+      if (m.dataset.from !== m.dataset.to) requestAnimationFrame(function () { requestAnimationFrame(function () { m.style.transform = "translate(" + to[0] + "px," + to[1] + "px)"; }); });
+    }
+    const cur = document.querySelector(".j-current");
+    if (cur && cur.scrollIntoView) setTimeout(function () { cur.scrollIntoView({ block: "center", behavior: "auto" }); }, 30);
   }
 
   function viewBoard() {
@@ -3712,13 +4066,19 @@ return exports;})();
         play("click");
         if (result && result.kind === "daily") startQuiz("daily"); else startQuiz("category", result.catId, result.tier);
         break;
-      case "home": play("click"); stopTimer(); screen = "home"; render(); break;
+      case "home": play("click"); stopTimer(); journeyReturn = false; screen = "home"; render(); break;
+      case "journey": play("click"); stopTimer(); journeyReturn = false; screen = "journey"; render(); break;
+      case "journey-stop": {
+        const jc = el.dataset.cat, jt = parseInt(el.dataset.tier, 10);
+        if (tierLocked(P.mode, jc, jt)) { play("wrong"); jToast("🔒 " + lockText(P.mode, jc, jt)); break; }
+        play("click"); journeyReturn = true; startQuiz("category", jc, jt); break;
+      }
       case "scores": play("click"); screen = "scores"; render(); break;
       case "review": play("click"); if (result) result.noAuto = true; screen = "review"; render(); break;
       case "back-result": screen = "result"; render(); break;
       case "leave":
         stopTimer();
-        confirmDialog("Quiz stoppen?", quiz && quiz.kind === "duel" ? "Je verlaat de duel. De anderen spelen verder." : "Je voortgang in deze ronde gaat verloren.", "Ja, stoppen", function () { screen = quiz && quiz.kind === "duel" ? "group" : "home"; render(); });
+        confirmDialog("Quiz stoppen?", quiz && quiz.kind === "duel" ? "Je verlaat de duel. De anderen spelen verder." : "Je voortgang in deze ronde gaat verloren.", "Ja, stoppen", function () { screen = quiz && quiz.kind === "duel" ? "group" : journeyReturn ? "journey" : "home"; render(); });
         if (quiz && !quiz.answered && quiz.level === "expert" && S.timer && quiz.kind !== "duel") { /* timer is gepauzeerd; herstart bij annuleren */
           const d = document.querySelector(".dialog-wrap");
           if (d) d.addEventListener("click", function (ev) { if (ev.target.closest('[data-d="no"]') || ev.target === d) { if (screen === "quiz" && !quiz.answered) startTimer(); } });
@@ -3744,9 +4104,10 @@ return exports;})();
       case "remove-player": {
         const victim = S.players.find(function (p) { return p.id === el.dataset.id; });
         if (!victim) break;
-        confirmDialog("Speler verwijderen?", "Alle scores van " + victim.name + " worden gewist. Dit kan niet ongedaan gemaakt worden.", "Ja, verwijderen", function () {
+        confirmDialog("Speler verwijderen?", "Alle scores van " + victim.name + " worden gewist. Dit kan niet ongedaan gemaakt worden." + (S.players.length === 1 ? " Dit is de enige speler: daarna maak je een nieuwe speler aan." : ""), "Ja, verwijderen", function () {
           closeGroupSub(); leaveGroup(victim);
           S.players = S.players.filter(function (p) { return p.id !== victim.id; });
+          if (!S.players.length) { S.current = null; P = null; screen = "newplayer"; draftColor = AVATAR_COLORS[0]; saveState(); render(); return; }
           if (S.current === victim.id) { S.current = S.players[0].id; P = currentPlayer(); }
           saveState(); render();
         });
@@ -3803,6 +4164,7 @@ return exports;})();
 
   document.addEventListener("keydown", function (e) {
     if (screen === "newplayer" && e.key === "Enter") { createPlayer(); return; }
+    if (screen === "journey" && (e.key === "Enter" || e.key === " ") && document.activeElement && document.activeElement.classList.contains("j-stop")) { e.preventDefault(); document.activeElement.dispatchEvent(new MouseEvent("click", { bubbles: true })); return; }
     if (screen !== "quiz" || !quiz || document.querySelector(".dialog-wrap")) return;
     if (!quiz.answered && /^[1-4]$/.test(e.key)) answer(parseInt(e.key, 10) - 1);
     else if (!quiz.answered && e.key === "Enter" && isMulti(quiz.items[quiz.idx].q) && document.activeElement.tagName !== "BUTTON") answer("check");
