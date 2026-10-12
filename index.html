@@ -798,6 +798,13 @@ table.board thead th .avatar { display: grid; margin: 0 auto; }
 .badge-card.unlocked.grand { background: linear-gradient(145deg, #2a1a4a 0%, #4a2a7a 100%); border-color: #ffd54f; }
 .badge-card.unlocked.master { background: linear-gradient(145deg, #1a2f3a 0%, #234a5a 100%); border-color: #7fe4ff; box-shadow: 0 4px 18px rgba(127, 228, 255, .3); }
 .badge-earned .be-icon { display: grid; place-items: center; flex: none; }
+.land-strip { display: flex; gap: 8px; justify-content: center; margin: 2px 0 10px; }
+.land-chip { appearance: none; border: 3px solid #fff; font: inherit; position: relative; width: 54px; height: 54px; border-radius: 18px; cursor: pointer; display: grid; place-items: center; align-content: center; color: #fff; background: var(--accent); box-shadow: 0 4px 0 rgba(0,0,0,.18); opacity: .78; transition: transform .12s, opacity .12s; }
+.land-chip span { font-size: .72rem; font-weight: 900; line-height: 1; margin-top: -2px; }
+.land-chip.on { opacity: 1; transform: translateY(-3px) scale(1.08); box-shadow: 0 7px 0 rgba(0,0,0,.2), 0 0 0 3px var(--accent); }
+.land-chip .lc-b { position: absolute; top: -9px; right: -9px; font-style: normal; font-size: .9rem; background: #fff; border-radius: 50%; width: 22px; height: 22px; display: grid; place-items: center; box-shadow: 0 2px 4px rgba(0,0,0,.2); }
+.land-nav { display: flex; justify-content: space-between; gap: 10px; margin: 14px 0 6px; }
+.land-nav .btn { flex: 1; }
    </style>
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Islam Quiz">
@@ -2800,6 +2807,18 @@ return exports;})();
     click() { tone(660, 0, 0.06, "sine", 0.06); },
     win() { [523.25, 659.25, 783.99, 1046.5].forEach(function (f, i) { tone(f, i * 0.14, 0.28); }); },
     lose() { tone(392, 0, 0.25, "triangle", 0.1); tone(329.63, 0.22, 0.4, "triangle", 0.1); },
+    swoosh() { /* zachte zwiep als je avatar naar de volgende stop springt */
+      const c = ctx(); if (!c) return;
+      const t0 = c.currentTime, dur = 0.6, n = Math.floor(c.sampleRate * dur), buf = c.createBuffer(1, n, c.sampleRate), d = buf.getChannelData(0);
+      for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+      const src = c.createBufferSource(); src.buffer = buf;
+      const bp = c.createBiquadFilter(); bp.type = "bandpass"; bp.Q.value = 1.3;
+      bp.frequency.setValueAtTime(300, t0); bp.frequency.exponentialRampToValueAtTime(3600, t0 + dur * 0.75);
+      const g = c.createGain();
+      g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(0.32, t0 + 0.2); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+      src.connect(bp); bp.connect(g); g.connect(c.destination); src.start(t0); src.stop(t0 + dur + 0.02);
+      tone(1174.66, 0.75, 0.22, "sine", 0.06); tone(1567.98, 0.85, 0.3, "sine", 0.05);   /* klein belletje bij de landing */
+    },
   };
   function play(name) { if (S.sound) { try { sfx[name](); } catch (e) {} } }
 
@@ -2810,6 +2829,7 @@ return exports;})();
   if (urlCode && P && P.mode && S.players.length === 1) screen = "group";
   let draftColor = AVATAR_COLORS[0];
   let journeyReturn = false;   /* quiz gestart vanaf De Reis: na afloop terug naar de kaart */
+  let journeyLand = null;      /* index van het getoonde land (null = eerste onafgeronde land) */
   const journeyPos = {};       /* laatst getoonde stop per land, voor de sprong-animatie */
   let boardLevel = "junior";
   let quiz = null;
@@ -3312,7 +3332,7 @@ return exports;})();
       return h;
     }
     if (r.next) h += '<button class="btn gold" data-act="go-next-tier">' + icon("right", 20) + "Ga door naar Niveau " + r.next + "</button>";
-    if (journeyReturn && r.kind === "category") h += '<button class="btn gold" data-act="journey">' + icon("map", 20) + "Terug naar De Reis</button>";
+    if (journeyReturn && r.kind === "category") h += '<button class="btn gold" data-act="journey-back">' + icon("map", 20) + "Terug naar De Reis</button>";
     h += '<button class="btn" data-act="retry">' + icon("retry", 20) + "Opnieuw Proberen</button>" +
       '<button class="btn gold" data-act="home">' + icon("layers", 20) + "Kies Andere Categorie</button>" +
       '<button class="btn ghost" data-act="review">' + icon("list", 20) + "Bekijk Antwoorden</button></div></section>";
@@ -3402,10 +3422,7 @@ return exports;})();
 
 
   /* ───────────── De Reis (routekaart) ───────────── */
-  const JTHEME = {
-    junior: { sky: ["#6ec9ff", "#b9b2ff", "#ffc9e3", "#ffe9a8"], far: "#ffd2a6", mid: "#ffbf78", near: "#fbab62", meadow: "#8be25a", meadow2: "#5cc23c", water: "#27c6e0", water2: "#a4f5ff", leaf: "#35c27a", leaf2: "#1f9c5c", trunk: "#a8703a", path: "#fff3d6", edge: "#e0a45a", wall: "#fff1d6", dome: "#1fc2a8", day: true },
-    expert: { sky: ["#141d4f", "#4b3a8c", "#c2508f", "#ffae6b"], far: "#e08f76", mid: "#c26e6a", near: "#93515f", meadow: "#38a869", meadow2: "#238a54", water: "#21a9d6", water2: "#7fe4ff", leaf: "#2fae78", leaf2: "#1b8a5a", trunk: "#6b4228", path: "#f8e4bc", edge: "#c98a52", wall: "#d9bfe6", dome: "#2fc0ae", day: false },
-  };
+  let curTh = null;   /* palet van het land dat nu getekend wordt */
   const JLAYOUT = { 3: [[110, 690], [250, 540], [100, 385]], 4: [[110, 690], [250, 540], [100, 385], [225, 190]] };
   const JCHEST = [[185, 738], [322, 548], [42, 405], [158, 232]];
   function starPoly(cx, cy, r) {
@@ -3414,7 +3431,7 @@ return exports;})();
     return pts.join(" ");
   }
   function palm(x, y, k, flip) {
-    const f = flip ? -1 : 1, th = JTHEME[P.mode];
+    const f = flip ? -1 : 1, th = curTh;
     let h = '<g transform="translate(' + x + " " + y + ") scale(" + k * f + " " + k + ')">' +
       '<path d="M0 0 C 4 -26, 2 -52, 12 -78" fill="none" stroke="' + th.trunk + '" stroke-width="7" stroke-linecap="round"/>' +
       '<path d="M2 -14 l8 -2 M3 -28 l8 -2 M5 -42 l8 -2 M8 -56 l7 -2" stroke="rgba(0,0,0,.18)" stroke-width="2" stroke-linecap="round"/>' +
@@ -3538,52 +3555,211 @@ return exports;})();
     if (curIdx < 0) curIdx = n - 1;
     return { stops: stops, cur: curIdx };
   }
+  /* ── decor-onderdelen voor de landen ── */
+  function lbl(x, y, t, size) { return '<text x="' + x + '" y="' + y + '" text-anchor="middle" font-size="' + (size || 11) + '" font-weight="900" fill="#fff" stroke="rgba(0,0,0,.45)" stroke-width="3" paint-order="stroke">' + t + "</text>"; }
+  function star8(x, y, r, fill, d) {
+    const sd = (r * 1.414).toFixed(1);
+    return '<g transform="translate(' + x + " " + y + ')"><circle r="' + r * 1.7 + '" fill="' + fill + '" opacity=".25"><animate attributeName="opacity" values=".12;.38;.12" dur="' + (2.2 + (d || 0)) + 's" repeatCount="indefinite"/></circle>' +
+      '<rect x="' + -sd / 2 + '" y="' + -sd / 2 + '" width="' + sd + '" height="' + sd + '" fill="' + fill + '" stroke="#fff" stroke-width="1.2"/><rect x="' + -sd / 2 + '" y="' + -sd / 2 + '" width="' + sd + '" height="' + sd + '" fill="' + fill + '" stroke="#fff" stroke-width="1.2" transform="rotate(45)"/><circle r="' + r * 0.28 + '" fill="#fff" opacity=".85"/></g>';
+  }
+  function heartShape(x, y, r, col, d) {
+    return '<g transform="translate(' + x + " " + y + ')"><g><animateTransform attributeName="transform" type="translate" values="0 0;0 -6;0 0" dur="' + (2 + (d || 0)) + 's" repeatCount="indefinite"/>' +
+      '<path d="M0 ' + r * 0.9 + " C" + -r * 1.5 + " " + -r * 0.2 + " " + -r * 0.7 + " " + -r * 1.3 + " 0 " + -r * 0.45 + " C" + r * 0.7 + " " + -r * 1.3 + " " + r * 1.5 + " " + -r * 0.2 + " 0 " + r * 0.9 + 'Z" fill="' + col + '" stroke="#fff" stroke-width="1.4"/></g></g>';
+  }
+  function skyDay(th, o) {
+    let h = "";
+    if (o.rainbow) ["#ff5d6c", "#ff9f43", "#ffd93d", "#4cd964", "#38bdf8", "#8b5cf6"].forEach(function (col, i) { h += '<path d="M' + (28 + i * 7) + " 240 A " + (152 - i * 7) + " " + (152 - i * 7) + " 0 0 1 " + (332 - i * 7) + ' 240" fill="none" stroke="' + col + '" stroke-width="7" opacity=".55"/>'; });
+    h += '<circle cx="' + o.sx + '" cy="' + o.sy + '" r="34" fill="#fff6c8"/><circle cx="' + o.sx + '" cy="' + o.sy + '" r="24" fill="#ffd95a"/>';
+    const cx = o.sx < 180 ? 300 : 70;
+    return h + '<g fill="#fff" opacity=".95"><ellipse cx="' + cx + '" cy="72" rx="34" ry="12"/><ellipse cx="' + (cx + 20) + '" cy="62" rx="22" ry="13"/><ellipse cx="170" cy="150" rx="30" ry="10"/><ellipse cx="188" cy="142" rx="18" ry="11"/><ellipse cx="40" cy="235" rx="30" ry="10"/><ellipse cx="320" cy="238" rx="30" ry="10"/></g>';
+  }
+  function skyNight(th, o) {
+    let h = '<path d="M60 40 a30 30 0 1 0 22 52 a24 24 0 1 1 -22 -52Z" fill="#fff4c9"/>' + sparkle(300, 60, 7, 0) + sparkle(210, 100, 5, .6) + sparkle(150, 40, 6, 1.1) + sparkle(250, 150, 4, .3) + sparkle(330, 130, 5, .9) + sparkle(120, 120, 4, .5);
+    return h + '<circle cx="190" cy="70" r="2.2" fill="#ff9ad5"/><circle cx="275" cy="30" r="2.2" fill="#7de3ff"/><circle cx="25" cy="150" r="2.2" fill="#ffe27a"/>';
+  }
+  function skyDawn(th) {
+    let h = '<circle cx="180" cy="222" r="86" fill="#fff1b8" opacity=".35"/><circle cx="180" cy="222" r="64" fill="#ffe08a" opacity=".55"/><circle cx="180" cy="222" r="46" fill="#ffd05a"/>';
+    h += '<g fill="#fff" opacity=".85"><ellipse cx="70" cy="90" rx="40" ry="9"/><ellipse cx="300" cy="120" rx="42" ry="9"/><ellipse cx="120" cy="150" rx="30" ry="7"/><ellipse cx="280" cy="60" rx="26" ry="6"/></g>';
+    if (!th.day) h += sparkle(60, 40, 6, 0) + sparkle(160, 60, 5, .6) + sparkle(300, 40, 6, 1) + sparkle(240, 100, 4, .3);
+    return h;
+  }
+  function domeMosque(x, y, k, wall, dome, win, m3) {
+    let h = '<g transform="translate(' + x + " " + y + ") scale(" + k + ')"><rect x="-32" y="-30" width="64" height="30" fill="' + wall + '"/><path d="M-28 -30 a28 28 0 0 1 56 0Z" fill="' + dome + '"/><circle cy="-61" r="3" fill="#ffb703"/>' +
+      '<rect x="32" y="-70" width="8" height="70" fill="' + wall + '"/><rect x="32" y="-52" width="8" height="3" fill="#ffb703"/><path d="M31 -70 l5 -15 l5 15Z" fill="#ff7a59"/>' +
+      '<rect x="-39" y="-50" width="7" height="50" fill="' + wall + '"/><rect x="-39" y="-36" width="7" height="3" fill="#ffb703"/><path d="M-40 -50 l4.5 -13 l4.5 13Z" fill="#ff7a59"/>';
+    if (m3) h += '<rect x="-50" y="-60" width="7" height="60" fill="' + wall + '"/><path d="M-51 -60 l4.5 -14 l4.5 14Z" fill="#ff7a59"/><rect x="42" y="-56" width="7" height="56" fill="' + wall + '"/><path d="M41 -56 l4.5 -14 l4.5 14Z" fill="#ff7a59"/><path d="M-22 -30 a10 10 0 0 1 20 0Z M2 -30 a10 10 0 0 1 20 0Z" fill="' + dome + '" opacity=".8"/>';
+    return h + '<path d="M-18 0 v-14 a6 6 0 0 1 12 0 v14Z M6 0 v-14 a6 6 0 0 1 12 0 v14Z" fill="' + win + '"/></g>';
+  }
+  function pillar(x, y, w, h, col, num) {
+    return '<g transform="translate(' + x + " " + y + ')"><ellipse cy="1" rx="' + w * 0.95 + '" ry="3" fill="rgba(0,0,0,.2)"/><rect x="' + -w * 0.75 + '" y="-6" width="' + w * 1.5 + '" height="6" rx="2" fill="#f5ead0" stroke="#c9b58a" stroke-width="1"/>' +
+      '<rect x="' + -w / 2 + '" y="' + -h + '" width="' + w + '" height="' + (h - 6) + '" fill="' + col + '"/><rect x="' + -w / 2 + '" y="' + -h + '" width="' + w * 0.28 + '" height="' + (h - 6) + '" fill="#fff" opacity=".35"/><rect x="' + w * 0.22 + '" y="' + -h + '" width="' + w * 0.28 + '" height="' + (h - 6) + '" fill="#000" opacity=".14"/>' +
+      '<rect x="' + -w * 0.8 + '" y="' + (-h - 5) + '" width="' + w * 1.6 + '" height="6" rx="2" fill="#f5ead0" stroke="#c9b58a" stroke-width="1"/><circle cy="' + (-h - 14) + '" r="7.5" fill="#ffd54f" stroke="#fff" stroke-width="1.5"/><text y="' + (-h - 10.5) + '" text-anchor="middle" font-size="10" font-weight="900" fill="#7a4a00">' + num + "</text></g>";
+  }
+  function fountain(x, y, k) {
+    let h = '<g transform="translate(' + x + " " + y + ") scale(" + k + ')"><ellipse cy="2" rx="40" ry="11" fill="#f3e6c8" stroke="#c9b58a" stroke-width="2"/><ellipse cy="0" rx="33" ry="8" fill="#38bdf8"/><ellipse cy="-1" rx="26" ry="5" fill="#a5f3fc"/>' +
+      '<rect x="-4" y="-34" width="8" height="34" fill="#f3e6c8" stroke="#c9b58a" stroke-width="1.2"/><ellipse cy="-34" rx="12" ry="4" fill="#f3e6c8" stroke="#c9b58a" stroke-width="1.2"/>';
+    ["M0 -38 Q-20 -62 -30 -8", "M0 -38 Q20 -62 30 -8", "M0 -38 Q-8 -70 -14 -6", "M0 -38 Q8 -70 14 -6"].forEach(function (d, i) {
+      h += '<path d="' + d + '" fill="none" stroke="#8fe3ff" stroke-width="3" stroke-linecap="round" stroke-dasharray="5 4"><animate attributeName="stroke-dashoffset" values="0;-18" dur="' + (0.9 + i * 0.1) + 's" repeatCount="indefinite"/></path>';
+    });
+    return h + sparkle(-22, -40, 4, 0.2) + sparkle(24, -38, 4, 0.7) + "</g>";
+  }
+  function mountain(x, y, w, h, c1, c2) {
+    return '<g><path d="M' + (x - w / 2) + " " + y + " L" + (x - w * 0.18) + " " + (y - h * 0.78) + " L" + x + " " + (y - h) + " L" + (x + w * 0.2) + " " + (y - h * 0.72) + " L" + (x + w / 2) + " " + y + 'Z" fill="' + c1 + '"/>' +
+      '<path d="M' + (x - w * 0.18) + " " + (y - h * 0.78) + " L" + x + " " + (y - h) + " L" + (x + w * 0.05) + " " + (y - h * 0.5) + " L" + (x - w * 0.1) + " " + (y - h * 0.4) + 'Z" fill="' + c2 + '"/><path d="M' + (x - w / 2) + " " + y + " L" + (x - w * 0.3) + " " + (y - h * 0.45) + " L" + (x - w * 0.12) + " " + y + 'Z" fill="' + c2 + '" opacity=".7"/></g>';
+  }
+  function tent(x, y, k, c1, c2) {
+    return '<g transform="translate(' + x + " " + y + ") scale(" + k + ')"><ellipse cy="1" rx="38" ry="5" fill="rgba(0,0,0,.16)"/><path d="M-34 0 L0 -40 L34 0Z" fill="' + c1 + '" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><path d="M-34 0 L0 -40 L-14 0Z" fill="' + c2 + '" opacity=".85"/><path d="M34 0 L0 -40 L14 0Z" fill="' + c2 + '" opacity=".85"/><path d="M-9 0 L0 -20 L9 0Z" fill="#3b2742"/>' +
+      '<line y1="-40" y2="-52" stroke="#6b4a2a" stroke-width="2"/><path d="M0 -52 L12 -48 L0 -44Z" fill="#ff3d6e"/></g>';
+  }
+  function campfire(x, y, k) {
+    return '<g transform="translate(' + x + " " + y + ") scale(" + k + ')"><circle cy="-8" r="22" fill="#ffb347" opacity=".3"><animate attributeName="opacity" values=".2;.45;.2" dur="1.3s" repeatCount="indefinite"/></circle><path d="M-12 2 L12 -4 M-12 -4 L12 2" stroke="#7a4a22" stroke-width="4" stroke-linecap="round"/>' +
+      '<path d="M0 -4 Q-10 -14 -2 -26 Q0 -16 6 -20 Q12 -10 0 -4Z" fill="#ff7a1c"><animate attributeName="d" values="M0 -4 Q-10 -14 -2 -26 Q0 -16 6 -20 Q12 -10 0 -4Z;M0 -4 Q-12 -12 0 -30 Q2 -18 8 -18 Q12 -8 0 -4Z;M0 -4 Q-10 -14 -2 -26 Q0 -16 6 -20 Q12 -10 0 -4Z" dur=".8s" repeatCount="indefinite"/></path><path d="M0 -4 Q-4 -10 0 -16 Q4 -10 0 -4Z" fill="#fff3a0"/></g>';
+  }
+  function rehal(x, y, k) {
+    return '<g transform="translate(' + x + " " + y + ") scale(" + k + ')"><circle cy="-44" r="46" fill="#fff6b0" opacity=".3"><animate attributeName="r" values="40;50;40" dur="3s" repeatCount="indefinite"/></circle>' +
+      '<path d="M-24 0 L10 -36 M24 0 L-10 -36" stroke="#7a4a22" stroke-width="5" stroke-linecap="round"/><path d="M-38 -38 Q-19 -46 0 -38 L0 -64 Q-19 -72 -38 -64Z" fill="#fffdf2" stroke="#b88a2a" stroke-width="2" stroke-linejoin="round"/><path d="M38 -38 Q19 -46 0 -38 L0 -64 Q19 -72 38 -64Z" fill="#fffdf2" stroke="#b88a2a" stroke-width="2" stroke-linejoin="round"/>' +
+      '<path d="M-33 -46 Q-19 -52 -5 -46 M-33 -52 Q-19 -58 -5 -52 M-33 -58 Q-19 -64 -5 -58 M5 -46 Q19 -52 33 -46 M5 -52 Q19 -58 33 -52 M5 -58 Q19 -64 33 -58" fill="none" stroke="#2e9d6a" stroke-width="2" stroke-linecap="round"/>' +
+      '<line x1="0" y1="-38" x2="0" y2="-64" stroke="#e0a100" stroke-width="3"/>' + sparkle(-40, -70, 5, .2) + sparkle(40, -72, 5, .8) + "</g>";
+  }
+  function archGate(x, y, k, col) {
+    return '<g transform="translate(' + x + " " + y + ") scale(" + k + ')"><ellipse cy="2" rx="36" ry="6" fill="rgba(0,0,0,.18)"/><path d="M-18 0 V-56 Q-18 -80 0 -86 Q18 -80 18 -56 V0Z" fill="#fff6b0" opacity=".55"><animate attributeName="opacity" values=".35;.7;.35" dur="2.4s" repeatCount="indefinite"/></path>' +
+      '<path d="M-26 0 V-58 Q-26 -92 0 -100 Q26 -92 26 -58 V0 H18 V-56 Q18 -80 0 -88 Q-18 -80 -18 -56 V0Z" fill="' + col + '" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><path d="M-26 -30 H-18 M18 -30 H26 M-26 -44 H-18 M18 -44 H26" stroke="#ffd54f" stroke-width="2.5"/></g>' + star8(x, y - 106 * k, 8 * k, "#ffd54f", 0.4);
+  }
+  function cypress(x, y, k) {
+    return '<g transform="translate(' + x + " " + y + ") scale(" + k + ')"><rect x="-3" y="-8" width="6" height="10" fill="#6b4a2a"/><path d="M0 -8 Q-16 -34 -9 -64 Q-4 -88 0 -98 Q4 -88 9 -64 Q16 -34 0 -8Z" fill="#1f8a63"/><path d="M0 -8 Q-16 -34 -9 -64 Q-4 -88 0 -98 Q-1 -50 0 -8Z" fill="#35b887" opacity=".7"/>' + sparkle(6, -60, 3, .4) + "</g>";
+  }
+  function rosebush(x, y, k) {
+    let h = '<g transform="translate(' + x + " " + y + ") scale(" + k + ')"><ellipse cy="2" rx="26" ry="5" fill="rgba(0,0,0,.16)"/><ellipse cx="-12" cy="-10" rx="15" ry="12" fill="#2fa862"/><ellipse cx="12" cy="-10" rx="15" ry="12" fill="#3dbd72"/><ellipse cy="-18" rx="17" ry="13" fill="#35b36b"/>';
+    [[-14, -12, "#ff4f8b"], [6, -22, "#ff7aa8"], [14, -8, "#ffffff"], [-4, -4, "#ff3d6e"], [-18, -22, "#ffd23f"], [20, -20, "#ff4f8b"]].forEach(function (r) {
+      h += '<circle cx="' + r[0] + '" cy="' + r[1] + '" r="5.2" fill="' + r[2] + '" stroke="#fff" stroke-width=".8"/><path d="M' + (r[0] - 2.5) + " " + r[1] + " a2.6 2.6 0 0 1 5 0 a1.4 1.4 0 0 1 -2.6 .6" + '" fill="none" stroke="rgba(0,0,0,.25)" stroke-width="1"/>';
+    });
+    return h + "</g>";
+  }
+  function gazebo(x, y, k) {
+    return '<g transform="translate(' + x + " " + y + ") scale(" + k + ')"><ellipse cy="2" rx="40" ry="6" fill="rgba(0,0,0,.16)"/><rect x="-32" y="-6" width="64" height="6" rx="2" fill="#fff0f6" stroke="#e8a0b8" stroke-width="1.2"/><rect x="-28" y="-46" width="5" height="40" fill="#fff"/><rect x="23" y="-46" width="5" height="40" fill="#fff"/><rect x="-2" y="-46" width="4" height="40" fill="#fff" opacity=".7"/>' +
+      '<path d="M-38 -46 L0 -80 L38 -46Z" fill="#ff7aa8" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><path d="M-38 -46 Q-28 -40 -19 -46 Q-9 -40 0 -46 Q9 -40 19 -46 Q28 -40 38 -46Z" fill="#ffc2d9"/><circle cy="-84" r="3.2" fill="#ffd54f"/>' +
+      '<circle cx="-26" cy="-30" r="4" fill="#ff4f8b"/><circle cx="-24" cy="-18" r="3.5" fill="#ffffff"/><circle cx="26" cy="-28" r="4" fill="#ff4f8b"/><circle cx="25" cy="-14" r="3.5" fill="#ffd23f"/></g>';
+  }
+  function roseArch(x, y, k) {
+    let h = '<g transform="translate(' + x + " " + y + ") scale(" + k + ')"><ellipse cy="2" rx="34" ry="6" fill="rgba(0,0,0,.16)"/><path d="M-24 0 V-52 Q-24 -84 0 -92 Q24 -84 24 -52 V0 H17 V-50 Q17 -74 0 -82 Q-17 -74 -17 -50 V0Z" fill="#fff0f6" stroke="#e8a0b8" stroke-width="1.5" stroke-linejoin="round"/>';
+    [[-21, -14, "#ff4f8b"], [-20, -34, "#ff7aa8"], [-19, -54, "#ff4f8b"], [-10, -76, "#ffffff"], [0, -86, "#ff4f8b"], [11, -76, "#ff7aa8"], [20, -54, "#ffffff"], [21, -34, "#ff4f8b"], [20, -14, "#ff7aa8"]].forEach(function (r) { h += '<circle cx="' + r[0] + '" cy="' + r[1] + '" r="4.6" fill="' + r[2] + '" stroke="#fff" stroke-width=".8"/>'; });
+    return h + "</g>" + heartShape(x, y - 104 * k, 8 * k, "#ff3d6e", 0.3);
+  }
+  function giftBox(x, y, w, h, c) {
+    return '<g transform="translate(' + x + " " + y + ')"><rect x="' + -w / 2 + '" y="' + -h + '" width="' + w + '" height="' + h + '" rx="3" fill="' + c + '" stroke="#fff" stroke-width="1.2"/><rect x="-3" y="' + -h + '" width="6" height="' + h + '" fill="#ffd54f"/><rect x="' + -w / 2 + '" y="' + (-h / 2 - 2.5) + '" width="' + w + '" height="5" fill="#ffd54f" opacity=".9"/><circle cx="-5" cy="' + (-h - 3) + '" r="4.5" fill="#ffd54f"/><circle cx="5" cy="' + (-h - 3) + '" r="4.5" fill="#ffd54f"/><circle cy="' + (-h - 2) + '" r="2.4" fill="#e0a100"/></g>';
+  }
+  function gifts(x, y, k) {
+    return '<g transform="translate(' + x + " " + y + ") scale(" + k + ')"><ellipse cy="2" rx="38" ry="6" fill="rgba(0,0,0,.16)"/>' + giftBox(-12, 0, 36, 28, "#ff5d8f") + giftBox(18, 0, 26, 20, "#38bdf8") + giftBox(-8, -30, 24, 18, "#8b5cf6") + giftBox(16, -22, 16, 12, "#4cd964") + sparkle(-30, -46, 5, .3) + sparkle(34, -40, 4, .8) + "</g>";
+  }
+  /* ── gemeenschappelijk voorgrond-decor ── */
+  function commonProps(th) {
+    return lantern(316, 600, "#ff5d6c", 0.8) + lantern(18, 655, "#35d0ff", 0.8) + lantern(160, 250, "#b388ff", 0.8) + lantern(325, 335, "#7dff6a", 0.75) + lantern(25, 440, "#ffb703", 0.7) +
+      oilLamp(240, 470, 0.7) + oilLamp(48, 725, 0.75) +
+      gem(205, 640, "#ff4f8b", 0) + gem(300, 500, "#35d0ff", .4) + gem(150, 510, "#7dff6a", .8) + gem(180, 330, "#ffc928", .2) + gem(55, 450, "#b388ff", .6) + gem(310, 735, "#ff9f1c", 1);
+  }
+  function groundFlowers() { return flowers([[130, 590], [150, 610], [20, 650], [48, 670], [175, 770], [215, 740], [330, 480], [350, 500], [200, 330], [30, 440], [230, 280], [155, 345], [335, 610], [10, 760], [100, 760]]); }
+  function pondsAll(th) { return pond(262, 668, 80, 32, th) + pond(72, 524, 58, 24, th) + pond(62, 292, 40, 16, th); }
+  function palms(th, extra) { return palm(20, 590, 0.9, false) + palm(342, 305, 0.6, true) + palm(150, 300, 0.55, false) + palm(18, 380, 0.7, false) + palm(215, 500, 0.5, true) + (extra || ""); }
+
+  /* ── de vijf landen ── */
+  const LANDS = {
+    profeten: {
+      pal: {
+        junior: { sky: ["#6ec9ff", "#b9b2ff", "#ffc9e3", "#ffe9a8"], far: "#ffd2a6", mid: "#ffbf78", near: "#fbab62", meadow: "#8be25a", meadow2: "#5cc23c", water: "#27c6e0", water2: "#a4f5ff", leaf: "#35c27a", leaf2: "#1f9c5c", trunk: "#a8703a", path: "#fff3d6", edge: "#e0a45a", wall: "#fff1d6", dome: "#1fc2a8", day: true },
+        expert: { sky: ["#141d4f", "#4b3a8c", "#c2508f", "#ffae6b"], far: "#e08f76", mid: "#c26e6a", near: "#93515f", meadow: "#38a869", meadow2: "#238a54", water: "#21a9d6", water2: "#7fe4ff", leaf: "#2fae78", leaf2: "#1b8a5a", trunk: "#6b4228", path: "#f8e4bc", edge: "#c98a52", wall: "#d9bfe6", dome: "#2fc0ae", day: false },
+      },
+      sky: function (th) { return th.day ? skyDay(th, { rainbow: true, sx: 60, sy: 62 }) : skyNight(th); },
+      tl: function (th) { return domeMosque(72, 206, 1, th.wall, th.dome, th.day ? "#7a5cf0" : "#ffe27a"); },
+      tr: function (th) {
+        return '<g transform="translate(0 14)"><ellipse cx="302" cy="190" rx="48" ry="11" fill="#f6efe2" stroke="#d8c8a8" stroke-width="2"/>' +
+          '<rect x="283" y="152" width="30" height="36" fill="#1f1f26"/><polygon points="313,152 327,146 327,182 313,188" fill="#121217"/><polygon points="283,152 297,146 327,146 313,152" fill="#3b3b46"/>' +
+          '<rect x="283" y="160" width="30" height="5" fill="#f0b81e"/><polygon points="313,160 327,154 327,159 313,165" fill="#d9a010"/><rect x="299" y="172" width="9" height="16" rx="1" fill="#f0b81e" stroke="#b8860b" stroke-width="1.2"/>' + lbl(303, 210, "Ka’bah") + "</g>";
+      },
+      mr: function (th) {
+        return '<g><path d="M262 452 L276 405 L296 384 L318 396 L336 378 L360 392 L360 452Z" fill="#8d6a5a"/><path d="M276 405 L296 384 L318 396 L300 410Z" fill="#b08c78"/><path d="M318 396 L336 378 L360 392 L346 408Z" fill="#a37c68"/>' +
+          '<path d="M290 452 L290 428 Q312 396 334 428 L334 452Z" fill="#2a1b2f"/><path d="M296 452 L296 432 Q312 408 328 432 L328 452Z" fill="#3b2742"/>' +
+          '<g stroke="#fff" stroke-opacity=".9" stroke-width="1" fill="none"><line x1="312" y1="414" x2="291" y2="436"/><line x1="312" y1="414" x2="333" y2="436"/><line x1="312" y1="414" x2="312" y2="452"/><line x1="312" y1="414" x2="293" y2="452"/><line x1="312" y1="414" x2="331" y2="452"/><path d="M303 424 Q312 428 321 424 M298 433 Q312 439 326 433 M294 443 Q312 450 330 443"/></g>' + lbl(312, 470, "Grot Thawr") + "</g>";
+      },
+      front: function (th) { return pondsAll(th) + groundFlowers() + palms(th) + commonProps(th) + dateBowl(206, 505, 0.8) + camel(246, 766, 0.72, true) + camel(136, 590, 0.62, false) + (th.day ? sparkle(200, 300, 6, .2) + sparkle(60, 480, 5, .7) + sparkle(250, 120, 5, 1) : ""); },
+    },
+    zuilen: {
+      tile: true,
+      pal: {
+        junior: { sky: ["#4fc3f7", "#7fdcf0", "#ffe08a", "#ffd27a"], far: "#ffe3a8", mid: "#ffd277", near: "#f7bd55", meadow: "#ffd54f", meadow2: "#26c6da", water: "#26c6da", water2: "#a5f3fc", leaf: "#35c27a", leaf2: "#1f9c5c", trunk: "#a8703a", path: "#fff3d6", edge: "#d9a05b", wall: "#fffaf0", dome: "#26c6da", day: true },
+        expert: { sky: ["#0b2545", "#13547a", "#d9a441", "#ffd98a"], far: "#d8a95a", mid: "#c28a42", near: "#9c6a30", meadow: "#e0b040", meadow2: "#12889a", water: "#1aa6bf", water2: "#7fe9ff", leaf: "#2fae78", leaf2: "#1b8a5a", trunk: "#6b4228", path: "#f8e4bc", edge: "#c98a52", wall: "#f3e6c8", dome: "#2bbfa8", day: false },
+      },
+      sky: function (th) { return th.day ? skyDay(th, { sx: 290, sy: 66 }) : skyNight(th); },
+      tl: function (th) { return domeMosque(72, 206, 1.15, th.wall, th.dome, th.day ? "#7a5cf0" : "#ffe27a", true) + lbl(72, 226, "Moskee"); },
+      tr: function (th) {
+        const cols = ["#ff5d6c", "#ff9f43", "#4cd964", "#38bdf8", "#8b5cf6"];
+        let h = '<ellipse cx="308" cy="206" rx="52" ry="8" fill="#f6efe2" stroke="#d8c8a8" stroke-width="1.5"/>';
+        cols.forEach(function (c, i) { h += pillar(274 + i * 17, 206, 9, 34, c, i + 1); });
+        return h + lbl(308, 226, "5 Zuilen");
+      },
+      mr: function (th) { return fountain(312, 452, 1.15) + lbl(312, 474, "Wudhu"); },
+      front: function (th) {
+        return pondsAll(th) + groundFlowers() + palm(20, 590, 0.9, false) + palm(342, 305, 0.6, true) + palm(150, 300, 0.55, false) + palm(18, 380, 0.7, false) + palm(215, 500, 0.5, true) +
+          star8(60, 760, 12, "#ff7a59", 0) + star8(300, 700, 11, "#38bdf8", .5) + star8(190, 420, 10, "#8b5cf6", 1) + star8(330, 520, 9, "#4cd964", .3) + star8(40, 610, 9, "#ff5d6c", .8) +
+          commonProps(th) + fountain(138, 592, 0.85) + dateBowl(246, 764, 1);
+      },
+    },
+    seerah: {
+      pal: {
+        junior: { sky: ["#ff8f7a", "#ffb089", "#ffd59c", "#fff1c2"], far: "#f5bd8c", mid: "#eaa070", near: "#dc8458", meadow: "#9bd85a", meadow2: "#6cbc3e", water: "#2ec4d6", water2: "#a4f5ff", leaf: "#35c27a", leaf2: "#1f9c5c", trunk: "#a8703a", path: "#fff0d0", edge: "#d98a50", wall: "#fff7e6", dome: "#2fbf71", day: true },
+        expert: { sky: ["#1a123d", "#6a2f6a", "#e5603f", "#ffb36b"], far: "#c9704f", mid: "#a65447", near: "#7d3e43", meadow: "#3aa86a", meadow2: "#26874f", water: "#2aa7c8", water2: "#8be6ff", leaf: "#2fae78", leaf2: "#1b8a5a", trunk: "#6b4228", path: "#f8e4bc", edge: "#c98a52", wall: "#ffe9c9", dome: "#2fbf71", day: false },
+      },
+      sky: function (th) { return skyDawn(th); },
+      tl: function (th) { return domeMosque(72, 206, 1.15, th.wall, "#2fbf71", th.day ? "#7a5cf0" : "#ffe27a", true) + lbl(72, 226, "Medina"); },
+      tr: function (th) { return tent(284, 206, 0.9, "#ff7a59", "#ffd23f") + tent(330, 205, 0.75, "#20c4b4", "#ffffff") + campfire(307, 206, 0.9) + lbl(307, 226, "Tenten"); },
+      mr: function (th) { return mountain(312, 452, 110, 92, "#a0522d", "#cf8350") + lbl(312, 470, "Jabal Uhud"); },
+      front: function (th) { return pondsAll(th) + groundFlowers() + palms(th, palm(335, 640, 0.8, true)) + commonProps(th) + dateBowl(206, 505, 0.8) + camel(246, 766, 0.72, true) + camel(136, 590, 0.62, false) + tent(60, 612, 0.7, "#8b5cf6", "#ffd23f"); },
+    },
+    koran: {
+      pal: {
+        junior: { sky: ["#4c5bff", "#8f6bff", "#ff9ad5", "#ffd8ef"], far: "#7be0c8", mid: "#4fc9b0", near: "#2fae98", meadow: "#8de8b5", meadow2: "#4fc9a0", water: "#6f9cff", water2: "#c6dcff", leaf: "#2fae78", leaf2: "#1b8a5a", trunk: "#6b4a2a", path: "#fff0d6", edge: "#c690e0", wall: "#f3e8ff", dome: "#8f6bff", day: false },
+        expert: { sky: ["#050a2a", "#14226a", "#2f2a8a", "#6a3fb0"], far: "#1f6f7a", mid: "#18555f", near: "#103f4a", meadow: "#1d8a74", meadow2: "#12685a", water: "#2b6fe0", water2: "#7fb4ff", leaf: "#23a37a", leaf2: "#157a58", trunk: "#4a3322", path: "#f3dfb0", edge: "#8a6ad0", wall: "#d8c8f8", dome: "#6a5cff", day: false },
+      },
+      sky: function (th) { return skyNight(th) + star8(330, 40, 8, "#ffd54f", 0) + star8(215, 95, 6, "#ffffff", .6) + star8(95, 150, 7, "#ff9ad5", 1.1) + star8(262, 150, 5, "#7de3ff", .3); },
+      tl: function (th) { return rehal(80, 206, 1.2) + lbl(80, 226, "Al-Qur’an"); },
+      tr: function (th) { return '<ellipse cx="305" cy="206" rx="26" ry="6" fill="#f3e8ff" opacity=".8"/><rect x="298" y="146" width="14" height="60" fill="' + th.wall + '"/><path d="M297 146 L305 126 L313 146Z" fill="#ffb703"/><rect x="298" y="170" width="14" height="3" fill="#ffd54f"/>' + star8(305, 118, 12, "#ffd54f", 0.2) + lbl(305, 226, "Nur"); },
+      mr: function (th) { return archGate(312, 452, 1, "#8f6bff") + lbl(312, 470, "Poort"); },
+      front: function (th) { return pondsAll(th) + groundFlowers() + cypress(20, 590, 0.9) + cypress(342, 305, 0.6) + cypress(150, 300, 0.55) + cypress(18, 380, 0.7) + cypress(215, 500, 0.5) + cypress(330, 640, 0.8) + star8(60, 640, 10, "#ffd54f", 0.2) + star8(300, 700, 9, "#7de3ff", .7) + star8(190, 430, 8, "#ff9ad5", 1.2) + commonProps(th) + sparkle(120, 700, 5, .2) + sparkle(280, 440, 5, .9); },
+    },
+    akhlaaq: {
+      pal: {
+        junior: { sky: ["#ffb3d1", "#ffcfe3", "#fff0d9", "#e6ffe6"], far: "#c4f0c5", mid: "#9fe6a8", near: "#7fd890", meadow: "#aef0a0", meadow2: "#6fd08a", water: "#8fe0f5", water2: "#d6f7ff", leaf: "#35c27a", leaf2: "#1f9c5c", trunk: "#a8703a", path: "#fff3e6", edge: "#e8a0b8", wall: "#fff7fb", dome: "#ff7aa8", day: true },
+        expert: { sky: ["#3a1445", "#8a2f78", "#e8708f", "#ffc9a8"], far: "#4fa878", mid: "#3a9163", near: "#2a7a52", meadow: "#5cc088", meadow2: "#2f9460", water: "#5ec8e8", water2: "#bdf0ff", leaf: "#2fae78", leaf2: "#1b8a5a", trunk: "#6b4228", path: "#f8e4bc", edge: "#d890b0", wall: "#ffe6f0", dome: "#ff7aa8", day: false },
+      },
+      sky: function (th) { return (th.day ? skyDay(th, { sx: 300, sy: 60 }) : skyNight(th)) + heartShape(70, 120, 8, "#ff5d8f", 0) + heartShape(200, 90, 6, "#ffffff", .6) + heartShape(330, 150, 7, "#ff9ad5", 1.1) + heartShape(120, 180, 5, "#ff3d6e", .3); },
+      tl: function (th) { return gazebo(72, 206, 1.1) + lbl(72, 226, "Rozentuin"); },
+      tr: function (th) { return roseArch(306, 206, 1) + lbl(306, 226, "Adab"); },
+      mr: function (th) { return gifts(312, 452, 1.15) + lbl(312, 472, "Sadaqa"); },
+      front: function (th) { return pondsAll(th) + groundFlowers() + rosebush(22, 592, 0.9) + rosebush(340, 305, 0.7) + rosebush(150, 305, 0.65) + rosebush(24, 385, 0.8) + rosebush(215, 502, 0.6) + rosebush(336, 640, 0.9) + rosebush(135, 592, 0.7) + heartShape(60, 690, 7, "#ff5d8f", 0.4) + heartShape(290, 600, 6, "#ffffff", 0.9) + heartShape(190, 760, 7, "#ff9ad5", 0.2) + commonProps(th) + (th.day ? sparkle(200, 300, 6, .2) + sparkle(60, 480, 5, .7) : ""); },
+    },
+  };
+
   function journeyMap(c) {
-    const level = P.mode, th = JTHEME[level], J = journeyStops(level, c), stops = J.stops, n = stops.length;
-    const uid = "j" + level[0];
+    const level = P.mode, L = LANDS[c.id] || LANDS.profeten, th = L.pal[level], J = journeyStops(level, c), stops = J.stops, n = stops.length;
+    curTh = th;
+    const uid = "j" + level[0] + c.id.charAt(0);
     const tierName = ["Basis", "Gemiddeld", "Gevorderd", "Expert"];
     let h = '<svg class="jsvg" viewBox="0 0 360 800" role="group" aria-label="Routekaart ' + esc(c.title) + '" xmlns="http://www.w3.org/2000/svg"><defs>' +
       '<linearGradient id="' + uid + 'sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + th.sky[0] + '"/><stop offset=".35" stop-color="' + th.sky[1] + '"/><stop offset=".7" stop-color="' + th.sky[2] + '"/><stop offset="1" stop-color="' + th.sky[3] + '"/></linearGradient>' +
       '<radialGradient id="' + uid + 'done" cx=".35" cy=".3"><stop offset="0" stop-color="#7ae6b4"/><stop offset="1" stop-color="#14935f"/></radialGradient>' +
       '<radialGradient id="' + uid + 'cur" cx=".35" cy=".3"><stop offset="0" stop-color="#fff0a8"/><stop offset="1" stop-color="#f0a02e"/></radialGradient>' +
       '<radialGradient id="' + uid + 'lock" cx=".35" cy=".3"><stop offset="0" stop-color="#dcd7cd"/><stop offset="1" stop-color="#9a9488"/></radialGradient>' +
-      '<radialGradient id="' + uid + 'gold" cx=".35" cy=".3"><stop offset="0" stop-color="#fff3b0"/><stop offset="1" stop-color="#e0a100"/></radialGradient></defs>';
+      '<radialGradient id="' + uid + 'gold" cx=".35" cy=".3"><stop offset="0" stop-color="#fff3b0"/><stop offset="1" stop-color="#e0a100"/></radialGradient>' +
+      '<pattern id="' + uid + 'tile" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M15 2 L28 15 L15 28 L2 15Z" fill="#26c6da" opacity=".55"/><path d="M15 8 L22 15 L15 22 L8 15Z" fill="#fff" opacity=".55"/><circle cx="15" cy="15" r="3.2" fill="#ffd54f"/><path d="M0 0 H6 L0 6Z M30 0 H24 L30 6Z M0 30 H6 L0 24Z M30 30 H24 L30 24Z" fill="#ff7a59" opacity=".6"/></pattern></defs>';
     h += '<rect width="360" height="800" fill="url(#' + uid + 'sky)"/>';
-    if (th.day) {
-      const rb = ["#ff5d6c", "#ff9f43", "#ffd93d", "#4cd964", "#38bdf8", "#8b5cf6"];
-      rb.forEach(function (col, i) { h += '<path d="M' + (28 + i * 7) + " 240 A " + (152 - i * 7) + " " + (152 - i * 7) + " 0 0 1 " + (332 - i * 7) + ' 240" fill="none" stroke="' + col + '" stroke-width="7" opacity=".55"/>'; });
-      h += '<circle cx="60" cy="62" r="34" fill="#fff6c8"/><circle cx="60" cy="62" r="24" fill="#ffd95a"/>' +
-        '<g fill="#fff" opacity=".95"><ellipse cx="300" cy="72" rx="34" ry="12"/><ellipse cx="320" cy="62" rx="22" ry="13"/><ellipse cx="170" cy="150" rx="30" ry="10"/><ellipse cx="188" cy="142" rx="18" ry="11"/><ellipse cx="40" cy="235" rx="30" ry="10"/><ellipse cx="320" cy="238" rx="30" ry="10"/></g>';
-    } else {
-      h += '<path d="M60 40 a30 30 0 1 0 22 52 a24 24 0 1 1 -22 -52Z" fill="#fff4c9"/>' + sparkle(300, 60, 7, 0) + sparkle(210, 100, 5, .6) + sparkle(150, 40, 6, 1.1) + sparkle(250, 150, 4, .3) + sparkle(330, 130, 5, .9) + sparkle(120, 120, 4, .5);
-      h += '<circle cx="190" cy="70" r="2.2" fill="#ff9ad5"/><circle cx="275" cy="30" r="2.2" fill="#7de3ff"/><circle cx="25" cy="150" r="2.2" fill="#ffe27a"/>';
-    }
-    // verre heuvels
+    h += L.sky(th);
     h += '<path d="M0 235 C 80 190, 160 225, 240 200 S 340 205, 360 190 L360 800 L0 800Z" fill="' + th.far + '"/>';
-    // moskee
-    h += '<g transform="translate(0 8)" opacity="' + (th.day ? 1 : .95) + '"><rect x="40" y="168" width="64" height="30" fill="' + th.wall + '"/><path d="M44 168 a28 28 0 0 1 56 0Z" fill="' + th.dome + '"/><circle cx="72" cy="136" r="3" fill="#ffb703"/><rect x="104" y="128" width="8" height="70" fill="' + th.wall + '"/><path d="M103 128 l5 -15 l5 15Z" fill="#ff7a59"/><rect x="30" y="148" width="7" height="50" fill="' + th.wall + '"/><path d="M29 148 l4.5 -13 l4.5 13Z" fill="#ff7a59"/>' +
-      '<path d="M54 198 v-14 a6 6 0 0 1 12 0 v14Z M78 198 v-14 a6 6 0 0 1 12 0 v14Z" fill="' + (th.day ? "#7a5cf0" : "#ffe27a") + '"/></g>';
-    // Ka'bah
-    h += '<g transform="translate(0 14)"><ellipse cx="302" cy="190" rx="48" ry="11" fill="#f6efe2" stroke="#d8c8a8" stroke-width="2"/>' +
-      '<rect x="283" y="152" width="30" height="36" fill="#1f1f26"/><polygon points="313,152 327,146 327,182 313,188" fill="#121217"/><polygon points="283,152 297,146 327,146 313,152" fill="#3b3b46"/>' +
-      '<rect x="283" y="160" width="30" height="5" fill="#f0b81e"/><polygon points="313,160 327,154 327,159 313,165" fill="#d9a010"/><rect x="299" y="172" width="9" height="16" rx="1" fill="#f0b81e" stroke="#b8860b" stroke-width="1.2"/>' +
-      '<text x="303" y="210" text-anchor="middle" font-size="11" font-weight="900" fill="#fff" stroke="rgba(0,0,0,.45)" stroke-width="3" paint-order="stroke">Ka’bah</text></g>';
+    h += L.tl(th) + L.tr(th);
     h += '<path d="M0 420 C 90 365, 170 405, 250 372 S 340 355, 360 370 L360 800 L0 800Z" fill="' + th.mid + '"/>';
-    // Grot Thawr met spinnenweb
-    h += '<g><path d="M262 452 L276 405 L296 384 L318 396 L336 378 L360 392 L360 452Z" fill="#8d6a5a"/><path d="M276 405 L296 384 L318 396 L300 410Z" fill="#b08c78"/><path d="M318 396 L336 378 L360 392 L346 408Z" fill="#a37c68"/>' +
-      '<path d="M290 452 L290 428 Q312 396 334 428 L334 452Z" fill="#2a1b2f"/><path d="M296 452 L296 432 Q312 408 328 432 L328 452Z" fill="#3b2742"/>' +
-      '<g stroke="#fff" stroke-opacity=".9" stroke-width="1" fill="none"><line x1="312" y1="414" x2="291" y2="436"/><line x1="312" y1="414" x2="333" y2="436"/><line x1="312" y1="414" x2="312" y2="452"/><line x1="312" y1="414" x2="293" y2="452"/><line x1="312" y1="414" x2="331" y2="452"/>' +
-      '<path d="M303 424 Q312 428 321 424 M298 433 Q312 439 326 433 M294 443 Q312 450 330 443"/></g>' +
-      '<text x="312" y="470" text-anchor="middle" font-size="11" font-weight="900" fill="#fff" stroke="rgba(0,0,0,.45)" stroke-width="3" paint-order="stroke">Grot Thawr</text></g>';
-    h += '<path d="M0 610 C 100 565, 200 612, 300 572 S 350 560, 360 566 L360 800 L0 800Z" fill="' + th.near + '"/>';
-    // vijvers (groter) + weide
-    h += pond(262, 668, 80, 32, th) + pond(72, 524, 58, 24, th) + pond(62, 292, 40, 16, th);
-    h += flowers([[130, 590], [150, 610], [20, 650], [48, 670], [175, 770], [215, 740], [330, 480], [350, 500], [200, 330], [30, 440], [230, 280], [155, 345], [335, 610], [10, 760], [100, 760]]);
-    h += palm(20, 590, 0.9, false) + palm(342, 305, 0.6, true) + palm(150, 300, 0.55, false) + palm(18, 380, 0.7, false) + palm(215, 500, 0.5, true);
-    h += lantern(316, 600, "#ff5d6c", 0.8) + lantern(18, 655, "#35d0ff", 0.8) + lantern(160, 250, "#b388ff", 0.8) + lantern(325, 335, "#7dff6a", 0.75) + lantern(25, 440, "#ffb703", 0.7);
-    h += oilLamp(240, 470, 0.7) + oilLamp(48, 725, 0.75) + dateBowl(206, 505, 0.8) + camel(246, 766, 0.72, true) + camel(136, 590, 0.62, false);
-    h += gem(205, 640, "#ff4f8b", 0) + gem(300, 500, "#35d0ff", .4) + gem(150, 510, "#7dff6a", .8) + gem(180, 330, "#ffc928", .2) + gem(55, 450, "#b388ff", .6) + gem(310, 735, "#ff9f1c", 1);
-    if (th.day) h += sparkle(200, 300, 6, .2) + sparkle(60, 480, 5, .7) + sparkle(250, 120, 5, 1);
+    h += L.mr(th);
+    const nearD = "M0 610 C 100 565, 200 612, 300 572 S 350 560, 360 566 L360 800 L0 800Z";
+    h += '<path d="' + nearD + '" fill="' + th.near + '"/>';
+    if (L.tile) h += '<path d="' + nearD + '" fill="url(#' + uid + 'tile)" opacity=".55"/>';
+    h += L.front(th);
     // pad
     const seg = function (a, b) { const ym = (a.y + b.y) / 2; return "M" + a.x + " " + a.y + " C" + a.x + " " + ym + " " + b.x + " " + ym + " " + b.x + " " + b.y; };
     const s0 = stops[0];
@@ -3597,10 +3773,8 @@ return exports;})();
       const ch = JCHEST[i];
       h += chest(ch[0], ch[1], st.passed ? (st.stars === 3 ? "gold" : "open") : st.locked ? "closed-dim" : "closed", 1, "stop");
     });
-    // Quiz van de Dag-kist
     const dDone = !!P.daily[level][todayStr()];
-    h += '<g class="j-stop j-daily" data-act="start-daily" role="button" tabindex="0" aria-label="Quiz van de Dag' + (dDone ? " (vandaag gespeeld)" : "") + '" style="cursor:pointer">' + chest(318, 752, dDone ? "open" : "closed", 1.3, "daily") +
-      '<text x="318" y="786" text-anchor="middle" font-size="10" font-weight="900" fill="#fff" stroke="rgba(0,0,0,.45)" stroke-width="3" paint-order="stroke">Quiz van de Dag</text></g>';
+    h += '<g class="j-stop j-daily" data-act="start-daily" role="button" tabindex="0" aria-label="Quiz van de Dag' + (dDone ? " (vandaag gespeeld)" : "") + '" style="cursor:pointer">' + chest(318, 752, dDone ? "open" : "closed", 1.3, "daily") + lbl(318, 786, "Quiz van de Dag", 10) + "</g>";
     // stops
     stops.forEach(function (st, i) {
       const R = st.last ? 36 : 30, state = st.locked ? "locked" : st.passed ? "done" : "current";
@@ -3614,8 +3788,7 @@ return exports;})();
       else if (state === "done") h += '<polyline points="-10,1 -3,8 11,-8" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>';
       else h += '<text y="9" text-anchor="middle" font-size="26" font-weight="900" fill="#fff" stroke="#c77d12" stroke-width="1">' + st.tier + "</text>";
       for (let k = 0; k < 3; k++) h += '<polygon points="' + starPoly((k - 1) * 22, R + 20, 9.5) + '" fill="' + (k < st.stars ? "#ffc928" : "rgba(0,0,0,.2)") + '" stroke="' + (k < st.stars ? "#d98e00" : "none") + '" stroke-width="1"/>';
-      h += '<text y="' + (R + 46) + '" text-anchor="middle" font-size="13" font-weight="900" fill="#fff" stroke="rgba(0,0,0,.4)" stroke-width="3" paint-order="stroke">Niveau ' + st.tier + "</text>";
-      // beloning: Meester-rozet bij niveau 3, Grootmeester-kroon bij niveau 4 (kleurrijk als verdiend, grijs met slot als nog niet)
+      h += lbl(0, R + 46, "Niveau " + st.tier, 13);
       if (st.tier === 3 || st.tier === 4) {
         const kind = st.tier === 3 ? "master" : "grand", got = !!(P.badges && P.badges[badgeId(level, c.id, kind)]);
         h += badgeSvg(kind, c.color, got ? 46 : 34, !got, 'x="' + (R - (got ? 14 : 8)) + '" y="' + (-R - (got ? 22 : 12)) + '" overflow="visible"');
@@ -3632,13 +3805,26 @@ return exports;})();
     journeyPos[key] = J.cur;
     return h + "</svg>";
   }
+  function landDone(level, catId) { const rt = requiredTiers(level, catId); return rt.length > 0 && rt.every(function (t) { return tierPassed(level, catId, t); }); }
+  function defaultLand() {
+    for (let i = 0; i < CATEGORIES.length; i++) { if (!landDone(P.mode, CATEGORIES[i].id)) return i; }
+    return 0;
+  }
   function viewJourney() {
-    const c = CATEGORIES[0], level = P.mode;
+    if (journeyLand === null || journeyLand >= CATEGORIES.length) journeyLand = defaultLand();
+    const i = journeyLand, c = CATEGORIES[i], level = P.mode;
     let h = '<div class="topbar"><button class="icon-btn" data-act="home" aria-label="Terug naar home">' + icon("left", 22) + "</button>" +
       '<div class="brand">' + icon("map", 24) + 'De Reis</div><span style="width:44px"></span></div>';
-    h += '<div class="land-head" style="--accent:' + c.color + '"><span class="land-n">Land 1</span><h2>' + esc(c.title) + "</h2><p>" + esc(c.subtitle) + "</p></div>";
+    h += '<div class="land-strip" role="tablist" aria-label="Kies een land">';
+    CATEGORIES.forEach(function (x, k) {
+      const gm = P.badges && P.badges[badgeId(level, x.id, "grand")], mm = P.badges && P.badges[badgeId(level, x.id, "master")];
+      h += '<button class="land-chip' + (k === i ? " on" : "") + '" style="--accent:' + x.color + '" data-act="journey-land" data-i="' + k + '" role="tab" aria-selected="' + (k === i) + '" aria-label="Land ' + (k + 1) + ": " + esc(x.title) + '">' + icon(CAT_ICON[x.icon] || "sparkles", 22) + "<span>" + (k + 1) + "</span>" + (gm ? '<i class="lc-b">👑</i>' : mm ? '<i class="lc-b">۞</i>' : "") + "</button>";
+    });
+    h += "</div>";
+    h += '<div class="land-head" style="--accent:' + c.color + '"><span class="land-n">Land ' + (i + 1) + " van " + CATEGORIES.length + "</span><h2>" + esc(c.title) + "</h2><p>" + esc(c.subtitle) + "</p></div>";
     h += '<div class="journey-map">' + journeyMap(c) + "</div>";
-    h += '<div class="land-next"><span>' + icon("map", 20) + "</span><b>Meer landen volgen</b><small>" + CATEGORIES.slice(1).map(function (x) { return esc(x.title); }).join(" · ") + "</small></div>";
+    h += '<div class="land-nav">' + (i > 0 ? '<button class="btn ghost" data-act="journey-land" data-i="' + (i - 1) + '">' + icon("left", 20) + "Land " + i + "</button>" : "<span></span>") +
+      (i < CATEGORIES.length - 1 ? '<button class="btn gold" data-act="journey-land" data-i="' + (i + 1) + '">Land ' + (i + 2) + icon("right", 20) + "</button>" : "<span></span>") + "</div>";
     h += '<div class="j-toast" id="jToast" role="status"></div>';
     return h;
   }
@@ -3653,7 +3839,7 @@ return exports;})();
     const m = document.getElementById("jMarker");
     if (m) {
       const to = m.dataset.to.split(",");
-      if (m.dataset.from !== m.dataset.to) requestAnimationFrame(function () { requestAnimationFrame(function () { m.style.transform = "translate(" + to[0] + "px," + to[1] + "px)"; }); });
+      if (m.dataset.from !== m.dataset.to) { play("swoosh"); requestAnimationFrame(function () { requestAnimationFrame(function () { m.style.transform = "translate(" + to[0] + "px," + to[1] + "px)"; }); }); }
     }
     const cur = document.querySelector(".j-current");
     if (cur && cur.scrollIntoView) setTimeout(function () { cur.scrollIntoView({ block: "center", behavior: "auto" }); }, 30);
@@ -4200,11 +4386,13 @@ return exports;})();
         if (result && result.kind === "daily") startQuiz("daily"); else startQuiz("category", result.catId, result.tier);
         break;
       case "home": play("click"); stopTimer(); journeyReturn = false; screen = "home"; render(); break;
-      case "journey": play("click"); stopTimer(); journeyReturn = false; screen = "journey"; render(); break;
+      case "journey": play("click"); stopTimer(); journeyReturn = false; journeyLand = null; screen = "journey"; render(); break;
+      case "journey-back": play("click"); stopTimer(); screen = "journey"; render(); break;
+      case "journey-land": play("click"); journeyLand = parseInt(el.dataset.i, 10); render(); break;
       case "journey-stop": {
         const jc = el.dataset.cat, jt = parseInt(el.dataset.tier, 10);
         if (tierLocked(P.mode, jc, jt)) { play("wrong"); jToast("🔒 " + lockText(P.mode, jc, jt)); break; }
-        play("click"); journeyReturn = true; startQuiz("category", jc, jt); break;
+        play("click"); journeyReturn = true; journeyLand = Math.max(0, CATEGORIES.findIndex(function (x) { return x.id === jc; })); startQuiz("category", jc, jt); break;
       }
       case "scores": play("click"); screen = "scores"; render(); break;
       case "review": play("click"); if (result) result.noAuto = true; screen = "review"; render(); break;
