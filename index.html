@@ -834,7 +834,70 @@ a.btn.block { display: flex; margin-top: 14px; }
 .age-dialog .stack { margin-top: 6px; }
 .age-badge { width: 72px; height: 72px; margin: 0 auto 10px; border-radius: 50%; display: grid; place-items: center; font-weight: 900; font-size: 1.5rem; color: #fff; background: radial-gradient(circle at 35% 30%, #74c69d, var(--emerald)); box-shadow: 0 5px 0 var(--emerald-dark); }
 @media (prefers-reduced-motion: reduce) { .celebrate { display: none; } }
-  </style>
+  /* ── Schatkist, minigames, album ── */
+.chest-bounce { transform-box: fill-box; transform-origin: 50% 100%; animation: chestHop 1.1s ease-in-out infinite; }
+@keyframes chestHop { 0%, 100% { transform: translateY(0) scale(1, 1); } 10% { transform: translateY(0) scale(1.1, .88); } 32% { transform: translateY(-12px) scale(.94, 1.1); } 52% { transform: translateY(0) scale(1.08, .92); } 66% { transform: translateY(-5px) scale(.98, 1.03); } 78% { transform: translateY(0) scale(1.02, .98); } }
+.j-ready { cursor: pointer; }
+.chest-win.ready { background: linear-gradient(135deg, #fff3c4, #ffd36a); box-shadow: 0 0 0 3px #fff6b8 inset, 0 6px 18px rgba(255, 180, 0, .35); }
+.co-stage { position: relative; overflow: hidden; text-align: center; padding: 18px 16px 24px; margin-top: 8px; border-radius: 28px; background: radial-gradient(circle at 50% 38%, #fff6c8, #ffd36a 45%, #f0a500); color: #5a3d00; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.co-stage > * { position: relative; z-index: 1; }
+.co-stage .co-rays { position: absolute; z-index: 0; left: 50%; top: 36%; width: 150%; aspect-ratio: 1; margin: -75% 0 0 -75%; background: repeating-conic-gradient(rgba(255,255,255,.55) 0 9deg, transparent 9deg 24deg); animation: coSpin 18s linear infinite; border-radius: 50%; -webkit-mask-image: radial-gradient(circle, #000 15%, transparent 62%); mask-image: radial-gradient(circle, #000 15%, transparent 62%); }
+@keyframes coSpin { to { transform: rotate(360deg); } }
+.co-stage h1 { font-size: 1.7rem; margin: 4px 0 0; }
+.co-sub { margin: 0; font-weight: 700; }
+.co-chest { appearance: none; border: 0; background: none; cursor: pointer; width: min(260px, 70vw); padding: 0; animation: coShake .9s ease-in-out infinite; filter: drop-shadow(0 12px 14px rgba(90, 50, 0, .35)); }
+.co-chest svg { width: 100%; height: auto; overflow: visible; display: block; }
+.co-chest.opened { animation: coPop .7s cubic-bezier(.2, 1.6, .4, 1) both; }
+@keyframes coShake { 0%, 100% { transform: rotate(0) scale(1); } 20% { transform: rotate(-5deg) scale(1.04); } 40% { transform: rotate(5deg) scale(1.06); } 60% { transform: rotate(-3deg) scale(1.03); } 80% { transform: rotate(2deg); } }
+@keyframes coPop { 0% { transform: scale(.7); } 60% { transform: scale(1.22); } 100% { transform: scale(1.1); } }
+.co-game { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,.75); border-radius: 18px; padding: 10px 16px; text-align: left; animation: pop .5s ease both; }
+.co-game b { display: block; } .co-game small { font-weight: 700; opacity: .85; } .co-game-ic { font-size: 2rem; }
+.co-stage .btn { width: 100%; max-width: 360px; }
+.mg { padding: 4px 0 24px; text-align: center; }
+.mg-hint { font-weight: 800; margin: 8px 0; }
+.mg-stats { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-weight: 800; margin: 0 4px 10px; }
+.pz-prev { display: inline-flex; align-items: center; gap: 6px; font-size: .85rem; } .pz-prev img { width: 44px; height: 44px; border-radius: 10px; border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,.25); }
+.mc-grid { display: grid; grid-template-columns: repeat(var(--cols), 1fr); gap: 10px; max-width: 480px; margin: 0 auto; }
+.mc { appearance: none; border: 0; padding: 0; background: none; aspect-ratio: 1; perspective: 700px; cursor: pointer; border-radius: 16px; }
+.mc-in { display: block; width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform .45s; }
+.mc.flip .mc-in { transform: rotateY(180deg); }
+.mc-face { position: absolute; inset: 0; border-radius: 16px; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden; border: 3px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,.22); display: grid; place-items: center; }
+.mc-front { background: linear-gradient(135deg, #1fa86a, #0d6e48); } .mc-front svg { width: 46%; height: auto; }
+.mc-back { transform: rotateY(180deg); background: #fff; } .mc-back svg { width: 100%; height: 100%; display: block; }
+.mc.matched .mc-face { border-color: #ffd23f; box-shadow: 0 0 0 3px #1fa86a, 0 0 16px rgba(255, 210, 63, .8); }
+.pz-grid { display: grid; grid-template-columns: repeat(var(--n), 1fr); gap: 3px; width: min(94vw, 440px); aspect-ratio: 1; margin: 0 auto; padding: 5px; background: #fff; border-radius: 18px; box-shadow: 0 6px 18px rgba(0,0,0,.25); }
+.pz-tile { appearance: none; border: 2px solid rgba(255,255,255,.9); border-radius: 8px; cursor: pointer; padding: 0; background-repeat: no-repeat; transition: transform .15s; min-width: 0; }
+.pz-tile.sel { outline: 4px solid #ffb703; transform: scale(.93); z-index: 1; } .pz-tile.ok { border-color: #35c97a; }
+.pz-grid.solved { gap: 0; padding: 0; } .pz-grid.solved .pz-tile { border-color: transparent; border-radius: 0; }
+.kw-pack { appearance: none; border: 0; background: none; cursor: pointer; width: min(220px, 60vw); margin: 10px auto; display: block; animation: chestHop 1.2s ease-in-out infinite; filter: drop-shadow(0 12px 14px rgba(0,0,0,.35)); } .kw-pack svg { width: 100%; height: auto; display: block; }
+.kw-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 8px 0; }
+.kc { appearance: none; border: 0; padding: 0; background: none; width: min(30%, 160px); min-width: 104px; aspect-ratio: 2 / 3; perspective: 800px; cursor: pointer; }
+.kc-in { display: block; position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform .6s; }
+.kc.flip .kc-in { transform: rotateY(180deg); }
+.kc-face { position: absolute; inset: 0; border-radius: 14px; border: 4px solid #fff; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden; box-shadow: 0 6px 14px rgba(0,0,0,.3); }
+.kc-front { background: linear-gradient(135deg, #1fa86a, #0d6e48); display: grid; place-items: center; } .kc-front svg { width: 50%; height: auto; }
+.kc-back { transform: rotateY(180deg); background: #fffdf5; display: flex; flex-direction: column; text-align: center; border-color: var(--sc); color: #2b2b2b; }
+.kc.rare .kc-back { border-color: #ffc928; box-shadow: 0 0 0 3px #fff3a0, 0 0 18px rgba(255, 200, 40, .9); }
+.kc-art { display: block; flex: 1 1 auto; min-height: 0; } .kc-art svg { width: 100%; height: 100%; display: block; }
+.kc-back b { font-size: .78rem; line-height: 1.15; padding: 4px 4px 0; } .kc-back i { font-size: .62rem; font-style: normal; font-weight: 800; color: var(--sc); padding: 0 4px 4px; }
+.kc-new, .kc-dup, .kc-rare { position: absolute; font-style: normal; font-weight: 900; font-size: .64rem; padding: 2px 6px; border-radius: 10px; }
+.kc-new { top: 4px; left: 4px; background: #ff3d6e; color: #fff; animation: pop .5s ease .5s both; } .kc-dup { top: 4px; left: 4px; background: #e5e7eb; color: #374151; } .kc-rare { top: 4px; right: 4px; background: #ffc928; color: #5a3d00; }
+.mg-done { margin: 18px auto 0; max-width: 460px; padding: 18px 16px; border-radius: 24px; background: linear-gradient(135deg, #fff3c4, #ffe08a); color: #5a3d00; animation: pop .5s ease both; }
+.mg-done h2 { margin: 4px 0; } .mg-done p { margin: 0 0 10px; font-weight: 700; } .mg-done-star { width: 54px; margin: 0 auto; } .mg-done-star svg { width: 100%; height: auto; }
+.kw-set-win { background: #fff; border-radius: 14px; padding: 8px 12px; margin: 0 0 10px; font-weight: 800; }
+.album { padding-bottom: 24px; } .album-head { text-align: center; margin: 6px 0 12px; font-size: 1.1rem; } .album-head small { display: block; opacity: .8; margin-top: 6px; }
+.album-set { background: rgba(255,255,255,.85); border-radius: 20px; padding: 12px; margin-bottom: 12px; border-left: 8px solid var(--sc); color: #2b2b2b; }
+.album-set h3 { margin: 0 0 8px; } .kw-done { color: #1f9d55; font-size: .85rem; }
+.album-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.ac { appearance: none; border: 3px solid var(--sc); border-radius: 14px; background: #fffdf5; padding: 0; overflow: hidden; position: relative; font: inherit; color: inherit; text-align: center; display: flex; flex-direction: column; }
+.ac.own { cursor: pointer; } .ac.rare { border-color: #ffc928; box-shadow: 0 0 10px rgba(255, 200, 40, .8); }
+.ac-art { display: block; aspect-ratio: 1; width: 100%; } .ac-art svg { width: 100%; height: 100%; display: block; }
+.ac.lock { background: #d9dce3; border-color: #aab0bd; color: #6b7280; } .ac.lock .ac-art { display: grid; place-items: center; font-size: 3rem; font-weight: 900; background: repeating-linear-gradient(45deg, #cfd3dc, #cfd3dc 8px, #c4c9d3 8px, #c4c9d3 16px); }
+.ac b { font-size: .85rem; padding: 6px 4px; } .ac-n { position: absolute; top: 4px; right: 4px; background: #1f9d55; color: #fff; font-style: normal; font-weight: 900; font-size: .75rem; padding: 2px 7px; border-radius: 10px; }
+.album-dlg { text-align: center; border-top: 8px solid var(--sc); } .adlg-art { width: 70%; max-width: 260px; margin: 0 auto 8px; border-radius: 16px; overflow: hidden; border: 4px solid var(--sc); aspect-ratio: 1; } .adlg-art svg { width: 100%; height: 100%; display: block; }
+.album-btn { background: linear-gradient(135deg, #7a5cf0, #3a2fb0); }
+@media (prefers-reduced-motion: reduce) { .chest-bounce, .co-chest, .co-rays, .kw-pack { animation: none; } .mc-in, .kc-in { transition: none; } }
+</style>
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Islam Quiz">
   <meta property="og:locale" content="nl_NL">
@@ -2656,6 +2719,256 @@ exports.questions = [
         ], answer: 3,
         explanation: "De Koran is door de Profeet ﷺ in meerdere erkende wijzen van recitatie (qira’at) onderwezen. De overlevering van Hafs van ‘Asim is nu de meest verspreide, naast bijvoorbeeld Warsh in delen van Noord- en West-Afrika. Alle erkende riwayat gaan terug op de Profeet ﷺ.",
     },
+
+    // ═════════════ NIEUWE VRAGEN (uitbreiding: ≥40 per categorie en modus) ═════════════
+    // ───── PROFETENVERHALEN ─────
+    { id: "n-p-j1", category: "profeten", level: "junior", tier: 1, question: "Welke profeet was de broer van Musa (a.s.) en hielp hem bij zijn opdracht?", options: ["Harun (a.s.)", "Yahya (a.s.)", "Hud (a.s.)", "Lut (a.s.)"], answer: 0, explanation: "Harun (a.s.) was de broer van Musa (a.s.). Samen riepen zij Fir'aun op om Allah te dienen." },
+    { id: "n-p-j2", category: "profeten", level: "junior", tier: 1, question: "Welk dier kreeg Ibrahim (a.s.) van Allah om te offeren in plaats van zijn zoon?", options: ["Een kameel", "Een ram", "Een duif", "Een os"], answer: 1, explanation: "Allah schonk Ibrahim (a.s.) een groot offerdier in de plaats van zijn zoon. Zo bleef zijn zoon veilig." },
+    { id: "n-p-j3", category: "profeten", level: "junior", tier: 1, question: "Hoe heette de vader van profeet Yusuf (a.s.)?", options: ["Ishaq (a.s.)", "Ismail (a.s.)", "Yaqub (a.s.)", "Harun (a.s.)"], answer: 2, explanation: "Yaqub (a.s.) was zelf ook een profeet en hield heel veel van zijn zoon Yusuf (a.s.)." },
+    { id: "n-p-j4", category: "profeten", level: "junior", tier: 1, question: "Wat gebeurde er toen Musa (a.s.) zijn staf op de grond wierp op bevel van Allah?", options: ["De staf werd een boom", "De staf brak in tweeën", "De staf werd een vogel", "De staf werd een slang"], answer: 3, explanation: "Allah liet de staf van Musa (a.s.) een slang worden als wonder. Zo zagen de mensen dat Musa (a.s.) de waarheid sprak." },
+    { id: "n-p-j5", category: "profeten", level: "junior", tier: 1, question: "Wie ging er volgens de Koran met Nuh (a.s.) mee de ark in, naast de gelovigen?", options: ["Van elke diersoort een paar", "Alleen de vogels", "Alleen de huisdieren", "Alleen de grote dieren"], answer: 0, explanation: "Allah gebood Nuh (a.s.) van elke soort een paar mee te nemen. Zo bleven de dieren gespaard." },
+    { id: "n-p-j6", category: "profeten", level: "junior", tier: 1, question: "Hoe heet de moeder van profeet Isa (a.s.)?", options: ["Hajar", "Maryam", "Asiya", "Sara"], answer: 1, explanation: "Maryam was een zeer vrome vrouw. Er is zelfs een soera in de Koran naar haar genoemd." },
+    { id: "n-p-j7", category: "profeten", level: "junior", tier: 1, question: "Welk water liet Allah ontspringen voor baby Ismail (a.s.) en zijn moeder Hajar in de woestijn?", options: ["Nijl", "Eufraat", "Zamzam", "Kawthar"], answer: 2, explanation: "Allah liet de bron Zamzam ontspringen bij Mekka. Mensen drinken er nog steeds van." },
+    { id: "n-p-j8", category: "profeten", level: "junior", tier: 1, question: "Wat kon Isa (a.s.) doen met toestemming van Allah?", options: ["Op water vliegen", "Dag in nacht veranderen", "Bergen verplaatsen", "Blinden weer laten zien"], answer: 3, explanation: "Met Allah's toestemming genas Isa (a.s.) mensen die blind geboren waren. Dat was een groot wonder." },
+    { id: "n-p-j9", category: "profeten", level: "junior", tier: 1, question: "Wie is de laatste profeet die Allah naar de mensen stuurde?", options: ["Muhammad ﷺ", "Isa (a.s.)", "Musa (a.s.)", "Ibrahim (a.s.)"], answer: 0, explanation: "Profeet Muhammad ﷺ is de laatste profeet. Na hem komt er geen nieuwe profeet meer." },
+    { id: "n-p-j10", category: "profeten", level: "junior", tier: 1, question: "Hoeveel sterren zag Yusuf (a.s.) in zijn droom voor hem buigen, samen met de zon en de maan?", options: ["Zeven", "Elf", "Tien", "Twaalf"], answer: 1, explanation: "Yusuf (a.s.) zag elf sterren, de zon en de maan voor hem buigen. Later kwam deze droom uit." },
+    { id: "n-p-j11", category: "profeten", level: "junior", tier: 1, question: "Welk heilig boek kreeg Isa (a.s.) van Allah?", options: ["De Zaboer", "De Tora", "De Indjil (Injil)", "De Suhuf"], answer: 2, explanation: "De Indjil (Injil) is het boek dat Allah aan Isa (a.s.) gaf." },
+    { id: "n-p-j12", category: "profeten", level: "junior", tier: 1, question: "Wat kon profeet Dawud (a.s.) met zijn handen doen dankzij Allah?", options: ["Water vasthouden", "Vuur doven", "Stenen laten zweven", "IJzer zacht maken"], answer: 3, explanation: "Allah maakte ijzer zacht voor Dawud (a.s.). Zo kon hij er sterke maliën van maken." },
+    { id: "n-p-j13", category: "profeten", level: "junior", tier: 1, question: "In welke stad werd Profeet Muhammad ﷺ geboren?", options: ["Mekka", "Medina", "Jeruzalem", "Taif"], answer: 0, explanation: "Profeet Muhammad ﷺ werd geboren in Mekka, de stad van de Ka'ba." },
+    { id: "n-p-j14", category: "profeten", level: "junior", tier: 1, question: "Naar welke koning stuurde Allah Musa (a.s.) om hem uit te nodigen voor het goede?", options: ["Jalut", "Fir'aun", "Namrud", "Nebukadnezar"], answer: 1, explanation: "Allah stuurde Musa (a.s.) en Harun (a.s.) naar Fir'aun. Zij vroegen hem vriendelijk om Allah te dienen." },
+    { id: "n-p-j15", category: "profeten", level: "junior", tier: 2, question: "Wie zorgde voor Maryam toen zij jong was en in het gebedshuis verbleef?", options: ["Yahya (a.s.)", "Dawud (a.s.)", "Zakariyya (a.s.)", "Harun (a.s.)"], answer: 2, explanation: "Zakariyya (a.s.) werd de verzorger van Maryam. Hij zag hoe Allah haar steeds van voedsel voorzag." },
+    { id: "n-p-j16", category: "profeten", level: "junior", tier: 2, question: "Wie was de vader van profeet Yaqub (a.s.)?", options: ["Ismail (a.s.)", "Yusuf (a.s.)", "Nuh (a.s.)", "Ishaq (a.s.)"], answer: 3, explanation: "Ishaq (a.s.) was de zoon van Ibrahim (a.s.) en de vader van Yaqub (a.s.)." },
+    { id: "n-p-j17", category: "profeten", level: "junior", tier: 2, question: "Hoe heette de zoon van Zakariyya (a.s.), die ook een profeet werd?", options: ["Yahya (a.s.)", "Yusuf (a.s.)", "Ismail (a.s.)", "Isa (a.s.)"], answer: 0, explanation: "Allah schonk Zakariyya (a.s.) op hoge leeftijd een zoon: Yahya (a.s.)." },
+    { id: "n-p-j18", category: "profeten", level: "junior", tier: 2, question: "Welk dier waarschuwde de anderen voor het leger van Sulayman (a.s.), zodat ze niet vertrapt werden?", options: ["Een bij", "Een mier", "Een vogel", "Een mus"], answer: 1, explanation: "Een mier riep haar volk op om naar binnen te gaan. Sulayman (a.s.) verstond haar en glimlachte." },
+    { id: "n-p-j19", category: "profeten", level: "junior", tier: 2, question: "Naar welk volk stuurde Allah profeet Hud (a.s.)?", options: ["Het volk van Madyan", "Het volk van Saba", "Het volk van 'Ad", "Het volk van Lut"], answer: 2, explanation: "Hud (a.s.) werd gestuurd naar het volk van 'Ad. Zij waren sterk, maar luisterden niet." },
+    { id: "n-p-j20", category: "profeten", level: "junior", tier: 2, question: "Naar welk volk stuurde Allah profeet Shuayb (a.s.)?", options: ["Het volk van 'Ad", "Het volk van Thamud", "Het volk van Nuh", "Het volk van Madyan"], answer: 3, explanation: "Shuayb (a.s.) riep het volk van Madyan op om eerlijk te handelen en niet te bedriegen met maat en gewicht." },
+    { id: "n-p-j21", category: "profeten", level: "junior", tier: 2, question: "Welke vogel bracht Sulayman (a.s.) nieuws over het land van Saba?", options: ["De hop (hoepoe)", "De adelaar", "De raaf", "De duif"], answer: 0, explanation: "De hop vertelde Sulayman (a.s.) over de koningin van Saba en haar volk." },
+    { id: "n-p-j22", category: "profeten", level: "junior", tier: 2, question: "Wat deed Ibrahim (a.s.) met de afgoden van zijn volk, toen zij weg waren?", options: ["Hij verstopte ze", "Hij sloeg ze stuk, behalve de grootste", "Hij schilderde ze wit", "Hij nam ze mee naar huis"], answer: 1, explanation: "Ibrahim (a.s.) wilde laten zien dat afgoden niets kunnen doen. Alleen Allah verdient aanbidding." },
+    { id: "n-p-j23", category: "profeten", level: "junior", tier: 3, question: "Welke profeet wordt in de Koran genoemd als een eerlijk man die door Allah een hoge plaats kreeg?", options: ["Hud (a.s.)", "Salih (a.s.)", "Idris (a.s.)", "Lut (a.s.)"], answer: 2, explanation: "Idris (a.s.) wordt in Soera Maryam geprezen als een zeer eerlijk man en profeet." },
+    { id: "n-p-j24", category: "profeten", level: "junior", tier: 3, question: "Wat vroegen de volgelingen van Isa (a.s.) aan Allah, als teken van Zijn kracht?", options: ["Een tuin vol bomen", "Een huis van goud", "Een rivier van melk", "Een tafel vol eten uit de hemel"], answer: 3, explanation: "Zij vroegen om een tafel met voedsel vanuit de hemel. Een soera in de Koran, Al-Ma'idah, is hiernaar vernoemd." },
+    { id: "n-p-j25", category: "profeten", level: "junior", tier: 3, question: "Hoeveel nachten ging Musa (a.s.) naar de berg om Allah te ontmoeten, volgens Soera Al-A'raf?", options: ["Veertig nachten", "Zeven nachten", "Tien nachten", "Honderd nachten"], answer: 0, explanation: "Allah vervulde de ontmoeting met Musa (a.s.) in veertig nachten." },
+    { id: "n-p-j26", category: "profeten", level: "junior", tier: 3, question: "Wat gaf Yaqub (a.s.) zijn gezichtsvermogen terug toen hij door verdriet blind was geworden?", options: ["Water van Zamzam", "Het hemd van Yusuf (a.s.)", "Een medicijn van Egypte", "Een zachte doek"], answer: 1, explanation: "Het hemd van Yusuf (a.s.) werd op zijn gezicht gelegd. Met Allah's toestemming kon hij weer zien." },
+    { id: "n-p-j27", category: "profeten", level: "junior", tier: 3, question: "Waarheen wilde de zoon van Nuh (a.s.) vluchten, in plaats van de ark in te gaan?", options: ["Naar een grot", "Naar een bos", "Naar een berg", "Naar een eiland"], answer: 2, explanation: "Hij dacht dat een berg hem zou beschermen. Maar alleen Allah kan redden." },
+    { id: "n-p-j28", category: "profeten", level: "junior", tier: 3, question: "Hoe lang kon Zakariyya (a.s.) niet met mensen praten, als teken dat Allah zijn gebed had verhoord?", options: ["Een uur", "Zeven dagen", "Een maand", "Drie dagen"], answer: 3, explanation: "Als teken van het nieuws over zijn zoon kon Zakariyya (a.s.) drie dagen niet met mensen spreken, behalve met gebaren." },
+    { id: "n-p-e1", category: "profeten", level: "expert", tier: 1, question: "Welke van deze soera's is vernoemd naar een profeet?", options: ["Soera Ibrahim", "Soera Al-Hajj", "Soera Al-Fil", "Soera Al-Ahzab"], answer: 0, explanation: "Soera Ibrahim (14) draagt zijn naam. Ook Yunus, Hud, Yusuf en Nuh hebben een soera naar zich genoemd." },
+    { id: "n-p-e2", category: "profeten", level: "expert", tier: 1, question: "Welke titel wordt in de Koran aan Isa (a.s.) gegeven?", options: ["Al-Kalim", "Al-Masih (de Messias)", "Al-Khalil", "Al-Amin"], answer: 1, explanation: "In de Koran wordt Isa (a.s.) 'Al-Masih' genoemd, onder meer in Soera Ali 'Imran. Hij is de zoon van Maryam." },
+    { id: "n-p-e3", category: "profeten", level: "expert", tier: 1, question: "Tussen welke twee heuvels liep Hajar, op zoek naar water voor haar zoon Ismail (a.s.)?", options: ["Uhud en Hira", "Arafat en Mina", "Safa en Marwa", "Thawr en Nur"], answer: 2, explanation: "Hajar liep zeven keer tussen Safa en Marwa. Daarna liet Allah Zamzam ontspringen." },
+    { id: "n-p-e4", category: "profeten", level: "expert", tier: 1, question: "Welke profeet wordt in de Koran ook 'Israël' genoemd, naar wie de Banu Israel zijn vernoemd?", options: ["Ishaq (a.s.)", "Musa (a.s.)", "Yusuf (a.s.)", "Yaqub (a.s.)"], answer: 3, explanation: "Israël was de bijnaam van Yaqub (a.s.). De Banu Israel zijn zijn nageslacht." },
+    { id: "n-p-e5", category: "profeten", level: "expert", tier: 1, question: "Welke vrouw wordt als enige met haar eigen naam in de Koran genoemd?", options: ["Maryam", "Hajar", "Asiya", "Khadija (r.a.)"], answer: 0, explanation: "Alleen Maryam wordt met naam in de Koran genoemd. Bovendien is Soera Maryam naar haar vernoemd." },
+    { id: "n-p-e6", category: "profeten", level: "expert", tier: 1, question: "Onder welke bijnaam wordt Yunus (a.s.) in de Koran aangeduid?", options: ["Dhul-Kifl", "Dhun-Nun (de man van de vis)", "Dhul-Qarnayn", "Dhul-Jalal"], answer: 1, explanation: "In Soera Al-Anbiya 21:87 wordt Yunus (a.s.) Dhun-Nun genoemd." },
+    { id: "n-p-e7", category: "profeten", level: "expert", tier: 1, question: "Wie was de vader van Sulayman (a.s.) en ook een profeet-koning?", options: ["Ishaq (a.s.)", "Yaqub (a.s.)", "Dawud (a.s.)", "Harun (a.s.)"], answer: 2, explanation: "Sulayman (a.s.) erfde van zijn vader Dawud (a.s.) kennis en een koninkrijk." },
+    { id: "n-p-e8", category: "profeten", level: "expert", tier: 1, question: "Op welke berg kwam de ark van Nuh (a.s.) tot rust volgens de Koran?", options: ["Toor", "Hira", "Uhud", "Al-Judi"], answer: 3, explanation: "Soera Hud 11:44 vermeldt dat de ark tot rust kwam op Al-Judi." },
+    { id: "n-p-e9", category: "profeten", level: "expert", tier: 2, question: "Welke geschriften, 'de bladen van Ibrahim', worden in de Koran vermeld?", options: ["De Suhuf van Ibrahim", "De Zaboer van Ibrahim", "De Tawrat van Ibrahim", "De Injil van Ibrahim"], answer: 0, explanation: "Soera Al-A'la 87:19 spreekt over de 'bladen van Ibrahim en Musa'. Het zijn geschriften die voor Tora en Evangelie bestonden." },
+    { id: "n-p-e10", category: "profeten", level: "expert", tier: 2, question: "Wat zegt de Koran over de kruisiging van Isa (a.s.)?", options: ["Hij werd gekruisigd en herrees", "Zij doodden hem niet en kruisigden hem niet", "Hij werd gedood en begraven", "Hij stierf in zijn slaap"], answer: 1, explanation: "Soera An-Nisa 4:157 zegt dat het hun slechts onduidelijk gemaakt werd. Allah verhief Isa (a.s.) naar Zich." },
+    { id: "n-p-e11", category: "profeten", level: "expert", tier: 2, question: "Wie in het huis van Fir'aun zei over baby Musa (a.s.): 'Een vreugde voor mij en voor jou, dood hem niet'?", options: ["De zus van Musa", "De min", "De vrouw van Fir'aun", "Een dienaar van Fir'aun"], answer: 2, explanation: "Soera Al-Qasas 28:9 vermeldt dit. Zij wordt Asiya genoemd in de overlevering." },
+    { id: "n-p-e12", category: "profeten", level: "expert", tier: 2, question: "Hoe prijst Allah Ismail (a.s.) in Soera Maryam?", options: ["Als de wijste in zijn volk", "Als de sterkste ruiter", "Als de vroegste dienaar", "Als getrouw aan zijn belofte"], answer: 3, explanation: "Soera Maryam 19:54 noemt Ismail (a.s.) 'getrouw aan zijn belofte' en een profeet en boodschapper." },
+    { id: "n-p-e13", category: "profeten", level: "expert", tier: 2, question: "Waarom vroeg Musa (a.s.) aan Allah om Harun (a.s.) als steun te sturen?", options: ["Omdat Harun welsprekender was", "Omdat Harun rijker was", "Omdat Harun sterker was", "Omdat Harun Fir'aun kende"], answer: 0, explanation: "Soera Al-Qasas 28:34 vermeldt dat Harun (a.s.) beter sprak dan Musa (a.s.)." },
+    { id: "n-p-e14", category: "profeten", level: "expert", tier: 3, question: "Wat deden de bergen en de vogels volgens Soera Sad samen met Dawud (a.s.)?", options: ["Zij beschermden hem tegen vijanden", "Zij lofprezen Allah met hem", "Zij volgden hem naar de strijd", "Zij brachten hem water en voedsel"], answer: 1, explanation: "Soera Sad 38:18-19 vermeldt dat de bergen en de verzamelde vogels samen met Dawud (a.s.) Allah verheerlijkten." },
+    { id: "n-p-e15", category: "profeten", level: "expert", tier: 3, question: "Welk hemellichaam zag Ibrahim (a.s.) als eerste, toen hij in Soera Al-An'am het volk redeneerde?", options: ["De maan", "De zon", "Een ster", "Een komeet"], answer: 2, explanation: "Soera Al-An'am 6:76-78: eerst een ster, dan de maan, dan de zon. Hij zei dat hij onschuldig is aan afgoden." },
+    { id: "n-p-e16", category: "profeten", level: "expert", tier: 3, question: "Welke afspraak maakte Musa (a.s.) met zijn schoonvader in Madyan?", options: ["Drie jaar dienst", "Zeven jaar dienst", "Veertig jaar dienst", "Acht jaar dienst, naar keuze tien"], answer: 3, explanation: "Soera Al-Qasas 28:27 noemt acht jaar, en tien als hij dat uit eigen wil doet." },
+    { id: "n-p-e17", category: "profeten", level: "expert", tier: 3, question: "Hoe worden de directe volgelingen van Isa (a.s.) in de Koran genoemd?", options: ["Al-Hawariyyun", "Al-Ansar", "Al-Muhajirun", "Al-Asbat"], answer: 0, explanation: "Soera Ali 'Imran 3:52 vermeldt dat de Hawariyyun zeiden: wij zijn helpers van Allah." },
+    { id: "n-p-e18", category: "profeten", level: "expert", tier: 4, question: "Welke profeet ontmoette Profeet Muhammad ﷺ in de zesde hemel tijdens de Mi'raj?", options: ["Harun (a.s.)", "Idris (a.s.)", "Musa (a.s.)", "Ibrahim (a.s.)"], answer: 2, explanation: "Volgens de overlevering (Bukhari en Muslim) ontmoette hij Musa (a.s.) in de zesde hemel, en Ibrahim (a.s.) in de zevende." },
+    { id: "n-p-e19", category: "profeten", level: "expert", tier: 4, question: "Welk beroep had Zakariyya (a.s.) volgens een authentieke hadith?", options: ["Herder", "Handelaar", "Smid", "Timmerman"], answer: 3, explanation: "Sahih Muslim vermeldt dat Zakariyya (a.s.) timmerman was. Zo verdiende hij zijn brood." },
+    { id: "n-p-e20", category: "profeten", level: "expert", tier: 4, question: "In welke soera vraagt Nuh (a.s.) naar zijn verdronken zoon en antwoordt Allah dat deze niet tot zijn familie behoort?", options: ["Soera Hud", "Soera Nuh", "Soera Al-A'raf", "Soera Al-Mu'minun"], answer: 0, explanation: "Soera Hud 11:45-46 bevat dit gesprek. Allah zegt dat 'het geen goede daad was'." },
+    // ───── DE 5 ZUILEN & AQEEDA ─────
+    { id: "n-z-j1", category: "zuilen", level: "junior", tier: 1, question: "Welke engel bracht de Koran naar de Profeet ﷺ?", options: ["Jibriel (a.s.)", "Mikaa’iel (a.s.)", "Israafiel (a.s.)", "Malik (a.s.)"], answer: 0, explanation: "Engel Jibriel (a.s.) bracht de woorden van Allah naar de Profeet ﷺ." },
+    { id: "n-z-j2", category: "zuilen", level: "junior", tier: 1, question: "Welk heilig boek is aan de Profeet Mohammed ﷺ geschonken?", options: ["De Tawrat", "De Koran", "De Injiel", "De Zabur"], answer: 1, explanation: "Allah gaf de Koran aan de Profeet ﷺ. Het is het laatste heilige boek." },
+    { id: "n-z-j3", category: "zuilen", level: "junior", tier: 1, question: "Hoe heet de maaltijd vóór zonsopgang tijdens het vasten?", options: ["Iftar", "Walima", "Suhoor", "Aqiqah"], answer: 2, explanation: "Suhoor eten we vroeg in de ochtend, zodat we sterk zijn tijdens het vasten." },
+    { id: "n-z-j4", category: "zuilen", level: "junior", tier: 1, question: "Hoe heet de maaltijd waarmee we het vasten openen bij zonsondergang?", options: ["Suhoor", "Walima", "Eid", "Iftar"], answer: 3, explanation: "Bij zonsondergang openen we het vasten met Iftar, vaak met dadels en water." },
+    { id: "n-z-j5", category: "zuilen", level: "junior", tier: 1, question: "Hoe heet de oproep die ons uitnodigt om te komen bidden?", options: ["De Adhan", "De Takbir", "De Tasbih", "De Dhikr"], answer: 0, explanation: "De Adhan wordt door de muadhin geroepen om te laten weten dat het gebedstijd is." },
+    { id: "n-z-j6", category: "zuilen", level: "junior", tier: 1, question: "Wie is de laatste profeet die Allah naar de mensen heeft gestuurd?", options: ["Ibrahim (a.s.)", "Mohammed ﷺ", "Musa (a.s.)", "Isa (a.s.)"], answer: 1, explanation: "Profeet Mohammed ﷺ is de laatste profeet. Na hem komt er geen profeet meer." },
+    { id: "n-z-j7", category: "zuilen", level: "junior", tier: 1, question: "Welk feest heet het Offerfeest?", options: ["Eid al-Fitr", "Laylat al-Qadr", "Eid al-Adha", "Isra en Mi’raj"], answer: 2, explanation: "Tijdens Eid al-Adha denken we aan de gehoorzaamheid van Ibrahim (a.s.) en delen we eten met anderen." },
+    { id: "n-z-j8", category: "zuilen", level: "junior", tier: 1, question: "Op welke dag van de week bidden moslims samen het Jumu’ah-gebed?", options: ["Zaterdag", "Zondag", "Donderdag", "Vrijdag"], answer: 3, explanation: "Op vrijdag komen moslims samen in de moskee voor het speciale Jumu’ah-gebed." },
+    { id: "n-z-j9", category: "zuilen", level: "junior", tier: 1, question: "Welke begroeting zeggen moslims tegen elkaar? Het betekent: vrede zij met jou.", options: ["As-salamu alaykum", "Allahu Akbar", "Alhamdulillah", "Bismillah"], answer: 0, explanation: "As-salamu alaykum is een mooie wens van vrede. Het antwoord is: Wa alaykum as-salam." },
+    { id: "n-z-j10", category: "zuilen", level: "junior", tier: 1, question: "Wat zeggen we voordat we beginnen met eten?", options: ["Alhamdulillah", "Bismillah", "Insha’Allah", "As-salamu alaykum"], answer: 1, explanation: "Bismillah betekent: in de naam van Allah. We beginnen er mooi mee." },
+    { id: "n-z-j12", category: "zuilen", level: "junior", tier: 1, question: "Hoe heet de eerste soera van de Koran?", options: ["Al-Baqarah", "Al-Ikhlas", "An-Nas", "Al-Fatiha"], answer: 3, explanation: "Al-Fatiha betekent: de Opening. We lezen hem in elk gebed." },
+    { id: "n-z-j13", category: "zuilen", level: "junior", tier: 1, question: "Welke kleur heeft de doek (kiswa) die de Ka’ba bedekt?", options: ["Zwart", "Groen", "Wit", "Blauw"], answer: 0, explanation: "De Ka’ba is bedekt met een zwarte doek met gouden letters erop." },
+    { id: "n-z-j14", category: "zuilen", level: "junior", tier: 1, question: "Hoe heet de plek waar moslims samen bidden?", options: ["De kerk", "De moskee", "De synagoge", "De tempel"], answer: 1, explanation: "In de moskee bidden moslims samen en leren ze over de Islam." },
+    { id: "n-z-j15", category: "zuilen", level: "junior", tier: 2, question: "Welke twee profeten bouwden samen de Ka’ba?", options: ["Nuh en Hud (a.s.)", "Musa en Harun (a.s.)", "Ibrahim en Ismail (a.s.)", "Yusuf en Yaqub (a.s.)"], answer: 2, explanation: "Ibrahim (a.s.) en zijn zoon Ismail (a.s.) bouwden de Ka’ba, het huis van Allah." },
+    { id: "n-z-j16", category: "zuilen", level: "junior", tier: 2, question: "Welke engel zal op de laatste dag op de bazuin (Soer) blazen?", options: ["Jibriel (a.s.)", "Mikaa’iel (a.s.)", "Malik (a.s.)", "Israafiel (a.s.)"], answer: 3, explanation: "Engel Israafiel (a.s.) zal blazen op bevel van Allah." },
+    { id: "n-z-j17", category: "zuilen", level: "junior", tier: 2, question: "Waaruit heeft Allah de engelen geschapen?", options: ["Uit licht", "Uit vuur", "Uit klei", "Uit water"], answer: 0, explanation: "De Profeet ﷺ vertelde dat de engelen uit licht zijn geschapen." },
+    { id: "n-z-j18", category: "zuilen", level: "junior", tier: 2, question: "Aan welke profeet gaf Allah de Tawrat?", options: ["Dawud (a.s.)", "Musa (a.s.)", "Ibrahim (a.s.)", "Yusuf (a.s.)"], answer: 1, explanation: "Allah gaf de Tawrat aan Profeet Musa (a.s.)." },
+    { id: "n-z-j19", category: "zuilen", level: "junior", tier: 2, question: "Hoeveel rak’ahs (gebedseenheden) heeft het Fajr-gebed?", options: ["3", "4", "2", "5"], answer: 2, explanation: "Het ochtendgebed Fajr is kort: het heeft 2 rak’ahs." },
+    { id: "n-z-j20", category: "zuilen", level: "junior", tier: 2, question: "Hoeveel rak’ahs heeft het Maghrib-gebed?", options: ["2", "4", "5", "3"], answer: 3, explanation: "Het Maghrib-gebed na zonsondergang heeft 3 rak’ahs." },
+    { id: "n-z-j21", category: "zuilen", level: "junior", tier: 2, question: "Hoe heet het lopen rond de Ka’ba tijdens de Hadj?", options: ["De Tawaaf", "Het Sa’ee", "De Ihram", "De Takbir"], answer: 0, explanation: "Bij de Tawaaf lopen pelgrims zevenmaal rond de Ka’ba." },
+    { id: "n-z-j22", category: "zuilen", level: "junior", tier: 2, question: "Wie was de eerste muadhin (gebedsroeper) in de Islam?", options: ["Abu Bakr (r.a.)", "Bilal ibn Rabah (r.a.)", "Umar (r.a.)", "Ali (r.a.)"], answer: 1, explanation: "Bilal (r.a.) had een mooie stem en riep als eerste de Adhan." },
+    { id: "n-z-j23", category: "zuilen", level: "junior", tier: 3, question: "Welk verplicht gebed ligt tussen Dhuhr en Maghrib?", options: ["Fajr", "Isha", "Asr", "Tahajjud"], answer: 2, explanation: "Het Asr-gebed bidden we in de namiddag, na Dhuhr en voor Maghrib." },
+    { id: "n-z-j24", category: "zuilen", level: "junior", tier: 3, question: "Aan welke profeet gaf Allah de Injiel?", options: ["Musa (a.s.)", "Dawud (a.s.)", "Ibrahim (a.s.)", "Isa (a.s.)"], answer: 3, explanation: "De Injiel werd door Allah gegeven aan Profeet Isa (a.s.)." },
+    { id: "n-z-j25", category: "zuilen", level: "junior", tier: 3, question: "Hoe heet de bron bij de Ka’ba waar water ontsprong voor Ismail (a.s.) en zijn moeder?", options: ["Zamzam", "Al-Kawthar", "Mina", "Muzdalifah"], answer: 0, explanation: "Allah liet het Zamzam-water ontspringen. Pelgrims drinken er nog steeds van." },
+    { id: "n-z-j26", category: "zuilen", level: "junior", tier: 3, question: "Tussen welke twee heuvels lopen pelgrims tijdens de Hadj heen en weer?", options: ["Arafah en Mina", "Safa en Marwa", "Hira en Thawr", "Uhud en Safa"], answer: 1, explanation: "Pelgrims lopen zeven keer tussen de heuvels Safa en Marwa." },
+    { id: "n-z-j27", category: "zuilen", level: "junior", tier: 3, question: "Hoe heet de richting waarin moslims bidden?", options: ["De Mihrab", "De Minbar", "De Qibla", "De Minaret"], answer: 2, explanation: "De Qibla is de richting van de Ka’ba in Mekka." },
+    { id: "n-z-j28", category: "zuilen", level: "junior", tier: 3, question: "Hoe heet de aalmoes die we geven aan het einde van Ramadan, vóór het Eid-gebed?", options: ["Zakaat al-Maal", "Qurbani", "Sadaqah jariyah", "Zakaat al-Fitr"], answer: 3, explanation: "Zakaat al-Fitr helpt arme mensen om ook Eid te kunnen vieren." },
+    { id: "n-z-e1", category: "zuilen", level: "expert", tier: 1, question: "Welke soera noemde de Profeet ﷺ gelijk aan een derde van de Koran, omdat zij de zuivere eenheid van Allah behandelt?", options: ["Al-Ikhlas", "Al-Kafirun", "Al-Falaq", "Al-Fatiha"], answer: 0, explanation: "Volgens een overlevering in Sahih al-Bukhari is Soera Al-Ikhlas gelijk aan een derde van de Koran. Zij benadrukt dat Allah de Ene is." },
+    { id: "n-z-e2", category: "zuilen", level: "expert", tier: 1, question: "Welke zuil noemt de Profeet ﷺ in de bekende hadith over de vijf zuilen direct na de Shahada?", options: ["De Zakaat", "Het gebed (Salaat)", "Het vasten (Sawm)", "De Hadj"], answer: 1, explanation: "In de hadith over de vijf zuilen volgt het gebed op de Shahada. Dit onderstreept het belang van de salaat als band tussen dienaar en Schepper." },
+    { id: "n-z-e3", category: "zuilen", level: "expert", tier: 1, question: "Hoeveel verplichte rak’ahs heeft het Dhuhr-gebed voor een niet-reizende moslim?", options: ["2", "3", "4", "5"], answer: 2, explanation: "Dhuhr bestaat uit vier verplichte rak’ahs. Ter vergelijking: Fajr heeft er twee, Maghrib drie." },
+    { id: "n-z-e4", category: "zuilen", level: "expert", tier: 1, question: "In welke maand is volgens Soera Al-Baqarah 2:185 de Koran neergezonden?", options: ["Dhul-Hijjah", "Muharram", "Shawwal", "Ramadan"], answer: 3, explanation: "Allah zegt dat het de maand Ramadan is waarin de Koran werd neergezonden als leidraad voor de mensen. Daarom is Ramadan ook de maand van recitatie." },
+    { id: "n-z-e5", category: "zuilen", level: "expert", tier: 1, question: "Hoe heet de rituele wassing van het hele lichaam, bijvoorbeeld na janaba?", options: ["Ghusl", "Wudhu", "Tayammum", "Istinja"], answer: 0, explanation: "Ghusl is de volledige rituele reiniging. Wudhu is de kleinere reiniging van onder meer gezicht, handen en voeten." },
+    { id: "n-z-e6", category: "zuilen", level: "expert", tier: 1, question: "Wat betekent het Arabische woord ‘Islam’ letterlijk?", options: ["Vrede onder mensen", "Overgave aan Allah", "Zuivering van het hart", "Gehoorzaamheid aan de leider"], answer: 1, explanation: "Islam betekent overgave of onderwerping aan Allah. Verwant is het woord salaam, vrede." },
+    { id: "n-z-e7", category: "zuilen", level: "expert", tier: 1, question: "Welke soera is de langste van de Koran?", options: ["Aal-Imran", "An-Nisa", "Al-Baqarah", "Al-Ma’idah"], answer: 2, explanation: "Soera Al-Baqarah (nr. 2) heeft 286 verzen en is de langste soera. Ze bevat onder meer Ayat al-Kursi." },
+    { id: "n-z-e8", category: "zuilen", level: "expert", tier: 1, question: "Welke maand volgt direct op Ramadan en begint met Eid al-Fitr?", options: ["Rajab", "Sha’ban", "Dhul-Qa’dah", "Shawwal"], answer: 3, explanation: "Op de eerste dag van Shawwal wordt Eid al-Fitr gevierd. Shawwal volgt op Ramadan, Sha’ban gaat eraan vooraf." },
+    { id: "n-z-e9", category: "zuilen", level: "expert", tier: 2, question: "Welk boek is volgens de Koran aan Dawud (a.s.) gegeven?", options: ["De Zabur", "De Tawrat", "De Injiel", "De Suhuf"], answer: 0, explanation: "De Koran vermeldt dat Allah aan Dawud (a.s.) de Zabur gaf (o.a. Soera An-Nisa 4:163). Het hoort bij de geopenbaarde boeken waarin moslims geloven." },
+    { id: "n-z-e10", category: "zuilen", level: "expert", tier: 2, question: "Op welke dag van Dhul-Hijjah staan de pelgrims op de vlakte van ‘Arafah?", options: ["De 8e", "De 9e", "De 10e", "De 12e"], answer: 1, explanation: "De dag van ‘Arafah is de 9e van Dhul-Hijjah. De volgende dag, de 10e, begint Eid al-Adha." },
+    { id: "n-z-e11", category: "zuilen", level: "expert", tier: 2, question: "Welke reiniging staat de Koran toe wanneer er geen water is of men het niet kan gebruiken?", options: ["Ghusl", "Istinja", "Tayammum", "Taharah al-Ihram"], answer: 2, explanation: "Tayammum (reiniging met zuivere aarde) wordt genoemd in o.a. Soera Al-Ma’idah 5:6. Het is een voorbeeld van de verlichting die de Islam biedt." },
+    { id: "n-z-e12", category: "zuilen", level: "expert", tier: 2, question: "Hoe worden de engelen die de daden van de mens optekenen genoemd in Soera Al-Infitar?", options: ["Beschermers van de Troon", "Bewakers van het Paradijs", "Dragers van de Troon", "Edele schrijvers (Kiraaman Kaatibien)"], answer: 3, explanation: "Soera Al-Infitar 82:10-12 spreekt over bewakers, edele schrijvers, die weten wat jullie doen. Dit herinnert de gelovige aan verantwoordelijkheid." },
+    { id: "n-z-e13", category: "zuilen", level: "expert", tier: 2, question: "Uit hoeveel dagen kan een maand in de islamitische maankalender bestaan?", options: ["29 of 30", "28 of 29", "30 of 31", "Altijd 30"], answer: 0, explanation: "Een maand begint met de nieuwe maan en duurt 29 of 30 dagen. Dat geldt ook voor Ramadan." },
+    { id: "n-z-e14", category: "zuilen", level: "expert", tier: 3, question: "Welke zuil is volgens Soera Aal-Imran 3:97 slechts eenmaal verplicht voor wie er de middelen toe heeft?", options: ["De Zakaat", "De Hadj", "Het vasten", "De Shahada"], answer: 1, explanation: "Allah verplicht de bedevaart naar het Huis voor wie de weg ernaartoe kan vinden. De Profeet ﷺ leerde dat zij eenmaal in het leven verplicht is." },
+    { id: "n-z-e15", category: "zuilen", level: "expert", tier: 3, question: "Hoeveel gebeden werden aanvankelijk voorgeschreven tijdens de Mi’raj, voordat dit werd verminderd tot vijf?", options: ["30", "40", "50", "25"], answer: 2, explanation: "Volgens Sahih al-Bukhari kwamen er na verzoeken om verlichting uiteindelijk vijf gebeden, met de beloning van vijftig. Dit toont Allah’s barmhartigheid." },
+    { id: "n-z-e16", category: "zuilen", level: "expert", tier: 3, question: "Hoe heet de brug over de Hel die volgens de overlevering iedereen op de Dag des Oordeels moet passeren?", options: ["Al-Mizaan", "Al-Hawd", "Al-A’raaf", "As-Siraat"], answer: 3, explanation: "As-Siraat is de brug over de Hel. Al-Mizaan is de weegschaal van daden, Al-Hawd het bekken van de Profeet ﷺ." },
+    { id: "n-z-e17", category: "zuilen", level: "expert", tier: 3, question: "Welke soera van de Koran begint als enige niet met de Basmalah?", options: ["At-Tawbah", "Al-Anfal", "Yunus", "Al-A’raf"], answer: 0, explanation: "Soera At-Tawbah (nr. 9) begint zonder Bismillah. Daarom wordt zij ook Bara’ah genoemd." },
+    { id: "n-z-e18", category: "zuilen", level: "expert", tier: 3, question: "Hoeveel profeten worden met naam in de Koran genoemd?", options: ["20", "25", "30", "40"], answer: 1, explanation: "De Koran noemt 25 profeten bij naam, van Adam tot Mohammed ﷺ. Er zijn er volgens de overlevering veel meer gezonden." },
+    { id: "n-z-e19", category: "zuilen", level: "expert", tier: 4, question: "Welke twee soera’s worden samen ‘Al-Mu’awwidhatayn’ (de twee toevluchtsoera’s) genoemd?", options: ["Al-Ikhlas en Al-Falaq", "An-Nas en Al-Kawthar", "Al-Falaq en An-Nas", "Al-Kafirun en An-Nas"], answer: 2, explanation: "Soera Al-Falaq (113) en An-Nas (114) vragen om toevlucht bij Allah. De Profeet ﷺ reciteerde ze regelmatig voor het slapen." },
+    { id: "n-z-e20", category: "zuilen", level: "expert", tier: 4, question: "Hoeveel ‘sleutels van het Ghaib’ (het ongeziene) noemt de Profeet ﷺ, met verwijzing naar Soera Luqman 31:34?", options: ["3", "7", "10", "5"], answer: 3, explanation: "Volgens Sahih al-Bukhari zijn er vijf sleutels van het ongeziene die alleen Allah kent, waaronder het uur van de Dag des Oordeels en wat in de baarmoeders is." },
+    { id: "n-z-e21", category: "zuilen", level: "expert", tier: 4, question: "Welke vraag volgt in de Hadith van Jibriel direct na de vraag over Iman?", options: ["De vraag over Ihsaan", "De vraag over het Uur", "De vraag over Zakaat", "De vraag over Hadj"], answer: 0, explanation: "In de hadith vraagt Jibriel achtereenvolgens naar Islam, Iman, Ihsaan en het Uur. Zo ordent de hadith de drie niveaus van de religie." },
+    // ───── SEERAH & METGEZELLEN ─────
+    { id: "n-s-j1", category: "seerah", level: "junior", tier: 1, question: "Hoe heette de vader van de Profeet ﷺ?", options: ["Abdullah", "Abdul Muttalib", "Abu Talib", "Abbas"], answer: 0, explanation: "Zijn vader heette Abdullah. Hij overleed al voordat de Profeet ﷺ geboren werd." },
+    { id: "n-s-j2", category: "seerah", level: "junior", tier: 1, question: "Wie was de vierde kalief na de Profeet ﷺ?", options: ["Uthman ibn Affan (r.a.)", "Zubayr ibn al-Awwam (r.a.)", "Talha ibn Ubaydullah (r.a.)", "Ali ibn Abi Talib (r.a.)"], answer: 3, explanation: "Ali (r.a.) was een neef van de Profeet ﷺ en werd de vierde kalief." },
+    { id: "n-s-j3", category: "seerah", level: "junior", tier: 1, question: "Hoe heette de dochter van Abu Bakr (r.a.) die met de Profeet ﷺ trouwde?", options: ["Hafsa (r.a.)", "Zaynab (r.a.)", "Aisha (r.a.)", "Umm Salama (r.a.)"], answer: 2, explanation: "Aisha (r.a.) was de dochter van Abu Bakr. Ze leerde veel van de Profeet ﷺ en vertelde dat aan anderen door." },
+    { id: "n-s-j4", category: "seerah", level: "junior", tier: 1, question: "Naar welke moskee in Jeruzalem reisde de Profeet ﷺ tijdens de Isra-reis?", options: ["Quba", "Al-Aqsa", "Al-Nabawi", "Al-Haram"], answer: 1, explanation: "In één nacht reisde de Profeet ﷺ van Mekka naar de Al-Aqsa-moskee in Jeruzalem. Allah liet hem dit wonder beleven." },
+    { id: "n-s-j5", category: "seerah", level: "junior", tier: 1, question: "Welke oom van de Profeet ﷺ werd 'de Leeuw van Allah' genoemd?", options: ["Abbas (r.a.)", "Hamza (r.a.)", "Abu Lahab", "Abu Talib"], answer: 1, explanation: "Hamza (r.a.) was sterk en moedig. Hij verdedigde de Profeet ﷺ en de islam." },
+    { id: "n-s-j6", category: "seerah", level: "junior", tier: 1, question: "Welke metgezel kreeg de bijnaam 'Het Zwaard van Allah'?", options: ["Khalid ibn al-Walid (r.a.)", "Zayd ibn Haritha (r.a.)", "Sa'd ibn Abi Waqqas (r.a.)", "Amr ibn al-As (r.a.)"], answer: 0, explanation: "Khalid ibn al-Walid (r.a.) was een dappere legeraanvoerder. De Profeet ﷺ gaf hem deze eervolle bijnaam." },
+    { id: "n-s-j7", category: "seerah", level: "junior", tier: 1, question: "Hoe heten de helpers uit Medina die de Profeet ﷺ en de moslims uit Mekka welkom heetten?", options: ["De Muhajirun", "De Quraysh", "De Habasha", "De Ansar"], answer: 3, explanation: "De Ansar betekent 'de helpers'. Ze deelden hun huis en bezittingen met hun broeders uit Mekka." },
+    { id: "n-s-j8", category: "seerah", level: "junior", tier: 1, question: "Hoe heten de moslims die van Mekka naar Medina emigreerden?", options: ["De Ansar", "De Tabi'un", "De Muhajirun", "De Quraysh"], answer: 2, explanation: "Muhajirun betekent 'de emigranten'. Zij lieten hun huis achter om Allah te kunnen dienen." },
+    { id: "n-s-j9", category: "seerah", level: "junior", tier: 1, question: "Bij welke berg hield de Profeet ﷺ zijn Afscheidspreek tijdens de Hadj?", options: ["Uhud", "Safa", "Arafat", "Hira"], answer: 2, explanation: "De Profeet ﷺ sprak bij Arafat tot duizenden pelgrims. Hij vroeg hen onder andere om eerlijk en vriendelijk voor elkaar te zijn." },
+    { id: "n-s-j10", category: "seerah", level: "junior", tier: 1, question: "Welk werk deed de Profeet ﷺ als jongen?", options: ["Vissen", "Schapen hoeden", "Brood bakken", "Water verkopen"], answer: 1, explanation: "De Profeet ﷺ was als jongen herder en zorgde voor schapen. Zo leerde hij geduld en zorg voor anderen." },
+    { id: "n-s-j11", category: "seerah", level: "junior", tier: 1, question: "Hoe heette Medina vroeger, voordat de Profeet ﷺ er aankwam?", options: ["Yathrib", "Taif", "Badr", "Khaybar"], answer: 0, explanation: "De stad heette eerst Yathrib. Later werd ze bekend als Medina, de stad van de Profeet ﷺ." },
+    { id: "n-s-j12", category: "seerah", level: "junior", tier: 1, question: "Voor wie werkte de Profeet ﷺ als eerlijke handelaar, voordat ze met hem trouwde?", options: ["Aisha (r.a.)", "Fatima (r.a.)", "Sawda (r.a.)", "Khadija (r.a.)"], answer: 3, explanation: "Khadija (r.a.) was een rijke handelaarster. Ze zag hoe eerlijk de Profeet ﷺ was en trouwde later met hem." },
+    { id: "n-s-j13", category: "seerah", level: "junior", tier: 1, question: "Welke engel bracht de woorden van Allah naar de Profeet ﷺ?", options: ["Mikail (a.s.)", "Israfil (a.s.)", "Azrail (a.s.)", "Jibril (a.s.)"], answer: 3, explanation: "Jibril (a.s.) bracht de Koran van Allah naar de Profeet ﷺ. Hij komt vaak voor in de verhalen over het leven van de Profeet ﷺ." },
+    { id: "n-s-j14", category: "seerah", level: "junior", tier: 1, question: "Welke bijnaam kreeg Abu Bakr (r.a.), omdat hij altijd geloofde wat de Profeet ﷺ zei?", options: ["Al-Amien", "Al-Faroeq", "As-Siddiq", "Dhun-Noorayn"], answer: 2, explanation: "As-Siddiq betekent 'de waarheidsgetrouwe'. Abu Bakr (r.a.) geloofde de Profeet ﷺ altijd, ook in moeilijke tijden." },
+    { id: "n-s-j15", category: "seerah", level: "junior", tier: 2, question: "Welke grootvader zorgde voor de Profeet ﷺ nadat zijn moeder was overleden?", options: ["Abu Sufyan", "Abdul Muttalib", "Abdullah", "Abu Lahab"], answer: 1, explanation: "Abdul Muttalib zorgde liefdevol voor zijn kleinzoon. Toen hij overleed, nam oom Abu Talib de zorg over." },
+    { id: "n-s-j16", category: "seerah", level: "junior", tier: 2, question: "Hoe heette de zoon van de Profeet ﷺ die al als klein kind overleed?", options: ["Ibrahim", "Hasan", "Husayn", "Qasim"], answer: 0, explanation: "Ibrahim was de zoon van de Profeet ﷺ en Maria (r.a.). De Profeet ﷺ was erg verdrietig toen hij overleed." },
+    { id: "n-s-j17", category: "seerah", level: "junior", tier: 2, question: "Naar welke stad ging de Profeet ﷺ om mensen uit te nodigen voor de islam, waar hij werd weggejaagd?", options: ["Ta'if", "Medina", "Jeruzalem", "Yemen"], answer: 0, explanation: "In Ta'if luisterden de mensen niet en werd de Profeet ﷺ weggejaagd. Toch bleef hij geduldig en vriendelijk." },
+    { id: "n-s-j18", category: "seerah", level: "junior", tier: 2, question: "Hoe heette de vrouw die als baby voor de Profeet ﷺ zorgde als voedster?", options: ["Amina", "Sumayya", "Barakah", "Halima"], answer: 3, explanation: "Halima zorgde in haar dorp voor de kleine Muhammad ﷺ. Zo groeide hij op in de frisse lucht van de woestijn." },
+    { id: "n-s-j19", category: "seerah", level: "junior", tier: 2, question: "In welke veldslag werd Hamza (r.a.) martelaar?", options: ["De Slag bij Badr", "De Slag bij Tabuk", "De Slag bij Uhud", "De Slag bij Khandaq"], answer: 2, explanation: "Hamza (r.a.) sneuvelde bij Uhud. De Profeet ﷺ was daar erg verdrietig om." },
+    { id: "n-s-j20", category: "seerah", level: "junior", tier: 2, question: "Wie kocht Bilal (r.a.) vrij toen hij als slaaf werd gemarteld?", options: ["Umar (r.a.)", "Abu Bakr (r.a.)", "Ali (r.a.)", "Uthman (r.a.)"], answer: 1, explanation: "Abu Bakr (r.a.) kocht Bilal vrij en maakte hem een vrij man. Bilal bleef trouw aan zijn geloof." },
+    { id: "n-s-j21", category: "seerah", level: "junior", tier: 2, question: "Hoe heette de dochter van Umar (r.a.) die met de Profeet ﷺ trouwde?", options: ["Aisha (r.a.)", "Hafsa (r.a.)", "Zaynab (r.a.)", "Maymuna (r.a.)"], answer: 1, explanation: "Hafsa (r.a.) was de dochter van Umar. Ze stond bekend als een vrouw die veel las en de Koran goed bewaarde." },
+    { id: "n-s-j22", category: "seerah", level: "junior", tier: 2, question: "Naar welk land stuurde de Profeet ﷺ de eerste moslims om veilig te zijn voor vervolging?", options: ["Abessinië (Ethiopië)", "Egypte", "Syrië", "Perzië"], answer: 0, explanation: "De koning van Abessinië was rechtvaardig en beschermde de moslims. Daar konden ze veilig bidden." },
+    { id: "n-s-j23", category: "seerah", level: "junior", tier: 3, question: "Wie leidde het gebed in de moskee toen de Profeet ﷺ ziek was?", options: ["Umar (r.a.)", "Ali (r.a.)", "Bilal (r.a.)", "Abu Bakr (r.a.)"], answer: 3, explanation: "De Profeet ﷺ vroeg Abu Bakr (r.a.) om de mensen voor te gaan in het gebed. Dat toonde hoeveel hij hem vertrouwde." },
+    { id: "n-s-j24", category: "seerah", level: "junior", tier: 3, question: "Wie wordt in de Koran genoemd als een felle tegenstander en oom van de Profeet ﷺ?", options: ["Abu Talib", "Abbas", "Abu Lahab", "Hamza"], answer: 2, explanation: "Over Abu Lahab gaat een hele soera, Al-Masad. Hij werkte de Profeet ﷺ tegen." },
+    { id: "n-s-j25", category: "seerah", level: "junior", tier: 3, question: "Welke metgezel vertelde de meeste uitspraken (hadith) van de Profeet ﷺ door?", options: ["Bilal (r.a.)", "Khalid (r.a.)", "Abu Hurayra (r.a.)", "Hamza (r.a.)"], answer: 2, explanation: "Abu Hurayra (r.a.) was altijd dicht bij de Profeet ﷺ om te leren. Hij vertelde daardoor veel hadith door." },
+    { id: "n-s-j26", category: "seerah", level: "junior", tier: 3, question: "Welke metgezel kocht de waterput Rumah in Medina en schonk die aan de moslims?", options: ["Abu Bakr (r.a.)", "Uthman ibn Affan (r.a.)", "Ali ibn Abi Talib (r.a.)", "Bilal (r.a.)"], answer: 1, explanation: "Uthman (r.a.) was heel vrijgevig. Zijn put gaf de mensen in Medina schoon drinkwater." },
+    { id: "n-s-j27", category: "seerah", level: "junior", tier: 3, question: "Hoe heetten de twee kleinzonen van de Profeet ﷺ, zonen van Fatima (r.a.) en Ali (r.a.)?", options: ["Hasan en Husayn", "Ibrahim en Qasim", "Anas en Usama", "Abdullah en Salim"], answer: 0, explanation: "Hasan en Husayn waren zeer geliefd bij de Profeet ﷺ. Hij speelde vaak met hen en hield veel van hen." },
+    { id: "n-s-j28", category: "seerah", level: "junior", tier: 3, question: "Welke vrouw wordt gezien als de eerste moslim die zijn leven gaf voor haar geloof?", options: ["Khadija (r.a.)", "Hafsa (r.a.)", "Aisha (r.a.)", "Sumayya (r.a.)"], answer: 3, explanation: "Sumayya (r.a.) bleef standvastig ondanks de pijn die haar werd aangedaan. Ze is een voorbeeld van moed." },
+    { id: "n-s-e1", category: "seerah", level: "expert", tier: 1, question: "Tot welke stam behoorde de Profeet ﷺ?", options: ["Banu Aws", "Banu Khazraj", "Banu Thaqif", "Quraysh"], answer: 3, explanation: "De Profeet ﷺ behoorde tot de Quraysh, meer bepaald de clan Banu Hashim. De Quraysh hadden de zorg voor de Kaaba in Mekka." },
+    { id: "n-s-e2", category: "seerah", level: "expert", tier: 1, question: "Met welk woord begon de eerste openbaring van de Koran aan de Profeet ﷺ?", options: ["Qul (Zeg)", "Ya ayyuha (O gij)", "Iqra (Lees/Draag voor)", "Bismillah"], answer: 2, explanation: "De eerste verzen van Soera Al-Alaq (96) beginnen met 'Iqra'. Daarmee begon de openbaring van de Koran in de grot Hira." },
+    { id: "n-s-e3", category: "seerah", level: "expert", tier: 1, question: "Hoe oud was de Profeet ﷺ toen hij de eerste openbaring ontving?", options: ["30 jaar", "40 jaar", "25 jaar", "50 jaar"], answer: 1, explanation: "De Profeet ﷺ was ongeveer veertig jaar toen Jibril (a.s.) kwam. Dit geldt in de overlevering als het begin van zijn profeetschap." },
+    { id: "n-s-e4", category: "seerah", level: "expert", tier: 1, question: "Wat gebeurde er bij de verovering van Mekka met de afgodsbeelden rond de Kaaba?", options: ["Ze werden verwijderd en vernietigd", "Ze werden verkocht", "Ze bleven staan", "Ze werden verplaatst naar Medina"], answer: 0, explanation: "De Profeet ﷺ reinigde de Kaaba van de afgoden. Zo werd ze weer een huis voor de aanbidding van de enige God." },
+    { id: "n-s-e5", category: "seerah", level: "expert", tier: 1, question: "Hoe lang duurde de openbaring van de Koran ongeveer?", options: ["Ongeveer 23 jaar", "Ongeveer 10 jaar", "Ongeveer 40 jaar", "Ongeveer 3 jaar"], answer: 0, explanation: "De Koran werd gedurende circa 23 jaar stapsgewijs geopenbaard, in Mekka en in Medina. Zo kon de gemeenschap zich gaandeweg ontwikkelen." },
+    { id: "n-s-e6", category: "seerah", level: "expert", tier: 1, question: "Welke gebeurtenis vormt het beginpunt van de islamitische jaartelling?", options: ["De geboorte van de Profeet ﷺ", "De eerste openbaring", "De verovering van Mekka", "De Hijra naar Medina"], answer: 3, explanation: "Onder kalief Umar (r.a.) werd besloten de jaartelling te laten beginnen bij de Hijra. Het jaar 1 n.H. correspondeert met 622 n.Chr." },
+    { id: "n-s-e7", category: "seerah", level: "expert", tier: 1, question: "In welk bekend jaar werd de Profeet ﷺ volgens de overlevering geboren?", options: ["Het Jaar van het Verdriet", "Het Jaar van de Delegaties", "Het Jaar van de Olifant", "Het Jaar van de Hijra"], answer: 2, explanation: "Soera Al-Fil vertelt over het leger met olifanten dat de Kaaba wilde vernietigen. Volgens de gangbare overlevering werd de Profeet ﷺ in dat jaar geboren." },
+    { id: "n-s-e8", category: "seerah", level: "expert", tier: 1, question: "Wie kreeg onder kalief Abu Bakr (r.a.) de opdracht de Koran te verzamelen?", options: ["Abdullah ibn Abbas (r.a.)", "Zayd ibn Thabit (r.a.)", "Abu Hurayra (r.a.)", "Anas ibn Malik (r.a.)"], answer: 1, explanation: "Zayd ibn Thabit (r.a.) was een schrijver van de openbaring. Hij verzamelde de Koran na de Slag bij Yamama op verzoek van Abu Bakr (r.a.)." },
+    { id: "n-s-e9", category: "seerah", level: "expert", tier: 2, question: "Welke soera wordt gezien als geopenbaard naar aanleiding van het Verdrag van Hudaybiyyah?", options: ["Soera Al-Anfal", "Soera Al-Fath", "Soera Al-Ahzab", "Soera At-Tawbah"], answer: 1, explanation: "Soera Al-Fath (48) werd geopenbaard op de terugweg van Hudaybiyyah. Ze spreekt over een duidelijke overwinning." },
+    { id: "n-s-e10", category: "seerah", level: "expert", tier: 2, question: "Wat gebeurde er tijdens de Eed van Aqaba kort voor de Hijra?", options: ["Mannen uit Medina beloofden de Profeet ﷺ te beschermen", "De Quraysh sloten vrede met de moslims", "De Profeet ﷺ verklaarde de oorlog aan Mekka", "Er werd een nieuwe moskee ingewijd"], answer: 0, explanation: "Bij Aqaba zwoeren inwoners van Yathrib trouw aan de Profeet ﷺ en beloofden hem te beschermen. Dit maakte de Hijra naar Medina mogelijk." },
+    { id: "n-s-e11", category: "seerah", level: "expert", tier: 2, question: "Met welke vrouw trad de Profeet ﷺ in het huwelijk na het overlijden van Khadija (r.a.)?", options: ["Hafsa bint Umar (r.a.)", "Zaynab bint Jahsh (r.a.)", "Umm Salama (r.a.)", "Sawda bint Zam'a (r.a.)"], answer: 3, explanation: "Sawda (r.a.) was de eerste echtgenote na Khadija (r.a.). Zij behoort net als zijn andere echtgenotes tot de 'Moeders der Gelovigen'." },
+    { id: "n-s-e12", category: "seerah", level: "expert", tier: 2, question: "Wat was de opdracht aan de boogschutters op de heuvel tijdens de Slag bij Uhud?", options: ["De vijand achtervolgen", "Het kamp bewaken in Medina", "Hun post onder geen beding verlaten", "Water brengen naar de strijders"], answer: 2, explanation: "De Profeet ﷺ gaf de boogschutters de opdracht hun positie te behouden. Toen sommigen vertrokken, kon de vijand de moslims van achteren aanvallen." },
+    { id: "n-s-e13", category: "seerah", level: "expert", tier: 2, question: "Wie sliep in het bed van de Profeet ﷺ in de nacht van de Hijra?", options: ["Abu Bakr (r.a.)", "Zayd ibn Haritha (r.a.)", "Ali ibn Abi Talib (r.a.)", "Bilal (r.a.)"], answer: 2, explanation: "Ali (r.a.) bleef achter in het bed van de Profeet ﷺ, zodat de Quraysh niets in de gaten kregen. Zo kon de Profeet ﷺ veilig vertrekken." },
+    { id: "n-s-e14", category: "seerah", level: "expert", tier: 3, question: "Welke metgezel is de enige die met zijn naam in de Koran wordt genoemd?", options: ["Abu Bakr (r.a.)", "Zayd ibn Haritha (r.a.)", "Bilal (r.a.)", "Salman al-Farisi (r.a.)"], answer: 1, explanation: "Zayd (r.a.) wordt genoemd in Soera Al-Ahzab 33:37. Hij was een vrijgelaten slaaf en nauwe metgezel van de Profeet ﷺ." },
+    { id: "n-s-e15", category: "seerah", level: "expert", tier: 3, question: "Welke slag volgde kort na de verovering van Mekka en wordt in de Koran genoemd?", options: ["De Slag bij Hunayn", "De Slag bij Khaybar", "De Slag bij Mu'ta", "De Slag bij Badr"], answer: 0, explanation: "Hunayn wordt vermeld in Soera At-Tawbah. De moslims leerden dat aantal alleen niet beslissend is, maar de hulp van Allah." },
+    { id: "n-s-e16", category: "seerah", level: "expert", tier: 3, question: "Welke expeditie naar de noordgrens tegen een groot Byzantijns leger vond plaats in 9 n.H.?", options: ["Hunayn", "Mu'ta", "Dhat as-Salasil", "Tabuk"], answer: 3, explanation: "De tocht naar Tabuk was zwaar vanwege hitte en grote afstand. Er kwam geen veldslag, maar de moslims toonden hun kracht." },
+    { id: "n-s-e17", category: "seerah", level: "expert", tier: 3, question: "Welke metgezel sprak namens de moslims voor de Negus van Abessinië?", options: ["Uthman ibn Affan (r.a.)", "Mus'ab ibn Umayr (r.a.)", "Abdullah ibn Mas'ud (r.a.)", "Ja'far ibn Abi Talib (r.a.)"], answer: 3, explanation: "Ja'far (r.a.) legde de Negus uit wat de islam inhield en las verzen uit Soera Maryam voor. De Negus beschermde de moslims." },
+    { id: "n-s-e18", category: "seerah", level: "expert", tier: 3, question: "Welke veldslag vond kort na Hudaybiyyah plaats, tegen de bewoners van een versterkte oase ten noorden van Medina?", options: ["De Slag bij Hunayn", "De Slag bij Badr", "De Slag bij Khaybar", "De Slag bij Tabuk"], answer: 2, explanation: "Khaybar was een oase met forten van een Joodse stam. De strijd vond plaats in 7 n.H." },
+    { id: "n-s-e19", category: "seerah", level: "expert", tier: 4, question: "In welke slag sneuvelden Zayd ibn Haritha, Ja'far ibn Abi Talib en Abdullah ibn Rawaha (r.a.)?", options: ["De Slag bij Hunayn", "De Slag bij Mu'ta", "De Slag bij Uhud", "De Slag bij Khaybar"], answer: 1, explanation: "In Mu'ta (8 n.H.) viel de aangewezen aanvoerder één voor één uit. Daarna nam Khalid ibn al-Walid (r.a.) het commando over." },
+    { id: "n-s-e20", category: "seerah", level: "expert", tier: 4, question: "Welke bijnaam kreeg Asma bint Abi Bakr (r.a.) vanwege haar rol tijdens de Hijra?", options: ["Dhat an-Nitaqayn (zij van de twee gordels)", "Umm al-Mu'minin", "Dhun-Noorayn", "Umm al-Fadl"], answer: 0, explanation: "Asma (r.a.) scheurde haar gordel in tweeën om het reisproviand vast te binden. De Profeet ﷺ gaf haar deze bijnaam." },
+    { id: "n-s-e21", category: "seerah", level: "expert", tier: 4, question: "Wie werd door de Profeet ﷺ aangesteld als aanvoerder van een leger richting Syrië, kort voor zijn overlijden?", options: ["Usama ibn Zayd (r.a.)", "Khalid ibn al-Walid (r.a.)", "Amr ibn al-As (r.a.)", "Ali ibn Abi Talib (r.a.)"], answer: 0, explanation: "Usama (r.a.) was nog jong toen hij werd aangesteld. De expeditie vertrok na het overlijden van de Profeet ﷺ onder Abu Bakr (r.a.)." },
+    // ───── KORAN & KENNIS ─────
+    { id: "n-k-j1", category: "koran", level: "junior", tier: 1, question: "Wat betekent de naam van Soera Al-Fil?", options: ["De Olifant", "De Leeuw", "De Kameel", "Het Paard"], answer: 0, explanation: "Al-Fil betekent ‘De Olifant’. De soera vertelt over een leger met olifanten dat de Kaaba wilde afbreken." },
+    { id: "n-k-j2", category: "koran", level: "junior", tier: 1, question: "Wat betekent de naam van Soera Al-Falaq?", options: ["De Avond", "De Dageraad", "De Regen", "De Sterren"], answer: 1, explanation: "Al-Falaq betekent ‘De Dageraad’, het moment dat de dag begint. In deze soera zoeken we bescherming bij Allah." },
+    { id: "n-k-j3", category: "koran", level: "junior", tier: 1, question: "Wat betekent de naam van Soera Al-Kahf?", options: ["De Berg", "De Zee", "De Grot", "De Woestijn"], answer: 2, explanation: "Al-Kahf betekent ‘De Grot’. De soera vertelt onder andere over jonge gelovigen die in een grot beschutting zochten." },
+    { id: "n-k-j4", category: "koran", level: "junior", tier: 1, question: "Naar welk diertje is Soera An-Nahl genoemd?", options: ["De mier", "De spin", "De vlinder", "De bij"], answer: 3, explanation: "An-Nahl betekent ‘De Bijen’. Allah noemt de bij als teken van Zijn zorg en wijsheid." },
+    { id: "n-k-j5", category: "koran", level: "junior", tier: 1, question: "Wat betekent de naam van Soera Al-Baqarah, de langste soera?", options: ["De Koe", "De Tafel", "De Familie", "De Vrouwen"], answer: 0, explanation: "Al-Baqarah betekent ‘De Koe’. De naam komt van een verhaal over het volk van Musa (a.s.)." },
+    { id: "n-k-j6", category: "koran", level: "junior", tier: 1, question: "Wat betekent de naam van Soera Ash-Shams?", options: ["De Maan", "De Zon", "De Nacht", "De Aarde"], answer: 1, explanation: "Ash-Shams betekent ‘De Zon’. Allah zweert in deze soera bij de zon en andere tekenen in de schepping." },
+    { id: "n-k-j7", category: "koran", level: "junior", tier: 1, question: "Naar welk klein diertje is Soera An-Naml genoemd?", options: ["De bij", "De spin", "De mier", "De mug"], answer: 2, explanation: "An-Naml betekent ‘De Mieren’. De soera vertelt dat Sulaymaan (a.s.) een mier hoorde praten." },
+    { id: "n-k-j8", category: "koran", level: "junior", tier: 1, question: "Naar wie is Soera Maryam genoemd?", options: ["De moeder van Musa (a.s.)", "De vrouw van Nuh (a.s.)", "De dochter van Yusuf (a.s.)", "De moeder van Isa (a.s.)"], answer: 3, explanation: "Soera Maryam is genoemd naar Maryam, de moeder van Isa (a.s.). Zij wordt in de Koran zeer geëerd." },
+    { id: "n-k-j9", category: "koran", level: "junior", tier: 1, question: "Hoe heet een geschreven of gedrukt boek waarin de hele Koran staat?", options: ["Mushaf", "Minbar", "Mihrab", "Miswak"], answer: 0, explanation: "Een gebonden exemplaar van de Koran heet een mushaf. Moslims behandelen het met veel respect." },
+    { id: "n-k-j10", category: "koran", level: "junior", tier: 1, question: "Hoe noem je iemand die de hele Koran uit zijn hoofd kent?", options: ["Imam", "Hafiz", "Muadhin", "Hajji"], answer: 1, explanation: "Een hafiz is iemand die de hele Koran van buiten kent. Dat is een prachtige prestatie." },
+    { id: "n-k-j11", category: "koran", level: "junior", tier: 1, question: "In welke grot ontving de Profeet ﷺ de eerste openbaring?", options: ["De grot Thawr", "De grot van Kahf", "De grot Hira", "De grot Uhud"], answer: 2, explanation: "De Profeet ﷺ trok zich vaak terug in de grot Hira bij Mekka. Daar kwam Jibriel met de eerste woorden van de Koran." },
+    { id: "n-k-j12", category: "koran", level: "junior", tier: 1, question: "Waar gaat Soera Al-Ikhlas over?", options: ["De bouw van de Kaaba", "Het verhaal van Yusuf", "De regels van het vasten", "Allah is Één"], answer: 3, explanation: "Soera Al-Ikhlas leert dat Allah Eén is en dat niemand aan Hem gelijk is. Het is een korte en mooie soera." },
+    { id: "n-k-j13", category: "koran", level: "junior", tier: 1, question: "Naar welke stam van de Profeet ﷺ is Soera Quraysh genoemd?", options: ["De stam Quraysh", "De stam Aws", "De stam Thaqif", "De stam Ghifar"], answer: 0, explanation: "De Profeet ﷺ kwam uit de stam Quraysh in Mekka. De soera herinnert hen eraan Allah te danken, de Heer van dit Huis." },
+    { id: "n-k-j14", category: "koran", level: "junior", tier: 1, question: "Wat betekent het woord ‘Koran’ ongeveer?", options: ["Het geschreven verhaal", "Het voorgedragene (recitatie)", "Het beste boek", "De gouden regel"], answer: 1, explanation: "‘Koran’ komt van een Arabisch woord voor ‘voordragen’ of ‘reciteren’. We lezen en reciteren de Koran dus hardop." },
+    { id: "n-k-j15", category: "koran", level: "junior", tier: 2, question: "Hoeveel verzen heeft Soera Al-Ikhlas?", options: ["3", "5", "4", "7"], answer: 2, explanation: "Soera Al-Ikhlas heeft vier korte verzen. Zo kun je haar makkelijk leren." },
+    { id: "n-k-j16", category: "koran", level: "junior", tier: 2, question: "In welke soera staat het beroemde Troonvers (Ayat al-Kursi)?", options: ["Soera Al-Fatiha", "Soera Yasin", "Soera Al-Mulk", "Soera Al-Baqarah"], answer: 3, explanation: "Het Troonvers staat in Soera Al-Baqarah (2:255). Het vertelt hoe groot en machtig Allah is." },
+    { id: "n-k-j17", category: "koran", level: "junior", tier: 2, question: "Over welke bijzondere nacht gaat Soera Al-Qadr?", options: ["De Nacht van Qadr", "De Nacht van Hijra", "De Nacht van Badr", "De Nacht van Eid"], answer: 0, explanation: "Soera Al-Qadr gaat over de Nacht van Qadr, in de Ramadan. In die nacht begon de Koran te worden geopenbaard." },
+    { id: "n-k-j18", category: "koran", level: "junior", tier: 2, question: "Wat zeggen we vóór het lezen van de Koran om bescherming te vragen?", options: ["Allah is de Grootste in alle dingen", "Ik zoek toevlucht bij Allah tegen de vervloekte satan", "Alle lof komt toe aan Allah, de Heer", "Ik getuig dat Allah de enige God is"], answer: 1, explanation: "We zeggen ‘A’udhu billahi min ash-shaytan ir-rajim’. Daarna zeggen we Bismillah en beginnen we te lezen." },
+    { id: "n-k-j19", category: "koran", level: "junior", tier: 2, question: "Wat wilde het leger met olifanten in Soera Al-Fil doen?", options: ["Medina veroveren", "De Zamzam-bron dichtgooien", "De Kaaba afbreken", "Het huis van de Profeet ﷺ verbranden"], answer: 2, explanation: "Het leger wilde de Kaaba afbreken, maar Allah beschermde Zijn Huis. Zo leren we dat Allah altijd machtiger is." },
+    { id: "n-k-j20", category: "koran", level: "junior", tier: 2, question: "Wat deed de wijze man Luqman, naar wie een soera is genoemd?", options: ["Hij bouwde een grote schip", "Hij leidde een leger", "Hij verzamelde de Koran", "Hij gaf goede raad aan zijn zoon"], answer: 3, explanation: "In Soera Luqman geeft Luqman wijze raad aan zijn zoon. Hij leert hem bijvoorbeeld alleen Allah te aanbidden." },
+    { id: "n-k-j21", category: "koran", level: "junior", tier: 2, question: "Bij wie zoeken we toevlucht in Soera An-Nas?", options: ["Bij de Heer van de mensen", "Bij de Heer van de bergen", "Bij de Heer van de dieren", "Bij de Heer van de zeeën"], answer: 0, explanation: "In Soera An-Nas zoeken we bescherming bij de Heer, de Koning en de God van de mensen. Zo weten we dat Allah ons beschermt." },
+    { id: "n-k-j22", category: "koran", level: "junior", tier: 2, question: "Wat vertelt Soera Al-Kahf over een groepje jongeren?", options: ["Zij bouwden een grote stad", "Zij zochten schuilplaats in een grot", "Zij reisden met een schip", "Zij waren herders in Mekka"], answer: 1, explanation: "De jongeren geloofden in Allah en vluchtten naar een grot. Allah beschermde hen daar." },
+    { id: "n-k-j23", category: "koran", level: "junior", tier: 3, question: "Welke korte soera eindigt met ‘Voor jullie jullie godsdienst, en voor mij mijn godsdienst’?", options: ["Soera Al-Asr", "Soera Al-Masad", "Soera Al-Kafirun", "Soera Al-Humazah"], answer: 2, explanation: "Soera Al-Kafirun eindigt met deze woorden. Ze leert ons respectvol te zijn en toch trouw te blijven aan ons geloof." },
+    { id: "n-k-j24", category: "koran", level: "junior", tier: 3, question: "Welke soera begint met ‘Wanneer de hulp van Allah en de overwinning komt’?", options: ["Soera Al-Fil", "Soera Al-Kawthar", "Soera Quraysh", "Soera An-Nasr"], answer: 3, explanation: "Dit zijn de beginwoorden van Soera An-Nasr. Ze spreekt over de hulp van Allah en de overwinning." },
+    { id: "n-k-j25", category: "koran", level: "junior", tier: 3, question: "Waarop werd de Koran in de tijd van de Profeet ﷺ opgeschreven?", options: ["Op palmbladeren, platte stenen en botten", "Op dik papier uit China", "Op gouden platen", "Op zijden doeken"], answer: 0, explanation: "Er was toen geen papier zoals nu. Daarom schreven de metgezellen de verzen op palmtakken, stenen en botten." },
+    { id: "n-k-j26", category: "koran", level: "junior", tier: 3, question: "In welke stad werd Soera Al-Baqarah geopenbaard?", options: ["Mekka", "Medina", "Taif", "Jeruzalem"], answer: 1, explanation: "Soera Al-Baqarah is een Medinese soera: ze werd geopenbaard nadat de Profeet ﷺ naar Medina was verhuisd." },
+    { id: "n-k-j27", category: "koran", level: "junior", tier: 3, question: "Hoe heet de uitleg van de Koran door geleerden?", options: ["Tajwied", "Takbir", "Tafsir", "Tasbih"], answer: 2, explanation: "Tafsir is de uitleg van de betekenis van de Koran. Geleerden leggen daarmee de verzen uit." },
+    { id: "n-k-j28", category: "koran", level: "junior", tier: 3, question: "Naar welk ding is Soera Al-Ma’idah genoemd?", options: ["Een groot schip", "Een gouden troon", "Een vurige fakkel", "Een gedekte tafel"], answer: 3, explanation: "Al-Ma’idah betekent ‘De Tafel’. Het gaat om de tafel met voedsel waar de volgelingen van Isa (a.s.) om vroegen." },
+    { id: "n-k-e1", category: "koran", level: "expert", tier: 1, question: "Onder welke kalief werd de Koran voor het eerst in één verzameling bijeengebracht?", options: ["Abu Bakr (r.a.)", "Umar (r.a.)", "Uthman (r.a.)", "Ali (r.a.)"], answer: 0, explanation: "Na de slag bij Yamama liet Abu Bakr (r.a.) de Koran in één verzameling bijeenbrengen. Zo werd het behoud van de tekst gewaarborgd." },
+    { id: "n-k-e2", category: "koran", level: "expert", tier: 1, question: "In welke soera staat het Troonvers (Ayat al-Kursi), en wat is het versnummer?", options: ["Soera Al-Baqarah 2:286", "Soera Al-Baqarah 2:255", "Soera Ali ‘Imran 3:18", "Soera An-Nisa 4:1"], answer: 1, explanation: "Ayat al-Kursi is Soera Al-Baqarah 2:255. Het is een van de grootste verzen over Allahs Eenheid en Macht." },
+    { id: "n-k-e3", category: "koran", level: "expert", tier: 1, question: "In welke soera wordt het verhaal van Musa (a.s.) en Khidr verteld?", options: ["Soera Taha", "Soera Al-Qasas", "Soera Al-Kahf", "Soera Ash-Shu’ara"], answer: 2, explanation: "Het verhaal van de reis van Musa (a.s.) met Khidr staat in Soera Al-Kahf. De soera bevat nog meer verhalen met lessen." },
+    { id: "n-k-e4", category: "koran", level: "expert", tier: 1, question: "Welke soera is als enige naar een vrouw genoemd?", options: ["Soera Al-Mujadila", "Soera An-Nisa", "Soera At-Talaq", "Soera Maryam"], answer: 3, explanation: "Soera Maryam is de enige soera die de naam van een vrouw draagt. Maryam wordt daarin als voorbeeld van vroomheid genoemd." },
+    { id: "n-k-e5", category: "koran", level: "expert", tier: 1, question: "Hoe heten de losse letters aan het begin van sommige soera’s, zoals Alif Lam Mim?", options: ["Al-Muqatta’at", "Al-Mutashabihat", "Al-Mu’awwidhat", "Al-Mufassal"], answer: 0, explanation: "Dit zijn de Al-Muqatta’at, de ‘afgekorte’ of losse letters. Hun precieze betekenis kent Allah het best." },
+    { id: "n-k-e6", category: "koran", level: "expert", tier: 1, question: "Welke soera heet ook ‘Umm al-Qur’an’, de Moeder van de Koran?", options: ["Soera Al-Ikhlas", "Soera Al-Fatiha", "Soera Al-Baqarah", "Soera Yasin"], answer: 1, explanation: "Al-Fatiha wordt in de overlevering ook ‘Umm al-Qur’an’ genoemd. Zij vormt de opening en samenvatting van de boodschap en wordt in elk gebed gelezen." },
+    { id: "n-k-e7", category: "koran", level: "expert", tier: 1, question: "Hoe noemt Allah het verhaal van Yusuf (a.s.) in zijn soera?", options: ["Het langste verhaal", "Het oudste verhaal", "Het mooiste verhaal", "Het droevigste verhaal"], answer: 2, explanation: "In Soera Yusuf wordt zijn geschiedenis ‘ahsan al-qasas’ genoemd, het mooiste verhaal. Het bevat vele lessen over geduld en vertrouwen." },
+    { id: "n-k-e8", category: "koran", level: "expert", tier: 1, question: "Welke soera begint met ‘Gezegend is Hij in Wiens hand de heerschappij is’?", options: ["Soera Al-Waqi’ah", "Soera Ar-Rahman", "Soera Al-Hadid", "Soera Al-Mulk"], answer: 3, explanation: "Dit is het begin van Soera Al-Mulk (soera 67). De soera gaat over Allahs heerschappij en schepping." },
+    { id: "n-k-e9", category: "koran", level: "expert", tier: 2, question: "Welke metgezel leidde, in opdracht van Abu Bakr (r.a.), het werk om de Koran te verzamelen?", options: ["Zayd ibn Thabit (r.a.)", "Abdullah ibn Mas’ud (r.a.)", "Ubayy ibn Ka’b (r.a.)", "Mu’adh ibn Jabal (r.a.)"], answer: 0, explanation: "Zayd ibn Thabit (r.a.) was een schrijver van de openbaring en kende de Koran goed. Hij verzamelde de tekst zorgvuldig en vergeleek die met meerdere getuigen." },
+    { id: "n-k-e10", category: "koran", level: "expert", tier: 2, question: "Wat is een ‘makhraj’ in de tajweed?", options: ["De lengte van een klinker", "De plaats waar een letter wordt uitgesproken", "Het teken voor een pauze", "De regel voor het buigen van de stem"], answer: 1, explanation: "Een makhraj is het uitspraakpunt van een letter in mond of keel. Het kennen ervan is de basis van correcte recitatie." },
+    { id: "n-k-e11", category: "koran", level: "expert", tier: 2, question: "Wat zegt Soera Al-Qadr over de Nacht van Qadr?", options: ["Ze is gelijk aan duizend dagen", "Ze is de langste nacht van het jaar", "Ze is beter dan duizend maanden", "Ze valt altijd op de eerste Ramadannacht"], answer: 2, explanation: "Soera Al-Qadr noemt deze nacht beter dan duizend maanden (97:3). De engelen dalen in die nacht neer met Allahs verlof." },
+    { id: "n-k-e12", category: "koran", level: "expert", tier: 2, question: "Welke twee reizen noemt Soera Quraysh?", options: ["De reis naar Medina en Abessinië", "De reis naar Jeruzalem en Taif", "De reis van de Hijra en de Hajj", "De winter- en de zomerreis"], answer: 3, explanation: "Soera Quraysh verwijst naar de handelsreizen in winter en zomer. De stam wordt opgeroepen de Heer van dit Huis te aanbidden." },
+    { id: "n-k-e13", category: "koran", level: "expert", tier: 2, question: "Welke van deze soera’s is een Medinese (Madani) soera?", options: ["Soera Al-Baqarah", "Soera Al-Kahf", "Soera Maryam", "Soera Yasin"], answer: 0, explanation: "Al-Baqarah is een Medinese soera, geopenbaard na de Hijra. Al-Kahf, Maryam en Yasin zijn Mekkaans." },
+    { id: "n-k-e14", category: "koran", level: "expert", tier: 3, question: "Welk besluit nam kalief Uthman (r.a.) over de Koranteksten?", options: ["Hij liet de Koran in alle dialecten opschrijven", "Hij liet standaardexemplaren kopiëren en naar de steden sturen", "Hij verbood elke vorm van recitatie", "Hij liet de Koran opnieuw ordenen op thema"], answer: 1, explanation: "Uthman (r.a.) liet de mushaf in het dialect van de Quraysh kopiëren en stuurde exemplaren naar de grote steden. Zo werd verschil in lezing voorkomen." },
+    { id: "n-k-e15", category: "koran", level: "expert", tier: 3, question: "Wat is de kern van de boodschap van Ayat al-Kursi?", options: ["De regels van de zakat", "Het verhaal van de Hijra", "Allahs Eenheid, Leven, Kennis en Macht", "De straf van vroegere volken"], answer: 2, explanation: "Het vers begint met Allah, er is geen god dan Hij, de Levende, de Zelfstandig Bestaande. Het beschrijft Zijn kennis en Zijn Troon die hemelen en aarde omvat." },
+    { id: "n-k-e16", category: "koran", level: "expert", tier: 3, question: "Welke figuur komt, naast de jongeren van de grot, voor in Soera Al-Kahf?", options: ["Dhul-Kifl", "Dhun-Nun", "Dhul-Hijjah", "Dhul-Qarnayn"], answer: 3, explanation: "Soera Al-Kahf vertelt over de jongeren van de grot, de eigenaar van twee tuinen, Musa (a.s.) en Khidr en Dhul-Qarnayn." },
+    { id: "n-k-e17", category: "koran", level: "expert", tier: 3, question: "Welke recitatiewijze (riwaya) wordt vooral in Noord- en West-Afrika gebruikt?", options: ["Warsh ‘an Nafi’", "Hafs ‘an ‘Asim", "Qalun ‘an Nafi’", "Al-Duri ‘an Abi ‘Amr"], answer: 0, explanation: "Warsh ‘an Nafi’ is in grote delen van Noord- en West-Afrika gebruikelijk. De verschillende riwayat zijn geldige overgeleverde lezingen." },
+    { id: "n-k-e18", category: "koran", level: "expert", tier: 3, question: "Welke vier voorwaarden noemt Soera Al-‘Asr om niet in verlies te zijn?", options: ["Gebed, vasten, zakat en hajj", "Geloof, goede daden, elkaar tot waarheid en geduld aansporen", "Kennis, rijkdom, macht en roem", "Geloof, handel, reizen en studie"], answer: 1, explanation: "Soera Al-‘Asr zegt dat de mens in verlies is, behalve wie gelooft, goede daden doet en elkaar tot waarheid en geduld aanspoort." },
+    { id: "n-k-e19", category: "koran", level: "expert", tier: 4, question: "Bij welke slag vielen veel Koranreciteurs (qurra’), wat leidde tot de verzameling van de Koran?", options: ["De slag bij Hunayn", "De slag bij Mu’ta", "De slag bij Yamama", "De slag bij Yarmuk"], answer: 2, explanation: "Bij Yamama, tegen de valse profeet Musaylima, vielen veel reciteurs. Umar (r.a.) maakte zich zorgen over het behoud en adviseerde Abu Bakr (r.a.) de Koran te verzamelen." },
+    { id: "n-k-e20", category: "koran", level: "expert", tier: 4, question: "Welke letters worden de qalqalah-letters genoemd in de tajweed?", options: ["Qaf, Kaf, Ba, Ra, Dal", "Ta, Tha, Sin, Jim, Dal", "Qaf, Ta, Mim, Nun, Dal", "Qaf, Ta, Ba, Jim, Dal"], answer: 3, explanation: "De qalqalah-letters zijn Qaf, Ta, Ba, Jim en Dal (‘qutb jad’). Zij krijgen een lichte echo wanneer ze een sukun hebben." },
+    { id: "n-k-e21", category: "koran", level: "expert", tier: 4, question: "Welke twee soorten verzen onderscheidt Soera Ali ‘Imran 3:7?", options: ["Muhkamat en mutashabihat", "Makki en Madani", "Nasikh en mansukh", "Awwal en akhir"], answer: 0, explanation: "Vers 3:7 noemt duidelijke verzen (muhkamat) als de basis van het Boek, en verzen die meerdere betekenissen toelaten (mutashabihat). Geleerden verklaren de laatste aan de hand van de duidelijke." },
+    // ───── AKHLAAQ & DU’A ─────
+    { id: "n-a-j1", category: "akhlaaq", level: "junior", tier: 1, question: "Wat zeg je tegen iemand die niest en ‘Alhamdulillah’ zegt?", options: ["Yarhamukallah (Moge Allah je genadig zijn)", "Barakallahu fiek (Moge Allah je zegenen)", "Subhanallah (Glorie zij Allah)", "Allahu akbar (Allah is de Grootste)"], answer: 0, explanation: "Als iemand niest en Alhamdulillah zegt, wensen we hem Allahs genade toe. Zo zorgen we voor elkaar." },
+    { id: "n-a-j2", category: "akhlaaq", level: "junior", tier: 1, question: "Hoe ontvang je een gast het beste?", options: ["Je laat hem lang in de gang wachten", "Vriendelijk en gul, met een warm welkom", "Je gaat gewoon verder met spelen", "Je vraagt hem snel weer te vertrekken"], answer: 1, explanation: "De Profeet ﷺ leerde ons onze gasten te eren. Een lach en iets lekkers maken hen blij." },
+    { id: "n-a-j3", category: "akhlaaq", level: "junior", tier: 1, question: "Wat betekent het om eerlijk te zijn?", options: ["Alleen de waarheid zeggen als iemand kijkt", "Dingen zeggen die anderen graag horen", "Altijd de waarheid spreken", "Niets zeggen als je iets verkeerd deed"], answer: 2, explanation: "Een moslim is eerlijk, ook als dat moeilijk is. Allah houdt van eerlijke mensen." },
+    { id: "n-a-j4", category: "akhlaaq", level: "junior", tier: 1, question: "Welke bijnaam kreeg de Profeet ﷺ al als jonge man, omdat hij zo eerlijk was?", options: ["Al-Qawi (de sterke)", "Al-Hakim (de wijze)", "Al-Kabir (de grote)", "Al-Amin (de betrouwbare)"], answer: 3, explanation: "Mensen in Mekka vertrouwden hem hun spullen toe. Daarom noemden ze hem Al-Amin." },
+    { id: "n-a-j5", category: "akhlaaq", level: "junior", tier: 1, question: "Wat doe je als je iets lekkers hebt en een ander heeft niets?", options: ["Ik eet het snel zelf op", "Ik deel het met hem of haar", "Ik verstop het voor hem", "Ik laat het hem alleen zien"], answer: 1, explanation: "Delen maakt blij en brengt hartjes dichter bij elkaar. Allah beloont wie deelt." },
+    { id: "n-a-j6", category: "akhlaaq", level: "junior", tier: 1, question: "Wat bedank je Allah als je ’s ochtends wakker wordt?", options: ["Dat het weekend is begonnen", "Dat je lekker lang hebt kunnen slapen", "Dat Hij je na de slaap weer tot leven heeft gebracht", "Dat je geen school hebt vandaag"], answer: 2, explanation: "Slapen lijkt een beetje op sterven. Wakker worden is een geschenk van Allah, dus we zeggen dank." },
+    { id: "n-a-j7", category: "akhlaaq", level: "junior", tier: 1, question: "Wie heeft volgens de Profeet ﷺ het meeste recht op jouw goede gezelschap?", options: ["Je beste vriend", "Je buurman", "Je juf of meester", "Je moeder"], answer: 3, explanation: "Een man vroeg wie het meeste recht heeft op zijn goede gezelschap. De Profeet ﷺ zei drie keer: je moeder." },
+    { id: "n-a-j8", category: "akhlaaq", level: "junior", tier: 1, question: "Wat belooft Allah aan mensen die dankbaar zijn?", options: ["Dat Hij hen nog meer zal geven", "Dat Hij hen rijk maakt voor altijd", "Dat zij nooit meer ziek worden", "Dat zij nooit meer iets fout doen"], answer: 0, explanation: "Allah zegt in de Koran dat Hij wie dankbaar is méér geeft. Zeg dus vaak Alhamdulillah!" },
+    { id: "n-a-j9", category: "akhlaaq", level: "junior", tier: 1, question: "Wat is sabr?", options: ["Heel snel iets willen hebben", "Boos worden als het niet lukt", "Geduld hebben en volhouden als iets moeilijk is", "Opgeven als iets te lang duurt"], answer: 2, explanation: "Sabr betekent rustig blijven en op Allah vertrouwen. Allah houdt van geduldige mensen." },
+    { id: "n-a-j10", category: "akhlaaq", level: "junior", tier: 1, question: "Wat is hoogmoed?", options: ["Blij zijn met een goed cijfer", "Dankbaar zijn voor je spullen", "Netjes zijn met je kleren", "Denken dat je beter bent dan anderen"], answer: 3, explanation: "Een moslim is bescheiden. Niemand is beter dan een ander; Allah kijkt naar ons hart." },
+    { id: "n-a-j11", category: "akhlaaq", level: "junior", tier: 1, question: "Een vriend zegt sorry omdat hij je pijn deed. Wat is mooi om te doen?", options: ["Hem vergeven", "Hem nooit meer aankijken", "Hem terug pijn doen", "Het aan iedereen vertellen"], answer: 0, explanation: "Vergeven is een grote kracht. Wie vergeeft, hoopt dat Allah ook hem zal vergeven." },
+    { id: "n-a-j12", category: "akhlaaq", level: "junior", tier: 1, question: "Hoe behandelen we dieren volgens de Islam?", options: ["Met plagen als we ons vervelen", "Met vriendelijkheid en zorg", "Alleen goed als anderen kijken", "We letten niet op hun honger"], answer: 1, explanation: "De Profeet ﷺ leerde barmhartigheid voor alle schepselen. Dieren hebben eten, water en liefde nodig." },
+    { id: "n-a-j13", category: "akhlaaq", level: "junior", tier: 1, question: "Je ziet een steen midden op het looppad liggen. Wat doe je het beste?", options: ["Ik laat hem liggen, het is niet van mij", "Ik schop hem verder het pad op", "Ik loop er snel omheen", "Ik leg hem aan de kant, zodat niemand struikelt"], answer: 3, explanation: "De Profeet ﷺ zei dat iets schadelijks van de weg halen een goede daad (sadaqa) is." },
+    { id: "n-a-j14", category: "akhlaaq", level: "junior", tier: 1, question: "Wie zijn de beste mensen volgens de Profeet ﷺ?", options: ["Zij die het beste karakter hebben", "Zij die het hardst kunnen roepen", "Zij die de meeste spullen hebben", "Zij die het snelst kunnen rennen"], answer: 0, explanation: "Goede manieren tellen zwaar bij Allah. Wees dus aardig, eerlijk en vriendelijk." },
+    { id: "n-a-j15", category: "akhlaaq", level: "junior", tier: 2, question: "Met welke voet stap je de moskee binnen?", options: ["Met de linkervoet", "Met de rechtervoet", "Met allebei tegelijk", "Dat maakt niet uit"], answer: 1, explanation: "Bij het binnengaan van de moskee beginnen we met rechts, want het is een eervolle plek." },
+    { id: "n-a-j16", category: "akhlaaq", level: "junior", tier: 2, question: "Met welke voet stap je het toilet binnen?", options: ["Met de rechtervoet", "Met allebei tegelijk", "Met de linkervoet", "Op je tenen"], answer: 2, explanation: "Voor het toilet beginnen we met links en zoeken we bij Allah bescherming. Bij het verlaten stappen we met rechts naar buiten." },
+    { id: "n-a-j17", category: "akhlaaq", level: "junior", tier: 2, question: "Wat is ‘silat ar-rahim’?", options: ["Goed zorgen voor je familie en contact houden", "Een gebed na de zonsondergang", "Een speciaal feest voor kinderen", "Een vorm van vasten in de zomer"], answer: 0, explanation: "Familiebanden onderhouden is belangrijk. Bel, bezoek en help je opa’s, oma’s, ooms, tantes en neven." },
+    { id: "n-a-j18", category: "akhlaaq", level: "junior", tier: 2, question: "Wanneer ben je volgens de Profeet ﷺ het dichtst bij Allah, zodat je goed een smeekbede kunt doen?", options: ["Als je aan tafel zit te eten", "Als je met je voorhoofd op de grond ligt (sujoed)", "Als je naar school loopt", "Als je tv aan het kijken bent"], answer: 1, explanation: "In de sujoed (de neerknieling) zijn we heel dicht bij Allah. Daarom smeken we daar veel." },
+    { id: "n-a-j19", category: "akhlaaq", level: "junior", tier: 2, question: "Wie groet eerst volgens de Profeet ﷺ?", options: ["De oudere groet de jongere", "Degene met de mooiste kleren", "De jongere groet de oudere", "Degene die het dichtstbij staat"], answer: 2, explanation: "Zo tonen we respect voor ouderen. Maar het mooiste is dat wie het eerst groet, de meeste beloning krijgt." },
+    { id: "n-a-j20", category: "akhlaaq", level: "junior", tier: 2, question: "Wat betekent ‘Astaghfirullah’?", options: ["Ik dank Allah voor mijn eten", "Ik prijs Allah met mooie woorden", "Ik vraag Allah om een cadeau", "Ik vraag Allah om vergeving"], answer: 3, explanation: "Als we een fout maken, zeggen we Astaghfirullah. Allah houdt van wie berouw toont." },
+    { id: "n-a-j21", category: "akhlaaq", level: "junior", tier: 2, question: "Wat zei de Profeet ﷺ tegen Abu Dharr (r.a.) over soep koken?", options: ["Eet alles zelf lekker op", "Doe er wat extra water bij en geef er je buren van", "Verkoop de soep op de markt", "Bewaar de soep voor volgende week"], answer: 1, explanation: "Zo leerde de Profeet ﷺ ons delen met de buren, ook als we zelf niet veel hebben." },
+    { id: "n-a-j22", category: "akhlaaq", level: "junior", tier: 2, question: "Op welke zij ga je volgens de Sunnah liggen om te slapen?", options: ["Op je linkerzij", "Op je buik", "Op je rechterzij", "Op je rug"], answer: 2, explanation: "De Profeet ﷺ sliep op zijn rechterzij en zei eerst een smeekbede voor het slapen." },
+    { id: "n-a-j23", category: "akhlaaq", level: "junior", tier: 3, question: "Wat raadde de Profeet ﷺ aan als je een slechte daad hebt gedaan?", options: ["Doen alsof er niets gebeurd is", "Het aan niemand vertellen", "Het meteen vergeten", "Er een goede daad achteraan doen"], answer: 3, explanation: "Goede daden kunnen kleine fouten uitwissen. Dus: spijt hebben en iets goeds doen." },
+    { id: "n-a-j24", category: "akhlaaq", level: "junior", tier: 3, question: "Wie is volgens de Profeet ﷺ echt sterk?", options: ["Wie zichzelf in bedwang houdt als hij boos is", "Wie het zwaarste kan optillen", "Wie het hardst kan schreeuwen", "Wie altijd wint met worstelen"], answer: 0, explanation: "Sterk zijn is niet vechten, maar rustig blijven als je boos bent." },
+    { id: "n-a-j25", category: "akhlaaq", level: "junior", tier: 3, question: "Wat doe je als je heel boos wordt en de duivel je wil laten schreeuwen?", options: ["Ik schreeuw nog harder terug", "Ik sla de deur dicht en vloek", "Ik zoek toevlucht bij Allah tegen de duivel", "Ik ga mijn spullen kapotmaken"], answer: 2, explanation: "De Profeet ﷺ leerde dat toevlucht zoeken bij Allah de woede kan laten zakken." },
+    { id: "n-a-j26", category: "akhlaaq", level: "junior", tier: 3, question: "Wat zegt de Profeet ﷺ over wie geen genegenheid toont aan kleine kinderen?", options: ["Dat is een gewone zaak", "Dat is zijn eigen keuze", "Hij krijgt een extra beloning", "Hij is niet van ons, zei de Profeet ﷺ"], answer: 3, explanation: "Een moslim is vriendelijk voor kleintjes en respectvol voor ouderen. Dat is goed karakter." },
+    { id: "n-a-j27", category: "akhlaaq", level: "junior", tier: 3, question: "Wat zei de Profeet ﷺ dat iemand die in Allah en de Laatste Dag gelooft moet doen?", options: ["Goed spreken of zwijgen", "Veel praten over anderen", "Altijd het laatste woord hebben", "Hard praten om gehoord te worden"], answer: 0, explanation: "Woorden zijn belangrijk. Als we niets goeds te zeggen hebben, is zwijgen beter." },
+    { id: "n-a-j28", category: "akhlaaq", level: "junior", tier: 3, question: "Wat zei de Profeet ﷺ over wie voor een wees zorgt?", options: ["Hij hoeft verder nooit meer te geven", "Hij zal met hem in het Paradijs zijn, heel dichtbij", "Hij krijgt een stuk land op aarde", "Hij hoeft geen gebeden meer te doen"], answer: 1, explanation: "De Profeet ﷺ wees met twee vingers dicht tegen elkaar: zo dichtbij zal de zorger van een wees bij hem zijn." },
+    { id: "n-a-e1", category: "akhlaaq", level: "expert", tier: 1, question: "Wat zei de Profeet ﷺ over wat het zwaarst zal wegen in de weegschaal van de gelovige op de Dag des Oordeels?", options: ["Het aantal bezochte moskeeën", "De hoeveelheid bezit die hij naliet", "Zijn afkomst en familienaam", "Goed karakter (husn al-khuluq)"], answer: 3, explanation: "In een overlevering bij At-Tirmidhi wordt goed karakter genoemd als iets zeer zwaars in de weegschaal. Dit toont dat gedrag even essentieel is als ritueel." },
+    { id: "n-a-e2", category: "akhlaaq", level: "expert", tier: 1, question: "Welk kort advies herhaalde de Profeet ﷺ meermaals aan een man die hem om raad vroeg?", options: ["‘Word niet boos’", "‘Spreek weinig’", "‘Wees niet bang’", "‘Haast je niet’"], answer: 0, explanation: "Deze overlevering staat in Sahih Al-Bukhari. Beheersing van woede is een kern van goed karakter, omdat uit woede veel kwaad voortkomt." },
+    { id: "n-a-e3", category: "akhlaaq", level: "expert", tier: 1, question: "Wat zegt de Profeet ﷺ over de du’a (smeekbede) in een bekende overlevering?", options: ["Dat de du’a alleen voor nood bedoeld is", "Dat de du’a zelf aanbidding (‘ibadah) is", "Dat de du’a het gebed kan vervangen", "Dat de du’a alleen in de moskee geldt"], answer: 1, explanation: "Volgens At-Tirmidhi noemde de Profeet ﷺ de du’a de aanbidding. Wie smeekt, erkent zijn afhankelijkheid van Allah." },
+    { id: "n-a-e4", category: "akhlaaq", level: "expert", tier: 1, question: "Welke indeling van de maag raadt de Profeet ﷺ aan in zijn advies over eten en drinken?", options: ["Twee derde voedsel en een derde water", "De helft voedsel, de helft drank", "Een derde voor voedsel, een derde voor drank, een derde voor adem", "Een kwart voedsel, driekwart leeg"], answer: 2, explanation: "Dit advies wordt overgeleverd door At-Tirmidhi en Ibn Majah. Het leert matigheid: de Profeet ﷺ noemde een vol vat slechter dan de buik." },
+    { id: "n-a-e5", category: "akhlaaq", level: "expert", tier: 1, question: "Wie is volgens de Profeet ﷺ een ‘moslim’ in de bekende Hadith over de tong en de hand?", options: ["Degene van wiens tong en hand de moslims veilig zijn", "Degene die de meeste uren in de moskee zit", "Degene die zijn tong nooit gebruikt", "Degene die alleen met moslims omgaat"], answer: 0, explanation: "Deze Hadith staat in Al-Bukhari en Moslim. Ware islam toont zich in veilig en respectvol gedrag naar anderen." },
+    { id: "n-a-e6", category: "akhlaaq", level: "expert", tier: 1, question: "Wanneer is het geduld (sabr) volgens de Profeet ﷺ het meest volledig?", options: ["Nadat de tegenslag voorbij is", "Bij de eerste klap van de tegenslag", "Als anderen zijn geduld prijzen", "Na een jaar van rouw"], answer: 1, explanation: "Volgens Al-Bukhari en Moslim is sabr ‘bij de eerste schok’. Het eerste moment van tegenslag toetst de gelovige het meest." },
+    { id: "n-a-e7", category: "akhlaaq", level: "expert", tier: 1, question: "Welke du’a leert de Koran aan het kind voor zijn ouders (Soera Al-Isra 17:24)?", options: ["Allah te vragen hen rijk te maken in dit leven", "Allah te vragen hen nooit te laten sterven", "Allah te vragen hen genadig te zijn zoals zij hem als klein kind opvoedden", "Allah te vragen hen alles te vergeven wat zij nalaten"], answer: 2, explanation: "Het vers volgt direct op het gebod tot goedheid voor ouders. Het kind wordt opgeroepen nederig te zijn en voor hen te bidden." },
+    { id: "n-a-e8", category: "akhlaaq", level: "expert", tier: 1, question: "Wat is de religie volgens een bekende Hadith in Moslim?", options: ["Het zwijgen over fouten van anderen", "Het vermijden van alle wereldse zaken", "Het volgen van de traditie van de voorouders", "Oprecht advies (nasiha)"], answer: 3, explanation: "De Profeet ﷺ zei: ‘De religie is nasiha’, voor Allah, Zijn Boek, Zijn Boodschapper, de leiders en alle moslims. Oprechtheid en zorg voor anderen horen dus tot de kern." },
+    { id: "n-a-e9", category: "akhlaaq", level: "expert", tier: 2, question: "Hoe definieert de Profeet ﷺ hoogmoed (kibr) in een overlevering in Sahih Moslim?", options: ["Het dragen van mooie kleding", "Het afwijzen van de waarheid en het neerkijken op mensen", "Het bezitten van veel eigendom", "Het goed willen zijn in je werk"], answer: 1, explanation: "Een man vroeg of het kibr is als hij mooie kleding en schoeisel wil. De Profeet ﷺ zei dat Allah schoonheid liefheeft, en dat kibr het afwijzen van de waarheid en neerkijken op mensen is." },
+    { id: "n-a-e10", category: "akhlaaq", level: "expert", tier: 2, question: "Wat antwoordt iemand die niest, op de wens ‘Yarhamukallah’?", options: ["‘Jazakallahu khayran’ (Moge Allah je belonen)", "‘Barakallahu fiek’ (Moge Allah je zegenen)", "‘Yahdikumullah wa yuslihu balakum’ (Moge Allah jullie leiden en jullie toestand verbeteren)", "‘Wa iyyakum’ (En ook jullie)"], answer: 2, explanation: "Dit is de etiquette van het niezen zoals overgeleverd in Al-Bukhari en andere bronnen. De niezer prijst Allah, de ander smeekt om genade, en de niezer smeekt terug." },
+    { id: "n-a-e11", category: "akhlaaq", level: "expert", tier: 2, question: "In welke Koranpassage belooft Allah de dankbaren meer te geven?", options: ["Soera Al-Baqarah 2:255", "Soera Al-Fatiha 1:5", "Soera Al-Ikhlas 112:1", "Soera Ibrahim 14:7"], answer: 3, explanation: "Allah zegt dat Hij wie dankbaar is méér zal geven, en waarschuwt dat de ondankbaren zware straf wacht. Shukr is dus zowel een spirituele als een praktische deugd." },
+    { id: "n-a-e12", category: "akhlaaq", level: "expert", tier: 2, question: "Welke uitspraak doet de Profeet ﷺ over de gevende en nemende hand?", options: ["De bovenste (gevende) hand is beter dan de onderste (nemende) hand", "De nemende hand is dichter bij Allah", "Beide handen zijn aan elkaar gelijk", "De gevende hand moet verborgen blijven"], answer: 0, explanation: "Dit staat in Al-Bukhari en Moslim. De Hadith moedigt vrijgevigheid en zelfstandigheid aan, en waarschuwt voor onnodig vragen." },
+    { id: "n-a-e13", category: "akhlaaq", level: "expert", tier: 2, question: "Voor welke twee dingen is volgens de Profeet ﷺ een benijdenswaardig verlangen (ghibta) toegestaan?", options: ["Macht over anderen en een hoge positie", "Veel kinderen en een groot huis", "Rijkdom die men op de weg van het goede besteedt, en kennis waarmee men oordeelt en onderwijst", "Een mooie stem en veel vrienden"], answer: 2, explanation: "In Al-Bukhari en Moslim spreekt de Profeet ﷺ over ‘haasad’ in de zin van ghibta: ernaar verlangen om dezelfde goede gave te hebben, zonder te willen dat de ander die verliest." },
+    { id: "n-a-e14", category: "akhlaaq", level: "expert", tier: 3, question: "Hoeveel dagen duurt de gastvrijheid (diyafa) volgens de Hadith in Al-Bukhari en Moslim?", options: ["Eén dag", "Zeven dagen", "Veertig dagen", "Drie dagen"], answer: 3, explanation: "De gast wordt volgens de Hadith drie dagen ontvangen; wat daarna gegeven wordt, geldt als sadaqa. Ook mag een gast zijn gastheer niet tot last worden." },
+    { id: "n-a-e15", category: "akhlaaq", level: "expert", tier: 3, question: "Welk tijdstip noemt de Hadith in Al-Bukhari en Moslim waarop Allah vraagt: ‘Wie roept Mij aan, zodat Ik hem antwoord?’", options: ["Het laatste derde deel van de nacht", "Het moment vlak na de zonsopgang", "De middag van de vrijdag", "Het eerste derde deel van de nacht"], answer: 0, explanation: "Deze overlevering moedigt aan om in de late nacht te smeken en om vergeving te vragen. Zo’n moment wordt gezien als een tijd van grote verhoring." },
+    { id: "n-a-e16", category: "akhlaaq", level: "expert", tier: 3, question: "Welk moment noemt een overlevering bij Abu Dawud en At-Tirmidhi waarop de du’a niet wordt afgewezen?", options: ["Tussen het ontwaken en het ontbijt", "Tussen de adhan en de iqama", "Tussen de nacht en de vroege ochtend", "Tussen het zonsondergang- en nachtgebed"], answer: 1, explanation: "Er wordt overgeleverd dat een du’a tussen de gebedsoproep en de start van het gebed niet wordt afgewezen. Daarom is dit een goed moment om te smeken." },
+    { id: "n-a-e17", category: "akhlaaq", level: "expert", tier: 3, question: "Waartegen zoekt men volgens de authentieke du’a bescherming bij het betreden van het toilet?", options: ["Tegen de honger en de dorst", "Tegen de onzuiverheid van het water", "Tegen de kou en de duisternis", "Tegen de mannelijke en vrouwelijke kwaadaardige jinn en duivels"], answer: 3, explanation: "De Profeet ﷺ leerde dit bij Al-Bukhari en Moslim. Het toont dat zelfs dagelijkse handelingen met Allahs bescherming worden begonnen." },
+    { id: "n-a-e18", category: "akhlaaq", level: "expert", tier: 3, question: "Over wie werd Soera An-Nur 24:22 geopenbaard, met de oproep om te vergeven en over te zien?", options: ["Abu Bakr (r.a.), die zijn steun aan Mistah wilde stopzetten", "Omar (r.a.), die een leugenaar wilde straffen", "Uthman (r.a.), die zijn rijkdom wilde verdelen", "Ali (r.a.), die een strijd wilde beëindigen"], answer: 0, explanation: "Mistah had deelgenomen aan de laster tegen Aisha (r.a.). Na dit vers hervatte Abu Bakr zijn steun en zei: ‘Ja, ik wil dat Allah mij vergeeft.’" },
+    { id: "n-a-e19", category: "akhlaaq", level: "expert", tier: 4, question: "Wat zeggen de ‘dienaren van de Barmhartige’ volgens Soera Al-Furqan 25:63 als onwetenden hen toespreken?", options: ["‘Wij zullen u straffen’", "‘Vrede’ (salaam)", "‘Wij hebben u niet nodig’", "‘Dat is niet ons werk’"], answer: 1, explanation: "Het vers beschrijft hen als mensen die nederig over de aarde lopen. Ze beantwoorden onwetende taal met een vredelievende groet." },
+    { id: "n-a-e20", category: "akhlaaq", level: "expert", tier: 4, question: "Wat belooft Allah de geduldigen (as-sabirun) in Soera Az-Zumar 39:10?", options: ["Dat zij het eerst het Paradijs betreden", "Dat zij nooit meer op de proef worden gesteld", "Dat zij hun loon zonder berekening zullen ontvangen", "Dat zij in dit leven alles krijgen wat ze willen"], answer: 2, explanation: "Het vers benadrukt de grootheid van de beloning voor sabr: zij wordt niet naar een vaste maat uitgekeerd." },
+    { id: "n-a-e21", category: "akhlaaq", level: "expert", tier: 4, question: "Welke goede daden noemden de drie mannen in de grot in de Hadith in Al-Bukhari en Moslim in hun du’a, om Allahs hulp te vragen?", options: ["Voorrang geven aan ouders, zich onthouden van zonde uit vrees voor Allah, en het loon van een arbeider eerlijk beheren", "Het bouwen van een moskee, vasten en pelgrimage", "Het vrijlaten van slaven, bidden en strijden", "Het uitdelen van kleding, reizen en onderwijzen"], answer: 0, explanation: "De mannen zaten opgesloten door een rots en deden een du’a via hun oprechte daden; de rots schoof daardoor stap voor stap open. De Hadith leert dat oprechte goede daden een middel (wasila) tot verhoring zijn." },
 ];
 return exports;})();
 
@@ -2773,6 +3086,10 @@ return exports;})();
       group: null,                          // {code, mid} als de speler in een groep zit
       journey: { junior: {}, expert: {} },  // journey[level][catId][levelIndex] = {score,total,stars} (De Reis)
       age14: false,                         // 14+ bevestigd voor de Expert Modus
+      seen: { junior: {}, expert: {} },     // seen[level][vraagId] = hoe vaak beantwoord (voor variatie)
+      recent: { junior: [], expert: [] },   // laatst beantwoorde vraag-id's per modus (niet meteen herhalen)
+      chests: { junior: {}, expert: {} },   // chests[level][catId][levelIndex] = {t, game} (geopende schatkisten)
+      album: { junior: {}, expert: {} },    // Kwartet-album per modus: album[level][kaartId] = aantal
     };
   }
   function normalizePlayer(p) {
@@ -2783,6 +3100,10 @@ return exports;})();
       streak: Object.assign(d.streak, p.streak || {}),
       badges: Object.assign({}, p.badges || {}),
       journey: Object.assign({ junior: {}, expert: {} }, p.journey || {}),
+      seen: Object.assign({ junior: {}, expert: {} }, p.seen || {}),
+      recent: Object.assign({ junior: [], expert: [] }, p.recent || {}),
+      chests: Object.assign({ junior: {}, expert: {} }, p.chests || {}),
+      album: (function (a) { a = a || {}; if (a.junior || a.expert) return { junior: Object.assign({}, a.junior || {}), expert: Object.assign({}, a.expert || {}) }; return { junior: Object.assign({}, a), expert: {} }; })(p.album),
     });
   }
   function defaultState() { return { v: 2, sound: true, timer: false, players: [], current: null }; }
@@ -3031,7 +3352,7 @@ return exports;})();
     } else if (kind === "journey") {
       questions = jQuestions(level, catId, jIdx);
     } else {
-      questions = shuffle(poolFor(level, catId, tier));
+      questions = drawQuestions(level, catId, tier, tier === 4 ? 7 : 6);
     }
     quiz = {
       kind: kind, catId: kind === "daily" ? null : catId, level: level, tier: tier, jIdx: kind === "journey" ? jIdx : null,
@@ -3043,9 +3364,9 @@ return exports;})();
 
   /* ───────────── Weergave ───────────── */
   function render() {
-    stopTimer();
+    stopTimer(); mgClear();
     document.body.className = "";
-    if (screen !== "result") { const cel = document.getElementById("celebrate"); if (cel) cel.remove(); }
+    if (screen !== "result" && screen !== "chestopen" && screen !== "minigame") { const cel = document.getElementById("celebrate"); if (cel) cel.remove(); }
     const inDuelQuiz = screen === "quiz" && quiz && quiz.kind === "duel";
     if (P && P.group && (screen === "group" || screen === "duelresult" || inDuelQuiz)) openGroupSub();
     else closeGroupSub();
@@ -3055,7 +3376,8 @@ return exports;})();
     else if (screen === "result") {
       app.innerHTML = viewResult();
       if (result.next && !result.noAuto) startAutoNext();
-      if (result.kind === "journey" && result.passed && !result.celebrated) { result.celebrated = true; celebrate(result.landDone || result.chest); }
+      if (result.kind === "journey" && result.passed && !result.celebrated) { result.celebrated = true; celebrate(result.landDone || result.chestReady); }
+      if (result.kind === "journey" && result.passed && !result.noAuto) startAutoBack();
     }
     else if (screen === "review") app.innerHTML = viewReview();
     else if (screen === "scores") app.innerHTML = viewScores();
@@ -3065,6 +3387,9 @@ return exports;})();
     else if (screen === "group") app.innerHTML = viewGroup();
     else if (screen === "duelresult") app.innerHTML = viewDuelResult();
     else if (screen === "journey") app.innerHTML = viewJourney();
+    else if (screen === "chestopen") { app.innerHTML = viewChestOpen(); afterChestOpenRender(); }
+    else if (screen === "minigame") app.innerHTML = viewMinigame();
+    else if (screen === "album") app.innerHTML = viewAlbum();
     const bw = document.getElementById("badgesBtnWrap");
     if (bw) bw.style.display = (screen === "home" || screen === "scores") ? "" : "none";
     window.scrollTo({ top: 0 });
@@ -3123,9 +3448,9 @@ return exports;})();
     return s + "</span>";
   }
 
-  function totalStars() {
+  function totalStars(only) {
     let t = 0;
-    ["junior", "expert"].forEach(function (l) {
+    [only || P.mode].forEach(function (l) {
       Object.keys(P.best[l]).forEach(function (k) { t += P.best[l][k].stars || 0; });
       t += jStarTotal(P, l);
     });
@@ -3163,6 +3488,7 @@ return exports;})();
       '</p></span><span class="go">' + icon("right", 22) + "</span></button>";
 
     h += '<button class="journey-btn" data-act="journey"><span class="jb-ic">' + icon("map", 28) + '</span><span class="jb-tx"><b>Start de Reis</b><small>12+ korte levels per land met sterren en schatkisten</small></span>' + icon("right", 22) + "</button>";
+    h += '<button class="journey-btn album-btn" data-act="album"><span class="jb-ic">' + icon("layers", 28) + '</span><span class="jb-tx"><b>Kwartet-album</b><small>' + albumOwned() + ' van ' + albumTotal() + ' verzamelkaarten gevonden</small></span></button>';
     h += '<div class="btn-row"><button class="scores-btn" data-act="scores">' + icon("trophy", 22) + "<span>Mijn Scores</span>" + icon("right", 20) + "</button>" +
       (S.players.length > 1 ? '<button class="scores-btn" data-act="board">' + icon("users", 22) + "<span>Scorebord</span>" + icon("right", 20) + "</button>" : "") +
       '<button class="scores-btn" data-act="group">' + icon("users", 22) + "<span>" + (P.group ? "Mijn groep" : "Groep & duel") + "</span>" + icon("right", 20) + "</button></div>";
@@ -3300,6 +3626,7 @@ return exports;})();
     if (isMulti(it.q)) { it.picked = (it.sel || []).slice(); it.correct = !it.timedOut && sameSet(it.picked, it.q.answer); }
     else { it.picked = pos === null ? null : it.order[pos]; it.correct = it.picked === it.q.answer; }
     quiz.answered = true;
+    if (quiz.kind === "category" || quiz.kind === "journey") markSeen(quiz.level, it.q.id);
     if (quiz.kind === "duel") { quiz.ms += Date.now() - quiz.qStart; pushDuelProgress(); }
     if (it.correct) {
       quiz.score++;
@@ -3361,7 +3688,7 @@ return exports;})();
       const passed = stars >= 1, first = passed && !wasPassed, mile = jIsMile(ji, n);
       jr = {
         jIdx: ji, jCount: n, passed: passed, firstPass: first,
-        chest: first && mile, chestGold: first && mile && jChestState(lv, cid, ji, n) === "gold",
+        chestReady: first && mile,
         landDone: first && jLandStats(lv, cid).done,
       };
     } else if (quiz.kind === "daily") {
@@ -3389,7 +3716,7 @@ return exports;})();
     pushMember();
 
     result = { kind: quiz.kind, catId: quiz.catId, level: quiz.level, tier: quiz.tier || 1, next: nextTier(quiz, stars), score: score, total: total, stars: stars, record: isRecord, items: quiz.items, newBadges: newBadges, open4: open4, noAuto: journeyReturn && quiz.kind === "category" };
-    if (jr) Object.assign(result, jr, { noAuto: true });
+    if (jr) Object.assign(result, jr, { noAuto: false });
     screen = "result";
     if (jr) {
       play(jr.passed ? "fanfare" : "lose");
@@ -3649,21 +3976,38 @@ return exports;})();
      (3 van 5) en levert 1-3 sterren op: 3/5 = 1 ster, 4/5 = 2 sterren, 5/5 = 3 sterren.
      Elke J_MILE-de level (en het laatste level) heeft een schatkist als mijlpaal.
      De vragen komen uit de bestaande vragenlijst van het land, oplopend in moeilijkheid (niveau 1 → 4). */
-  const J_Q = 5, J_MIN = 12, J_MAX = 15, J_MILE = 5;
-  function jPool(level, catId) {
-    return poolFor(level, catId).slice().sort(function (a, b) {
-      return qTier(a) - qTier(b) || hashString("j" + a.id) - hashString("j" + b.id);
+  const J_Q = 5, J_MIN = 10, J_MAX = 15, J_MILE = 2;
+  /* ── slimme vraagkeuze: eerst vragen die de speler nog niet (of het minst) beantwoordde, nooit meteen dezelfde als net daarvoor ──
+     target (0-1) = gewenste moeilijkheid binnen de pool (0 = makkelijk, 1 = zwaar); alleen een lichte voorkeur. */
+  const RECENT_KEEP = 14;
+  function drawQuestions(level, catId, tier, count, target) {
+    const pool = poolFor(level, catId, tier || undefined);
+    const seen = (P && P.seen && P.seen[level]) || {}, recent = (P && P.recent && P.recent[level]) || [];
+    const maxTier = level === "expert" ? 4 : 3;
+    let cand = pool.filter(function (q) { return recent.indexOf(q.id) === -1; });
+    if (cand.length < Math.min(count, pool.length)) cand = pool.slice();
+    const scored = cand.map(function (q) {
+      const diff = target === undefined ? 0 : Math.abs((qTier(q) - 1) / (maxTier - 1) - target) * 3;
+      return { q: q, s: (seen[q.id] || 0) * 10 + diff + Math.random() * 1.6 };
     });
+    scored.sort(function (a, b) { return a.s - b.s; });
+    return shuffle(scored.slice(0, count).map(function (x) { return x.q; }));
   }
-  /* aantal levels groeit vanzelf mee als je meer vragen toevoegt (ruim 4 vragen per level), tussen J_MIN en J_MAX */
+  function markSeen(level, qid) {
+    if (!P) return;
+    if (!P.seen) P.seen = { junior: {}, expert: {} };
+    if (!P.seen[level]) P.seen[level] = {};
+    P.seen[level][qid] = (P.seen[level][qid] || 0) + 1;
+    if (!P.recent) P.recent = { junior: [], expert: [] };
+    const r = (P.recent[level] || []).filter(function (x) { return x !== qid; });
+    r.push(qid);
+    P.recent[level] = r.slice(-RECENT_KEEP);
+  }
+  /* aantal levels groeit vanzelf mee met de vragenbank (ruim 4 vragen per level), tussen J_MIN en J_MAX */
   function jCount(level, catId) { return Math.max(J_MIN, Math.min(J_MAX, Math.ceil(poolFor(level, catId).length / 4))); }
-  /* vaste selectie per level: een venster in de (op moeilijkheid gesorteerde) lijst dat meeschuift met het level */
   function jQuestions(level, catId, idx) {
-    const pool = jPool(level, catId), n = pool.length, size = Math.min(J_Q, n);
-    if (n <= size) return pool;
-    const cnt = jCount(level, catId), band = Math.min(n, size + 4);
-    const start = Math.round(idx * (n - band) / Math.max(1, cnt - 1));
-    return shuffle(shuffle(pool.slice(start, start + band), mulberry32(hashString(level + "|" + catId + "|" + idx))).slice(0, size));
+    const cnt = jCount(level, catId);
+    return drawQuestions(level, catId, null, J_Q, cnt > 1 ? idx / (cnt - 1) : 0);
   }
   function jBest(level, catId, i) {
     const m = P && P.journey && P.journey[level] && P.journey[level][catId];
@@ -3701,13 +4045,38 @@ return exports;})();
     if (m) Object.keys(m).forEach(function (cid) { Object.keys(m[cid]).forEach(function (k) { t += m[cid][k].stars || 0; }); });
     return t;
   }
-  /* toestand van de schatkist bij een mijlpaal-level: closed-dim (nog ver weg), closed (bereikbaar), open, gold (alle levels sinds de vorige kist met 3 sterren) */
+  /* schatkisten: na elke J_MILE levels (en na het laatste level). De kist is "ready" (springt!) zodra het level gehaald is
+     en blijft dat tot de speler hem opent en de minigame uitspeelt. */
+  const MG_GAMES = ["memory", "kwartet", "puzzel"];
+  const MG_NAME = { memory: "Memory", kwartet: "Kwartet-pakje", puzzel: "Puzzel" };
+  function chestRec(level, catId, i) {
+    const m = P && P.chests && P.chests[level] && P.chests[level][catId];
+    return (m && m[i]) || null;
+  }
+  function chestSave(level, catId, i, game) {
+    if (!P.chests) P.chests = { junior: {}, expert: {} };
+    if (!P.chests[level]) P.chests[level] = {};
+    if (!P.chests[level][catId]) P.chests[level][catId] = {};
+    P.chests[level][catId][i] = { t: Date.now(), game: game };
+    saveState();
+  }
+  function chestGame(catId, i) {
+    const ci = Math.max(0, CATEGORIES.findIndex(function (x) { return x.id === catId; }));
+    return MG_GAMES[(Math.floor(i / J_MILE) + ci) % MG_GAMES.length];
+  }
+  /* closed-dim (level nog niet bereikt), closed (level is aan de beurt), ready (springt, wacht op jou), open, gold (open + alle levels sinds de vorige kist met 3 sterren) */
   function jChestState(level, catId, i, n) {
     if (!jPassed(level, catId, i)) return jLocked(level, catId, i) ? "closed-dim" : "closed";
+    if (!chestRec(level, catId, i)) return "ready";
     let s = i;
     while (s > 0 && !jIsMile(s - 1, n)) s--;
     for (let k = s; k <= i; k++) { const b = jBest(level, catId, k); if (!b || b.stars < 3) return "open"; }
     return "gold";
+  }
+  function chestsReady(level, catId) {
+    const n = jCount(level, catId); let c = 0;
+    for (let i = 0; i < n; i++) if (jIsMile(i, n) && jChestState(level, catId, i, n) === "ready") c++;
+    return c;
   }
   /* slingerend pad: x volgt een sinus, y loopt omhoog; ruim genoeg voor 15 levels */
   function jLayout(n) {
@@ -3762,14 +4131,14 @@ return exports;})();
   function shareScoreText(r) {
     const c = r.catId ? catById(r.catId) : null;
     if (r.kind === "journey") {
-      return "🌙 Islam Quiz: level " + (r.jIdx + 1) + " van " + r.jCount + " gehaald bij " + c.title + "! " + starEmoji(r.stars) + " (" + r.score + "/" + r.total + " goed)" +
-        (r.landDone ? "\n🚩 Land voltooid!" : r.chest ? "\n🎁 Schatkist geopend!" : "") + "\nLukt het jou ook? " + SITE_URL;
+      return "🌙 Islam Quiz (" + modeName(r.level) + "): level " + (r.jIdx + 1) + " van " + r.jCount + " gehaald bij " + c.title + "! " + starEmoji(r.stars) + " (" + r.score + "/" + r.total + " goed)" +
+        (r.landDone ? "\n🚩 Land voltooid!" : r.chestReady ? "\n🎁 Schatkist verdiend!" : "") + "\nLukt het jou ook? " + SITE_URL;
     }
-    if (r.kind === "daily") return "🌙 Islam Quiz – Quiz van de Dag: " + r.score + "/" + r.total + " goed " + starEmoji(r.stars) + "\nLukt het jou ook? " + SITE_URL;
-    return "🌙 Islam Quiz: " + r.score + "/" + r.total + " goed " + starEmoji(r.stars) + " bij " + c.title + (tiersFor(r.level, r.catId).length > 1 ? " (niveau " + r.tier + ")" : "") + "!\nLukt het jou ook? " + SITE_URL;
+    if (r.kind === "daily") return "🌙 Islam Quiz (" + modeName(r.level) + ") – Quiz van de Dag: " + r.score + "/" + r.total + " goed " + starEmoji(r.stars) + "\nLukt het jou ook? " + SITE_URL;
+    return "🌙 Islam Quiz (" + modeName(r.level) + "): " + r.score + "/" + r.total + " goed " + starEmoji(r.stars) + " bij " + c.title + (tiersFor(r.level, r.catId).length > 1 ? " (niveau " + r.tier + ")" : "") + "!\nLukt het jou ook? " + SITE_URL;
   }
   function shareBtn(text, label) {
-    return '<a class="btn wa" href="' + waLink(text) + '" target="_blank" rel="noopener">' + icon("chat", 20) + (label || "Deel mijn score via WhatsApp") + "</a>";
+    return '<a class="btn wa" data-act="hold-auto" href="' + waLink(text) + '" target="_blank" rel="noopener">' + icon("chat", 20) + (label || "Deel mijn score via WhatsApp") + "</a>";
   }
 
   /* ───────────── Resultaat van een reis-level ───────────── */
@@ -3788,26 +4157,484 @@ return exports;})();
     h += '<div class="tier-tag">' + esc(catById(r.catId).title) + " · Level " + (r.jIdx + 1) + " van " + r.jCount + "</div>";
     h += ar(arabicTxt) + "<h1>" + esc(title) + '</h1><p class="msg">' + esc(msg) + "</p>";
     if (r.record) h += '<div class="badge-new">' + icon("trophy", 18) + "Nieuw record!</div>";
-    if (r.chest) {
-      h += '<div class="chest-win ' + (r.chestGold ? "gold" : "") + '"><svg viewBox="-34 -36 68 62" width="84" height="76" aria-hidden="true">' + chest(0, 4, r.chestGold ? "gold" : "open", 1.3, "stop") + "</svg>" +
-        "<span><b>" + (r.chestGold ? "Gouden schatkist geopend!" : "Schatkist geopend!") + "</b>Mijlpaal bereikt na level " + (r.jIdx + 1) + (r.chestGold ? ". Alle levels met 3 sterren!" : ".") + "</span></div>";
-    }
+    if (r.chestReady) h += '<div class="chest-win ready"><svg viewBox="-34 -36 68 62" width="84" height="76" aria-hidden="true"><g class="chest-bounce">' + chest(0, 4, "closed", 1.3, "stop") + "</g></svg>" +
+      "<span><b>Een schatkist wacht op je!</b>Tik op de springende kist op de kaart om hem te openen.</span></div>";
     if (r.landDone) h += '<div class="land-win"><span class="lw-flag">' + FLAG_SVG + "</span><span><b>Land voltooid!</b>Je hebt alle " + r.jCount + " levels van " + esc(catById(r.catId).title) + " gehaald.</span></div>";
     h += '<div class="result-actions">';
-    const hasNext = r.passed && r.jIdx + 1 < r.jCount;
-    if (hasNext) h += '<button class="btn gold" data-act="journey-next-level">' + icon("right", 20) + "Volgend level (" + (r.jIdx + 2) + ")</button>";
-    if (r.passed && !hasNext && !r.landDone) h += '<button class="btn gold" data-act="journey-back">' + icon("map", 20) + "Terug naar De Reis</button>";
-    if (r.landDone) {
-      const ni = CATEGORIES.findIndex(function (x) { return x.id === r.catId; }) + 1;
-      if (ni < CATEGORIES.length) h += '<button class="btn gold" data-act="journey-land-go" data-i="' + ni + '">' + icon("map", 20) + "Naar het volgende land</button>";
-      else h += '<button class="btn gold" data-act="journey-back">' + icon("map", 20) + "Terug naar De Reis</button>";
+    if (r.passed) {
+      /* Candy Crush-stijl: na de viering terug naar de kaart; geen 'volgende'-knop. De speler tikt zelf het volgende icoon aan. */
+      h += '<button class="btn gold" data-act="journey-back">' + icon("map", 20) + '<span id="autoTxt">Naar de kaart (' + AUTO_BACK_SECS + ")</span></button>";
+      h += shareBtn(shareScoreText(r), "Deel via WhatsApp");
+      h += '<button class="btn ghost" data-act="review">' + icon("list", 20) + "Bekijk antwoorden</button></div></section>";
+      return h;
     }
-    if (!r.passed) h += '<button class="btn gold" data-act="retry">' + icon("retry", 20) + "Probeer dit level opnieuw</button>";
-    if (r.passed) h += shareBtn(shareScoreText(r), "Deel via WhatsApp");
-    if (hasNext || !r.passed || r.landDone) h += '<button class="btn ghost" data-act="journey-back">' + icon("map", 20) + "Terug naar De Reis</button>";
-    if (r.passed) h += '<button class="btn ghost" data-act="retry">' + icon("retry", 20) + "Speel dit level nog een keer</button>";
+    h += '<button class="btn gold" data-act="retry">' + icon("retry", 20) + "Probeer dit level opnieuw</button>";
+    h += '<button class="btn ghost" data-act="journey-back">' + icon("map", 20) + "Terug naar De Reis</button>";
     h += '<button class="btn ghost" data-act="review">' + icon("list", 20) + "Bekijk antwoorden</button></div></section>";
     return h;
+  }
+  /* na een gehaald level: viering, dan automatisch terug naar de reiskaart (stopt zodra de speler iets aantikt) */
+  const AUTO_BACK_SECS = 7;
+  function startAutoBack() {
+    let left = AUTO_BACK_SECS;
+    stopTimer();
+    timerHandle = setInterval(function () {
+      left--;
+      if (left <= 0) { stopTimer(); if (screen === "result") { screen = "journey"; render(); } return; }
+      const t = document.getElementById("autoTxt");
+      if (t) t.textContent = "Naar de kaart (" + left + ")";
+    }, 1000);
+  }
+
+  /* ───────────── Kunstgalerij: 20 originele SVG-illustraties (voor Memory, Puzzel en het Kwartet-album) ───────────── */
+  function artBands(cols) {
+    const bh = 200 / cols.length; let h = "";
+    cols.forEach(function (c, i) { h += '<rect y="' + (i * bh - 1).toFixed(1) + '" width="200" height="' + (bh + 2).toFixed(1) + '" fill="' + c + '"/>'; });
+    return h;
+  }
+  function artCrescent(x, y, r, fill, rot) {
+    return '<path transform="translate(' + x + " " + y + ") rotate(" + (rot || 0) + ')" d="M0 ' + -r + " A " + r + " " + r + " 0 0 0 0 " + r + " A " + r * 1.4 + " " + r * 1.4 + " 0 0 1 0 " + -r + 'Z" fill="' + fill + '"/>';
+  }
+  function artStarDots(list, col) { return list.map(function (p) { return '<polygon points="' + starPoly(p[0], p[1], p[2]) + '" fill="' + (col || "#fff6b8") + '"/>'; }).join(""); }
+  function artCloud(x, y, k) { return '<g transform="translate(' + x + " " + y + ") scale(" + k + ')" fill="#fff" opacity=".92"><ellipse rx="22" ry="8"/><ellipse cx="12" cy="-6" rx="14" ry="9"/><ellipse cx="-10" cy="-5" rx="11" ry="7"/></g>'; }
+  function artSun(x, y, r) { return '<circle cx="' + x + '" cy="' + y + '" r="' + r * 1.5 + '" fill="#fff6c8" opacity=".7"/><circle cx="' + x + '" cy="' + y + '" r="' + r + '" fill="#ffd95a"/>'; }
+  function artWaves(y, col, amp) {
+    amp = amp || 10;
+    return '<path d="M0 ' + y + " Q25 " + (y - amp) + " 50 " + y + " T100 " + y + " T150 " + y + " T200 " + y + ' V200 H0Z" fill="' + col + '"/>';
+  }
+
+  const ARTS = {
+    ark: function () {
+      return artBands(["#7fc8ff", "#a6d9ff", "#cfeaff", "#eaf6ff"]) + artSun(158, 40, 15) + artCloud(48, 38, 1.1) + artCloud(118, 72, .8) + artWaves(124, "#5db0f0") +
+        '<path d="M38 112 H162 L146 150 Q100 164 54 150Z" fill="#8a5a2b" stroke="#5e3a17" stroke-width="3" stroke-linejoin="round"/><path d="M46 128 H154" stroke="#c98f4a" stroke-width="3"/>' +
+        '<rect x="66" y="80" width="68" height="32" rx="3" fill="#c98f4a" stroke="#5e3a17" stroke-width="3"/><path d="M58 82 L100 56 L142 82Z" fill="#a8672b" stroke="#5e3a17" stroke-width="3" stroke-linejoin="round"/>' +
+        '<rect x="77" y="90" width="14" height="16" rx="7" fill="#ffe9a8"/><rect x="109" y="90" width="14" height="16" rx="7" fill="#ffe9a8"/><line x1="100" y1="56" x2="100" y2="34" stroke="#5e3a17" stroke-width="3"/><path d="M100 34 L120 41 L100 48Z" fill="#1f9d55" stroke="#fff" stroke-width="1.5"/>' +
+        artWaves(146, "#2f86d6") + artWaves(170, "#1f6fbd") + '<path d="M12 156 q8 -6 16 0 M120 160 q8 -6 16 0 M70 182 q8 -6 16 0 M158 180 q8 -6 16 0" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="2.5" stroke-linecap="round"/>';
+    },
+    walvis: function () {
+      return artBands(["#0e2a5c", "#14418a", "#1d63b8", "#2b86d6"]) + artCrescent(40, 34, 18, "#fff4c9", -20) + artStarDots([[96, 24, 5], [150, 40, 4], [180, 18, 5], [120, 62, 3], [72, 56, 3]]) +
+        '<path d="M120 84 Q112 62 100 50 M120 84 Q124 60 134 48 M120 84 Q132 66 148 62" fill="none" stroke="#bfe8ff" stroke-width="4" stroke-linecap="round" opacity=".85"/>' +
+        '<path d="M30 130 Q34 86 90 84 Q150 84 168 120 Q176 132 166 140 Q120 170 60 152 Q36 146 30 130Z" fill="#5b7fa8" stroke="#2a4a70" stroke-width="3"/>' +
+        '<path d="M44 142 Q100 170 164 138 Q150 152 100 158 Q64 160 44 142Z" fill="#d6e8f6"/><path d="M30 130 Q12 112 16 86 Q30 98 38 108 Q44 96 56 92 Q48 112 46 126Z" fill="#5b7fa8" stroke="#2a4a70" stroke-width="3" stroke-linejoin="round"/>' +
+        '<circle cx="142" cy="114" r="6" fill="#fff"/><circle cx="143.5" cy="114.5" r="3.2" fill="#14223a"/><path d="M132 130 Q148 138 162 126" fill="none" stroke="#2a4a70" stroke-width="3" stroke-linecap="round"/><path d="M96 124 Q104 142 116 140 Q112 128 96 124Z" fill="#46688f"/>' +
+        artWaves(150, "#2b86d6", 8).replace('fill="#2b86d6"', 'fill="#2b86d6" opacity=".55"') + artWaves(176, "#1d63b8", 8) +
+        '<circle cx="176" cy="150" r="5" fill="none" stroke="#bfe8ff" stroke-width="2"/><circle cx="186" cy="134" r="3" fill="none" stroke="#bfe8ff" stroke-width="2"/><circle cx="26" cy="170" r="4" fill="none" stroke="#bfe8ff" stroke-width="2"/>';
+    },
+    mier: function () {
+      let flow = ""; [[26, 150, "#ff5d9e"], [176, 140, "#ffd23f"], [150, 168, "#fff"], [40, 176, "#b388ff"]].forEach(function (f) { flow += '<line x1="' + f[0] + '" y1="' + f[1] + '" x2="' + f[0] + '" y2="200" stroke="#2f9d4f" stroke-width="3"/><circle cx="' + f[0] + '" cy="' + f[1] + '" r="9" fill="' + f[2] + '"/><circle cx="' + f[0] + '" cy="' + f[1] + '" r="3.5" fill="#fff6a0"/>'; });
+      return artBands(["#b6ecff", "#d7f6c8", "#a8e08e", "#79c96b"]) + artSun(40, 36, 16) + artCloud(140, 44, .9) +
+        '<path d="M10 164 Q100 96 192 144 Q110 190 10 164Z" fill="#2fae5a" stroke="#1c7a3c" stroke-width="3" stroke-linejoin="round"/><path d="M16 162 Q100 140 188 144" fill="none" stroke="#7fe0a0" stroke-width="3"/>' + flow +
+        '<g stroke="#4a1f08" stroke-width="3.5" stroke-linecap="round" fill="none"><path d="M64 118 L56 134 M80 118 L78 136 M96 114 L100 132 M112 112 L124 128 M70 112 L60 100 M104 106 L112 96"/></g>' +
+        '<ellipse cx="62" cy="108" rx="21" ry="14" fill="#8a3b12"/><ellipse cx="92" cy="106" rx="11" ry="9" fill="#a8481a"/><circle cx="118" cy="100" r="12" fill="#8a3b12"/><ellipse cx="55" cy="102" rx="8" ry="4" fill="#fff" opacity=".25"/>' +
+        '<circle cx="122" cy="97" r="3.4" fill="#fff"/><circle cx="123" cy="97.5" r="1.8" fill="#14223a"/><path d="M114 92 Q108 78 98 76 M120 90 Q124 76 136 72" fill="none" stroke="#4a1f08" stroke-width="3" stroke-linecap="round"/><path d="M118 106 Q124 110 130 105" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>';
+    },
+    hoepoe: function () {
+      let crest = ""; [-62, -40, -18, 4, 26].forEach(function (a) { const r = a * Math.PI / 180, tx = 132 + Math.sin(r) * 34 - 6, ty = 84 - Math.cos(r) * 34; crest += '<path d="M132 86 L' + tx.toFixed(1) + " " + ty.toFixed(1) + " L" + (132 + 8).toFixed(1) + ' 84Z" fill="#e9a15e" stroke="#7a4a1c" stroke-width="1.5" stroke-linejoin="round"/><circle cx="' + tx.toFixed(1) + '" cy="' + ty.toFixed(1) + '" r="3.2" fill="#14223a"/>'; });
+      return artBands(["#ffe3b0", "#ffc98a", "#ffb38a", "#ff9d7a"]) + artSun(40, 150, 18) + '<path d="M0 156 Q100 140 200 156" fill="none" stroke="#6b4a2a" stroke-width="8" stroke-linecap="round"/><path d="M20 160 q-6 10 -2 20 M170 150 q8 8 6 20" fill="none" stroke="#6b4a2a" stroke-width="4" stroke-linecap="round"/>' +
+        '<path d="M70 124 L22 150 L28 134 L18 124 L34 120 L70 112Z" fill="#14223a"/><path d="M60 122 L34 134 M54 116 L32 124" stroke="#fff" stroke-width="4"/>' +
+        '<ellipse cx="102" cy="114" rx="38" ry="26" fill="#e9a15e" stroke="#7a4a1c" stroke-width="3" transform="rotate(-12 102 114)"/><ellipse cx="108" cy="124" rx="26" ry="14" fill="#f6d6a8" transform="rotate(-12 108 124)"/>' +
+        '<path d="M72 112 Q96 96 126 112 L120 130 Q92 122 70 128Z" fill="#14223a"/><path d="M80 112 L78 126 M92 108 L90 124 M104 108 L102 126 M116 112 L114 128" stroke="#fff" stroke-width="4"/>' +
+        '<circle cx="136" cy="92" r="17" fill="#eeb279" stroke="#7a4a1c" stroke-width="3"/>' + crest + '<path d="M150 94 Q172 96 184 112" fill="none" stroke="#3a2412" stroke-width="5" stroke-linecap="round"/><circle cx="142" cy="90" r="3.6" fill="#14223a"/><circle cx="143" cy="89" r="1.2" fill="#fff"/><path d="M94 140 L92 156 M110 142 L112 156" stroke="#7a4a1c" stroke-width="3" stroke-linecap="round"/>';
+    },
+    gebedsmat: function () {
+      let fringe = ""; for (let i = 0; i < 11; i++) fringe += '<line x1="' + (52 + i * 9.6) + '" y1="22" x2="' + (52 + i * 9.6) + '" y2="14" stroke="#f3e2b0" stroke-width="2"/><line x1="' + (52 + i * 9.6) + '" y1="176" x2="' + (52 + i * 9.6) + '" y2="184" stroke="#f3e2b0" stroke-width="2"/>';
+      return artBands(["#2b2a6b", "#4a3f8f", "#7a5bb0", "#b58bd0"]) + artStarDots([[20, 24, 5], [176, 36, 4], [24, 120, 4], [180, 130, 5], [170, 70, 3]]) + artCrescent(170, 22, 10, "#fff4c9", -20) + fringe +
+        '<rect x="50" y="22" width="100" height="154" rx="5" fill="#7a1f3a"/><rect x="58" y="30" width="84" height="138" rx="3" fill="#b7324f"/><rect x="62" y="34" width="76" height="130" rx="2" fill="none" stroke="#f5d77a" stroke-width="2" stroke-dasharray="5 4"/>' +
+        '<path d="M70 156 V96 Q70 56 100 44 Q130 56 130 96 V156Z" fill="#7a1f3a" stroke="#f5d77a" stroke-width="3"/><path d="M78 156 V98 Q78 64 100 54 Q122 64 122 98 V156Z" fill="#d95a76"/>' +
+        '<g transform="translate(100 118)"><rect x="-13" y="-13" width="26" height="26" fill="#f5d77a"/><rect x="-13" y="-13" width="26" height="26" fill="#f5d77a" transform="rotate(45)"/><circle r="6" fill="#7a1f3a"/></g>' +
+        '<line x1="100" y1="44" x2="100" y2="62" stroke="#f5d77a" stroke-width="2"/><path d="M92 62 H108 L106 74 Q100 80 94 74Z" fill="#ffd36a" stroke="#a86b00" stroke-width="1.5"/><circle cx="100" cy="70" r="2.6" fill="#fff3a0"/>';
+    },
+    zakat: function () {
+      let coins = ""; [[152, 156, 12], [168, 142, 9], [36, 160, 11], [52, 172, 8]].forEach(function (c) { coins += '<circle cx="' + c[0] + '" cy="' + c[1] + '" r="' + c[2] + '" fill="#ffc928" stroke="#b87400" stroke-width="2"/><path d="M' + (c[0] + 2) + " " + (c[1] - c[2] * .55) + " a" + c[2] * .55 + " " + c[2] * .55 + " 0 1 0 0 " + c[2] * 1.1 + ' a' + c[2] * .42 + " " + c[2] * .42 + " 0 1 1 0 -" + c[2] * 1.1 + 'Z" fill="#b87400"/>'; });
+      return artBands(["#0d4d4d", "#127a76", "#20a79c", "#7fe0c9"]) + artStarDots([[30, 30, 5], [168, 28, 4], [100, 18, 3], [176, 70, 3]]) +
+        '<path d="M70 92 Q58 150 78 170 Q100 184 122 170 Q142 150 130 92 Q100 104 70 92Z" fill="#c8923a" stroke="#7a5200" stroke-width="3" stroke-linejoin="round"/><path d="M76 100 Q70 140 80 160" fill="none" stroke="#f3c87a" stroke-width="5" stroke-linecap="round" opacity=".7"/>' +
+        '<path d="M72 92 Q100 108 128 92 L124 78 Q100 90 76 78Z" fill="#e0a43a" stroke="#7a5200" stroke-width="3" stroke-linejoin="round"/><path d="M84 74 Q100 50 116 74" fill="none" stroke="#7a5200" stroke-width="4" stroke-linecap="round"/><path d="M96 78 H104 L110 92 H90Z" fill="#ff5d8f" stroke="#fff" stroke-width="1.5"/>' +
+        artCrescent(96, 132, 15, "#fff4c9", -20) + '<polygon points="' + starPoly(108, 126, 6) + '" fill="#fff4c9"/>' + coins + heartShape(152, 96, 8, "#ff5d8f", 0).replace(/<animateTransform[^>]*\/>/g, "") + heartShape(48, 104, 6, "#ff9ad5", .5).replace(/<animateTransform[^>]*\/>/g, "");
+    },
+    maan: function () {
+      return artBands(["#201b4e", "#3b2f7a", "#6a4aa8", "#e29a8f"]) + artCrescent(78, 70, 40, "#ffe27a", -18) + artStarDots([[140, 40, 8], [168, 80, 5], [30, 28, 5], [120, 100, 4], [30, 110, 4], [182, 30, 4]]) +
+        '<path d="M0 168 Q100 150 200 168 V200 H0Z" fill="#2a1f5a"/>' + dateBowl(100, 160, 2.2) + '<ellipse cx="100" cy="188" rx="64" ry="7" fill="#000" opacity=".2"/>' +
+        '<rect x="150" y="128" width="26" height="34" rx="4" fill="#bfe8ff" opacity=".85" stroke="#fff" stroke-width="2"/><rect x="150" y="140" width="26" height="22" rx="3" fill="#6fc6ff" opacity=".8"/>';
+    },
+    kaaba: function () {
+      let crowd = ""; for (let i = 0; i < 26; i++) { const a = (i / 26) * Math.PI * 2; crowd += '<circle cx="' + (100 + Math.cos(a) * 82).toFixed(1) + '" cy="' + (170 + Math.sin(a) * 15).toFixed(1) + '" r="3" fill="#fff" opacity=".9"/>'; }
+      return artBands(["#1b2a5e", "#3d4a96", "#c76f8f", "#ffcf8a"]) + artCrescent(160, 40, 14, "#fff4c9", -20) + artStarDots([[30, 30, 5], [70, 18, 4], [110, 40, 3], [184, 80, 3]]) +
+        '<ellipse cx="100" cy="170" rx="96" ry="22" fill="#f3e8cf"/><ellipse cx="100" cy="170" rx="84" ry="17" fill="#e4d5b0"/>' +
+        '<rect x="26" y="70" width="9" height="86" fill="#f3e8cf"/><path d="M24 70 L30.5 46 L37 70Z" fill="#ffb703"/><rect x="165" y="70" width="9" height="86" fill="#f3e8cf"/><path d="M163 70 L169.5 46 L176 70Z" fill="#ffb703"/>' +
+        '<path d="M62 84 L138 84 L146 74 L70 74Z" fill="#3b3b46"/><rect x="62" y="84" width="76" height="72" fill="#1f1f26"/><path d="M138 84 L146 74 L146 146 L138 156Z" fill="#121217"/>' +
+        '<rect x="62" y="98" width="76" height="9" fill="#e2b53a"/><path d="M138 98 L146 90 L146 99 L138 107Z" fill="#c99a22"/><rect x="108" y="116" width="20" height="40" rx="2" fill="#e2b53a" stroke="#a87c10" stroke-width="2"/><circle cx="123" cy="138" r="2" fill="#7a5a10"/>' + crowd;
+    },
+    hira: function () {
+      return artBands(["#08102e", "#13224f", "#27386f", "#4b4f8c"]) + artCrescent(150, 40, 20, "#fff4c9", -20) + artStarDots([[30, 26, 5], [70, 50, 4], [110, 20, 4], [182, 90, 3], [20, 80, 3]]) +
+        '<path d="M-6 200 L-6 130 Q30 96 60 60 Q82 36 100 34 Q122 36 146 64 Q172 100 206 124 L206 200Z" fill="#4a3426"/><path d="M60 60 Q82 36 100 34 Q122 36 146 64 Q120 50 100 54 Q80 54 60 60Z" fill="#6a4a36"/>' +
+        '<path d="M70 200 V148 Q70 100 100 96 Q130 100 130 148 V200Z" fill="#ffe9a8" opacity=".35"/><path d="M78 200 V150 Q78 112 100 108 Q122 112 122 150 V200Z" fill="#ffd36a" opacity=".6"/><path d="M86 200 V152 Q86 124 100 120 Q114 124 114 152 V200Z" fill="#fff3a0"/>' +
+        '<path d="M100 120 L40 34 M100 120 L160 34 M100 120 L100 20" stroke="#fff3a0" stroke-width="3" opacity=".3"/><path d="M0 184 Q100 170 200 184 V200 H0Z" fill="#2a1d14"/>';
+    },
+    medina: function () {
+      curTh = LANDS.profeten.pal.junior;
+      return artBands(["#bfe9d0", "#d9f3dc", "#f3f9d9", "#fff1c2"]) + artSun(164, 36, 14) + artCloud(40, 40, 1) + '<path d="M0 170 Q100 150 200 170 V200 H0Z" fill="#e8d6a8"/>' +
+        '<rect x="30" y="92" width="10" height="78" fill="#fbf4de"/><path d="M28 92 L35 66 L42 92Z" fill="#ff7a59"/><rect x="160" y="92" width="10" height="78" fill="#fbf4de"/><path d="M158 92 L165 66 L172 92Z" fill="#ff7a59"/>' +
+        '<rect x="48" y="122" width="104" height="48" fill="#fbf4de" stroke="#d8c8a8" stroke-width="2"/><path d="M62 122 A38 38 0 0 1 138 122Z" fill="#2fbf71" stroke="#1c8a50" stroke-width="2"/><path d="M100 84 V70" stroke="#e0a100" stroke-width="3"/><circle cx="100" cy="66" r="4" fill="#ffb703"/>' +
+        '<path d="M64 170 V150 a9 9 0 0 1 18 0 V170Z M91 170 V146 a9 9 0 0 1 18 0 V170Z M118 170 V150 a9 9 0 0 1 18 0 V170Z" fill="#7a5cf0"/>' + palm(14, 176, 0.9, false) + palm(190, 176, 0.8, true);
+    },
+    uhud: function () {
+      return artBands(["#ff9a76", "#ffb48a", "#ffd09a", "#ffe6b3"]) + artSun(120, 112, 24) + mountain(58, 172, 130, 74, "#8a4524", "#b8693d") + mountain(132, 176, 190, 124, "#a0522d", "#cf8350") +
+        '<path d="M0 172 Q100 156 200 172 V200 H0Z" fill="#e8c98a"/><path d="M0 186 Q100 174 200 186 V200 H0Z" fill="#d9b56e"/>' + artCloud(40, 34, 1) + artCloud(160, 50, .8);
+    },
+    kameel: function () {
+      curTh = LANDS.profeten.pal.junior;
+      return artBands(["#ffb36b", "#ffcf8a", "#ffe3a8", "#fff1c8"]) + artSun(150, 52, 20) + '<path d="M0 150 Q60 126 120 148 T200 140 V200 H0Z" fill="#f0c274"/><path d="M0 176 Q80 158 200 172 V200 H0Z" fill="#e3ad58"/>' + palm(176, 164, 0.7, true) + camel(84, 176, 1.28, false);
+    },
+    rehal: function () {
+      return artBands(["#06243a", "#0b3b4f", "#16606a", "#2a8a85"]) + '<circle cx="100" cy="96" r="78" fill="#fff6b0" opacity=".13"/><circle cx="100" cy="96" r="54" fill="#fff6b0" opacity=".14"/>' + artStarDots([[24, 30, 6], [176, 26, 5], [36, 96, 4], [170, 100, 4], [100, 18, 4]]) + artCrescent(170, 60, 12, "#fff4c9", -20) +
+        rehal(100, 168, 1.95) + '<path d="M20 190 Q100 170 180 190 V200 H20Z" fill="#0a2f3f"/>';
+    },
+    qalam: function () {
+      return artBands(["#fdf0d0", "#f6dfa8", "#efd08a", "#e3bd6a"]) + artStarDots([[30, 32, 6], [170, 24, 5], [168, 150, 4]], "#e0a100") +
+        '<path d="M42 66 Q40 60 52 60 H150 Q162 60 160 66 V150 Q162 158 150 158 H52 Q40 158 42 150Z" fill="#fffaf0" stroke="#b88a2a" stroke-width="3"/><ellipse cx="46" cy="108" rx="9" ry="50" fill="#f3e2b0" stroke="#b88a2a" stroke-width="3"/><ellipse cx="156" cy="108" rx="9" ry="50" fill="#f3e2b0" stroke="#b88a2a" stroke-width="3"/>' +
+        '<path d="M64 82 H138 M64 98 H128 M64 114 H138 M64 130 H112" stroke="#2e9d6a" stroke-width="4" stroke-linecap="round"/>' +
+        '<rect x="30" y="146" width="36" height="34" rx="6" fill="#1c2f6a" stroke="#0e1a44" stroke-width="3"/><rect x="38" y="138" width="20" height="10" rx="3" fill="#8a6a2a"/><ellipse cx="48" cy="150" rx="11" ry="4" fill="#3a5ad0"/>' +
+        '<path d="M164 24 L96 128 L88 132 L90 122 L158 18Z" fill="#e0a100" stroke="#8a5a00" stroke-width="3" stroke-linejoin="round"/><path d="M96 128 L88 132 L90 122Z" fill="#1c2f6a"/><path d="M160 22 L94 124" stroke="#fff3a0" stroke-width="2.5" opacity=".7"/>';
+    },
+    fanous: function () {
+      return artBands(["#1a123d", "#3a1f6a", "#6a2f8a", "#c2508f"]) + artStarDots([[26, 30, 5], [176, 40, 5], [40, 120, 3], [170, 130, 4], [150, 20, 3]]) + '<circle cx="100" cy="112" r="80" fill="#ffd36a" opacity=".14"/><circle cx="100" cy="112" r="56" fill="#ffd36a" opacity=".18"/>' +
+        '<line x1="100" y1="0" x2="100" y2="34" stroke="#c88a10" stroke-width="3"/><circle cx="100" cy="38" r="6" fill="none" stroke="#c88a10" stroke-width="3"/>' +
+        '<path d="M70 62 Q100 24 130 62Z" fill="#c88a10" stroke="#8a5a00" stroke-width="3" stroke-linejoin="round"/><rect x="66" y="62" width="68" height="8" rx="3" fill="#e0a21c" stroke="#8a5a00" stroke-width="2.5"/>' +
+        '<path d="M70 70 L62 118 Q66 150 100 154 Q134 150 138 118 L130 70Z" fill="#ff5d6c" stroke="#8a5a00" stroke-width="3" stroke-linejoin="round"/><path d="M100 70 V154 M66 94 H134 M64 122 H136" stroke="#8a5a00" stroke-width="2" opacity=".7"/>' +
+        '<path d="M78 80 L90 94 L78 108Z M122 80 L110 94 L122 108Z M100 100 L112 116 L100 132 L88 116Z" fill="#ffd23f" opacity=".85"/><ellipse cx="100" cy="116" rx="9" ry="14" fill="#fff6c0"/><path d="M70 154 L130 154 L120 170 L80 170Z" fill="#c88a10" stroke="#8a5a00" stroke-width="3" stroke-linejoin="round"/><circle cx="100" cy="178" r="5" fill="#e5365c"/>';
+    },
+    sterren: function () {
+      return artBands(["#050a2a", "#0f1c5c", "#2a2a8c", "#5a3fa8"]) + artCrescent(54, 58, 26, "#fff4c9", -22) +
+        artStarDots([[118, 28, 9], [160, 66, 7], [96, 78, 5], [172, 22, 5], [26, 118, 5], [140, 112, 6], [80, 36, 4], [30, 28, 4], [184, 110, 4], [110, 130, 3]]) +
+        '<g fill="#fff" opacity=".85"><circle cx="64" cy="100" r="1.6"/><circle cx="130" cy="52" r="1.6"/><circle cx="150" cy="30" r="1.4"/><circle cx="14" cy="76" r="1.6"/><circle cx="186" cy="60" r="1.4"/><circle cx="92" cy="14" r="1.6"/></g>' +
+        '<path d="M0 168 Q50 146 100 164 T200 156 V200 H0Z" fill="#14123f"/><path d="M0 186 Q70 170 140 184 T200 180 V200 H0Z" fill="#0b0a2c"/>' + domeMosque(150, 166, 0.55, "#2a2a6a", "#3a3a8a", "#ffe27a", false);
+    },
+    roos: function () {
+      return artBands(["#ffd9e8", "#ffc2d9", "#ffe0ec", "#e6ffe6"]) + artSun(36, 34, 12) + artCloud(150, 40, .9) + '<path d="M0 170 Q100 152 200 170 V200 H0Z" fill="#a8e8a0"/>' + rosebush(100, 178, 3.1) + heartShape(40, 90, 7, "#ff5d8f", 0).replace(/<animateTransform[^>]*\/>/g, "") + heartShape(168, 96, 6, "#ff9ad5", .3).replace(/<animateTransform[^>]*\/>/g, "");
+    },
+    cadeau: function () {
+      let conf = ""; [[24, 40, "#ff5d8f"], [170, 30, "#ffd23f"], [40, 100, "#38bdf8"], [168, 96, "#8b5cf6"], [110, 22, "#4cd964"], [66, 60, "#ff9f43"], [146, 62, "#ff5d8f"]].forEach(function (c) { conf += '<rect x="' + c[0] + '" y="' + c[1] + '" width="9" height="5" rx="1" fill="' + c[2] + '" transform="rotate(' + (c[0] * 3 % 90) + " " + c[0] + " " + c[1] + ')"/>'; });
+      return artBands(["#d9c8ff", "#ecd9ff", "#ffd9ee", "#ffeaf5"]) + conf + '<path d="M0 172 Q100 156 200 172 V200 H0Z" fill="#c8a8ff"/>' + gifts(100, 182, 2.3);
+    },
+    hart: function () {
+      return artBands(["#ffe0ef", "#ffc7de", "#ffafcf", "#ff97be"]) + '<circle cx="100" cy="104" r="82" fill="#fff" opacity=".18"/>' + heartShape(100, 100, 52, "#ff5d8f", 0).replace(/<animateTransform[^>]*\/>/g, "") + '<path d="M64 74 Q56 90 66 104" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" opacity=".55"/>' +
+        artCrescent(96, 100, 17, "#fff4c9", -20) + '<polygon points="' + starPoly(112, 96, 7) + '" fill="#fff4c9"/>' + heartShape(32, 40, 8, "#fff", 0).replace(/<animateTransform[^>]*\/>/g, "") + heartShape(172, 150, 9, "#ff3d6e", 0).replace(/<animateTransform[^>]*\/>/g, "") + artStarDots([[170, 36, 6], [26, 150, 5]], "#ffd23f");
+    },
+    vrede: function () {
+      let leaves = "", ol = ""; for (let i = 0; i < 8; i++) { const t = i / 7, x = 34 + t * 130, y = 168 - t * 80 - Math.sin(t * 3) * 14, up = i % 2 ? -1 : 1; leaves += '<ellipse cx="' + x.toFixed(1) + '" cy="' + (y + up * 12).toFixed(1) + '" rx="16" ry="6" fill="' + (i % 2 ? "#6aa84f" : "#8cc152") + '" stroke="#3f7a2a" stroke-width="1.5" transform="rotate(' + (up * -35 - 15) + " " + x.toFixed(1) + " " + (y + up * 12).toFixed(1) + ')"/>'; if (i % 3 === 1) ol += '<ellipse cx="' + (x + 6).toFixed(1) + '" cy="' + (y + 12).toFixed(1) + '" rx="4.5" ry="6" fill="#4a2a5e"/>'; }
+      return artBands(["#8fd3ff", "#b6e4ff", "#dff3ff", "#f4fbff"]) + artSun(30, 34, 14) + artCloud(150, 34, 1) + '<path d="M0 176 Q100 160 200 176 V200 H0Z" fill="#9bd88a"/>' +
+        '<path d="M30 170 Q80 120 170 84" fill="none" stroke="#6b4a2a" stroke-width="5" stroke-linecap="round"/>' + leaves + ol +
+        '<g transform="translate(112 52) rotate(-12)"><path d="M-30 6 L-52 -6 L-40 12 L-54 18 L-28 16Z" fill="#fff" stroke="#b0bec5" stroke-width="2" stroke-linejoin="round"/><ellipse rx="30" ry="15" fill="#fff" stroke="#b0bec5" stroke-width="2"/><path d="M-6 -4 Q-6 -34 24 -38 Q14 -20 12 -2Z" fill="#f4f8fb" stroke="#b0bec5" stroke-width="2" stroke-linejoin="round"/><circle cx="28" cy="-8" r="11" fill="#fff" stroke="#b0bec5" stroke-width="2"/><path d="M37 -9 L48 -6 L37 -3Z" fill="#ff9f1c"/><circle cx="31" cy="-10" r="2" fill="#14223a"/></g>';
+    },
+  };
+  const KW_CARDS = {
+    ark: { title: "De Ark van Nuh", text: "Nuh (a.s.) bouwde op Allahs bevel een ark. Wie erin ging, werd gered van de vloed.", rare: true },
+    walvis: { title: "Yunus en de vis", text: "In de buik van de vis riep Yunus (a.s.) Allah aan. Allah redde hem." },
+    mier: { title: "De wijze mier", text: "Een mier waarschuwde haar volk voor het leger van Sulayman (a.s.)." },
+    hoepoe: { title: "De hop van Saba", text: "De hop (hoepoe) bracht Sulayman (a.s.) nieuws over het volk van Saba." },
+    gebedsmat: { title: "De gebedsmat", text: "Vijf keer per dag bidden we: Fajr, Dhuhr, Asr, Maghrib en Isha." },
+    zakat: { title: "Zakaat: delen", text: "Met zakaat delen we een deel van ons geld met mensen die het nodig hebben." },
+    maan: { title: "Ramadan-maan", text: "In Ramadan vasten we van zonsopgang tot zonsondergang. Veel mensen openen het vasten met een dadel." },
+    kaaba: { title: "De Ka’ba", text: "De Ka’ba in Mekka. Moslims over de hele wereld bidden in haar richting.", rare: true },
+    hira: { title: "De grot Hira", text: "In de grot Hira ontving de Profeet ﷺ de eerste openbaring.", rare: true },
+    medina: { title: "De Profetenmoskee", text: "In Medina staat de moskee van de Profeet ﷺ, met de bekende groene koepel." },
+    uhud: { title: "De berg Uhud", text: "Bij de berg Uhud, vlak bij Medina, vond de Slag bij Uhud plaats." },
+    kameel: { title: "De kameel", text: "Kamelen droegen mensen en spullen door de woestijn, ook tijdens de Hijra naar Medina." },
+    rehal: { title: "De Koranstandaard", text: "Op een rehal ligt de Koran netjes open, zodat we met respect kunnen lezen.", rare: true },
+    qalam: { title: "De pen", text: "Het eerste woord van de openbaring was ‘Iqra’: lees! Ook een soera heet Al-Qalam: de pen." },
+    fanous: { title: "De lantaarn", text: "De Koran is een licht voor de mensen, zoals een lantaarn die de weg wijst." },
+    sterren: { title: "De sterrenhemel", text: "Allah schiep de sterren als sieraad van de hemel en als wegwijzers." },
+    roos: { title: "De roos", text: "Een goed karakter is als een roos: iedereen wordt er blij van." },
+    cadeau: { title: "Het cadeau", text: "Een cadeautje geven maakt blij en brengt mensen dichter bij elkaar." },
+    hart: { title: "Het zachte hart", text: "Barmhartigheid: zacht en lief zijn voor mensen, dieren en jezelf." },
+    vrede: { title: "De vredestak", text: "Moslims groeten elkaar met ‘As-salamu alaykum’: vrede zij met jou." },
+  };
+  const KW_SETS = [
+    { id: "profeten", title: "Profetenverhalen", color: "#1fa8c0", cards: ["ark", "walvis", "mier", "hoepoe"] },
+    { id: "zuilen", title: "De 5 Zuilen", color: "#e0a100", cards: ["gebedsmat", "zakat", "maan", "kaaba"] },
+    { id: "seerah", title: "Seerah", color: "#e8583a", cards: ["hira", "medina", "uhud", "kameel"] },
+    { id: "koran", title: "Koran & Kennis", color: "#7a52e0", cards: ["rehal", "qalam", "fanous", "sterren"] },
+    { id: "akhlaaq", title: "Akhlaaq", color: "#e63e82", cards: ["roos", "cadeau", "hart", "vrede"] },
+  ];
+  function kwSetOf(id) { return KW_SETS.find(function (s) { return s.cards.indexOf(id) !== -1; }); }
+  function artInner(id, strip) {
+    let h = ARTS[id]();
+    if (strip) h = h.replace(/<animateTransform[^>]*\/>/g, "").replace(/<animate [^>]*\/>/g, "").replace(/<animate [^>]*>[\s\S]*?<\/animate>/g, "");
+    return h;
+  }
+  function artSvg(id, strip) {
+    return '<svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">' + artInner(id, strip) + "</svg>";
+  }
+
+  /* ───────────── Schatkist openen + minigames (Memory, Kwartet-pakje, Puzzel) + Kwartet-album ───────────── */
+  let albumFrom = null;
+  let mg = null;          /* { level, catId, i, game, phase, ... } */
+  let mgTimers = [];
+  function mgLater(fn, ms) { const t = setTimeout(fn, ms); mgTimers.push(t); return t; }
+  function mgClear() { mgTimers.forEach(clearTimeout); mgTimers = []; }
+  const MODE_NAME = { junior: "Junior", expert: "Expert" };
+  function modeName(lv) { return MODE_NAME[lv] || "Junior"; }
+  /* het album is strikt per modus: Junior en Expert hebben elk hun eigen verzameling */
+  function albumMap(lv) { lv = lv || P.mode; if (!P.album || !P.album.junior || !P.album.expert) P.album = { junior: (P.album && P.album.junior) || {}, expert: (P.album && P.album.expert) || {} }; return P.album[lv]; }
+  function albumOwned(lv) { const m = albumMap(lv); return Object.keys(m).filter(function (k) { return m[k] > 0 && KW_CARDS[k]; }).length; }
+  function albumTotal() { return Object.keys(KW_CARDS).length; }
+  function setComplete(set, lv) { const m = albumMap(lv); return set.cards.every(function (c) { return m[c] > 0; }); }
+  function artDataUri(id) {
+    const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice">' + artInner(id, true) + "</svg>";
+    return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
+  }
+  function cardTitle(id) { return KW_CARDS[id] ? KW_CARDS[id].title : id; }
+
+  /* 1) tik op de springende kist op de kaart */
+  function openChest(catId, i) {
+    const level = P.mode, n = jCount(level, catId), st = jChestState(level, catId, i, n);
+    if (st === "closed-dim" || st === "closed") { play("wrong"); jToast("🔒 Haal eerst level " + (i + 1) + " om deze schatkist te openen"); return; }
+    if (st === "open" || st === "gold") { play("click"); jToast("🎁 Deze schatkist heb je al geopend. Bekijk je Kwartet-album!"); return; }
+    play("click");
+    mg = { level: level, catId: catId, i: i, game: chestGame(catId, i), phase: "closed" };
+    screen = "chestopen"; render();
+  }
+  function viewChestOpen() {
+    const c = catById(mg.catId);
+    return '<div class="topbar"><button class="icon-btn" data-act="journey-back" aria-label="Terug naar de kaart">' + icon("left", 22) + "</button>" +
+      '<div class="brand">' + icon("map", 24) + 'Schatkist</div><span style="width:44px"></span></div>' +
+      '<section class="co-stage" style="--accent:' + c.color + '"><div class="co-rays" aria-hidden="true"></div>' +
+      '<h1 id="coTitle">Een schatkist!</h1><p class="co-sub" id="coSub" aria-live="polite">Tik op de kist of wacht even…</p>' +
+      '<button class="co-chest" id="coChest" data-act="mg-open-now" aria-label="Open de schatkist"><svg viewBox="-50 -62 100 92" aria-hidden="true">' + chest(0, 6, "closed", 1.45, "stop") + "</svg></button>" +
+      '<div class="co-game" id="coGame" style="visibility:hidden"><span class="co-game-ic">' + mgIcon(mg.game) + "</span><span><b>Minigame: " + MG_NAME[mg.game] + "</b><small>" + mgBlurb(mg.game) + "</small></span></div>" +
+      '<button class="btn gold" data-act="mg-open-now" id="coBtn">' + icon("sparkles", 20) + "Open de schatkist</button>" +
+      '<button class="btn ghost" data-act="journey-back">Later openen</button></section>';
+  }
+  function mgIcon(g) { return g === "memory" ? "🃏" : g === "kwartet" ? "🎴" : "🧩"; }
+  function mgBlurb(g) { return g === "memory" ? "Vind de paartjes mooie plaatjes." : g === "kwartet" ? "Pak je verzamelkaarten uit en vul je album." : "Leg de grote afbeelding weer in elkaar."; }
+  function afterChestOpenRender() {
+    mgClear();
+    mgLater(function () { if (screen === "chestopen") chestOpenNow(); }, 1700);
+  }
+  function chestOpenNow() {
+    if (screen !== "chestopen" || !mg || mg.phase !== "closed") return;
+    mg.phase = "opened";
+    const ch = document.getElementById("coChest"), t = document.getElementById("coTitle"), s = document.getElementById("coSub"), g = document.getElementById("coGame"), b = document.getElementById("coBtn");
+    if (ch) { ch.classList.add("opened"); ch.setAttribute("aria-label", "Schatkist is open"); ch.innerHTML = '<svg viewBox="-50 -62 100 92" aria-hidden="true">' + chest(0, 6, "gold", 1.45, "stop") + "</svg>"; }
+    if (t) t.textContent = "Masha’Allah! Open!";
+    if (s) s.textContent = "Je minigame begint zo…";
+    if (g) g.style.visibility = "visible";
+    if (b) { b.innerHTML = icon("right", 20) + "Start: " + MG_NAME[mg.game]; b.setAttribute("data-act", "mg-start"); }
+    play("win"); celebrate(true);
+    mgLater(function () { if (screen === "chestopen") startMinigame(); }, 3600);
+  }
+  function startMinigame() {
+    if (!mg) return;
+    mgClear();
+    if (mg.game === "memory") mgInitMemory();
+    else if (mg.game === "puzzel") mgInitPuzzle();
+    else mgInitKwartet();
+    screen = "minigame"; render();
+  }
+
+  /* gedeelde onderdelen */
+  function mgTop(title) {
+    return '<div class="topbar"><button class="icon-btn" data-act="journey-back" aria-label="Stoppen en terug naar de kaart">' + icon("left", 22) + "</button>" +
+      '<div class="brand">' + esc(title) + '</div><span style="width:44px"></span></div>';
+  }
+  function viewMinigame() {
+    if (!mg) return "";
+    if (mg.game === "memory") return mgViewMemory();
+    if (mg.game === "puzzel") return mgViewPuzzle();
+    return mgViewKwartet();
+  }
+  function mgFinishCommon() {
+    if (!mg.saved) { mg.saved = true; chestSave(mg.level, mg.catId, mg.i, mg.game); }
+    play("win"); celebrate(true);
+  }
+  function mgDonePanel(title, msg, extra) {
+    const c = catById(mg.catId);
+    const txt = "🌙 Islam Quiz (" + modeName(mg.level) + "): schatkist geopend bij " + c.title + "! " + mgIcon(mg.game) + " " + MG_NAME[mg.game] + " gespeeld. " + modeName(mg.level) + "-album: " + albumOwned(mg.level) + "/" + albumTotal() + " kaarten.\nLukt het jou ook? " + SITE_URL;
+    return '<div class="mg-done" role="status"><div class="mg-done-star">' + GOLD_STAR_SVG + "</div><h2>" + esc(title) + "</h2><p>" + esc(msg) + "</p>" + (extra || "") +
+      '<div class="result-actions"><button class="btn gold" data-act="journey-back">' + icon("map", 20) + "Terug naar de kaart</button>" +
+      '<button class="btn ghost" data-act="album">' + icon("layers", 20) + "Mijn Kwartet-album</button>" + shareBtn(txt, "Deel via WhatsApp") + "</div></div>";
+  }
+
+  /* ── Memory ── */
+  function mgInitMemory() {
+    const junior = mg.level === "junior", pairs = junior ? 6 : 8, own = (KW_SETS.find(function (x) { return x.id === mg.catId; }) || { cards: [] }).cards;
+    const all = shuffle(Object.keys(ARTS).slice(), Math.random), pick = [];
+    own.forEach(function (k) { if (pick.length < pairs) pick.push(k); });
+    all.forEach(function (k) { if (pick.length < pairs && pick.indexOf(k) === -1) pick.push(k); });
+    const cards = []; pick.forEach(function (k, n) { cards.push({ art: k, id: n * 2 }); cards.push({ art: k, id: n * 2 + 1 }); });
+    mg.cards = shuffle(cards, Math.random); mg.cols = junior ? 3 : 4; mg.open = []; mg.matched = {}; mg.moves = 0; mg.lock = false; mg.pairs = pairs; mg.done = false;
+  }
+  function mgViewMemory() {
+    let h = mgTop("Memory") + '<section class="mg mg-memory"><p class="mg-hint" id="mgInfo" aria-live="polite">Draai twee kaarten om. Vind alle ' + mg.pairs + ' paartjes!</p>' +
+      '<div class="mg-stats"><span>Zetten: <b id="mgMoves">0</b></span><span>Paartjes: <b id="mgPairs">0</b>/' + mg.pairs + '</span></div><div class="mc-grid" style="--cols:' + mg.cols + '" id="mcGrid">';
+    mg.cards.forEach(function (c, k) {
+      h += '<button class="mc" data-act="mg-flip" data-k="' + k + '" aria-label="Kaart ' + (k + 1) + ', dicht"><span class="mc-in"><span class="mc-face mc-front">' + FLAG_SVG + '</span><span class="mc-face mc-back">' + artSvg(c.art, true) + "</span></span></button>";
+    });
+    h += "</div><div id=\"mgEnd\"></div></section>";
+    return h;
+  }
+  function mgFlip(k) {
+    if (!mg || mg.game !== "memory" || mg.lock || mg.done) return;
+    const c = mg.cards[k], el = document.querySelector('.mc[data-k="' + k + '"]');
+    if (!el || mg.matched[k] || mg.open.indexOf(k) !== -1) return;
+    play("click"); el.classList.add("flip"); el.setAttribute("aria-label", "Kaart " + (k + 1) + ": " + cardTitle(c.art));
+    mg.open.push(k);
+    if (mg.open.length < 2) return;
+    mg.moves++; document.getElementById("mgMoves").textContent = mg.moves;
+    const a = mg.open[0], b = mg.open[1];
+    if (mg.cards[a].art === mg.cards[b].art) {
+      mg.matched[a] = mg.matched[b] = true; mg.open = [];
+      mgLater(function () {
+        [a, b].forEach(function (x) { const e = document.querySelector('.mc[data-k="' + x + '"]'); if (e) { e.classList.add("matched"); e.disabled = true; } });
+        play("correct");
+        const np = Object.keys(mg.matched).length / 2; document.getElementById("mgPairs").textContent = np;
+        const info = document.getElementById("mgInfo"); if (info) info.textContent = "Gevonden: " + cardTitle(mg.cards[a].art) + "!";
+        if (np === mg.pairs) mgMemoryWin();
+      }, 350);
+    } else {
+      mg.lock = true;
+      mgLater(function () {
+        [a, b].forEach(function (x) { const e = document.querySelector('.mc[data-k="' + x + '"]'); if (e) { e.classList.remove("flip"); e.setAttribute("aria-label", "Kaart " + (x + 1) + ", dicht"); } });
+        mg.open = []; mg.lock = false;
+      }, 1000);
+    }
+  }
+  function mgMemoryWin() {
+    mg.done = true; mgFinishCommon();
+    const good = mg.moves <= mg.pairs + 3 ? "Wat een geheugen!" : "Goed gedaan!";
+    const end = document.getElementById("mgEnd");
+    if (end) end.innerHTML = mgDonePanel(good, "Alle " + mg.pairs + " paartjes gevonden in " + mg.moves + " zetten. De schatkist is helemaal leeg gehaald.");
+    if (end) end.scrollIntoView({ behavior: reducedMotion() ? "auto" : "smooth", block: "center" });
+  }
+
+  /* ── Puzzel (wissel-puzzel met een grote afbeelding) ── */
+  function mgInitPuzzle() {
+    const n = mg.level === "junior" ? 3 : 4, own = Object.keys(KW_CARDS).filter(function (k) { return kwSetOf(k).id === mg.catId; });
+    const pool = own.concat(Object.keys(ARTS)); mg.art = pool[Math.floor(Math.random() * pool.length)];
+    mg.n = n; mg.sel = -1; mg.moves = 0; mg.done = false;
+    let perm; do { perm = shuffle(Array.from({ length: n * n }, function (_, i) { return i; }), Math.random); } while (perm.every(function (v, i) { return v === i; }) || perm.filter(function (v, i) { return v === i; }).length > n * n - 4);
+    mg.perm = perm; mg.uri = artDataUri(mg.art);
+  }
+  function mgPuzzleTiles() {
+    const n = mg.n; let h = "";
+    mg.perm.forEach(function (t, pos) {
+      const tx = t % n, ty = Math.floor(t / n), ok = t === pos;
+      h += '<button class="pz-tile' + (mg.sel === pos ? " sel" : "") + (ok ? " ok" : "") + '" data-act="mg-pz" data-k="' + pos + '" style="background-image:url(&quot;' + mg.uri + '&quot;);background-size:' + (n * 100) + "% " + (n * 100) + "%;background-position:" + (n > 1 ? (tx / (n - 1)) * 100 : 0) + "% " + (n > 1 ? (ty / (n - 1)) * 100 : 0) + '%" aria-label="Rij ' + (Math.floor(pos / n) + 1) + ", kolom " + ((pos % n) + 1) + (ok ? ", staat goed" : "") + (mg.sel === pos ? ", gekozen" : "") + '"></button>';
+    });
+    return h;
+  }
+  function mgViewPuzzle() {
+    return mgTop("Puzzel") + '<section class="mg mg-puzzle"><p class="mg-hint" id="mgInfo" aria-live="polite">Tik op twee stukjes om ze te wisselen. Maak de afbeelding weer heel!</p>' +
+      '<div class="mg-stats"><span>Zetten: <b id="mgMoves">0</b></span><span class="pz-prev" aria-hidden="true"><img alt="" src="' + mg.uri + '"> Voorbeeld</span></div>' +
+      '<div class="pz-grid" id="pzGrid" style="--n:' + mg.n + '">' + mgPuzzleTiles() + '</div><div id="mgEnd"></div></section>';
+  }
+  function mgPz(k) {
+    if (!mg || mg.game !== "puzzel" || mg.done) return;
+    play("click");
+    if (mg.sel === -1) { mg.sel = k; }
+    else if (mg.sel === k) { mg.sel = -1; }
+    else {
+      const a = mg.sel, t = mg.perm[a]; mg.perm[a] = mg.perm[k]; mg.perm[k] = t; mg.sel = -1; mg.moves++;
+      document.getElementById("mgMoves").textContent = mg.moves;
+    }
+    document.getElementById("pzGrid").innerHTML = mgPuzzleTiles();
+    const f = document.querySelector('.pz-tile[data-k="' + k + '"]'); if (f) f.focus();
+    if (mg.perm.every(function (v, i) { return v === i; })) {
+      mg.done = true; mgFinishCommon();
+      document.getElementById("pzGrid").classList.add("solved");
+      const end = document.getElementById("mgEnd");
+      end.innerHTML = mgDonePanel("Puzzel af!", "“" + cardTitle(mg.art) + "” is weer heel, in " + mg.moves + " zetten.");
+      end.scrollIntoView({ behavior: reducedMotion() ? "auto" : "smooth", block: "center" });
+    }
+  }
+
+  /* ── Kwartet-pakje: unboxing van 3 verzamelkaarten ── */
+  function mgInitKwartet() {
+    const ids = Object.keys(KW_CARDS), picks = [];
+    while (picks.length < 3) {
+      let tot = 0; const w = ids.map(function (k) {
+        if (picks.indexOf(k) !== -1) return 0;
+        const x = (albumMap(mg.level)[k] > 0 ? 1 : 5) * (KW_CARDS[k].rare ? .6 : 1) * (kwSetOf(k).id === mg.catId ? 1.6 : 1); tot += x; return x;
+      });
+      let r = Math.random() * tot, k = 0; while (k < ids.length - 1 && (r -= w[k]) > 0) k++;
+      if (w[k] > 0) picks.push(ids[k]);
+    }
+    mg.cardsK = picks.map(function (k) { return { id: k, isNew: !(albumMap(mg.level)[k] > 0), shown: false }; });
+    mg.phase = "pack"; mg.revealed = 0; mg.doneSets = [];
+  }
+  function mgViewKwartet() {
+    let h = mgTop("Kwartet-pakje") + '<section class="mg mg-kwartet" id="kwStage">';
+    if (mg.phase === "pack") {
+      h += '<p class="mg-hint">Je krijgt 3 nieuwe verzamelkaarten. Tik op het pakje om het te openen!</p>' +
+        '<button class="kw-pack" data-act="mg-kw-open" aria-label="Open het kaartenpakje"><svg viewBox="0 0 200 260" aria-hidden="true"><defs><linearGradient id="kwg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#27c27a"/><stop offset="1" stop-color="#0d7a4a"/></linearGradient></defs>' +
+        '<path d="M20 20 L36 8 L52 20 L68 8 L84 20 L100 8 L116 20 L132 8 L148 20 L164 8 L180 20 V240 L164 252 L148 240 L132 252 L116 240 L100 252 L84 240 L68 252 L52 240 L36 252 L20 240Z" fill="url(#kwg)" stroke="#fff" stroke-width="5" stroke-linejoin="round"/>' +
+        '<rect x="34" y="34" width="132" height="192" rx="10" fill="none" stroke="#ffd23f" stroke-width="3" stroke-dasharray="8 6"/>' + artCrescent(100, 112, 40, "#fff4c9", -20) + '<polygon points="' + starPoly(116, 104, 15) + '" fill="#ffd23f"/>' +
+        '<text x="100" y="190" text-anchor="middle" font-size="26" font-weight="900" fill="#fff" font-family="inherit">KWARTET</text><text x="100" y="212" text-anchor="middle" font-size="13" font-weight="800" fill="#ffe9a0" font-family="inherit">3 KAARTEN</text></svg></button>';
+    } else {
+      h += '<p class="mg-hint" id="mgInfo" aria-live="polite">Tik op elke kaart om hem om te draaien!</p><div class="kw-row">';
+      mg.cardsK.forEach(function (c, k) {
+        const K = KW_CARDS[c.id], set = kwSetOf(c.id);
+        h += '<button class="kc' + (c.shown ? " flip" : "") + (K.rare ? " rare" : "") + '" data-act="mg-kw-flip" data-k="' + k + '" style="--sc:' + set.color + '" aria-label="' + (c.shown ? "Kaart: " + esc(K.title) : "Kaart " + (k + 1) + ", nog dicht. Tik om om te draaien") + '"><span class="kc-in"><span class="kc-face kc-front">' + FLAG_SVG + '</span><span class="kc-face kc-back"><span class="kc-art">' + artSvg(c.id, true) + '</span><b>' + esc(K.title) + "</b><i>" + esc(set.title) + "</i>" +
+          (c.isNew ? '<em class="kc-new">NIEUW!</em>' : '<em class="kc-dup">Dubbel</em>') + (K.rare ? '<em class="kc-rare">★ Zeldzaam</em>' : "") + "</span></span></button>";
+      });
+      h += '</div><div id="mgEnd"></div>';
+    }
+    return h + "</section>";
+  }
+  function mgKwOpen() {
+    if (!mg || mg.game !== "kwartet" || mg.phase !== "pack") return;
+    const am = albumMap(mg.level), before = KW_SETS.map(function (s) { return setComplete(s, mg.level); });
+    mg.cardsK.forEach(function (c) { am[c.id] = (am[c.id] || 0) + 1; });
+    mg.doneSets = KW_SETS.filter(function (s, i) { return !before[i] && setComplete(s, mg.level); });
+    mgFinishCommon();
+    mg.phase = "cards"; render(); celebrate(false);
+  }
+  function mgKwFlip(k) {
+    if (!mg || mg.game !== "kwartet" || mg.phase !== "cards") return;
+    const c = mg.cardsK[k]; if (c.shown) return;
+    c.shown = true; mg.revealed++; play(c.isNew ? "correct" : "click");
+    const el = document.querySelector('.kc[data-k="' + k + '"]');
+    if (el) { el.classList.add("flip"); el.setAttribute("aria-label", "Kaart: " + cardTitle(c.id) + (c.isNew ? ", nieuw" : ", dubbel")); }
+    const info = document.getElementById("mgInfo");
+    if (info) info.textContent = cardTitle(c.id) + (c.isNew ? " is nieuw in je album!" : " had je al. Dubbel!");
+    if (mg.revealed === 3) {
+      mgLater(function () {
+        const nw = mg.cardsK.filter(function (x) { return x.isNew; }).length;
+        let extra = "";
+        if (mg.doneSets.length) { extra = '<div class="kw-set-win">🏆 Kwartet compleet: <b>' + mg.doneSets.map(function (s) { return esc(s.title); }).join(", ") + "</b>!</div>"; celebrate(true); play("win"); }
+        const end = document.getElementById("mgEnd");
+        if (end) { end.innerHTML = mgDonePanel(nw ? nw + (nw === 1 ? " nieuwe kaart!" : " nieuwe kaarten!") : "Allemaal dubbel!", "Je album heeft nu " + albumOwned() + " van de " + albumTotal() + " kaarten." + (nw ? "" : " Volgende keer meer geluk, in shaa Allah."), extra); end.scrollIntoView({ behavior: reducedMotion() ? "auto" : "smooth", block: "center" }); }
+      }, 700);
+    }
+  }
+
+  /* ── Kwartet-album ── */
+  function viewAlbum() {
+    let h = '<div class="topbar"><button class="icon-btn" data-act="album-back" aria-label="Terug">' + icon("left", 22) + "</button>" +
+      '<div class="brand">' + icon("layers", 24) + 'Kwartet-album</div><span style="width:44px"></span></div>';
+    const own = albumOwned(), tot = albumTotal();
+    h += '<section class="album"><div class="album-head"><b>' + own + " / " + tot + '</b> kaarten verzameld in de ' + modeName(P.mode) + '-modus<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="' + tot + '" aria-valuenow="' + own + '"><i style="width:' + Math.round(own / tot * 100) + '%"></i></div>' +
+      "<small>Open schatkisten met het Kwartet-pakje om nieuwe kaarten te vinden.</small></div>";
+    KW_SETS.forEach(function (s) {
+      const done = setComplete(s);
+      h += '<div class="album-set" style="--sc:' + s.color + '"><h3>' + esc(s.title) + (done ? ' <span class="kw-done">✓ Kwartet!</span>' : "") + "</h3><div class=\"album-grid\">";
+      s.cards.forEach(function (id) {
+        const n = albumMap()[id] || 0, K = KW_CARDS[id];
+        if (n > 0) h += '<button class="ac own' + (K.rare ? " rare" : "") + '" data-act="album-card" data-id="' + id + '" aria-label="' + esc(K.title) + (n > 1 ? ", " + n + " keer" : "") + '. Tik voor uitleg"><span class="ac-art">' + artSvg(id, true) + "</span><b>" + esc(K.title) + "</b>" + (n > 1 ? '<em class="ac-n">×' + n + "</em>" : "") + "</button>";
+        else h += '<div class="ac lock" role="img" aria-label="Nog niet gevonden"><span class="ac-art">?</span><b>Nog niet gevonden</b></div>';
+      });
+      h += "</div></div>";
+    });
+    const txt = "🌙 Islam Quiz (" + modeName(P.mode) + "): mijn " + modeName(P.mode) + "-album heeft " + own + " van de " + tot + " kaarten! 🎴\nLukt het jou ook? " + SITE_URL;
+    return h + '<div class="result-actions">' + shareBtn(txt, "Deel mijn album via WhatsApp") + '<button class="btn ghost" data-act="album-back">' + icon("left", 20) + "Terug</button></div></section>";
+  }
+  function albumCardDialog(id) {
+    const K = KW_CARDS[id], set = kwSetOf(id), old = document.getElementById("albumDlg"); if (old) old.remove();
+    const w = document.createElement("div"); w.className = "dialog-wrap"; w.id = "albumDlg";
+    w.innerHTML = '<div class="dialog album-dlg" role="dialog" aria-modal="true" aria-labelledby="adT" style="--sc:' + set.color + '"><div class="adlg-art">' + artSvg(id, true) + '</div><h3 id="adT">' + esc(K.title) + "</h3><small>" + esc(set.title) + (K.rare ? " · ★ Zeldzaam" : "") + "</small><p>" + esc(K.text) + '</p><button class="btn gold block" data-d="x">Sluiten</button></div>';
+    w.addEventListener("click", function (e) { if (e.target === w || e.target.closest("[data-d]")) w.remove(); });
+    w.addEventListener("keydown", function (e) { if (e.key === "Escape") w.remove(); });
+    document.body.appendChild(w); const b = w.querySelector("button"); if (b) b.focus();
   }
 
   /* ───────────── Leeftijdsbevestiging voor de Expert Modus (14+) ───────────── */
@@ -4050,15 +4877,23 @@ return exports;})();
     // dagelijkse kist (Quiz van de Dag)
     const dDone = !!P.daily[level][todayStr()];
     h += '<g class="j-stop j-daily" data-act="start-daily" role="button" tabindex="0" aria-label="Quiz van de Dag' + (dDone ? " (vandaag gespeeld)" : "") + '" style="cursor:pointer">' + chest(318, 752, dDone ? "open" : "closed", 1.3, "daily") + lbl(318, 786, "Quiz van de Dag", 10) + "</g>";
-    // mijlpalen: schatkisten naast het pad
+    // mijlpalen: schatkisten naast het pad (springen als ze klaarstaan; tik om te openen)
     stops.forEach(function (st) {
       if (!st.mile) return;
-      const R = st.last ? 27 : 23, side = st.x < 180 ? 1 : -1, state = jChestState(level, c.id, st.i, n);
-      h += '<g role="img" aria-label="Mijlpaal na level ' + (st.i + 1) + ", schatkist " + (state === "gold" ? "goud" : state === "open" ? "open" : "dicht") + '">' + chest(st.x + side * (R + 24), st.y + 6, state, 0.9, "stop") + "</g>";
+      const R = st.last ? 27 : 21, side = st.x < 180 ? 1 : -1, state = jChestState(level, c.id, st.i, n), ready = state === "ready";
+      const cx = st.x + side * (R + 28), cy = st.y + 6, game = MG_NAME[chestGame(c.id, st.i)];
+      const label = "Schatkist na level " + (st.i + 1) + (ready ? ": klaar om te openen, met minigame " + game : state === "open" || state === "gold" ? ": geopend" : ": nog dicht, haal eerst level " + (st.i + 1));
+      h += '<g class="j-stop j-chest' + (ready ? " j-ready" : "") + '" data-act="journey-chest" data-cat="' + c.id + '" data-i="' + st.i + '" role="button" tabindex="0" aria-label="' + label + '">' +
+        '<circle cx="' + cx + '" cy="' + cy + '" r="26" fill="#000" fill-opacity="0"/>';
+      if (ready) h += '<circle cx="' + cx + '" cy="' + (cy - 4) + '" r="30" fill="#fff3a0" opacity=".5"><animate attributeName="opacity" values=".25;.8;.25" dur="1.1s" repeatCount="indefinite"/></circle>' +
+        '<circle cx="' + cx + '" cy="' + (cy - 4) + '" r="27" fill="none" stroke="#ffd23f" stroke-width="2.5" stroke-dasharray="4 5" opacity=".9"/>';
+      h += '<g class="' + (ready ? "chest-bounce" : "") + '">' + chest(cx, cy, ready ? "closed" : state, ready ? 1.25 : 0.95, "stop") + "</g>";
+      if (ready) h += '<g transform="translate(' + (cx + 16) + " " + (cy - 34) + ')"><circle r="9" fill="#ff3d6e" stroke="#fff" stroke-width="2"/><text y="4.5" text-anchor="middle" font-size="13" font-weight="900" fill="#fff">!</text></g>';
+      h += "</g>";
     });
     // levels
     stops.forEach(function (st) {
-      const R = st.last ? 27 : st.mile ? 23 : 19, state = st.locked ? "locked" : st.passed ? "done" : "current";
+      const R = st.last ? 27 : st.mile ? 21 : 19, state = st.locked ? "locked" : st.passed ? "done" : "current";
       const fill = state === "locked" ? "lock" : state === "done" ? (st.stars === 3 ? "gold" : "done") : "cur";
       const name = "Level " + (st.i + 1) + " van " + n + (st.mile ? ", mijlpaal met schatkist" : "") + (st.last ? ", laatste level" : "") + (st.locked ? " (vergrendeld)" : st.passed ? " (gehaald, " + st.stars + " van 3 sterren)" : " (volgende)");
       h += '<g class="j-stop ' + state + (st.i === J.cur ? " j-current" : "") + '" data-act="journey-level" data-cat="' + c.id + '" data-i="' + st.i + '" role="button" tabindex="0" aria-label="' + name + '" transform="translate(' + st.x + " " + st.y + ')">';
@@ -4074,7 +4909,7 @@ return exports;})();
     });
     // avatar-marker naast het huidige level
     const ini = esc((P.name || "?").trim().charAt(0).toUpperCase());
-    const mpos = function (st) { const R = st.last ? 27 : st.mile ? 23 : 19, side = st.x < 180 ? -1 : 1; return (st.x + side * (R + 17)) + "," + st.y; };
+    const mpos = function (st) { const R = st.last ? 27 : st.mile ? 21 : 19, side = st.x < 180 ? -1 : 1; return (st.x + side * (R + 17)) + "," + st.y; };
     const cs = stops[J.cur], key = level + ":" + c.id, prev = journeyPos[key] !== undefined ? Math.min(journeyPos[key], n - 1) : J.cur, ps = stops[prev];
     h += '<g id="jMarker" class="j-marker" data-from="' + mpos(ps) + '" data-to="' + mpos(cs) + '" style="transform:translate(' + mpos(ps).split(",")[0] + "px," + mpos(ps).split(",")[1] + 'px)" aria-hidden="true"><g class="j-bob">' +
       '<circle r="17" fill="#fff"/><circle r="14" fill="' + P.color + '"/><text y="5.5" text-anchor="middle" font-size="15" font-weight="900" fill="#fff">' + ini + "</text></g></g>";
@@ -4095,7 +4930,7 @@ return exports;})();
       levels += s.passed; stars += s.stars;
       lines += "\n" + (s.done ? "✅" : "▫️") + " " + c.title + ": " + s.passed + "/" + s.n + " levels";
     });
-    return "🌙 Mijn Reis in Islam Quiz: " + levels + " levels gehaald en " + stars + " ⭐ verzameld!" + lines + "\nKun jij mij inhalen? " + SITE_URL;
+    return "🌙 Mijn Reis in Islam Quiz (" + modeName(lv) + "-modus): " + levels + " levels gehaald en " + stars + " ⭐ verzameld!" + lines + "\nKun jij mij inhalen? " + SITE_URL;
   }
   function waLink(text) { return "https://wa.me/?text=" + encodeURIComponent(text); }
   function viewJourney() {
@@ -4112,8 +4947,9 @@ return exports;})();
     h += '<div class="land-head" style="--accent:' + c.color + '"><span class="land-n">Land ' + (i + 1) + " van " + CATEGORIES.length + "</span><h2>" + esc(c.title) + "</h2><p>" + esc(c.subtitle) + "</p></div>";
     h += '<div class="land-prog"><div class="lp-txt"><b>' + st.passed + " / " + st.n + "</b> levels gehaald<span>" + icon("star", 16, "fill") + " " + st.stars + " / " + st.max + "</span></div>" +
       '<div class="bar" role="progressbar" aria-label="Voortgang in dit land" aria-valuemin="0" aria-valuemax="' + st.n + '" aria-valuenow="' + st.passed + '"><i style="width:' + Math.round((st.passed / st.n) * 100) + '%"></i></div>' +
-      '<p class="lp-hint">Elk level heeft ' + J_Q + " vragen. Haal minstens " + Math.ceil(J_Q * PASS_PCT) + " goed om door te gaan. Bij elke 5e level wacht een schatkist!</p></div>";
+      '<p class="lp-hint">Elk level heeft ' + J_Q + " vragen. Haal minstens " + Math.ceil(J_Q * PASS_PCT) + " goed om door te gaan. Na elke 2 levels wacht een springende schatkist met een minigame!</p></div>";
     h += '<div class="journey-map">' + journeyMap(c) + "</div>";
+    h += '<button class="btn ghost block" data-act="album" style="margin-top:10px">' + icon("layers", 20) + 'Kwartet-album (' + albumOwned() + '/' + albumTotal() + ')</button>';
     h += '<div class="land-nav">' + (i > 0 ? '<button class="btn ghost" data-act="journey-land" data-i="' + (i - 1) + '">' + icon("left", 20) + "Land " + i + "</button>" : "<span></span>") +
       (i < CATEGORIES.length - 1 ? '<button class="btn gold" data-act="journey-land" data-i="' + (i + 1) + '">Land ' + (i + 2) + icon("right", 20) + "</button>" : "<span></span>") + "</div>";
     h += '<a class="btn wa block" href="' + waLink(shareJourneyText()) + '" target="_blank" rel="noopener">' + icon("chat", 20) + "Deel mijn Reis via WhatsApp</a>";
@@ -4689,11 +5525,17 @@ return exports;})();
         if (jLocked(P.mode, jc, ji)) { play("wrong"); jToast("🔒 Haal eerst level " + ji + " om dit level te openen"); break; }
         play("click"); journeyReturn = true; journeyLand = Math.max(0, CATEGORIES.findIndex(function (x) { return x.id === jc; })); startQuiz("journey", jc, null, ji); break;
       }
-      case "journey-next-level": {
-        if (!result || result.kind !== "journey" || !result.passed || result.jIdx + 1 >= result.jCount) break;
-        play("click"); journeyReturn = true; startQuiz("journey", result.catId, null, result.jIdx + 1); break;
-      }
-      case "journey-land-go": play("click"); journeyLand = parseInt(el.dataset.i, 10); screen = "journey"; render(); break;
+      case "hold-auto": stopTimer(); if (result) result.noAuto = true; { const t = document.getElementById("autoTxt"); if (t) t.textContent = "Naar de kaart"; } break;
+      case "journey-chest": openChest(el.dataset.cat, parseInt(el.dataset.i, 10)); break;
+      case "mg-open-now": chestOpenNow(); break;
+      case "mg-start": startMinigame(); break;
+      case "mg-flip": mgFlip(parseInt(el.dataset.k, 10)); break;
+      case "mg-pz": mgPz(parseInt(el.dataset.k, 10)); break;
+      case "mg-kw-open": mgKwOpen(); break;
+      case "mg-kw-flip": mgKwFlip(parseInt(el.dataset.k, 10)); break;
+      case "album": play("click"); albumFrom = screen === "minigame" ? "journey" : screen; screen = "album"; render(); break;
+      case "album-back": play("click"); screen = albumFrom || "home"; render(); break;
+      case "album-card": play("click"); albumCardDialog(el.dataset.id); break;
       case "scores": play("click"); screen = "scores"; render(); break;
       case "review": play("click"); if (result) result.noAuto = true; screen = "review"; render(); break;
       case "back-result": screen = "result"; render(); break;
@@ -4708,7 +5550,7 @@ return exports;})();
       case "reset":
         confirmDialog("Voortgang wissen?", "Alle scores, sterren en de reeks van " + P.name + " worden verwijderd. Andere spelers blijven staan.", "Ja, wissen", function () {
           const fresh = newPlayer(P.name, P.color);
-          P.best = fresh.best; P.daily = fresh.daily; P.streak = fresh.streak; P.played = 0; P.badges = {}; P.journey = fresh.journey; saveState(); render();
+          P.best = fresh.best; P.daily = fresh.daily; P.streak = fresh.streak; P.played = 0; P.badges = {}; P.journey = fresh.journey; P.seen = fresh.seen; P.recent = fresh.recent; P.chests = fresh.chests; P.album = fresh.album; saveState(); render();
         });
         break;
       case "install":
