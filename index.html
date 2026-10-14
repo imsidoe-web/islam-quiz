@@ -805,7 +805,36 @@ table.board thead th .avatar { display: grid; margin: 0 auto; }
 .land-chip .lc-b { position: absolute; top: -9px; right: -9px; font-style: normal; font-size: .9rem; background: #fff; border-radius: 50%; width: 22px; height: 22px; display: grid; place-items: center; box-shadow: 0 2px 4px rgba(0,0,0,.2); }
 .land-nav { display: flex; justify-content: space-between; gap: 10px; margin: 14px 0 6px; }
 .land-nav .btn { flex: 1; }
-   </style>
+ 
+/* ── Reis: levels, WhatsApp, feest-animatie, 14+ bevestiging ── */
+.btn.wa { background: #25d366; color: #fff; box-shadow: 0 5px 0 #128c4a; text-decoration: none; }
+.btn.wa:active { box-shadow: 0 1px 0 #128c4a; }
+a.btn.block { display: flex; margin-top: 14px; }
+.land-prog { margin: 0 0 12px; padding: 12px 14px; border-radius: 20px; background: #fff; box-shadow: var(--shadow); }
+.lp-txt { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-weight: 700; color: var(--emerald-dark); margin-bottom: 8px; }
+.lp-txt span { display: inline-flex; align-items: center; gap: 4px; font-weight: 900; color: #a8742f; }
+.lp-txt .ic.fill { color: var(--gold); }
+.lp-hint { margin: 8px 0 0; font-size: .85rem; font-weight: 600; color: var(--muted); }
+.jresult { position: relative; }
+.bunting { display: block; width: calc(100% + 32px); margin: -8px -16px 0; height: 52px; }
+.chest-win, .land-win { display: flex; align-items: center; gap: 12px; margin: 14px auto 0; padding: 10px 16px; border-radius: 20px; text-align: left; max-width: 420px; animation: pop .6s ease .5s both; }
+.chest-win { background: linear-gradient(135deg, #fff3c4, #ffe08a); color: #5a3d00; }
+.chest-win.gold { background: linear-gradient(135deg, #ffe27a, #ffc928); box-shadow: 0 0 0 3px #fff6b8 inset; }
+.land-win { background: var(--emerald-soft); color: var(--emerald-dark); }
+.chest-win b, .land-win b { display: block; font-size: 1.05rem; }
+.chest-win span, .land-win span { font-weight: 700; }
+.lw-flag { width: 44px; height: 50px; flex: none; }
+.lw-flag svg { width: 100%; height: 100%; display: block; }
+.celebrate { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 80; }
+.cf { position: absolute; top: -60px; width: var(--s); height: var(--s); animation: cfall var(--t) linear var(--d) both; will-change: transform; }
+.cf svg { width: 100%; height: 100%; display: block; transform-origin: 50% 0; animation: cspin 1.5s ease-in-out infinite alternate; }
+@keyframes cfall { 0% { transform: translate3d(0, -8vh, 0) rotate(0deg); } 100% { transform: translate3d(var(--sw), 118vh, 0) rotate(var(--r)); } }
+@keyframes cspin { from { transform: rotate(-16deg); } to { transform: rotate(16deg); } }
+.age-dialog { text-align: center; }
+.age-dialog .stack { margin-top: 6px; }
+.age-badge { width: 72px; height: 72px; margin: 0 auto 10px; border-radius: 50%; display: grid; place-items: center; font-weight: 900; font-size: 1.5rem; color: #fff; background: radial-gradient(circle at 35% 30%, #74c69d, var(--emerald)); box-shadow: 0 5px 0 var(--emerald-dark); }
+@media (prefers-reduced-motion: reduce) { .celebrate { display: none; } }
+  </style>
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Islam Quiz">
   <meta property="og:locale" content="nl_NL">
@@ -2669,6 +2698,7 @@ return exports;})();
     users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
     landmark: '<line x1="3" x2="21" y1="22" y2="22"/><line x1="6" x2="6" y1="18" y2="11"/><line x1="10" x2="10" y1="18" y2="11"/><line x1="14" x2="14" y1="18" y2="11"/><line x1="18" x2="18" y1="18" y2="11"/><polygon points="12 2 20 7 4 7"/>',
     moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
+    chat: '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
     layers: '<path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/>',
   };
   const CAT_ICON = { sparkles: "sparkles", landmark: "landmark", users: "users", "book-open": "book", heart: "heart" };
@@ -2741,6 +2771,8 @@ return exports;})();
       played: 0,
       badges: {},                           // badges[id] = tijdstempel; id = level:cat:master|grand
       group: null,                          // {code, mid} als de speler in een groep zit
+      journey: { junior: {}, expert: {} },  // journey[level][catId][levelIndex] = {score,total,stars} (De Reis)
+      age14: false,                         // 14+ bevestigd voor de Expert Modus
     };
   }
   function normalizePlayer(p) {
@@ -2750,6 +2782,7 @@ return exports;})();
       daily: Object.assign(d.daily, p.daily || {}),
       streak: Object.assign(d.streak, p.streak || {}),
       badges: Object.assign({}, p.badges || {}),
+      journey: Object.assign({ junior: {}, expert: {} }, p.journey || {}),
     });
   }
   function defaultState() { return { v: 2, sound: true, timer: false, players: [], current: null }; }
@@ -2807,6 +2840,7 @@ return exports;})();
     click() { tone(660, 0, 0.06, "sine", 0.06); },
     win() { [523.25, 659.25, 783.99, 1046.5].forEach(function (f, i) { tone(f, i * 0.14, 0.28); }); },
     lose() { tone(392, 0, 0.25, "triangle", 0.1); tone(329.63, 0.22, 0.4, "triangle", 0.1); },
+    fanfare() { [523.25, 659.25, 783.99, 1046.5, 783.99, 1046.5, 1318.5].forEach(function (f, i) { tone(f, i * 0.12, 0.3, i > 3 ? "triangle" : "sine", 0.14); }); tone(1567.98, 0.9, 0.5, "sine", 0.07); },
     swoosh() { /* zachte zwiep als je avatar naar de volgende stop springt */
       const c = ctx(); if (!c) return;
       const t0 = c.currentTime, dur = 0.6, n = Math.floor(c.sampleRate * dur), buf = c.createBuffer(1, n, c.sampleRate), d = buf.getChannelData(0);
@@ -2982,7 +3016,7 @@ return exports;})();
     });
   }
 
-  function startQuiz(kind, catId, tier) {
+  function startQuiz(kind, catId, tier, jIdx) {
     const level = P.mode;
     tier = kind === "category" ? (tier || 1) : null;
     let questions;
@@ -2994,11 +3028,13 @@ return exports;})();
         if (p.length) questions.push(p[0]);
       });
       questions = shuffle(questions, rnd);
+    } else if (kind === "journey") {
+      questions = jQuestions(level, catId, jIdx);
     } else {
       questions = shuffle(poolFor(level, catId, tier));
     }
     quiz = {
-      kind: kind, catId: kind === "daily" ? null : catId, level: level, tier: tier,
+      kind: kind, catId: kind === "daily" ? null : catId, level: level, tier: tier, jIdx: kind === "journey" ? jIdx : null,
       items: makeItems(questions), idx: 0, score: 0, answered: false, timeLeft: TIMER_SECONDS,
     };
     screen = "quiz";
@@ -3009,13 +3045,18 @@ return exports;})();
   function render() {
     stopTimer();
     document.body.className = "";
+    if (screen !== "result") { const cel = document.getElementById("celebrate"); if (cel) cel.remove(); }
     const inDuelQuiz = screen === "quiz" && quiz && quiz.kind === "duel";
     if (P && P.group && (screen === "group" || screen === "duelresult" || inDuelQuiz)) openGroupSub();
     else closeGroupSub();
     if (screen === "welcome") app.innerHTML = viewWelcome();
     else if (screen === "home") app.innerHTML = viewHome();
     else if (screen === "quiz") { app.innerHTML = viewQuiz(); afterQuizRender(); }
-    else if (screen === "result") { app.innerHTML = viewResult(); if (result.next && !result.noAuto) startAutoNext(); }
+    else if (screen === "result") {
+      app.innerHTML = viewResult();
+      if (result.next && !result.noAuto) startAutoNext();
+      if (result.kind === "journey" && result.passed && !result.celebrated) { result.celebrated = true; celebrate(result.landDone || result.chest); }
+    }
     else if (screen === "review") app.innerHTML = viewReview();
     else if (screen === "scores") app.innerHTML = viewScores();
     else if (screen === "newplayer") { app.innerHTML = viewNewPlayer(); }
@@ -3071,7 +3112,7 @@ return exports;})();
       "<p>Vrolijk, zonder tijdsdruk, met eenvoudige vragen en leuke beloningen!</p></span></button>" +
       '<button class="mode-card expert" data-act="pick-mode" data-mode="expert">' +
       '<span class="badge">' + icon("cap", 34) + "</span><span>" +
-      '<span class="sub">Voor volwassenen</span><h3>Expert Modus</h3>' +
+      '<span class="sub">Voor 14 jaar en ouder</span><h3>Expert Modus</h3>' +
       "<p>Diepere vragen met optionele timer en bronnen: verzen en Hadith in het Arabisch.</p></span></button>" +
       "</div></section>";
   }
@@ -3086,6 +3127,7 @@ return exports;})();
     let t = 0;
     ["junior", "expert"].forEach(function (l) {
       Object.keys(P.best[l]).forEach(function (k) { t += P.best[l][k].stars || 0; });
+      t += jStarTotal(P, l);
     });
     return t;
   }
@@ -3120,7 +3162,7 @@ return exports;})();
       (daily ? "Vandaag gespeeld: " + daily.score + "/" + daily.total + ". Speel opnieuw!" : "5 vragen, elke dag nieuw!") +
       '</p></span><span class="go">' + icon("right", 22) + "</span></button>";
 
-    h += '<button class="journey-btn" data-act="journey"><span class="jb-ic">' + icon("map", 28) + '</span><span class="jb-tx"><b>Start de Reis</b><small>Nieuw: loop de route en verdien badges</small></span>' + icon("right", 22) + "</button>";
+    h += '<button class="journey-btn" data-act="journey"><span class="jb-ic">' + icon("map", 28) + '</span><span class="jb-tx"><b>Start de Reis</b><small>12+ korte levels per land met sterren en schatkisten</small></span>' + icon("right", 22) + "</button>";
     h += '<div class="btn-row"><button class="scores-btn" data-act="scores">' + icon("trophy", 22) + "<span>Mijn Scores</span>" + icon("right", 20) + "</button>" +
       (S.players.length > 1 ? '<button class="scores-btn" data-act="board">' + icon("users", 22) + "<span>Scorebord</span>" + icon("right", 20) + "</button>" : "") +
       '<button class="scores-btn" data-act="group">' + icon("users", 22) + "<span>" + (P.group ? "Mijn groep" : "Groep & duel") + "</span>" + icon("right", 20) + "</button></div>";
@@ -3153,7 +3195,7 @@ return exports;})();
     const it = quiz.items[quiz.idx], q = it.q, total = quiz.items.length;
     const cat = catById(q.category);
     const isDaily = quiz.kind === "daily", isDuel = quiz.kind === "duel";
-    const label = isDaily ? "Quiz van de Dag" : isDuel ? "Duel" : cat.title + (tiersFor(quiz.level, quiz.catId).length > 1 ? " · Niveau " + quiz.tier : "");
+    const label = isDaily ? "Quiz van de Dag" : isDuel ? "Duel" : quiz.kind === "journey" ? cat.title + " · Level " + (quiz.jIdx + 1) : cat.title + (tiersFor(quiz.level, quiz.catId).length > 1 ? " · Niveau " + quiz.tier : "");
     const pct = ((quiz.idx + (quiz.answered ? 1 : 0)) / total) * 100;
     document.body.className = quiz.level;
 
@@ -3305,10 +3347,24 @@ return exports;})();
   }
 
   function finishQuiz() {
-    const total = quiz.items.length, score = quiz.score, stars = starsFor(score, total);
-    let isRecord = false;
+    const total = quiz.items.length, score = quiz.score;
+    let stars = starsFor(score, total), isRecord = false, jr = null;
 
-    if (quiz.kind === "daily") {
+    if (quiz.kind === "journey") {
+      stars = jStarsFor(score, total);
+      const lv = quiz.level, cid = quiz.catId, ji = quiz.jIdx, n = jCount(lv, cid);
+      const prev = jBest(lv, cid, ji), wasPassed = !!prev && prev.stars >= 1;
+      if (!prev || stars > prev.stars || (stars === prev.stars && score > prev.score)) {
+        isRecord = !!prev && (stars > prev.stars || score > prev.score);
+        jSave(lv, cid, ji, { score: score, total: total, stars: stars });
+      }
+      const passed = stars >= 1, first = passed && !wasPassed, mile = jIsMile(ji, n);
+      jr = {
+        jIdx: ji, jCount: n, passed: passed, firstPass: first,
+        chest: first && mile, chestGold: first && mile && jChestState(lv, cid, ji, n) === "gold",
+        landDone: first && jLandStats(lv, cid).done,
+      };
+    } else if (quiz.kind === "daily") {
       const prev = P.daily[quiz.level][todayStr()];
       if (!prev || score > prev.score) P.daily[quiz.level][todayStr()] = { score: score, total: total };
     } else {
@@ -3333,15 +3389,22 @@ return exports;})();
     pushMember();
 
     result = { kind: quiz.kind, catId: quiz.catId, level: quiz.level, tier: quiz.tier || 1, next: nextTier(quiz, stars), score: score, total: total, stars: stars, record: isRecord, items: quiz.items, newBadges: newBadges, open4: open4, noAuto: journeyReturn && quiz.kind === "category" };
+    if (jr) Object.assign(result, jr, { noAuto: true });
     screen = "result";
-    play(stars >= 2 ? "win" : "lose");
-    if (quiz.kind === "category" || quiz.kind === "daily") {
-      voice(open4 ? "niveau4" : newBadges.length ? "badge" : stars === 3 ? "sterren" : stars === 2 ? "gehaald" : "oefenen", undefined, 900);
+    if (jr) {
+      play(jr.passed ? "fanfare" : "lose");
+      voice(!jr.passed ? "oefenen" : stars === 3 ? "sterren" : "gehaald", undefined, 900);
+    } else {
+      play(stars >= 2 ? "win" : "lose");
+      if (quiz.kind === "category" || quiz.kind === "daily") {
+        voice(open4 ? "niveau4" : newBadges.length ? "badge" : stars === 3 ? "sterren" : stars === 2 ? "gehaald" : "oefenen", undefined, 900);
+      }
     }
     render();
   }
 
   function viewResult() {
+    if (result.kind === "journey") return viewJourneyResult(result);
     const r = result, junior = r.level === "junior";
     let title, msg, arabicTxt;
     if (r.stars === 3) { title = "Masha’Allah! Super goed gedaan!"; msg = junior ? "Je bent een echte ster! Alles (bijna) goed!" : "Uitstekend! Moge Allah je kennis vermeerderen."; arabicTxt = "مَا شَاءَ ٱللَّهُ"; }
@@ -3365,11 +3428,13 @@ return exports;})();
     if (r.next && !r.noAuto) {
       h += '<div class="levelup">' + icon("sparkles", 22) + "<b>Niveau " + r.next + " vrijgespeld!</b><span>Je gaat vanzelf door…</span></div>" +
         '<button class="btn gold" data-act="go-next-tier">' + icon("right", 20) + '<span id="autoTxt">Ga door naar Niveau ' + r.next + " (8)</span></button>" +
+        shareBtn(shareScoreText(r)) +
         '<button class="btn ghost" data-act="home">' + icon("left", 20) + "Stoppen en naar hoofdscherm</button>" +
         '<button class="btn ghost" data-act="review">' + icon("list", 20) + "Bekijk Antwoorden</button></div></section>";
       return h;
     }
     if (r.next) h += '<button class="btn gold" data-act="go-next-tier">' + icon("right", 20) + "Ga door naar Niveau " + r.next + "</button>";
+    h += shareBtn(shareScoreText(r));
     if (journeyReturn && r.kind === "category") h += '<button class="btn gold" data-act="journey-back">' + icon("map", 20) + "Terug naar De Reis</button>";
     h += '<button class="btn" data-act="retry">' + icon("retry", 20) + "Opnieuw Proberen</button>" +
       '<button class="btn gold" data-act="home">' + icon("layers", 20) + "Kies Andere Categorie</button>" +
@@ -3412,7 +3477,7 @@ return exports;})();
   }
   function starsAt(p, lv) {
     let t = 0; Object.keys(p.best[lv]).forEach(function (k) { t += p.best[lv][k].stars || 0; });
-    return t;
+    return t + jStarTotal(p, lv);
   }
   function allStars(p) { return starsAt(p, "junior") + starsAt(p, "expert"); }
   function avgPct(p, lv) {
@@ -3461,8 +3526,6 @@ return exports;})();
 
   /* ───────────── De Reis (routekaart) ───────────── */
   let curTh = null;   /* palet van het land dat nu getekend wordt */
-  const JLAYOUT = { 3: [[110, 690], [250, 540], [100, 385]], 4: [[110, 690], [250, 540], [100, 385], [225, 190]] };
-  const JCHEST = [[185, 738], [322, 548], [42, 405], [158, 232]];
   function starPoly(cx, cy, r) {
     let pts = [];
     for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + (i * Math.PI) / 5, rr = i % 2 ? r * 0.45 : r; pts.push((cx + Math.cos(a) * rr).toFixed(1) + "," + (cy + Math.sin(a) * rr).toFixed(1)); }
@@ -3581,17 +3644,196 @@ return exports;})();
     }
     return h + "</svg>";
   }
-  function journeyStops(level, c) {
-    const ts = tiersFor(level, c.id), n = ts.length;
-    const pts = (JLAYOUT[n === 4 ? 4 : 3]).slice(0, n);
-    let curIdx = -1;
-    const stops = ts.map(function (t, i) {
-      const locked = tierLocked(level, c.id, t), passed = tierPassed(level, c.id, t), b = P.best[level][bkey(c.id, t)];
-      if (curIdx < 0 && !locked && !passed) curIdx = i;
-      return { tier: t, x: pts[i][0], y: pts[i][1], locked: locked, passed: passed, stars: b ? b.stars || 0 : 0, last: i === n - 1 };
+  /* ───────────── De Reis: korte levels ─────────────
+     Elk land heeft J_MIN tot J_MAX korte levels van J_Q vragen. Een level is gehaald bij minstens 60% goed
+     (3 van 5) en levert 1-3 sterren op: 3/5 = 1 ster, 4/5 = 2 sterren, 5/5 = 3 sterren.
+     Elke J_MILE-de level (en het laatste level) heeft een schatkist als mijlpaal.
+     De vragen komen uit de bestaande vragenlijst van het land, oplopend in moeilijkheid (niveau 1 → 4). */
+  const J_Q = 5, J_MIN = 12, J_MAX = 15, J_MILE = 5;
+  function jPool(level, catId) {
+    return poolFor(level, catId).slice().sort(function (a, b) {
+      return qTier(a) - qTier(b) || hashString("j" + a.id) - hashString("j" + b.id);
     });
-    if (curIdx < 0) curIdx = n - 1;
-    return { stops: stops, cur: curIdx };
+  }
+  /* aantal levels groeit vanzelf mee als je meer vragen toevoegt (ruim 4 vragen per level), tussen J_MIN en J_MAX */
+  function jCount(level, catId) { return Math.max(J_MIN, Math.min(J_MAX, Math.ceil(poolFor(level, catId).length / 4))); }
+  /* vaste selectie per level: een venster in de (op moeilijkheid gesorteerde) lijst dat meeschuift met het level */
+  function jQuestions(level, catId, idx) {
+    const pool = jPool(level, catId), n = pool.length, size = Math.min(J_Q, n);
+    if (n <= size) return pool;
+    const cnt = jCount(level, catId), band = Math.min(n, size + 4);
+    const start = Math.round(idx * (n - band) / Math.max(1, cnt - 1));
+    return shuffle(shuffle(pool.slice(start, start + band), mulberry32(hashString(level + "|" + catId + "|" + idx))).slice(0, size));
+  }
+  function jBest(level, catId, i) {
+    const m = P && P.journey && P.journey[level] && P.journey[level][catId];
+    return (m && m[i]) || null;
+  }
+  function jSave(level, catId, i, rec) {
+    if (!P.journey) P.journey = { junior: {}, expert: {} };
+    if (!P.journey[level]) P.journey[level] = {};
+    if (!P.journey[level][catId]) P.journey[level][catId] = {};
+    P.journey[level][catId][i] = rec;
+  }
+  function jStarsFor(score, total) {
+    if (!total) return 0;
+    if (score >= total) return 3;
+    if (score >= total - 1 && score >= Math.ceil(total * PASS_PCT)) return 2;
+    return score >= Math.ceil(total * PASS_PCT) ? 1 : 0;
+  }
+  function jPassed(level, catId, i) { const b = jBest(level, catId, i); return !!b && b.stars >= 1; }
+  function jLocked(level, catId, i) { return i > 0 && !jPassed(level, catId, i - 1); }
+  function jIsMile(i, n) { return (i + 1) % J_MILE === 0 || i === n - 1; }
+  function jCurrent(level, catId) {
+    const n = jCount(level, catId);
+    for (let i = 0; i < n; i++) if (!jPassed(level, catId, i)) return i;
+    return n - 1;
+  }
+  function jLandStats(level, catId) {
+    const n = jCount(level, catId);
+    let passed = 0, stars = 0;
+    for (let i = 0; i < n; i++) { const b = jBest(level, catId, i); if (b && b.stars >= 1) passed++; stars += b ? b.stars || 0 : 0; }
+    return { n: n, passed: passed, stars: stars, max: n * 3, done: passed === n };
+  }
+  function jStarTotal(p, lv) {
+    let t = 0;
+    const m = p && p.journey && p.journey[lv];
+    if (m) Object.keys(m).forEach(function (cid) { Object.keys(m[cid]).forEach(function (k) { t += m[cid][k].stars || 0; }); });
+    return t;
+  }
+  /* toestand van de schatkist bij een mijlpaal-level: closed-dim (nog ver weg), closed (bereikbaar), open, gold (alle levels sinds de vorige kist met 3 sterren) */
+  function jChestState(level, catId, i, n) {
+    if (!jPassed(level, catId, i)) return jLocked(level, catId, i) ? "closed-dim" : "closed";
+    let s = i;
+    while (s > 0 && !jIsMile(s - 1, n)) s--;
+    for (let k = s; k <= i; k++) { const b = jBest(level, catId, k); if (!b || b.stars < 3) return "open"; }
+    return "gold";
+  }
+  /* slingerend pad: x volgt een sinus, y loopt omhoog; ruim genoeg voor 15 levels */
+  function jLayout(n) {
+    const bottom = 722, top = 112, step = Math.min(58, (bottom - top) / Math.max(1, n - 1)), pts = [];
+    for (let i = 0; i < n; i++) pts.push({ x: Math.round(180 + 104 * Math.sin(i * 1.45 + 0.4)), y: Math.round(bottom - i * step) });
+    return pts;
+  }
+  function journeyStops(level, c) {
+    const n = jCount(level, c.id), pts = jLayout(n), cur = jCurrent(level, c.id);
+    const stops = pts.map(function (p, i) {
+      const b = jBest(level, c.id, i);
+      return { i: i, x: p.x, y: p.y, locked: jLocked(level, c.id, i), passed: !!b && b.stars >= 1, stars: b ? b.stars || 0 : 0, mile: jIsMile(i, n), last: i === n - 1 };
+    });
+    return { stops: stops, cur: cur };
+  }
+
+  /* ───────────── Feestelijke animatie: vallende groene vlaggetjes met halve maan en gouden sterren ───────────── */
+  const FLAG_SVG = '<svg viewBox="0 0 40 46" aria-hidden="true" focusable="false"><line x1="5" y1="2" x2="5" y2="45" stroke="#b07a1a" stroke-width="3" stroke-linecap="round"/>' +
+    '<path d="M6 4 H37 L31 14 L37 24 H6Z" fill="#1f9d55" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/>' +
+    '<circle cx="17" cy="14" r="6" fill="#fff"/><circle cx="19.6" cy="12.8" r="5.1" fill="#1f9d55"/><polygon points="' + starPoly(26.5, 14, 3.8) + '" fill="#ffd23f"/></svg>';
+  const GOLD_STAR_SVG = '<svg viewBox="-12 -12 24 24" aria-hidden="true" focusable="false"><polygon points="' + starPoly(0, 0, 11) + '" fill="#ffc928" stroke="#d98e00" stroke-width="1.4" stroke-linejoin="round"/><polygon points="' + starPoly(-2, -3, 3) + '" fill="#fff" opacity=".6"/></svg>';
+  function reducedMotion() { return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); }
+  function celebrate(big) {
+    if (reducedMotion()) return;
+    const old = document.getElementById("celebrate"); if (old) old.remove();
+    const wrap = document.createElement("div");
+    wrap.id = "celebrate"; wrap.className = "celebrate"; wrap.setAttribute("aria-hidden", "true");
+    const nFlags = big ? 36 : 22, nStars = big ? 28 : 16;
+    let h = "";
+    for (let i = 0; i < nFlags + nStars; i++) {
+      const isFlag = i < nFlags, size = isFlag ? 28 + Math.random() * 22 : 16 + Math.random() * 18;
+      h += '<span class="cf" style="left:' + (Math.random() * 96).toFixed(1) + "%;--d:" + (Math.random() * 1.8).toFixed(2) + "s;--t:" + (3.4 + Math.random() * 2.6).toFixed(2) + "s;--s:" + size.toFixed(0) + "px;--sw:" + Math.round(Math.random() * 90 - 45) + "px;--r:" + Math.round(Math.random() * 200 - 100) + 'deg">' + (isFlag ? FLAG_SVG : GOLD_STAR_SVG) + "</span>";
+    }
+    wrap.innerHTML = h;
+    document.body.appendChild(wrap);
+    setTimeout(function () { if (wrap.isConnected) wrap.remove(); }, 8500);
+  }
+  /* statische slinger met vlaggetjes (ook zichtbaar zonder animaties) */
+  function bunting() {
+    const cols = ["#1f9d55", "#ffd23f", "#ffffff", "#2d6a4f"];
+    let h = '<svg class="bunting" viewBox="0 0 360 52" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M-4 4 Q180 34 364 4" fill="none" stroke="#b07a1a" stroke-width="2"/>';
+    for (let i = 0; i < 9; i++) {
+      const t = (i + 0.5) / 9, x = -4 + t * 368, y = 4 + 60 * t * (1 - t);
+      h += '<path d="M' + (x - 15).toFixed(1) + " " + (y - 1).toFixed(1) + " L" + (x + 15).toFixed(1) + " " + (y - 1).toFixed(1) + " L" + x.toFixed(1) + " " + (y + 26).toFixed(1) + 'Z" fill="' + cols[i % cols.length] + '" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/>';
+      if (i % 2 === 0) h += '<polygon points="' + starPoly(x, y + 8, 4.2) + '" fill="#ffd23f"/>';
+    }
+    return h + "</svg>";
+  }
+
+  /* ───────────── Delen via WhatsApp ───────────── */
+  function starEmoji(n) { return new Array(n + 1).join("⭐"); }
+  function shareScoreText(r) {
+    const c = r.catId ? catById(r.catId) : null;
+    if (r.kind === "journey") {
+      return "🌙 Islam Quiz: level " + (r.jIdx + 1) + " van " + r.jCount + " gehaald bij " + c.title + "! " + starEmoji(r.stars) + " (" + r.score + "/" + r.total + " goed)" +
+        (r.landDone ? "\n🚩 Land voltooid!" : r.chest ? "\n🎁 Schatkist geopend!" : "") + "\nLukt het jou ook? " + SITE_URL;
+    }
+    if (r.kind === "daily") return "🌙 Islam Quiz – Quiz van de Dag: " + r.score + "/" + r.total + " goed " + starEmoji(r.stars) + "\nLukt het jou ook? " + SITE_URL;
+    return "🌙 Islam Quiz: " + r.score + "/" + r.total + " goed " + starEmoji(r.stars) + " bij " + c.title + (tiersFor(r.level, r.catId).length > 1 ? " (niveau " + r.tier + ")" : "") + "!\nLukt het jou ook? " + SITE_URL;
+  }
+  function shareBtn(text, label) {
+    return '<a class="btn wa" href="' + waLink(text) + '" target="_blank" rel="noopener">' + icon("chat", 20) + (label || "Deel mijn score via WhatsApp") + "</a>";
+  }
+
+  /* ───────────── Resultaat van een reis-level ───────────── */
+  function viewJourneyResult(r) {
+    const need = Math.ceil(r.total * PASS_PCT);
+    let title, msg, arabicTxt;
+    if (!r.passed) { title = "Bijna! Probeer het nog eens"; msg = "Haal minstens " + need + " van de " + r.total + " goed om door te gaan. Je kunt het!"; arabicTxt = "إِنْ شَاءَ ٱللَّهُ"; }
+    else if (r.stars === 3) { title = "Masha’Allah! Perfect level!"; msg = "Alle vragen goed. Drie sterren voor jou!"; arabicTxt = "مَا شَاءَ ٱللَّهُ"; }
+    else if (r.stars === 2) { title = "Barakallahu fiek! Goed gedaan!"; msg = "Nog één keer foutloos en je haalt alle drie de sterren."; arabicTxt = "بَارَكَ ٱللَّهُ فِيكَ"; }
+    else { title = "Level gehaald!"; msg = "Het volgende level is open. Speel dit level later opnieuw voor meer sterren."; arabicTxt = "ٱلْحَمْدُ لِلَّهِ"; }
+
+    let h = '<section class="result jresult">' + (r.passed ? bunting() : "") + '<div class="stars-row" role="img" aria-label="' + r.stars + ' van 3 sterren">';
+    for (let i = 1; i <= 3; i++) h += icon("star", i === 2 ? 84 : 68, "fill" + (i <= r.stars ? " on" : ""));
+    h += "</div>";
+    h += '<div class="big-score">' + r.score + "<small> / " + r.total + "</small></div>";
+    h += '<div class="tier-tag">' + esc(catById(r.catId).title) + " · Level " + (r.jIdx + 1) + " van " + r.jCount + "</div>";
+    h += ar(arabicTxt) + "<h1>" + esc(title) + '</h1><p class="msg">' + esc(msg) + "</p>";
+    if (r.record) h += '<div class="badge-new">' + icon("trophy", 18) + "Nieuw record!</div>";
+    if (r.chest) {
+      h += '<div class="chest-win ' + (r.chestGold ? "gold" : "") + '"><svg viewBox="-34 -36 68 62" width="84" height="76" aria-hidden="true">' + chest(0, 4, r.chestGold ? "gold" : "open", 1.3, "stop") + "</svg>" +
+        "<span><b>" + (r.chestGold ? "Gouden schatkist geopend!" : "Schatkist geopend!") + "</b>Mijlpaal bereikt na level " + (r.jIdx + 1) + (r.chestGold ? ". Alle levels met 3 sterren!" : ".") + "</span></div>";
+    }
+    if (r.landDone) h += '<div class="land-win"><span class="lw-flag">' + FLAG_SVG + "</span><span><b>Land voltooid!</b>Je hebt alle " + r.jCount + " levels van " + esc(catById(r.catId).title) + " gehaald.</span></div>";
+    h += '<div class="result-actions">';
+    const hasNext = r.passed && r.jIdx + 1 < r.jCount;
+    if (hasNext) h += '<button class="btn gold" data-act="journey-next-level">' + icon("right", 20) + "Volgend level (" + (r.jIdx + 2) + ")</button>";
+    if (r.passed && !hasNext && !r.landDone) h += '<button class="btn gold" data-act="journey-back">' + icon("map", 20) + "Terug naar De Reis</button>";
+    if (r.landDone) {
+      const ni = CATEGORIES.findIndex(function (x) { return x.id === r.catId; }) + 1;
+      if (ni < CATEGORIES.length) h += '<button class="btn gold" data-act="journey-land-go" data-i="' + ni + '">' + icon("map", 20) + "Naar het volgende land</button>";
+      else h += '<button class="btn gold" data-act="journey-back">' + icon("map", 20) + "Terug naar De Reis</button>";
+    }
+    if (!r.passed) h += '<button class="btn gold" data-act="retry">' + icon("retry", 20) + "Probeer dit level opnieuw</button>";
+    if (r.passed) h += shareBtn(shareScoreText(r), "Deel via WhatsApp");
+    if (hasNext || !r.passed || r.landDone) h += '<button class="btn ghost" data-act="journey-back">' + icon("map", 20) + "Terug naar De Reis</button>";
+    if (r.passed) h += '<button class="btn ghost" data-act="retry">' + icon("retry", 20) + "Speel dit level nog een keer</button>";
+    h += '<button class="btn ghost" data-act="review">' + icon("list", 20) + "Bekijk antwoorden</button></div></section>";
+    return h;
+  }
+
+  /* ───────────── Leeftijdsbevestiging voor de Expert Modus (14+) ───────────── */
+  const EXPERT_MIN_AGE = 14;
+  function ageGate(onYes, onNo) {
+    const old = document.getElementById("ageGate"); if (old) old.remove();
+    const w = document.createElement("div");
+    w.className = "dialog-wrap"; w.id = "ageGate";
+    w.innerHTML = '<div class="dialog age-dialog" role="alertdialog" aria-modal="true" aria-labelledby="agT" aria-describedby="agD">' +
+      '<div class="age-badge" aria-hidden="true">' + EXPERT_MIN_AGE + '+</div><h3 id="agT">Expert Modus is voor ' + EXPERT_MIN_AGE + ' jaar en ouder</h3>' +
+      '<p id="agD">De vragen in de Expert Modus zijn dieper en bevatten uitgebreide bronnen, zoals Koranverzen en Hadith. Ben je ' + EXPERT_MIN_AGE + ' jaar of ouder?</p>' +
+      '<div class="stack"><button class="btn gold block" data-d="yes">Ja, ik ben ' + EXPERT_MIN_AGE + ' of ouder</button>' +
+      '<button class="btn ghost block" data-d="no">Nee, ik speel Junior</button></div></div>';
+    let done = false;
+    const finish = function (yes) { if (done) return; done = true; w.remove(); if (yes) onYes(); else onNo(); };
+    w.addEventListener("click", function (e) { const d = e.target.closest("[data-d]"); if (d) finish(d.dataset.d === "yes"); });
+    w.addEventListener("keydown", function (e) { if (e.key === "Escape") finish(false); });
+    document.body.appendChild(w);
+    const yes = w.querySelector('[data-d="yes"]'); if (yes) yes.focus();
+  }
+  /* kies een modus; Expert vraagt eenmalig per speler om de 14+ bevestiging */
+  function chooseMode(mode, after) {
+    const go = function () { P.mode = mode; saveState(); play("click"); after(); };
+    if (mode === "expert" && !P.age14) {
+      ageGate(function () { P.age14 = true; go(); }, function () { P.mode = "junior"; saveState(); play("click"); after(); });
+    } else go();
   }
   /* ── decor-onderdelen voor de landen ── */
   function lbl(x, y, t, size) { return '<text x="' + x + '" y="' + y + '" text-anchor="middle" font-size="' + (size || 11) + '" font-weight="900" fill="#fff" stroke="rgba(0,0,0,.45)" stroke-width="3" paint-order="stroke">' + t + "</text>"; }
@@ -3780,8 +4022,7 @@ return exports;})();
     const level = P.mode, L = LANDS[c.id] || LANDS.profeten, th = L.pal[level], J = journeyStops(level, c), stops = J.stops, n = stops.length;
     curTh = th;
     const uid = "j" + level[0] + c.id.charAt(0);
-    const tierName = ["Basis", "Gemiddeld", "Gevorderd", "Expert"];
-    let h = '<svg class="jsvg" viewBox="0 0 360 800" role="group" aria-label="Routekaart ' + esc(c.title) + '" xmlns="http://www.w3.org/2000/svg"><defs>' +
+    let h = '<svg class="jsvg" viewBox="0 0 360 800" role="group" aria-label="Routekaart ' + esc(c.title) + ", " + n + ' levels" xmlns="http://www.w3.org/2000/svg"><defs>' +
       '<linearGradient id="' + uid + 'sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + th.sky[0] + '"/><stop offset=".35" stop-color="' + th.sky[1] + '"/><stop offset=".7" stop-color="' + th.sky[2] + '"/><stop offset="1" stop-color="' + th.sky[3] + '"/></linearGradient>' +
       '<radialGradient id="' + uid + 'done" cx=".35" cy=".3"><stop offset="0" stop-color="#7ae6b4"/><stop offset="1" stop-color="#14935f"/></radialGradient>' +
       '<radialGradient id="' + uid + 'cur" cx=".35" cy=".3"><stop offset="0" stop-color="#fff0a8"/><stop offset="1" stop-color="#f0a02e"/></radialGradient>' +
@@ -3801,71 +4042,85 @@ return exports;})();
     // pad
     const seg = function (a, b) { const ym = (a.y + b.y) / 2; return "M" + a.x + " " + a.y + " C" + a.x + " " + ym + " " + b.x + " " + ym + " " + b.x + " " + b.y; };
     const s0 = stops[0];
-    let segs = [["M" + (s0.x - 80) + " 800 C" + (s0.x - 80) + " " + (s0.y + 70) + " " + s0.x + " " + (s0.y + 90) + " " + s0.x + " " + s0.y, true]];
+    let segs = [["M" + (s0.x - 90) + " 800 C" + (s0.x - 90) + " " + (s0.y + 50) + " " + s0.x + " " + (s0.y + 70) + " " + s0.x + " " + s0.y, true]];
     for (let i = 0; i < n - 1; i++) segs.push([seg(stops[i], stops[i + 1]), stops[i].passed]);
-    segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="' + th.edge + '" stroke-width="30" stroke-linecap="round"/>'; });
-    segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="' + (S[1] ? "#ffe08a" : th.path) + '" stroke-width="22" stroke-linecap="round"/>'; });
-    segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 11"/>'; });
-    // schatkisten
-    stops.forEach(function (st, i) {
-      const ch = JCHEST[i];
-      h += chest(ch[0], ch[1], st.passed ? (st.stars === 3 ? "gold" : "open") : st.locked ? "closed-dim" : "closed", 1, "stop");
-    });
+    segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="' + th.edge + '" stroke-width="26" stroke-linecap="round"/>'; });
+    segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="' + (S[1] ? "#ffe08a" : th.path) + '" stroke-width="18" stroke-linecap="round"/>'; });
+    segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="1 10"/>'; });
+    // dagelijkse kist (Quiz van de Dag)
     const dDone = !!P.daily[level][todayStr()];
     h += '<g class="j-stop j-daily" data-act="start-daily" role="button" tabindex="0" aria-label="Quiz van de Dag' + (dDone ? " (vandaag gespeeld)" : "") + '" style="cursor:pointer">' + chest(318, 752, dDone ? "open" : "closed", 1.3, "daily") + lbl(318, 786, "Quiz van de Dag", 10) + "</g>";
-    // stops
-    stops.forEach(function (st, i) {
-      const R = st.last ? 36 : 30, state = st.locked ? "locked" : st.passed ? "done" : "current";
-      const fill = state === "locked" ? "lock" : state === "done" ? (st.last && st.stars === 3 ? "gold" : "done") : "cur";
-      const name = "Niveau " + st.tier + " · " + tierName[st.tier - 1] + (st.locked ? " (vergrendeld)" : st.passed ? " (gehaald, " + st.stars + " van 3 sterren)" : "");
-      h += '<g class="j-stop ' + state + (i === J.cur ? " j-current" : "") + '" data-act="journey-stop" data-cat="' + c.id + '" data-tier="' + st.tier + '" role="button" tabindex="0" aria-label="' + name + '" transform="translate(' + st.x + " " + st.y + ')">';
-      if (state === "current") h += '<circle class="j-glow" r="' + (R + 14) + '" fill="#ffe08a" opacity=".55"/>';
-      h += '<circle r="' + (R + 5) + '" fill="#fff"/><circle r="' + R + '" fill="url(#' + uid + fill + ')"/>';
-      if (st.last) h += '<circle r="' + (R - 7) + '" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="2" stroke-dasharray="3 5"/>';
-      if (state === "locked") h += '<g transform="translate(-9 -11)" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><rect x="0" y="9" width="18" height="14" rx="3" fill="#fff" stroke="none"/><path d="M4 9 V5 a5 5 0 0 1 10 0 V9"/></g>';
-      else if (state === "done") h += '<polyline points="-10,1 -3,8 11,-8" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>';
-      else h += '<text y="9" text-anchor="middle" font-size="26" font-weight="900" fill="#fff" stroke="#c77d12" stroke-width="1">' + st.tier + "</text>";
-      for (let k = 0; k < 3; k++) h += '<polygon points="' + starPoly((k - 1) * 22, R + 20, 9.5) + '" fill="' + (k < st.stars ? "#ffc928" : "rgba(0,0,0,.2)") + '" stroke="' + (k < st.stars ? "#d98e00" : "none") + '" stroke-width="1"/>';
-      h += lbl(0, R + 46, "Niveau " + st.tier, 13);
-      if (st.tier === 3 || st.tier === 4) {
-        const kind = st.tier === 3 ? "master" : "grand", got = !!(P.badges && P.badges[badgeId(level, c.id, kind)]);
-        h += badgeSvg(kind, c.color, got ? 46 : 34, !got, 'x="' + (R - (got ? 14 : 8)) + '" y="' + (-R - (got ? 22 : 12)) + '" overflow="visible"');
-      }
+    // mijlpalen: schatkisten naast het pad
+    stops.forEach(function (st) {
+      if (!st.mile) return;
+      const R = st.last ? 27 : 23, side = st.x < 180 ? 1 : -1, state = jChestState(level, c.id, st.i, n);
+      h += '<g role="img" aria-label="Mijlpaal na level ' + (st.i + 1) + ", schatkist " + (state === "gold" ? "goud" : state === "open" ? "open" : "dicht") + '">' + chest(st.x + side * (R + 24), st.y + 6, state, 0.9, "stop") + "</g>";
+    });
+    // levels
+    stops.forEach(function (st) {
+      const R = st.last ? 27 : st.mile ? 23 : 19, state = st.locked ? "locked" : st.passed ? "done" : "current";
+      const fill = state === "locked" ? "lock" : state === "done" ? (st.stars === 3 ? "gold" : "done") : "cur";
+      const name = "Level " + (st.i + 1) + " van " + n + (st.mile ? ", mijlpaal met schatkist" : "") + (st.last ? ", laatste level" : "") + (st.locked ? " (vergrendeld)" : st.passed ? " (gehaald, " + st.stars + " van 3 sterren)" : " (volgende)");
+      h += '<g class="j-stop ' + state + (st.i === J.cur ? " j-current" : "") + '" data-act="journey-level" data-cat="' + c.id + '" data-i="' + st.i + '" role="button" tabindex="0" aria-label="' + name + '" transform="translate(' + st.x + " " + st.y + ')">';
+      h += '<circle r="' + (R + 7) + '" fill="#000" fill-opacity="0"/>';
+      if (state === "current") h += '<circle class="j-glow" r="' + (R + 12) + '" fill="#ffe08a" opacity=".55"/>';
+      h += '<circle r="' + (R + 4) + '" fill="' + (st.mile ? "#ffd54f" : "#fff") + '"/><circle r="' + R + '" fill="url(#' + uid + fill + ')"/>';
+      if (st.mile) h += '<circle r="' + (R - 5) + '" fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="1.6" stroke-dasharray="3 4"/>';
+      if (state === "locked") h += '<g transform="translate(-7 -9)" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><rect x="0" y="7" width="14" height="11" rx="2.5" fill="#fff" stroke="none"/><path d="M3 7 V4 a4 4 0 0 1 8 0 V7"/></g>';
+      else h += '<text y="' + (R > 22 ? 9 : 7) + '" text-anchor="middle" font-size="' + (R > 22 ? 25 : 20) + '" font-weight="900" fill="#fff" stroke="' + (state === "done" ? "#0b6b44" : "#c77d12") + '" stroke-width="1" paint-order="stroke">' + (st.i + 1) + "</text>";
+      if (state === "done") for (let k = 0; k < 3; k++) h += '<polygon points="' + starPoly((k - 1) * 15, R + (k === 1 ? 8 : 5), 7.5) + '" fill="' + (k < st.stars ? "#ffc928" : "rgba(0,0,0,.35)") + '" stroke="' + (k < st.stars ? "#b87400" : "#fff") + '" stroke-width="1.3" stroke-linejoin="round"/>';
+      if (st.last) h += '<g transform="translate(0 ' + (-R - 3) + ')"><line y2="-38" stroke="#b07a1a" stroke-width="3" stroke-linecap="round"/><path d="M1 -38 L33 -38 L27 -28 L33 -18 L1 -18Z" fill="#1f9d55" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"><animate attributeName="d" values="M1 -38 L33 -38 L27 -28 L33 -18 L1 -18Z;M1 -38 Q17 -42 33 -38 L27 -28 L33 -18 Q17 -14 1 -18Z;M1 -38 L33 -38 L27 -28 L33 -18 L1 -18Z" dur="2.2s" repeatCount="indefinite"/></path><circle cx="13" cy="-28" r="5.2" fill="#fff"/><circle cx="15.4" cy="-29" r="4.4" fill="#1f9d55"/><polygon points="' + starPoly(23.5, -28, 3.6) + '" fill="#ffd23f"/></g>';
       h += "</g>";
     });
-    // avatar-marker met naam
-    const nm = (P.name || "?").trim().slice(0, 12), pw = Math.max(40, nm.length * 8.6 + 22);
-    const mpos = function (st) { return st.x + "," + (st.y - (st.last ? 36 : 30) - 31); };
-    const cs = stops[J.cur], key = level + ":" + c.id, prev = journeyPos[key] !== undefined ? journeyPos[key] : J.cur, ps = stops[Math.min(prev, n - 1)];
-    h += '<g id="jMarker" class="j-marker" data-from="' + mpos(ps) + '" data-to="' + mpos(cs) + '" style="transform:translate(' + mpos(ps).split(",")[0] + "px," + mpos(ps).split(",")[1] + 'px)"><g class="j-bob">' +
-      '<path d="M-8 12 L0 25 L8 12Z" fill="#fff"/><rect x="' + (-pw / 2 - 3) + '" y="-17" width="' + (pw + 6) + '" height="34" rx="17" fill="#fff"/><rect x="' + -pw / 2 + '" y="-14" width="' + pw + '" height="28" rx="14" fill="' + P.color + '"/>' +
-      '<text y="5.5" text-anchor="middle" font-size="14" font-weight="900" fill="#fff">' + esc(nm) + "</text></g></g>";
+    // avatar-marker naast het huidige level
+    const ini = esc((P.name || "?").trim().charAt(0).toUpperCase());
+    const mpos = function (st) { const R = st.last ? 27 : st.mile ? 23 : 19, side = st.x < 180 ? -1 : 1; return (st.x + side * (R + 17)) + "," + st.y; };
+    const cs = stops[J.cur], key = level + ":" + c.id, prev = journeyPos[key] !== undefined ? Math.min(journeyPos[key], n - 1) : J.cur, ps = stops[prev];
+    h += '<g id="jMarker" class="j-marker" data-from="' + mpos(ps) + '" data-to="' + mpos(cs) + '" style="transform:translate(' + mpos(ps).split(",")[0] + "px," + mpos(ps).split(",")[1] + 'px)" aria-hidden="true"><g class="j-bob">' +
+      '<circle r="17" fill="#fff"/><circle r="14" fill="' + P.color + '"/><text y="5.5" text-anchor="middle" font-size="15" font-weight="900" fill="#fff">' + ini + "</text></g></g>";
     journeyPos[key] = J.cur;
     return h + "</svg>";
   }
-  function landDone(level, catId) { const rt = requiredTiers(level, catId); return rt.length > 0 && rt.every(function (t) { return tierPassed(level, catId, t); }); }
+  function landDone(level, catId) { return jLandStats(level, catId).done; }
   function defaultLand() {
     for (let i = 0; i < CATEGORIES.length; i++) { if (!landDone(P.mode, CATEGORIES[i].id)) return i; }
     return 0;
   }
+  /* tekst voor WhatsApp: totaaloverzicht van De Reis */
+  function shareJourneyText() {
+    const lv = P.mode;
+    let levels = 0, stars = 0, lines = "";
+    CATEGORIES.forEach(function (c) {
+      const s = jLandStats(lv, c.id);
+      levels += s.passed; stars += s.stars;
+      lines += "\n" + (s.done ? "✅" : "▫️") + " " + c.title + ": " + s.passed + "/" + s.n + " levels";
+    });
+    return "🌙 Mijn Reis in Islam Quiz: " + levels + " levels gehaald en " + stars + " ⭐ verzameld!" + lines + "\nKun jij mij inhalen? " + SITE_URL;
+  }
+  function waLink(text) { return "https://wa.me/?text=" + encodeURIComponent(text); }
   function viewJourney() {
     if (journeyLand === null || journeyLand >= CATEGORIES.length) journeyLand = defaultLand();
-    const i = journeyLand, c = CATEGORIES[i], level = P.mode;
+    const i = journeyLand, c = CATEGORIES[i], level = P.mode, st = jLandStats(level, c.id);
     let h = '<div class="topbar"><button class="icon-btn" data-act="home" aria-label="Terug naar home">' + icon("left", 22) + "</button>" +
       '<div class="brand">' + icon("map", 24) + 'De Reis</div><span style="width:44px"></span></div>';
     h += '<div class="land-strip" role="tablist" aria-label="Kies een land">';
     CATEGORIES.forEach(function (x, k) {
-      const gm = P.badges && P.badges[badgeId(level, x.id, "grand")], mm = P.badges && P.badges[badgeId(level, x.id, "master")];
-      h += '<button class="land-chip' + (k === i ? " on" : "") + '" style="--accent:' + x.color + '" data-act="journey-land" data-i="' + k + '" role="tab" aria-selected="' + (k === i) + '" aria-label="Land ' + (k + 1) + ": " + esc(x.title) + '">' + icon(CAT_ICON[x.icon] || "sparkles", 22) + "<span>" + (k + 1) + "</span>" + (gm ? '<i class="lc-b">👑</i>' : mm ? '<i class="lc-b">۞</i>' : "") + "</button>";
+      const done = landDone(level, x.id);
+      h += '<button class="land-chip' + (k === i ? " on" : "") + '" style="--accent:' + x.color + '" data-act="journey-land" data-i="' + k + '" role="tab" aria-selected="' + (k === i) + '" aria-label="Land ' + (k + 1) + ": " + esc(x.title) + (done ? " (voltooid)" : "") + '">' + icon(CAT_ICON[x.icon] || "sparkles", 22) + "<span>" + (k + 1) + "</span>" + (done ? '<i class="lc-b">🚩</i>' : "") + "</button>";
     });
     h += "</div>";
     h += '<div class="land-head" style="--accent:' + c.color + '"><span class="land-n">Land ' + (i + 1) + " van " + CATEGORIES.length + "</span><h2>" + esc(c.title) + "</h2><p>" + esc(c.subtitle) + "</p></div>";
+    h += '<div class="land-prog"><div class="lp-txt"><b>' + st.passed + " / " + st.n + "</b> levels gehaald<span>" + icon("star", 16, "fill") + " " + st.stars + " / " + st.max + "</span></div>" +
+      '<div class="bar" role="progressbar" aria-label="Voortgang in dit land" aria-valuemin="0" aria-valuemax="' + st.n + '" aria-valuenow="' + st.passed + '"><i style="width:' + Math.round((st.passed / st.n) * 100) + '%"></i></div>' +
+      '<p class="lp-hint">Elk level heeft ' + J_Q + " vragen. Haal minstens " + Math.ceil(J_Q * PASS_PCT) + " goed om door te gaan. Bij elke 5e level wacht een schatkist!</p></div>";
     h += '<div class="journey-map">' + journeyMap(c) + "</div>";
     h += '<div class="land-nav">' + (i > 0 ? '<button class="btn ghost" data-act="journey-land" data-i="' + (i - 1) + '">' + icon("left", 20) + "Land " + i + "</button>" : "<span></span>") +
       (i < CATEGORIES.length - 1 ? '<button class="btn gold" data-act="journey-land" data-i="' + (i + 1) + '">Land ' + (i + 2) + icon("right", 20) + "</button>" : "<span></span>") + "</div>";
+    h += '<a class="btn wa block" href="' + waLink(shareJourneyText()) + '" target="_blank" rel="noopener">' + icon("chat", 20) + "Deel mijn Reis via WhatsApp</a>";
     h += '<div class="j-toast" id="jToast" role="status"></div>';
     return h;
   }
+
   let jToastTimer = null;
   function jToast(msg) {
     const t = document.getElementById("jToast");
@@ -4406,8 +4661,8 @@ return exports;})();
     if (!el || el.tagName === "INPUT") return;
     const act = el.dataset.act;
     switch (act) {
-      case "pick-mode": P.mode = el.dataset.mode; saveState(); play("click"); screen = pendingCode ? "group" : "home"; render(); break;
-      case "switch-mode": P.mode = P.mode === "junior" ? "expert" : "junior"; saveState(); play("click"); render(); break;
+      case "pick-mode": chooseMode(el.dataset.mode, function () { screen = pendingCode ? "group" : "home"; render(); }); break;
+      case "switch-mode": chooseMode(P.mode === "junior" ? "expert" : "junior", function () { render(); }); break;
       case "toggle-sound": S.sound = !S.sound; if (!S.sound) voiceStop(); saveState(); if (S.sound) play("click"); render(); break;
       case "start-cat":
         play("click");
@@ -4421,17 +4676,24 @@ return exports;})();
       case "next": next(); break;
       case "retry":
         play("click");
-        if (result && result.kind === "daily") startQuiz("daily"); else startQuiz("category", result.catId, result.tier);
+        if (result && result.kind === "daily") startQuiz("daily");
+        else if (result && result.kind === "journey") { journeyReturn = true; startQuiz("journey", result.catId, null, result.jIdx); }
+        else startQuiz("category", result.catId, result.tier);
         break;
       case "home": play("click"); stopTimer(); journeyReturn = false; screen = "home"; render(); break;
       case "journey": play("click"); if (!voiceOnce.reis) { voiceOnce.reis = 1; voice("reis", undefined, 500); } stopTimer(); journeyReturn = false; journeyLand = null; screen = "journey"; render(); break;
       case "journey-back": play("click"); stopTimer(); screen = "journey"; render(); break;
       case "journey-land": play("click"); journeyLand = parseInt(el.dataset.i, 10); render(); break;
-      case "journey-stop": {
-        const jc = el.dataset.cat, jt = parseInt(el.dataset.tier, 10);
-        if (tierLocked(P.mode, jc, jt)) { play("wrong"); jToast("🔒 " + lockText(P.mode, jc, jt)); break; }
-        play("click"); journeyReturn = true; journeyLand = Math.max(0, CATEGORIES.findIndex(function (x) { return x.id === jc; })); startQuiz("category", jc, jt); break;
+      case "journey-level": {
+        const jc = el.dataset.cat, ji = parseInt(el.dataset.i, 10);
+        if (jLocked(P.mode, jc, ji)) { play("wrong"); jToast("🔒 Haal eerst level " + ji + " om dit level te openen"); break; }
+        play("click"); journeyReturn = true; journeyLand = Math.max(0, CATEGORIES.findIndex(function (x) { return x.id === jc; })); startQuiz("journey", jc, null, ji); break;
       }
+      case "journey-next-level": {
+        if (!result || result.kind !== "journey" || !result.passed || result.jIdx + 1 >= result.jCount) break;
+        play("click"); journeyReturn = true; startQuiz("journey", result.catId, null, result.jIdx + 1); break;
+      }
+      case "journey-land-go": play("click"); journeyLand = parseInt(el.dataset.i, 10); screen = "journey"; render(); break;
       case "scores": play("click"); screen = "scores"; render(); break;
       case "review": play("click"); if (result) result.noAuto = true; screen = "review"; render(); break;
       case "back-result": screen = "result"; render(); break;
@@ -4446,7 +4708,7 @@ return exports;})();
       case "reset":
         confirmDialog("Voortgang wissen?", "Alle scores, sterren en de reeks van " + P.name + " worden verwijderd. Andere spelers blijven staan.", "Ja, wissen", function () {
           const fresh = newPlayer(P.name, P.color);
-          P.best = fresh.best; P.daily = fresh.daily; P.streak = fresh.streak; P.played = 0; P.badges = {}; saveState(); render();
+          P.best = fresh.best; P.daily = fresh.daily; P.streak = fresh.streak; P.played = 0; P.badges = {}; P.journey = fresh.journey; saveState(); render();
         });
         break;
       case "install":
@@ -4535,6 +4797,7 @@ return exports;})();
 
   if (P && syncBadges().length) saveState();
   render();
+  if (P && P.mode === "expert" && !P.age14) chooseMode("expert", function () { render(); });
 })();
 </script>
 <script>
