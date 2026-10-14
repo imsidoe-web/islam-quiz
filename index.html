@@ -19,12 +19,13 @@
   --mint: #74c69d;
   --bg: #faf8f5;
   --ink: #1f2a24;
-  --muted: #66756c;
+  --muted: #5a695f;
   --card: #ffffff;
   --line: #ece6dc;
   --ok: #2d6a4f;
   --ok-bg: #d8f3dc;
-  --bad: #d9534f;
+  --bad: #bf3f3a;
+  --gold-text: #8a5a14;
   --bad-bg: #fde3e1;
   --shadow: 0 6px 20px rgba(45, 106, 79, 0.10);
   --shadow-lift: 0 10px 28px rgba(45, 106, 79, 0.18);
@@ -97,7 +98,7 @@ p { margin: 0; }
 .btn:hover { filter: brightness(1.06); }
 .btn:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--emerald-dark); }
 .btn:focus-visible, .option:focus-visible, .cat-card:focus-visible, .icon-btn:focus-visible, .daily:focus-visible, .mode-card:focus-visible {
-  outline: 3px solid var(--gold); outline-offset: 3px;
+  outline: 3px solid var(--emerald-dark); outline-offset: 3px; box-shadow: 0 0 0 6px #fff;
 }
 .btn.gold { background: var(--gold); box-shadow: 0 5px 0 #a8742f; color: #3a2606; }
 .btn.gold:active { box-shadow: 0 1px 0 #a8742f; }
@@ -148,7 +149,7 @@ p { margin: 0; }
 .mode-card.junior .badge { background: linear-gradient(135deg, var(--gold), #f0c27f); }
 .mode-card.expert .badge { background: linear-gradient(135deg, var(--emerald), var(--mint)); }
 .mode-card h3 { font-size: 1.2rem; color: var(--emerald-dark); }
-.mode-card .sub { font-weight: 800; font-size: .85rem; color: var(--gold); text-transform: uppercase; letter-spacing: .04em; }
+.mode-card .sub { font-weight: 800; font-size: .85rem; color: var(--gold-text); text-transform: uppercase; letter-spacing: .04em; }
 .mode-card.expert .sub { color: var(--emerald); }
 .mode-card p { color: var(--muted); font-size: .95rem; margin-top: 4px; }
 
@@ -263,7 +264,7 @@ p { margin: 0; }
   box-shadow: var(--shadow); margin: 16px 0; animation: fadeUp .35s ease both;
   overflow: hidden;
 }
-.q-card .q-num { font-size: .8rem; font-weight: 900; text-transform: uppercase; letter-spacing: .06em; color: var(--gold); }
+.q-card .q-num { font-size: .8rem; font-weight: 900; text-transform: uppercase; letter-spacing: .06em; color: var(--gold-text); }
 .q-card h2 { font-size: 1.28rem; color: var(--ink); margin-top: 4px; }
 .q-card .arabic { text-align: center; background: var(--emerald-soft); border-radius: 20px; padding: 6px 12px; margin-top: 14px; font-size: 1.9rem; }
 .expert .q-card h2 { font-size: 1.18rem; }
@@ -290,7 +291,7 @@ p { margin: 0; }
 .option.correct .mark, .option.wrong .mark { display: block; }
 .option.correct .mark { color: var(--ok); }
 .option.wrong .mark { color: var(--bad); }
-.option.dim { opacity: .55; }
+.option.dim { opacity: .8; }
 
 .feedback {
   border-radius: 24px; padding: 16px 18px; margin-top: 16px; animation: fadeUp .35s ease both;
@@ -341,7 +342,7 @@ p { margin: 0; }
 .review h1 { font-size: 1.4rem; color: var(--emerald-dark); margin: 6px 0 14px; }
 .rev-item { background: var(--card); border-radius: 26px; padding: 16px; box-shadow: var(--shadow); margin-bottom: 14px; border-left: 8px solid var(--ok); }
 .rev-item.bad { border-left-color: var(--bad); }
-.rev-item .qn { font-size: .78rem; font-weight: 900; color: var(--gold); text-transform: uppercase; letter-spacing: .05em; display: flex; align-items: center; gap: 6px; }
+.rev-item .qn { font-size: .78rem; font-weight: 900; color: var(--gold-text); text-transform: uppercase; letter-spacing: .05em; display: flex; align-items: center; gap: 6px; }
 .rev-item h3 { font-size: 1.05rem; margin: 4px 0 8px; }
 .rev-item .arabic { background: var(--emerald-soft); border-radius: 16px; padding: 4px 12px; text-align: center; margin-bottom: 8px; }
 .rev-line { font-weight: 700; font-size: .95rem; display: flex; gap: 8px; align-items: flex-start; margin: 4px 0; }
@@ -432,7 +433,7 @@ p { margin: 0; }
 .swatch .ic { opacity: 0; }
 .swatch.on { border-color: var(--ink); transform: scale(1.1); }
 .swatch.on .ic { opacity: 1; }
-.swatch:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+.swatch:focus-visible { outline: 3px solid var(--emerald-dark); outline-offset: 3px; box-shadow: 0 0 0 6px #fff; }
 .player-list { display: grid; gap: 12px; }
 .player-card { display: flex; align-items: center; gap: 8px; background: var(--card); border-radius: 24px; padding: 8px 10px 8px 8px; box-shadow: var(--shadow); border: 3px solid transparent; }
 .player-card.active { border-color: var(--mint); }
@@ -441,14 +442,14 @@ p { margin: 0; }
 .pinfo { min-width: 0; display: grid; }
 .pinfo b { font-size: 1.1rem; color: var(--emerald-dark); overflow-wrap: anywhere; }
 .pinfo small { color: var(--muted); font-weight: 700; font-size: .82rem; }
-.icon-btn.small { width: 36px; height: 36px; border-radius: 12px; color: var(--muted); box-shadow: none; background: var(--bg); flex: none; }
+.icon-btn.small { width: 44px; height: 44px; border-radius: 12px; color: var(--muted); box-shadow: none; background: var(--bg); flex: none; }
 .tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: #ece6dc; padding: 5px; border-radius: 20px; margin-bottom: 14px; }
 .tab { appearance: none; border: 0; font: inherit; font-weight: 800; padding: 10px; border-radius: 16px; background: transparent; color: var(--muted); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
 .tab.on { background: #fff; color: var(--emerald-dark); box-shadow: var(--shadow); }
 .rank-list { display: grid; gap: 10px; margin-bottom: 20px; }
 .rank-row { display: flex; align-items: center; gap: 10px; background: var(--card); border-radius: 22px; padding: 10px 14px 10px 10px; box-shadow: var(--shadow); }
 .rank-row.first { background: var(--gold-soft); }
-.rank-n { width: 28px; text-align: center; font-weight: 900; font-size: 1.2rem; color: var(--gold); flex: none; }
+.rank-n { width: 28px; text-align: center; font-weight: 900; font-size: 1.2rem; color: var(--gold-text); flex: none; }
 .rank-row .pinfo { flex: 1; }
 .rank-stars { display: inline-flex; align-items: center; gap: 4px; font-weight: 900; font-size: 1.2rem; color: var(--emerald-dark); flex: none; }
 .rank-stars .ic { color: var(--gold); }
@@ -898,6 +899,17 @@ a.btn.block { display: flex; margin-top: 14px; }
 .board-share { margin: 14px 0 24px; text-align: center; } .board-share small { display: block; margin-top: 6px; opacity: .8; font-weight: 700; }
 .album-btn { background: linear-gradient(135deg, #7a5cf0, #3a2fb0); }
 @media (prefers-reduced-motion: reduce) { .chest-bounce, .co-chest, .co-rays, .kw-pack { animation: none; } .mc-in, .kc-in { transition: none; } }
+
+/* ── Toegankelijkheid ── */
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }
+:focus-visible { outline: 3px solid var(--emerald-dark); outline-offset: 3px; }
+[tabindex="-1"]:focus { outline: none; }
+.j-stop:focus-visible { outline: none; }
+.a11y-dlg label.opt { display: flex; gap: 12px; align-items: flex-start; padding: 12px; margin: 8px 0; border-radius: 16px; background: var(--bg); font-weight: 800; color: var(--ink); cursor: pointer; }
+.a11y-dlg label.opt input { width: 26px; height: 26px; flex: none; accent-color: var(--emerald); margin-top: 2px; }
+.a11y-dlg label.opt small { display: block; font-weight: 600; color: var(--muted); margin-top: 2px; }
+.a11y-dlg .warn { background: var(--gold-soft); color: #5b3b08; border-radius: 14px; padding: 10px 12px; font-weight: 700; margin: 8px 0 14px; }
+.read-btn { margin: 8px 0 0; }
 </style>
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Islam Quiz">
@@ -923,9 +935,9 @@ a.btn.block { display: flex; margin-top: 14px; }
 <body>
   <!-- Disclaimer Modal -->
   <div id="disclaimerModal" class="modal-overlay">
-    <div class="modal-content">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="discT">
       <div class="modal-icon">📜</div>
-      <h3>Belangrijke Mededeling</h3>
+      <h3 id="discT">Belangrijke Mededeling</h3>
       <p>
         Dit spel bevat koranteksten en islamitische inhoud. Speel dit spel niet op onreine plekken (zoals het toilet of de badkamer).
         <br><br>
@@ -942,9 +954,9 @@ a.btn.block { display: flex; margin-top: 14px; }
 </div>
 
 <!-- BADGES OVERZICHT OVERLAY / MODAL -->
-<div id="badgesModal" class="badges-modal">
+<div id="badgesModal" class="badges-modal" role="dialog" aria-modal="true" aria-label="Mijn prestaties en badges">
   <div class="badges-container">
-    <button class="close-badges-btn" onclick="closeBadgesModal()">&times;</button>
+    <button class="close-badges-btn" onclick="closeBadgesModal()" aria-label="Sluiten">&times;</button>
     
     <div class="badges-header">
       <h2>جَوَائِزُ المَعْرِفَة</h2>
@@ -955,7 +967,9 @@ a.btn.block { display: flex; margin-top: 14px; }
     <div id="badgesGrid" class="badges-grid"></div>
   </div>
 </div>
-  <div id="app" aria-live="polite"></div>
+  <main id="app" tabindex="-1"></main>
+  <div id="liveP" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <div id="liveA" class="sr-only" aria-live="assertive" aria-atomic="true" role="alert"></div>
   <noscript>Deze quiz heeft JavaScript nodig. Zet JavaScript aan in je browser.</noscript>
   <script>
     function acceptDisclaimer() {
@@ -3011,6 +3025,7 @@ return exports;})();
     list: '<line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/>',
     users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
     landmark: '<line x1="3" x2="21" y1="22" y2="22"/><line x1="6" x2="6" y1="18" y2="11"/><line x1="10" x2="10" y1="18" y2="11"/><line x1="14" x2="14" y1="18" y2="11"/><line x1="18" x2="18" y1="18" y2="11"/><polygon points="12 2 20 7 4 7"/>',
+    access: '<circle cx="12" cy="4.5" r="2"/><path d="M5 8.5c4.5 1.4 9.5 1.4 14 0"/><path d="M12 9v5"/><path d="m12 14-3 7"/><path d="m12 14 3 7"/>',
     moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
     chat: '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
     layers: '<path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/>',
@@ -3073,6 +3088,7 @@ return exports;})();
   /* ───────────── Opslag (localStorage, per apparaat) ─────────────
      Meerdere spelers per apparaat: S.players[] met eigen scores, reeks en niveau. */
   const AVATAR_COLORS = ["#2D6A4F", "#D9A05B", "#F4978E", "#B589D6", "#4C9BE8", "#E76F51"];
+  const COLOR_NAMES = { "#2D6A4F": "donkergroen", "#D9A05B": "goud", "#F4978E": "roze", "#B589D6": "paars", "#4C9BE8": "blauw", "#E76F51": "oranjerood" };
   const MAX_PLAYERS = 8;
 
   function newPlayer(name, color) {
@@ -3107,7 +3123,7 @@ return exports;})();
       album: (function (a) { a = a || {}; if (a.junior || a.expert) return { junior: Object.assign({}, a.junior || {}), expert: Object.assign({}, a.expert || {}) }; return { junior: Object.assign({}, a), expert: {} }; })(p.album),
     });
   }
-  function defaultState() { return { v: 2, sound: true, timer: false, players: [], current: null }; }
+  function defaultState() { return { v: 2, sound: true, timer: false, speak: false, autoNext: true, players: [], current: null }; }
   function loadState() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -3192,7 +3208,7 @@ return exports;})();
     } catch (e) {}
   }
   function voice(cat, chance, delay) {
-    if (!S.sound || !VOICE[cat]) return;
+    if (!S.sound || S.speak || !VOICE[cat]) return;
     if (chance !== undefined && Math.random() > chance) return;
     clearTimeout(voiceTimer);
     voiceTimer = setTimeout(function () { voiceTry(cat); }, delay === undefined ? 450 : delay);
@@ -3363,8 +3379,144 @@ return exports;})();
     render();
   }
 
+  /* ───────────── Toegankelijkheid: meldingen, focus, dialogen, voorlezen ───────────── */
+  const SCREEN_TITLE = { welcome: "Kies je niveau", home: "Hoofdmenu", quiz: "Quiz", result: "Resultaat", review: "Antwoorden bekijken", scores: "Mijn scores", newplayer: "Nieuwe speler", players: "Spelers", board: "Scorebord", group: "Groep en duel", duelresult: "Duel-uitslag", journey: "De Reis", chestopen: "Schatkist", minigame: "Minigame", album: "Kwartet-album" };
+  function announce(msg, assertive) {
+    const el = document.getElementById(assertive ? "liveA" : "liveP"); if (!el) return;
+    el.textContent = ""; setTimeout(function () { el.textContent = msg; }, 60);
+  }
+  function autoOn() { return S.autoNext !== false; }
+  function speakOn() { return !!S.speak && "speechSynthesis" in window; }
+  function speak(text) {
+    if (!speakOn()) return;
+    try {
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text); u.lang = "nl-NL";
+      const v = (speechSynthesis.getVoices() || []).filter(function (x) { return /^nl/i.test(x.lang); })[0]; if (v) u.voice = v;
+      speechSynthesis.speak(u);
+    } catch (e) {}
+  }
+  function speakStop() { try { if ("speechSynthesis" in window) speechSynthesis.cancel(); } catch (e) {} }
+  function questionSpeech(it) {
+    const q = it.q; let t = q.question + ". ";
+    if (isMulti(q)) t += "Meerdere antwoorden mogelijk. ";
+    it.order.forEach(function (orig, pos) { t += "Antwoord " + LETTERS[pos] + ": " + q.options[orig] + ". "; });
+    return t;
+  }
+  function feedbackSpeech(it) { return (it.correct ? "Goed! " : it.timedOut ? "De tijd is op. " : "Fout. ") + (it.correct ? "" : "Het juiste antwoord: " + correctText(it.q) + ". ") + it.q.explanation; }
+  /* handtekening van een knop, om de focus na het hertekenen terug te zetten */
+  function sigOf(el) {
+    if (!el || !el.getAttribute || !el.getAttribute("data-act")) return null;
+    let sg = '[data-act="' + el.getAttribute("data-act") + '"]';
+    ["data-id", "data-cat", "data-i", "data-k", "data-level", "data-mode", "data-tier", "data-pos", "data-color"].forEach(function (a) { if (el.hasAttribute(a)) sg += "[" + a + '="' + el.getAttribute(a) + '"]'; });
+    return sg;
+  }
+  let a11yLast = { screen: null, qkey: null, answered: null };
+  function a11yBefore() {
+    const ae = document.activeElement;
+    return { screen: a11yLast.screen, qkey: a11yLast.qkey, answered: a11yLast.answered, sig: ae && app.contains(ae) ? sigOf(ae.closest("[data-act]")) : null };
+  }
+  function a11yFocus(el) { if (!el) return; if (!el.hasAttribute("tabindex") && !/^(A|BUTTON|INPUT)$/.test(el.tagName)) el.setAttribute("tabindex", "-1"); try { el.focus({ preventScroll: true }); } catch (e) {} }
+  function a11yAfter(prev) {
+    syncInert();
+    document.title = (SCREEN_TITLE[screen] || "Islam Quiz") + " – Islam Quiz";
+    Array.prototype.forEach.call(app.querySelectorAll(".brand"), function (b) { b.setAttribute("role", "heading"); b.setAttribute("aria-level", "1"); });
+    let target = null; const sameScreen = prev.screen === screen;
+    if (screen === "quiz" && quiz) {
+      const qk = quiz.kind + ":" + quiz.idx, it = quiz.items[quiz.idx];
+      if (quiz.answered && !prev.answered) {
+        announce(it.correct ? "Goed!" : it.timedOut ? "De tijd is op." : "Fout.", true);
+        const fb = document.getElementById("feedback");
+        setTimeout(function () { if (screen === "quiz" && quiz && quiz.answered && fb && fb.isConnected) a11yFocus(fb); }, 900);
+        if (speakOn()) setTimeout(function () { if (screen === "quiz" && quiz && quiz.answered) speak(feedbackSpeech(it)); }, 500);
+      } else if (!quiz.answered && (!sameScreen || prev.qkey !== qk)) {
+        target = document.getElementById("qcard");
+        if (speakOn()) setTimeout(function () { if (screen === "quiz" && quiz && !quiz.answered) speak(questionSpeech(quiz.items[quiz.idx])); }, 600);
+      } else if (prev.sig) { target = app.querySelector(prev.sig); }
+      a11yLast = { screen: screen, qkey: qk, answered: !!quiz.answered };
+    } else {
+      if (!sameScreen) target = app.querySelector("h1") || app.querySelector(".brand") || app.querySelector("h2");
+      else if (prev.sig) target = app.querySelector(prev.sig);
+      a11yLast = { screen: screen, qkey: null, answered: null };
+    }
+    if (target) a11yFocus(target);
+  }
+  /* dialogen: aria, inert-achtergrond, Escape, focus terug naar de opener */
+  let dlgUid = 0, lastOpener = null, lastOpenerSig = null;
+  document.addEventListener("focusin", function (e) {
+    const t = e.target; if (!t || !t.closest) return;
+    if (t.closest(".dialog-wrap, #disclaimerModal, #badgesModal")) return;
+    lastOpener = t; lastOpenerSig = sigOf(t.closest("[data-act]"));
+  });
+  function syncInert() {
+    const disc = document.getElementById("disclaimerModal"), bm = document.getElementById("badgesModal");
+    const discOpen = !!disc && !disc.classList.contains("hidden") && getComputedStyle(disc).display !== "none";
+    const bmOpen = !!bm && bm.classList.contains("active"), dlgOpen = !!document.querySelector(".dialog-wrap");
+    const any = discOpen || bmOpen || dlgOpen;
+    ["app", "badgesBtnWrap"].forEach(function (id) { const el = document.getElementById(id); if (el) { if (any) el.setAttribute("inert", ""); else el.removeAttribute("inert"); } });
+    if (bm) { if (discOpen || dlgOpen) bm.setAttribute("inert", ""); else bm.removeAttribute("inert"); }
+    return { any: any, discOpen: discOpen, bmOpen: bmOpen };
+  }
+  function setupDialog(w) {
+    const d = w.querySelector(".dialog");
+    if (d) {
+      if (!d.getAttribute("role")) d.setAttribute("role", "dialog");
+      d.setAttribute("aria-modal", "true");
+      if (!d.getAttribute("aria-labelledby")) { const hd = d.querySelector("h3, h2"); if (hd) { if (!hd.id) hd.id = "dh" + (++dlgUid); d.setAttribute("aria-labelledby", hd.id); } }
+    }
+    w.addEventListener("keydown", function (e) {
+      if (e.key !== "Escape") return;
+      const c = w.querySelector('[data-d="no"], [data-d="ok"], [data-d="x"]');
+      if (c) c.click(); else w.remove();
+    });
+    if (!w.contains(document.activeElement)) { const f = w.querySelector("button, input"); if (f) f.focus(); }
+  }
+  function restoreOpener() {
+    let el = lastOpener && lastOpener.isConnected ? lastOpener : null;
+    if (!el && lastOpenerSig) el = app.querySelector(lastOpenerSig);
+    if (el) a11yFocus(el);
+  }
+  const a11yObserver = new MutationObserver(function (muts) {
+    let added = null, removed = false;
+    muts.forEach(function (m) {
+      Array.prototype.forEach.call(m.addedNodes || [], function (n) { if (n.classList && n.classList.contains("dialog-wrap")) added = n; });
+      Array.prototype.forEach.call(m.removedNodes || [], function (n) { if (n.classList && n.classList.contains("dialog-wrap")) removed = true; });
+    });
+    const was = a11yObserver.wasOpen, st = syncInert();
+    if (added) setupDialog(added);
+    if (!st.any && was) { restoreOpener(); if (was === "disc") a11yFocus(app.querySelector("h1") || app.querySelector(".brand")); }
+    a11yObserver.wasOpen = st.discOpen ? "disc" : st.any ? "dlg" : null;
+  });
+  a11yObserver.wasOpen = null;
+  (function initA11y() {
+    a11yObserver.observe(document.body, { childList: true });
+    ["disclaimerModal", "badgesModal"].forEach(function (id) { const el = document.getElementById(id); if (el) a11yObserver.observe(el, { attributes: true, attributeFilter: ["class", "style"] }); });
+    const st = syncInert(); a11yObserver.wasOpen = st.discOpen ? "disc" : st.any ? "dlg" : null;
+    if (st.discOpen) { const b = document.querySelector("#disclaimerModal .btn"); if (b) setTimeout(function () { b.focus(); }, 50); }
+  })();
+  function a11yDialog() {
+    const w = document.createElement("div"); w.className = "dialog-wrap";
+    w.innerHTML = '<div class="dialog a11y-dlg" role="dialog" aria-modal="true" aria-labelledby="a11yT"><h3 id="a11yT">Toegankelijkheid</h3>' +
+      '<label class="opt"><input type="checkbox" id="optSpeak"' + (S.speak ? " checked" : "") + '><span>Spreek vragen uit<small>De app leest elke vraag, de antwoorden en de uitleg hardop voor. Op de vraagpagina staat ook een knop “Lees voor”.</small></span></label>' +
+      '<label class="opt"><input type="checkbox" id="optAuto"' + (autoOn() ? " checked" : "") + '><span>Automatisch doorgaan na een level<small>Na een resultaat ga je vanzelf verder. Zet dit uit als je liever zelf op de knop tikt.</small></span></label>' +
+      '<p class="warn">Gebruik je al een schermlezer (VoiceOver of TalkBack)? Zet “Spreek vragen uit” dan uit, anders praten beide stemmen door elkaar.</p>' +
+      '<button class="btn block" data-d="ok">Klaar</button></div>';
+    w.addEventListener("change", function (e) {
+      if (e.target.id === "optSpeak") {
+        S.speak = e.target.checked;
+        if (S.speak) { S.autoNext = false; const a = document.getElementById("optAuto"); if (a) a.checked = false; if (!("speechSynthesis" in window)) { announce("Voorlezen wordt niet ondersteund in deze browser."); } else speak("Voorlezen staat aan."); }
+        else { speakStop(); S.autoNext = true; const a = document.getElementById("optAuto"); if (a) a.checked = true; }
+      }
+      if (e.target.id === "optAuto") S.autoNext = e.target.checked;
+      saveState();
+    });
+    w.addEventListener("click", function (e) { if (e.target === w || e.target.closest("[data-d]")) { w.remove(); if (screen === "home") render(); } });
+    document.body.appendChild(w);
+  }
+
   /* ───────────── Weergave ───────────── */
   function render() {
+    const prevA = a11yBefore(); speakStop();
     stopTimer(); mgClear();
     document.body.className = "";
     if (screen !== "result" && screen !== "chestopen" && screen !== "minigame") { const cel = document.getElementById("celebrate"); if (cel) cel.remove(); }
@@ -3395,6 +3547,7 @@ return exports;})();
     if (bw) bw.style.display = (screen === "home" || screen === "scores") ? "" : "none";
     window.scrollTo({ top: 0 });
     if (screen === "journey") afterJourneyRender();
+    a11yAfter(prevA);
   }
 
   function startAutoNext() {
@@ -3415,8 +3568,8 @@ return exports;})();
     let h = '<div class="dialog" role="dialog" aria-modal="true"><h3>' + esc(c.title) + "</h3><p>Kies een niveau. Je speelt stap voor stap: haal een niveau (min. " + Math.round(PASS_PCT * 100) + "% goed) om het volgende te openen. " + (hasTier4(lv, catId) ? "Niveau 4 gaat open als je niveau 1-3 van deze categorie hebt gehaald (min. " + Math.round(PASS_PCT * 100) + "% goed)." : "Haal niveau 1-3 (min. " + Math.round(PASS_PCT * 100) + "% goed) voor de Meester-badge.") + "</p><div class=\"tier-list\">";
     ts.forEach(function (t) {
       const b = P.best[lv][bkey(catId, t)], locked = tierLocked(lv, catId, t), ok = tierPassed(lv, catId, t);
-      h += '<button class="tier-btn' + (locked ? " locked" : "") + '"' + (locked ? " disabled" : ' data-act="start-tier" data-cat="' + catId + '" data-tier="' + t + '"') + '><span class="tier-n">' + (locked ? "🔒 " : "") + "Niveau " + t + "</span>" +
-        '<span class="tier-d">' + (locked ? lockText(lv, catId, t) : ["Basis", "Gemiddeld", "Gevorderd", "Expert"][t - 1] + (ok ? " · ✓ gehaald" : "")) + "</span>" + miniStars(b ? b.stars : 0) + "</button>";
+      h += '<button class="tier-btn' + (locked ? " locked" : "") + '"' + (locked ? ' aria-disabled="true"' : ' data-act="start-tier" data-cat="' + catId + '" data-tier="' + t + '"') + '><span class="tier-n">' + (locked ? "🔒 " : "") + "Niveau " + t + "</span>" +
+        '<span class="tier-d">' + (locked ? '<span class="sr-only">Vergrendeld. </span>' + lockText(lv, catId, t) : ["Basis", "Gemiddeld", "Gevorderd", "Expert"][t - 1] + (ok ? " · ✓ gehaald" : "")) + "</span>" + miniStars(b ? b.stars : 0) + "</button>";
     });
     h += '</div><button class="btn ghost block" data-d="no">Annuleren</button></div>';
     w.innerHTML = h;
@@ -3469,8 +3622,9 @@ return exports;})();
     const daily = P.daily[level][todayStr()];
     let h = '<div class="topbar"><div class="brand"><span class="mini-logo">' + icon("moon", 22) + "</span>Islam Quiz</div>" +
       '<div class="top-actions">' +
+      '<button class="icon-btn" data-act="a11y" aria-label="Toegankelijkheid: voorlezen en automatisch doorgaan">' + icon("access", 22) + "</button>" +
       '<button class="icon-btn" data-act="toggle-sound" aria-label="' + (S.sound ? "Geluid uitzetten" : "Geluid aanzetten") + '">' + icon(S.sound ? "sound" : "mute", 22) + "</button>" +
-      '<button class="mode-chip ' + level + '" data-act="switch-mode" aria-label="Wissel van niveau">' +
+      '<button class="mode-chip ' + level + '" data-act="switch-mode" aria-label="Niveau wisselen. Nu: ' + (isJunior ? "Junior, tik voor Expert" : "Expert, tik voor Junior") + '">' +
       icon(isJunior ? "smile" : "cap", 18) + (isJunior ? "Junior" : "Expert") + "</button></div></div>";
 
     h += '<div class="hello"><div><h1>' + (isJunior ? "Hoi, " : "Assalamu ‘alaykum, ") + esc(P.name) + "!</h1>" +
@@ -3505,7 +3659,7 @@ return exports;})();
       const b = P.best[level][c.id];
       const nt = tiersFor(level, c.id).length;
       const n = poolFor(level, c.id, 1).length;
-      h += '<button class="cat-card" style="--accent:' + c.color + '" data-act="start-cat" data-cat="' + c.id + '">' +
+      h += '<button class="cat-card" style="--accent:' + c.color + '" data-act="start-cat" data-cat="' + c.id + '" aria-label="' + esc(c.title + ". " + c.subtitle + ". " + (nt > 1 ? nt + " niveaus. " : n + " vragen. ") + (b ? "Beste score " + b.score + " van " + b.total + ", " + b.stars + " van 3 sterren." : "Nog niet gespeeld.")) + '">' +
         '<span class="badge">' + icon(CAT_ICON[c.icon] || "sparkles", 28) + "</span>" +
         "<span><h3>" + esc(c.title) + "</h3><p>" + esc(c.subtitle) + "</p></span>" +
         '<span class="meta">' + miniStars(b ? b.stars : 0) +
@@ -3535,12 +3689,14 @@ return exports;})();
     if (isDuel) h += '<div class="opp-strip" id="oppStrip">' + oppStripHtml() + "</div>";
 
     if (quiz.level === "expert" && S.timer && !isDuel) {
-      h += '<div class="bar timer"><i id="timerBar" style="width:' + (quiz.answered ? 0 : 100) + '%"></i></div>' +
-        '<div class="timer-label">' + icon("timer", 14) + '<span id="timerTxt">' + (quiz.answered ? "" : TIMER_SECONDS + " sec") + "</span></div>";
+      h += '<div class="bar timer" aria-hidden="true"><i id="timerBar" style="width:' + (quiz.answered ? 0 : 100) + '%"></i></div>' +
+        '<div class="timer-label" aria-hidden="true">' + icon("timer", 14) + '<span id="timerTxt">' + (quiz.answered ? "" : TIMER_SECONDS + " sec") + "</span></div>";
     }
 
-    h += '<div class="q-card' + (quiz.answered ? " static" : "") + '" id="qcard"><div class="q-num">' + (isDaily ? "Dagelijkse vraag " : "Vraag ") + (quiz.idx + 1) + "</div>" +
-      "<h2>" + esc(q.question) + "</h2>" + (isMulti(q) ? '<div class="multi-hint">Meerdere antwoorden mogelijk: kies álle juiste antwoorden</div>' : "") + (q.questionArabic ? ar(q.questionArabic) : "") + "</div>";
+    h += '<div class="q-card' + (quiz.answered ? " static" : "") + '" id="qcard" role="group" tabindex="-1" aria-labelledby="qh" aria-describedby="qopts"><div class="q-num">' + (isDaily ? "Dagelijkse vraag " : "Vraag ") + (quiz.idx + 1) + " van " + total + "</div>" +
+      '<h2 id="qh">' + esc(q.question) + "</h2>" + (isMulti(q) ? '<div class="multi-hint">Meerdere antwoorden mogelijk: kies álle juiste antwoorden</div>' : "") + (q.questionArabic ? ar(q.questionArabic) : "") +
+      '<span class="sr-only" id="qopts">' + (isMulti(q) ? "Meerdere antwoorden mogelijk. " : "") + "Antwoordopties: " + it.order.map(function (o, p) { return LETTERS[p] + ": " + esc(q.options[o]); }).join(". ") + "</span>" +
+      (S.speak && "speechSynthesis" in window ? '<button class="btn ghost small read-btn" data-act="read-aloud">' + icon("sound", 18) + "Lees voor</button>" : "") + "</div>";
 
     h += '<div class="options' + (quiz.answered ? " answered" : "") + '" role="group" aria-label="Antwoordopties">';
     const multi = isMulti(q), aset = answerSet(q), pset = it.picked === null || it.picked === undefined ? [] : Array.isArray(it.picked) ? it.picked : [it.picked];
@@ -3552,7 +3708,7 @@ return exports;})();
         else cls += " dim";
       } else if (multi && (it.sel || []).indexOf(orig) !== -1) cls += " selected";
       h += '<button class="' + cls + '" data-act="answer" data-pos="' + pos + '" ' + (quiz.answered ? "disabled" : (multi ? 'aria-pressed="' + ((it.sel || []).indexOf(orig) !== -1) + '"' : "")) + ">" +
-        '<span class="letter">' + LETTERS[pos] + "</span><span>" + esc(q.options[orig]) + '</span><span class="mark">' + mark + "</span></button>";
+        '<span class="letter" aria-hidden="true">' + LETTERS[pos] + "</span><span>" + esc(q.options[orig]) + '</span><span class="mark" aria-hidden="true">' + mark + '</span>' + (quiz.answered ? '<span class="sr-only">' + (aset.indexOf(orig) !== -1 ? "Juist antwoord" : pset.indexOf(orig) !== -1 ? "Jouw antwoord, fout" : "Niet gekozen") + "</span>" : "") + "</button>";
     });
     h += "</div>";
     if (multi && !quiz.answered) h += '<div class="next-row"><button class="btn" data-act="check-multi" id="checkBtn"' + ((it.sel || []).length ? "" : " disabled") + ">" + icon("check", 20) + "Controleer mijn antwoord</button></div>";
@@ -3597,9 +3753,14 @@ return exports;})();
   function startTimer() {
     quiz.timeLeft = TIMER_SECONDS;
     const t0 = Date.now();
+    let said = {};
     timerHandle = setInterval(function () {
       const left = TIMER_SECONDS - (Date.now() - t0) / 1000;
       const bar = document.getElementById("timerBar"), txt = document.getElementById("timerTxt");
+      const sec = Math.ceil(left);
+      if (sec <= 10 && sec > 5 && !said.a && TIMER_SECONDS > 10) { said.a = 1; announce("Nog 10 seconden.", false); }
+      if (sec <= 5 && sec > 3 && !said.b) { said.b = 1; announce("Nog 5 seconden.", true); }
+      if (sec <= 3 && sec > 0 && !said.c) { said.c = 1; announce("Nog 3 seconden.", true); }
       if (left <= 0) { stopTimer(); answer(null); return; }
       if (bar) bar.style.width = (left / TIMER_SECONDS) * 100 + "%";
       if (txt) txt.textContent = Math.ceil(left) + " sec";
@@ -3716,8 +3877,8 @@ return exports;})();
     saveState();
     pushMember();
 
-    result = { kind: quiz.kind, catId: quiz.catId, level: quiz.level, tier: quiz.tier || 1, next: nextTier(quiz, stars), score: score, total: total, stars: stars, record: isRecord, items: quiz.items, newBadges: newBadges, open4: open4, noAuto: journeyReturn && quiz.kind === "category" };
-    if (jr) Object.assign(result, jr, { noAuto: false });
+    result = { kind: quiz.kind, catId: quiz.catId, level: quiz.level, tier: quiz.tier || 1, next: nextTier(quiz, stars), score: score, total: total, stars: stars, record: isRecord, items: quiz.items, newBadges: newBadges, open4: open4, noAuto: (journeyReturn && quiz.kind === "category") || !autoOn() };
+    if (jr) Object.assign(result, jr, { noAuto: !autoOn() });
     screen = "result";
     if (jr) {
       play(jr.passed ? "fanfare" : "lose");
@@ -3755,6 +3916,7 @@ return exports;})();
     if (r.open4 && !r.next) h += '<button class="btn gold" data-act="start-tier" data-cat="' + r.catId + '" data-tier="4">' + icon("sparkles", 20) + "Speel Niveau 4 (vrijgespeld!)</button>";
     if (r.next && !r.noAuto) {
       h += '<div class="levelup">' + icon("sparkles", 22) + "<b>Niveau " + r.next + " vrijgespeld!</b><span>Je gaat vanzelf door…</span></div>" +
+        '<button class="btn ghost" data-act="hold-auto">Niet automatisch doorgaan</button>' +
         '<button class="btn gold" data-act="go-next-tier">' + icon("right", 20) + '<span id="autoTxt">Ga door naar Niveau ' + r.next + " (8)</span></button>" +
         shareBtn(shareScoreText(r)) +
         '<button class="btn ghost" data-act="home">' + icon("left", 20) + "Stoppen en naar hoofdscherm</button>" +
@@ -3840,7 +4002,7 @@ return exports;})();
       '<div class="field"><label for="pname">Naam</label><input id="pname" type="text" maxlength="14" autocomplete="off" placeholder="Bijvoorbeeld Aisha"></div>' +
       '<div class="field"><label>Kies een kleur</label><div class="swatches" role="radiogroup" aria-label="Kleur">';
     AVATAR_COLORS.forEach(function (c) {
-      h += '<button type="button" class="swatch' + (c === draftColor ? " on" : "") + '" style="--c:' + c + '" data-act="pick-color" data-color="' + c + '" role="radio" aria-checked="' + (c === draftColor) + '" aria-label="Kleur ' + c + '">' + icon("check", 18) + "</button>";
+      h += '<button type="button" class="swatch' + (c === draftColor ? " on" : "") + '" style="--c:' + c + '" data-act="pick-color" data-color="' + c + '" role="radio" aria-checked="' + (c === draftColor) + '" aria-label="Kleur ' + (COLOR_NAMES[c] || c) + '">' + icon("check", 18) + "</button>";
     });
     h += '</div></div><div class="stack">' +
       '<button class="btn block" data-act="create-player">Verder' + icon("right", 20) + "</button>" +
@@ -3856,7 +4018,7 @@ return exports;})();
       h += '<div class="player-card' + (p.id === S.current ? " active" : "") + '">' +
         '<button class="player-main" data-act="select-player" data-id="' + p.id + '">' + avatarHtml(p, 52) +
         '<span class="pinfo"><b>' + esc(p.name) + "</b><small>" + allStars(p) + (allStars(p) === 1 ? " ster" : " sterren") + " · " + p.played + (p.played === 1 ? " quiz" : " quizzen") + (p.mode ? " · " + (p.mode === "junior" ? "Junior" : "Expert") : "") + "</small></span></button>" +
-        '<button class="icon-btn small" data-act="remove-player" data-id="' + p.id + '" aria-label="Verwijder ' + esc(p.name) + '" title="Verwijder ' + esc(p.name) + '">' + icon("trash", 18) + "</button></div>";
+        '<button class="icon-btn small" data-act="remove-player" data-id="' + p.id + '" aria-label="Verwijder speler ' + esc(p.name) + '" title="Verwijder speler ' + esc(p.name) + '">' + icon("trash", 18) + "</button></div>";
     });
     h += "</div>";
     h += '<div class="stack">' +
@@ -4178,7 +4340,8 @@ return exports;})();
     h += '<div class="result-actions">';
     if (r.passed) {
       /* Candy Crush-stijl: na de viering terug naar de kaart; geen 'volgende'-knop. De speler tikt zelf het volgende icoon aan. */
-      h += '<button class="btn gold" data-act="journey-back">' + icon("map", 20) + '<span id="autoTxt">Naar de kaart (' + AUTO_BACK_SECS + ")</span></button>";
+      h += '<button class="btn gold" data-act="journey-back">' + icon("map", 20) + '<span id="autoTxt">' + (r.noAuto ? "Naar de kaart" : "Naar de kaart (" + AUTO_BACK_SECS + ")") + "</span></button>";
+      if (!r.noAuto) h += '<button class="btn ghost" data-act="hold-auto">Niet automatisch doorgaan</button>';
       h += shareBtn(shareScoreText(r), "Deel via WhatsApp");
       h += '<button class="btn ghost" data-act="review">' + icon("list", 20) + "Bekijk antwoorden</button></div></section>";
       return h;
@@ -4910,8 +5073,8 @@ return exports;})();
     stops.forEach(function (st) {
       const R = st.last ? 27 : st.mile ? 21 : 19, state = st.locked ? "locked" : st.passed ? "done" : "current";
       const fill = state === "locked" ? "lock" : state === "done" ? (st.stars === 3 ? "gold" : "done") : "cur";
-      const name = "Level " + (st.i + 1) + " van " + n + (st.mile ? ", mijlpaal met schatkist" : "") + (st.last ? ", laatste level" : "") + (st.locked ? " (vergrendeld)" : st.passed ? " (gehaald, " + st.stars + " van 3 sterren)" : " (volgende)");
-      h += '<g class="j-stop ' + state + (st.i === J.cur ? " j-current" : "") + '" data-act="journey-level" data-cat="' + c.id + '" data-i="' + st.i + '" role="button" tabindex="0" aria-label="' + name + '" transform="translate(' + st.x + " " + st.y + ')">';
+      const name = "Level " + (st.i + 1) + " van " + n + " in " + c.title + (st.mile ? ", mijlpaal met schatkist" : "") + (st.last ? ", laatste level" : "") + (st.locked ? " (vergrendeld)" : st.passed ? " (gehaald, " + st.stars + " van 3 sterren)" : " (volgende)");
+      h += '<g class="j-stop ' + state + (st.i === J.cur ? " j-current" : "") + '" data-act="journey-level" data-cat="' + c.id + '" data-i="' + st.i + '" role="button" tabindex="0"' + (st.locked ? ' aria-disabled="true"' : "") + ' aria-label="' + name + '" transform="translate(' + st.x + " " + st.y + ')">';
       h += '<circle r="' + (R + 7) + '" fill="#000" fill-opacity="0"/>';
       if (state === "current") h += '<circle class="j-glow" r="' + (R + 12) + '" fill="#ffe08a" opacity=".55"/>';
       h += '<circle r="' + (R + 4) + '" fill="' + (st.mile ? "#ffd54f" : "#fff") + '"/><circle r="' + R + '" fill="url(#' + uid + fill + ')"/>';
@@ -4953,10 +5116,10 @@ return exports;})();
     const i = journeyLand, c = CATEGORIES[i], level = P.mode, st = jLandStats(level, c.id);
     let h = '<div class="topbar"><button class="icon-btn" data-act="home" aria-label="Terug naar home">' + icon("left", 22) + "</button>" +
       '<div class="brand">' + icon("map", 24) + 'De Reis</div><span style="width:44px"></span></div>';
-    h += '<div class="land-strip" role="tablist" aria-label="Kies een land">';
+    h += '<div class="land-strip" role="group" aria-label="Kies een land">';
     CATEGORIES.forEach(function (x, k) {
       const done = landDone(level, x.id);
-      h += '<button class="land-chip' + (k === i ? " on" : "") + '" style="--accent:' + x.color + '" data-act="journey-land" data-i="' + k + '" role="tab" aria-selected="' + (k === i) + '" aria-label="Land ' + (k + 1) + ": " + esc(x.title) + (done ? " (voltooid)" : "") + '">' + icon(CAT_ICON[x.icon] || "sparkles", 22) + "<span>" + (k + 1) + "</span>" + (done ? '<i class="lc-b">🚩</i>' : "") + "</button>";
+      h += '<button class="land-chip' + (k === i ? " on" : "") + '" style="--accent:' + x.color + '" data-act="journey-land" data-i="' + k + '" aria-pressed="' + (k === i) + '" aria-label="Land ' + (k + 1) + ": " + esc(x.title) + (done ? " (voltooid)" : "") + '">' + icon(CAT_ICON[x.icon] || "sparkles", 22) + "<span>" + (k + 1) + "</span>" + (done ? '<i class="lc-b">🚩</i>' : "") + "</button>";
     });
     h += "</div>";
     h += '<div class="land-head" style="--accent:' + c.color + '"><span class="land-n">Land ' + (i + 1) + " van " + CATEGORIES.length + "</span><h2>" + esc(c.title) + "</h2><p>" + esc(c.subtitle) + "</p></div>";
@@ -4996,8 +5159,8 @@ return exports;})();
     });
     let h = '<div class="topbar"><button class="icon-btn" data-act="players" aria-label="Terug naar spelers">' + icon("left", 22) + "</button>" +
       '<div class="brand">' + icon("trophy", 24) + "Scorebord</div><span style=\"width:44px\"></span></div>";
-    h += '<div class="tabs" role="tablist"><button class="tab' + (lv === "junior" ? " on" : "") + '" data-act="board-level" data-level="junior" role="tab" aria-selected="' + (lv === "junior") + '">' + icon("smile", 18) + "Junior</button>" +
-      '<button class="tab' + (lv === "expert" ? " on" : "") + '" data-act="board-level" data-level="expert" role="tab" aria-selected="' + (lv === "expert") + '">' + icon("cap", 18) + "Expert</button></div>";
+    h += '<div class="tabs" role="group" aria-label="Kies modus"><button class="tab' + (lv === "junior" ? " on" : "") + '" data-act="board-level" data-level="junior" aria-pressed="' + (lv === "junior") + '">' + icon("smile", 18) + "Junior</button>" +
+      '<button class="tab' + (lv === "expert" ? " on" : "") + '" data-act="board-level" data-level="expert" aria-pressed="' + (lv === "expert") + '">' + icon("cap", 18) + "Expert</button></div>";
     h += '<div class="rank-list">';
     ranked.forEach(function (p, i) {
       const pct = avgPct(p, lv);
@@ -5090,8 +5253,8 @@ return exports;})();
     const sv = function (m) { return (m.stars && m.stars[lv]) || 0; }, av = function (m) { return (m.avg && m.avg[lv]) || 0; };
     members.sort(function (a, b) { return sv(b) - sv(a) || av(b) - av(a); });
 
-    h += '<div class="tabs" role="tablist"><button class="tab' + (lv === "junior" ? " on" : "") + '" data-act="board-level" data-level="junior" role="tab" aria-selected="' + (lv === "junior") + '">' + icon("smile", 18) + "Junior</button>" +
-      '<button class="tab' + (lv === "expert" ? " on" : "") + '" data-act="board-level" data-level="expert" role="tab" aria-selected="' + (lv === "expert") + '">' + icon("cap", 18) + "Expert</button></div>";
+    h += '<div class="tabs" role="group" aria-label="Kies modus"><button class="tab' + (lv === "junior" ? " on" : "") + '" data-act="board-level" data-level="junior" aria-pressed="' + (lv === "junior") + '">' + icon("smile", 18) + "Junior</button>" +
+      '<button class="tab' + (lv === "expert" ? " on" : "") + '" data-act="board-level" data-level="expert" aria-pressed="' + (lv === "expert") + '">' + icon("cap", 18) + "Expert</button></div>";
     h += '<div class="rank-list">';
     members.forEach(function (m, i) {
       const me = m.mid === g.mid, today = m.day === todayStr() && m.daily && m.daily[lv];
@@ -5554,7 +5717,9 @@ return exports;})();
         if (jLocked(P.mode, jc, ji)) { play("wrong"); jToast("🔒 Haal eerst level " + ji + " om dit level te openen"); break; }
         play("click"); journeyReturn = true; journeyLand = Math.max(0, CATEGORIES.findIndex(function (x) { return x.id === jc; })); startQuiz("journey", jc, null, ji); break;
       }
-      case "hold-auto": stopTimer(); if (result) result.noAuto = true; { const t = document.getElementById("autoTxt"); if (t) t.textContent = "Naar de kaart"; } break;
+      case "hold-auto": stopTimer(); if (result) result.noAuto = true; { const t = document.getElementById("autoTxt"); if (t) t.textContent = result && result.kind === "journey" ? "Naar de kaart" : "Ga door naar Niveau " + result.next; const hb = document.querySelector('button[data-act="hold-auto"]'); if (hb) hb.remove(); announce("Automatisch doorgaan is gestopt."); } break;
+      case "read-aloud": if (quiz) { const it = quiz.items[quiz.idx]; speak(quiz.answered ? feedbackSpeech(it) : questionSpeech(it)); } break;
+      case "a11y": play("click"); a11yDialog(); break;
       case "journey-chest": openChest(el.dataset.cat, parseInt(el.dataset.i, 10)); break;
       case "mg-open-now": chestOpenNow(); break;
       case "mg-start": startMinigame(); break;
