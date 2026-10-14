@@ -936,10 +936,12 @@ a.btn.block { display: flex; margin-top: 14px; }
 .hint-btn.used { opacity: .35; cursor: default; }
 .hint-btn.nudge { opacity: 1; animation: hintGlow 1.1s ease-in-out infinite; }
 @keyframes hintGlow { 0%, 100% { transform: rotate(0) scale(1); box-shadow: 0 0 0 0 rgba(255, 200, 0, .7), 0 3px 0 rgba(160,110,0,.3); } 25% { transform: rotate(-12deg) scale(1.12); } 50% { transform: rotate(10deg) scale(1.18); box-shadow: 0 0 0 12px rgba(255, 200, 0, 0), 0 3px 0 rgba(160,110,0,.3); } 75% { transform: rotate(-6deg) scale(1.08); } }
-.hint-box { position: relative; margin: 14px 0 0; background: #fff8d6; border: 2px dashed #e0a100; color: #5b3b08; border-radius: 18px; padding: 10px 14px; font-weight: 700; transform-origin: calc(100% - 34px) -10px; }
-.hint-box::before { content: ""; position: absolute; top: -9px; right: 28px; width: 14px; height: 14px; background: #fff8d6; border-left: 2px dashed #e0a100; border-top: 2px dashed #e0a100; transform: rotate(45deg); border-radius: 3px 0 0 0; }
-.hint-box.floep { animation: floep .75s cubic-bezier(.3, 1.4, .5, 1) both; }
-@keyframes floep { 0% { transform: scale(0) translateY(-14px); opacity: 0; } 45% { transform: scale(1.14) translateY(2px); opacity: 1; } 65% { transform: scale(.94); } 82% { transform: scale(1.04); } 100% { transform: scale(1); opacity: 1; } }
+.hint-bubble { position: absolute; top: 62px; right: 10px; z-index: 6; max-width: min(236px, calc(100% - 24px)); padding: 9px 14px 10px; background: linear-gradient(180deg, #fff7c9, #ffe27a); color: #4f3200; border: 2px solid #f0b400; border-radius: 18px; font-size: .9rem; line-height: 1.3; font-weight: 800; cursor: pointer; box-shadow: 0 10px 24px rgba(224, 161, 0, .45), 0 0 0 5px rgba(255, 214, 64, .28); transform-origin: calc(100% - 24px) -8px; }
+.hint-bubble::before { content: ""; position: absolute; top: -9px; right: 17px; width: 14px; height: 14px; background: #fff7c9; border-left: 2px solid #f0b400; border-top: 2px solid #f0b400; transform: rotate(45deg); border-radius: 4px 0 0 0; }
+.hint-bubble.floep { animation: floep .75s cubic-bezier(.3, 1.5, .5, 1) both; }
+.hint-bubble.out { animation: bubbleOut .3s ease both; }
+@keyframes bubbleOut { to { transform: scale(0); opacity: 0; } }
+@keyframes floep { 0% { transform: scale(0); opacity: 0; } 45% { transform: scale(1.14); opacity: 1; } 65% { transform: scale(.93); } 82% { transform: scale(1.04); } 100% { transform: scale(1); opacity: 1; } }
 .hint-btn.blink { opacity: 1; animation: hintBlink .9s ease-in-out 3; }
 @keyframes hintBlink { 0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255, 200, 0, .0), 0 3px 0 rgba(160,110,0,.3); } 50% { opacity: .45; box-shadow: 0 0 14px 6px rgba(255, 200, 0, .65), 0 3px 0 rgba(160,110,0,.3); } }
 .hint-btn.popring::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; border: 3px solid #ffc800; animation: popRing .7s ease-out both; pointer-events: none; }
@@ -953,7 +955,7 @@ a.btn.block { display: flex; margin-top: 14px; }
 .rf-e { font-size: 2rem; }
 @keyframes flyIn { from { transform: translate(-50%, -140%) rotate(-4deg); } to { transform: translate(-50%, 0); } }
 @keyframes flyOut { to { transform: translate(-50%, -160%); opacity: 0; } }
-@media (prefers-reduced-motion: reduce) { .hint-btn.nudge, .hint-btn.blink { animation: none; outline: 4px solid #ffb703; } .hint-box.floep, .option.eliminated.just, .hint-btn.popring::after { animation: none; } .reward-flyer, .reward-flyer.out { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .hint-btn.nudge, .hint-btn.blink { animation: none; outline: 4px solid #ffb703; } .hint-bubble.floep, .hint-bubble.out, .option.eliminated.just, .hint-btn.popring::after { animation: none; } .reward-flyer, .reward-flyer.out { animation: none; } }
 .mg-word { text-align: center; }
 .wz-clue { font-weight: 800; margin: 6px 4px 12px; } .wz-len { opacity: .75; font-weight: 700; }
 .wz-slots { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin: 6px 0 16px; }
@@ -3738,8 +3740,8 @@ return exports;})();
       '<h2 id="qh">' + esc(q.question) + "</h2>" + (isMulti(q) ? '<div class="multi-hint">Meerdere antwoorden mogelijk: kies álle juiste antwoorden</div>' : "") + (q.questionArabic ? ar(q.questionArabic) : "") +
       '<span class="sr-only" id="qopts">' + (isMulti(q) ? "Meerdere antwoorden mogelijk. " : "") + "Antwoordopties: " + it.order.map(function (o, p) { return LETTERS[p] + ": " + esc(q.options[o]); }).join(". ") + "</span>" +
       (S.speak && "speechSynthesis" in window ? '<button class="btn ghost small read-btn" data-act="read-aloud">' + icon("sound", 18) + "Lees voor</button>" : "") +
-      (quiz.answered ? "" : '<button class="hint-btn' + (it.hintShown ? " used" : "") + '" id="hintBtn" data-act="hint" aria-label="' + (it.hintShown ? "Hint is al gebruikt" : "Hint tonen") + '"' + (it.hintShown ? " disabled" : "") + '><span aria-hidden="true">💡</span></button>') + "</div>" +
-      (it.hintShown && !quiz.answered ? '<div class="hint-box" id="hintBox" role="note"><b>💡 Hint:</b> ' + esc(hintText(it)) + "</div>" : "");
+      (quiz.answered ? "" : '<button class="hint-btn' + (it.hintShown ? " used" : "") + '" id="hintBtn" data-act="hint" aria-label="' + (it.hintShown ? "Hint is al gebruikt" : "Hint tonen") + '"' + (it.hintShown ? " disabled" : "") + '><span aria-hidden="true">💡</span></button>') +
+      (it.hintShown && !it.bubbleOff && !quiz.answered ? bubbleHtml(it, false) : "") + "</div>";
 
     h += '<div class="options' + (quiz.answered ? " answered" : "") + '" role="group" aria-label="Antwoordopties">';
     const multi = isMulti(q), aset = answerSet(q), pset = it.picked === null || it.picked === undefined ? [] : Array.isArray(it.picked) ? it.picked : [it.picked];
@@ -3808,7 +3810,17 @@ return exports;})();
   window.addEventListener("scroll", idleReset, { passive: true });
   function hintText(it) {
     if (it.q.hint) return it.q.hint;
-    return "Denk goed na… “" + it.q.options[it.hintOpt] + "” is het in elk geval niet!";
+    return "Denk eraan: “" + it.q.options[it.hintOpt] + "” is het niet!";
+  }
+  let bubbleT = null;
+  function bubbleHtml(it, fresh) {
+    return '<div class="hint-bubble' + (fresh ? " floep" : "") + '" id="hintBox" role="note" data-act="hint-close" title="Tik om te sluiten">💡 ' + esc(hintText(it)) + "</div>";
+  }
+  function closeBubble() {
+    clearTimeout(bubbleT);
+    const bx = document.getElementById("hintBox"); if (!bx) return;
+    if (quiz && quiz.items[quiz.idx]) quiz.items[quiz.idx].bubbleOff = true;
+    bx.classList.remove("floep"); bx.classList.add("out"); setTimeout(function () { if (bx.parentNode) bx.parentNode.removeChild(bx); }, 300);
   }
   function showHint(auto) {
     if (!quiz || quiz.answered) return;
@@ -3819,14 +3831,13 @@ return exports;})();
     play("click"); idleStop();
     const b = document.getElementById("hintBtn"); if (b) { b.classList.remove("nudge"); b.classList.add("used", "popring"); if (auto) { b.classList.add("blink"); b.addEventListener("animationend", function (e) { if (e.animationName === "hintBlink") b.classList.remove("blink"); }); } b.disabled = true; b.setAttribute("aria-label", "Hint is al gebruikt"); setTimeout(function () { b.classList.remove("popring"); }, 800); }
     const card = document.getElementById("qcard");
-    if (card && !document.getElementById("hintBox")) { const d = document.createElement("div"); d.className = "hint-box floep"; d.id = "hintBox"; d.setAttribute("role", "note"); d.innerHTML = "<b>💡 Hint:</b> " + esc(hintText(it)); card.insertAdjacentElement("afterend", d); }
+    if (card && !document.getElementById("hintBox")) { card.insertAdjacentHTML("beforeend", bubbleHtml(it, true)); clearTimeout(bubbleT); bubbleT = setTimeout(closeBubble, 6500); }
     const opts = document.querySelectorAll('.option[data-act="answer"]'); const pos = it.order.indexOf(it.hintOpt);
     if (opts[pos]) { opts[pos].classList.add("eliminated", "just"); opts[pos].setAttribute("aria-disabled", "true"); }
     announce("Hint: " + hintText(it)); if (speakOn()) speak("Hint. " + hintText(it));
-    const bx = document.getElementById("hintBox"); if (bx) bx.setAttribute("tabindex", "-1");
   }
   function afterQuizRender() {
-    idleStart();
+    clearTimeout(bubbleT); idleStart();
     if (quiz.answered) {
       const fb = document.getElementById("feedback");
       if (fb && fb.scrollIntoView) setTimeout(function () { fb.scrollIntoView({ behavior: "smooth", block: "center" }); }, 80);
@@ -6045,6 +6056,7 @@ return exports;})();
       }
       case "hold-auto": stopTimer(); if (result) result.noAuto = true; { const t = document.getElementById("autoTxt"); if (t) t.textContent = result && result.kind === "journey" ? "Naar de kaart" : "Ga door naar Niveau " + result.next; const hb = document.querySelector('button[data-act="hold-auto"]'); if (hb) hb.remove(); announce("Automatisch doorgaan is gestopt."); } break;
       case "hint": showHint(); break;
+      case "hint-close": closeBubble(); break;
       case "read-aloud": if (quiz) { const it = quiz.items[quiz.idx]; speak(quiz.answered ? feedbackSpeech(it) : questionSpeech(it)); } break;
       case "settings": case "a11y": play("click"); settingsDialog(); break;
       case "journey-chest": openChest(el.dataset.cat, parseInt(el.dataset.i, 10)); break;
