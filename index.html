@@ -936,14 +936,24 @@ a.btn.block { display: flex; margin-top: 14px; }
 .hint-btn.used { opacity: .35; cursor: default; }
 .hint-btn.nudge { opacity: 1; animation: hintGlow 1.1s ease-in-out infinite; }
 @keyframes hintGlow { 0%, 100% { transform: rotate(0) scale(1); box-shadow: 0 0 0 0 rgba(255, 200, 0, .7), 0 3px 0 rgba(160,110,0,.3); } 25% { transform: rotate(-12deg) scale(1.12); } 50% { transform: rotate(10deg) scale(1.18); box-shadow: 0 0 0 12px rgba(255, 200, 0, 0), 0 3px 0 rgba(160,110,0,.3); } 75% { transform: rotate(-6deg) scale(1.08); } }
-.hint-box { margin: 10px 0 0; background: #fff8d6; border: 2px dashed #e0a100; color: #5b3b08; border-radius: 16px; padding: 10px 14px; font-weight: 700; animation: pop .4s ease both; }
-.option.eliminated { opacity: .45; text-decoration: line-through; pointer-events: none; }
+.hint-box { position: relative; margin: 14px 0 0; background: #fff8d6; border: 2px dashed #e0a100; color: #5b3b08; border-radius: 18px; padding: 10px 14px; font-weight: 700; transform-origin: calc(100% - 34px) -10px; }
+.hint-box::before { content: ""; position: absolute; top: -9px; right: 28px; width: 14px; height: 14px; background: #fff8d6; border-left: 2px dashed #e0a100; border-top: 2px dashed #e0a100; transform: rotate(45deg); border-radius: 3px 0 0 0; }
+.hint-box.floep { animation: floep .75s cubic-bezier(.3, 1.4, .5, 1) both; }
+@keyframes floep { 0% { transform: scale(0) translateY(-14px); opacity: 0; } 45% { transform: scale(1.14) translateY(2px); opacity: 1; } 65% { transform: scale(.94); } 82% { transform: scale(1.04); } 100% { transform: scale(1); opacity: 1; } }
+.hint-btn.blink { opacity: 1; animation: hintBlink .9s ease-in-out 3; }
+@keyframes hintBlink { 0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255, 200, 0, .0), 0 3px 0 rgba(160,110,0,.3); } 50% { opacity: .45; box-shadow: 0 0 14px 6px rgba(255, 200, 0, .65), 0 3px 0 rgba(160,110,0,.3); } }
+.hint-btn.popring::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; border: 3px solid #ffc800; animation: popRing .7s ease-out both; pointer-events: none; }
+@keyframes popRing { from { transform: scale(.8); opacity: 1; } to { transform: scale(2); opacity: 0; } }
+.option { transition: opacity .4s ease, filter .4s ease; }
+.option.eliminated { opacity: .45; filter: grayscale(1); text-decoration: line-through; pointer-events: none; }
+.option.eliminated.just { animation: elimShake .5s ease both; }
+@keyframes elimShake { 0% { transform: translateX(0); opacity: 1; filter: none; } 20% { transform: translateX(-7px); } 40% { transform: translateX(6px); } 60% { transform: translateX(-4px); } 80% { transform: translateX(2px); } 100% { transform: translateX(0); } }
 .reward-flyer { position: fixed; z-index: 55; left: 50%; top: 14px; transform: translateX(-50%); max-width: min(92vw, 420px); display: flex; align-items: center; gap: 12px; background: linear-gradient(135deg, #fff3c4, #ffd36a); color: #4a3000; border: 3px solid #fff; border-radius: 22px; padding: 12px 18px; font-weight: 800; box-shadow: 0 10px 26px rgba(120, 80, 0, .35); animation: flyIn .6s cubic-bezier(.3, 1.5, .5, 1) both; cursor: pointer; }
 .reward-flyer.out { animation: flyOut .5s ease both; }
 .rf-e { font-size: 2rem; }
 @keyframes flyIn { from { transform: translate(-50%, -140%) rotate(-4deg); } to { transform: translate(-50%, 0); } }
 @keyframes flyOut { to { transform: translate(-50%, -160%); opacity: 0; } }
-@media (prefers-reduced-motion: reduce) { .hint-btn.nudge { animation: none; outline: 4px solid #ffb703; } .reward-flyer, .reward-flyer.out { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .hint-btn.nudge, .hint-btn.blink { animation: none; outline: 4px solid #ffb703; } .hint-box.floep, .option.eliminated.just, .hint-btn.popring::after { animation: none; } .reward-flyer, .reward-flyer.out { animation: none; } }
 .mg-word { text-align: center; }
 .wz-clue { font-weight: 800; margin: 6px 4px 12px; } .wz-len { opacity: .75; font-weight: 700; }
 .wz-slots { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin: 6px 0 16px; }
@@ -3786,7 +3796,7 @@ return exports;})();
     idleOn = true; const key = quiz.idx;
     idleT = setTimeout(function () {
       if (!idleOn || screen !== "quiz" || !quiz || quiz.answered || quiz.idx !== key) return;
-      const b = document.getElementById("hintBtn"); if (b && !b.disabled) { b.classList.add("nudge"); announce("Twijfel je? Er is een hint beschikbaar. Tik op het lampje."); }
+      const b = document.getElementById("hintBtn"); if (b && !b.disabled) showHint(true);
     }, quiz.level === "expert" ? 15000 : 11000);
   }
   function idleReset() {
@@ -3798,20 +3808,20 @@ return exports;})();
   window.addEventListener("scroll", idleReset, { passive: true });
   function hintText(it) {
     if (it.q.hint) return it.q.hint;
-    return "“" + it.q.options[it.hintOpt] + "” is niet het juiste antwoord.";
+    return "Denk goed na… “" + it.q.options[it.hintOpt] + "” is het in elk geval niet!";
   }
-  function showHint() {
+  function showHint(auto) {
     if (!quiz || quiz.answered) return;
     const it = quiz.items[quiz.idx]; if (it.hintShown) return;
     const aset = answerSet(it.q), wrong = it.order.filter(function (o) { return aset.indexOf(o) === -1; });
     if (!wrong.length) return;
     it.hintOpt = wrong[Math.floor(Math.random() * wrong.length)]; it.hintShown = true;
     play("click"); idleStop();
-    const b = document.getElementById("hintBtn"); if (b) { b.classList.remove("nudge"); b.classList.add("used"); b.disabled = true; b.setAttribute("aria-label", "Hint is al gebruikt"); }
+    const b = document.getElementById("hintBtn"); if (b) { b.classList.remove("nudge"); b.classList.add("used", "popring"); if (auto) { b.classList.add("blink"); b.addEventListener("animationend", function (e) { if (e.animationName === "hintBlink") b.classList.remove("blink"); }); } b.disabled = true; b.setAttribute("aria-label", "Hint is al gebruikt"); setTimeout(function () { b.classList.remove("popring"); }, 800); }
     const card = document.getElementById("qcard");
-    if (card && !document.getElementById("hintBox")) { const d = document.createElement("div"); d.className = "hint-box"; d.id = "hintBox"; d.setAttribute("role", "note"); d.innerHTML = "<b>💡 Hint:</b> " + esc(hintText(it)); card.insertAdjacentElement("afterend", d); }
+    if (card && !document.getElementById("hintBox")) { const d = document.createElement("div"); d.className = "hint-box floep"; d.id = "hintBox"; d.setAttribute("role", "note"); d.innerHTML = "<b>💡 Hint:</b> " + esc(hintText(it)); card.insertAdjacentElement("afterend", d); }
     const opts = document.querySelectorAll('.option[data-act="answer"]'); const pos = it.order.indexOf(it.hintOpt);
-    if (opts[pos]) { opts[pos].classList.add("eliminated"); opts[pos].setAttribute("aria-disabled", "true"); }
+    if (opts[pos]) { opts[pos].classList.add("eliminated", "just"); opts[pos].setAttribute("aria-disabled", "true"); }
     announce("Hint: " + hintText(it)); if (speakOn()) speak("Hint. " + hintText(it));
     const bx = document.getElementById("hintBox"); if (bx) bx.setAttribute("tabindex", "-1");
   }
