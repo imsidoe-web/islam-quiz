@@ -3387,11 +3387,51 @@ return exports;})();
   }
   function autoOn() { return S.autoNext !== false; }
   function speakOn() { return !!S.speak && "speechSynthesis" in window; }
+  /* uitspraak: afkortingen en tekens die de spraakcomputer verkeerd voorleest, vervangen vóór het voorlezen (de geschreven tekst blijft kort) */
+  /* (r.a.) zonder toevoeging: vrouwelijk als vlak ervoor (of, aan het begin van een zin, vlak erna) een bekende vrouwennaam staat */
+  const FEMALE_NAMES = ["aisha", "aicha", "aysha", "ayesha", "aaisha", "khadija", "khadijah", "khadidja", "fatima", "fatimah", "fatma", "maryam", "mariam", "asmaa", "asma", "hafsa", "hafsah", "sawda", "sauda", "zaynab", "zainab", "zeynab", "ruqayyah", "ruqayya", "rukayya", "kulthum", "kulsum", "salama", "habiba", "juwayriyya", "juwayriyah", "safiyya", "safiyyah", "maymuna", "maymunah", "rayhana", "sumayyah", "sumayya", "nusayba", "halima", "amina", "aminah", "bint", "binti", "bintu"];
+  const MALE_CUES = ["ibn", "bin", "zoon"];
+  function nameTokens(txt) { return (txt.match(/[\p{L}'’\-]+/gu) || []).map(function (w) { return w.toLowerCase().replace(/’/g, "'"); }); }
+  const MALE_NAMES = ["ali", "umar", "omar", "uthman", "othman", "osman", "abu", "bakr", "abubakr", "hamza", "bilal", "zayd", "zaid", "talha", "zubayr", "zubair", "saad", "sa'd", "abdullah", "abdurrahman", "khalid", "jafar", "ja'far", "mus'ab", "musab", "anas", "salman", "hasan", "husayn", "hussein", "ammar", "mu'adh", "muadh", "ubayda", "ubaydah", "abbas", "ibrahim", "ismail"];
+  /* geeft "f" (vrouw), "m" (man) of null (onbekend) voor de naam vlak voor de afkorting; aan het begin van een zin kijkt hij naar de twee woorden erna */
+  function genderContext(str, off) {
+    let before = str.slice(Math.max(0, off - 70), off);
+    const cut = before.search(/[.!?]\s+(?=[^.!?]*$)/); if (cut !== -1) before = before.slice(cut + 1);
+    const prev = nameTokens(before).slice(-4);
+    if (prev.length) {
+      if (prev.indexOf("bint") !== -1 || prev.indexOf("binti") !== -1 || prev.indexOf("bintu") !== -1) return "f";
+      for (let k = prev.length - 1; k >= 0; k--) {
+        if (FEMALE_NAMES.indexOf(prev[k]) !== -1) return "f";
+        if (MALE_CUES.indexOf(prev[k]) !== -1 || MALE_NAMES.indexOf(prev[k]) !== -1) return "m";
+      }
+      return null;
+    }
+    const after = nameTokens(str.slice(off + 4, off + 50).split(/[.!?]\s/)[0]).slice(0, 2);
+    if (after.some(function (w) { return FEMALE_NAMES.indexOf(w) !== -1; })) return "f";
+    if (after.some(function (w) { return MALE_NAMES.indexOf(w) !== -1; })) return "m";
+    return null;
+  }
+  function isFemaleContext(str, off) { return genderContext(str, off) === "f"; }
+  const SPEECH_FIXES = [
+    [/\(?\s*\bv\.?\s?z\.?\s?m\.?\s?h\b\.?\s*\)?/gi, "vrede zij met hem"],
+    [/\(?\s*\ba\.\s?s\b\.?\s*\)?/gi, "Aleyhi Salaam"],
+    [/\(?\s*\bs\.\s?a\.\s?w\b\.?\s*\)?/gi, "sallallahoe aleyhi wa sallam"],
+    [/\(?\s*\br\.\s?a\.\s?(?:hum|m)\b\.?\s*\)?/gi, "radi Allahoe anhum"],     /* meervoud: (r.a.hum) / (r.a.m.) */
+    [/\(?\s*\br\.\s?a\.\s?(?:ha|a)\b\.?\s*\)?/gi, function (str, off) { return genderContext(str, off) === "m" ? "radi Allahoe anhoe" : "radi Allahoe anha"; }],       /* vrouw: (r.a.ha) / (r.a.a.) */
+    [/\(?\s*\br\.\s?a\.\s?h\b\.?\s*\)?/gi, function (str, off) { return genderContext(str, off) === "f" ? "radi Allahoe anha" : "radi Allahoe anhoe"; }],             /* man: (r.a.h.) */
+    [/\(?\s*\br\.\s?a\b\.?\s*\)?/gi, function (str, off) { return isFemaleContext(str, off) ? "radi Allahoe anha" : "radi Allahoe anhoe"; }],  /* (r.a.): man, tenzij een vrouwennaam in de buurt staat */
+    [/\uFDFA/g, "sallallahoe aleyhi wa sallam"]
+  ];
+  function speechClean(t) {
+    let out = String(t);
+    SPEECH_FIXES.forEach(function (f) { out = out.replace(f[0], function (m) { const off = arguments[arguments.length - 2], whole = arguments[arguments.length - 1]; return " " + (typeof f[1] === "function" ? f[1](whole, off) : f[1]) + " "; }); });
+    return out.replace(/\s+/g, " ").replace(/\s+([.,!?;:])/g, "$1").trim();
+  }
   function speak(text) {
     if (!speakOn()) return;
     try {
       speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text); u.lang = "nl-NL";
+      const u = new SpeechSynthesisUtterance(speechClean(text)); u.lang = "nl-NL";
       const v = (speechSynthesis.getVoices() || []).filter(function (x) { return /^nl/i.test(x.lang); })[0]; if (v) u.voice = v;
       speechSynthesis.speak(u);
     } catch (e) {}
