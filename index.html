@@ -970,6 +970,46 @@ a.btn.block { display: flex; margin-top: 14px; }
 .ws-cell { aspect-ratio: 1; border: 0; border-radius: 8px; background: #f3efe7; font: inherit; font-weight: 900; font-size: clamp(.9rem, 4.4vw, 1.3rem); color: var(--ink); cursor: pointer; padding: 0; min-width: 0; }
 .ws-cell.sel { background: #ffd36a; outline: 3px solid #e0a100; } .ws-cell.found { background: #35c97a; color: #fff; }
 @media (prefers-reduced-motion: reduce) { .wz-slots.shake { animation: none; } }
+
+/* ── Fullscreen reiskaart (Candy-Crush stijl) ── */
+body.jfull { overflow: hidden; }
+body.jfull #app { max-width: none; padding: 0; }
+.jmap-scroll { position: fixed; inset: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; background: radial-gradient(circle at 50% 0, #2d6a4f, #12362a 70%); }
+.jmap-scroll .journey-map { max-width: 560px; min-height: 100%; margin: 0 auto; padding: 118px 0 92px; border: 0; border-radius: 0; box-shadow: 0 0 40px rgba(0, 0, 0, .4); background: linear-gradient(180deg, var(--sky, #bfe3d0) 50%, var(--near, #2a7a52) 50%); overflow: visible; }
+.j-head { position: fixed; z-index: 30; top: calc(env(safe-area-inset-top, 0px) + 8px); left: 8px; right: 8px; max-width: 704px; margin: 0 auto; display: flex; align-items: center; gap: 6px; padding: 5px 6px 5px 6px; border-radius: 22px; color: #fff; background: rgba(20, 56, 42, .72); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); border: 1px solid rgba(240, 194, 127, .5); box-shadow: 0 6px 18px rgba(0, 0, 0, .25); }
+.jh-player { appearance: none; border: 0; background: transparent; color: #fff; font: inherit; font-weight: 900; font-size: .82rem; display: inline-flex; align-items: center; gap: 6px; padding: 0 4px 0 0; cursor: pointer; min-width: 0; border-radius: 18px; }
+.jh-player span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 72px; }
+.jh-stats { flex: 1; display: flex; justify-content: center; gap: 5px; min-width: 0; }
+.jh-stats > span { display: inline-flex; align-items: center; gap: 3px; font-weight: 900; font-size: .78rem; background: rgba(255, 255, 255, .15); padding: 3px 8px; border-radius: 999px; white-space: nowrap; }
+.jh-stats .ic.fill { color: #ffd54f; } .jh-stats .xp { color: #e3d7ff; } .jh-stats .gem b { color: #bff0ff; }
+.jh-mode { appearance: none; border: 0; cursor: pointer; font: inherit; font-weight: 900; font-size: .74rem; display: inline-flex; align-items: center; gap: 4px; min-height: 34px; padding: 0 10px; border-radius: 999px; }
+.jh-mode.junior { background: linear-gradient(180deg, #f6d58a, #d9a05b); color: #3a2606; } .jh-mode.expert { background: #74c69d; color: #0f3322; }
+.jh-gear { appearance: none; border: 0; cursor: pointer; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: rgba(255, 255, 255, .16); color: #fff; flex: none; }
+.j-head button:active, .j-shield button:active, .jn-item:active { transform: scale(.93); }
+.j-shield { position: fixed; z-index: 25; top: calc(env(safe-area-inset-top, 0px) + 66px); left: 50%; transform: translateX(-50%); width: min(92vw, 440px); display: flex; align-items: center; gap: 6px; padding: 6px 8px 7px; border-radius: 22px 22px 18px 18px; color: #fff; background: linear-gradient(180deg, #2d6a4f, #1b4332); border: 2px solid #f0c27f; box-shadow: 0 8px 18px rgba(0, 0, 0, .3), inset 0 1px 0 rgba(255, 255, 255, .25); }
+.j-shield::before { content: ""; position: absolute; top: -11px; left: 50%; width: 42px; height: 12px; transform: translateX(-50%); background: linear-gradient(#f9dd9c, #d9a05b); border: 2px solid #f0c27f; border-bottom: 0; border-radius: 42px 42px 0 0; }
+.js-arrow { appearance: none; border: 0; cursor: pointer; width: 36px; height: 36px; flex: none; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(180deg, #f9dd9c, #d9a05b); color: #3a2606; box-shadow: 0 3px 0 #a8742f; }
+.js-arrow:disabled { opacity: .35; cursor: default; box-shadow: none; }
+.js-mid { flex: 1; min-width: 0; text-align: center; }
+.js-mid > b { display: block; font-size: .92rem; font-weight: 900; line-height: 1.15; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.js-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 4px; }
+.j-shield .land-strip { margin: 0; gap: 5px; }
+.j-shield .land-chip { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #fff; box-shadow: none; opacity: .8; transform: none; }
+.j-shield .land-chip span { font-size: .7rem; margin: 0; }
+.j-shield .land-chip.on { opacity: 1; transform: scale(1.2); box-shadow: 0 0 0 2px #ffd54f; }
+.j-shield .land-chip .lc-b { top: -8px; right: -8px; width: 15px; height: 15px; font-size: .55rem; }
+.js-prog { font-weight: 900; font-size: .72rem; color: #fbefd9; white-space: nowrap; }
+.j-nav { position: fixed; z-index: 30; left: 0; right: 0; bottom: 0; padding: 8px 8px calc(8px + env(safe-area-inset-bottom, 0px)); background: linear-gradient(180deg, #1f5a43, #12362a); border-top: 3px solid #d9a05b; box-shadow: 0 -8px 20px rgba(0, 0, 0, .25); }
+.jn-in { display: flex; gap: 4px; max-width: 560px; margin: 0 auto; }
+.jn-item { appearance: none; border: 0; background: transparent; font: inherit; text-decoration: none; cursor: pointer; flex: 1; min-width: 0; position: relative; display: grid; justify-items: center; align-content: start; gap: 3px; padding: 3px 0; border-radius: 16px; color: #fbefd9; font-weight: 800; font-size: .68rem; line-height: 1.1; }
+.jn-ic { width: 40px; height: 40px; border-radius: 14px; display: grid; place-items: center; font-size: 1.4rem; background: linear-gradient(180deg, #fbefd9, #f0c27f); box-shadow: 0 3px 0 #a8742f; transition: transform .15s; }
+.jn-item.on { color: #ffe08a; }
+.jn-item.on .jn-ic { background: linear-gradient(180deg, #fff0a8, #f0b400); transform: translateY(-5px) scale(1.1); box-shadow: 0 6px 0 #a8742f, 0 0 0 3px rgba(255, 214, 64, .45); }
+.jn-item.wa .jn-ic { background: linear-gradient(180deg, #6df09b, #25d366); box-shadow: 0 3px 0 #128c4a; }
+.jn-count { position: absolute; top: -2px; left: calc(50% + 8px); font-style: normal; font-weight: 900; font-size: .6rem; background: #fff; color: #1b4332; padding: 1px 5px; border-radius: 99px; box-shadow: 0 2px 4px rgba(0, 0, 0, .3); }
+body.jfull .j-toast { bottom: 100px; }
+body.jfull .reward-flyer { top: 160px; }
+@media (max-width: 400px) { .jh-player { flex: none; } .jh-player span { max-width: 62px; } .jh-stats { gap: 3px; } .jh-stats > span { gap: 2px; } .jh-mode span { display: none; } .jh-mode { padding: 0; width: 34px; justify-content: center; } .jh-stats > span { padding: 3px 5px; font-size: .72rem; } }
 </style>
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Islam Quiz">
@@ -3495,16 +3535,29 @@ return exports;})();
     SPEECH_FIXES.forEach(function (f) { out = out.replace(f[0], function (m) { const off = arguments[arguments.length - 2], whole = arguments[arguments.length - 1]; return " " + (typeof f[1] === "function" ? f[1](whole, off) : f[1]) + " "; }); });
     return out.replace(/\s+/g, " ").replace(/\s+([.,!?;:])/g, "$1").trim();
   }
+  /* hint-timer gekoppeld aan spraak: pauzeert zolang er wordt voorgelezen, start vers na afloop */
+  let curU = null, speechBusy = false, speechWatch = null;
+  function speechRelease(resume) {
+    clearTimeout(speechWatch); curU = null;
+    if (!speechBusy) return;
+    speechBusy = false;
+    if (resume && idleOn) idleStart();
+  }
   function speak(text) {
     if (!speakOn()) return;
     try {
       speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(speechClean(text)); u.lang = "nl-NL";
       const v = (speechSynthesis.getVoices() || []).filter(function (x) { return /^nl/i.test(x.lang); })[0]; if (v) u.voice = v;
+      curU = u; speechBusy = true; clearTimeout(speechWatch);
+      if (idleOn) clearTimeout(idleT);
+      u.onstart = function () { if (curU !== u) return; speechBusy = true; if (idleOn) clearTimeout(idleT); };
+      u.onend = u.onerror = function () { if (curU === u) speechRelease(true); };
+      speechWatch = setTimeout(function () { if (curU === u) speechRelease(true); }, 90000);
       speechSynthesis.speak(u);
-    } catch (e) {}
+    } catch (e) { speechRelease(true); }
   }
-  function speakStop() { try { if ("speechSynthesis" in window) speechSynthesis.cancel(); } catch (e) {} }
+  function speakStop() { try { if ("speechSynthesis" in window) speechSynthesis.cancel(); } catch (e) {} speechRelease(true); }
   function questionSpeech(it) {
     const q = it.q; let t = q.question + ". ";
     if (isMulti(q)) t += "Meerdere antwoorden mogelijk. ";
@@ -3610,7 +3663,8 @@ return exports;})();
       '<label class="opt"><input type="checkbox" id="optSpeak"' + (S.speak ? " checked" : "") + '><span>Spreek vragen uit<small>De app leest elke vraag, de antwoorden en de uitleg hardop voor. Op de vraagpagina staat ook een knop “Lees voor”.</small></span></label>' +
       '<label class="opt"><input type="checkbox" id="optAuto"' + (autoOn() ? " checked" : "") + '><span>Automatisch doorgaan na een level<small>Na een resultaat ga je vanzelf verder. Zet dit uit als je liever zelf op de knop tikt.</small></span></label>' +
       '<p class="warn">Gebruik je al een schermlezer (VoiceOver of TalkBack)? Zet “Spreek vragen uit” dan uit, anders praten beide stemmen door elkaar.</p>' +
-      '<div class="stack"><button class="btn ghost block" data-act="group" data-d="x">' + icon("users", 20) + "Groep &amp; duel</button>" +
+      '<div class="stack"><button class="btn ghost block" data-act="scores" data-d="x">' + icon("trophy", 20) + "Mijn scores</button>" +
+      '<button class="btn ghost block" data-act="group" data-d="x">' + icon("users", 20) + "Groep &amp; duel</button>" +
       (isStandalone() ? "" : '<button class="btn ghost block" data-act="install" data-d="x">Zet op beginscherm</button>') +
       '<button class="btn ghost block" data-act="reset" data-d="x">' + icon("trash", 20) + "Voortgang van " + esc(P.name) + " wissen</button>" +
       '<button class="btn block" data-d="ok">Klaar</button></div></div>';
@@ -3659,8 +3713,9 @@ return exports;})();
     else if (screen === "minigame") app.innerHTML = viewMinigame();
     else if (screen === "album") app.innerHTML = viewAlbum();
     const bw = document.getElementById("badgesBtnWrap");
-    if (bw) bw.style.display = (screen === "journey" || screen === "scores") ? "" : "none";
+    if (bw) bw.style.display = (screen === "board" || screen === "scores") ? "" : "none";
     window.scrollTo({ top: 0 });
+    if (screen === "journey") document.body.classList.add("jfull");
     if (screen === "journey") afterJourneyRender();
     a11yAfter(prevA);
   }
@@ -3796,6 +3851,7 @@ return exports;})();
     idleStop(); if (!quiz || quiz.answered || quiz.kind === "duel") return;
     const it = quiz.items[quiz.idx]; if (it.hintShown) return;
     idleOn = true; const key = quiz.idx;
+    if (speechBusy) return; /* tijdens het voorlezen loopt de timer niet; die start na onend */
     idleT = setTimeout(function () {
       if (!idleOn || screen !== "quiz" || !quiz || quiz.answered || quiz.idx !== key) return;
       const b = document.getElementById("hintBtn"); if (b && !b.disabled) showHint(true);
@@ -5384,28 +5440,34 @@ return exports;})();
   function viewJourney() {
     if (journeyLand === null || journeyLand >= CATEGORIES.length) journeyLand = defaultLand();
     const i = journeyLand, c = CATEGORIES[i], level = P.mode, st = jLandStats(level, c.id);
-    let h = '<div class="topbar"><div class="brand">' + icon("map", 24) + 'De Reis</div><div class="top-actions">' +
-      '<button class="icon-btn" data-act="scores" aria-label="Mijn Scores">' + icon("trophy", 22) + "</button>" +
-      '<button class="icon-btn" data-act="board" aria-label="Scorebord">' + icon("users", 22) + "</button>" +
-      '<button class="icon-btn" data-act="settings" aria-label="Instellingen">' + icon("gear", 22) + "</button></div></div>";
-    h += '<div class="j-hello"><button class="player-chip" data-act="players" aria-label="Speler: ' + esc(P.name) + '. Wissel van speler">' + avatarHtml(P, 34) + "<span>" + esc(P.name) + "</span></button>" +
-      '<button class="mode-chip ' + level + '" data-act="switch-mode" aria-label="Niveau wisselen. Nu: ' + (level === "junior" ? "Junior, tik voor Expert" : "Expert, tik voor Junior") + '">' + icon(level === "junior" ? "smile" : "cap", 18) + (level === "junior" ? "Junior" : "Expert") + "</button></div>" +
-      '<div class="j-stats" role="group" aria-label="Jouw punten in de ' + modeName(level) + '-modus"><span>' + icon("star", 18, "fill") + "<b>" + starsAt(P, level) + '</b> sterren</span><span class="xp"><b>' + xpAt(P, level) + '</b> XP</span><span class="gem">' + gemSvg(18) + "<b>" + gemsAt(P, level) + "</b></span></div>";
-    h += '<div class="land-strip" role="group" aria-label="Kies een land">';
+    const mapHtml = journeyMap(c), th = curTh;
+    const nm = esc(P.name), stars = starsAt(P, level), xp = xpAt(P, level), gems = gemsAt(P, level);
+    let h = '<h1 class="sr-only" tabindex="-1">De Reis – Land ' + (i + 1) + ": " + esc(c.title) + "</h1>";
+    /* zwevende topbalk */
+    h += '<header class="j-head"><button class="jh-player" data-act="players" aria-label="Speler: ' + nm + '. Wissel van speler">' + avatarHtml(P, 30) + "<span>" + nm + "</span></button>" +
+      '<div class="jh-stats" role="group" aria-label="Jouw punten in de ' + modeName(level) + '-modus"><span>' + icon("star", 15, "fill") + "<b>" + stars + '</b><i class="sr-only"> sterren</i></span><span class="xp"><b>' + xp + '</b> XP</span><span class="gem">' + gemSvg(15) + "<b>" + gems + '</b><i class="sr-only"> edelstenen</i></span></div>' +
+      '<button class="jh-mode ' + level + '" data-act="switch-mode" aria-label="Niveau wisselen. Nu: ' + (level === "junior" ? "Junior, tik voor Expert" : "Expert, tik voor Junior") + '">' + icon(level === "junior" ? "smile" : "cap", 16) + "<span>" + (level === "junior" ? "Junior" : "Expert") + "</span></button>" +
+      '<button class="jh-gear" data-act="settings" aria-label="Instellingen">' + icon("gear", 20) + "</button></header>";
+    /* land-schild */
+    h += '<div class="j-shield" style="--accent:' + c.color + '" role="group" aria-label="Land kiezen">' +
+      (i > 0 ? '<button class="js-arrow" data-act="journey-land" data-i="' + (i - 1) + '" aria-label="Vorig land: ' + esc(CATEGORIES[i - 1].title) + '">' + icon("left", 20) + "</button>" : '<button class="js-arrow" disabled aria-label="Geen vorig land">' + icon("left", 20) + "</button>") +
+      '<div class="js-mid"><b>Land ' + (i + 1) + ": " + esc(c.title) + '</b><div class="js-row"><span class="land-strip" role="group" aria-label="Spring naar een land">';
     CATEGORIES.forEach(function (x, k) {
       const done = landDone(level, x.id);
-      h += '<button class="land-chip' + (k === i ? " on" : "") + '" style="--accent:' + x.color + '" data-act="journey-land" data-i="' + k + '" aria-pressed="' + (k === i) + '" aria-label="Land ' + (k + 1) + ": " + esc(x.title) + (done ? " (voltooid)" : "") + '">' + icon(CAT_ICON[x.icon] || "sparkles", 22) + "<span>" + (k + 1) + "</span>" + (done ? '<i class="lc-b">🚩</i>' : "") + "</button>";
+      h += '<button class="land-chip' + (k === i ? " on" : "") + '" style="--accent:' + x.color + '" data-act="journey-land" data-i="' + k + '" aria-pressed="' + (k === i) + '" aria-label="Land ' + (k + 1) + ": " + esc(x.title) + (done ? " (voltooid)" : "") + '"><span>' + (k + 1) + "</span>" + (done ? '<i class="lc-b">🚩</i>' : "") + "</button>";
     });
-    h += "</div>";
-    h += '<div class="land-head" style="--accent:' + c.color + '"><span class="land-n">Land ' + (i + 1) + " van " + CATEGORIES.length + "</span><h2>" + esc(c.title) + "</h2><p>" + esc(c.subtitle) + "</p></div>";
-    h += '<div class="land-prog"><div class="lp-txt"><b>' + st.passed + " / " + st.n + "</b> levels gehaald<span>" + icon("star", 16, "fill") + " " + st.stars + " / " + st.max + "</span></div>" +
-      '<div class="bar" role="progressbar" aria-label="Voortgang in dit land" aria-valuemin="0" aria-valuemax="' + st.n + '" aria-valuenow="' + st.passed + '"><i style="width:' + Math.round((st.passed / st.n) * 100) + '%"></i></div>' +
-      '<p class="lp-hint">Elk level heeft ' + J_Q + " vragen. Haal minstens " + Math.ceil(J_Q * PASS_PCT) + " goed om door te gaan. Na elke 2 levels wacht een springende schatkist met een minigame!</p></div>";
-    h += '<div class="journey-map">' + journeyMap(c) + "</div>";
-    h += '<button class="btn ghost block" data-act="album" style="margin-top:10px">' + icon("layers", 20) + 'Kwartet-album (' + albumOwned() + '/' + albumTotal() + ')</button>';
-    h += '<div class="land-nav">' + (i > 0 ? '<button class="btn ghost" data-act="journey-land" data-i="' + (i - 1) + '">' + icon("left", 20) + "Land " + i + "</button>" : "<span></span>") +
-      (i < CATEGORIES.length - 1 ? '<button class="btn gold" data-act="journey-land" data-i="' + (i + 1) + '">Land ' + (i + 2) + icon("right", 20) + "</button>" : "<span></span>") + "</div>";
-    h += '<a class="btn wa block" href="' + waLink(shareJourneyText()) + '" target="_blank" rel="noopener">' + icon("chat", 20) + "Deel mijn Reis via WhatsApp</a>";
+    h += '</span><small class="js-prog" aria-label="' + st.passed + " van " + st.n + ' levels gehaald">' + st.passed + "/" + st.n + " ⭐" + st.stars + "</small></div></div>" +
+      (i < CATEGORIES.length - 1 ? '<button class="js-arrow" data-act="journey-land" data-i="' + (i + 1) + '" aria-label="Volgend land: ' + esc(CATEGORIES[i + 1].title) + '">' + icon("right", 20) + "</button>" : '<button class="js-arrow" disabled aria-label="Geen volgend land">' + icon("right", 20) + "</button>") + "</div>";
+    /* fullscreen kaart */
+    h += '<div class="jmap-scroll" style="--sky:' + th.sky[0] + ";--near:" + th.near + '"><div class="journey-map">' + mapHtml + "</div></div>";
+    /* onderste navigatiebalk */
+    h += '<nav class="j-nav" aria-label="Hoofdmenu"><div class="jn-in">' +
+      '<button class="jn-item on" data-act="journey" aria-current="page"><span class="jn-ic" aria-hidden="true">🗺️</span>Kaart</button>' +
+      '<button class="jn-item" data-act="board"><span class="jn-ic" aria-hidden="true">🏆</span>Score</button>' +
+      '<button class="jn-item" data-act="album" aria-label="Kwartet-album, ' + albumOwned(level) + " van " + albumTotal() + ' kaarten"><span class="jn-ic" aria-hidden="true">🎴</span>Album<em class="jn-count" aria-hidden="true">' + albumOwned(level) + "/" + albumTotal() + "</em></button>" +
+      '<button class="jn-item" data-act="group"><span class="jn-ic" aria-hidden="true">👥</span>Groep</button>' +
+      '<a class="jn-item wa" href="' + waLink(shareJourneyText()) + '" target="_blank" rel="noopener" aria-label="Deel mijn Reis via WhatsApp"><span class="jn-ic" aria-hidden="true">💬</span>Delen</a>' +
+      "</div></nav>";
     h += '<div class="j-toast" id="jToast" role="status"></div>';
     return h;
   }
