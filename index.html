@@ -1027,6 +1027,57 @@ body.jfull .reward-flyer { top: 160px; }
 .a11y-dlg label.opt input.sw:checked::after { transform: translateX(22px); }
 .a11y-dlg label.opt input.sw:focus-visible { outline: 3px solid #ffb703; outline-offset: 2px; }
 @media (max-width: 400px) { .j-head { gap: 4px; } .jh-stats { gap: 2px; } .jh-stats > span { padding: 3px 4px; } .jh-player span { max-width: 52px; } }
+
+/* ── Inloggen en wereldwijd klassement ── */
+.avatar { position: relative; overflow: hidden; }
+.avatar.has-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+.btn.google { background: #fff; color: #1f1f1f; border: 2px solid #dadce0; box-shadow: 0 4px 0 #c6c9cc; display: inline-flex; align-items: center; justify-content: center; gap: 10px; }
+.btn.google:active { box-shadow: 0 1px 0 #c6c9cc; }
+.login-btns { margin-top: 22px; }
+.login-err { min-height: 1.4em; margin-top: 12px; color: var(--bad); font-weight: 800; }
+.login-note { margin-top: 10px; font-size: .85rem; color: var(--muted); font-weight: 600; line-height: 1.5; }
+.acct { margin: 4px 0 10px; font-weight: 700; color: var(--ink); }
+.gb-head { text-align: center; margin: 6px 0 12px; }
+.gb-head h2 { display: inline-flex; align-items: center; gap: 8px; font-size: 1.35rem; color: var(--emerald-dark); }
+.gb-head p { color: var(--muted); font-weight: 700; font-size: .88rem; margin-top: 2px; }
+.gb-me { text-align: center; font-weight: 800; color: var(--emerald-dark); background: var(--ok-bg); border-radius: 14px; padding: 8px 12px; margin: 0 0 12px; }
+.gb-cta { display: grid; gap: 8px; justify-items: center; text-align: center; background: linear-gradient(135deg, #fff3c4, #ffe08a); color: #4a3000; border: 2px solid #fff; border-radius: 20px; padding: 14px; margin: 0 0 14px; box-shadow: var(--shadow); font-weight: 700; }
+.gb-cta b { font-size: 1.05rem; }
+.gb-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.gb-row { display: flex; align-items: center; gap: 10px; background: var(--card); border-radius: 20px; padding: 8px 14px 8px 10px; box-shadow: var(--shadow); border: 2px solid transparent; }
+.gb-row.me { border-color: var(--emerald); background: var(--emerald-soft); }
+.gb-row.top1 { background: linear-gradient(135deg, #fff6cf, #ffe08a); border-color: #f0b400; }
+.gb-row.top2 { background: linear-gradient(135deg, #f4f6f8, #dfe4ea); border-color: #aab4c0; }
+.gb-row.top3 { background: linear-gradient(135deg, #fbe8d6, #f0c9a0); border-color: #cd8a4b; }
+.gb-rank { min-width: 38px; text-align: center; font-weight: 900; font-size: 1.1rem; color: var(--gold-text); }
+.gb-row.top1 .gb-rank { font-size: 1.3rem; color: #8a5a00; }
+.gb-av { position: relative; overflow: hidden; width: 44px; height: 44px; flex: none; border-radius: 50%; display: grid; place-items: center; background: var(--c, var(--emerald)); color: #fff; font-weight: 900; font-size: 1.1rem; }
+.gb-av img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.gb-name { flex: 1; min-width: 0; font-weight: 800; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gb-score { display: grid; justify-items: end; line-height: 1.15; }
+.gb-score b { font-size: 1.15rem; color: var(--emerald-dark); font-weight: 900; }
+.gb-score small { display: inline-flex; align-items: center; gap: 3px; font-weight: 800; color: var(--gold-text); }
+.gb-score .ic.fill { color: var(--gold); }
+.gb-state { text-align: center; font-weight: 700; color: var(--muted); padding: 18px 8px; }
+.gb-state.err { color: var(--bad); }
+.gb-refresh { text-align: center; margin: 14px 0 6px; }
+
+/* ── Inlogkaart: gebruikt de kleuren van de app (smaragdgroen en goud) ── */
+.islam-quiz-card { --card-a: var(--emerald-dark); --card-b: var(--emerald); --card-mid: #24593f; --card-line: #f0c27f; --card-label: #ffe08a; --card-ph: #cfe8d8;
+  background: linear-gradient(135deg, var(--card-a) 0%, var(--card-b) 100%); padding: 22px; border-radius: 18px; border: 2px solid var(--card-line); box-shadow: 0 8px 25px rgba(0, 0, 0, .3); width: min(100%, 360px); margin: 18px auto 8px; color: #fff; text-align: center; }
+.islam-quiz-card .quiz-label { color: var(--card-label); font-weight: 800; font-size: .95em; margin-bottom: 8px; display: block; text-align: left; }
+.islam-quiz-card .quiz-input { width: 100%; background: rgba(255, 255, 255, .1); border: 1.5px solid var(--card-line); border-radius: 10px; padding: 11px 14px; color: #fff; font: inherit; font-size: 1em; outline: none; transition: all .3s ease; }
+.islam-quiz-card .quiz-input:focus { background: rgba(255, 255, 255, .2); box-shadow: 0 0 10px rgba(255, 215, 0, .5); }
+.islam-quiz-card .quiz-input::placeholder { color: var(--card-ph); }
+.btn-guest-quiz { appearance: none; width: 100%; margin-top: 12px; padding: 12px 16px; border-radius: 10px; border: 2px solid var(--card-line, #f0c27f); background: rgba(255, 255, 255, .08); color: #fff; font: inherit; font-weight: 800; cursor: pointer; transition: transform .2s ease, background .2s ease; }
+.btn-guest-quiz:hover { background: rgba(255, 255, 255, .18); transform: translateY(-2px); }
+.quiz-divider { width: 100%; text-align: center; border-bottom: 1px solid rgba(255, 215, 0, .3); line-height: .1em; margin: 22px 0; }
+.quiz-divider span { background: var(--card-mid, #24593f); padding: 0 12px; color: #ffd700; font-size: .85em; font-weight: 800; }
+.btn-google-quiz { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 12px 16px; background: #fff; color: #1b4332; font: inherit; font-weight: 800; font-size: .95em; border-radius: 10px; border: 0; cursor: pointer; transition: transform .2s ease, box-shadow .2s ease; box-shadow: 0 4px 12px rgba(0, 0, 0, .25); }
+.btn-google-quiz:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0, 0, 0, .35); }
+.quiz-status { color: #4ade80; font-size: .9em; font-weight: 800; margin-top: 12px; min-height: 1.3em; }
+.quiz-status.err { color: #ffb4a9; }
+.islam-quiz-card button:focus-visible, .islam-quiz-card input:focus-visible { outline: 3px solid #ffd54f; outline-offset: 2px; }
 </style>
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Islam Quiz">
@@ -1088,6 +1139,7 @@ body.jfull .reward-flyer { top: 160px; }
   <div id="liveP" class="sr-only" aria-live="polite" aria-atomic="true"></div>
   <div id="liveA" class="sr-only" aria-live="assertive" aria-atomic="true" role="alert"></div>
   <noscript>Deze quiz heeft JavaScript nodig. Zet JavaScript aan in je browser.</noscript>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     function acceptDisclaimer() {
     const modal = document.getElementById('disclaimerModal');
@@ -3419,9 +3471,175 @@ return exports;})();
   ["pointerup", "touchend", "click", "keydown"].forEach(function (ev) { document.addEventListener(ev, duffGesture, { capture: true, passive: true }); });
   document.addEventListener("visibilitychange", duffSync);
 
+  /* ───────────── Supabase: Google-login en wereldwijd scorebord ─────────────
+     De publishable key hoort in de browser te staan; de beveiliging zit in de Row Level Security-regels (zie supabase-leaderboard.sql).
+     Gasten bewaren alles alleen in localStorage en tellen niet mee op het wereldwijde scorebord. */
+  const SB_URL = "https://mkjqaahxyljmczpinpvc.supabase.co";
+  const SB_KEY = "sb_publishable_cJ7mtK6JKPs9fMkT6U6shw_pTwJbwmi";
+  let sb = null, sbUser = null, boardScope = null, loginMsg = "";
+  try {
+    if (window.supabase && window.supabase.createClient) sb = window.supabase.createClient(SB_URL, SB_KEY, { auth: { flowType: "pkce", persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
+  } catch (e) { sb = null; }
+  const oauthReturn = /[?&#](code|access_token|error_description)=/.test(location.search + location.hash);
+  const GOOGLE_PHOTO = /^https:\/\/[a-z0-9.-]+\.googleusercontent\.com\//i;
+  const gb = { junior: null, expert: null };        /* geladen klassement per modus */
+
+  function sbMsg(t) {
+    loginMsg = t; const el = document.getElementById("user-status");
+    if (el) { el.textContent = t; el.classList.toggle("err", !!t); } else { announce(t); try { window.alert(t); } catch (e) {} }
+  }
+  function sbLoginGoogle() {
+    loginMsg = ""; const el0 = document.getElementById("user-status"); if (el0) { el0.textContent = ""; el0.classList.remove("err"); }
+    if (!sb) { sbMsg("Inloggen kan nu niet: de inlogdienst is niet bereikbaar. Controleer je verbinding of ga door als gast."); return; }
+    sb.auth.signInWithOAuth({ provider: "google", options: { redirectTo: location.origin + location.pathname } })
+      .then(function (r) { if (r && r.error) sbMsg("Inloggen is niet gelukt: " + r.error.message); })
+      .catch(function () { sbMsg("Inloggen is niet gelukt. Controleer je verbinding en probeer het opnieuw."); });
+  }
+  function sbLogout() {
+    try { if (sb) sb.auth.signOut(); } catch (e) {}
+    sbUser = null; S.entry = "guest"; saveState(); render();
+  }
+  /* koppel de Google-gebruiker aan een lokale speler (bestaande voortgang blijft behouden) */
+  function linkPlayer(u) {
+    const meta = u.user_metadata || {};
+    const full = String(meta.full_name || meta.name || (u.email || "").split("@")[0] || "Speler").trim();
+    const first = (full.split(/\s+/)[0] || "Speler").slice(0, 14);
+    const photo = /^https:\/\//i.test(meta.avatar_url || meta.picture || "") ? (meta.avatar_url || meta.picture) : "";
+    let p = S.players.find(function (x) { return x.sbId === u.id; });
+    if (!p) {
+      if (P && !P.sbId) p = P;                                    /* huidige gastspeler wordt jouw account */
+      else {
+        let name = first; const base = name; let n = 2;
+        while (S.players.some(function (x) { return x.name.toLowerCase() === name.toLowerCase(); })) name = base + " " + n++;
+        p = newPlayer(name, draftColor); S.players.push(p);
+      }
+      p.sbId = u.id;
+    }
+    p.photo = photo;
+    S.current = p.id; P = p;
+  }
+  function enterApp() {
+    screen = !P ? "newplayer" : P.mode ? "journey" : "welcome";
+    if (P && P.mode) flyerPending = true;
+    render();
+    if (P && P.mode === "expert" && !P.age14) chooseMode("expert", function () { render(); });
+  }
+  function sbOnSession(session) {
+    const u = session && session.user ? session.user : null;
+    const same = (u && sbUser && u.id === sbUser.id) || (!u && !sbUser);
+    sbUser = u;
+    if (u) {
+      const fresh = !same;
+      if (fresh) { linkPlayer(u); S.entry = "google"; saveState(); sbSyncAll(); }
+      if (screen === "login" || screen === "authwait") enterApp();
+      else if (fresh && ["journey", "board", "scores", "welcome", "players"].indexOf(screen) !== -1) render();
+    } else if (screen === "authwait") { loginMsg = "Inloggen met Google is niet gelukt of is geannuleerd. Probeer het opnieuw of ga door als gast."; screen = "login"; render(); }
+  }
+  function sbInit() {
+    if (!sb) return;
+    try {
+      sb.auth.onAuthStateChange(function (ev, session) { setTimeout(function () { sbOnSession(session); }, 0); });
+      sb.auth.getSession().then(function (r) { sbOnSession(r && r.data ? r.data.session : null); })
+        .catch(function () { sbOnSession(null); })
+        .then(function () { if (oauthReturn) { try { history.replaceState(null, "", location.pathname); } catch (e) {} } });
+      if (screen === "authwait") setTimeout(function () { if (screen === "authwait") sbOnSession(null); }, 10000);
+    } catch (e) {}
+  }
+  /* highscore van de ingelogde speler opslaan in tabel 'leaderboard' (één rij per account en modus) */
+  const sbTimers = {};
+  function sbSyncSoon(lv) { clearTimeout(sbTimers[lv]); sbTimers[lv] = setTimeout(function () { sbSync(lv); }, 800); }
+  function sbSyncAll() { sbSync("junior"); sbSync("expert"); }
+  function sbSync(lv) {
+    if (!sb || !sbUser) return;
+    const p = S.players.find(function (x) { return x.sbId === sbUser.id; }); if (!p) return;
+    const hs = scoreAt(p, lv); if (hs <= 0) return;
+    const row = { user_id: sbUser.id, mode: lv, display_name: String(p.name).slice(0, 14), avatar_url: GOOGLE_PHOTO.test(p.photo || "") ? p.photo : null, highscore: hs, stars: starsAt(p, lv), xp: xpAt(p, lv) };
+    try { sb.from("leaderboard").upsert(row, { onConflict: "user_id,mode" }).then(function (r) { if (r && !r.error) gb[lv] = null; }).catch(function () {}); } catch (e) {}
+  }
+  /* Top 50 ophalen, gesorteerd op highscore */
+  function gbLoad(lv) {
+    if (!sb) { gb[lv] = { err: "Het klassement is nu niet bereikbaar. Controleer je verbinding." }; gbPaint(lv); return; }
+    const prev = gb[lv] && gb[lv].rows;
+    gb[lv] = { rows: prev, loading: true }; gbPaint(lv);
+    try {
+      sb.from("leaderboard").select("user_id,display_name,avatar_url,highscore,stars").eq("mode", lv)
+        .order("highscore", { ascending: false }).order("stars", { ascending: false }).limit(50)
+        .then(function (r) {
+          if (r && r.error) gb[lv] = { rows: prev, err: "Het klassement kon niet worden geladen." };
+          else { gb[lv] = { rows: (r && r.data) || [] }; announce("Klassement bijgewerkt: " + gb[lv].rows.length + " spelers."); }
+          gbPaint(lv);
+        }).catch(function () { gb[lv] = { rows: prev, err: "Het klassement kon niet worden geladen." }; gbPaint(lv); });
+    } catch (e) { gb[lv] = { rows: prev, err: "Het klassement kon niet worden geladen." }; gbPaint(lv); }
+  }
+  function gbPaint(lv) {
+    if (screen !== "board" || boardScope !== "global" || boardLevel !== lv) return;
+    const el = document.getElementById("gbList"); if (el) el.innerHTML = gbListHtml(lv);
+  }
+  function gbAvatar(name, url, uid) {
+    let hsh = 0; String(uid || name).split("").forEach(function (c) { hsh = (hsh * 31 + c.charCodeAt(0)) >>> 0; });
+    const col = AVATAR_COLORS[hsh % AVATAR_COLORS.length], ini = esc(String(name || "?").trim().charAt(0).toUpperCase());
+    const img = GOOGLE_PHOTO.test(url || "") ? '<img src="' + esc(url) + '" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">' : "";
+    return '<span class="gb-av" style="--c:' + col + '" aria-hidden="true">' + ini + img + "</span>";
+  }
+  function gbListHtml(lv) {
+    const g = gb[lv];
+    if (!g || (g.loading && !g.rows)) return '<p class="gb-state" role="status">Klassement laden…</p>';
+    let h = "";
+    if (g.err) h += '<p class="gb-state err" role="alert">' + esc(g.err) + ' <button class="btn ghost small" data-act="gb-refresh">Opnieuw proberen</button></p>';
+    const rows = g.rows || [];
+    if (!rows.length) return h + (g.err ? "" : '<p class="gb-state">Nog niemand op het klassement. Log in met Google en wees de eerste!</p>');
+    h += '<ol class="gb-list" aria-label="Top ' + rows.length + " " + modeName(lv) + '-spelers">';
+    rows.forEach(function (r, i) {
+      const me = sbUser && r.user_id === sbUser.id;
+      h += '<li class="gb-row' + (i < 3 ? " top" + (i + 1) : "") + (me ? " me" : "") + '"><span class="gb-rank">#' + (i + 1) + "</span>" + gbAvatar(r.display_name, r.avatar_url, r.user_id) +
+        '<span class="gb-name">' + esc(r.display_name) + (me ? ' <em class="me">jij</em>' : "") + '</span><span class="gb-score"><b>' + Number(r.highscore).toLocaleString("nl-NL") + "</b><small>" + icon("star", 12, "fill") + " " + (r.stars || 0) + "</small></span></li>";
+    });
+    return h + "</ol>";
+  }
+  function gbSectionHtml(lv) {
+    let h = '<div class="gb-head"><h2>' + icon("trophy", 22) + " Wereldwijd klassement</h2><p>Top 50 · " + modeName(lv) + "-modus · gesorteerd op highscore</p></div>";
+    h += sbUser ? '<p class="gb-me">✅ Je bent ingelogd: jouw ' + modeName(lv) + "-score telt mee.</p>"
+      : '<div class="gb-cta"><b>Doe mee met de wereld!</b><span>Als gast tel je niet mee. Log in met Google om op het klassement te komen.</span><button class="btn google" data-act="login-google">' + GOOGLE_G + " Inloggen met Google</button></div>";
+    h += '<div id="gbList" class="gb-wrap" aria-live="polite">' + gbListHtml(lv) + "</div>";
+    h += '<div class="gb-refresh"><button class="btn ghost small" data-act="gb-refresh">' + icon("retry", 16) + " Vernieuwen</button></div>";
+    return h;
+  }
+  const GOOGLE_G = '<svg class="g-ic" viewBox="0 0 48 48" width="22" height="22" aria-hidden="true" focusable="false"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>';
+  function viewLogin() {
+    return '<section class="welcome login">' +
+      '<div class="logo">' + icon("moon", 44) + "</div><h1>Welkom bij Islam Quiz</h1>" + ar("السَّلَامُ عَلَيْكُمْ") +
+      '<p class="greet">Hoe wil je spelen?</p>' +
+      '<div class="islam-quiz-card player-input-section">' +
+      '<div class="input-group"><label for="username" class="quiz-label">Spelersnaam (Gast):</label>' +
+      '<input type="text" id="username" class="quiz-input" maxlength="14" autocomplete="off" placeholder="Voer je naam in..."></div>' +
+      '<button class="btn-guest-quiz" data-act="login-guest"><span aria-hidden="true">⚪</span> Doorgaan als Gast</button>' +
+      '<div class="quiz-divider" role="separator"><span>OF</span></div>' +
+      '<button id="google-login-btn" class="btn-google-quiz" data-act="login-google">' + GOOGLE_G + "<span>Inloggen met Google</span></button>" +
+      '<p id="user-status" class="quiz-status' + (loginMsg ? " err" : "") + '" role="status">' + esc(loginMsg) + "</p></div>" +
+      '<p class="login-note"><b>Met Google</b> tel je mee op het wereldwijde klassement. Alleen je voornaam, je profielfoto en je score zijn dan zichtbaar voor anderen.<br><b>Als gast</b> blijft alles op dit apparaat en tel je niet mee.</p></section>';
+  }
+  /* gast: een ingevulde naam maakt meteen een speler; leeg laten gaat naar het bestaande naam- en kleurscherm */
+  function guestEnter() {
+    const inp = document.getElementById("username");
+    let name = ((inp && inp.value) || "").trim().replace(/\s+/g, " ").slice(0, 14);
+    S.entry = "guest";
+    if (name) {
+      const base = name; let n = 2;
+      while (S.players.some(function (x) { return x.name.toLowerCase() === name.toLowerCase(); })) name = base + " " + n++;
+      const pl = newPlayer(name, AVATAR_COLORS[S.players.length % AVATAR_COLORS.length]);
+      S.players.push(pl); S.current = pl.id; P = pl;
+    }
+    saveState(); enterApp();
+  }
+  function viewAuthWait() {
+    return '<section class="welcome"><div class="logo">' + icon("moon", 44) + '</div><h1>Even geduld…</h1><p class="greet" role="status">We loggen je in met Google.</p></section>';
+  }
+
   /* ───────────── App-toestand ───────────── */
   const app = document.getElementById("app");
   let screen = !P ? "newplayer" : P.mode ? "journey" : "welcome";
+  if (!S.entry) screen = "login";                                   /* eerste keer: kies Google of gast */
+  if (oauthReturn && sb) screen = "authwait";                       /* terug van Google: even wachten op de sessie */
   const urlCode = normCode(new URLSearchParams(location.search).get("groep"));
   if (urlCode && P && P.mode) screen = "group";
   let draftColor = AVATAR_COLORS[0];
@@ -3573,7 +3791,7 @@ return exports;})();
   }
 
   /* ───────────── Toegankelijkheid: meldingen, focus, dialogen, voorlezen ───────────── */
-  const SCREEN_TITLE = { welcome: "Kies je niveau", home: "Hoofdmenu", quiz: "Quiz", result: "Resultaat", review: "Antwoorden bekijken", scores: "Mijn scores", newplayer: "Nieuwe speler", players: "Spelers", board: "Scorebord", group: "Groep en duel", duelresult: "Duel-uitslag", journey: "De Reis", chestopen: "Schatkist", minigame: "Minigame", album: "Kwartet-album" };
+  const SCREEN_TITLE = { login: "Inloggen", authwait: "Inloggen", welcome: "Kies je niveau", home: "Hoofdmenu", quiz: "Quiz", result: "Resultaat", review: "Antwoorden bekijken", scores: "Mijn scores", newplayer: "Nieuwe speler", players: "Spelers", board: "Scorebord", group: "Groep en duel", duelresult: "Duel-uitslag", journey: "De Reis", chestopen: "Schatkist", minigame: "Minigame", album: "Kwartet-album" };
   function announce(msg, assertive) {
     const el = document.getElementById(assertive ? "liveA" : "liveP"); if (!el) return;
     el.textContent = ""; setTimeout(function () { el.textContent = msg; }, 60);
@@ -3750,7 +3968,8 @@ return exports;})();
       '<label class="opt"><input type="checkbox" role="switch" class="sw" id="optDuff"' + (duffPref() ? " checked" : "") + '><span>Achtergrond percussie (Duff)<small>Zachte percussie op de achtergrond. Pauzeert vanzelf tijdens het voorlezen.</small></span></label>' +
       '<label class="opt"><input type="checkbox" id="optAuto"' + (autoOn() ? " checked" : "") + '><span>Automatisch doorgaan na een level<small>Na een resultaat ga je vanzelf verder. Zet dit uit als je liever zelf op de knop tikt.</small></span></label>' +
       '<p class="warn">Gebruik je al een schermlezer (VoiceOver of TalkBack)? Zet “Spreek vragen uit” dan uit, anders praten beide stemmen door elkaar.</p>' +
-      '<div class="stack"><button class="btn ghost block" data-act="scores" data-d="x">' + icon("trophy", 20) + "Mijn scores</button>" +
+      '<div class="stack">' + (sbUser ? '<p class="acct">Ingelogd met Google als <b>' + esc(P.name) + '</b>. Jouw score telt mee op het wereldwijde klassement.</p><button class="btn ghost block" data-act="logout" data-d="x">Uitloggen</button>' : '<button class="btn ghost block" data-act="login-google" data-d="x">' + GOOGLE_G + "Inloggen met Google</button>") +
+      '<button class="btn ghost block" data-act="scores" data-d="x">' + icon("trophy", 20) + "Mijn scores</button>" +
       '<button class="btn ghost block" data-act="group" data-d="x">' + icon("users", 20) + "Groep &amp; duel</button>" +
       (isStandalone() ? "" : '<button class="btn ghost block" data-act="install" data-d="x">Zet op beginscherm</button>') +
       '<button class="btn ghost block" data-act="reset" data-d="x">' + icon("trash", 20) + "Voortgang van " + esc(P.name) + " wissen</button>" +
@@ -3781,7 +4000,9 @@ return exports;})();
     const inDuelQuiz = screen === "quiz" && quiz && quiz.kind === "duel";
     if (P && P.group && (screen === "group" || screen === "duelresult" || inDuelQuiz)) openGroupSub();
     else closeGroupSub();
-    if (screen === "welcome") app.innerHTML = viewWelcome();
+    if (screen === "login") app.innerHTML = viewLogin();
+    else if (screen === "authwait") app.innerHTML = viewAuthWait();
+    else if (screen === "welcome") app.innerHTML = viewWelcome();
     else if (screen === "quiz") { app.innerHTML = viewQuiz(); afterQuizRender(); }
     else if (screen === "result") {
       app.innerHTML = viewResult();
@@ -4128,6 +4349,7 @@ return exports;})();
     }
     saveState();
     pushMember();
+    if (sbUser && P.sbId === sbUser.id) sbSyncSoon(quiz.level);
 
     result = { kind: quiz.kind, catId: quiz.catId, level: quiz.level, tier: quiz.tier || 1, next: nextTier(quiz, stars), score: score, total: total, stars: stars, record: isRecord, items: quiz.items, newBadges: newBadges, open4: open4, noAuto: (journeyReturn && quiz.kind === "category") || !autoOn() };
     if (jr) Object.assign(result, jr, { noAuto: !autoOn() });
@@ -4231,7 +4453,8 @@ return exports;})();
   /* ───────────── Spelers ───────────── */
   function avatarHtml(p, size) {
     const initial = esc((p.name || "?").trim().charAt(0).toUpperCase());
-    return '<span class="avatar" style="--c:' + p.color + ';width:' + size + 'px;height:' + size + 'px;font-size:' + Math.round(size * 0.46) + 'px">' + initial + "</span>";
+    const ph = p.photo && /^https:\/\//i.test(p.photo) ? '<img src="' + esc(p.photo) + '" alt="" referrerpolicy="no-referrer" onerror="this.remove()">' : "";
+    return '<span class="avatar' + (ph ? " has-photo" : "") + '" style="--c:' + p.color + ';width:' + size + 'px;height:' + size + 'px;font-size:' + Math.round(size * 0.46) + 'px">' + initial + ph + "</span>";
   }
   function starsAt(p, lv) {
     let t = 0; Object.keys(p.best[lv]).forEach(function (k) { t += p.best[lv][k].stars || 0; });
@@ -5648,13 +5871,17 @@ return exports;})();
 
   function viewBoard() {
     const lv = boardLevel;
+    if (boardScope === null) boardScope = sbUser ? "global" : "local";
     const ranked = S.players.slice().sort(function (a, b) {
       return scoreAt(b, lv) - scoreAt(a, lv) || starsAt(b, lv) - starsAt(a, lv) || (avgPct(b, lv) || 0) - (avgPct(a, lv) || 0);
     });
     let h = '<div class="topbar"><button class="icon-btn" data-act="home" aria-label="Terug naar De Reis">' + icon("left", 22) + "</button>" +
       '<div class="brand">' + icon("trophy", 24) + "Scorebord</div><span style=\"width:44px\"></span></div>";
+    h += '<div class="tabs" role="group" aria-label="Kies scorebord"><button class="tab' + (boardScope === "local" ? " on" : "") + '" data-act="board-scope" data-scope="local" aria-pressed="' + (boardScope === "local") + '">' + icon("users", 18) + "Dit apparaat</button>" +
+      '<button class="tab' + (boardScope === "global" ? " on" : "") + '" data-act="board-scope" data-scope="global" aria-pressed="' + (boardScope === "global") + '">🌍 Wereldwijd</button></div>';
     h += '<div class="tabs" role="group" aria-label="Kies modus"><button class="tab' + (lv === "junior" ? " on" : "") + '" data-act="board-level" data-level="junior" aria-pressed="' + (lv === "junior") + '">' + icon("smile", 18) + "Junior</button>" +
       '<button class="tab' + (lv === "expert" ? " on" : "") + '" data-act="board-level" data-level="expert" aria-pressed="' + (lv === "expert") + '">' + icon("cap", 18) + "Expert</button></div>";
+    if (boardScope === "global") return h + gbSectionHtml(lv);
     h += '<div class="rank-list">';
     ranked.forEach(function (p, i) {
       const pct = avgPct(p, lv);
@@ -6306,8 +6533,13 @@ return exports;})();
         } else { screen = "duelresult"; render(); }
         break;
       }
-      case "board": play("click"); boardLevel = (P && P.mode) || boardLevel; screen = "board"; render(); break;
-      case "board-level": boardLevel = el.dataset.level; render(); break;
+      case "board": play("click"); boardLevel = (P && P.mode) || boardLevel; screen = "board"; if (boardScope === null) boardScope = sbUser ? "global" : "local"; render(); if (boardScope === "global") gbLoad(boardLevel); break;
+      case "board-level": boardLevel = el.dataset.level; render(); if (boardScope === "global") gbLoad(boardLevel); break;
+      case "board-scope": play("click"); boardScope = el.dataset.scope; render(); if (boardScope === "global") gbLoad(boardLevel); break;
+      case "gb-refresh": gbLoad(boardLevel); break;
+      case "login-google": play("click"); sbLoginGoogle(); break;
+      case "login-guest": play("click"); guestEnter(); break;
+      case "logout": play("click"); sbLogout(); break;
     }
   });
 
@@ -6331,7 +6563,8 @@ return exports;})();
 
   if (P && syncBadges().length) saveState();
   render();
-  if (P && P.mode === "expert" && !P.age14) chooseMode("expert", function () { render(); });
+  if (P && P.mode === "expert" && !P.age14 && screen !== "login" && screen !== "authwait") chooseMode("expert", function () { render(); });
+  sbInit();
 })();
 </script>
 <script>
