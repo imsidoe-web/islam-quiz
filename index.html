@@ -910,6 +910,54 @@ a.btn.block { display: flex; margin-top: 14px; }
 .a11y-dlg label.opt small { display: block; font-weight: 600; color: var(--muted); margin-top: 2px; }
 .a11y-dlg .warn { background: var(--gold-soft); color: #5b3b08; border-radius: 14px; padding: 10px 12px; font-weight: 700; margin: 8px 0 14px; }
 .read-btn { margin: 8px 0 0; }
+.fly-shield { position: fixed; inset: 0; z-index: 69; background: transparent; }
+.land-fly { position: fixed; left: 0; top: 0; z-index: 70; width: 48px; height: 48px; display: grid; place-items: center; pointer-events: none; will-change: transform; }
+.land-fly .avatar { border: 3px solid #fff; box-shadow: 0 6px 16px rgba(0,0,0,.35); position: relative; z-index: 1; }
+.lf-glow { position: absolute; inset: -14px; border-radius: 50%; background: radial-gradient(circle, rgba(255,230,120,.95), rgba(255,200,40,0) 70%); animation: lfPulse .5s ease-in-out infinite alternate; }
+.lf-star { position: absolute; width: 18px; height: 18px; z-index: 2; animation: lfTwinkle .6s ease-in-out infinite alternate; } .lf-s1 { top: -10px; right: -8px; } .lf-s2 { bottom: -8px; left: -10px; animation-delay: .25s; }
+@keyframes lfPulse { from { transform: scale(.85); opacity: .7; } to { transform: scale(1.2); opacity: 1; } }
+@keyframes lfTwinkle { from { transform: scale(.6) rotate(-20deg); } to { transform: scale(1.2) rotate(20deg); } }
+.land-chip.land-arrive { animation: landArrive .7s cubic-bezier(.3, 1.6, .5, 1); }
+@keyframes landArrive { 0% { transform: scale(1); } 40% { transform: translateY(-8px) scale(1.35); } 100% { transform: translateY(-3px) scale(1.08); } }
+.land-enter { animation: landIn .7s ease both; }
+@keyframes landIn { from { opacity: 0; transform: translateX(40px) scale(.97); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .land-fly, .lf-glow, .lf-star, .land-enter, .land-chip.land-arrive { animation: none; } }
+.j-hello { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 6px 0 8px; }
+.j-stats { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin: 0 0 10px; }
+.j-stats > span { display: inline-flex; align-items: center; gap: 5px; background: #fff; border-radius: 999px; padding: 6px 12px; font-weight: 800; box-shadow: var(--shadow); color: var(--ink); font-size: .9rem; }
+.j-stats .xp { color: #5b2fc4; } .j-stats .gem b { color: #0b6a94; } .j-stats .ic.fill { color: var(--gold); }
+.rewards { display: flex; gap: 10px; justify-content: center; margin: 10px 0 0; flex-wrap: wrap; }
+.rw { display: inline-flex; align-items: center; gap: 6px; font-weight: 900; border-radius: 999px; padding: 6px 14px; animation: pop .5s ease .6s both; }
+.rw.xp { background: #ece4ff; color: #4b24a8; } .rw.gem { background: #def6ff; color: #0b6a94; }
+.rank-xp { display: block; font-size: .7rem; font-weight: 800; color: var(--muted); }
+.stat.xp b { color: #5b2fc4; } .stat.gems { color: #0b6a94; }
+.hint-btn { position: absolute; top: 10px; right: 12px; width: 44px; height: 44px; border-radius: 50%; border: 0; background: #fff8d6; font-size: 1.5rem; cursor: pointer; box-shadow: 0 3px 0 rgba(160,110,0,.3); opacity: .85; }
+.q-card { position: relative; }
+.hint-btn.used { opacity: .35; cursor: default; }
+.hint-btn.nudge { opacity: 1; animation: hintGlow 1.1s ease-in-out infinite; }
+@keyframes hintGlow { 0%, 100% { transform: rotate(0) scale(1); box-shadow: 0 0 0 0 rgba(255, 200, 0, .7), 0 3px 0 rgba(160,110,0,.3); } 25% { transform: rotate(-12deg) scale(1.12); } 50% { transform: rotate(10deg) scale(1.18); box-shadow: 0 0 0 12px rgba(255, 200, 0, 0), 0 3px 0 rgba(160,110,0,.3); } 75% { transform: rotate(-6deg) scale(1.08); } }
+.hint-box { margin: 10px 0 0; background: #fff8d6; border: 2px dashed #e0a100; color: #5b3b08; border-radius: 16px; padding: 10px 14px; font-weight: 700; animation: pop .4s ease both; }
+.option.eliminated { opacity: .45; text-decoration: line-through; pointer-events: none; }
+.reward-flyer { position: fixed; z-index: 55; left: 50%; top: 14px; transform: translateX(-50%); max-width: min(92vw, 420px); display: flex; align-items: center; gap: 12px; background: linear-gradient(135deg, #fff3c4, #ffd36a); color: #4a3000; border: 3px solid #fff; border-radius: 22px; padding: 12px 18px; font-weight: 800; box-shadow: 0 10px 26px rgba(120, 80, 0, .35); animation: flyIn .6s cubic-bezier(.3, 1.5, .5, 1) both; cursor: pointer; }
+.reward-flyer.out { animation: flyOut .5s ease both; }
+.rf-e { font-size: 2rem; }
+@keyframes flyIn { from { transform: translate(-50%, -140%) rotate(-4deg); } to { transform: translate(-50%, 0); } }
+@keyframes flyOut { to { transform: translate(-50%, -160%); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .hint-btn.nudge { animation: none; outline: 4px solid #ffb703; } .reward-flyer, .reward-flyer.out { animation: none; } }
+.mg-word { text-align: center; }
+.wz-clue { font-weight: 800; margin: 6px 4px 12px; } .wz-len { opacity: .75; font-weight: 700; }
+.wz-slots { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin: 6px 0 16px; }
+.wz-slot { width: 44px; height: 54px; border-radius: 12px; border: 3px dashed #b9c4bd; background: #fff; display: grid; place-items: center; font: inherit; font-weight: 900; font-size: 1.5rem; color: var(--emerald-dark); }
+.wz-slot:not(.empty) { border-style: solid; border-color: var(--emerald); cursor: pointer; box-shadow: 0 3px 0 rgba(0,0,0,.12); } .wz-slot.ok { background: #d8f3dc; border-color: #1f9d55; }
+.wz-tiles { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 0 0 14px; }
+.wz-tile { width: 48px; height: 52px; border-radius: 14px; border: 0; background: linear-gradient(135deg, #ffd36a, #f0a500); color: #4a3000; font: inherit; font-weight: 900; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 0 #b57a00; } .wz-tile.used { visibility: hidden; }
+.wz-tools { display: flex; gap: 10px; justify-content: center; }
+.wz-slots.shake { animation: wzShake .5s; } @keyframes wzShake { 20%, 60% { transform: translateX(-8px); } 40%, 80% { transform: translateX(8px); } }
+.wz-list ul { list-style: none; margin: 0 0 12px; padding: 0; display: grid; gap: 6px; text-align: left; } .wz-list li { background: #fff; border-radius: 12px; padding: 8px 12px; font-weight: 700; box-shadow: var(--shadow); } .wz-list li.found { background: #d8f3dc; color: #1b4332; }
+.ws-grid { display: grid; grid-template-columns: repeat(var(--n), 1fr); gap: 3px; width: min(94vw, 440px); margin: 0 auto; padding: 6px; background: #fff; border-radius: 16px; box-shadow: var(--shadow); }
+.ws-cell { aspect-ratio: 1; border: 0; border-radius: 8px; background: #f3efe7; font: inherit; font-weight: 900; font-size: clamp(.9rem, 4.4vw, 1.3rem); color: var(--ink); cursor: pointer; padding: 0; min-width: 0; }
+.ws-cell.sel { background: #ffd36a; outline: 3px solid #e0a100; } .ws-cell.found { background: #35c97a; color: #fff; }
+@media (prefers-reduced-motion: reduce) { .wz-slots.shake { animation: none; } }
 </style>
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Islam Quiz">
@@ -3025,6 +3073,7 @@ return exports;})();
     list: '<line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/>',
     users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
     landmark: '<line x1="3" x2="21" y1="22" y2="22"/><line x1="6" x2="6" y1="18" y2="11"/><line x1="10" x2="10" y1="18" y2="11"/><line x1="14" x2="14" y1="18" y2="11"/><line x1="18" x2="18" y1="18" y2="11"/><polygon points="12 2 20 7 4 7"/>',
+    gear: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
     access: '<circle cx="12" cy="4.5" r="2"/><path d="M5 8.5c4.5 1.4 9.5 1.4 14 0"/><path d="M12 9v5"/><path d="m12 14-3 7"/><path d="m12 14 3 7"/>',
     moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
     chat: '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
@@ -3107,6 +3156,8 @@ return exports;})();
       recent: { junior: [], expert: [] },   // laatst beantwoorde vraag-id's per modus (niet meteen herhalen)
       chests: { junior: {}, expert: {} },   // chests[level][catId][levelIndex] = {t, game} (geopende schatkisten)
       album: { junior: {}, expert: {} },    // Kwartet-album per modus: album[level][kaartId] = aantal
+      xp: { junior: 0, expert: 0 },         // Kennis-XP per modus
+      gems: { junior: 0, expert: 0 },       // edelstenen per modus
     };
   }
   function normalizePlayer(p) {
@@ -3120,6 +3171,8 @@ return exports;})();
       seen: Object.assign({ junior: {}, expert: {} }, p.seen || {}),
       recent: Object.assign({ junior: [], expert: [] }, p.recent || {}),
       chests: Object.assign({ junior: {}, expert: {} }, p.chests || {}),
+      xp: Object.assign({ junior: 0, expert: 0 }, p.xp || {}),
+      gems: Object.assign({ junior: 0, expert: 0 }, p.gems || {}),
       album: (function (a) { a = a || {}; if (a.junior || a.expert) return { junior: Object.assign({}, a.junior || {}), expert: Object.assign({}, a.expert || {}) }; return { junior: Object.assign({}, a), expert: {} }; })(p.album),
     });
   }
@@ -3231,14 +3284,17 @@ return exports;})();
 
   /* ───────────── App-toestand ───────────── */
   const app = document.getElementById("app");
-  let screen = !P ? "newplayer" : S.players.length > 1 ? "players" : P.mode ? "home" : "welcome";
+  let screen = !P ? "newplayer" : P.mode ? "journey" : "welcome";
   const urlCode = normCode(new URLSearchParams(location.search).get("groep"));
-  if (urlCode && P && P.mode && S.players.length === 1) screen = "group";
+  if (urlCode && P && P.mode) screen = "group";
   let draftColor = AVATAR_COLORS[0];
   let journeyReturn = false;   /* quiz gestart vanaf De Reis: na afloop terug naar de kaart */
   let journeyLand = null;      /* index van het getoonde land (null = eerste onafgeronde land) */
   const journeyPos = {};       /* laatst getoonde stop per land, voor de sprong-animatie */
   let boardLevel = "junior";
+  let flyerPending = !!(P && P.mode);   /* toon bij aankomst op de kaart een motivatieflyer */
+  let flyerLast = "";
+  let landFly = null;          /* {from,to}: land net voltooid, avatar vliegt bij terugkeer op de kaart naar het volgende land */
   let quiz = null;
   let result = null;
   let timerHandle = null;
@@ -3448,7 +3504,7 @@ return exports;})();
   function sigOf(el) {
     if (!el || !el.getAttribute || !el.getAttribute("data-act")) return null;
     let sg = '[data-act="' + el.getAttribute("data-act") + '"]';
-    ["data-id", "data-cat", "data-i", "data-k", "data-level", "data-mode", "data-tier", "data-pos", "data-color"].forEach(function (a) { if (el.hasAttribute(a)) sg += "[" + a + '="' + el.getAttribute(a) + '"]'; });
+    ["data-id", "data-cat", "data-i", "data-k", "data-r", "data-c", "data-level", "data-mode", "data-tier", "data-pos", "data-color"].forEach(function (a) { if (el.hasAttribute(a)) sg += "[" + a + '="' + el.getAttribute(a) + '"]'; });
     return sg;
   }
   let a11yLast = { screen: null, qkey: null, answered: null };
@@ -3506,7 +3562,7 @@ return exports;})();
     }
     w.addEventListener("keydown", function (e) {
       if (e.key !== "Escape") return;
-      const c = w.querySelector('[data-d="no"], [data-d="ok"], [data-d="x"]');
+      const c = w.querySelector('[data-d="no"]') || w.querySelector('[data-d="ok"]') || w.querySelector('[data-d="x"]:not([data-act])');
       if (c) c.click(); else w.remove();
     });
     if (!w.contains(document.activeElement)) { const f = w.querySelector("button, input"); if (f) f.focus(); }
@@ -3534,14 +3590,20 @@ return exports;})();
     const st = syncInert(); a11yObserver.wasOpen = st.discOpen ? "disc" : st.any ? "dlg" : null;
     if (st.discOpen) { const b = document.querySelector("#disclaimerModal .btn"); if (b) setTimeout(function () { b.focus(); }, 50); }
   })();
-  function a11yDialog() {
+  function settingsDialog() {
     const w = document.createElement("div"); w.className = "dialog-wrap";
-    w.innerHTML = '<div class="dialog a11y-dlg" role="dialog" aria-modal="true" aria-labelledby="a11yT"><h3 id="a11yT">Toegankelijkheid</h3>' +
+    w.innerHTML = '<div class="dialog a11y-dlg" role="dialog" aria-modal="true" aria-labelledby="a11yT"><h3 id="a11yT">Instellingen</h3>' +
+      '<label class="opt"><input type="checkbox" id="optSound"' + (S.sound ? " checked" : "") + '><span>Geluid<small>Geluidseffecten en de stem van de presentator.</small></span></label>' +
+      (P && P.mode === "expert" ? '<label class="opt"><input type="checkbox" data-act="toggle-timer"' + (S.timer ? " checked" : "") + '><span>Timer per vraag<small>' + TIMER_SECONDS + " seconden per vraag (Expert).</small></span></label>" : "") +
       '<label class="opt"><input type="checkbox" id="optSpeak"' + (S.speak ? " checked" : "") + '><span>Spreek vragen uit<small>De app leest elke vraag, de antwoorden en de uitleg hardop voor. Op de vraagpagina staat ook een knop “Lees voor”.</small></span></label>' +
       '<label class="opt"><input type="checkbox" id="optAuto"' + (autoOn() ? " checked" : "") + '><span>Automatisch doorgaan na een level<small>Na een resultaat ga je vanzelf verder. Zet dit uit als je liever zelf op de knop tikt.</small></span></label>' +
       '<p class="warn">Gebruik je al een schermlezer (VoiceOver of TalkBack)? Zet “Spreek vragen uit” dan uit, anders praten beide stemmen door elkaar.</p>' +
-      '<button class="btn block" data-d="ok">Klaar</button></div>';
+      '<div class="stack"><button class="btn ghost block" data-act="group" data-d="x">' + icon("users", 20) + "Groep &amp; duel</button>" +
+      (isStandalone() ? "" : '<button class="btn ghost block" data-act="install" data-d="x">Zet op beginscherm</button>') +
+      '<button class="btn ghost block" data-act="reset" data-d="x">' + icon("trash", 20) + "Voortgang van " + esc(P.name) + " wissen</button>" +
+      '<button class="btn block" data-d="ok">Klaar</button></div></div>';
     w.addEventListener("change", function (e) {
+      if (e.target.id === "optSound") { S.sound = e.target.checked; if (!S.sound) voiceStop(); }
       if (e.target.id === "optSpeak") {
         S.speak = e.target.checked;
         if (S.speak) { S.autoNext = false; const a = document.getElementById("optAuto"); if (a) a.checked = false; if (!("speechSynthesis" in window)) { announce("Voorlezen wordt niet ondersteund in deze browser."); } else speak("Voorlezen staat aan."); }
@@ -3550,21 +3612,22 @@ return exports;})();
       if (e.target.id === "optAuto") S.autoNext = e.target.checked;
       saveState();
     });
-    w.addEventListener("click", function (e) { if (e.target === w || e.target.closest("[data-d]")) { w.remove(); if (screen === "home") render(); } });
+    w.addEventListener("click", function (e) { if (e.target === w || e.target.closest("[data-d]")) { w.remove(); if (screen === "journey") render(); } });
     document.body.appendChild(w);
   }
 
   /* ───────────── Weergave ───────────── */
   function render() {
+    if (screen === "home") screen = "journey";
+    if (screen !== "journey") { const fl = document.getElementById("flyer"); if (fl) fl.remove(); }
     const prevA = a11yBefore(); speakStop();
-    stopTimer(); mgClear();
+    stopTimer(); mgClear(); idleStop();
     document.body.className = "";
     if (screen !== "result" && screen !== "chestopen" && screen !== "minigame") { const cel = document.getElementById("celebrate"); if (cel) cel.remove(); }
     const inDuelQuiz = screen === "quiz" && quiz && quiz.kind === "duel";
     if (P && P.group && (screen === "group" || screen === "duelresult" || inDuelQuiz)) openGroupSub();
     else closeGroupSub();
     if (screen === "welcome") app.innerHTML = viewWelcome();
-    else if (screen === "home") app.innerHTML = viewHome();
     else if (screen === "quiz") { app.innerHTML = viewQuiz(); afterQuizRender(); }
     else if (screen === "result") {
       app.innerHTML = viewResult();
@@ -3579,12 +3642,12 @@ return exports;})();
     else if (screen === "board") app.innerHTML = viewBoard();
     else if (screen === "group") app.innerHTML = viewGroup();
     else if (screen === "duelresult") app.innerHTML = viewDuelResult();
-    else if (screen === "journey") app.innerHTML = viewJourney();
+    else if (screen === "journey") { if (landFly) journeyLand = landFly.from; app.innerHTML = viewJourney(); }
     else if (screen === "chestopen") { app.innerHTML = viewChestOpen(); afterChestOpenRender(); }
     else if (screen === "minigame") app.innerHTML = viewMinigame();
     else if (screen === "album") app.innerHTML = viewAlbum();
     const bw = document.getElementById("badgesBtnWrap");
-    if (bw) bw.style.display = (screen === "home" || screen === "scores") ? "" : "none";
+    if (bw) bw.style.display = (screen === "journey" || screen === "scores") ? "" : "none";
     window.scrollTo({ top: 0 });
     if (screen === "journey") afterJourneyRender();
     a11yAfter(prevA);
@@ -3598,23 +3661,6 @@ return exports;})();
       const t = document.getElementById("autoTxt");
       if (t) t.textContent = "Ga door naar Niveau " + result.next + " (" + left + ")";
     }, 1000);
-  }
-
-  /* niveau-keuze voor een categorie */
-  function tierDialog(catId) {
-    const c = catById(catId), lv = P.mode, ts = tiersFor(lv, catId);
-    const w = document.createElement("div");
-    w.className = "dialog-wrap";
-    let h = '<div class="dialog" role="dialog" aria-modal="true"><h3>' + esc(c.title) + "</h3><p>Kies een niveau. Je speelt stap voor stap: haal een niveau (min. " + Math.round(PASS_PCT * 100) + "% goed) om het volgende te openen. " + (hasTier4(lv, catId) ? "Niveau 4 gaat open als je niveau 1-3 van deze categorie hebt gehaald (min. " + Math.round(PASS_PCT * 100) + "% goed)." : "Haal niveau 1-3 (min. " + Math.round(PASS_PCT * 100) + "% goed) voor de Meester-badge.") + "</p><div class=\"tier-list\">";
-    ts.forEach(function (t) {
-      const b = P.best[lv][bkey(catId, t)], locked = tierLocked(lv, catId, t), ok = tierPassed(lv, catId, t);
-      h += '<button class="tier-btn' + (locked ? " locked" : "") + '"' + (locked ? ' aria-disabled="true"' : ' data-act="start-tier" data-cat="' + catId + '" data-tier="' + t + '"') + '><span class="tier-n">' + (locked ? "🔒 " : "") + "Niveau " + t + "</span>" +
-        '<span class="tier-d">' + (locked ? '<span class="sr-only">Vergrendeld. </span>' + lockText(lv, catId, t) : ["Basis", "Gemiddeld", "Gevorderd", "Expert"][t - 1] + (ok ? " · ✓ gehaald" : "")) + "</span>" + miniStars(b ? b.stars : 0) + "</button>";
-    });
-    h += '</div><button class="btn ghost block" data-d="no">Annuleren</button></div>';
-    w.innerHTML = h;
-    w.addEventListener("click", function (e) { if (e.target === w || e.target.closest('[data-d="no"]')) w.remove(); });
-    document.body.appendChild(w);
   }
 
   function viewWelcome() {
@@ -3657,61 +3703,6 @@ return exports;})();
     return 0;
   }
 
-  function viewHome() {
-    const level = P.mode, isJunior = level === "junior";
-    const daily = P.daily[level][todayStr()];
-    let h = '<div class="topbar"><div class="brand"><span class="mini-logo">' + icon("moon", 22) + "</span>Islam Quiz</div>" +
-      '<div class="top-actions">' +
-      '<button class="icon-btn" data-act="a11y" aria-label="Toegankelijkheid: voorlezen en automatisch doorgaan">' + icon("access", 22) + "</button>" +
-      '<button class="icon-btn" data-act="toggle-sound" aria-label="' + (S.sound ? "Geluid uitzetten" : "Geluid aanzetten") + '">' + icon(S.sound ? "sound" : "mute", 22) + "</button>" +
-      '<button class="mode-chip ' + level + '" data-act="switch-mode" aria-label="Niveau wisselen. Nu: ' + (isJunior ? "Junior, tik voor Expert" : "Expert, tik voor Junior") + '">' +
-      icon(isJunior ? "smile" : "cap", 18) + (isJunior ? "Junior" : "Expert") + "</button></div></div>";
-
-    h += '<div class="hello"><div><h1>' + (isJunior ? "Hoi, " : "Assalamu ‘alaykum, ") + esc(P.name) + "!</h1>" +
-      "<p>" + (isJunior ? "Wat wil je vandaag leren?" : "Klaar om je kennis te testen?") + "</p></div>" +
-      '<button class="player-chip" data-act="players" aria-label="Wissel van speler">' + avatarHtml(P, 34) + "<span>Wissel</span></button></div>";
-
-    h += '<div class="stats">' +
-      '<div class="stat streak">' + icon("flame", 26) + "<b>" + currentStreak() + "</b><span>Dagen op rij</span></div>" +
-      '<div class="stat stars">' + icon("star", 26, "fill") + "<b>" + totalStars() + "</b><span>Sterren</span></div>" +
-      '<div class="stat played">' + icon("trophy", 26) + "<b>" + P.played + "</b><span>Quizzen</span></div></div>";
-
-    h += '<button class="daily' + (daily ? " done" : "") + '" data-act="start-daily">' +
-      '<span class="badge">' + icon("calendar", 30) + "</span><span>" +
-      "<h2>Quiz van de Dag</h2><p>" +
-      (daily ? "Vandaag gespeeld: " + daily.score + "/" + daily.total + ". Speel opnieuw!" : "5 vragen, elke dag nieuw!") +
-      '</p></span><span class="go">' + icon("right", 22) + "</span></button>";
-
-    h += '<button class="journey-btn" data-act="journey"><span class="jb-ic">' + icon("map", 28) + '</span><span class="jb-tx"><b>Start de Reis</b><small>12+ korte levels per land met sterren en schatkisten</small></span>' + icon("right", 22) + "</button>";
-    h += '<button class="journey-btn album-btn" data-act="album"><span class="jb-ic">' + icon("layers", 28) + '</span><span class="jb-tx"><b>Kwartet-album</b><small>' + albumOwned() + ' van ' + albumTotal() + ' verzamelkaarten gevonden</small></span></button>';
-    h += '<div class="btn-row"><button class="scores-btn" data-act="scores">' + icon("trophy", 22) + "<span>Mijn Scores</span>" + icon("right", 20) + "</button>" +
-      (S.players.length > 1 ? '<button class="scores-btn" data-act="board">' + icon("users", 22) + "<span>Scorebord</span>" + icon("right", 20) + "</button>" : "") +
-      '<button class="scores-btn" data-act="group">' + icon("users", 22) + "<span>" + (P.group ? "Mijn groep" : "Groep & duel") + "</span>" + icon("right", 20) + "</button></div>";
-
-    if (!isJunior) {
-      h += '<label class="timer-toggle"><span style="color:#b5651f">' + icon("timer", 26) + "</span>" +
-        '<span class="txt">Timer per vraag<small>' + TIMER_SECONDS + " seconden per vraag (optioneel)</small></span>" +
-        '<span class="switch"><input type="checkbox" data-act="toggle-timer" ' + (S.timer ? "checked" : "") + ' aria-label="Timer per vraag"></span></label>';
-    }
-
-    h += '<div class="section-title">' + icon("layers", 20) + "Kies een categorie</div><div class=\"cat-grid\">";
-    CATEGORIES.forEach(function (c) {
-      const b = P.best[level][c.id];
-      const nt = tiersFor(level, c.id).length;
-      const n = poolFor(level, c.id, 1).length;
-      h += '<button class="cat-card" style="--accent:' + c.color + '" data-act="start-cat" data-cat="' + c.id + '" aria-label="' + esc(c.title + ". " + c.subtitle + ". " + (nt > 1 ? nt + " niveaus. " : n + " vragen. ") + (b ? "Beste score " + b.score + " van " + b.total + ", " + b.stars + " van 3 sterren." : "Nog niet gespeeld.")) + '">' +
-        '<span class="badge">' + icon(CAT_ICON[c.icon] || "sparkles", 28) + "</span>" +
-        "<span><h3>" + esc(c.title) + "</h3><p>" + esc(c.subtitle) + "</p></span>" +
-        '<span class="meta">' + miniStars(b ? b.stars : 0) +
-        '<div class="best">' + (nt > 1 ? nt + " niveaus" : b ? "Beste: " + b.score + "/" + b.total : n + " vragen") +
-        (P.badges && P.badges[badgeId(level, c.id, "master")] ? " ۞" : "") + (P.badges && P.badges[badgeId(level, c.id, "grand")] ? " 👑" : "") + "</div></span></button>";
-    });
-    h += "</div>";
-    h += '<div class="footer-actions">' + (isStandalone() ? "" : '<button class="link-btn" data-act="install">Zet op beginscherm</button>') +
-      '<button class="link-btn" data-act="reset">Voortgang van ' + esc(P.name) + " wissen</button></div>";
-    return h;
-  }
-
   function viewQuiz() {
     const it = quiz.items[quiz.idx], q = it.q, total = quiz.items.length;
     const cat = catById(q.category);
@@ -3736,12 +3727,15 @@ return exports;})();
     h += '<div class="q-card' + (quiz.answered ? " static" : "") + '" id="qcard" role="group" tabindex="-1" aria-labelledby="qh" aria-describedby="qopts"><div class="q-num">' + (isDaily ? "Dagelijkse vraag " : "Vraag ") + (quiz.idx + 1) + " van " + total + "</div>" +
       '<h2 id="qh">' + esc(q.question) + "</h2>" + (isMulti(q) ? '<div class="multi-hint">Meerdere antwoorden mogelijk: kies álle juiste antwoorden</div>' : "") + (q.questionArabic ? ar(q.questionArabic) : "") +
       '<span class="sr-only" id="qopts">' + (isMulti(q) ? "Meerdere antwoorden mogelijk. " : "") + "Antwoordopties: " + it.order.map(function (o, p) { return LETTERS[p] + ": " + esc(q.options[o]); }).join(". ") + "</span>" +
-      (S.speak && "speechSynthesis" in window ? '<button class="btn ghost small read-btn" data-act="read-aloud">' + icon("sound", 18) + "Lees voor</button>" : "") + "</div>";
+      (S.speak && "speechSynthesis" in window ? '<button class="btn ghost small read-btn" data-act="read-aloud">' + icon("sound", 18) + "Lees voor</button>" : "") +
+      (quiz.answered ? "" : '<button class="hint-btn' + (it.hintShown ? " used" : "") + '" id="hintBtn" data-act="hint" aria-label="' + (it.hintShown ? "Hint is al gebruikt" : "Hint tonen") + '"' + (it.hintShown ? " disabled" : "") + '><span aria-hidden="true">💡</span></button>') + "</div>" +
+      (it.hintShown && !quiz.answered ? '<div class="hint-box" id="hintBox" role="note"><b>💡 Hint:</b> ' + esc(hintText(it)) + "</div>" : "");
 
     h += '<div class="options' + (quiz.answered ? " answered" : "") + '" role="group" aria-label="Antwoordopties">';
     const multi = isMulti(q), aset = answerSet(q), pset = it.picked === null || it.picked === undefined ? [] : Array.isArray(it.picked) ? it.picked : [it.picked];
     it.order.forEach(function (orig, pos) {
       let cls = "option", mark = "";
+      if (!quiz.answered && it.hintShown && it.hintOpt === orig) cls += " eliminated";
       if (quiz.answered) {
         if (aset.indexOf(orig) !== -1) { cls += " correct"; mark = icon("check", 24); }
         else if (pset.indexOf(orig) !== -1) { cls += " wrong"; mark = icon("x", 24); }
@@ -3783,7 +3777,46 @@ return exports;})();
     return h;
   }
 
+  /* slimme hint: bij aarzeling (Junior 11 s, Expert 15 s zonder aanraking) gaat het lampje bewegen */
+  let idleT = null, idleOn = false;
+  function idleStop() { clearTimeout(idleT); idleOn = false; }
+  function idleStart() {
+    idleStop(); if (!quiz || quiz.answered || quiz.kind === "duel") return;
+    const it = quiz.items[quiz.idx]; if (it.hintShown) return;
+    idleOn = true; const key = quiz.idx;
+    idleT = setTimeout(function () {
+      if (!idleOn || screen !== "quiz" || !quiz || quiz.answered || quiz.idx !== key) return;
+      const b = document.getElementById("hintBtn"); if (b && !b.disabled) { b.classList.add("nudge"); announce("Twijfel je? Er is een hint beschikbaar. Tik op het lampje."); }
+    }, quiz.level === "expert" ? 15000 : 11000);
+  }
+  function idleReset() {
+    if (!idleOn) return;
+    const b = document.getElementById("hintBtn"); if (b) b.classList.remove("nudge");
+    idleStart();
+  }
+  ["pointerdown", "keydown", "touchstart", "wheel"].forEach(function (ev) { document.addEventListener(ev, idleReset, { passive: true, capture: true }); });
+  window.addEventListener("scroll", idleReset, { passive: true });
+  function hintText(it) {
+    if (it.q.hint) return it.q.hint;
+    return "“" + it.q.options[it.hintOpt] + "” is niet het juiste antwoord.";
+  }
+  function showHint() {
+    if (!quiz || quiz.answered) return;
+    const it = quiz.items[quiz.idx]; if (it.hintShown) return;
+    const aset = answerSet(it.q), wrong = it.order.filter(function (o) { return aset.indexOf(o) === -1; });
+    if (!wrong.length) return;
+    it.hintOpt = wrong[Math.floor(Math.random() * wrong.length)]; it.hintShown = true;
+    play("click"); idleStop();
+    const b = document.getElementById("hintBtn"); if (b) { b.classList.remove("nudge"); b.classList.add("used"); b.disabled = true; b.setAttribute("aria-label", "Hint is al gebruikt"); }
+    const card = document.getElementById("qcard");
+    if (card && !document.getElementById("hintBox")) { const d = document.createElement("div"); d.className = "hint-box"; d.id = "hintBox"; d.setAttribute("role", "note"); d.innerHTML = "<b>💡 Hint:</b> " + esc(hintText(it)); card.insertAdjacentElement("afterend", d); }
+    const opts = document.querySelectorAll('.option[data-act="answer"]'); const pos = it.order.indexOf(it.hintOpt);
+    if (opts[pos]) { opts[pos].classList.add("eliminated"); opts[pos].setAttribute("aria-disabled", "true"); }
+    announce("Hint: " + hintText(it)); if (speakOn()) speak("Hint. " + hintText(it));
+    const bx = document.getElementById("hintBox"); if (bx) bx.setAttribute("tabindex", "-1");
+  }
   function afterQuizRender() {
+    idleStart();
     if (quiz.answered) {
       const fb = document.getElementById("feedback");
       if (fb && fb.scrollIntoView) setTimeout(function () { fb.scrollIntoView({ behavior: "smooth", block: "center" }); }, 80);
@@ -3811,6 +3844,7 @@ return exports;})();
     if (!quiz || quiz.answered) return;
     stopTimer();
     const it = quiz.items[quiz.idx];
+    if (typeof pos === "number" && it.hintShown && it.order[pos] === it.hintOpt) { if (quiz.level === "expert" && S.timer && quiz.kind !== "duel") startTimer(); return; }
     if (isMulti(it.q) && pos !== null) {
       if (pos !== "check") { /* aan- of uitvinken zonder het scherm opnieuw op te bouwen (timer blijft lopen) */
         it.sel = it.sel || [];
@@ -3892,7 +3926,9 @@ return exports;})();
         jIdx: ji, jCount: n, passed: passed, firstPass: first,
         chestReady: first && mile,
         landDone: first && jLandStats(lv, cid).done,
+        prevStars: prev ? prev.stars || 0 : 0,
       };
+      { const li = CATEGORIES.findIndex(function (x) { return x.id === cid; }); landFly = jr.landDone && passed && li + 1 < CATEGORIES.length ? { from: li, to: li + 1 } : null; }
     } else if (quiz.kind === "daily") {
       const prev = P.daily[quiz.level][todayStr()];
       if (!prev || score > prev.score) P.daily[quiz.level][todayStr()] = { score: score, total: total };
@@ -3902,6 +3938,16 @@ return exports;})();
         isRecord = !!prev || score === total; // nieuw record t.o.v. eerdere poging
         P.best[quiz.level][bk] = { score: score, total: total, stars: stars };
       }
+    }
+    /* Kennis-XP en edelstenen (per modus gescheiden) */
+    let xpGain = 0, gemGain = 0;
+    if (quiz.kind === "journey" || quiz.kind === "daily") {
+      xpGain = score * (XP_PER[quiz.level] || 10);
+      if (jr) {
+        const extra = Math.max(0, stars - (jr.prevStars || 0));
+        xpGain += extra * 10; gemGain = (jr.firstPass ? 5 : 0) + extra * 3;
+      } else gemGain = stars;
+      addReward(quiz.level, xpGain, gemGain);
     }
     P.played++;
     const newBadges = quiz.kind === "category" ? syncBadges() : [];
@@ -3919,6 +3965,7 @@ return exports;})();
 
     result = { kind: quiz.kind, catId: quiz.catId, level: quiz.level, tier: quiz.tier || 1, next: nextTier(quiz, stars), score: score, total: total, stars: stars, record: isRecord, items: quiz.items, newBadges: newBadges, open4: open4, noAuto: (journeyReturn && quiz.kind === "category") || !autoOn() };
     if (jr) Object.assign(result, jr, { noAuto: !autoOn() });
+    result.xpGain = xpGain; result.gemGain = gemGain; flyerPending = true;
     screen = "result";
     if (jr) {
       play(jr.passed ? "fanfare" : "lose");
@@ -3967,7 +4014,7 @@ return exports;})();
     h += shareBtn(shareScoreText(r));
     if (journeyReturn && r.kind === "category") h += '<button class="btn gold" data-act="journey-back">' + icon("map", 20) + "Terug naar De Reis</button>";
     h += '<button class="btn" data-act="retry">' + icon("retry", 20) + "Opnieuw Proberen</button>" +
-      '<button class="btn gold" data-act="home">' + icon("layers", 20) + "Kies Andere Categorie</button>" +
+      '<button class="btn gold" data-act="home">' + icon("layers", 20) + "Terug naar De Reis</button>" +
       '<button class="btn ghost" data-act="review">' + icon("list", 20) + "Bekijk Antwoorden</button></div></section>";
     return h;
   }
@@ -3975,12 +4022,13 @@ return exports;})();
 
   function viewScores() {
     const levels = [["junior", "Junior Modus", "smile"], ["expert", "Expert Modus", "cap"]];
-    let h = '<div class="topbar"><button class="icon-btn" data-act="home" aria-label="Terug naar home">' + icon("left", 22) + "</button>" +
+    let h = '<div class="topbar"><button class="icon-btn" data-act="home" aria-label="Terug naar De Reis">' + icon("left", 22) + "</button>" +
       '<div class="brand">' + icon("trophy", 24) + "Mijn Scores</div><span style=\"width:44px\"></span></div>";
     h += '<div class="stats">' +
       '<div class="stat streak">' + icon("flame", 26) + "<b>" + currentStreak() + "</b><span>Reeks nu</span></div>" +
       '<div class="stat stars">' + icon("star", 26, "fill") + "<b>" + totalStars() + "</b><span>Sterren " + modeName(P.mode) + "</span></div>" +
       '<div class="stat played">' + icon("trophy", 26) + "<b>" + P.played + "</b><span>Quizzen</span></div></div>";
+    h += '<div class="stats"><div class="stat xp"><b>' + xpAt(P, P.mode) + "</b><span>Kennis-XP " + modeName(P.mode) + '</span></div><div class="stat gems">' + gemSvg(26) + "<b>" + gemsAt(P, P.mode) + "</b><span>Edelstenen " + modeName(P.mode) + "</span></div></div>";
     h += '<div class="board-share"><a class="btn wa block" href="' + waLink(shareScoresText(P.mode)) + '" target="_blank" rel="noopener">' + icon("chat", 20) + "Deel via WhatsApp / Socials</a>" +
       "<small>Je deelt alleen je " + modeName(P.mode) + "-scores en -sterren (actieve modus).</small></div>";
     h += '<p class="score-note">Langste reeks: <b>' + (P.streak.max || 0) + (P.streak.max === 1 ? " dag" : " dagen") + "</b></p>";
@@ -4005,7 +4053,7 @@ return exports;})();
   /* deelbericht "Mijn Scores": uitsluitend gegevens van de actieve modus (lv); quizzen en reeks worden niet gedeeld */
   function shareScoresText(lv) {
     const pct = avgPct(P, lv);
-    let t = "🌙 Islam Quiz – mijn scores (" + modeName(lv) + ")\n⭐ " + starsAt(P, lv) + " sterren" + (pct === null ? "" : " · gemiddeld " + pct + "% goed");
+    let t = "🌙 Islam Quiz – mijn scores (" + modeName(lv) + ")\n⭐ " + starsAt(P, lv) + " sterren · " + xpAt(P, lv) + " XP · 💎 " + gemsAt(P, lv) + (pct === null ? "" : " · gemiddeld " + pct + "% goed");
     CATEGORIES.forEach(function (c) {
       let best = null; const js = jLandStats(lv, c.id);
       tiersFor(lv, c.id).forEach(function (tr) { const b = P.best[lv][bkey(c.id, tr)]; if (b && (!best || b.score / b.total > best.score / best.total)) best = b; });
@@ -4023,6 +4071,14 @@ return exports;})();
     let t = 0; Object.keys(p.best[lv]).forEach(function (k) { t += p.best[lv][k].stars || 0; });
     return t + jStarTotal(p, lv);
   }
+  /* totale score op het scorebord: Kennis-XP + 20 per ster (per modus) */
+  function scoreAt(p, lv) { return xpAt(p, lv) + starsAt(p, lv) * 20; }
+  const XP_PER = { junior: 10, expert: 15 };   /* Kennis-XP per goed antwoord */
+  const GEMS_CHEST = 25;                        /* edelstenen voor een uitgespeelde schatkist */
+  function xpAt(p, lv) { return (p.xp && p.xp[lv]) || 0; }
+  function gemsAt(p, lv) { return (p.gems && p.gems[lv]) || 0; }
+  function addReward(lv, xp, gems) { if (!P.xp) P.xp = { junior: 0, expert: 0 }; if (!P.gems) P.gems = { junior: 0, expert: 0 }; P.xp[lv] = (P.xp[lv] || 0) + (xp || 0); P.gems[lv] = (P.gems[lv] || 0) + (gems || 0); }
+  function gemSvg(size) { return '<svg class="gem-ic" width="' + size + '" height="' + size + '" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3h12l4 6-10 12L2 9z" fill="#35d0ff" stroke="#0b7aa8" stroke-width="1.5" stroke-linejoin="round"/><path d="M2 9h20M9 3 7 9l5 12 5-12-2-6" fill="none" stroke="#e6fbff" stroke-width="1.2" stroke-linejoin="round"/></svg>'; }
   function allStars(p) { return starsAt(p, "junior") + starsAt(p, "expert"); }
   function avgPct(p, lv) {
     const ks = Object.keys(p.best[lv]);
@@ -4051,7 +4107,7 @@ return exports;})();
   }
 
   function viewPlayers() {
-    let h = '<div class="topbar">' + (P && P.mode ? '<button class="icon-btn" data-act="home" aria-label="Terug naar home">' + icon("left", 22) + "</button>" : '<span style="width:44px"></span>') +
+    let h = '<div class="topbar">' + (P && P.mode ? '<button class="icon-btn" data-act="home" aria-label="Terug naar De Reis">' + icon("left", 22) + "</button>" : '<span style="width:44px"></span>') +
       '<div class="brand">' + icon("users", 24) + "Wie speelt er?</div><span style=\"width:44px\"></span></div>";
     h += '<div class="player-list">';
     S.players.forEach(function (p) {
@@ -4264,8 +4320,8 @@ return exports;})();
   }
   /* schatkisten: na elke J_MILE levels (en na het laatste level). De kist is "ready" (springt!) zodra het level gehaald is
      en blijft dat tot de speler hem opent en de minigame uitspeelt. */
-  const MG_GAMES = ["memory", "kwartet", "puzzel"];
-  const MG_NAME = { memory: "Memory", kwartet: "Kwartet-pakje", puzzel: "Puzzel" };
+  const MG_GAMES = ["memory", "kwartet", "puzzel", "woord"];
+  const MG_NAME = { memory: "Memory", kwartet: "Kwartet-pakje", puzzel: "Puzzel", woord: "Woordpuzzel" };
   function chestRec(level, catId, i) {
     const m = P && P.chests && P.chests[level] && P.chests[level][catId];
     return (m && m[i]) || null;
@@ -4359,6 +4415,10 @@ return exports;})();
   }
 
   /* ───────────── Resultaat van een reis-level ───────────── */
+  function rewardsHtml(r) {
+    if (!r.xpGain && !r.gemGain) return "";
+    return '<div class="rewards" role="status"><span class="rw xp">+' + r.xpGain + ' Kennis-XP</span>' + (r.gemGain ? '<span class="rw gem">+' + r.gemGain + " " + gemSvg(20) + '<span class="sr-only">edelstenen</span></span>' : "") + "</div>";
+  }
   function viewJourneyResult(r) {
     const need = Math.ceil(r.total * PASS_PCT);
     let title, msg, arabicTxt;
@@ -4374,6 +4434,7 @@ return exports;})();
     h += '<div class="tier-tag">' + esc(catById(r.catId).title) + " · Level " + (r.jIdx + 1) + " van " + r.jCount + "</div>";
     h += ar(arabicTxt) + "<h1>" + esc(title) + '</h1><p class="msg">' + esc(msg) + "</p>";
     if (r.record) h += '<div class="badge-new">' + icon("trophy", 18) + "Nieuw record!</div>";
+    h += rewardsHtml(r);
     if (r.chestReady) h += '<div class="chest-win ready"><svg viewBox="-34 -36 68 62" width="84" height="76" aria-hidden="true"><g class="chest-bounce">' + chest(0, 4, "closed", 1.3, "stop") + "</g></svg>" +
       "<span><b>Een schatkist wacht op je!</b>Tik op de springende kist op de kaart om hem te openen.</span></div>";
     if (r.landDone) h += '<div class="land-win"><span class="lw-flag">' + FLAG_SVG + "</span><span><b>Land voltooid!</b>Je hebt alle " + r.jCount + " levels van " + esc(catById(r.catId).title) + " gehaald.</span></div>";
@@ -4623,8 +4684,8 @@ return exports;})();
       '<button class="btn gold" data-act="mg-open-now" id="coBtn">' + icon("sparkles", 20) + "Open de schatkist</button>" +
       '<button class="btn ghost" data-act="journey-back">Later openen</button></section>';
   }
-  function mgIcon(g) { return g === "memory" ? "🃏" : g === "kwartet" ? "🎴" : "🧩"; }
-  function mgBlurb(g) { return g === "memory" ? "Vind de paartjes mooie plaatjes." : g === "kwartet" ? "Pak je verzamelkaarten uit en vul je album." : "Leg de grote afbeelding weer in elkaar."; }
+  function mgIcon(g) { return g === "memory" ? "🃏" : g === "kwartet" ? "🎴" : g === "woord" ? "🔤" : "🧩"; }
+  function mgBlurb(g) { return g === "woord" ? "Zet letters in de goede volgorde of zoek verborgen woorden." : g === "memory" ? "Vind de paartjes mooie plaatjes." : g === "kwartet" ? "Pak je verzamelkaarten uit en vul je album." : "Leg de grote afbeelding weer in elkaar."; }
   function afterChestOpenRender() {
     mgClear();
     mgLater(function () { if (screen === "chestopen") chestOpenNow(); }, 1700);
@@ -4646,6 +4707,7 @@ return exports;})();
     mgClear();
     if (mg.game === "memory") mgInitMemory();
     else if (mg.game === "puzzel") mgInitPuzzle();
+    else if (mg.game === "woord") mgInitWord();
     else mgInitKwartet();
     screen = "minigame"; render();
   }
@@ -4659,16 +4721,17 @@ return exports;})();
     if (!mg) return "";
     if (mg.game === "memory") return mgViewMemory();
     if (mg.game === "puzzel") return mgViewPuzzle();
+    if (mg.game === "woord") return mgViewWord();
     return mgViewKwartet();
   }
   function mgFinishCommon() {
-    if (!mg.saved) { mg.saved = true; chestSave(mg.level, mg.catId, mg.i, mg.game); }
+    if (!mg.saved) { mg.saved = true; chestSave(mg.level, mg.catId, mg.i, mg.game); addReward(mg.level, 0, GEMS_CHEST); saveState(); }
     play("win"); celebrate(true);
   }
   function mgDonePanel(title, msg, extra) {
     const c = catById(mg.catId);
     const txt = "🌙 Islam Quiz (" + modeName(mg.level) + "): schatkist geopend bij " + c.title + "! " + mgIcon(mg.game) + " " + MG_NAME[mg.game] + " gespeeld. " + modeName(mg.level) + "-album: " + albumOwned(mg.level) + "/" + albumTotal() + " kaarten.\nLukt het jou ook? " + SITE_URL;
-    return '<div class="mg-done" role="status"><div class="mg-done-star">' + GOLD_STAR_SVG + "</div><h2>" + esc(title) + "</h2><p>" + esc(msg) + "</p>" + (extra || "") +
+    return '<div class="mg-done" role="status"><div class="mg-done-star">' + GOLD_STAR_SVG + "</div><h2>" + esc(title) + "</h2><p>" + esc(msg) + "</p>" + '<div class="rewards"><span class="rw gem">+' + GEMS_CHEST + " " + gemSvg(20) + '<span class="sr-only">edelstenen</span></span></div>' + (extra || "") +
       '<div class="result-actions"><button class="btn gold" data-act="journey-back">' + icon("map", 20) + "Terug naar de kaart</button>" +
       '<button class="btn ghost" data-act="album">' + icon("layers", 20) + "Mijn Kwartet-album</button>" + shareBtn(txt, "Deel via WhatsApp") + "</div></div>";
   }
@@ -4824,6 +4887,152 @@ return exports;})();
         if (end) { end.innerHTML = mgDonePanel(nw ? nw + (nw === 1 ? " nieuwe kaart!" : " nieuwe kaarten!") : "Allemaal dubbel!", "Je album heeft nu " + albumOwned() + " van de " + albumTotal() + " kaarten." + (nw ? "" : " Volgende keer meer geluk, in shaa Allah."), extra); end.scrollIntoView({ behavior: reducedMotion() ? "auto" : "smooth", block: "center" }); }
       }, 700);
     }
+  }
+
+
+  /* ── Woordpuzzel: letters rangschikken en woordzoeker (Junior: basisbegrippen, Expert: diepere termen) ── */
+  const WORDS_JR = [["MOSKEE", "Het gebedshuis van moslims."], ["KORAN", "Het heilige boek van de islam."], ["RAMADAN", "De maand waarin moslims vasten."], ["BIDDEN", "Vijf keer per dag doe je dit."], ["ZAKAAT", "Een deel van je geld delen met mensen die het nodig hebben."], ["MEKKA", "De stad waar de Ka’ba staat."], ["MEDINA", "De stad van de Profetenmoskee."], ["VASTEN", "Overdag niet eten en drinken in Ramadan."], ["IMAAM", "Hij leidt het gebed in de moskee."], ["ISLAM", "De godsdienst van moslims."], ["ADHAAN", "De oproep tot het gebed."], ["KAABA", "Het zwarte gebouw in Mekka."], ["WOEDOE", "De wassing vóór het gebed."], ["HADJ", "De bedevaart naar Mekka."]];
+  const WORDS_EX = [["SHAHADA", "Het geloofsgetuigenis."], ["HADITH", "Overgeleverde woorden en daden van de Profeet ﷺ."], ["SUNNA", "De levenswijze van de Profeet ﷺ."], ["TAWHID", "De eenheid van Allah."], ["MIHRAAB", "De nis in de moskee die de gebedsrichting aanwijst."], ["MINBAR", "De preekstoel in de moskee."], ["QIBLA", "De richting van de Ka’ba waarheen we bidden."], ["HIJRA", "De verhuizing van de Profeet ﷺ van Mekka naar Medina."], ["ZAMZAM", "De bron bij de Ka’ba."], ["ARAFAT", "De vlakte waar de pelgrims op de negende dag van de hadj staan."], ["TARAWIEH", "Extra nachtgebed in Ramadan."], ["IFTAAR", "De maaltijd waarmee je het vasten verbreekt."], ["SADAQA", "Vrijwillige gift uit liefde voor Allah."], ["MUEZZIN", "Degene die de adhaan reciteert."], ["KALIEF", "Opvolger en leider van de moslims."], ["SOERA", "Een hoofdstuk van de Koran."]];
+  function wzPick(list, n, maxLen) {
+    const ok = list.filter(function (w) { return !maxLen || w[0].length <= maxLen; });
+    return shuffle(ok.slice(), Math.random).slice(0, n);
+  }
+  function mgInitWord() {
+    const junior = mg.level === "junior", ci = Math.max(0, CATEGORIES.findIndex(function (x) { return x.id === mg.catId; })), k = Math.floor(mg.i / J_MILE) + ci;
+    mg.sub = Math.floor(k / MG_GAMES.length) % 2 === 0 ? "anagram" : "zoeker";
+    mg.done = false; mg.moves = 0;
+    if (mg.sub === "anagram") {
+      mg.words = wzPick(junior ? WORDS_JR : WORDS_EX, junior ? 3 : 4, junior ? 7 : 8); mg.wi = 0; wzNextWord();
+    } else wzInitSearch();
+  }
+  /* — letters rangschikken — */
+  function wzNextWord() {
+    const w = mg.words[mg.wi][0]; let ch;
+    do { ch = shuffle(w.split(""), Math.random); } while (ch.join("") === w);
+    mg.tiles = ch; mg.used = ch.map(function () { return false; }); mg.slots = w.split("").map(function () { return -1; }); mg.hinted = false; mg.locked = false;
+  }
+  function wzAnagramHtml() {
+    const w = mg.words[mg.wi], word = w[0];
+    let h = '<p class="wz-clue"><b>Woord ' + (mg.wi + 1) + " van " + mg.words.length + ":</b> " + esc(w[1]) + " <span class=\"wz-len\">(" + word.length + " letters)</span></p>";
+    h += '<div class="wz-slots" role="group" aria-label="Jouw woord">';
+    mg.slots.forEach(function (t, k) {
+      h += t === -1 ? '<span class="wz-slot empty" role="img" aria-label="Lege plek ' + (k + 1) + '"></span>'
+        : '<button class="wz-slot' + (mg.locked ? " ok" : "") + '" data-act="wz-slot" data-k="' + k + '" aria-label="Plek ' + (k + 1) + ": " + mg.tiles[t] + '. Tik om terug te zetten"' + (mg.locked ? " disabled" : "") + ">" + mg.tiles[t] + "</button>";
+    });
+    h += '</div><div class="wz-tiles" role="group" aria-label="Letters">';
+    mg.tiles.forEach(function (c, k) { h += '<button class="wz-tile' + (mg.used[k] ? " used" : "") + '" data-act="wz-tile" data-k="' + k + '" aria-label="Letter ' + c + '"' + (mg.used[k] || mg.locked ? " disabled" : "") + ">" + c + "</button>"; });
+    h += '</div><div class="wz-tools"><button class="btn ghost small" data-act="wz-hint"' + (mg.hinted || mg.locked ? " disabled" : "") + ">💡 Eerste letter</button><button class=\"btn ghost small\" data-act=\"wz-shuffle\"" + (mg.locked ? " disabled" : "") + ">" + icon("retry", 16) + " Husselen</button></div>";
+    return h;
+  }
+  function wzTile(k) {
+    if (mg.locked || mg.used[k]) return;
+    const e = mg.slots.indexOf(-1); if (e === -1) return;
+    mg.slots[e] = k; mg.used[k] = true; play("click");
+    if (mg.slots.indexOf(-1) === -1) return wzCheckAnagram();
+    wzRedraw();
+  }
+  function wzSlot(k) { if (mg.locked) return; const t = mg.slots[k]; if (t === -1) return; mg.slots[k] = -1; mg.used[t] = false; play("click"); wzRedraw(); }
+  function wzHint() {
+    if (mg.locked || mg.hinted) return;
+    const word = mg.words[mg.wi][0];
+    /* zet de eerste letter goed: maak plek 1 leeg, zoek de juiste tegel */
+    mg.slots.forEach(function (t) { if (t !== -1) mg.used[t] = false; }); mg.slots = mg.slots.map(function () { return -1; });
+    const tk = mg.tiles.indexOf(word[0]); mg.slots[0] = tk; mg.used[tk] = true; mg.hinted = true; play("click");
+    announce("De eerste letter is " + word[0] + "."); wzRedraw();
+  }
+  function wzShuffle() {
+    if (mg.locked) return;
+    mg.slots = mg.slots.map(function () { return -1; }); mg.used = mg.tiles.map(function () { return false; });
+    const w = mg.words[mg.wi][0]; let ch; do { ch = shuffle(mg.tiles.slice(), Math.random); } while (ch.join("") === w);
+    mg.tiles = ch; play("click"); wzRedraw();
+  }
+  function wzCheckAnagram() {
+    const guess = mg.slots.map(function (t) { return mg.tiles[t]; }).join(""), word = mg.words[mg.wi][0];
+    mg.moves++;
+    if (guess === word) {
+      mg.locked = true; play("correct"); wzRedraw(); announce("Goed! " + word + ".", true);
+      mgLater(function () {
+        if (screen !== "minigame" || !mg || mg.sub !== "anagram") return;
+        mg.wi++;
+        if (mg.wi >= mg.words.length) { mg.done = true; mgFinishCommon(); const end = document.getElementById("mgEnd"); if (end) { end.innerHTML = mgDonePanel("Woordmeester!", "Alle " + mg.words.length + " woorden goed, in " + mg.moves + " pogingen."); end.scrollIntoView({ behavior: reducedMotion() ? "auto" : "smooth", block: "center" }); } const a = document.getElementById("wzArea"); if (a) a.innerHTML = ""; return; }
+        wzNextWord(); wzRedraw();
+      }, 1100);
+    } else {
+      mg.locked = true; play("wrong"); announce("Niet juist, probeer het nog eens.", true);
+      const sl = document.querySelector(".wz-slots"); if (sl) sl.classList.add("shake");
+      mgLater(function () {
+        if (screen !== "minigame" || !mg) return;
+        mg.slots = mg.slots.map(function () { return -1; }); mg.used = mg.tiles.map(function () { return false; }); mg.locked = false; wzRedraw();
+      }, 750);
+    }
+  }
+  /* — woordzoeker — */
+  function wzInitSearch() {
+    const junior = mg.level === "junior", n = junior ? 8 : 10, count = junior ? 4 : 6;
+    const dirs = junior ? [[0, 1], [1, 0]] : [[0, 1], [1, 0], [1, 1], [0, -1], [-1, 0]];
+    for (let attempt = 0; attempt < 60; attempt++) {
+      const list = wzPick(junior ? WORDS_JR : WORDS_EX, count, n).sort(function (a, b) { return b[0].length - a[0].length; });
+      const grid = []; for (let r = 0; r < n; r++) { grid.push([]); for (let c = 0; c < n; c++) grid[r].push(""); }
+      let okAll = true; const placed = [];
+      for (let wi = 0; wi < list.length && okAll; wi++) {
+        const word = list[wi][0]; let ok = false;
+        for (let t = 0; t < 200 && !ok; t++) {
+          const d = dirs[Math.floor(Math.random() * dirs.length)], r0 = Math.floor(Math.random() * n), c0 = Math.floor(Math.random() * n);
+          const r1 = r0 + d[0] * (word.length - 1), c1 = c0 + d[1] * (word.length - 1);
+          if (r1 < 0 || r1 >= n || c1 < 0 || c1 >= n) continue;
+          let fit = true; for (let k = 0; k < word.length; k++) { const g = grid[r0 + d[0] * k][c0 + d[1] * k]; if (g !== "" && g !== word[k]) { fit = false; break; } }
+          if (!fit) continue;
+          for (let k = 0; k < word.length; k++) grid[r0 + d[0] * k][c0 + d[1] * k] = word[k];
+          placed.push({ word: word, clue: list[wi][1], r0: r0, c0: c0, dr: d[0], dc: d[1], found: false }); ok = true;
+        }
+        if (!ok) okAll = false;
+      }
+      if (!okAll) continue;
+      const abc = "ABDEHIKLMNORSTUWZ";
+      for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (grid[r][c] === "") grid[r][c] = abc[Math.floor(Math.random() * abc.length)];
+      mg.grid = grid; mg.n = n; mg.placed = placed; mg.sel = null; mg.foundCells = {}; return;
+    }
+  }
+  function wzSearchHtml() {
+    const n = mg.n, junior = mg.level === "junior";
+    let h = '<p class="wz-clue">' + (junior ? "Zoek de woorden in het rooster. Tik op de eerste en op de laatste letter van een woord." : "Zoek de woorden bij de omschrijvingen. Tik op de eerste en op de laatste letter. Woorden staan ook schuin of achterstevoren.") + "</p>";
+    h += '<div class="wz-list" aria-label="Te vinden woorden"><ul>';
+    mg.placed.forEach(function (p) { h += '<li class="' + (p.found ? "found" : "") + '">' + (junior ? (p.found ? "✓ " : "") + "<b>" + (p.found ? esc(p.word) : esc(p.word)) + "</b>" : (p.found ? "✓ <b>" + esc(p.word) + "</b>" : "<span>" + esc(p.clue) + " <i>(" + p.word.length + " letters)</i></span>")) + (p.found ? '<span class="sr-only"> gevonden</span>' : "") + "</li>"; });
+    h += '</ul></div><div class="ws-grid" role="group" aria-label="Woordzoeker" style="--n:' + n + '">';
+    for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) {
+      const key = r + "," + c, on = mg.sel && mg.sel[0] === r && mg.sel[1] === c;
+      h += '<button class="ws-cell' + (mg.foundCells[key] ? " found" : "") + (on ? " sel" : "") + '" data-act="wz-cell" data-r="' + r + '" data-c="' + c + '" aria-label="Rij ' + (r + 1) + ", kolom " + (c + 1) + ": " + mg.grid[r][c] + (mg.foundCells[key] ? ", onderdeel van een gevonden woord" : "") + (on ? ", gekozen als begin" : "") + '">' + mg.grid[r][c] + "</button>";
+    }
+    return h + "</div>";
+  }
+  function wzCell(r, c) {
+    if (mg.done) return;
+    play("click");
+    if (!mg.sel) { mg.sel = [r, c]; return wzRedraw(); }
+    const r0 = mg.sel[0], c0 = mg.sel[1]; mg.sel = null;
+    const dr = Math.sign(r - r0), dc = Math.sign(c - c0), len = Math.max(Math.abs(r - r0), Math.abs(c - c0)) + 1;
+    const straight = (r === r0 || c === c0 || Math.abs(r - r0) === Math.abs(c - c0)) && len > 1;
+    let hit = null;
+    if (straight) {
+      let txt = ""; for (let k = 0; k < len; k++) txt += mg.grid[r0 + dr * k][c0 + dc * k];
+      const rev = txt.split("").reverse().join("");
+      hit = mg.placed.filter(function (p) { return !p.found && (p.word === txt || p.word === rev); })[0] || null;
+      if (hit) { hit.found = true; for (let k = 0; k < len; k++) mg.foundCells[(r0 + dr * k) + "," + (c0 + dc * k)] = true; }
+    }
+    if (hit) {
+      play("correct"); announce("Gevonden: " + hit.word + "!", true);
+      if (mg.placed.every(function (p) { return p.found; })) { mg.done = true; wzRedraw(); mgFinishCommon(); const end = document.getElementById("mgEnd"); if (end) { end.innerHTML = mgDonePanel("Alle woorden gevonden!", "Wat een scherpe ogen, " + P.name + "!"); end.scrollIntoView({ behavior: reducedMotion() ? "auto" : "smooth", block: "center" }); } return; }
+    } else { play("wrong"); announce("Dat is geen woord uit de lijst. Probeer opnieuw.", true); }
+    wzRedraw();
+  }
+  function mgViewWord() {
+    return mgTop("Woordpuzzel") + '<section class="mg mg-word"><p class="mg-hint" id="mgInfo" aria-live="polite">' + (mg.sub === "anagram" ? "Zet de letters in de goede volgorde." : "Vind alle verborgen woorden!") + '</p><div id="wzArea">' + (mg.sub === "anagram" ? wzAnagramHtml() : wzSearchHtml()) + '</div><div id="mgEnd"></div></section>';
+  }
+  function wzRedraw() {
+    const a = document.getElementById("wzArea"); if (!a) return;
+    const ae = document.activeElement, sg = ae && a.contains(ae) ? sigOf(ae.closest("[data-act]")) : null;
+    a.innerHTML = mg.sub === "anagram" ? wzAnagramHtml() : wzSearchHtml();
+    if (sg) { let t = a.querySelector(sg); if (!t || t.disabled) t = a.querySelector(".wz-tile:not([disabled]), .ws-cell"); if (t) a.contains(t) && t.focus({ preventScroll: true }); }
   }
 
   /* ── Kwartet-album ── */
@@ -5154,8 +5363,13 @@ return exports;})();
   function viewJourney() {
     if (journeyLand === null || journeyLand >= CATEGORIES.length) journeyLand = defaultLand();
     const i = journeyLand, c = CATEGORIES[i], level = P.mode, st = jLandStats(level, c.id);
-    let h = '<div class="topbar"><button class="icon-btn" data-act="home" aria-label="Terug naar home">' + icon("left", 22) + "</button>" +
-      '<div class="brand">' + icon("map", 24) + 'De Reis</div><span style="width:44px"></span></div>';
+    let h = '<div class="topbar"><div class="brand">' + icon("map", 24) + 'De Reis</div><div class="top-actions">' +
+      '<button class="icon-btn" data-act="scores" aria-label="Mijn Scores">' + icon("trophy", 22) + "</button>" +
+      '<button class="icon-btn" data-act="board" aria-label="Scorebord">' + icon("users", 22) + "</button>" +
+      '<button class="icon-btn" data-act="settings" aria-label="Instellingen">' + icon("gear", 22) + "</button></div></div>";
+    h += '<div class="j-hello"><button class="player-chip" data-act="players" aria-label="Speler: ' + esc(P.name) + '. Wissel van speler">' + avatarHtml(P, 34) + "<span>" + esc(P.name) + "</span></button>" +
+      '<button class="mode-chip ' + level + '" data-act="switch-mode" aria-label="Niveau wisselen. Nu: ' + (level === "junior" ? "Junior, tik voor Expert" : "Expert, tik voor Junior") + '">' + icon(level === "junior" ? "smile" : "cap", 18) + (level === "junior" ? "Junior" : "Expert") + "</button></div>" +
+      '<div class="j-stats" role="group" aria-label="Jouw punten in de ' + modeName(level) + '-modus"><span>' + icon("star", 18, "fill") + "<b>" + starsAt(P, level) + '</b> sterren</span><span class="xp"><b>' + xpAt(P, level) + '</b> XP</span><span class="gem">' + gemSvg(18) + "<b>" + gemsAt(P, level) + "</b></span></div>";
     h += '<div class="land-strip" role="group" aria-label="Kies een land">';
     CATEGORIES.forEach(function (x, k) {
       const done = landDone(level, x.id);
@@ -5182,7 +5396,74 @@ return exports;})();
     t.textContent = msg; t.classList.add("show");
     clearTimeout(jToastTimer); jToastTimer = setTimeout(function () { t.classList.remove("show"); }, 2600);
   }
+  /* land 100% voltooid: avatar vliegt van het land-tabblad naar het volgende land-tabblad, daarna schakelt de kaart automatisch over */
+  function runLandFlight() {
+    const f = landFly; landFly = null; if (!f) return;
+    const toLand = CATEGORIES[f.to];
+    const switchNow = function () { journeyLand = f.to; render(); landEnterFx(toLand); };
+    const shield = document.createElement("div"); shield.className = "fly-shield"; shield.setAttribute("aria-hidden", "true"); document.body.appendChild(shield);
+    let finished = false, fly = null, anim = null;
+    const finish = function () { if (finished) return; finished = true; try { if (anim) anim.cancel(); } catch (e) {} if (fly) fly.remove(); shield.remove(); if (screen === "journey") switchNow(); };
+    shield.addEventListener("click", finish);
+    announce("Land voltooid! Je vliegt door naar " + toLand.title + ".");
+    setTimeout(function () {
+      if (finished || screen !== "journey") { finish(); return; }
+      window.scrollTo(0, 0);
+      const a = document.querySelector('.land-chip[data-i="' + f.from + '"]'), b = document.querySelector('.land-chip[data-i="' + f.to + '"]');
+      if (!a || !b || reducedMotion()) { setTimeout(finish, 600); return; }
+      try { b.scrollIntoView({ inline: "center", block: "nearest", behavior: "auto" }); } catch (e) {}
+      setTimeout(function () {
+        if (finished) return;
+        const ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
+        const sx = ra.left + ra.width / 2 - 24, sy = ra.top + ra.height / 2 - 24, ex = rb.left + rb.width / 2 - 24, ey = rb.top + rb.height / 2 - 24;
+        const mx = (sx + ex) / 2, my = Math.min(sy, ey) - 70;
+        fly = document.createElement("div"); fly.className = "land-fly"; fly.setAttribute("aria-hidden", "true");
+        fly.innerHTML = '<span class="lf-glow"></span>' + avatarHtml(P, 44) + '<span class="lf-star lf-s1">' + GOLD_STAR_SVG + '</span><span class="lf-star lf-s2">' + GOLD_STAR_SVG + "</span>";
+        document.body.appendChild(fly); play("swoosh");
+        anim = fly.animate([
+          { transform: "translate(" + sx + "px," + sy + "px) scale(1) rotate(0deg)", offset: 0 },
+          { transform: "translate(" + mx + "px," + my + "px) scale(1.55) rotate(-12deg)", offset: 0.5 },
+          { transform: "translate(" + ex + "px," + ey + "px) scale(1) rotate(0deg)", offset: 1 }
+        ], { duration: 1300, easing: "cubic-bezier(.45,.05,.3,1)", fill: "forwards" });
+        anim.onfinish = function () { b.classList.add("land-arrive"); play("win"); setTimeout(finish, 350); };
+      }, 380);
+    }, 800);
+  }
+  function landEnterFx(land) {
+    celebrate(false);
+    const m = document.querySelector(".journey-map"), hd = document.querySelector(".land-head");
+    [m, hd].forEach(function (el) { if (el) { el.classList.add("land-enter"); } });
+    announce("Welkom in " + land.title + ". Level 1 staat klaar.");
+  }
+  /* vrolijke beloningsflyers op strategische momenten */
+  function flyerFor() {
+    const lv = P.mode, c = CATEGORIES[journeyLand === null ? defaultLand() : journeyLand], n = jCount(lv, c.id), st = jLandStats(lv, c.id);
+    const list = [];
+    if (st.passed === 0 && starsAt(P, lv) === 0) list.push({ e: "🌙", t: "Welkom, " + P.name + "! Tik op level 1 om je reis te beginnen.", w: 4 });
+    if (chestsReady(lv, c.id) > 0) list.push({ e: "🎁", t: "Er staat een schatkist op je te wachten! Tik op de springende kist.", w: 3 });
+    const left = n - st.passed, li = CATEGORIES.indexOf(c);
+    if (left > 0 && left <= 3) list.push({ e: "🚩", t: li + 1 < CATEGORIES.length ? "Nog " + left + (left === 1 ? " level" : " levels") + " tot Land " + (li + 2) + "!" : "Nog " + left + (left === 1 ? " level" : " levels") + " tot het einde van de Reis!", w: 3 });
+    if (st.passed > 0 && st.stars < st.passed * 3 && st.passed >= 3) list.push({ e: "⭐", t: "Speel een level opnieuw voor een extra ster en meer edelstenen!", w: 1 });
+    if (currentStreak() >= 2) list.push({ e: "🔥", t: currentStreak() + " dagen op rij! Doe zo door, " + P.name + "!", w: 2 });
+    ["Masha’Allah, je doet het super!", "Elke vraag maakt je slimmer.", "Nieuwe edelstenen wachten op je!", "Jij bent goed bezig, " + P.name + "!"].forEach(function (t, k) { list.push({ e: ["🌟", "📚", "💎", "👏"][k], t: t, w: 1 }); });
+    if (list[0] && list[0].w === 4) return list[0];
+    const pool = []; list.forEach(function (f) { if (f.t !== flyerLast) for (let k = 0; k < f.w; k++) pool.push(f); });
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+  function showFlyer() {
+    if (screen !== "journey" || !P || document.getElementById("flyer")) return;
+    const f = flyerFor(); if (!f) return;
+    if (f.w < 2 && Math.random() > 0.45) return;      /* algemene aanmoediging: niet elke keer */
+    flyerLast = f.t;
+    const d = document.createElement("div"); d.id = "flyer"; d.className = "reward-flyer"; d.setAttribute("aria-hidden", "true");
+    d.innerHTML = '<span class="rf-e">' + f.e + '</span><span class="rf-t">' + esc(f.t) + "</span>";
+    d.addEventListener("click", function () { d.remove(); });
+    document.body.appendChild(d); announce(f.t);
+    setTimeout(function () { d.classList.add("out"); setTimeout(function () { d.remove(); }, 500); }, 5200);
+  }
   function afterJourneyRender() {
+    if (landFly) { runLandFlight(); return; }
+    if (flyerPending) { flyerPending = false; setTimeout(showFlyer, 700); }
     const m = document.getElementById("jMarker");
     if (m) {
       const to = m.dataset.to.split(",");
@@ -5195,18 +5476,18 @@ return exports;})();
   function viewBoard() {
     const lv = boardLevel;
     const ranked = S.players.slice().sort(function (a, b) {
-      return starsAt(b, lv) - starsAt(a, lv) || (avgPct(b, lv) || 0) - (avgPct(a, lv) || 0);
+      return scoreAt(b, lv) - scoreAt(a, lv) || starsAt(b, lv) - starsAt(a, lv) || (avgPct(b, lv) || 0) - (avgPct(a, lv) || 0);
     });
-    let h = '<div class="topbar"><button class="icon-btn" data-act="players" aria-label="Terug naar spelers">' + icon("left", 22) + "</button>" +
+    let h = '<div class="topbar"><button class="icon-btn" data-act="home" aria-label="Terug naar De Reis">' + icon("left", 22) + "</button>" +
       '<div class="brand">' + icon("trophy", 24) + "Scorebord</div><span style=\"width:44px\"></span></div>";
     h += '<div class="tabs" role="group" aria-label="Kies modus"><button class="tab' + (lv === "junior" ? " on" : "") + '" data-act="board-level" data-level="junior" aria-pressed="' + (lv === "junior") + '">' + icon("smile", 18) + "Junior</button>" +
       '<button class="tab' + (lv === "expert" ? " on" : "") + '" data-act="board-level" data-level="expert" aria-pressed="' + (lv === "expert") + '">' + icon("cap", 18) + "Expert</button></div>";
     h += '<div class="rank-list">';
     ranked.forEach(function (p, i) {
       const pct = avgPct(p, lv);
-      h += '<div class="rank-row' + (i === 0 && starsAt(p, lv) > 0 ? " first" : "") + '"><span class="rank-n">' + (i + 1) + "</span>" + avatarHtml(p, 44) +
+      h += '<div class="rank-row' + (i === 0 && scoreAt(p, lv) > 0 ? " first" : "") + '"><span class="rank-n">' + (i + 1) + "</span>" + avatarHtml(p, 44) +
         '<span class="pinfo"><b>' + esc(p.name) + "</b><small>" + (pct === null ? "Nog niet gespeeld" : "Gemiddeld " + pct + "% · reeks " + streakOf(p) + (streakOf(p) === 1 ? " dag" : " dagen")) + "</small></span>" +
-        '<span class="rank-stars">' + icon("star", 20, "fill") + starsAt(p, lv) + "</span></div>";
+        '<span class="rank-stars">' + icon("star", 20, "fill") + starsAt(p, lv) + '<small class="rank-xp">' + xpAt(p, lv) + " XP</small></span></div>";
     });
     h += "</div>";
     h += '<div class="section-title">' + icon("layers", 20) + "Beste score per categorie</div>" +
@@ -5230,13 +5511,13 @@ return exports;})();
   }
   /* deelbericht van het scorebord: uitsluitend gegevens van de gekozen modus (lv), nooit van de andere */
   function shareBoardText(lv) {
-    const ranked = S.players.slice().sort(function (a, b) { return starsAt(b, lv) - starsAt(a, lv) || (avgPct(b, lv) || 0) - (avgPct(a, lv) || 0); });
+    const ranked = S.players.slice().sort(function (a, b) { return scoreAt(b, lv) - scoreAt(a, lv) || starsAt(b, lv) - starsAt(a, lv) || (avgPct(b, lv) || 0) - (avgPct(a, lv) || 0); });
     const medals = ["🥇", "🥈", "🥉"];
     let t = "🏆 Islam Quiz – Scorebord " + modeName(lv) + "\n";
     ranked.slice(0, 8).forEach(function (p, i) {
       const pct = avgPct(p, lv);
       const lands = (function () { let n = 0; CATEGORIES.forEach(function (c) { const m = p.journey && p.journey[lv] && p.journey[lv][c.id]; if (m) { const cnt = jCount(lv, c.id); let ok = 0; for (let k = 0; k < cnt; k++) if (m[k] && m[k].stars >= 1) ok++; if (ok === cnt) n++; } }); return n; })();
-      t += (medals[i] || (i + 1) + ".") + " " + p.name + ": " + starsAt(p, lv) + " ⭐" + (pct === null ? " (nog niet gespeeld)" : " · gemiddeld " + pct + "% · " + lands + "/" + CATEGORIES.length + " landen voltooid") + "\n";
+      t += (medals[i] || (i + 1) + ".") + " " + p.name + ": " + scoreAt(p, lv) + " punten (" + xpAt(p, lv) + " XP, " + starsAt(p, lv) + " ⭐)" + (pct === null ? " (nog niet gespeeld)" : " · gemiddeld " + pct + "% · " + lands + "/" + CATEGORIES.length + " landen voltooid") + "\n";
     });
     return t + "Kun jij mij inhalen? " + SITE_URL;
   }
@@ -5264,7 +5545,7 @@ return exports;})();
 
   function viewGroup() {
     const g = P.group;
-    let h = '<div class="topbar"><button class="icon-btn" data-act="home" aria-label="Terug naar home">' + icon("left", 22) + "</button>" +
+    let h = '<div class="topbar"><button class="icon-btn" data-act="home" aria-label="Terug naar De Reis">' + icon("left", 22) + "</button>" +
       '<div class="brand">' + icon("users", 24) + "Groep</div><span style=\"width:44px\"></span></div>";
     if (groupMsg) h += '<div class="notice" role="alert">' + esc(groupMsg) + "</div>";
 
@@ -5370,7 +5651,7 @@ return exports;})();
 
   function viewReview() {
     let h = '<div class="topbar"><button class="icon-btn" data-act="back-result" aria-label="Terug naar resultaat">' + icon("left", 22) + "</button>" +
-      '<button class="btn ghost" data-act="home">' + icon("home", 18) + "Home</button></div>";
+      '<button class="btn ghost" data-act="home">' + icon("map", 18) + "De Reis</button></div>";
     h += '<section class="review"><h1>Jouw antwoorden</h1>';
     result.items.forEach(function (it, i) {
       const q = it.q;
@@ -5385,7 +5666,7 @@ return exports;})();
       h += '<p class="rev-expl">' + esc(q.explanation) + "</p>" + refHtml(q.arabic) + "</article>";
     });
     h += '<div class="result-actions"><button class="btn" data-act="retry">' + icon("retry", 20) + "Opnieuw Proberen</button>" +
-      '<button class="btn gold" data-act="home">' + icon("layers", 20) + "Kies Andere Categorie</button></div></section>";
+      '<button class="btn gold" data-act="home">' + icon("layers", 20) + "Terug naar De Reis</button></div></section>";
     return h;
   }
 
@@ -5702,7 +5983,7 @@ return exports;})();
     return (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || window.navigator.standalone === true;
   }
   window.addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); deferredInstall = e; });
-  window.addEventListener("appinstalled", function () { deferredInstall = null; if (screen === "home") render(); });
+  window.addEventListener("appinstalled", function () { deferredInstall = null; if (screen === "journey") render(); });
 
   function infoDialog(title, html) {
     const w = document.createElement("div");
@@ -5729,14 +6010,9 @@ return exports;})();
     if (!el || el.tagName === "INPUT") return;
     const act = el.dataset.act;
     switch (act) {
-      case "pick-mode": chooseMode(el.dataset.mode, function () { screen = pendingCode ? "group" : "home"; render(); }); break;
+      case "pick-mode": chooseMode(el.dataset.mode, function () { screen = pendingCode ? "group" : "journey"; flyerPending = true; render(); }); break;
       case "switch-mode": chooseMode(P.mode === "junior" ? "expert" : "junior", function () { render(); }); break;
       case "toggle-sound": S.sound = !S.sound; if (!S.sound) voiceStop(); saveState(); if (S.sound) play("click"); render(); break;
-      case "start-cat":
-        play("click");
-        if (tiersFor(P.mode, el.dataset.cat).length > 1) tierDialog(el.dataset.cat); else startQuiz("category", el.dataset.cat, 1);
-        break;
-      case "start-tier": { play("click"); const dw = document.querySelector(".dialog-wrap"); if (dw) dw.remove(); const st = parseInt(el.dataset.tier, 10); if (tierLocked(P.mode, el.dataset.cat, st)) break; startQuiz("category", el.dataset.cat, st); break; }
       case "go-next-tier": play("click"); stopTimer(); startQuiz("category", result.catId, result.next); break;
       case "start-daily": play("click"); startQuiz("daily"); break;
       case "answer": answer(parseInt(el.dataset.pos, 10)); break;
@@ -5748,9 +6024,9 @@ return exports;})();
         else if (result && result.kind === "journey") { journeyReturn = true; startQuiz("journey", result.catId, null, result.jIdx); }
         else startQuiz("category", result.catId, result.tier);
         break;
-      case "home": play("click"); stopTimer(); journeyReturn = false; screen = "home"; render(); break;
-      case "journey": play("click"); if (!voiceOnce.reis) { voiceOnce.reis = 1; voice("reis", undefined, 500); } stopTimer(); journeyReturn = false; journeyLand = null; screen = "journey"; render(); break;
-      case "journey-back": play("click"); stopTimer(); screen = "journey"; render(); break;
+      case "home": play("click"); stopTimer(); landFly = null; journeyReturn = false; screen = "journey"; render(); break;
+      case "journey": play("click"); landFly = null; if (!voiceOnce.reis) { voiceOnce.reis = 1; voice("reis", undefined, 500); } stopTimer(); journeyReturn = false; journeyLand = null; screen = "journey"; render(); break;
+      case "journey-back": play("click"); stopTimer(); if (mg && mg.saved) flyerPending = true; screen = "journey"; render(); break;
       case "journey-land": play("click"); journeyLand = parseInt(el.dataset.i, 10); render(); break;
       case "journey-level": {
         const jc = el.dataset.cat, ji = parseInt(el.dataset.i, 10);
@@ -5758,12 +6034,18 @@ return exports;})();
         play("click"); journeyReturn = true; journeyLand = Math.max(0, CATEGORIES.findIndex(function (x) { return x.id === jc; })); startQuiz("journey", jc, null, ji); break;
       }
       case "hold-auto": stopTimer(); if (result) result.noAuto = true; { const t = document.getElementById("autoTxt"); if (t) t.textContent = result && result.kind === "journey" ? "Naar de kaart" : "Ga door naar Niveau " + result.next; const hb = document.querySelector('button[data-act="hold-auto"]'); if (hb) hb.remove(); announce("Automatisch doorgaan is gestopt."); } break;
+      case "hint": showHint(); break;
       case "read-aloud": if (quiz) { const it = quiz.items[quiz.idx]; speak(quiz.answered ? feedbackSpeech(it) : questionSpeech(it)); } break;
-      case "a11y": play("click"); a11yDialog(); break;
+      case "settings": case "a11y": play("click"); settingsDialog(); break;
       case "journey-chest": openChest(el.dataset.cat, parseInt(el.dataset.i, 10)); break;
       case "mg-open-now": chestOpenNow(); break;
       case "mg-start": startMinigame(); break;
       case "mg-flip": mgFlip(parseInt(el.dataset.k, 10)); break;
+      case "wz-tile": wzTile(parseInt(el.dataset.k, 10)); break;
+      case "wz-slot": wzSlot(parseInt(el.dataset.k, 10)); break;
+      case "wz-hint": wzHint(); break;
+      case "wz-shuffle": wzShuffle(); break;
+      case "wz-cell": wzCell(parseInt(el.dataset.r, 10), parseInt(el.dataset.c, 10)); break;
       case "mg-pz": mgPz(parseInt(el.dataset.k, 10)); break;
       case "mg-kw-open": mgKwOpen(); break;
       case "mg-kw-flip": mgKwFlip(parseInt(el.dataset.k, 10)); break;
