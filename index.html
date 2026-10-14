@@ -1010,6 +1010,23 @@ body.jfull #app { max-width: none; padding: 0; }
 body.jfull .j-toast { bottom: 100px; }
 body.jfull .reward-flyer { top: 160px; }
 @media (max-width: 400px) { .jh-player { flex: none; } .jh-player span { max-width: 62px; } .jh-stats { gap: 3px; } .jh-stats > span { gap: 2px; } .jh-mode span { display: none; } .jh-mode { padding: 0; width: 34px; justify-content: center; } .jh-stats > span { padding: 3px 5px; font-size: .72rem; } }
+
+/* ── Achtergrond percussie ── */
+.jh-drum { appearance: none; border: 0; cursor: pointer; position: relative; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; flex: none; background: rgba(255, 214, 64, .28); box-shadow: inset 0 0 0 1.5px rgba(255, 214, 64, .8); color: #fff; font-size: 1.05rem; line-height: 1; }
+.jh-drum.playing span { display: inline-block; animation: drumBeat .6s ease-in-out infinite; }
+.jh-drum.playing::before { content: ""; position: absolute; inset: -3px; border-radius: 50%; border: 2px solid rgba(255, 214, 64, .8); animation: drumRing 1.2s ease-out infinite; pointer-events: none; }
+.jh-drum.off { background: rgba(255, 255, 255, .12); box-shadow: none; }
+.jh-drum.off span { opacity: .45; filter: grayscale(1); }
+.jh-drum.off::after { content: ""; position: absolute; left: 7px; right: 7px; top: 50%; height: 2.5px; border-radius: 2px; background: #ff8a80; transform: rotate(-45deg); }
+@keyframes drumBeat { 0%, 100% { transform: scale(1) rotate(0); } 50% { transform: scale(1.18) rotate(-8deg); } }
+@keyframes drumRing { from { transform: scale(.9); opacity: .9; } to { transform: scale(1.35); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .jh-drum.playing span, .jh-drum.playing::before { animation: none; } }
+.a11y-dlg label.opt input.sw { appearance: none; -webkit-appearance: none; width: 50px; height: 28px; border-radius: 99px; background: #c9c3b6; position: relative; cursor: pointer; transition: background .2s; margin-top: 0; flex: none; }
+.a11y-dlg label.opt input.sw::after { content: ""; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, .3); transition: transform .2s; }
+.a11y-dlg label.opt input.sw:checked { background: var(--emerald); }
+.a11y-dlg label.opt input.sw:checked::after { transform: translateX(22px); }
+.a11y-dlg label.opt input.sw:focus-visible { outline: 3px solid #ffb703; outline-offset: 2px; }
+@media (max-width: 400px) { .j-head { gap: 4px; } .jh-stats { gap: 2px; } .jh-stats > span { padding: 3px 4px; } .jh-player span { max-width: 52px; } }
 </style>
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Islam Quiz">
@@ -3228,7 +3245,7 @@ return exports;})();
       album: (function (a) { a = a || {}; if (a.junior || a.expert) return { junior: Object.assign({}, a.junior || {}), expert: Object.assign({}, a.expert || {}) }; return { junior: Object.assign({}, a), expert: {} }; })(p.album),
     });
   }
-  function defaultState() { return { v: 2, sound: true, timer: false, speak: false, autoNext: true, players: [], current: null }; }
+  function defaultState() { return { v: 2, sound: true, duff: true, timer: false, speak: false, autoNext: true, players: [], current: null }; }
   function loadState() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -3333,6 +3350,74 @@ return exports;})();
     } catch (e) {}
   }
   function voiceStop() { clearTimeout(voiceTimer); try { if (voiceEl) voiceEl.pause(); } catch (e) {} }
+
+  /* ───────────── Achtergrond-percussie (duff.mp3, staat naast index.html) ─────────────
+     Standaard aan, zachte lus (12%). Start bij het laden en anders bij de eerste aanraking (autoplay-regels van de browser).
+     Pauzeert tijdens het voorlezen (TTS) en als de pagina verborgen is; hervat daarna zachtjes. */
+  const DUFF_VOL = 0.12;
+  let duffEl = null, duffGain = null, duffMuted = false, duffPauseT = null, duffRamp = null;
+  function duffPref() { return S.duff !== false; }
+  function duffOn() { return duffPref() && !duffMuted; }
+  function duffWanted() { return duffOn() && !document.hidden && !speechBusy; }
+  function duffPlaying() { return !!duffEl && !duffEl.paused && !duffEl.__bad && (!duffGain || (audioCtx && audioCtx.state === "running")); }
+  function duffInit() {
+    if (duffEl) return duffEl;
+    try {
+      duffEl = new Audio("duff.mp3"); duffEl.loop = true; duffEl.preload = "auto"; duffEl.volume = DUFF_VOL;
+      duffEl.addEventListener("error", function () { duffEl.__bad = true; duffUi(); });
+      ["playing", "pause"].forEach(function (ev) { duffEl.addEventListener(ev, duffUi); });
+      const c = ctx();
+      if (c && c.createMediaElementSource) {   /* via Web Audio: volume werkt dan ook op iPhone/iPad */
+        const src = c.createMediaElementSource(duffEl); duffGain = c.createGain(); duffGain.gain.value = 0;
+        src.connect(duffGain); duffGain.connect(c.destination); duffEl.volume = 1;
+      }
+    } catch (e) { duffGain = null; }
+    return duffEl;
+  }
+  function duffSet(v) {
+    try {
+      if (duffGain && audioCtx) { duffGain.gain.setTargetAtTime(v, audioCtx.currentTime, 0.2); return; }
+      if (!duffEl) return;
+      clearInterval(duffRamp);
+      duffRamp = setInterval(function () {
+        const d = v - duffEl.volume;
+        if (Math.abs(d) < 0.011) { duffEl.volume = v; clearInterval(duffRamp); return; }
+        duffEl.volume = Math.max(0, Math.min(1, duffEl.volume + (d > 0 ? 0.01 : -0.02)));
+      }, 50);
+    } catch (e) {}
+  }
+  function duffSync() {
+    clearTimeout(duffPauseT);
+    if (duffWanted()) {
+      const el = duffInit(); if (!el || el.__bad) { duffUi(); return; }
+      try {
+        if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+        const pr = el.play(); if (pr && pr.catch) pr.catch(function () {});   /* geblokkeerd? dan start de eerste aanraking hem */
+      } catch (e) {}
+      duffSet(DUFF_VOL);
+    } else if (duffEl) {
+      duffSet(0);
+      duffPauseT = setTimeout(function () { if (!duffWanted()) { try { duffEl.pause(); } catch (e) {} duffUi(); } }, 500);
+    }
+    duffUi();
+  }
+  function duffUi() {
+    const b = document.querySelector(".jh-drum"); if (!b) return;
+    const on = duffOn();
+    b.classList.toggle("off", !on); b.classList.toggle("playing", on && duffPlaying() && !speechBusy);
+    b.setAttribute("aria-pressed", on ? "true" : "false");
+  }
+  function duffToggle() {
+    if (!duffPref()) { S.duff = true; duffMuted = false; saveState(); }
+    else duffMuted = !duffMuted;
+    duffSync();
+  }
+  function duffGesture(e) {
+    if (e && e.target && e.target.closest && e.target.closest(".jh-drum")) return;
+    if (duffWanted() && !duffPlaying()) duffSync();
+  }
+  ["pointerup", "touchend", "click", "keydown"].forEach(function (ev) { document.addEventListener(ev, duffGesture, { capture: true, passive: true }); });
+  document.addEventListener("visibilitychange", duffSync);
 
   /* ───────────── App-toestand ───────────── */
   const app = document.getElementById("app");
@@ -3540,7 +3625,7 @@ return exports;})();
   function speechRelease(resume) {
     clearTimeout(speechWatch); curU = null;
     if (!speechBusy) return;
-    speechBusy = false;
+    speechBusy = false; duffSync();
     if (resume && idleOn) idleStart();
   }
   function speak(text) {
@@ -3549,7 +3634,7 @@ return exports;})();
       speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(speechClean(text)); u.lang = "nl-NL";
       const v = (speechSynthesis.getVoices() || []).filter(function (x) { return /^nl/i.test(x.lang); })[0]; if (v) u.voice = v;
-      curU = u; speechBusy = true; clearTimeout(speechWatch);
+      curU = u; speechBusy = true; clearTimeout(speechWatch); duffSync();
       if (idleOn) clearTimeout(idleT);
       u.onstart = function () { if (curU !== u) return; speechBusy = true; if (idleOn) clearTimeout(idleT); };
       u.onend = u.onerror = function () { if (curU === u) speechRelease(true); };
@@ -3656,11 +3741,13 @@ return exports;})();
     if (st.discOpen) { const b = document.querySelector("#disclaimerModal .btn"); if (b) setTimeout(function () { b.focus(); }, 50); }
   })();
   function settingsDialog() {
+    const fl = document.getElementById("flyer"); if (fl) fl.remove();
     const w = document.createElement("div"); w.className = "dialog-wrap";
     w.innerHTML = '<div class="dialog a11y-dlg" role="dialog" aria-modal="true" aria-labelledby="a11yT"><h3 id="a11yT">Instellingen</h3>' +
       '<label class="opt"><input type="checkbox" id="optSound"' + (S.sound ? " checked" : "") + '><span>Geluid<small>Geluidseffecten en de stem van de presentator.</small></span></label>' +
       (P && P.mode === "expert" ? '<label class="opt"><input type="checkbox" data-act="toggle-timer"' + (S.timer ? " checked" : "") + '><span>Timer per vraag<small>' + TIMER_SECONDS + " seconden per vraag (Expert).</small></span></label>" : "") +
       '<label class="opt"><input type="checkbox" id="optSpeak"' + (S.speak ? " checked" : "") + '><span>Spreek vragen uit<small>De app leest elke vraag, de antwoorden en de uitleg hardop voor. Op de vraagpagina staat ook een knop “Lees voor”.</small></span></label>' +
+      '<label class="opt"><input type="checkbox" role="switch" class="sw" id="optDuff"' + (duffPref() ? " checked" : "") + '><span>Achtergrond percussie (Duff)<small>Zachte percussie op de achtergrond. Pauzeert vanzelf tijdens het voorlezen.</small></span></label>' +
       '<label class="opt"><input type="checkbox" id="optAuto"' + (autoOn() ? " checked" : "") + '><span>Automatisch doorgaan na een level<small>Na een resultaat ga je vanzelf verder. Zet dit uit als je liever zelf op de knop tikt.</small></span></label>' +
       '<p class="warn">Gebruik je al een schermlezer (VoiceOver of TalkBack)? Zet “Spreek vragen uit” dan uit, anders praten beide stemmen door elkaar.</p>' +
       '<div class="stack"><button class="btn ghost block" data-act="scores" data-d="x">' + icon("trophy", 20) + "Mijn scores</button>" +
@@ -3676,6 +3763,7 @@ return exports;})();
         else { speakStop(); S.autoNext = true; const a = document.getElementById("optAuto"); if (a) a.checked = true; }
       }
       if (e.target.id === "optAuto") S.autoNext = e.target.checked;
+      if (e.target.id === "optDuff") { S.duff = e.target.checked; if (S.duff) duffMuted = false; duffSync(); }
       saveState();
     });
     w.addEventListener("click", function (e) { if (e.target === w || e.target.closest("[data-d]")) { w.remove(); if (screen === "journey") render(); } });
@@ -3717,6 +3805,7 @@ return exports;})();
     window.scrollTo({ top: 0 });
     if (screen === "journey") document.body.classList.add("jfull");
     if (screen === "journey") afterJourneyRender();
+    duffUi();
     a11yAfter(prevA);
   }
 
@@ -5447,6 +5536,7 @@ return exports;})();
     h += '<header class="j-head"><button class="jh-player" data-act="players" aria-label="Speler: ' + nm + '. Wissel van speler">' + avatarHtml(P, 30) + "<span>" + nm + "</span></button>" +
       '<div class="jh-stats" role="group" aria-label="Jouw punten in de ' + modeName(level) + '-modus"><span>' + icon("star", 15, "fill") + "<b>" + stars + '</b><i class="sr-only"> sterren</i></span><span class="xp"><b>' + xp + '</b> XP</span><span class="gem">' + gemSvg(15) + "<b>" + gems + '</b><i class="sr-only"> edelstenen</i></span></div>' +
       '<button class="jh-mode ' + level + '" data-act="switch-mode" aria-label="Niveau wisselen. Nu: ' + (level === "junior" ? "Junior, tik voor Expert" : "Expert, tik voor Junior") + '">' + icon(level === "junior" ? "smile" : "cap", 16) + "<span>" + (level === "junior" ? "Junior" : "Expert") + "</span></button>" +
+      '<button class="jh-drum' + (duffOn() ? "" : " off") + '" data-act="duff-toggle" aria-pressed="' + duffOn() + '" aria-label="Achtergrond percussie (Duff)"><span aria-hidden="true">🥁</span></button>' +
       '<button class="jh-gear" data-act="settings" aria-label="Instellingen">' + icon("gear", 20) + "</button></header>";
     /* land-schild */
     h += '<div class="j-shield" style="--accent:' + c.color + '" role="group" aria-label="Land kiezen">' +
@@ -6120,6 +6210,7 @@ return exports;})();
       case "hint": showHint(); break;
       case "hint-close": closeBubble(); break;
       case "read-aloud": if (quiz) { const it = quiz.items[quiz.idx]; speak(quiz.answered ? feedbackSpeech(it) : questionSpeech(it)); } break;
+      case "duff-toggle": duffToggle(); break;
       case "settings": case "a11y": play("click"); settingsDialog(); break;
       case "journey-chest": openChest(el.dataset.cat, parseInt(el.dataset.i, 10)); break;
       case "mg-open-now": chestOpenNow(); break;
@@ -6236,6 +6327,7 @@ return exports;})();
 
   // zorg dat geluid werkt op mobiel na de eerste aanraking
   document.addEventListener("pointerdown", function () { if (S.sound) ctx(); voiceUnlock(); }, { once: true });
+  duffSync();   /* probeer meteen te starten; lukt dat niet (autoplay-regels), dan volgt de eerste aanraking */
 
   if (P && syncBadges().length) saveState();
   render();
