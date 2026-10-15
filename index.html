@@ -1105,6 +1105,29 @@ body.jfull .reward-flyer { top: 160px; }
 .btn-out-quiz:hover { background: rgba(255, 180, 169, .12); }
 .acct-dlg button:focus-visible, .acct-dlg input:focus-visible { outline: 3px solid #ffd54f; outline-offset: 2px; }
 .btn.acct-open { border-color: var(--gold); }
+
+/* ── Dagreeks (streak) ── */
+.jstreak { position: fixed; z-index: 28; left: 10px; bottom: calc(96px + env(safe-area-inset-bottom, 0px)); appearance: none; border: 2px solid #fff; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; border-radius: 999px; font: inherit; font-weight: 900; font-size: 1rem; box-shadow: 0 4px 12px rgba(0, 0, 0, .3); }
+.jstreak.done { background: linear-gradient(180deg, #ffb347, #f0701a); color: #fff; }
+.jstreak.risk { background: #f4efe6; color: #8a7a64; animation: streakRisk 1.6s ease-in-out infinite; }
+.jstreak.risk span { filter: grayscale(1); }
+.jstreak.zero { background: #f4efe6; color: #8a7a64; opacity: .9; }
+.jstreak.zero span { filter: grayscale(1); opacity: .6; }
+@keyframes streakRisk { 0%, 100% { transform: scale(1); box-shadow: 0 4px 12px rgba(0,0,0,.3); } 50% { transform: scale(1.08); box-shadow: 0 0 0 6px rgba(240, 112, 26, .25), 0 4px 12px rgba(0,0,0,.3); } }
+@media (prefers-reduced-motion: reduce) { .jstreak.risk { animation: none; } }
+.rw.streak { background: #ffe9d0; color: #b4500a; }
+.streak-dlg { text-align: center; }
+.stk-flame { font-size: 3.4rem; line-height: 1.1; }
+.stk-flame.off, .stk-flame.risk { filter: grayscale(1); opacity: .7; }
+.stk-flame.on { animation: pop .5s ease both; filter: drop-shadow(0 0 10px rgba(240, 112, 26, .6)); }
+.streak-dlg h3 { font-size: 1.5rem; margin-top: 2px; }
+.stk-week { list-style: none; display: flex; justify-content: space-between; gap: 4px; margin: 4px 0 8px; padding: 0; }
+.stk-week li { display: grid; justify-items: center; gap: 4px; flex: 1; }
+.stk-wd { font-size: .75rem; font-weight: 900; color: var(--muted); }
+.stk-dot { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: #ece6dc; color: #fff; font-weight: 900; }
+.stk-week li.did .stk-dot { background: linear-gradient(180deg, #ffb347, #f0701a); }
+.stk-week li.today .stk-dot { box-shadow: 0 0 0 3px #f0c27f; }
+.streak-dlg .stk-best { margin: 4px 0 2px; } .streak-dlg .stk-note { margin: 2px 0 14px; font-size: .85rem; }
 </style>
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Islam Quiz">
@@ -3294,7 +3317,7 @@ return exports;})();
       name: name, color: color, mode: null,
       best: { junior: {}, expert: {} },     // best[level][catId] = {score,total,stars}
       daily: { junior: {}, expert: {} },    // daily[level][YYYY-MM-DD] = {score,total}
-      streak: { count: 0, last: null, max: 0 },
+      streak: { count: 0, last: null, max: 0, days: [] },
       played: 0,
       badges: {},                           // badges[id] = tijdstempel; id = level:cat:master|grand
       group: null,                          // {code, mid} als de speler in een groep zit
@@ -3524,11 +3547,27 @@ return exports;})();
       .catch(function () { sbMsg("Inloggen is niet gelukt. Controleer je verbinding en probeer het opnieuw."); });
   }
   /* uitloggen / account wisselen: sessie weg, en de voortgang van deze speler op dit apparaat wordt gewist (andere spelers blijven) */
-  function doLogout() {
+  function sbClearSession() {
     try { if (sb) sb.auth.signOut(); } catch (e) {}
     try { Object.keys(localStorage).filter(function (k) { return /^sb-.+-auth-token/.test(k) || k.indexOf("supabase.auth") === 0; }).forEach(function (k) { localStorage.removeItem(k); }); } catch (e) {}
-    const gone = P ? P.id : null;
     sbUser = null; gb.junior = null; gb.expert = null;
+  }
+  /* speler verwijderd (prullenbakje): hoort het account bij de ingelogde gebruiker, of is er niemand meer over,
+     dan gaat de app naar het inlogportaal en nooit naar het oude naam-en-kleurscherm */
+  function afterPlayerRemoved(victim) {
+    const wasAccount = !!(sbUser && victim.sbId === sbUser.id);
+    if (wasAccount) sbClearSession();
+    if (S.current === victim.id || !S.players.length) { S.current = S.players[0] ? S.players[0].id : null; P = currentPlayer(); }
+    if (wasAccount || !S.players.length) {
+      S.entry = null; quiz = null; result = null; journeyLand = null; boardScope = null; loginMsg = "";
+      if (!S.players.length) { try { localStorage.removeItem(AUTH_KEY); } catch (e) {} }
+      saveState(); screen = "login"; render(); accountDialog(); return;
+    }
+    saveState(); render();
+  }
+  function doLogout() {
+    sbClearSession();
+    const gone = P ? P.id : null;
     S.players = S.players.filter(function (x) { return x.id !== gone; });
     S.current = S.players[0] ? S.players[0].id : null; P = currentPlayer();
     S.entry = null; quiz = null; result = null; journeyLand = null; boardScope = null; loginMsg = "";
@@ -3567,7 +3606,7 @@ return exports;})();
     sbUser = u;
     if (u) {
       const fresh = !same;
-      if (fresh) { linkPlayer(u); S.entry = "account"; saveState(); sbSyncAll(); closeAccount(); }
+      if (fresh) { linkPlayer(u); S.entry = "account"; saveState(); sbSyncAll(); sbLoadStreak(); closeAccount(); }
       if (screen === "login" || screen === "authwait") enterApp();
       else if (fresh && ["journey", "board", "scores", "welcome", "players"].indexOf(screen) !== -1) render();
     } else if (screen === "authwait") { loginMsg = "Inloggen met Google is niet gelukt of is geannuleerd. Probeer het opnieuw of ga door als gast."; screen = "login"; render(); accountDialog(); }
@@ -3592,6 +3631,29 @@ return exports;})();
     const hs = scoreAt(p, lv); if (hs <= 0) return;
     const row = { user_id: sbUser.id, mode: lv, display_name: String(p.name).slice(0, 14), avatar_url: GOOGLE_PHOTO.test(p.photo || "") ? p.photo : null, highscore: hs, stars: starsAt(p, lv), xp: xpAt(p, lv) };
     try { sb.from("leaderboard").upsert(row, { onConflict: "user_id,mode" }).then(function (r) { if (r && !r.error) gb[lv] = null; }).catch(function () {}); } catch (e) {}
+  }
+  /* dagreeks van ingelogde spelers: tabel 'user_streaks' (één rij per account); lokaal blijft de bron, de server bewaart hem tussen apparaten */
+  function sbLinkedPlayer() { return sbUser ? S.players.find(function (x) { return x.sbId === sbUser.id; }) : null; }
+  function sbSyncStreak() {
+    const p = sbLinkedPlayer(); if (!sb || !p) return;
+    const row = { user_id: sbUser.id, current_streak: streakOf(p), best_streak: p.streak.max || 0, last_day: p.streak.last || null };
+    try { sb.from("user_streaks").upsert(row, { onConflict: "user_id" }).then(function () {}).catch(function () {}); } catch (e) {}
+  }
+  function sbLoadStreak() {
+    const p = sbLinkedPlayer(); if (!sb || !p) return;
+    try {
+      sb.from("user_streaks").select("current_streak,best_streak,last_day").eq("user_id", sbUser.id).maybeSingle().then(function (r) {
+        const d = r && r.data, l = p.streak;
+        if (d) {
+          if (d.last_day && (!l.last || d.last_day > l.last || (d.last_day === l.last && d.current_streak > l.count))) { l.count = d.current_streak; l.last = d.last_day; }
+          l.max = Math.max(l.max || 0, d.best_streak || 0);
+          if (l.last && (!l.days || l.days.indexOf(l.last) === -1)) { l.days = (l.days || []).concat([l.last]).sort(); }
+          saveState();
+          if (screen === "journey") render();
+        }
+        sbSyncStreak();
+      }).catch(function () {});
+    } catch (e) {}
   }
   /* Top 50 ophalen, gesorteerd op highscore */
   function gbLoad(lv) {
@@ -4450,18 +4512,22 @@ return exports;})();
 
     // reeks (streak): opeenvolgende dagen met minstens één afgeronde quiz
     const t = todayStr();
+    let streakUp = false;
     if (P.streak.last !== t) {
       P.streak.count = P.streak.last === yesterdayStr() ? P.streak.count + 1 : 1;
-      P.streak.last = t;
+      P.streak.last = t; streakUp = true;
       P.streak.max = Math.max(P.streak.max || 0, P.streak.count);
     }
+    if (!Array.isArray(P.streak.days)) P.streak.days = [];
+    if (P.streak.days.indexOf(t) === -1) { P.streak.days.push(t); P.streak.days.sort(); if (P.streak.days.length > 28) P.streak.days = P.streak.days.slice(-28); }
     saveState();
     pushMember();
-    if (sbUser && P.sbId === sbUser.id) sbSyncSoon(quiz.level);
+    if (sbUser && P.sbId === sbUser.id) { sbSyncSoon(quiz.level); sbSyncStreak(); }
 
     result = { kind: quiz.kind, catId: quiz.catId, level: quiz.level, tier: quiz.tier || 1, next: nextTier(quiz, stars), score: score, total: total, stars: stars, record: isRecord, items: quiz.items, newBadges: newBadges, open4: open4, noAuto: (journeyReturn && quiz.kind === "category") || !autoOn() };
     if (jr) Object.assign(result, jr, { noAuto: !autoOn() });
     result.xpGain = xpGain; result.gemGain = gemGain; flyerPending = true;
+    result.streakUp = streakUp; result.streakCount = P.streak.count;
     screen = "result";
     if (jr) {
       play(jr.passed ? "fanfare" : "lose");
@@ -4584,6 +4650,34 @@ return exports;})();
     return Math.round((t / ks.length) * 100);
   }
   function streakOf(p) { return p.streak.last === todayStr() || p.streak.last === yesterdayStr() ? p.streak.count : 0; }
+  function playedToday(p) { return p.streak.last === todayStr(); }
+  function streakAtRisk(p) { return streakOf(p) > 0 && !playedToday(p); }
+  /* de laatste 7 dagen (oud naar nieuw, vandaag laatst) voor het weekoverzicht */
+  function lastDays(n) { const out = []; for (let i = n - 1; i >= 0; i--) { const d = new Date(); d.setDate(d.getDate() - i); out.push({ s: dateStr(d), wd: ["Z", "M", "D", "W", "D", "V", "Z"][d.getDay()], wdName: ["zondag", "maandag", "dinsdag", "woensdag", "donderdag", "vrijdag", "zaterdag"][d.getDay()] }); } return out; }
+  function streakPillHtml() {
+    const n = streakOf(P), st = n === 0 ? "zero" : playedToday(P) ? "done" : "risk";
+    return '<button class="jstreak ' + st + '" data-act="streak" aria-label="Dagreeks: ' + n + (n === 1 ? " dag" : " dagen") + (st === "risk" ? ". Speel vandaag een level om hem te houden" : st === "done" ? ". Vandaag al gespeeld" : "") + '"><span aria-hidden="true">🔥</span><b>' + n + "</b></button>";
+  }
+  function streakDialog() {
+    const fl = document.getElementById("flyer"); if (fl) fl.remove();
+    const n = streakOf(P), today = playedToday(P), days = P.streak.days || [];
+    let msg;
+    if (today) msg = "Mooi! Vandaag heb je al gespeeld. Kom morgen terug om je reeks te verlengen.";
+    else if (n > 0) msg = "Speel vandaag minstens één level om je reeks van " + n + (n === 1 ? " dag" : " dagen") + " te houden!";
+    else msg = "Rond vandaag een level af om je reeks te starten. Elke dag opnieuw telt!";
+    let h = '<div class="dialog streak-dlg" role="dialog" aria-modal="true" aria-labelledby="stkT"><div class="stk-flame ' + (today ? "on" : n > 0 ? "risk" : "off") + '" aria-hidden="true">🔥</div>' +
+      '<h3 id="stkT">' + n + (n === 1 ? " dag" : " dagen") + " op rij</h3><p>" + msg + '</p><ul class="stk-week" aria-label="Laatste 7 dagen">';
+    lastDays(7).forEach(function (d, i) {
+      const did = days.indexOf(d.s) !== -1;
+      h += '<li class="' + (did ? "did" : "") + (i === 6 ? " today" : "") + '"><span class="stk-wd" aria-hidden="true">' + d.wd + '</span><span class="stk-dot" aria-hidden="true">' + (did ? "✓" : "") + '</span><span class="sr-only">' + d.wdName + (i === 6 ? " (vandaag)" : "") + ": " + (did ? "gespeeld" : "niet gespeeld") + "</span></li>";
+    });
+    h += "</ul><p class=\"stk-best\">Beste reeks: <b>" + (P.streak.max || 0) + (P.streak.max === 1 ? " dag" : " dagen") + "</b></p>" +
+      '<p class="stk-note">' + (sbUser ? "✓ Je reeks wordt bewaard in je account." : "Log in met een account om je reeks ook op andere apparaten te bewaren.") + "</p>" +
+      '<button class="btn block" data-d="ok">Top!</button></div>';
+    const w = document.createElement("div"); w.className = "dialog-wrap"; w.innerHTML = h;
+    w.addEventListener("click", function (e) { if (e.target === w || e.target.closest("[data-d]")) w.remove(); });
+    document.body.appendChild(w);
+  }
 
   function viewNewPlayer() {
     const first = S.players.length === 0;
@@ -4913,8 +5007,9 @@ return exports;})();
 
   /* ───────────── Resultaat van een reis-level ───────────── */
   function rewardsHtml(r) {
-    if (!r.xpGain && !r.gemGain) return "";
-    return '<div class="rewards" role="status"><span class="rw xp">+' + r.xpGain + ' Kennis-XP</span>' + (r.gemGain ? '<span class="rw gem">+' + r.gemGain + " " + gemSvg(20) + '<span class="sr-only">edelstenen</span></span>' : "") + "</div>";
+    if (!r.xpGain && !r.gemGain && !r.streakUp) return "";
+    return '<div class="rewards" role="status">' + (r.xpGain ? '<span class="rw xp">+' + r.xpGain + " Kennis-XP</span>" : "") + (r.gemGain ? '<span class="rw gem">+' + r.gemGain + " " + gemSvg(20) + '<span class="sr-only">edelstenen</span></span>' : "") +
+      (r.streakUp ? '<span class="rw streak">🔥 ' + r.streakCount + (r.streakCount === 1 ? " dag" : " dagen") + " op rij!</span>" : "") + "</div>";
   }
   function viewJourneyResult(r) {
     const need = Math.ceil(r.total * PASS_PCT);
@@ -5889,6 +5984,7 @@ return exports;})();
       '<button class="jn-item" data-act="group"><span class="jn-ic" aria-hidden="true">👥</span>Groep</button>' +
       '<a class="jn-item wa" href="' + waLink(shareJourneyText()) + '" target="_blank" rel="noopener" aria-label="Deel mijn Reis via WhatsApp"><span class="jn-ic" aria-hidden="true">💬</span>Delen</a>' +
       "</div></nav>";
+    h += streakPillHtml();
     h += '<div class="j-toast" id="jToast" role="status"></div>';
     return h;
   }
@@ -5948,6 +6044,7 @@ return exports;})();
     const left = n - st.passed, li = CATEGORIES.indexOf(c);
     if (left > 0 && left <= 3) list.push({ e: "🚩", t: li + 1 < CATEGORIES.length ? "Nog " + left + (left === 1 ? " level" : " levels") + " tot Land " + (li + 2) + "!" : "Nog " + left + (left === 1 ? " level" : " levels") + " tot het einde van de Reis!", w: 3 });
     if (st.passed > 0 && st.stars < st.passed * 3 && st.passed >= 3) list.push({ e: "⭐", t: "Speel een level opnieuw voor een extra ster en meer edelstenen!", w: 1 });
+    if (streakAtRisk(P)) list.push({ e: "🔥", t: "Je reeks van " + streakOf(P) + (streakOf(P) === 1 ? " dag" : " dagen") + " staat op het spel! Speel vandaag een level.", w: 3 });
     if (currentStreak() >= 2) list.push({ e: "🔥", t: currentStreak() + " dagen op rij! Doe zo door, " + P.name + "!", w: 2 });
     ["Masha’Allah, je doet het super!", "Elke vraag maakt je slimmer.", "Nieuwe edelstenen wachten op je!", "Jij bent goed bezig, " + P.name + "!"].forEach(function (t, k) { list.push({ e: ["🌟", "📚", "💎", "👏"][k], t: t, w: 1 }); });
     if (list[0] && list[0].w === 4) return list[0];
@@ -6593,12 +6690,10 @@ return exports;})();
       case "remove-player": {
         const victim = S.players.find(function (p) { return p.id === el.dataset.id; });
         if (!victim) break;
-        confirmDialog("Speler verwijderen?", "Alle scores van " + victim.name + " worden gewist. Dit kan niet ongedaan gemaakt worden." + (S.players.length === 1 ? " Dit is de enige speler: daarna maak je een nieuwe speler aan." : ""), "Ja, verwijderen", function () {
+        confirmDialog("Speler verwijderen?", "Alle scores van " + victim.name + " worden gewist. Dit kan niet ongedaan gemaakt worden." + (sbUser && victim.sbId === sbUser.id ? " Je wordt ook uitgelogd; je highscore op het wereldwijde klassement blijft staan." : S.players.length === 1 ? " Dit is de enige speler: daarna kies je opnieuw hoe je wilt spelen." : ""), "Ja, verwijderen", function () {
           closeGroupSub(); leaveGroup(victim);
           S.players = S.players.filter(function (p) { return p.id !== victim.id; });
-          if (!S.players.length) { S.current = null; P = null; screen = "newplayer"; draftColor = AVATAR_COLORS[0]; saveState(); render(); return; }
-          if (S.current === victim.id) { S.current = S.players[0].id; P = currentPlayer(); }
-          saveState(); render();
+          afterPlayerRemoved(victim);
         });
         break;
       }
@@ -6647,6 +6742,7 @@ return exports;})();
       case "gb-refresh": gbLoad(boardLevel); break;
       case "login-google": play("click"); sbLoginGoogle(); break;
       case "account": play("click"); accountDialog(); break;
+      case "streak": play("click"); streakDialog(); break;
       case "acct-tab": acctTab = el.dataset.tab; sbMsg(""); acctRefresh('.acct-tab[aria-selected="true"]'); break;
       case "acct-oauth": play("click"); sbOAuth(el.dataset.provider); break;
       case "acct-guest": play("click"); guestEnter(); break;
