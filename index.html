@@ -1115,6 +1115,7 @@ body.jfull .reward-flyer { top: 160px; }
 .jstreak.zero span { filter: grayscale(1); opacity: .6; }
 @keyframes streakRisk { 0%, 100% { transform: scale(1); box-shadow: 0 4px 12px rgba(0,0,0,.3); } 50% { transform: scale(1.08); box-shadow: 0 0 0 6px rgba(240, 112, 26, .25), 0 4px 12px rgba(0,0,0,.3); } }
 @media (prefers-reduced-motion: reduce) { .jstreak.risk { animation: none; } }
+.set-h { margin: 8px 0 -2px; font-weight: 900; font-size: .85rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
 .rw.streak { background: #ffe9d0; color: #b4500a; }
 .streak-dlg { text-align: center; }
 .stk-flame { font-size: 3.4rem; line-height: 1.1; }
@@ -3540,7 +3541,7 @@ return exports;})();
   }
   function sbLoginGoogle() { sbOAuth("google"); }
   function sbOAuth(provider) {
-    sbMsg("");
+    sbMsg(""); markLinkIntent();
     if (!sb) { sbMsg("Inloggen kan nu niet: de inlogdienst is niet bereikbaar. Controleer je verbinding of ga door als gast."); return; }
     sb.auth.signInWithOAuth({ provider: provider, options: { redirectTo: location.origin + location.pathname } })
       .then(function (r) { if (r && r.error) sbMsg("Inloggen is niet gelukt: " + r.error.message); })
@@ -3575,6 +3576,55 @@ return exports;})();
     saveState();
     screen = "login"; render(); accountDialog();
   }
+  /* Gast-naar-account: de gast die inlogt wordt onthouden (ook over de Google/Facebook-redirect heen) */
+  function markLinkIntent() {
+    if (!sbUser && P && !P.sbId) { S.linkGuest = { id: P.id, t: Date.now() }; saveState(); }
+  }
+  function takeLinkIntent() {
+    const f = S.linkGuest; S.linkGuest = null;
+    if (!f || Date.now() - f.t > 30 * 60 * 1000) return null;
+    return S.players.find(function (x) { return x.id === f.id && !x.sbId; }) || null;
+  }
+  /* voeg de voortgang van gast 'src' samen met het bestaande accountprofiel 'dst': per onderdeel blijft het beste over */
+  function mergeRecMap(a, b) {   /* {level:{cat:{i:rec}}} of {level:{cat:rec}} of {level:{date:rec}}: hogere score wint */
+    Object.keys(b || {}).forEach(function (k) {
+      const x = a[k], y = b[k];
+      if (x === undefined) { a[k] = y; return; }
+      if (y && typeof y === "object" && typeof y.score === "number" && typeof x.score === "number") { if (y.score > x.score || (y.score === x.score && (y.stars || 0) > (x.stars || 0))) a[k] = y; return; }
+      if (y && typeof y === "object" && x && typeof x === "object") mergeRecMap(x, y);
+    });
+  }
+  function mergeCountMap(a, b) {   /* {level:{id:getal}}: hoogste getal */
+    Object.keys(b || {}).forEach(function (k) {
+      if (b[k] && typeof b[k] === "object") { a[k] = a[k] || {}; mergeCountMap(a[k], b[k]); }
+      else a[k] = Math.max(a[k] || 0, b[k] || 0);
+    });
+  }
+  function mergeStreak(a, b) {
+    const alive = function (x) { return x.last === todayStr() || x.last === yesterdayStr(); };
+    let pick = a;
+    if (alive(b) && !alive(a)) pick = b;
+    else if (alive(a) === alive(b)) pick = (b.count > a.count || (b.count === a.count && (b.last || "") > (a.last || ""))) ? b : a;
+    const last = [a.last, b.last].filter(Boolean).sort().pop() || null;
+    const days = (a.days || []).concat(b.days || []).filter(function (d, i, arr) { return arr.indexOf(d) === i; }).sort().slice(-28);
+    return { count: pick.count || 0, last: last, max: Math.max(a.max || 0, b.max || 0, pick.count || 0), days: days };
+  }
+  function mergePlayers(dst, src) {
+    ["junior", "expert"].forEach(function (lv) {
+      ["best", "journey", "daily"].forEach(function (k) { dst[k] = dst[k] || {}; dst[k][lv] = dst[k][lv] || {}; mergeRecMap(dst[k][lv], (src[k] || {})[lv]); });
+      ["chests", "seen"].forEach(function (k) { dst[k] = dst[k] || {}; dst[k][lv] = dst[k][lv] || {}; mergeRecMap(dst[k][lv], (src[k] || {})[lv]); });
+      dst.album = dst.album || {}; dst.album[lv] = dst.album[lv] || {}; mergeCountMap(dst.album[lv], (src.album || {})[lv]);
+      dst.xp = dst.xp || {}; dst.gems = dst.gems || {};
+      dst.xp[lv] = (dst.xp[lv] || 0) + ((src.xp || {})[lv] || 0);          /* wat de gast verdiende komt erbij */
+      dst.gems[lv] = (dst.gems[lv] || 0) + ((src.gems || {})[lv] || 0);
+    });
+    dst.badges = Object.assign({}, src.badges || {}, dst.badges || {});
+    dst.streak = mergeStreak(dst.streak, src.streak);
+    dst.played = (dst.played || 0) + (src.played || 0);
+    dst.age14 = !!(dst.age14 || src.age14);
+    if (!dst.mode) dst.mode = src.mode;
+  }
+  let linkNote = null;
   /* koppel de Google-gebruiker aan een lokale speler (bestaande voortgang blijft behouden) */
   function linkPlayer(u) {
     const meta = u.user_metadata || {};
@@ -3582,8 +3632,15 @@ return exports;})();
     const first = (full.split(/\s+/)[0] || "Speler").slice(0, 14);
     const photo = /^https:\/\//i.test(meta.avatar_url || meta.picture || "") ? (meta.avatar_url || meta.picture) : "";
     let p = S.players.find(function (x) { return x.sbId === u.id; });
+    const guest = takeLinkIntent();
+    if (p && guest && guest.id !== p.id) {                        /* dit account bestond al op dit apparaat: gastvoortgang erbij voegen */
+      mergePlayers(p, guest);
+      S.players = S.players.filter(function (x) { return x.id !== guest.id; });
+      if (!p.group && guest.group) p.group = guest.group; else { try { leaveGroup(guest); } catch (e) {} }
+      linkNote = "merged";
+    }
     if (!p) {
-      if (P && !P.sbId) p = P;                                    /* huidige gastspeler wordt jouw account */
+      if (guest || (P && !P.sbId)) { p = guest || P; linkNote = "linked"; }   /* de gastspeler wordt jouw account */
       else {
         let name = first; const base = name; let n = 2;
         while (S.players.some(function (x) { return x.name.toLowerCase() === name.toLowerCase(); })) name = base + " " + n++;
@@ -3608,7 +3665,9 @@ return exports;})();
       const fresh = !same;
       if (fresh) { linkPlayer(u); S.entry = "account"; saveState(); sbSyncAll(); sbLoadStreak(); closeAccount(); }
       if (screen === "login" || screen === "authwait") enterApp();
+      else if (fresh && screen === "players" && linkNote) enterApp();
       else if (fresh && ["journey", "board", "scores", "welcome", "players"].indexOf(screen) !== -1) render();
+      if (fresh && linkNote) { const m = linkNote; linkNote = null; setTimeout(function () { if (screen === "journey") jToast(m === "merged" ? "✓ Je gastvoortgang is toegevoegd aan je account" : "✓ Account gekoppeld, je voortgang is bewaard"); }, 500); }
     } else if (screen === "authwait") { loginMsg = "Inloggen met Google is niet gelukt of is geannuleerd. Probeer het opnieuw of ga door als gast."; screen = "login"; render(); accountDialog(); }
   }
   function sbInit() {
@@ -3645,9 +3704,9 @@ return exports;})();
       sb.from("user_streaks").select("current_streak,best_streak,last_day").eq("user_id", sbUser.id).maybeSingle().then(function (r) {
         const d = r && r.data, l = p.streak;
         if (d) {
-          if (d.last_day && (!l.last || d.last_day > l.last || (d.last_day === l.last && d.current_streak > l.count))) { l.count = d.current_streak; l.last = d.last_day; }
-          l.max = Math.max(l.max || 0, d.best_streak || 0);
-          if (l.last && (!l.days || l.days.indexOf(l.last) === -1)) { l.days = (l.days || []).concat([l.last]).sort(); }
+          /* lokaal en server samenvoegen: de reeks die nog leeft en het hoogst is wint, de beste reeks is het maximum */
+          const m = mergeStreak(l, { count: d.last_day ? d.current_streak : 0, last: d.last_day || null, max: d.best_streak || 0, days: d.last_day ? [d.last_day] : [] });
+          p.streak = m;
           saveState();
           if (screen === "journey") render();
         }
@@ -3720,7 +3779,7 @@ return exports;})();
     const logged = !!sbUser, active = acctActive();
     let h = '<div class="dialog acct-dlg islam-quiz-card" role="dialog" aria-modal="true" aria-labelledby="acctT"><button class="acct-x" data-d="x" aria-label="Sluiten">×</button><h3 id="acctT">Account</h3>';
     if (logged) h += '<p class="acct-who">✓ Ingelogd als: <b>' + esc(P ? P.name : "") + "</b> (" + acctProvider() + ")<small>Jouw score telt mee op het wereldwijde klassement.</small></p>";
-    else if (active) h += '<p class="acct-who">Je speelt als gast: <b>' + esc(P.name) + "</b><small>Log in om mee te tellen op het wereldwijde klassement. Je voortgang blijft behouden.</small></p>";
+    else if (active) h += '<p class="acct-who">Je speelt als gast: <b>' + esc(P.name) + "</b><small>Log in of maak een account: je levels, sterren, edelstenen en dagreeks gaan mee en je telt voortaan mee op het wereldwijde klassement.</small></p>";
     else h += '<p class="acct-who">Kies hoe je wilt spelen.</p>';
     if (!logged) {
       const up = acctTab === "up";
@@ -3775,7 +3834,7 @@ return exports;})();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) { sbMsg("Vul een geldig e-mailadres in."); return; }
     if (up && !nm) { sbMsg("Vul een naam in voor op het klassement."); return; }
     if (pw.length < (up ? 8 : 1)) { sbMsg(up ? "Kies een wachtwoord van minstens 8 tekens." : "Vul je wachtwoord in."); return; }
-    acctBusy = true;
+    acctBusy = true; markLinkIntent();
     const done = function (r) {
       acctBusy = false;
       if (r && r.error) { sbMsg(acctErr(r.error.message)); return; }
@@ -4142,7 +4201,8 @@ return exports;})();
       '<button class="btn ghost block" data-act="group" data-d="x">' + icon("users", 20) + "Groep &amp; duel</button>" +
       (isStandalone() ? "" : '<button class="btn ghost block" data-act="install" data-d="x">Zet op beginscherm</button>') +
       '<button class="btn ghost block" data-act="reset" data-d="x">' + icon("trash", 20) + "Voortgang van " + esc(P.name) + " wissen</button>" +
-      '<button class="btn ghost block acct-open" data-act="account" data-d="x">' + icon("users", 20) + (sbUser ? "Ingelogd als: " + esc(P.name) : "Account &amp; Inloggen") + "</button>" +
+      '<p class="set-h">Account &amp; Synchronisatie</p>' +
+      '<button class="btn ghost block acct-open" data-act="account" data-d="x">' + icon("users", 20) + (sbUser && P && P.sbId === sbUser.id ? "✓ Ingelogd als: " + esc(P.name) + " (gesynchroniseerd)" : P && !P.sbId ? "Status: Gastspeler — Koppel je account" : "Account &amp; Inloggen") + "</button>" +
       '<button class="btn block" data-d="ok">Klaar</button></div></div>';
     w.addEventListener("change", function (e) {
       if (e.target.id === "optSound") { S.sound = e.target.checked; if (!S.sound) voiceStop(); }
@@ -4710,6 +4770,7 @@ return exports;})();
     h += "</div>";
     h += '<div class="stack">' +
       (S.players.length < MAX_PLAYERS ? '<button class="btn gold block" data-act="add-player">' + icon("smile", 20) + "Nieuwe speler</button>" : "") +
+      (!sbUser || (P && !P.sbId) ? '<button class="btn ghost block acct-open" data-act="account">' + icon("users", 20) + (P && !P.sbId ? "Account koppelen / Inloggen voor " + esc(P.name) : "Account koppelen / Inloggen") + "</button>" : "") +
       (S.players.length > 1 ? '<button class="btn block" data-act="board">' + icon("trophy", 20) + "Scorebord</button>" : "") + "</div>";
     return h;
   }
