@@ -1078,6 +1078,33 @@ body.jfull .reward-flyer { top: 160px; }
 .quiz-status { color: #4ade80; font-size: .9em; font-weight: 800; margin-top: 12px; min-height: 1.3em; }
 .quiz-status.err { color: #ffb4a9; }
 .islam-quiz-card button:focus-visible, .islam-quiz-card input:focus-visible { outline: 3px solid #ffd54f; outline-offset: 2px; }
+
+/* ── Account-pop-up (groen/goud) ── */
+.acct-dlg.islam-quiz-card { position: relative; width: 100%; max-width: 380px; margin: 0; padding: 22px 20px 20px; text-align: left; max-height: calc(100dvh - 40px); overflow-y: auto; border-radius: 24px; }
+.acct-dlg h3 { color: #ffe08a; font-size: 1.3rem; padding-right: 36px; }
+.acct-dlg p { color: #e8f3ec; margin: 0; }
+.acct-x { position: absolute; top: 10px; right: 10px; width: 36px; height: 36px; border-radius: 50%; border: 0; cursor: pointer; background: rgba(255, 255, 255, .15); color: #fff; font-size: 1.5rem; line-height: 1; }
+.acct-who { margin: 8px 0 14px !important; font-weight: 700; background: rgba(255, 255, 255, .1); border-radius: 12px; padding: 10px 12px; }
+.acct-who small { display: block; font-weight: 600; color: #cfe8d8; margin-top: 2px; }
+.acct-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: rgba(0, 0, 0, .25); padding: 4px; border-radius: 14px; margin-bottom: 12px; }
+.acct-tab { appearance: none; border: 0; font: inherit; font-weight: 800; padding: 9px; border-radius: 11px; background: transparent; color: #cfe8d8; cursor: pointer; }
+.acct-tab.on { background: linear-gradient(180deg, #f9dd9c, #d9a05b); color: #3a2606; }
+.acct-form { display: grid; gap: 4px; }
+.acct-form .quiz-label { margin-top: 6px; margin-bottom: 4px; }
+.acct-dlg .quiz-label { color: var(--card-label); font-weight: 800; font-size: .92em; display: block; margin-bottom: 6px; }
+.acct-dlg .quiz-input { width: 100%; background: rgba(255, 255, 255, .1); border: 1.5px solid var(--card-line); border-radius: 10px; padding: 11px 14px; color: #fff; font: inherit; outline: none; }
+.acct-dlg .quiz-input:focus { background: rgba(255, 255, 255, .2); box-shadow: 0 0 10px rgba(255, 215, 0, .5); }
+.acct-dlg .quiz-input::placeholder { color: var(--card-ph); }
+.btn-gold-quiz { appearance: none; width: 100%; margin-top: 12px; padding: 12px 16px; border: 0; border-radius: 10px; background: linear-gradient(180deg, #f9dd9c, #d9a05b); color: #3a2606; font: inherit; font-weight: 900; cursor: pointer; box-shadow: 0 4px 0 #a8742f; }
+.btn-gold-quiz:active { transform: translateY(3px); box-shadow: 0 1px 0 #a8742f; }
+.acct-msg { min-height: 1.2em; margin-top: 10px !important; font-weight: 800; font-size: .9em; }
+.acct-msg.err { color: #ffb4a9 !important; } .acct-msg.ok { color: #4ade80 !important; }
+.acct-dlg .btn-google-quiz { margin-top: 8px; }
+.acct-dlg .btn-guest-quiz { margin-top: 10px; }
+.btn-out-quiz { appearance: none; width: 100%; margin-top: 18px; padding: 12px 16px; border-radius: 10px; border: 2px solid #ffb4a9; background: transparent; color: #ffb4a9; font: inherit; font-weight: 800; cursor: pointer; }
+.btn-out-quiz:hover { background: rgba(255, 180, 169, .12); }
+.acct-dlg button:focus-visible, .acct-dlg input:focus-visible { outline: 3px solid #ffd54f; outline-offset: 2px; }
+.btn.acct-open { border-color: var(--gold); }
 </style>
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Islam Quiz">
@@ -3484,20 +3511,30 @@ return exports;})();
   const GOOGLE_PHOTO = /^https:\/\/[a-z0-9.-]+\.googleusercontent\.com\//i;
   const gb = { junior: null, expert: null };        /* geladen klassement per modus */
 
-  function sbMsg(t) {
-    loginMsg = t; const el = document.getElementById("user-status");
-    if (el) { el.textContent = t; el.classList.toggle("err", !!t); } else { announce(t); try { window.alert(t); } catch (e) {} }
+  function sbMsg(t, ok) {
+    loginMsg = t; const el = document.getElementById("acctMsg") || document.getElementById("user-status");
+    if (el) { el.textContent = t; el.classList.toggle("err", !!t && !ok); el.classList.toggle("ok", !!t && !!ok); } else { announce(t); try { window.alert(t); } catch (e) {} }
   }
-  function sbLoginGoogle() {
-    loginMsg = ""; const el0 = document.getElementById("user-status"); if (el0) { el0.textContent = ""; el0.classList.remove("err"); }
+  function sbLoginGoogle() { sbOAuth("google"); }
+  function sbOAuth(provider) {
+    sbMsg("");
     if (!sb) { sbMsg("Inloggen kan nu niet: de inlogdienst is niet bereikbaar. Controleer je verbinding of ga door als gast."); return; }
-    sb.auth.signInWithOAuth({ provider: "google", options: { redirectTo: location.origin + location.pathname } })
+    sb.auth.signInWithOAuth({ provider: provider, options: { redirectTo: location.origin + location.pathname } })
       .then(function (r) { if (r && r.error) sbMsg("Inloggen is niet gelukt: " + r.error.message); })
       .catch(function () { sbMsg("Inloggen is niet gelukt. Controleer je verbinding en probeer het opnieuw."); });
   }
-  function sbLogout() {
+  /* uitloggen / account wisselen: sessie weg, en de voortgang van deze speler op dit apparaat wordt gewist (andere spelers blijven) */
+  function doLogout() {
     try { if (sb) sb.auth.signOut(); } catch (e) {}
-    sbUser = null; S.entry = "guest"; saveState(); render();
+    try { Object.keys(localStorage).filter(function (k) { return /^sb-.+-auth-token/.test(k) || k.indexOf("supabase.auth") === 0; }).forEach(function (k) { localStorage.removeItem(k); }); } catch (e) {}
+    const gone = P ? P.id : null;
+    sbUser = null; gb.junior = null; gb.expert = null;
+    S.players = S.players.filter(function (x) { return x.id !== gone; });
+    S.current = S.players[0] ? S.players[0].id : null; P = currentPlayer();
+    S.entry = null; quiz = null; result = null; journeyLand = null; boardScope = null; loginMsg = "";
+    if (!S.players.length) { try { localStorage.removeItem(AUTH_KEY); } catch (e) {} }
+    saveState();
+    screen = "login"; render(); accountDialog();
   }
   /* koppel de Google-gebruiker aan een lokale speler (bestaande voortgang blijft behouden) */
   function linkPlayer(u) {
@@ -3530,10 +3567,10 @@ return exports;})();
     sbUser = u;
     if (u) {
       const fresh = !same;
-      if (fresh) { linkPlayer(u); S.entry = "google"; saveState(); sbSyncAll(); }
+      if (fresh) { linkPlayer(u); S.entry = "account"; saveState(); sbSyncAll(); closeAccount(); }
       if (screen === "login" || screen === "authwait") enterApp();
       else if (fresh && ["journey", "board", "scores", "welcome", "players"].indexOf(screen) !== -1) render();
-    } else if (screen === "authwait") { loginMsg = "Inloggen met Google is niet gelukt of is geannuleerd. Probeer het opnieuw of ga door als gast."; screen = "login"; render(); }
+    } else if (screen === "authwait") { loginMsg = "Inloggen met Google is niet gelukt of is geannuleerd. Probeer het opnieuw of ga door als gast."; screen = "login"; render(); accountDialog(); }
   }
   function sbInit() {
     if (!sb) return;
@@ -3599,7 +3636,7 @@ return exports;})();
   function gbSectionHtml(lv) {
     let h = '<div class="gb-head"><h2>' + icon("trophy", 22) + " Wereldwijd klassement</h2><p>Top 50 · " + modeName(lv) + "-modus · gesorteerd op highscore</p></div>";
     h += sbUser ? '<p class="gb-me">✅ Je bent ingelogd: jouw ' + modeName(lv) + "-score telt mee.</p>"
-      : '<div class="gb-cta"><b>Doe mee met de wereld!</b><span>Als gast tel je niet mee. Log in met Google om op het klassement te komen.</span><button class="btn google" data-act="login-google">' + GOOGLE_G + " Inloggen met Google</button></div>";
+      : '<div class="gb-cta"><b>Doe mee met de wereld!</b><span>Als gast tel je niet mee. Log in met Google om op het klassement te komen.</span><button class="btn google" data-act="account">' + GOOGLE_G + " Inloggen of account maken</button></div>";
     h += '<div id="gbList" class="gb-wrap" aria-live="polite">' + gbListHtml(lv) + "</div>";
     h += '<div class="gb-refresh"><button class="btn ghost small" data-act="gb-refresh">' + icon("retry", 16) + " Vernieuwen</button></div>";
     return h;
@@ -3608,15 +3645,85 @@ return exports;})();
   function viewLogin() {
     return '<section class="welcome login">' +
       '<div class="logo">' + icon("moon", 44) + "</div><h1>Welkom bij Islam Quiz</h1>" + ar("السَّلَامُ عَلَيْكُمْ") +
-      '<p class="greet">Hoe wil je spelen?</p>' +
-      '<div class="islam-quiz-card player-input-section">' +
-      '<div class="input-group"><label for="username" class="quiz-label">Spelersnaam (Gast):</label>' +
-      '<input type="text" id="username" class="quiz-input" maxlength="14" autocomplete="off" placeholder="Voer je naam in..."></div>' +
-      '<button class="btn-guest-quiz" data-act="login-guest"><span aria-hidden="true">⚪</span> Doorgaan als Gast</button>' +
-      '<div class="quiz-divider" role="separator"><span>OF</span></div>' +
-      '<button id="google-login-btn" class="btn-google-quiz" data-act="login-google">' + GOOGLE_G + "<span>Inloggen met Google</span></button>" +
-      '<p id="user-status" class="quiz-status' + (loginMsg ? " err" : "") + '" role="status">' + esc(loginMsg) + "</p></div>" +
-      '<p class="login-note"><b>Met Google</b> tel je mee op het wereldwijde klassement. Alleen je voornaam, je profielfoto en je score zijn dan zichtbaar voor anderen.<br><b>Als gast</b> blijft alles op dit apparaat en tel je niet mee.</p></section>';
+      '<p class="greet">Log in of speel als gast.</p>' +
+      '<div class="stack login-btns"><button class="btn block" data-act="account">' + icon("users", 20) + "Account &amp; Inloggen</button></div>" +
+      '<p class="login-note"><b>Met een account</b> tel je mee op het wereldwijde klassement. Alleen je voornaam, je profielfoto (als je die hebt) en je score zijn dan zichtbaar voor anderen.<br><b>Als gast</b> blijft alles op dit apparaat en tel je niet mee.</p></section>';
+  }
+  /* ── Account-pop-up: e-mail, Google, Facebook, gast en uitloggen ── */
+  let acctTab = "in", acctBusy = false;
+  const FB_F = '<svg class="g-ic" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><path fill="#1877F2" d="M24 12a12 12 0 1 0-13.9 11.85v-8.38H7.08V12h3.02V9.36c0-3 1.79-4.67 4.53-4.67 1.31 0 2.69.23 2.69.23v2.95h-1.52c-1.49 0-1.96.93-1.96 1.87V12h3.33l-.53 3.47h-2.8v8.38A12 12 0 0 0 24 12z"/></svg>';
+  function acctActive() { return !!P && !!S.entry; }
+  function acctProvider() { const m = sbUser && sbUser.app_metadata && sbUser.app_metadata.provider; return m === "google" ? "Google" : m === "facebook" ? "Facebook" : "e-mail"; }
+  function acctHtml(keepEmail) {
+    const logged = !!sbUser, active = acctActive();
+    let h = '<div class="dialog acct-dlg islam-quiz-card" role="dialog" aria-modal="true" aria-labelledby="acctT"><button class="acct-x" data-d="x" aria-label="Sluiten">×</button><h3 id="acctT">Account</h3>';
+    if (logged) h += '<p class="acct-who">✓ Ingelogd als: <b>' + esc(P ? P.name : "") + "</b> (" + acctProvider() + ")<small>Jouw score telt mee op het wereldwijde klassement.</small></p>";
+    else if (active) h += '<p class="acct-who">Je speelt als gast: <b>' + esc(P.name) + "</b><small>Log in om mee te tellen op het wereldwijde klassement. Je voortgang blijft behouden.</small></p>";
+    else h += '<p class="acct-who">Kies hoe je wilt spelen.</p>';
+    if (!logged) {
+      const up = acctTab === "up";
+      h += '<div class="acct-tabs" role="tablist" aria-label="Inloggen of registreren"><button type="button" role="tab" class="acct-tab' + (!up ? " on" : "") + '" aria-selected="' + !up + '" data-act="acct-tab" data-tab="in">Inloggen</button><button type="button" role="tab" class="acct-tab' + (up ? " on" : "") + '" aria-selected="' + up + '" data-act="acct-tab" data-tab="up">Registreren</button></div>' +
+        '<form class="acct-form" novalidate>' +
+        (up ? '<label class="quiz-label" for="acctName">Naam (zichtbaar op het klassement)</label><input class="quiz-input" id="acctName" type="text" maxlength="14" autocomplete="nickname" placeholder="Bijvoorbeeld Aisha">' : "") +
+        '<label class="quiz-label" for="acctEmail">E-mailadres</label><input class="quiz-input" id="acctEmail" type="email" inputmode="email" autocomplete="email" placeholder="naam@voorbeeld.nl" value="' + esc(keepEmail || "") + '">' +
+        '<label class="quiz-label" for="acctPass">Wachtwoord' + (up ? " (minstens 8 tekens)" : "") + '</label><input class="quiz-input" id="acctPass" type="password" autocomplete="' + (up ? "new-password" : "current-password") + '" placeholder="••••••••">' +
+        '<button type="submit" class="btn-gold-quiz">' + (up ? "Account maken" : "Inloggen") + "</button></form>" +
+        '<p id="acctMsg" class="acct-msg" role="alert">' + esc(loginMsg) + "</p>" +
+        '<div class="quiz-divider" role="separator"><span>OF</span></div>' +
+        '<button class="btn-google-quiz" data-act="acct-oauth" data-provider="google">' + GOOGLE_G + "<span>Doorgaan met Google</span></button>" +
+        '<button class="btn-google-quiz" data-act="acct-oauth" data-provider="facebook">' + FB_F + "<span>Doorgaan met Facebook</span></button>" +
+        '<div class="quiz-divider" role="separator"><span>OF</span></div>' +
+        (active ? '<button class="btn-guest-quiz" data-d="x">⚪ Doorgaan als Gast</button>'
+          : '<label class="quiz-label" for="username">Spelersnaam (Gast)</label><input class="quiz-input" id="username" type="text" maxlength="14" autocomplete="off" placeholder="Voer je naam in..."><button class="btn-guest-quiz" data-act="acct-guest"><span aria-hidden="true">⚪</span> Doorgaan als Gast</button>');
+    }
+    if (logged || active) h += '<button class="btn-out-quiz" data-act="acct-logout">Uitloggen / Account wisselen</button>';
+    return h + "</div>";
+  }
+  function closeAccount() { const w = document.getElementById("acctDlg"); if (w) w.remove(); }
+  function accountDialog() {
+    closeAccount();
+    const w = document.createElement("div"); w.className = "dialog-wrap"; w.id = "acctDlg";
+    w.innerHTML = acctHtml("");
+    w.addEventListener("click", function (e) { if (e.target === w || e.target.closest("[data-d]")) closeAccount(); });
+    w.addEventListener("submit", function (e) { e.preventDefault(); acctSubmit(); });
+    document.body.appendChild(w);
+  }
+  function acctRefresh(focusSel) {
+    const w = document.getElementById("acctDlg"); if (!w) return;
+    const em = (document.getElementById("acctEmail") || {}).value || "";
+    w.innerHTML = acctHtml(em);
+    const f = focusSel && w.querySelector(focusSel); if (f) f.focus();
+  }
+  function acctErr(m) {
+    m = String(m || "");
+    if (/invalid login/i.test(m)) return "E-mailadres of wachtwoord klopt niet.";
+    if (/not confirmed/i.test(m)) return "Bevestig eerst je e-mailadres via de mail die we je stuurden.";
+    if (/already registered/i.test(m)) return "Dit e-mailadres heeft al een account. Log in.";
+    if (/at least/i.test(m)) return "Kies een wachtwoord van minstens 8 tekens.";
+    if (/rate limit|too many/i.test(m)) return "Te veel pogingen. Probeer het later opnieuw.";
+    if (/unable to validate email|invalid.*email/i.test(m)) return "Dit e-mailadres lijkt niet te kloppen.";
+    return "Dat is niet gelukt: " + m;
+  }
+  function acctSubmit() {
+    if (acctBusy) return;
+    const v = function (id) { const el = document.getElementById(id); return el ? el.value : ""; };
+    const em = v("acctEmail").trim(), pw = v("acctPass"), nm = v("acctName").trim().replace(/\s+/g, " ").slice(0, 14), up = acctTab === "up";
+    sbMsg("");
+    if (!sb) { sbMsg("Inloggen kan nu niet: de inlogdienst is niet bereikbaar. Controleer je verbinding of ga door als gast."); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) { sbMsg("Vul een geldig e-mailadres in."); return; }
+    if (up && !nm) { sbMsg("Vul een naam in voor op het klassement."); return; }
+    if (pw.length < (up ? 8 : 1)) { sbMsg(up ? "Kies een wachtwoord van minstens 8 tekens." : "Vul je wachtwoord in."); return; }
+    acctBusy = true;
+    const done = function (r) {
+      acctBusy = false;
+      if (r && r.error) { sbMsg(acctErr(r.error.message)); return; }
+      if (up && !(r && r.data && r.data.session)) sbMsg("Bijna klaar! Bevestig je e-mailadres via de mail die we stuurden en log daarna in.", true);
+    };
+    const fail = function () { acctBusy = false; sbMsg("Dat is niet gelukt. Controleer je verbinding en probeer het opnieuw."); };
+    try {
+      if (up) sb.auth.signUp({ email: em, password: pw, options: { data: { full_name: nm }, emailRedirectTo: location.origin + location.pathname } }).then(done).catch(fail);
+      else sb.auth.signInWithPassword({ email: em, password: pw }).then(done).catch(fail);
+    } catch (e) { fail(); }
   }
   /* gast: een ingevulde naam maakt meteen een speler; leeg laten gaat naar het bestaande naam- en kleurscherm */
   function guestEnter() {
@@ -3629,7 +3736,7 @@ return exports;})();
       const pl = newPlayer(name, AVATAR_COLORS[S.players.length % AVATAR_COLORS.length]);
       S.players.push(pl); S.current = pl.id; P = pl;
     }
-    saveState(); enterApp();
+    closeAccount(); saveState(); enterApp();
   }
   function viewAuthWait() {
     return '<section class="welcome"><div class="logo">' + icon("moon", 44) + '</div><h1>Even geduld…</h1><p class="greet" role="status">We loggen je in met Google.</p></section>';
@@ -3968,11 +4075,12 @@ return exports;})();
       '<label class="opt"><input type="checkbox" role="switch" class="sw" id="optDuff"' + (duffPref() ? " checked" : "") + '><span>Achtergrond percussie (Duff)<small>Zachte percussie op de achtergrond. Pauzeert vanzelf tijdens het voorlezen.</small></span></label>' +
       '<label class="opt"><input type="checkbox" id="optAuto"' + (autoOn() ? " checked" : "") + '><span>Automatisch doorgaan na een level<small>Na een resultaat ga je vanzelf verder. Zet dit uit als je liever zelf op de knop tikt.</small></span></label>' +
       '<p class="warn">Gebruik je al een schermlezer (VoiceOver of TalkBack)? Zet “Spreek vragen uit” dan uit, anders praten beide stemmen door elkaar.</p>' +
-      '<div class="stack">' + (sbUser ? '<p class="acct">Ingelogd met Google als <b>' + esc(P.name) + '</b>. Jouw score telt mee op het wereldwijde klassement.</p><button class="btn ghost block" data-act="logout" data-d="x">Uitloggen</button>' : '<button class="btn ghost block" data-act="login-google" data-d="x">' + GOOGLE_G + "Inloggen met Google</button>") +
+      '<div class="stack">' +
       '<button class="btn ghost block" data-act="scores" data-d="x">' + icon("trophy", 20) + "Mijn scores</button>" +
       '<button class="btn ghost block" data-act="group" data-d="x">' + icon("users", 20) + "Groep &amp; duel</button>" +
       (isStandalone() ? "" : '<button class="btn ghost block" data-act="install" data-d="x">Zet op beginscherm</button>') +
       '<button class="btn ghost block" data-act="reset" data-d="x">' + icon("trash", 20) + "Voortgang van " + esc(P.name) + " wissen</button>" +
+      '<button class="btn ghost block acct-open" data-act="account" data-d="x">' + icon("users", 20) + (sbUser ? "Ingelogd als: " + esc(P.name) : "Account &amp; Inloggen") + "</button>" +
       '<button class="btn block" data-d="ok">Klaar</button></div></div>';
     w.addEventListener("change", function (e) {
       if (e.target.id === "optSound") { S.sound = e.target.checked; if (!S.sound) voiceStop(); }
@@ -6538,8 +6646,13 @@ return exports;})();
       case "board-scope": play("click"); boardScope = el.dataset.scope; render(); if (boardScope === "global") gbLoad(boardLevel); break;
       case "gb-refresh": gbLoad(boardLevel); break;
       case "login-google": play("click"); sbLoginGoogle(); break;
+      case "account": play("click"); accountDialog(); break;
+      case "acct-tab": acctTab = el.dataset.tab; sbMsg(""); acctRefresh('.acct-tab[aria-selected="true"]'); break;
+      case "acct-oauth": play("click"); sbOAuth(el.dataset.provider); break;
+      case "acct-guest": play("click"); guestEnter(); break;
+      case "acct-logout": play("click"); closeAccount(); confirmDialog("Uitloggen / Account wisselen", "De voortgang van " + (P ? P.name : "deze speler") + " op dit apparaat wordt gewist" + (sbUser ? " (je highscore op het wereldwijde klassement blijft staan)" : "") + ". Andere spelers op dit apparaat blijven bewaard. Daarna kies je een nieuw account of speel je als gast.", "Ja, uitloggen", doLogout); break;
       case "login-guest": play("click"); guestEnter(); break;
-      case "logout": play("click"); sbLogout(); break;
+      case "logout": play("click"); closeAccount(); confirmDialog("Uitloggen / Account wisselen", "De voortgang van " + (P ? P.name : "deze speler") + " op dit apparaat wordt gewist. Daarna kies je een nieuw account of speel je als gast.", "Ja, uitloggen", doLogout); break;
     }
   });
 
@@ -6565,6 +6678,7 @@ return exports;})();
   render();
   if (P && P.mode === "expert" && !P.age14 && screen !== "login" && screen !== "authwait") chooseMode("expert", function () { render(); });
   sbInit();
+  if (screen === "login") accountDialog();
 })();
 </script>
 <script>
