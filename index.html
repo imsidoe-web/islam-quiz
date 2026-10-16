@@ -1192,7 +1192,7 @@ body.jfull .reward-flyer { top: 160px; }
 .rw.daily { background: #fff3c4; color: #7a4d08; }
 
 /* ── medespelers + profiel-bordje ── */
-.j-peer, .j-me { cursor: pointer; outline: none; } .j-peer:focus-visible circle:first-of-type, .j-me:focus-visible circle:first-of-type { stroke: #ffd54f; stroke-width: 3; }
+.j-peer, .j-me { cursor: pointer; outline: none; } .j-peer:focus-visible rect:nth-of-type(3), .j-me:focus-visible circle:first-of-type { stroke: #ffd54f; stroke-width: 3; }
 .j-peer-in { animation: peerBob 3s ease-in-out infinite; } @keyframes peerBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
 .peer-dlg { background: none; box-shadow: none; padding: 0; max-width: 330px; overflow: visible; text-align: center; position: relative; margin-top: 34px; }
 .pe-ropes { position: absolute; top: -34px; left: 0; right: 0; height: 40px; pointer-events: none; z-index: 0; }
@@ -6233,13 +6233,17 @@ return exports;})();
   }
   function peerColor(pe) { if (pe.color) return pe.color; let h = 0; String(pe.uid || pe.name).split("").forEach(function (c) { h = (h * 31 + c.charCodeAt(0)) >>> 0; }); return AVATAR_COLORS[h % AVATAR_COLORS.length]; }
   function peerSvg(pe, x, y) {
-    const id = "pc" + (++socUid), ini = esc(String(pe.name || "?").trim().charAt(0).toUpperCase());
+    const id = "pc" + (++socUid), ini = esc(String(pe.name || "?").trim().charAt(0).toUpperCase()), S2 = 46, H = S2 / 2;
     peerMap[pe.key] = pe;
+    /* Candy-Crush-achtig: afgeronde tegel met blauwe rand, groot genoeg om te herkennen en aan te tikken */
     return '<g class="j-peer" data-act="peer" data-key="' + esc(pe.key) + '" role="button" tabindex="0" aria-label="Medespeler ' + esc(pe.name) + ", level " + (pe.level + 1) + ". Tik voor het profiel" + '" transform="translate(' + x + " " + y + ')"><g class="j-peer-in">' +
-      '<circle r="19" fill="#000" fill-opacity="0"/><circle r="15" fill="#fff"/><circle r="12.5" fill="' + peerColor(pe) + '"/>' +
-      '<text y="5" text-anchor="middle" font-size="13" font-weight="900" fill="#fff">' + ini + "</text>" +
-      (pe.photo ? '<clipPath id="' + id + '"><circle r="12.5"/></clipPath><image href="' + esc(pe.photo) + '" x="-12.5" y="-12.5" width="25" height="25" preserveAspectRatio="xMidYMid slice" clip-path="url(#' + id + ')" referrerpolicy="no-referrer"/>' : "") +
-      '<circle r="15" fill="none" stroke="#ffd54f" stroke-width="2"/></g></g>';
+      '<rect x="' + (-H - 4) + '" y="' + (-H - 4) + '" width="' + (S2 + 8) + '" height="' + (S2 + 8) + '" rx="15" fill="#000" fill-opacity="0"/>' +
+      '<rect x="' + (-H + 1) + '" y="' + (-H + 4) + '" width="' + S2 + '" height="' + S2 + '" rx="13" fill="#000" fill-opacity=".28"/>' +
+      '<rect x="' + (-H) + '" y="' + (-H) + '" width="' + S2 + '" height="' + S2 + '" rx="13" fill="#2f86e0" stroke="#bfe0ff" stroke-width="2"/>' +
+      '<rect x="' + (-H + 4) + '" y="' + (-H + 4) + '" width="' + (S2 - 8) + '" height="' + (S2 - 8) + '" rx="9" fill="' + peerColor(pe) + '"/>' +
+      '<text y="9" text-anchor="middle" font-size="24" font-weight="900" fill="#fff">' + ini + "</text>" +
+      (pe.photo ? '<clipPath id="' + id + '"><rect x="' + (-H + 4) + '" y="' + (-H + 4) + '" width="' + (S2 - 8) + '" height="' + (S2 - 8) + '" rx="9"/></clipPath><image href="' + esc(pe.photo) + '" x="' + (-H + 4) + '" y="' + (-H + 4) + '" width="' + (S2 - 8) + '" height="' + (S2 - 8) + '" preserveAspectRatio="xMidYMid slice" clip-path="url(#' + id + ')" referrerpolicy="no-referrer"/>' : "") +
+      '<rect x="' + (-H) + '" y="' + (-H) + '" width="' + S2 + '" height="' + S2 + '" rx="13" fill="none" stroke="#ffd54f" stroke-width="1.5" stroke-opacity=".9"/></g></g>';
   }
   function socialSvg(c, stops) {
     const lv = P.mode, li = CATEGORIES.indexOf(c), by = {};
@@ -6247,8 +6251,9 @@ return exports;})();
     let h = "";
     Object.keys(by).forEach(function (k) {
       const st = stops[k], R = st.last ? 27 : st.mile ? 21 : 19, side = st.x < 180 ? -1 : 1, list = by[k];
-      list.slice(0, 2).forEach(function (pe, n) { h += peerSvg(pe, st.x + side * (R + 17), st.y - 34 - n * 31); });
-      if (list.length > 2) h += '<g transform="translate(' + (st.x + side * (R + 17)) + " " + (st.y - 34 - 2 * 31) + ')" aria-hidden="true"><circle r="12" fill="#1b4332" stroke="#ffd54f" stroke-width="2"/><text y="4" text-anchor="middle" font-size="11" font-weight="900" fill="#fff">+' + (list.length - 2) + "</text></g>";
+      const px = Math.max(30, Math.min(330, st.x + side * (R + 36)));
+      list.slice(0, 2).forEach(function (pe, n) { h += peerSvg(pe, px, st.y - 4 - n * 58); });
+      if (list.length > 2) h += '<g transform="translate(' + px + " " + (st.y - 4 - 2 * 58 + 10) + ')" aria-hidden="true"><circle r="13" fill="#1b4332" stroke="#ffd54f" stroke-width="2"/><text y="4" text-anchor="middle" font-size="11" font-weight="900" fill="#fff">+' + (list.length - 2) + "</text></g>";
     });
     return h;
   }
@@ -7204,7 +7209,7 @@ return exports;})();
     const gen = (el._gen = (el._gen || 0) + 1);
     /* Op telefoons blokkeert de browser geluid tot de eerste aanraking: dan wachten we met de intro op één tik ("Tik om te starten"). */
     let needTap = false;
-    try { if (!retry && S.sound && !rm && window.matchMedia && matchMedia("(pointer: coarse)").matches) { const c0 = ctx(); needTap = !!c0 && c0.state !== "running"; } } catch (e) {}
+    try { if (!retry && S.sound && !rm) { const c0 = ctx(); needTap = !!c0 && c0.state !== "running"; } } catch (e) {}
     let opened = false, gone = false, doneCalled = false;
     const later = function (fn, ms) { timers.push(setTimeout(fn, ms)); };
     const callDone = function () { if (!doneCalled) { doneCalled = true; done(); } };
@@ -7213,7 +7218,7 @@ return exports;})();
       '<div class="sp-center"><div class="sp-logo"><div class="logo">' + brandLogo(44) + '</div></div><p class="sp-title" aria-hidden="true">' +
       text.split("").map(function (ch) { return ch === " " ? '<span class="sp">&nbsp;</span>' : "<span>" + ch + "</span>"; }).join("") + "</p></div>" +
       '<button class="sp-skip" type="button">Overslaan</button>' +
-      (needTap ? '<p class="sp-hint" aria-hidden="true">Tik om te starten</p>' : "") + '<h1 class="sr-only">Islam Quiz</h1>';
+      (needTap ? '<p class="sp-hint" aria-hidden="true">' + (window.matchMedia && matchMedia("(pointer: coarse)").matches ? "Tik om te starten" : "Klik of druk op een toets om te starten") + "</p>" : "") + '<h1 class="sr-only">Islam Quiz</h1>';
     el.classList.add("ready"); if (rm) el.classList.add("rm");
     const logo = el.querySelector(".sp-logo"), letters = el.querySelectorAll(".sp-title span"), skipBtn = el.querySelector(".sp-skip");
     try { ctx(); } catch (e) {}
@@ -7247,8 +7252,19 @@ return exports;})();
       if (needTap) { needTap = false; timers.forEach(clearTimeout); try { ctx(); } catch (e) {} startSplash(done, true); return; }
       skip();
     });
-    el.addEventListener("keydown", function (e) { if (el._gen !== gen) return; if (e.key === "Escape" || e.key === "Enter" || e.key === " ") { e.preventDefault(); skip(); } });
-    try { skipBtn.focus({ preventScroll: true }); } catch (e) {}
+    el.addEventListener("keydown", function (e) {
+      if (el._gen !== gen) return;
+      if (needTap && e.key !== "Escape" && e.key !== "Tab") { e.preventDefault(); needTap = false; timers.forEach(clearTimeout); try { ctx(); } catch (x) {} startSplash(done, true); return; }
+      if (e.key === "Escape" || e.key === "Enter" || e.key === " ") { e.preventDefault(); skip(); } });
+    if (needTap) {
+      const kd = function (e) {
+        if (!document.body.contains(el) || el._gen !== gen || !needTap) { document.removeEventListener("keydown", kd, true); return; }
+        if (e.key === "Escape" || e.key === "Tab" || e.key === "Shift" || e.key === "Control" || e.key === "Alt" || e.key === "Meta") return;
+        e.preventDefault(); needTap = false; document.removeEventListener("keydown", kd, true); timers.forEach(clearTimeout); try { ctx(); } catch (x) {} startSplash(done, true);
+      };
+      document.addEventListener("keydown", kd, true);
+    }
+    try { if (!needTap) skipBtn.focus({ preventScroll: true }); else el.tabIndex = -1, el.focus({ preventScroll: true }); } catch (e) {}
     if (needTap) return;
     if (rm) { later(function () { letters.forEach(function (l) { l.classList.add("on"); }); }, 300); later(function () { open(false); }, 1400); return; }
     for (let k = 0; k < text.length; k++) later(function () { hop(k); }, 450 + k * 260);
