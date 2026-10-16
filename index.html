@@ -1463,6 +1463,16 @@ body:has(#avDlg) .back-toast { top: 92px !important; bottom: auto !important; z-
 .tour-btns .btn { min-height: 50px; font-size: 17px; font-weight: 900; white-space: nowrap; }
 .tour-btns .btn.ghost { background: rgba(255,255,255,.1); color: #f4efe0; border: 2px solid rgba(255,255,255,.25); } .tour-btns .btn.gold { background: linear-gradient(#ffe27a, #e9a800); color: #3a2600; }
 @media (prefers-reduced-motion: reduce) { .tour-art.inr, .tour-art.inl { animation: none; } }
+
+/* 3D-iconen met glans */
+.i3 { overflow: visible; filter: drop-shadow(0 1.5px 1.2px rgba(0,0,0,.4)); flex: none; }
+.i3sp { transform-box: fill-box; transform-origin: center; animation: i3sp 3s ease-in-out infinite; opacity: 0; }
+@keyframes i3sp { 0%, 62%, 100% { transform: scale(0) rotate(0); opacity: 0; } 76% { transform: scale(1.15) rotate(25deg); opacity: .95; } 88% { transform: scale(.4) rotate(45deg); opacity: .4; } }
+.star3d.on, .stars-row .star3d { color: inherit; }
+.mini-stars span:not(.on) .star3d, .stars-row .star3d:not(.on) { filter: grayscale(1) brightness(.62) contrast(.9) drop-shadow(0 1px 1px rgba(0,0,0,.3)); } .mini-stars span:not(.on) .i3sp, .stars-row .star3d:not(.on) .i3sp { display: none; }
+.jh-stats > span { background: linear-gradient(180deg, rgba(255,255,255,.3), rgba(255,255,255,.08)); box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 0 2px 0 rgba(0,0,0,.28); border: 1px solid rgba(255,255,255,.22); }
+.jh-stats .i3 { margin-left: -2px; }
+@media (prefers-reduced-motion: reduce) { .i3sp { animation: none; opacity: 0; } }
 </style>
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Islam Quiz">
@@ -1487,6 +1497,9 @@ body:has(#avDlg) .back-toast { top: 92px !important; bottom: auto !important; z-
 </head>
 <body>
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+    <linearGradient id="i3Gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff7bf"/><stop offset=".35" stop-color="#ffd23a"/><stop offset=".8" stop-color="#e79a00"/><stop offset="1" stop-color="#9a5a00"/></linearGradient>
+    <linearGradient id="i3Fl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd24a"/><stop offset=".45" stop-color="#ff8a1f"/><stop offset="1" stop-color="#e5400a"/></linearGradient>
+    <linearGradient id="i3Em" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7dffb8"/><stop offset=".5" stop-color="#1fb36a"/><stop offset="1" stop-color="#0a5c38"/></linearGradient>
     <!-- 3D-glans voor de kaartafbeeldingen: licht van linksboven, reliëf op basis van kleur en lijnen -->
     <filter id="kw3d" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
       <feColorMatrix in="SourceGraphic" type="luminanceToAlpha" result="lum"/>
@@ -3600,8 +3613,33 @@ return exports;})();
   };
   const CAT_ICON = { sparkles: "sparkles", landmark: "landmark", users: "users", "book-open": "book", heart: "heart" };
 
+  /* ───────────── 3D-iconen (ster, edelsteen, vlam, XP): zelfde stijl als de badges, met glans ───────────── */
+  let i3n = 0;
+  function i3sp(x, y, r) { const d = ((i3n++ % 7) * 0.37).toFixed(2); return '<path class="i3sp" style="animation-delay:' + d + 's" d="M' + x + " " + (y - r) + "Q" + x + " " + y + " " + (x + r) + " " + y + "Q" + x + " " + y + " " + x + " " + (y + r) + "Q" + x + " " + y + " " + (x - r) + " " + y + "Q" + x + " " + y + " " + x + " " + (y - r) + 'Z" fill="#fff"/>'; }
+  function starInner() {
+    return '<polygon points="' + starPoly(0, 1.5, 11) + '" fill="#6b3a00" opacity=".4"/><polygon points="' + starPoly(0, 0, 11) + '" fill="url(#i3Gold)" stroke="#a35f00" stroke-width="1.2" stroke-linejoin="round"/>' +
+      '<polygon points="' + starPoly(-0.8, -1, 6.2) + '" fill="#fff" opacity=".28"/><polygon points="' + starPoly(0.8, 1.2, 4) + '" fill="#9a5a00" opacity=".25"/>' +
+      '<ellipse cx="-3.4" cy="-5.2" rx="3.2" ry="1.5" transform="rotate(-35 -3.4 -5.2)" fill="#fff" opacity=".6"/>' + i3sp(5.5, -5.5, 3);
+  }
+  function gemInner(c) {
+    return '<polygon points="6,3 18,3 22,9 12,21 2,9" fill="' + c + '" stroke="rgba(0,30,60,.85)" stroke-width="1.3" stroke-linejoin="round"/>' +
+      '<polygon points="2,9 12,21 9,9" fill="#000" opacity=".2"/><polygon points="22,9 12,21 15,9" fill="#000" opacity=".32"/><polygon points="9,9 12,21 15,9" fill="#fff" opacity=".1"/>' +
+      '<polygon points="6,3 9,9 2,9" fill="#fff" opacity=".28"/><polygon points="18,3 22,9 15,9" fill="#000" opacity=".12"/><polygon points="6,3 18,3 15,9 9,9" fill="#fff" opacity=".5"/>' +
+      '<path d="M2 9H22M9 9 6 3M15 9 18 3M9 9 12 21 15 9" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width=".8" stroke-linejoin="round"/>' + i3sp(8, 5.8, 2.6);
+  }
+  function flameInner() {
+    return '<path d="M12 22.2c-4.4 0-7-2.8-7-6.6 0-3 2-4.8 3-7.2.4-1 .4-2.4.2-3.8 2 1 3.2 2.6 3.6 4.6.8-1.2 1-3.4.6-5.6 3.4 2.6 6.6 6.4 6.6 12 0 4.2-2.6 6.6-7 6.6Z" fill="url(#i3Fl)" stroke="#b33a00" stroke-width="1.1" stroke-linejoin="round"/>' +
+      '<path d="M12 21c-2.4 0-3.8-1.5-3.8-3.4 0-1.8 1.4-2.8 2.2-4.4.4-.8.4-1.6.3-2.4 1.6 1.2 2.6 2.8 3.6 4.4.6 1 1.5 1.8 1.5 2.8 0 1.8-1.4 3-3.8 3Z" fill="#ffe27a"/><ellipse cx="9" cy="10.5" rx="1.4" ry="2.6" transform="rotate(20 9 10.5)" fill="#fff" opacity=".5"/>';
+  }
+  function xpInner() {
+    return '<circle cx="12" cy="13" r="10" fill="#063d25" opacity=".4"/><circle cx="12" cy="12" r="10" fill="url(#i3Em)" stroke="#fff3b0" stroke-width="1.4"/><path d="M13.4 4.5 6.8 13h4.4l-1 6.6 6.8-8.8h-4.4z" fill="url(#i3Gold)" stroke="#9a5a00" stroke-width=".7" stroke-linejoin="round"/><ellipse cx="8.6" cy="6.6" rx="3.6" ry="1.7" transform="rotate(-35 8.6 6.6)" fill="#fff" opacity=".45"/>';
+  }
+  function svg3(size, cls, vb, inner) { return '<svg class="ic i3 ' + (cls || "") + '" width="' + size + '" height="' + size + '" viewBox="' + vb + '" aria-hidden="true" focusable="false">' + inner + "</svg>"; }
+  function xpSvg(size) { return svg3(size, "xp3d", "0 0 24 24", xpInner()); }
   function icon(name, size, cls) {
     size = size || 20;
+    if (name === "star" && /\bfill\b/.test(cls || "")) return svg3(size, "star3d " + cls, "-12 -12 24 24", starInner());
+    if (name === "flame") return svg3(size, "flame3d " + (cls || ""), "0 0 24 24", flameInner());
     return '<svg class="ic ' + (cls || "") + '" width="' + size + '" height="' + size +
       '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
       (ICONS[name] || "") + "</svg>";
@@ -5241,7 +5279,7 @@ return exports;})();
   function xpAt(p, lv) { return (p.xp && p.xp[lv]) || 0; }
   function gemsAt(p, lv) { return (p.gems && p.gems[lv]) || 0; }
   function addReward(lv, xp, gems) { if (!P.xp) P.xp = { junior: 0, expert: 0 }; if (!P.gems) P.gems = { junior: 0, expert: 0 }; P.xp[lv] = (P.xp[lv] || 0) + (xp || 0); P.gems[lv] = (P.gems[lv] || 0) + (gems || 0); }
-  function gemSvg(size) { return '<svg class="gem-ic" width="' + size + '" height="' + size + '" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3h12l4 6-10 12L2 9z" fill="#35d0ff" stroke="#0b7aa8" stroke-width="1.5" stroke-linejoin="round"/><path d="M2 9h20M9 3 7 9l5 12 5-12-2-6" fill="none" stroke="#e6fbff" stroke-width="1.2" stroke-linejoin="round"/></svg>'; }
+  function gemSvg(size) { return svg3(size, "gem-ic", "0 0 24 24", gemInner("#35d0ff")); }
   function allStars(p) { return starsAt(p, "junior") + starsAt(p, "expert"); }
   function avgPct(p, lv) {
     const ks = Object.keys(p.best[lv]);
@@ -5426,7 +5464,7 @@ return exports;})();
   }
   function gem(x, y, col, d) {
     return '<g transform="translate(' + x + " " + y + ')"><g><animateTransform attributeName="transform" type="translate" values="0 0;0 -4;0 0" dur="' + (1.8 + d) + 's" repeatCount="indefinite"/>' +
-      '<polygon points="0,-9 8,-2 0,9 -8,-2" fill="' + col + '" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><polygon points="0,-9 8,-2 0,-1 -8,-2" fill="#fff" opacity=".45"/></g></g>';
+      '<g transform="translate(-10.5 -11) scale(.88)" style="filter:drop-shadow(0 2px 1.5px rgba(0,0,0,.35))">' + gemInner(col) + "</g></g></g>";
   }
   function flowers(list) {
     const cols = ["#ffc95d", "#ffd23f", "#ffffff", "#88c7ff", "#ff8a3d"];
@@ -5710,7 +5748,7 @@ return exports;})();
   const FLAG_SVG = '<svg viewBox="0 0 40 46" aria-hidden="true" focusable="false"><line x1="5" y1="2" x2="5" y2="45" stroke="#b07a1a" stroke-width="3" stroke-linecap="round"/>' +
     '<path d="M6 4 H37 L31 14 L37 24 H6Z" fill="#1f9d55" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/>' +
     '<circle cx="17" cy="14" r="6" fill="#fff"/><circle cx="19.6" cy="12.8" r="5.1" fill="#1f9d55"/><polygon points="' + starPoly(26.5, 14, 3.8) + '" fill="#ffd23f"/></svg>';
-  const GOLD_STAR_SVG = '<svg viewBox="-12 -12 24 24" aria-hidden="true" focusable="false"><polygon points="' + starPoly(0, 0, 11) + '" fill="#ffc928" stroke="#d98e00" stroke-width="1.4" stroke-linejoin="round"/><polygon points="' + starPoly(-2, -3, 3) + '" fill="#fff" opacity=".6"/></svg>';
+  const GOLD_STAR_SVG = '<svg class="i3" viewBox="-12 -12 24 24" aria-hidden="true" focusable="false">' + starInner() + "</svg>";
   function reducedMotion() { return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); }
   function celebrate(big) {
     if (reducedMotion()) return;
@@ -6400,13 +6438,13 @@ return exports;})();
   /* ───────────── Uitleg bij de eerste keer ("Zo werkt het"), later opnieuw te openen via Instellingen ───────────── */
   function tourArt(i) {
     const G = '<linearGradient id="tg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff7bf"/><stop offset=".4" stop-color="#ffd23a"/><stop offset=".85" stop-color="#e79a00"/><stop offset="1" stop-color="#9a5a00"/></linearGradient>';
-    const star = function (x, y, r) { let d = ""; for (let k = 0; k < 10; k++) { const a = -Math.PI / 2 + k * Math.PI / 5, rr = k % 2 ? r * 0.45 : r; d += (k ? "L" : "M") + (x + Math.cos(a) * rr).toFixed(1) + " " + (y + Math.sin(a) * rr).toFixed(1); } return '<path d="' + d + 'Z" fill="url(#tg)" stroke="#9a5a00" stroke-width="1.2" stroke-linejoin="round"/>'; };
+    const star = function (x, y, r) { return '<g transform="translate(' + x + " " + y + ") scale(" + (r / 11).toFixed(2) + ')" style="filter:drop-shadow(0 2px 1.5px rgba(0,0,0,.35))">' + starInner() + "</g>"; };
     const bg = '<defs>' + G + '<radialGradient id="tb" cx=".3" cy=".2" r=".9"><stop offset="0" stop-color="#3aa37f"/><stop offset="1" stop-color="#0f4a36"/></radialGradient></defs><rect width="200" height="130" rx="22" fill="url(#tb)"/>';
     let a = "";
     if (i === 0) a = '<circle cx="100" cy="66" r="38" fill="url(#tg)" stroke="#9a5a00" stroke-width="2"/><circle cx="114" cy="58" r="32" fill="#1a6a4d"/>' + star(126, 52, 14) + star(54, 30, 7) + star(160, 100, 6);
     else if (i === 1) a = '<path d="M30 100 Q70 40 100 70 T170 30" fill="none" stroke="#f4e3a6" stroke-width="7" stroke-linecap="round" stroke-dasharray="1 12"/>' + [[34, 98], [100, 70], [168, 32]].map(function (p, k) { return '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="17" fill="url(#tg)" stroke="#fff" stroke-width="3"/><text x="' + p[0] + '" y="' + (p[1] + 6) + '" text-anchor="middle" font-size="18" font-weight="900" fill="#5a3600">' + (k + 1) + "</text>"; }).join("") + star(100, 98, 9) + star(120, 98, 9) + star(80, 98, 9);
-    else if (i === 2) a = '<path d="M60 40 L84 40 L96 60 L72 92 L48 60Z" fill="#5ec8ff" stroke="#fff" stroke-width="3" stroke-linejoin="round"/><path d="M48 60 H96 M72 40 L72 92" stroke="#fff" stroke-opacity=".6" stroke-width="2"/><circle cx="130" cy="64" r="26" fill="url(#tg)" stroke="#9a5a00" stroke-width="2.5"/>' + star(130, 64, 16) + '<rect x="150" y="84" width="28" height="22" rx="5" fill="#c78a2e" stroke="#7a4a10" stroke-width="2"/><rect x="150" y="84" width="28" height="8" rx="4" fill="#e6b14a"/>';
-    else if (i === 3) a = '<path d="M100 18 C120 44 140 56 140 84 C140 106 122 118 100 118 C78 118 60 106 60 84 C60 66 72 58 78 44 C84 56 90 54 92 42 C94 34 96 26 100 18Z" fill="#ff8a1f" stroke="#fff3b0" stroke-width="3"/><path d="M100 62 C110 76 118 82 118 96 C118 106 110 112 100 112 C90 112 82 106 82 96 C82 86 94 80 100 62Z" fill="#ffd54a"/>';
+    else if (i === 2) a = '<g transform="translate(34 30) scale(2.7)" style="filter:drop-shadow(0 3px 2px rgba(0,0,0,.35))">' + gemInner("#35d0ff") + "</g>" + star(132, 62, 26) + '<g transform="translate(150 80) scale(1.1)" style="filter:drop-shadow(0 2px 1.5px rgba(0,0,0,.35))">' + gemInner("#ff5c7a") + '</g><g transform="translate(30 84) scale(.9)" style="filter:drop-shadow(0 2px 1.5px rgba(0,0,0,.35))">' + gemInner("#5cf08a") + '</g>';
+    else if (i === 3) a = '<g transform="translate(46 8) scale(4.2)" style="filter:drop-shadow(0 3px 2px rgba(0,0,0,.35))">' + flameInner() + "</g>";
     else a = '<rect x="62" y="22" width="76" height="76" rx="18" fill="#ffd54a" stroke="#fff3b0" stroke-width="3"/><g transform="translate(66 26) scale(.68)">' + (AVATARS.PEOPLE[1] ? avInner(AVATARS.PEOPLE[1]) : "") + "</g>" + star(160, 40, 10) + star(40, 92, 8);
     return '<svg viewBox="0 0 200 130" aria-hidden="true" focusable="false">' + bg + a + "</svg>";
   }
@@ -6767,7 +6805,7 @@ return exports;})();
       if (st.mile) h += '<circle r="' + (R - 5) + '" fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="1.6" stroke-dasharray="3 4"/>';
       if (state === "locked") h += '<g transform="translate(-7 -9)" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><rect x="0" y="7" width="14" height="11" rx="2.5" fill="#fff" stroke="none"/><path d="M3 7 V4 a4 4 0 0 1 8 0 V7"/></g>';
       else h += '<text y="' + (R > 22 ? 9 : 7) + '" text-anchor="middle" font-size="' + (R > 22 ? 25 : 20) + '" font-weight="900" fill="#fff" stroke="' + (state === "done" ? "#0b6b44" : "#c77d12") + '" stroke-width="1" paint-order="stroke">' + (st.i + 1) + "</text>";
-      if (state === "done") for (let k = 0; k < 3; k++) h += '<polygon points="' + starPoly((k - 1) * 15, R + (k === 1 ? 8 : 5), 7.5) + '" fill="' + (k < st.stars ? "#ffc928" : "rgba(0,0,0,.35)") + '" stroke="' + (k < st.stars ? "#b87400" : "#fff") + '" stroke-width="1.3" stroke-linejoin="round"/>';
+      if (state === "done") for (let k = 0; k < 3; k++) h += (k < st.stars ? '<g transform="translate(' + ((k - 1) * 15) + " " + (R + (k === 1 ? 8 : 5)) + ') scale(.72)" style="filter:drop-shadow(0 1.5px 1px rgba(0,0,0,.4))">' + starInner() + "</g>" : '<polygon points="' + starPoly((k - 1) * 15, R + (k === 1 ? 8 : 5), 7.5) + '" fill="rgba(0,0,0,.35)" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/>');
       if (st.last) h += '<g transform="translate(0 ' + (-R - 3) + ')"><line y2="-38" stroke="#b07a1a" stroke-width="3" stroke-linecap="round"/><path d="M1 -38 L33 -38 L27 -28 L33 -18 L1 -18Z" fill="#1f9d55" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"><animate attributeName="d" values="M1 -38 L33 -38 L27 -28 L33 -18 L1 -18Z;M1 -38 Q17 -42 33 -38 L27 -28 L33 -18 Q17 -14 1 -18Z;M1 -38 L33 -38 L27 -28 L33 -18 L1 -18Z" dur="2.2s" repeatCount="indefinite"/></path><circle cx="13" cy="-28" r="5.2" fill="#fff"/><circle cx="15.4" cy="-29" r="4.4" fill="#1f9d55"/><polygon points="' + starPoly(23.5, -28, 3.6) + '" fill="#ffd23f"/></g>';
       h += "</g>";
     });
@@ -6947,7 +6985,7 @@ return exports;})();
     let h = '<h1 class="sr-only" tabindex="-1">De Reis – Land ' + (i + 1) + ": " + esc(c.title) + "</h1>";
     /* zwevende topbalk */
     h += '<header class="j-head"><div class="jh-pw"><button class="jh-player jh-av" data-act="avatar-pick" data-id="' + P.id + '" aria-label="Kies je avatar">' + avatarHtml(P, 30) + '</button><button class="jh-player" data-act="players" aria-label="Speler: ' + nm + '. Wissel van speler"><span>' + nm + "</span></button></div>" +
-      '<div class="jh-stats" role="group" aria-label="Jouw punten in de ' + modeName(level) + '-modus"><span>' + icon("star", 15, "fill") + "<b>" + stars + '</b><i class="sr-only"> sterren</i></span><span class="xp"><b>' + xp + '</b> XP</span><span class="gem">' + gemSvg(15) + "<b>" + gems + '</b><i class="sr-only"> edelstenen</i></span></div>' +
+      '<div class="jh-stats" role="group" aria-label="Jouw punten in de ' + modeName(level) + '-modus"><span>' + icon("star", 15, "fill") + "<b>" + stars + '</b><i class="sr-only"> sterren</i></span><span class="xp">' + xpSvg(16) + '<b>' + xp + '</b> XP</span><span class="gem">' + gemSvg(15) + "<b>" + gems + '</b><i class="sr-only"> edelstenen</i></span></div>' +
       '<button class="jh-mode ' + level + '" data-act="switch-mode" aria-label="Niveau wisselen. Nu: ' + (level === "junior" ? "Junior, tik voor Expert" : "Expert, tik voor Junior") + '">' + icon(level === "junior" ? "smile" : "cap", 16) + "<span>" + (level === "junior" ? "Junior" : "Expert") + "</span></button>" +
       '<button class="jh-gear" data-act="settings" aria-label="Instellingen">' + icon("gear", 20) + "</button></header>";
     /* land-schild */
