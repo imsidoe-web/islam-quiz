@@ -1313,6 +1313,26 @@ body.jfull .reward-flyer { top: 160px; }
 .ac b { font-size: .8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ac.lock b { font-size: .72rem; }
 .ac.lock .ac-art { font-size: 2.8rem; }
+
+/* ── Prestatie-badges 2.0: glanzende 3D-tegels ── */
+.badge-card { --bc: #5cabf0; overflow: hidden; border: 0; border-radius: 24px; padding: 14px 10px 14px; background: linear-gradient(165deg, #2b4b66 0%, #172e44 60%, #0f2132 100%);
+  box-shadow: 0 7px 0 rgba(0, 0, 0, .42), 0 14px 18px rgba(0, 0, 0, .3), inset 0 3px 0 rgba(255, 255, 255, .22), inset 0 -3px 0 rgba(0, 0, 0, .3), inset 0 0 0 2px color-mix(in srgb, var(--bc) 55%, transparent); }
+.badge-card::before { content: ""; position: absolute; inset: 0 0 55% 0; pointer-events: none; background: linear-gradient(180deg, rgba(255, 255, 255, .2), rgba(255, 255, 255, 0)); border-radius: 24px 24px 60% 60% / 24px 24px 22px 22px; }
+.badge-card .badge-icon { background: radial-gradient(closest-side, color-mix(in srgb, var(--bc) 50%, transparent), rgba(0, 0, 0, 0) 78%) !important; width: 100% !important; height: auto !important; background-color: transparent; margin: 0 0 6px; border: 0; border-radius: 0; background: radial-gradient(closest-side, color-mix(in srgb, var(--bc) 48%, transparent), rgba(0, 0, 0, 0) 78%); }
+.badge-card.unlocked .badge-icon { background: radial-gradient(closest-side, color-mix(in srgb, var(--bc) 60%, transparent), rgba(0, 0, 0, 0) 78%); border: 0; }
+.badge-icon svg { filter: drop-shadow(0 6px 4px rgba(0, 0, 0, .5)); }
+.badge-card.unlocked .badge-icon svg { animation: bdBob 3.4s ease-in-out infinite; }
+@keyframes bdBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+.badge-card.unlocked.master { background: linear-gradient(165deg, color-mix(in srgb, var(--bc) 38%, #2b4b66) 0%, #173048 62%, #0f2132 100%); box-shadow: 0 7px 0 rgba(0, 0, 0, .42), 0 14px 20px rgba(0, 0, 0, .3), 0 0 22px color-mix(in srgb, var(--bc) 40%, transparent), inset 0 3px 0 rgba(255, 255, 255, .3), inset 0 -3px 0 rgba(0, 0, 0, .3), inset 0 0 0 2px color-mix(in srgb, var(--bc) 80%, #fff); }
+.badge-card.unlocked.grand { background: linear-gradient(165deg, #6b5217 0%, #2a557a 55%, #14304a 100%); box-shadow: 0 7px 0 rgba(0, 0, 0, .42), 0 14px 22px rgba(0, 0, 0, .32), 0 0 28px rgba(255, 200, 40, .55), inset 0 3px 0 rgba(255, 255, 255, .4), inset 0 -3px 0 rgba(0, 0, 0, .3), inset 0 0 0 3px #ffcf3a; }
+.badge-card .badge-title { position: relative; font-size: 1.05rem; text-shadow: 0 2px 0 rgba(0, 0, 0, .5); }
+.badge-card.unlocked.grand .badge-title { color: #ffe27a; }
+.badge-card.unlocked.master .badge-title { color: #fff; }
+.badge-card .badge-desc { position: relative; color: #c9d6e2; }
+.badge-card .badge-status-tag { position: relative; }
+.badge-card.unlocked .badge-status-tag { background: linear-gradient(180deg, #2fc486, #12805a); color: #fff; border: 2px solid #b6ffd9; box-shadow: 0 3px 0 rgba(0, 0, 0, .35), inset 0 2px 0 rgba(255, 255, 255, .4); text-shadow: 0 1px 0 rgba(0, 0, 0, .4); }
+.badge-card.locked { opacity: .72; filter: none; box-shadow: 0 7px 0 rgba(0, 0, 0, .4), inset 0 3px 0 rgba(255, 255, 255, .12), inset 0 -3px 0 rgba(0, 0, 0, .3); background: linear-gradient(165deg, #2a3342, #1b222d); }
+@media (prefers-reduced-motion: reduce) { .badge-card.unlocked .badge-icon svg { animation: none; } }
 </style>
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Islam Quiz">
@@ -4199,7 +4219,7 @@ return exports;})();
           if (k === "master" && requiredTiers(lv, c.id).length < 2) return;
           if (k === "grand" && !hasTier4(lv, c.id)) return;
           const got = !!(P.badges && P.badges[badgeId(lv, c.id, k)]), m = BADGE_META[k];
-          h += '<div class="badge-card ' + (got ? "unlocked " + k : "locked") + '"><div class="badge-icon">' + badgeSvg(k, c.color, 64, !got) + '</div>' +
+          h += '<div class="badge-card ' + (got ? "unlocked " + k : "locked") + '" style="--bc:' + c.color + '"><div class="badge-icon">' + badgeSvg(k, c.color, 104, !got) + '</div>' +
             '<div class="badge-title">' + m.title + '</div><div class="badge-desc">' + esc(c.title) + "<br>" + m.desc + "</div>" +
             '<div class="badge-status-tag">' + (got ? "Behaald" : "Vergrendeld") + "</div></div>";
         });
@@ -5197,23 +5217,67 @@ return exports;})();
   let bsUid = 0;
   /* kleurrijke badge: 'master' = Meester-rozet, 'grand' = Grootmeester-kroon */
   function badgeSvg(kind, color, size, locked, attrs) {
-    const id = "bsv" + (++bsUid), c1 = color || "#5cabf0";
-    let h = '<svg ' + (attrs || "") + ' width="' + size + '" height="' + size + '" viewBox="-30 -30 60 60" aria-hidden="true"><defs>' +
-      '<radialGradient id="' + id + 'g" cx=".35" cy=".3"><stop offset="0" stop-color="#fff6b8"/><stop offset=".55" stop-color="#ffcb2e"/><stop offset="1" stop-color="#e08a00"/></radialGradient>' +
-      '<radialGradient id="' + id + 'p" cx=".35" cy=".3"><stop offset="0" stop-color="#8bc9ff"/><stop offset="1" stop-color="#2f7ec4"/></radialGradient></defs>';
-    if (locked) return h + '<circle r="22" fill="#4b5563"/><circle r="22" fill="none" stroke="#6b7280" stroke-width="3"/><rect x="-8" y="-3" width="16" height="13" rx="3" fill="#9ca3af"/><path d="M-5 -3 V-8 a5 5 0 0 1 10 0 V-3" fill="none" stroke="#9ca3af" stroke-width="3"/></svg>';
-    if (kind === "master") {
-      h += '<path d="M-13 8 L-21 29 L-11 24 L-6 31 L1 10Z" fill="#ffc44f" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><path d="M13 8 L21 29 L11 24 L6 31 L-1 10Z" fill="#20c4b4" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/>';
-      for (let i = 0; i < 12; i++) { const a = (i * Math.PI) / 6; h += '<circle cx="' + (Math.cos(a) * 18).toFixed(1) + '" cy="' + (Math.sin(a) * 18).toFixed(1) + '" r="7" fill="' + c1 + '" stroke="#fff" stroke-width="1"/>'; }
-      h += '<circle r="19" fill="' + c1 + '"/><circle r="15" fill="url(#' + id + 'g)" stroke="#fff" stroke-width="2.5"/><circle r="10.5" fill="' + c1 + '"/><text y="6.5" text-anchor="middle" font-size="17" font-weight="900" fill="#fff6b8">۞</text><path d="M-9 -8 Q0 -16 9 -8" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="2.5" stroke-linecap="round"/>';
-    } else {
-      h += '<path d="M-13 8 L-21 29 L-11 24 L-6 31 L1 10Z" fill="#4fadff" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><path d="M13 8 L21 29 L11 24 L6 31 L-1 10Z" fill="#ff9f1c" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/>' +
-        '<circle r="22" fill="url(#' + id + 'g)" stroke="#fff" stroke-width="3"/><circle r="16.5" fill="url(#' + id + 'p)" stroke="#fff3a6" stroke-width="2"/>' +
-        '<path d="M-11 7 L-14 -8 L-6 -2 L0 -12 L6 -2 L14 -8 L11 7Z" fill="url(#' + id + 'g)" stroke="#b87400" stroke-width="1.5" stroke-linejoin="round"/><rect x="-11" y="7" width="22" height="4.5" rx="2" fill="url(#' + id + 'g)" stroke="#b87400" stroke-width="1.3"/>' +
-        '<circle cx="-14" cy="-8" r="2.6" fill="#ffbe3d" stroke="#fff" stroke-width=".8"/><circle cy="-12" r="3" fill="#35d0ff" stroke="#fff" stroke-width=".8"/><circle cx="14" cy="-8" r="2.6" fill="#7dff6a" stroke="#fff" stroke-width=".8"/><circle cy="1" r="2.4" fill="#ffbe3d"/>' +
-        '<path d="M17 -17 l1.6 3.4 3.4 1.6 -3.4 1.6 -1.6 3.4 -1.6 -3.4 -3.4 -1.6 3.4 -1.6Z" fill="#fff"/>';
+    const id = "bsv" + (++bsUid), c1 = color || "#5cabf0", U = function (n) { return "url(#" + id + n + ")"; };
+    let h = '<svg ' + (attrs || "") + ' width="' + size + '" height="' + size + '" viewBox="-32 -32 64 64" aria-hidden="true"><defs>' +
+      /* metaalgoud: sterke licht-donker wisseling zoals gepolijst goud */
+      '<linearGradient id="' + id + 'R" x1=".1" y1="0" x2=".9" y2="1"><stop offset="0" stop-color="#fffbd2"/><stop offset=".16" stop-color="#ffe466"/><stop offset=".36" stop-color="#d89800"/><stop offset=".54" stop-color="#fff1a6"/><stop offset=".74" stop-color="#c58200"/><stop offset="1" stop-color="#7d4700"/></linearGradient>' +
+      '<linearGradient id="' + id + 'B" x1=".1" y1="0" x2=".9" y2="1"><stop offset="0" stop-color="#7d4700"/><stop offset=".45" stop-color="#e6ac1c"/><stop offset=".8" stop-color="#ffefa0"/><stop offset="1" stop-color="#fffbd2"/></linearGradient>' +
+      '<linearGradient id="' + id + 'g" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#fff8c4"/><stop offset=".3" stop-color="#ffd84a"/><stop offset=".68" stop-color="#eda000"/><stop offset="1" stop-color="#9a5a00"/></linearGradient>' +
+      '<radialGradient id="' + id + 'v" cx=".5" cy=".5" r=".6"><stop offset=".45" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".5"/></radialGradient>' +
+      '<radialGradient id="' + id + 'p" cx=".35" cy=".25" r=".95"><stop offset="0" stop-color="#8fd0ff"/><stop offset=".5" stop-color="#2f7fd0"/><stop offset="1" stop-color="#0d3f80"/></radialGradient>' +
+      '<linearGradient id="' + id + 'a" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8fd8ff"/><stop offset=".5" stop-color="#2b7fd2"/><stop offset="1" stop-color="#14529a"/></linearGradient>' +
+      '<linearGradient id="' + id + 'o" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe08a"/><stop offset=".5" stop-color="#f09a10"/><stop offset="1" stop-color="#b85a00"/></linearGradient>' +
+      '<linearGradient id="' + id + 't" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7ff5e0"/><stop offset=".5" stop-color="#14b7a2"/><stop offset="1" stop-color="#0a6f63"/></linearGradient>' +
+      '<linearGradient id="' + id + 'Lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9bf5a8"/><stop offset=".5" stop-color="#22b85a"/><stop offset="1" stop-color="#0b6b34"/></linearGradient>' +
+      '<linearGradient id="' + id + 'Lb" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8fd8ff"/><stop offset=".5" stop-color="#2b7fd2"/><stop offset="1" stop-color="#14529a"/></linearGradient>' +
+      '<linearGradient id="' + id + 'Lp" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d3b0ff"/><stop offset=".5" stop-color="#8a4de0"/><stop offset="1" stop-color="#4a1f96"/></linearGradient>' +
+      '<linearGradient id="' + id + 'Lk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb3d6"/><stop offset=".5" stop-color="#f0488f"/><stop offset="1" stop-color="#a0155a"/></linearGradient>' +
+      '<linearGradient id="' + id + 'k" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#cfd6e0"/><stop offset=".5" stop-color="#7e8798"/><stop offset="1" stop-color="#3b4350"/></linearGradient></defs>';
+    const rib = function (fl, fr) {
+      return '<path d="M-3 8 L-11 31 L-5.5 27.2 L-1.5 31.5 L5 10Z" fill="#000" opacity=".28" transform="translate(-4 0)"/><path d="M3 8 L11 31 L5.5 27.2 L1.5 31.5 L-5 10Z" fill="#000" opacity=".28" transform="translate(4 0)"/>' +
+        '<path d="M-16 6 L-22 30 L-15.5 26 L-11.5 31 L-4 8Z" fill="' + fl + '" stroke="#000" stroke-opacity=".35" stroke-width=".8" stroke-linejoin="round"/><path d="M-16 6 L-22 30 L-19 28 L-12 8Z" fill="#fff" opacity=".28"/><path d="M-15.5 26 L-11.5 31 L-13.6 14Z" fill="#000" opacity=".2"/>' +
+        '<path d="M16 6 L22 30 L15.5 26 L11.5 31 L4 8Z" fill="' + fr + '" stroke="#000" stroke-opacity=".35" stroke-width=".8" stroke-linejoin="round"/><path d="M16 6 L22 30 L19 28 L12 8Z" fill="#fff" opacity=".28"/><path d="M15.5 26 L11.5 31 L13.6 14Z" fill="#000" opacity=".2"/>';
+    };
+    const coin = function (field, motif, extra) {
+      let ticks = ""; for (let i = 0; i < 28; i++) { const a = (i * 2 * Math.PI) / 28; ticks += '<circle cx="' + (Math.cos(a) * 21.2).toFixed(2) + '" cy="' + (Math.sin(a) * 21.2).toFixed(2) + '" r=".75"/>'; }
+      return '<g transform="translate(0 -4)">' + (extra || "") +
+        '<circle cy="2.4" r="23" fill="#000" opacity=".38"/>' +
+        '<circle r="23" fill="' + U("R") + '"/><circle r="23" fill="none" stroke="#fff6bf" stroke-width="1" opacity=".8"/>' +
+        '<g fill="#6a3d00" opacity=".38">' + ticks + '</g>' +
+        '<circle r="19.2" fill="' + U("B") + '"/>' +
+        '<circle r="17.6" fill="' + U("R") + '"/>' +
+        '<circle r="15.8" fill="#3a2200" opacity=".55"/>' +
+        field +
+        '<circle r="15.8" fill="' + U("v") + '"/>' +
+        motif +
+        '<ellipse cx="-3" cy="-11.5" rx="11.5" ry="5.2" fill="#fff" opacity=".26"/>' +
+        '<path d="M-18 -12.5 A22 22 0 0 1 5 -21.6" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" opacity=".9"/><path d="M-20.5 -6 A22 22 0 0 1 -19.6 -10" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".7"/>' +
+        '<path d="M18.5 15 A22 22 0 0 1 10 20.5" fill="none" stroke="#7a4300" stroke-width="2" stroke-linecap="round" opacity=".35"/>' +
+        '<path d="M19 -17 l1.6 3.4 3.4 1.6 -3.4 1.6 -1.6 3.4 -1.6 -3.4 -3.4 -1.6 3.4 -1.6Z" fill="#fff"/></g>';
+    };
+    if (locked) {
+      return h + rib("#6a7384", "#566072") + '<g transform="translate(0 -4)"><circle cy="2.4" r="23" fill="#000" opacity=".38"/><circle r="23" fill="' + U("k") + '"/><circle r="19" fill="#2a303b" stroke="#9aa3b2" stroke-width="1.5"/><circle r="19" fill="' + U("v") + '"/>' +
+        '<rect x="-8" y="-3" width="16" height="13" rx="3" fill="#b4bcc8"/><path d="M-5 -3 V-8 a5 5 0 0 1 10 0 V-3" fill="none" stroke="#b4bcc8" stroke-width="3"/><path d="M-18 -12.5 A22 22 0 0 1 5 -21.6" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".5"/></g></svg>';
     }
-    return h + "</svg>";
+    if (kind === "master") {
+      const field = '<circle r="15.8" fill="' + c1 + '"/><circle r="15.8" fill="url(#' + id + 'v)"/>';
+      const star = '<g transform="translate(.8 1.2)" fill="#000" opacity=".4"><rect x="-7" y="-7" width="14" height="14" rx="1.2"/><rect x="-7" y="-7" width="14" height="14" rx="1.2" transform="rotate(45)"/></g>' +
+        '<g fill="' + U("g") + '" stroke="#7a4300" stroke-width=".9" stroke-linejoin="round"><rect x="-7" y="-7" width="14" height="14" rx="1.2"/><rect x="-7" y="-7" width="14" height="14" rx="1.2" transform="rotate(45)"/></g>' +
+        '<g fill="none" stroke="#fff8c8" stroke-width=".7" opacity=".8"><path d="M-6.4 -6.4 H0 M-6.4 -6.4 V0"/></g><circle r="3" fill="' + c1 + '" stroke="#fff3a6" stroke-width="1"/><circle r="3" fill="' + U("v") + '" opacity=".7"/>' +
+        '<circle r="13.2" fill="none" stroke="#ffe48a" stroke-width=".9" stroke-dasharray="1 2.3" stroke-linecap="round" opacity=".85"/>';
+      const ci = (typeof CATEGORIES !== "undefined" ? CATEGORIES.findIndex(function (c) { return c.color === c1; }) : 0), pal = ["g", "b", "p", "k"], rc = U("L" + pal[(Math.max(ci, 0)) % 4]);
+      return h + rib(rc, rc) + coin(field, star) + "</svg>";
+    }
+    const field = '<circle r="15.8" fill="' + U("p") + '"/>';
+    const crown = '<path d="M-11 8 L-14.5 -7 L-6 -1.5 L0 -12 L6 -1.5 L14.5 -7 L11 8Z" fill="#000" opacity=".4" transform="translate(.8 1.4)"/>' +
+      '<path d="M-11 7 L-14 -8 L-6 -2 L0 -12.5 L6 -2 L14 -8 L11 7Z" fill="' + U("g") + '" stroke="#7a4300" stroke-width="1.2" stroke-linejoin="round"/><path d="M-11 7 L-14 -8 L-6 -2 L0 -12.5 L0 7Z" fill="#fff" opacity=".28"/>' +
+      '<rect x="-11" y="7" width="22" height="4.6" rx="2" fill="' + U("g") + '" stroke="#7a4300" stroke-width="1.1"/><rect x="-11" y="7" width="22" height="1.6" rx=".8" fill="#fff" opacity=".4"/>' +
+      '<circle cx="-14" cy="-8" r="2.5" fill="#ff5c7a" stroke="#fff" stroke-width=".8"/><circle cy="-12.5" r="2.9" fill="#35d0ff" stroke="#fff" stroke-width=".8"/><circle cx="14" cy="-8" r="2.5" fill="#4dff8a" stroke="#fff" stroke-width=".8"/><circle cy="1.8" r="2.2" fill="#fff3a6" stroke="#7a4300" stroke-width=".7"/>';
+    let leaves = "";
+    for (let i = 0; i < 7; i++) { const t = -1.25 + i * 0.36; [-1, 1].forEach(function (sd) { const x = sd * Math.sin(Math.abs(t) + 0.55) * 25.5, y = 13 - i * 5.2 - (i > 4 ? 0 : 0); leaves += '<ellipse cx="' + x.toFixed(1) + '" cy="' + (y - 4).toFixed(1) + '" rx="2.1" ry="4.2" transform="rotate(' + (sd * (28 + i * 9)) + ' ' + x.toFixed(1) + ' ' + (y - 4).toFixed(1) + ')" fill="' + U("g") + '" stroke="#7a4300" stroke-width=".6"/>'; }); }
+    const crest = '<path d="M-9 -22 Q0 -31 9 -22 L6 -21.5 Q0 -27 -6 -21.5Z" fill="' + U("g") + '" stroke="#7a4300" stroke-width=".9"/>';
+    const cj = (typeof CATEGORIES !== "undefined" ? CATEGORIES.findIndex(function (c) { return c.color === c1; }) : 0), pj = ["g", "b", "p", "k"], rj = U("L" + pj[(Math.max(cj, 0) + 1) % 4]);
+    return h + rib(rj, rj) + coin(field, crown, leaves) + "</svg>";
   }
   /* ───────────── De Reis: korte levels ─────────────
      Elk land heeft J_MIN tot J_MAX korte levels van J_Q vragen. Een level is gehaald bij minstens 60% goed
