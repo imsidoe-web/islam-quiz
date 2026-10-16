@@ -7174,10 +7174,8 @@ return exports;})();
     if (!el) { done(); return; }
     if (oauthReturn) { el.remove(); done(); return; }          /* terug van Google/Facebook: niet nog eens laten wachten */
     const rm = reducedMotion(), text = "Islam Quiz", timers = [];
-    /* Browsers staan geluid pas toe na een tik; zonder tik tonen we een hint en spelen we de intro na de eerste tik opnieuw met geluid. */
     const gen = (el._gen = (el._gen || 0) + 1);
-    let needTap = false;
-    try { if (!retry && S.sound && !rm) { const c0 = ctx(); needTap = !!c0 && c0.state !== "running"; } } catch (e) {}
+    let needTap = false;   /* geen geluidshint: speelt geluid alleen als de browser het toestaat */
     let opened = false, gone = false, doneCalled = false;
     const later = function (fn, ms) { timers.push(setTimeout(fn, ms)); };
     const callDone = function () { if (!doneCalled) { doneCalled = true; done(); } };
@@ -7186,7 +7184,7 @@ return exports;})();
       '<div class="sp-center"><div class="sp-logo"><div class="logo">' + brandLogo(44) + '</div></div><p class="sp-title" aria-hidden="true">' +
       text.split("").map(function (ch) { return ch === " " ? '<span class="sp">&nbsp;</span>' : "<span>" + ch + "</span>"; }).join("") + "</p></div>" +
       '<button class="sp-skip" type="button">Overslaan</button>' +
-      (needTap ? '<p class="sp-hint" aria-hidden="true">🔊 Tik op het scherm voor geluid</p>' : "") + '<h1 class="sr-only">Islam Quiz</h1>';
+      '<h1 class="sr-only">Islam Quiz</h1>';
     el.classList.add("ready"); if (rm) el.classList.add("rm");
     const logo = el.querySelector(".sp-logo"), letters = el.querySelectorAll(".sp-title span"), skipBtn = el.querySelector(".sp-skip");
     try { ctx(); } catch (e) {}
