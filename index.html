@@ -4776,7 +4776,7 @@ return exports;})();
       "<p>Vrolijk, zonder tijdsdruk, met eenvoudige vragen en leuke beloningen!</p></span></button>" +
       '<button class="mode-card expert" data-act="pick-mode" data-mode="expert">' +
       '<span class="badge">' + icon("cap", 34) + "</span><span>" +
-      '<span class="sub">Voor 14 jaar en ouder</span><h3>Expert Modus</h3>' +
+      '<span class="sub">Voor wie meer wil weten</span><h3>Expert Modus</h3>' +
       "<p>Diepere vragen met optionele timer en bronnen: verzen en Hadith in het Arabisch.</p></span></button>" +
       "</div></section>";
   }
@@ -6539,17 +6539,16 @@ return exports;})();
     document.body.appendChild(w); const b = w.querySelector("button"); if (b) b.focus();
   }
 
-  /* ───────────── Leeftijdsbevestiging voor de Expert Modus (14+) ───────────── */
-  const EXPERT_MIN_AGE = 14;
+  /* ───────────── Eenmalige melding voor de Expert Modus (geen leeftijdsgrens meer) ───────────── */
   function ageGate(onYes, onNo) {
     const old = document.getElementById("ageGate"); if (old) old.remove();
     const w = document.createElement("div");
     w.className = "dialog-wrap"; w.id = "ageGate";
     w.innerHTML = '<div class="dialog age-dialog" role="alertdialog" aria-modal="true" aria-labelledby="agT" aria-describedby="agD">' +
-      '<div class="age-badge" aria-hidden="true">' + EXPERT_MIN_AGE + '+</div><h3 id="agT">Expert Modus is voor ' + EXPERT_MIN_AGE + ' jaar en ouder</h3>' +
-      '<p id="agD">De vragen in de Expert Modus zijn dieper en bevatten uitgebreide bronnen, zoals Koranverzen en Hadith. Ben je ' + EXPERT_MIN_AGE + ' jaar of ouder?</p>' +
-      '<div class="stack"><button class="btn gold block" data-d="yes">Ja, ik ben ' + EXPERT_MIN_AGE + ' of ouder</button>' +
-      '<button class="btn ghost block" data-d="no">Nee, ik speel Junior</button></div></div>';
+      '<div class="age-badge" aria-hidden="true">' + icon("cap", 34) + '</div><h3 id="agT">Expert Modus is pittiger</h3>' +
+      '<p id="agD">De vragen zijn dieper en hebben uitgebreide bronnen, zoals Koranverzen en Hadith. Wil je het proberen? Je kunt altijd terug naar Junior.</p>' +
+      '<div class="stack"><button class="btn gold block" data-d="yes">Ja, ik probeer het</button>' +
+      '<button class="btn ghost block" data-d="no">Nee, ik blijf bij Junior</button></div></div>';
     let done = false;
     const finish = function (yes) { if (done) return; done = true; w.remove(); if (yes) onYes(); else onNo(); };
     w.addEventListener("click", function (e) { const d = e.target.closest("[data-d]"); if (d) finish(d.dataset.d === "yes"); });
@@ -6557,7 +6556,7 @@ return exports;})();
     document.body.appendChild(w);
     const yes = w.querySelector('[data-d="yes"]'); if (yes) yes.focus();
   }
-  /* kies een modus; Expert vraagt eenmalig per speler om de 14+ bevestiging */
+  /* kies een modus; Expert toont eenmalig per speler een vriendelijke melding */
   function chooseMode(mode, after) {
     const go = function () { P.mode = mode; saveState(); play("click"); after(); };
     if (mode === "expert" && !P.age14) {
@@ -7090,9 +7089,9 @@ return exports;})();
     setTimeout(function () { d.classList.add("out"); setTimeout(function () { d.remove(); }, 500); }, 4500 + 90 * f.t.length);
   }
   function afterJourneyRender() {
-    if (!S.tour && P && P.mode) {
-      S.tour = true;
-      const fresh = !S.players.some(function (p) { return p.played > 0; });
+    if (P && P.mode && !P.tourSeen) {
+      P.tourSeen = true; S.tour = true;
+      const fresh = !(P.played > 0);
       saveState();
       if (fresh) { setTimeout(showTour, 900); return; }
     }
