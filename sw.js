@@ -1,7 +1,7 @@
 /* Islam Quiz – service worker (netwerk eerst, cache als terugval)
    Verhoog CACHE_VERSION bij elke release. Zo zien bezoekers altijd meteen de nieuwste versie. */
-const CACHE_VERSION = "islam-quiz-v26";
-const PRECACHE = ["duff.mp3"];   // achtergrond-percussie, zodat die ook offline werkt
+const CACHE_VERSION = "islam-quiz-v28";
+const PRECACHE = [];
 
 self.addEventListener("install", (event) => {
   event.waitUntil((async () => {
@@ -42,10 +42,7 @@ self.addEventListener("fetch", (event) => {
   if (req.method !== "GET") return;
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;                 // Firebase, lettertypen enz. rechtstreeks
-  if (req.headers.has("range")) {
-    if (/\/duff\.mp3$/.test(url.pathname)) event.respondWith(fetch(req).catch(() => rangeFromCache(req)));
-    return;
-  }
+  if (req.headers.has("range")) return;
 
   event.respondWith((async () => {
     try {

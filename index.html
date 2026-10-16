@@ -1172,6 +1172,8 @@ body.jfull .reward-flyer { top: 160px; }
 .sp-star { position: absolute; left: 50%; top: 42%; width: 22px; height: 22px; margin: -11px; pointer-events: none; animation: spBurst .95s ease-out forwards; }
 .sp-star svg { width: 100%; height: 100%; display: block; }
 @keyframes spBurst { 0% { transform: translate(0, 0) scale(.2) rotate(0); opacity: 1; } 100% { transform: translate(var(--bx), var(--by)) scale(1.1) rotate(160deg); opacity: 0; } }
+.sp-hint { position: absolute; left: 0; right: 0; bottom: calc(76px + env(safe-area-inset-bottom)); text-align: center; margin: 0; color: #ffe9a8; font-weight: 800; font-size: .95rem; text-shadow: 0 2px 6px rgba(0,30,20,.6); animation: spHint 1.6s ease-in-out infinite; z-index: 3; pointer-events: none; }
+@keyframes spHint { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
 .sp-skip { position: absolute; z-index: 6; left: 50%; bottom: calc(22px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); appearance: none; border: 1.5px solid rgba(255, 224, 138, .75); background: rgba(3, 40, 28, .45); color: #ffe9a0; font: inherit; font-weight: 800; font-size: .85rem; padding: 8px 18px; border-radius: 999px; cursor: pointer; backdrop-filter: blur(4px); }
 .sp-skip:focus-visible { outline: 3px solid #ffb703; outline-offset: 2px; }
 #splash.open .sp-l { transform: translateX(-101%); } #splash.open .sp-r { transform: translateX(101%); }
@@ -3474,7 +3476,7 @@ return exports;})();
       album: (function (a) { a = a || {}; if (a.junior || a.expert) return { junior: Object.assign({}, a.junior || {}), expert: Object.assign({}, a.expert || {}) }; return { junior: Object.assign({}, a), expert: {} }; })(p.album),
     });
   }
-  function defaultState() { return { v: 2, sound: true, duff: true, timer: false, speak: false, autoNext: true, players: [], current: null }; }
+  function defaultState() { return { v: 2, sound: true, duff: false, timer: false, speak: false, autoNext: true, players: [], current: null }; }
   function loadState() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -3587,7 +3589,7 @@ return exports;})();
   let duffEl = null, duffGain = null, duffMuted = false, duffPauseT = null, duffRamp = null;
   function duffPref() { return S.duff !== false; }
   function duffOn() { return duffPref() && !duffMuted; }
-  function duffWanted() { return duffOn() && !document.hidden && !speechBusy; }
+  function duffWanted() { return false; }   /* achtergrondmuziek (nasheed/duff) is verwijderd */
   function duffPlaying() { return !!duffEl && !duffEl.paused && !duffEl.__bad && (!duffGain || (audioCtx && audioCtx.state === "running")); }
   function duffInit() {
     if (duffEl) return duffEl;
@@ -4348,7 +4350,6 @@ return exports;})();
       row('id="optSound"' + (S.sound ? " checked" : ""), "Geluid", "Effecten en de stem van de presentator") +
       (P && P.mode === "expert" ? row('data-act="toggle-timer"' + (S.timer ? " checked" : ""), "Timer per vraag", TIMER_SECONDS + " seconden per vraag (Expert)") : "") +
       row('id="optSpeak"' + (S.speak ? " checked" : ""), "Spreek vragen uit", "Leest vraag, antwoorden en uitleg voor") +
-      row('id="optDuff"' + (duffPref() ? " checked" : ""), "Achtergrond percussie (Duff)", "Zacht ritme, pauzeert bij voorlezen") +
       row('id="optAuto"' + (autoOn() ? " checked" : ""), "Automatisch doorgaan", "Na een level vanzelf verder") +
       '<p class="set-info">ⓘ Gebruik je een schermlezer (VoiceOver of TalkBack)? Zet “Spreek vragen uit” dan uit.</p>' +
       '<p class="set-h">Account &amp; Synchronisatie</p>' +
@@ -6324,7 +6325,6 @@ return exports;})();
     h += '<header class="j-head"><button class="jh-player" data-act="players" aria-label="Speler: ' + nm + '. Wissel van speler">' + avatarHtml(P, 30) + "<span>" + nm + "</span></button>" +
       '<div class="jh-stats" role="group" aria-label="Jouw punten in de ' + modeName(level) + '-modus"><span>' + icon("star", 15, "fill") + "<b>" + stars + '</b><i class="sr-only"> sterren</i></span><span class="xp"><b>' + xp + '</b> XP</span><span class="gem">' + gemSvg(15) + "<b>" + gems + '</b><i class="sr-only"> edelstenen</i></span></div>' +
       '<button class="jh-mode ' + level + '" data-act="switch-mode" aria-label="Niveau wisselen. Nu: ' + (level === "junior" ? "Junior, tik voor Expert" : "Expert, tik voor Junior") + '">' + icon(level === "junior" ? "smile" : "cap", 16) + "<span>" + (level === "junior" ? "Junior" : "Expert") + "</span></button>" +
-      '<button class="jh-drum' + (duffOn() ? "" : " off") + '" data-act="duff-toggle" aria-pressed="' + duffOn() + '" aria-label="Achtergrond percussie (Duff)"><span aria-hidden="true">🥁</span></button>' +
       '<button class="jh-gear" data-act="settings" aria-label="Instellingen">' + icon("gear", 20) + "</button></header>";
     /* land-schild */
     h += '<div class="j-shield" style="--accent:' + c.color + '" role="group" aria-label="Land kiezen">' +
@@ -7169,11 +7169,15 @@ return exports;})();
       wave("w3", "rgba(246,211,107,.30)", "rgba(255,238,170,.75)", 46) + wave("w2", "rgba(40,170,115,.45)", "rgba(190,255,225,.45)", 38) + wave("w1", "rgba(3,40,28,.55)", "rgba(246,211,107,.55)", 30) +
       "</div>" + b + "</div>";
   }
-  function startSplash(done) {
+  function startSplash(done, retry) {
     const el = document.getElementById("splash");
     if (!el) { done(); return; }
     if (oauthReturn) { el.remove(); done(); return; }          /* terug van Google/Facebook: niet nog eens laten wachten */
     const rm = reducedMotion(), text = "Islam Quiz", timers = [];
+    /* Browsers staan geluid pas toe na een tik; zonder tik tonen we een hint en spelen we de intro na de eerste tik opnieuw met geluid. */
+    const gen = (el._gen = (el._gen || 0) + 1);
+    let needTap = false;
+    try { if (!retry && S.sound && !rm) { const c0 = ctx(); needTap = !!c0 && c0.state !== "running"; } } catch (e) {}
     let opened = false, gone = false, doneCalled = false;
     const later = function (fn, ms) { timers.push(setTimeout(fn, ms)); };
     const callDone = function () { if (!doneCalled) { doneCalled = true; done(); } };
@@ -7181,7 +7185,8 @@ return exports;})();
     el.innerHTML = '<div class="sp-half sp-l">' + splashScene(0) + '</div><div class="sp-half sp-r">' + splashScene(1) + "</div>" +
       '<div class="sp-center"><div class="sp-logo"><div class="logo">' + brandLogo(44) + '</div></div><p class="sp-title" aria-hidden="true">' +
       text.split("").map(function (ch) { return ch === " " ? '<span class="sp">&nbsp;</span>' : "<span>" + ch + "</span>"; }).join("") + "</p></div>" +
-      '<button class="sp-skip" type="button">Overslaan</button><h1 class="sr-only">Islam Quiz</h1>';
+      '<button class="sp-skip" type="button">Overslaan</button>' +
+      (needTap ? '<p class="sp-hint" aria-hidden="true">🔊 Tik op het scherm voor geluid</p>' : "") + '<h1 class="sr-only">Islam Quiz</h1>';
     el.classList.add("ready"); if (rm) el.classList.add("rm");
     const logo = el.querySelector(".sp-logo"), letters = el.querySelectorAll(".sp-title span"), skipBtn = el.querySelector(".sp-skip");
     try { ctx(); } catch (e) {}
@@ -7209,8 +7214,12 @@ return exports;})();
     };
     const skip = function () { open(true); };
     skipBtn.addEventListener("click", function (e) { e.stopPropagation(); skip(); });
-    el.addEventListener("pointerdown", function () { if (!opened) skip(); });
-    el.addEventListener("keydown", function (e) { if (e.key === "Escape" || e.key === "Enter" || e.key === " ") { e.preventDefault(); skip(); } });
+    el.addEventListener("pointerdown", function () {
+      if (opened || el._gen !== gen) return;
+      if (needTap) { needTap = false; timers.forEach(clearTimeout); try { ctx(); } catch (e) {} startSplash(done, true); return; }
+      skip();
+    });
+    el.addEventListener("keydown", function (e) { if (el._gen !== gen) return; if (e.key === "Escape" || e.key === "Enter" || e.key === " ") { e.preventDefault(); skip(); } });
     try { skipBtn.focus({ preventScroll: true }); } catch (e) {}
     if (rm) { later(function () { letters.forEach(function (l) { l.classList.add("on"); }); }, 300); later(function () { open(false); }, 1400); return; }
     for (let k = 0; k < text.length; k++) later(function () { hop(k); }, 450 + k * 260);
