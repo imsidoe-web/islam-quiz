@@ -6919,7 +6919,7 @@ return exports;})();
     const t = document.getElementById("jToast");
     if (!t) return;
     t.textContent = msg; t.classList.add("show");
-    clearTimeout(jToastTimer); jToastTimer = setTimeout(function () { t.classList.remove("show"); }, 2600);
+    clearTimeout(jToastTimer); jToastTimer = setTimeout(function () { t.classList.remove("show"); }, 2800 + 60 * String(msg).length);
   }
   /* land 100% voltooid: avatar vliegt van het land-tabblad naar het volgende land-tabblad, daarna schakelt de kaart automatisch over */
   function runLandFlight() {
@@ -6985,7 +6985,7 @@ return exports;})();
     d.innerHTML = '<span class="rf-e">' + f.e + '</span><span class="rf-t">' + esc(f.t) + "</span>";
     d.addEventListener("click", function () { d.remove(); });
     document.body.appendChild(d); announce(f.t);
-    setTimeout(function () { d.classList.add("out"); setTimeout(function () { d.remove(); }, 500); }, 5200);
+    setTimeout(function () { d.classList.add("out"); setTimeout(function () { d.remove(); }, 500); }, 4500 + 90 * f.t.length);
   }
   function afterJourneyRender() {
     if (landFly) { runLandFlight(); return; }
@@ -7819,7 +7819,7 @@ return exports;})();
     let t = document.getElementById("backToast");
     if (!t) { t = document.createElement("div"); t.id = "backToast"; t.className = "back-toast"; t.setAttribute("role", "status"); document.body.appendChild(t); }
     t.textContent = msg; t.classList.remove("show"); void t.offsetWidth; t.classList.add("show");
-    clearTimeout(t._h); t._h = setTimeout(function () { t.classList.remove("show"); }, 1900);
+    clearTimeout(t._h); t._h = setTimeout(function () { t.classList.remove("show"); }, 2800 + 60 * String(msg).length);
   }
   /* sluit de bovenste laag; geeft true als er iets gesloten is */
   function backCloseTop() {
