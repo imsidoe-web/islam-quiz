@@ -4032,8 +4032,8 @@ return exports;})();
       /* avatar_id ontbreekt nog (supabase-avatars.sql niet uitgevoerd)? Dan syncen we zonder dat veld */
       const ex = soc.noAv ? {} : { avatar_id: av ? av.id : null };
       return send(Object.assign({}, soc.noCols ? row : full, ex)).then(function (r) {
-        const msg = r && r.error ? String(r.error.message || r.error.code || "") : "";
-        if (msg && !soc.noAv && /avatar_id/i.test(msg)) { soc.noAv = true; return go(); }
+        const msg = r && r.error ? errTxt(r.error) : "";
+        if (msg && !soc.noAv && /avatar_id|42703|pgrst204/i.test(msg)) { soc.noAv = true; return go(); }
         if (msg && !soc.noCols && /column|schema|pgrst204/i.test(msg)) { soc.noCols = true; return go(); }
         return r;
       });
@@ -4075,7 +4075,7 @@ return exports;})();
       sb.from("leaderboard").select("user_id,display_name,avatar_url,highscore,stars" + (soc.noAv ? "" : ",avatar_id")).eq("mode", lv)
         .order("highscore", { ascending: false }).order("stars", { ascending: false }).limit(50)
         .then(function (r) {
-          if (r && r.error && !soc.noAv && /avatar_id/i.test(String(r.error.message || ""))) { soc.noAv = true; gbLoad(lv); return; }
+          if (r && r.error && !soc.noAv) { soc.noAv = true; gbLoad(lv); return; }
           if (r && r.error) gb[lv] = { rows: prev, err: "Het klassement kon niet worden geladen." };
           else { gb[lv] = { rows: (r && r.data) || [] }; announce("Klassement bijgewerkt: " + gb[lv].rows.length + " spelers."); }
           gbPaint(lv);
@@ -5187,6 +5187,7 @@ return exports;})();
     return { ANIMALS: ANIMALS, PEOPLE: PEOPLE, THINGS: THINGS, ALL: ALL };
   })();
   let avUid = 0;
+  function errTxt(e) { try { return e ? [e.message, e.details, e.hint, e.code].join(" ") : ""; } catch (x) { return ""; } }
   function avById(id) { return id ? AVATARS.ALL.find(function (a) { return a.id === id; }) || null : null; }
   function levelsDone(p) { return passedLevels(p, "junior") + passedLevels(p, "expert"); }
   function avUnlocked(p, a) { return !!a && levelsDone(p) >= a.need; }
@@ -6712,8 +6713,8 @@ return exports;})();
     h += '<g id="jSocial">' + socialSvg(c, stops) + "</g>";
     const mpos = function (st) { const R = st.last ? 27 : st.mile ? 21 : 19, side = st.x < 180 ? -1 : 1; return (st.x + side * (R + 17)) + "," + st.y; };
     const cs = stops[J.cur], key = level + ":" + c.id, prev = journeyPos[key] !== undefined ? Math.min(journeyPos[key], n - 1) : J.cur, ps = stops[prev];
-    h += '<g id="jMarker" class="j-marker j-me" data-act="peer" data-key="me" role="button" tabindex="0" aria-label="Jouw profiel" data-from="' + mpos(ps) + '" data-to="' + mpos(cs) + '" style="transform:translate(' + mpos(ps).split(",")[0] + "px," + mpos(ps).split(",")[1] + 'px)"><g class="j-bob">' +
-      '<circle r="17" fill="#fff"/><circle r="14" fill="' + P.color + '"/>' + (avOf(P) ? '<clipPath id="jmc"><circle r="14"/></clipPath><svg x="-14" y="-14" width="28" height="28" viewBox="0 0 100 100" clip-path="url(#jmc)">' + avInner(avOf(P)) + "</svg>" : '<text y="5.5" text-anchor="middle" font-size="15" font-weight="900" fill="#fff">' + ini + "</text>") + "</g></g>";
+    h += '<g id="jMarker" class="j-marker j-me" data-act="peer" data-key="me" role="button" tabindex="0" aria-label="Jouw profiel" data-from="' + mpos(ps) + '" data-to="' + mpos(cs) + '" style="transform:translate(' + mpos(ps).split(",")[0] + "px," + mpos(ps).split(",")[1] + 'px)"><g class="j-bob"><g transform="scale(1.4)">' +
+      '<circle r="17" fill="#fff"/><circle r="14" fill="' + P.color + '"/>' + (avOf(P) ? '<clipPath id="jmc"><circle r="14"/></clipPath><svg x="-14" y="-14" width="28" height="28" viewBox="0 0 100 100" clip-path="url(#jmc)">' + avInner(avOf(P)) + "</svg>" : '<text y="5.5" text-anchor="middle" font-size="15" font-weight="900" fill="#fff">' + ini + "</text>" + (P.photo && /^https:\/\//i.test(P.photo) ? '<clipPath id="jmc"><circle r="14"/></clipPath><image href="' + esc(P.photo) + '" x="-14" y="-14" width="28" height="28" preserveAspectRatio="xMidYMid slice" clip-path="url(#jmc)" referrerpolicy="no-referrer"/>' : "")) + "</g>" + "</g></g>";
     journeyPos[key] = J.cur;
     return h + "</svg>";
   }
@@ -6765,15 +6766,15 @@ return exports;})();
   }
   function peerColor(pe) { if (pe.color) return pe.color; let h = 0; String(pe.uid || pe.name).split("").forEach(function (c) { h = (h * 31 + c.charCodeAt(0)) >>> 0; }); return AVATAR_COLORS[h % AVATAR_COLORS.length]; }
   function peerSvg(pe, x, y) {
-    const id = "pc" + (++socUid), ini = esc(String(pe.name || "?").trim().charAt(0).toUpperCase()), S2 = 46, H = S2 / 2;
+    const id = "pc" + (++socUid), ini = esc(String(pe.name || "?").trim().charAt(0).toUpperCase()), S2 = 62, H = S2 / 2;
     peerMap[pe.key] = pe;
     /* Candy-Crush-achtig: afgeronde tegel met blauwe rand, groot genoeg om te herkennen en aan te tikken */
     return '<g class="j-peer" data-act="peer" data-key="' + esc(pe.key) + '" role="button" tabindex="0" aria-label="Medespeler ' + esc(pe.name) + ", level " + (pe.level + 1) + ". Tik voor het profiel" + '" transform="translate(' + x + " " + y + ')"><g class="j-peer-in">' +
-      '<rect x="' + (-H - 4) + '" y="' + (-H - 4) + '" width="' + (S2 + 8) + '" height="' + (S2 + 8) + '" rx="15" fill="#000" fill-opacity="0"/>' +
+      '<rect x="' + (-H - 4) + '" y="' + (-H - 4) + '" width="' + (S2 + 8) + '" height="' + (S2 + 8) + '" rx="18" fill="#000" fill-opacity="0"/>' +
       '<rect x="' + (-H + 1) + '" y="' + (-H + 4) + '" width="' + S2 + '" height="' + S2 + '" rx="13" fill="#000" fill-opacity=".28"/>' +
       '<rect x="' + (-H) + '" y="' + (-H) + '" width="' + S2 + '" height="' + S2 + '" rx="13" fill="#2f86e0" stroke="#bfe0ff" stroke-width="2"/>' +
       '<rect x="' + (-H + 4) + '" y="' + (-H + 4) + '" width="' + (S2 - 8) + '" height="' + (S2 - 8) + '" rx="9" fill="' + peerColor(pe) + '"/>' +
-      (avById(pe.av) ? '<clipPath id="' + id + 'a"><rect x="' + (-H + 4) + '" y="' + (-H + 4) + '" width="' + (S2 - 8) + '" height="' + (S2 - 8) + '" rx="9"/></clipPath><svg x="' + (-H + 4) + '" y="' + (-H + 4) + '" width="' + (S2 - 8) + '" height="' + (S2 - 8) + '" viewBox="0 0 100 100" clip-path="url(#' + id + 'a)">' + avInner(avById(pe.av)) + "</svg>" : '<text y="9" text-anchor="middle" font-size="24" font-weight="900" fill="#fff">' + ini + "</text>") +
+      (avById(pe.av) ? '<clipPath id="' + id + 'a"><rect x="' + (-H + 4) + '" y="' + (-H + 4) + '" width="' + (S2 - 8) + '" height="' + (S2 - 8) + '" rx="9"/></clipPath><svg x="' + (-H + 4) + '" y="' + (-H + 4) + '" width="' + (S2 - 8) + '" height="' + (S2 - 8) + '" viewBox="0 0 100 100" clip-path="url(#' + id + 'a)">' + avInner(avById(pe.av)) + "</svg>" : '<text y="12" text-anchor="middle" font-size="32" font-weight="900" fill="#fff">' + ini + "</text>") +
       (pe.photo ? '<clipPath id="' + id + '"><rect x="' + (-H + 4) + '" y="' + (-H + 4) + '" width="' + (S2 - 8) + '" height="' + (S2 - 8) + '" rx="9"/></clipPath><image href="' + esc(pe.photo) + '" x="' + (-H + 4) + '" y="' + (-H + 4) + '" width="' + (S2 - 8) + '" height="' + (S2 - 8) + '" preserveAspectRatio="xMidYMid slice" clip-path="url(#' + id + ')" referrerpolicy="no-referrer"/>' : "") +
       '<rect x="' + (-H) + '" y="' + (-H) + '" width="' + S2 + '" height="' + S2 + '" rx="13" fill="none" stroke="#ffd54f" stroke-width="1.5" stroke-opacity=".9"/></g></g>';
   }
@@ -6783,9 +6784,9 @@ return exports;})();
     let h = "";
     Object.keys(by).forEach(function (k) {
       const st = stops[k], R = st.last ? 27 : st.mile ? 21 : 19, side = st.x < 180 ? -1 : 1, list = by[k];
-      const px = Math.max(30, Math.min(330, st.x + side * (R + 36)));
-      list.slice(0, 2).forEach(function (pe, n) { h += peerSvg(pe, px, st.y - 4 - n * 58); });
-      if (list.length > 2) h += '<g transform="translate(' + px + " " + (st.y - 4 - 2 * 58 + 10) + ')" aria-hidden="true"><circle r="13" fill="#1b4332" stroke="#ffd54f" stroke-width="2"/><text y="4" text-anchor="middle" font-size="11" font-weight="900" fill="#fff">+' + (list.length - 2) + "</text></g>";
+      const px = Math.max(40, Math.min(320, st.x + side * (R + 46)));
+      list.slice(0, 2).forEach(function (pe, n) { h += peerSvg(pe, px, st.y - 4 - n * 74); });
+      if (list.length > 2) h += '<g transform="translate(' + px + " " + (st.y - 4 - 2 * 74 + 10) + ')" aria-hidden="true"><circle r="13" fill="#1b4332" stroke="#ffd54f" stroke-width="2"/><text y="4" text-anchor="middle" font-size="11" font-weight="900" fill="#fff">+' + (list.length - 2) + "</text></g>";
     });
     return h;
   }
@@ -6801,7 +6802,7 @@ return exports;})();
       q.order("updated_at", { ascending: false }).limit(80).then(function (r) {
         soc.busy[key] = false;
         if (!r) return;
-        if (r.error && !soc.noAv && /avatar_id/i.test(String(r.error.message || ""))) { soc.noAv = true; socialFetch(); return; }
+        if (r.error && !soc.noAv) { soc.noAv = true; socialFetch(); return; }
         if (r.error) { if (/column|schema|pgrst204/i.test(String(r.error.message || r.error.code || ""))) soc.noCols = true; return; }
         soc.all[lv] = r.data || []; soc.t[key] = Date.now();
         presenceUpdate();
