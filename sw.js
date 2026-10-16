@@ -1,6 +1,6 @@
 /* Islam Quiz – service worker (netwerk eerst, cache als terugval)
    Verhoog CACHE_VERSION bij elke release. Zo zien bezoekers altijd meteen de nieuwste versie. */
-const CACHE_VERSION = "islam-quiz-v32";
+const CACHE_VERSION = "islam-quiz-v33";
 const PRECACHE = [];
 
 self.addEventListener("install", (event) => {
@@ -56,5 +56,30 @@ self.addEventListener("fetch", (event) => {
       const hit = (await caches.match(req, { ignoreSearch: true })) || (req.mode === "navigate" ? await caches.match("index.html") || await caches.match("./") : null);
       return hit || new Response("Geen verbinding. Probeer het later opnieuw.", { status: 503, headers: { "Content-Type": "text/plain; charset=utf-8" } });
     }
+  })());
+});
+
+// ───── Herinnering (Web Push): melding als de dagreeks in gevaar is ─────
+self.addEventListener("push", (event) => {
+  let d = {};
+  try { d = event.data ? event.data.json() : {}; } catch (e) { d = { body: event.data ? event.data.text() : "" }; }
+  event.waitUntil((async () => {
+    const wins = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+    if (wins.some((c) => c.visibilityState === "visible")) return;   // de app is open en toont zelf de herinnering
+    await self.registration.showNotification(d.title || "Islam Quiz", {
+      body: d.body || "Speel vandaag nog één level om je reeks te houden.",
+      icon: "icon-192.png", badge: "icon-192.png", tag: "streak", renotify: false,
+      data: { url: d.url || "./" }
+    });
+  })());
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const url = (event.notification.data && event.notification.data.url) || "./";
+  event.waitUntil((async () => {
+    const wins = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+    for (const c of wins) { if ("focus" in c) { await c.focus(); return; } }
+    if (self.clients.openWindow) await self.clients.openWindow(url);
   })());
 });

@@ -1134,6 +1134,16 @@ body.jfull .reward-flyer { top: 160px; }
 .j-presence { position: fixed; z-index: 24; top: calc(env(safe-area-inset-top, 0px) + 136px); left: 50%; transform: translateX(-50%); width: max-content; max-width: calc(100% - 24px); pointer-events: none; padding: 5px 12px; border-radius: 999px; background: rgba(3, 40, 28, .72); color: #ffe9a8; font-weight: 800; font-size: .78rem; text-align: center; border: 1.5px solid rgba(255, 224, 138, .55); backdrop-filter: blur(4px); }
 .j-presence[hidden] { display: none; }
 
+.remind-bn { position: fixed; z-index: 60; left: 50%; bottom: calc(92px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); width: min(92vw, 420px); display: flex; align-items: flex-start; gap: 10px; padding: 12px 12px 12px 14px; border-radius: 18px; background: linear-gradient(180deg, #1f6b4a, #0f4a33); color: #fff; border: 2px solid #ffd54f; box-shadow: 0 10px 28px rgba(0, 30, 20, .45); animation: rbIn .45s cubic-bezier(.3, 1.4, .5, 1) both; }
+.remind-bn.out { opacity: 0; transition: opacity .45s; }
+.remind-bn .rb-ic { font-size: 1.7rem; line-height: 1; margin-top: 2px; }
+.remind-bn .rb-t { flex: 1; min-width: 0; display: grid; gap: 2px; }
+.remind-bn .rb-t b { font-size: 1rem; color: #ffe9a8; } .remind-bn .rb-t small { font-size: .85rem; opacity: .95; }
+.remind-bn .rb-bell { appearance: none; margin-top: 8px; justify-self: start; border: 0; border-radius: 999px; padding: 8px 14px; font: inherit; font-weight: 800; font-size: .85rem; color: #4a2f00; background: linear-gradient(180deg, #ffe08a, #f5b82e); box-shadow: 0 3px 0 #c98a12; cursor: pointer; min-height: 40px; }
+.remind-bn .rb-x { appearance: none; border: 0; background: rgba(255, 255, 255, .18); color: #fff; width: 34px; height: 34px; border-radius: 50%; font-size: 1.3rem; line-height: 1; cursor: pointer; flex: none; }
+@keyframes rbIn { from { transform: translate(-50%, 30px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .remind-bn { animation: none; } }
+
 /* ── Splash screen ── */
 #splash { position: fixed; inset: 0; z-index: 9999; background: linear-gradient(160deg, #0b6b47, #03281c); overflow: hidden; touch-action: manipulation; animation: spFailsafe .01s 14s forwards; }
 #splash.ready { background: transparent; }
@@ -3795,6 +3805,7 @@ return exports;})();
     if (u) {
       const fresh = !same;
       if (fresh) { linkPlayer(u); S.entry = "account"; saveState(); sbSyncAll(); sbLoadStreak(); closeAccount(); }
+      remindSync();
       if (screen === "login" || screen === "authwait") enterApp();
       else if (fresh && screen === "players" && linkNote) enterApp();
       else if (fresh && ["journey", "board", "scores", "welcome", "players"].indexOf(screen) !== -1) render();
@@ -4354,6 +4365,7 @@ return exports;})();
       (P && P.mode === "expert" ? row('data-act="toggle-timer"' + (S.timer ? " checked" : ""), "Timer per vraag", TIMER_SECONDS + " seconden per vraag (Expert)") : "") +
       row('id="optSpeak"' + (S.speak ? " checked" : ""), "Spreek vragen uit", "Leest vraag, antwoorden en uitleg voor") +
       row('id="optAuto"' + (autoOn() ? " checked" : ""), "Automatisch doorgaan", "Na een level vanzelf verder") +
+      (pushSupported() ? row('id="optRemind"' + (S.remind ? " checked" : ""), "Dagelijkse herinnering", "Melding om " + REMIND_HOUR + ":00 als je reeks in gevaar is") + '<p class="set-info" id="remindMsg" role="status" hidden></p>' : "") +
       '<p class="set-info">ⓘ Gebruik je een schermlezer (VoiceOver of TalkBack)? Zet “Spreek vragen uit” dan uit.</p>' +
       '<p class="set-h">Account &amp; Synchronisatie</p>' +
       '<button class="btn ghost block acct-open" data-act="account" data-d="x">' + icon("users", 20) + (sbUser && P && P.sbId === sbUser.id ? "✓ Ingelogd als: " + esc(publicName(P)) + " (gesynchroniseerd)" : P && !P.sbId ? "Status: Gastspeler — Koppel je account" : "Account &amp; Inloggen") + "</button>" +
@@ -4371,6 +4383,11 @@ return exports;})();
         else { speakStop(); S.autoNext = true; const a = document.getElementById("optAuto"); if (a) a.checked = true; }
       }
       if (e.target.id === "optAuto") S.autoNext = e.target.checked;
+      if (e.target.id === "optRemind") {
+        const box = e.target, msg = document.getElementById("remindMsg");
+        if (box.checked) { remindEnable().then(function (r) { if (!r.ok) box.checked = false; if (msg) { msg.textContent = r.msg; msg.hidden = false; } }); }
+        else { remindDisable(); if (msg) { msg.textContent = "Herinnering uit."; msg.hidden = false; } }
+      }
       if (e.target.id === "optDuff") { S.duff = e.target.checked; if (S.duff) duffMuted = false; duffSync(); }
       saveState();
     });
@@ -4879,6 +4896,87 @@ return exports;})();
   function streakAtRisk(p) { return streakOf(p) > 0 && !playedToday(p); }
   /* de laatste 7 dagen (oud naar nieuw, vandaag laatst) voor het weekoverzicht */
   function lastDays(n) { const out = []; for (let i = n - 1; i >= 0; i--) { const d = new Date(); d.setDate(d.getDate() - i); out.push({ s: dateStr(d), wd: ["Z", "M", "D", "W", "D", "V", "Z"][d.getDay()], wdName: ["zondag", "maandag", "dinsdag", "woensdag", "donderdag", "vrijdag", "zaterdag"][d.getDay()] }); } return out; }
+  /* ───────────── Herinnering voor de dagreeks ─────────────
+     Op het scherm: een banner als de reeks in gevaar is (vanaf REMIND_HOUR, één keer per dag).
+     Buiten de app: een echte melding (Web Push). De server (Supabase) stuurt die; zie supabase-push.sql. */
+  const VAPID_PUBLIC = "BAxbqfFnhqwVh-k2RDn8SpJ9NmleSo5RTpD-_fYzYcE8kgAzC6N3EujNMzJ8ZrAPn3kmpH6g6rSsix7M6gSZq9U";
+  const REMIND_HOUR = 19;
+  function pushSupported() { return "serviceWorker" in navigator && "PushManager" in window && "Notification" in window; }
+  function isIOS() { return /iPad|iPhone|iPod/.test(navigator.userAgent || ""); }
+  function b64ToU8(b) { const p = "=".repeat((4 - b.length % 4) % 4), r = atob((b + p).replace(/-/g, "+").replace(/_/g, "/")), o = new Uint8Array(r.length); for (let i = 0; i < r.length; i++) o[i] = r.charCodeAt(i); return o; }
+  function pushSubscription(create) {
+    return navigator.serviceWorker.ready.then(function (reg) {
+      return reg.pushManager.getSubscription().then(function (sub) {
+        if (sub || !create) return sub;
+        return reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64ToU8(VAPID_PUBLIC) });
+      });
+    });
+  }
+  function pushSave(sub) {
+    if (!sb || !sbUser || !sub) return Promise.resolve(false);
+    const j = sub.toJSON ? sub.toJSON() : {}; if (!j.endpoint || !j.keys) return Promise.resolve(false);
+    let tz = "Europe/Amsterdam"; try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || tz; } catch (e) {}
+    return sb.rpc("push_subscribe", { p_endpoint: j.endpoint, p_p256dh: j.keys.p256dh, p_auth: j.keys.auth, p_tz: tz }).then(function (r) { return !(r && r.error); });
+  }
+  /* aanzetten: toestemming vragen, abonneren en (als je ingelogd bent) bij de server aanmelden */
+  function remindEnable() {
+    if (!pushSupported()) return Promise.resolve({ ok: false, msg: "Meldingen worden niet ondersteund in deze browser." });
+    if (isIOS() && !isStandalone()) return Promise.resolve({ ok: false, msg: "Op iPhone en iPad werken meldingen pas als je de app eerst op je beginscherm zet (Delen → Zet op beginscherm)." });
+    return Notification.requestPermission().then(function (perm) {
+      if (perm !== "granted") return { ok: false, msg: "Meldingen zijn niet toegestaan. Zet ze aan in de instellingen van je telefoon of browser." };
+      S.remind = true; saveState();
+      if (!sbUser) return { ok: true, msg: "✓ Aan zolang de app open staat. Log in met een account voor meldingen ook als de app dicht is." };
+      return pushSubscription(true).then(pushSave).then(function (ok) {
+        return ok ? { ok: true, msg: "✓ Aan. Je krijgt om " + REMIND_HOUR + ":00 een melding als je reeks in gevaar is." } : { ok: true, msg: "✓ Aan zolang de app open staat. De server is nog niet klaar voor meldingen als de app dicht is." };
+      });
+    }).catch(function () { return { ok: false, msg: "Meldingen aanzetten is niet gelukt. Probeer het later opnieuw." }; });
+  }
+  function remindDisable() {
+    S.remind = false; saveState();
+    return pushSubscription(false).then(function (sub) {
+      if (!sub) return;
+      const ep = sub.endpoint;
+      return (sb && sbUser ? sb.rpc("push_unsubscribe", { p_endpoint: ep }) : Promise.resolve()).then(function () { return sub.unsubscribe(); });
+    }).catch(function () {});
+  }
+  /* bij elke start: abonnement verversen zodat de server altijd een geldig adres heeft */
+  function remindSync() {
+    if (!S.remind || !pushSupported() || Notification.permission !== "granted" || !sbUser) return;
+    pushSubscription(true).then(pushSave).catch(function () {});
+  }
+  function remindText() {
+    const n = P ? streakOf(P) : 0;
+    return { title: "🔥 Je reeks is in gevaar!", body: "Speel vandaag nog één level om je reeks van " + n + (n === 1 ? " dag" : " dagen") + " te houden." };
+  }
+  function remindBannerClose() { const b = document.getElementById("remindBn"); if (b) b.remove(); }
+  function remindBanner() {
+    if (document.getElementById("remindBn")) return;
+    const t = remindText(), canAsk = pushSupported() && !S.remind && Notification.permission !== "denied";
+    const d = document.createElement("div"); d.id = "remindBn"; d.className = "remind-bn"; d.setAttribute("role", "status");
+    d.innerHTML = '<span class="rb-ic" aria-hidden="true">🔥</span><div class="rb-t"><b>' + t.title.replace("🔥 ", "") + "</b><small>" + esc(t.body) + "</small>" +
+      (canAsk ? '<button class="rb-bell" type="button" data-act="remind-on">🔔 Herinner mij met een melding</button>' : "") + '</div><button class="rb-x" type="button" data-act="remind-x" aria-label="Sluiten">×</button>';
+    document.body.appendChild(d); announce(t.title.replace("🔥 ", "") + " " + t.body);
+    setTimeout(function () { const b = document.getElementById("remindBn"); if (b === d) d.classList.add("out"); setTimeout(function () { if (d.isConnected) d.remove(); }, 500); }, 14000);
+  }
+  /* controleren of de herinnering nu moet: vanaf REMIND_HOUR, reeks in gevaar, nog niet getoond vandaag */
+  function remindCheck() {
+    try {
+      if (!P || !P.mode || screen === "quiz" || screen === "login" || screen === "authwait") return;
+      if (new Date().getHours() < REMIND_HOUR || !streakAtRisk(P) || S.remindDay === todayStr()) return;
+      if (document.hidden) {
+        if (S.remind && "Notification" in window && Notification.permission === "granted" && navigator.serviceWorker) {
+          S.remindDay = todayStr(); saveState();
+          const t = remindText();
+          navigator.serviceWorker.ready.then(function (reg) { reg.showNotification(t.title, { body: t.body, icon: "icon-192.png", badge: "icon-192.png", tag: "streak", data: { url: "./" } }); }).catch(function () {});
+        }
+        return;
+      }
+      S.remindDay = todayStr(); saveState(); remindBanner();
+    } catch (e) {}
+  }
+  setInterval(remindCheck, 60000);
+  document.addEventListener("visibilitychange", function () { setTimeout(remindCheck, 400); });
+
   function streakPillHtml() {
     const n = streakOf(P), st = n === 0 ? "zero" : playedToday(P) ? "done" : "risk";
     return '<button class="jstreak ' + st + '" data-act="streak" aria-label="Dagreeks: ' + n + (n === 1 ? " dag" : " dagen") + (st === "risk" ? ". Speel vandaag een level om hem te houden" : st === "done" ? ". Vandaag al gespeeld" : "") + '"><span aria-hidden="true">🔥</span><b>' + n + "</b></button>";
@@ -6458,6 +6556,7 @@ return exports;})();
     if (landFly) { runLandFlight(); return; }
     if (flyerPending) { flyerPending = false; setTimeout(showFlyer, 700); }
     socialFetch();
+    setTimeout(remindCheck, 1500);
     const m = document.getElementById("jMarker");
     if (m) {
       const to = m.dataset.to.split(",");
@@ -7136,6 +7235,8 @@ return exports;})();
       case "login-google": play("click"); sbLoginGoogle(); break;
       case "account": play("click"); accountDialog(); break;
       case "streak": play("click"); streakDialog(); break;
+      case "remind-x": remindBannerClose(); break;
+      case "remind-on": play("click"); remindEnable().then(function (r) { remindBannerClose(); backToast(r.msg); }); break;
       case "peer": play("click"); peerDialog(el.dataset.key); break;
       case "nick-save": nickSave(); break;
       case "acct-tab": acctTab = el.dataset.tab; sbMsg(""); acctRefresh('.acct-tab[aria-selected="true"]'); break;
