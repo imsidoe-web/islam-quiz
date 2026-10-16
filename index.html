@@ -1131,6 +1131,9 @@ body.jfull .reward-flyer { top: 160px; }
 .stk-week li.today .stk-dot { box-shadow: 0 0 0 3px #f0c27f; }
 .streak-dlg .stk-best { margin: 4px 0 2px; } .streak-dlg .stk-note { margin: 2px 0 14px; font-size: .85rem; }
 
+.j-presence { position: fixed; z-index: 24; top: calc(env(safe-area-inset-top, 0px) + 136px); left: 50%; transform: translateX(-50%); width: max-content; max-width: calc(100% - 24px); pointer-events: none; padding: 5px 12px; border-radius: 999px; background: rgba(3, 40, 28, .72); color: #ffe9a8; font-weight: 800; font-size: .78rem; text-align: center; border: 1.5px solid rgba(255, 224, 138, .55); backdrop-filter: blur(4px); }
+.j-presence[hidden] { display: none; }
+
 /* ── Splash screen ── */
 #splash { position: fixed; inset: 0; z-index: 9999; background: linear-gradient(160deg, #0b6b47, #03281c); overflow: hidden; touch-action: manipulation; animation: spFailsafe .01s 14s forwards; }
 #splash.ready { background: transparent; }
@@ -6185,7 +6188,7 @@ return exports;})();
 
   /* ───────────── Medespelers op de kaart ───────────── */
   /* Alleen een nickname (of voornaam), een avatar en spelstatistieken. Nooit e-mail, achternaam of locatie. */
-  const soc = { rows: {}, t: {}, busy: {}, noCols: false };
+  const soc = { all: {}, t: {}, busy: {}, noCols: false };
   const peerMap = {};
   let socUid = 0;
   function publicName(p) { return String((p && (p.nick || p.name)) || "Speler").slice(0, 14); }
@@ -6222,7 +6225,7 @@ return exports;})();
   function socialPeers(lv, land) {
     const out = socialLocal(lv, land), have = {};
     out.forEach(function (o) { if (o.sbId) have[o.sbId] = 1; });
-    ((soc.rows[lv + ":" + land]) || []).forEach(function (r) {
+    ((soc.all[lv] || []).filter(function (r) { return Math.max(0, r.pos_land || 0) === land; })).forEach(function (r) {
       if ((sbUser && r.user_id === sbUser.id) || have[r.user_id]) return;
       out.push({ key: "g:" + r.user_id, name: String(r.display_name || "Speler").slice(0, 14), photo: GOOGLE_PHOTO.test(r.avatar_url || "") ? r.avatar_url : "", color: null, uid: r.user_id, land: r.pos_land, level: r.pos_level || 0, levels: r.levels_done || 0, xp: r.xp || 0, stars: r.stars || 0, score: r.highscore || 0, streak: r.streak || 0, local: false });
     });
@@ -6252,21 +6255,40 @@ return exports;})();
   /* medespelers van dit land ophalen (hooguit eens per 45 s) en de avatars op de kaart bijwerken */
   function socialFetch() {
     if (!sb || screen !== "journey" || !P || !P.mode) return;
-    const lv = P.mode, li = journeyLand === null ? defaultLand() : journeyLand, key = lv + ":" + li;
-    if (soc.noCols || soc.busy[key] || (soc.t[key] && Date.now() - soc.t[key] < 45000)) return;
+    const lv = P.mode, key = lv;
+    if (soc.noCols || soc.busy[key] || (soc.t[key] && Date.now() - soc.t[key] < 45000)) { presenceUpdate(); return; }
     soc.busy[key] = true;
     try {
-      let q = sb.from("leaderboard").select("user_id,display_name,avatar_url,highscore,stars,xp,levels_done,pos_land,pos_level,streak").eq("mode", lv).eq("pos_land", li);
+      let q = sb.from("leaderboard").select("user_id,display_name,avatar_url,highscore,stars,xp,levels_done,pos_land,pos_level,streak,updated_at").eq("mode", lv);
       if (sbUser) q = q.neq("user_id", sbUser.id);
-      q.order("highscore", { ascending: false }).limit(12).then(function (r) {
+      q.order("updated_at", { ascending: false }).limit(80).then(function (r) {
         soc.busy[key] = false;
         if (!r) return;
         if (r.error) { if (/column|schema|pgrst204/i.test(String(r.error.message || r.error.code || ""))) soc.noCols = true; return; }
-        soc.rows[key] = r.data || []; soc.t[key] = Date.now();
+        soc.all[lv] = r.data || []; soc.t[key] = Date.now();
+        presenceUpdate();
+        const li = journeyLand === null ? defaultLand() : journeyLand;
         const g = document.getElementById("jSocial"), c = CATEGORIES[li];
-        if (g && screen === "journey" && P && P.mode === lv && (journeyLand === null ? defaultLand() : journeyLand) === li) g.innerHTML = socialSvg(c, journeyStops(lv, c).stops);
+        if (g && screen === "journey" && P && P.mode === lv) g.innerHTML = socialSvg(c, journeyStops(lv, c).stops);
       }).catch(function () { soc.busy[key] = false; });
     } catch (e) { soc.busy[key] = false; }
+  }
+  /* korte regel boven de kaart: hoeveel medespelers er zijn en in welk land */
+  function presenceUpdate() {
+    const el = document.getElementById("jPresence"); if (!el || !P || !P.mode || !sb) return;
+    const lv = P.mode, li = journeyLand === null ? defaultLand() : journeyLand, rows = soc.all[lv];
+    if (!rows) return;
+    const per = {}; let tot = 0;
+    rows.forEach(function (r) { const k = Math.max(0, Math.min(CATEGORIES.length - 1, r.pos_land || 0)); per[k] = (per[k] || 0) + 1; tot++; });
+    const here = per[li] || 0;
+    let t;
+    if (!tot) t = "👥 Nog geen andere spelers. Nodig vrienden uit!";
+    else if (here) t = "👥 " + here + (here === 1 ? " medespeler" : " medespelers") + " in dit land" + (tot > here ? " · " + (tot - here) + " elders" : "");
+    else {
+      const where = Object.keys(per).map(function (k) { return "Land " + (+k + 1) + " (" + per[k] + ")"; }).join(", ");
+      t = "👥 " + tot + (tot === 1 ? " medespeler" : " medespelers") + " in " + where;
+    }
+    el.textContent = t; el.hidden = false;
   }
   function peerStat(ic, val, lab) { return '<li><span class="pe-ic" aria-hidden="true">' + ic + '</span><b>' + val + "</b><small>" + lab + "</small></li>"; }
   function peerDialog(key) {
@@ -6336,6 +6358,7 @@ return exports;})();
     });
     h += '</span><small class="js-prog" aria-label="' + st.passed + " van " + st.n + ' levels gehaald">' + st.passed + "/" + st.n + " ⭐" + st.stars + "</small></div></div>" +
       (i < CATEGORIES.length - 1 ? '<button class="js-arrow" data-act="journey-land" data-i="' + (i + 1) + '" aria-label="Volgend land: ' + esc(CATEGORIES[i + 1].title) + '">' + icon("right", 20) + "</button>" : '<button class="js-arrow" disabled aria-label="Geen volgend land">' + icon("right", 20) + "</button>") + "</div>";
+    h += '<div id="jPresence" class="j-presence" role="status" hidden></div>';
     /* fullscreen kaart */
     const landLocked = !jLandOpen(level, c.id);
     if (landLocked) { const pv = CATEGORIES[i - 1], ps = jLandStats(level, pv.id); h += '<div class="j-lockbanner" role="status"><span aria-hidden="true">🔒</span><span>Land vergrendeld. Rond <b>' + esc(pv.title) + "</b> helemaal af (" + ps.passed + "/" + ps.n + " levels) om hier te spelen. Rondkijken mag!</span></div>"; }
@@ -7153,7 +7176,11 @@ return exports;})();
   sfx.hopEnd = function () { [1046.5, 1318.5, 1568, 2093].forEach(function (f, i) { tone(f, i * 0.07, 0.42, "sine", 0.09); }); tone(2637, 0.3, 0.5, "sine", 0.045); };
   function splashSound(name, arg) {
     if (!S.sound) return;
-    try { const c = ctx(); if (!c || c.state !== "running") return; sfx[name](arg); } catch (e) {}
+    try {
+      const c = ctx(); if (!c) return;
+      if (c.state === "running") { sfx[name](arg); return; }
+      if (c.resume) c.resume().then(function () { if (c.state === "running") { try { sfx[name](arg); } catch (e) {} } }).catch(function () {});
+    } catch (e) {}
   }
   function splashScene(k) {
     let b = "";
@@ -7175,7 +7202,9 @@ return exports;})();
     if (oauthReturn) { el.remove(); done(); return; }          /* terug van Google/Facebook: niet nog eens laten wachten */
     const rm = reducedMotion(), text = "Islam Quiz", timers = [];
     const gen = (el._gen = (el._gen || 0) + 1);
-    let needTap = false;   /* geen geluidshint: speelt geluid alleen als de browser het toestaat */
+    /* Op telefoons blokkeert de browser geluid tot de eerste aanraking: dan wachten we met de intro op één tik ("Tik om te starten"). */
+    let needTap = false;
+    try { if (!retry && S.sound && !rm && window.matchMedia && matchMedia("(pointer: coarse)").matches) { const c0 = ctx(); needTap = !!c0 && c0.state !== "running"; } } catch (e) {}
     let opened = false, gone = false, doneCalled = false;
     const later = function (fn, ms) { timers.push(setTimeout(fn, ms)); };
     const callDone = function () { if (!doneCalled) { doneCalled = true; done(); } };
@@ -7184,7 +7213,7 @@ return exports;})();
       '<div class="sp-center"><div class="sp-logo"><div class="logo">' + brandLogo(44) + '</div></div><p class="sp-title" aria-hidden="true">' +
       text.split("").map(function (ch) { return ch === " " ? '<span class="sp">&nbsp;</span>' : "<span>" + ch + "</span>"; }).join("") + "</p></div>" +
       '<button class="sp-skip" type="button">Overslaan</button>' +
-      '<h1 class="sr-only">Islam Quiz</h1>';
+      (needTap ? '<p class="sp-hint" aria-hidden="true">Tik om te starten</p>' : "") + '<h1 class="sr-only">Islam Quiz</h1>';
     el.classList.add("ready"); if (rm) el.classList.add("rm");
     const logo = el.querySelector(".sp-logo"), letters = el.querySelectorAll(".sp-title span"), skipBtn = el.querySelector(".sp-skip");
     try { ctx(); } catch (e) {}
@@ -7212,13 +7241,15 @@ return exports;})();
     };
     const skip = function () { open(true); };
     skipBtn.addEventListener("click", function (e) { e.stopPropagation(); skip(); });
-    el.addEventListener("pointerdown", function () {
+    el.addEventListener("pointerdown", function (ev) {
       if (opened || el._gen !== gen) return;
+      if (needTap && ev && ev.target && ev.target.closest && ev.target.closest(".sp-skip")) return;
       if (needTap) { needTap = false; timers.forEach(clearTimeout); try { ctx(); } catch (e) {} startSplash(done, true); return; }
       skip();
     });
     el.addEventListener("keydown", function (e) { if (el._gen !== gen) return; if (e.key === "Escape" || e.key === "Enter" || e.key === " ") { e.preventDefault(); skip(); } });
     try { skipBtn.focus({ preventScroll: true }); } catch (e) {}
+    if (needTap) return;
     if (rm) { later(function () { letters.forEach(function (l) { l.classList.add("on"); }); }, 300); later(function () { open(false); }, 1400); return; }
     for (let k = 0; k < text.length; k++) later(function () { hop(k); }, 450 + k * 260);
     later(function () { logo.classList.remove("hop"); void logo.offsetWidth; logo.classList.add("final"); burst(); splashSound("hopEnd"); }, 450 + text.length * 260 + 150);
