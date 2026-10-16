@@ -1144,6 +1144,7 @@ body.jfull .reward-flyer { top: 160px; }
 @keyframes rbIn { from { transform: translate(-50%, 30px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .remind-bn { animation: none; } }
 
+
 /* ── Splash screen ── */
 #splash { position: fixed; inset: 0; z-index: 9999; background: linear-gradient(160deg, #0b6b47, #03281c); overflow: hidden; touch-action: manipulation; animation: spFailsafe .01s 14s forwards; }
 #splash.ready { background: transparent; }
@@ -1269,6 +1270,42 @@ body.jfull .reward-flyer { top: 160px; }
 .album-dlg { border: 6px solid var(--sc); border-top-width: 6px; border-radius: 30px; background: linear-gradient(180deg, #fffdf2, #f7e9c4); box-shadow: 0 10px 0 rgba(0, 0, 0, .28), 0 18px 34px rgba(0, 0, 0, .35); }
 .album-btn { background: linear-gradient(180deg, #2d8a62, #1b4332); }
 @media (prefers-reduced-motion: reduce) { .ac { transition: none; } }
+/* ── Kwartet-kaarten 2.0: glanzende 3D-tegels (smaragd, goud, crème) met reliëf in de afbeelding ── */
+.album-grid { gap: 22px 18px; padding: 4px 4px 2px; }
+.ac { overflow: visible; --t: color-mix(in srgb, var(--sc) 45%, #fff); --d: color-mix(in srgb, var(--sc) 62%, #000); isolation: isolate; padding: 9px 9px 10px; border-radius: 26px;
+  background: linear-gradient(155deg, var(--t) 0%, var(--sc) 46%, var(--d) 100%);
+  box-shadow: 0 9px 0 rgba(0, 0, 0, .34), 0 16px 18px rgba(0, 0, 0, .3), inset 0 3px 0 rgba(255, 255, 255, .7), inset 0 -4px 0 rgba(0, 0, 0, .22), inset 0 0 0 2px rgba(255, 255, 255, .25); transform: rotate(var(--rot, 0deg)); }
+.album-grid > .ac:nth-child(odd) { --rot: -2.2deg; } .album-grid > .ac:nth-child(even) { --rot: 2deg; }
+.ac.own { transition: transform .15s cubic-bezier(.3, 1.5, .5, 1), box-shadow .15s; }
+.ac.own:hover { transform: rotate(0deg) translateY(-3px) scale(1.03); }
+.ac.own:active { transform: rotate(0deg) translateY(5px); box-shadow: 0 3px 0 rgba(0, 0, 0, .34), 0 5px 8px rgba(0, 0, 0, .25), inset 0 3px 0 rgba(255, 255, 255, .7), inset 0 -4px 0 rgba(0, 0, 0, .22); }
+.ac-bk { position: absolute; z-index: -1; inset: 6px -4px -9px 5px; border-radius: 26px; transform: rotate(5deg); background: linear-gradient(180deg, color-mix(in srgb, var(--sc) 70%, #fff), var(--d)); box-shadow: 0 6px 0 rgba(0, 0, 0, .28), inset 0 2px 0 rgba(255, 255, 255, .5); }
+.ac::after { z-index: 3; left: 9px; right: 9px; top: 9px; height: 42%; border-radius: 20px 20px 60% 60% / 20px 20px 28px 28px; background: linear-gradient(180deg, rgba(255, 255, 255, .55), rgba(255, 255, 255, .08) 70%, rgba(255, 255, 255, 0)); mix-blend-mode: soft-light; }
+.ac-art { position: relative; display: block; aspect-ratio: 1 / 1; border-radius: 19px; overflow: hidden; border: 4px solid #fff6d2;
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, .22), inset 0 10px 16px rgba(255, 255, 255, .2), inset 0 -18px 22px rgba(0, 0, 0, .3), 0 2px 0 rgba(255, 255, 255, .55), 0 0 0 2px rgba(120, 80, 10, .35); }
+.ac-art svg { display: block; width: 100%; height: 100%; filter: url(#kw3d) saturate(1.2) contrast(1.06); }
+.ac-art::before { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; border-radius: 15px;
+  background: radial-gradient(130% 60% at 30% -8%, rgba(255, 255, 255, .6), rgba(255, 255, 255, 0) 60%), linear-gradient(115deg, rgba(255, 255, 255, 0) 36%, rgba(255, 255, 255, .5) 46%, rgba(255, 255, 255, .12) 54%, rgba(255, 255, 255, 0) 62%) 0 0 / 260% 100% no-repeat;
+  background-position: 0 0, 130% 0; animation: kwShine 6s ease-in-out infinite; }
+@keyframes kwShine { 0%, 55% { background-position: 0 0, 130% 0; } 85%, 100% { background-position: 0 0, -30% 0; } }
+.ac.own:nth-child(even) .ac-art::before { animation-delay: 2.4s; }
+.ac b { position: relative; margin-top: 8px; padding: 7px 4px 8px; border-radius: 14px; color: #ffe9a8; font-size: .85rem; letter-spacing: .2px; text-shadow: 0 2px 0 rgba(0, 0, 0, .55);
+  background: linear-gradient(180deg, #2a8a62, #0f4a33); border: 2px solid #f0c64a; box-shadow: inset 0 2px 0 rgba(255, 255, 255, .38), inset 0 -3px 0 rgba(0, 0, 0, .25), 0 3px 0 rgba(0, 0, 0, .3); }
+.ac.rare { box-shadow: 0 9px 0 rgba(0, 0, 0, .34), 0 0 0 4px #ffc928, 0 0 24px rgba(255, 200, 40, .95), inset 0 3px 0 rgba(255, 255, 255, .8), inset 0 -4px 0 rgba(0, 0, 0, .2); background: linear-gradient(155deg, #fff2a8, #f0b81f 46%, #a86e00 100%); }
+.ac.rare .ac-bk { background: linear-gradient(180deg, #ffe58a, #b97a00); }
+.ac.rare::before { z-index: 4; top: -13px; left: -9px; width: 34px; height: 34px; font-size: 1.1rem; animation: kwTwinkle 2.4s ease-in-out infinite; }
+@keyframes kwTwinkle { 0%, 100% { transform: scale(1) rotate(0); } 50% { transform: scale(1.18) rotate(14deg); } }
+.ac-n { z-index: 5; }
+.ac.lock { --rot: 0deg; background: linear-gradient(155deg, #3b9a74, #1a5a42 60%, #0f3d2c); box-shadow: 0 9px 0 rgba(0, 0, 0, .34), 0 12px 14px rgba(0, 0, 0, .25), inset 0 3px 0 rgba(255, 255, 255, .32), inset 0 -4px 0 rgba(0, 0, 0, .25); }
+.ac.lock .ac-art { display: grid; place-items: center; color: #ffe08a; font-size: 3.4rem; font-weight: 900; text-shadow: 0 3px 0 rgba(0, 0, 0, .5), 0 0 14px rgba(255, 224, 138, .5); background: radial-gradient(circle at 50% 35%, #2f7a5a, #1a4f3a 75%); border-color: rgba(255, 246, 210, .55); }
+.ac.lock .ac-art::before { animation: none; background: radial-gradient(130% 60% at 30% -8%, rgba(255, 255, 255, .25), rgba(255, 255, 255, 0) 60%); }
+.ac.lock b { color: #bfe6d1; background: rgba(0, 0, 0, .3); border-color: rgba(255, 255, 255, .2); text-shadow: none; }
+.adlg-art { position: relative; border: 5px solid #fff6d2; border-radius: 22px; box-shadow: 0 8px 0 rgba(0, 0, 0, .25), 0 0 0 4px var(--sc), 0 0 28px rgba(255, 214, 90, .35), inset 0 -22px 26px rgba(0, 0, 0, .28); }
+.adlg-art svg { display: block; width: 100%; height: auto; filter: url(#kw3d) saturate(1.2) contrast(1.06); }
+.adlg-art::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(130% 55% at 30% -6%, rgba(255, 255, 255, .6), rgba(255, 255, 255, 0) 60%), linear-gradient(115deg, rgba(255, 255, 255, 0) 38%, rgba(255, 255, 255, .45) 47%, rgba(255, 255, 255, 0) 58%); }
+.kc-art svg { filter: url(#kw3d) saturate(1.2) contrast(1.06); }
+@media (prefers-reduced-motion: reduce) { .ac-art::before, .ac.rare::before { animation: none; } .ac.own { transition: none; } }
+
 </style>
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Islam Quiz">
@@ -1292,6 +1329,18 @@ body.jfull .reward-flyer { top: 160px; }
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
 </head>
 <body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+    <!-- 3D-glans voor de kaartafbeeldingen: licht van linksboven, reliëf op basis van kleur en lijnen -->
+    <filter id="kw3d" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feColorMatrix in="SourceGraphic" type="luminanceToAlpha" result="lum"/>
+      <feGaussianBlur in="lum" stdDeviation="1.4" result="bump"/>
+      <feDiffuseLighting in="bump" surfaceScale="2.2" diffuseConstant="1.15" lighting-color="#ffffff" result="dif"><feDistantLight azimuth="225" elevation="62"/></feDiffuseLighting>
+      <feComposite in="SourceGraphic" in2="dif" operator="arithmetic" k1="1.05" k2="0" k3="0" k4="0" result="lit"/>
+      <feSpecularLighting in="bump" surfaceScale="3" specularConstant=".85" specularExponent="26" lighting-color="#fffbe8" result="spec"><feDistantLight azimuth="225" elevation="52"/></feSpecularLighting>
+      <feComposite in="spec" in2="SourceAlpha" operator="in" result="spec2"/>
+      <feComposite in="lit" in2="spec2" operator="arithmetic" k1="0" k2="1" k3=".5" k4="0"/>
+    </filter>
+  </defs></svg>
   <div id="splash" aria-hidden="false"></div>
   <!-- Disclaimer Modal -->
   <div id="disclaimerModal" class="modal-overlay">
@@ -5986,7 +6035,7 @@ return exports;})();
       h += '<div class="album-set" style="--sc:' + s.color + '"><h3><span class="as-t">' + esc(s.title) + '</span><span class="as-c" aria-label="' + have + " van " + s.cards.length + ' kaarten">' + (done ? "✓ Kwartet!" : have + "/" + s.cards.length) + "</span></h3><div class=\"album-grid\">";
       s.cards.forEach(function (id) {
         const n = albumMap()[id] || 0, K = KW_CARDS[id];
-        if (n > 0) h += '<button class="ac own' + (K.rare ? " rare" : "") + '" data-act="album-card" data-id="' + id + '" aria-label="' + esc(K.title) + (n > 1 ? ", " + n + " keer" : "") + '. Tik voor uitleg"><span class="ac-art">' + artSvg(id, true) + "</span><b>" + esc(K.title) + "</b>" + (n > 1 ? '<em class="ac-n">×' + n + "</em>" : "") + "</button>";
+        if (n > 0) h += '<button class="ac own' + (K.rare ? " rare" : "") + '" data-act="album-card" data-id="' + id + '" aria-label="' + esc(K.title) + (n > 1 ? ", " + n + " keer" : "") + '. Tik voor uitleg"><span class="ac-bk" aria-hidden="true"></span><span class="ac-art">' + artSvg(id, true) + "</span><b>" + esc(K.title) + "</b>" + (n > 1 ? '<em class="ac-n">×' + n + "</em>" : "") + "</button>";
         else h += '<div class="ac lock" role="img" aria-label="Nog niet gevonden"><span class="ac-art">?</span><b>Nog niet gevonden</b></div>';
       });
       h += "</div></div>";
