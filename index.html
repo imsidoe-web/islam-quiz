@@ -1447,6 +1447,9 @@ body.jfull .reward-flyer { top: 160px; }
 .av-dlg .avd-btns { flex: none; display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 12px 16px calc(14px + env(safe-area-inset-bottom, 0px)); border-top: 2px solid rgba(255,255,255,.12); background: #0c3324; }
 .av-dlg .avd-btns .btn { min-height: 50px; font-size: 17px; font-weight: 900; white-space: nowrap; }
 body:has(#avDlg) .back-toast { top: 92px !important; bottom: auto !important; z-index: 99999; }
+.jh-pw { display: inline-flex; align-items: center; gap: 6px; min-width: 0; }
+.jh-av { padding: 0 !important; }
+.player-card .icon-btn.small[data-act="avatar-pick"] { width: auto; padding: 0 12px; gap: 6px; display: inline-flex; align-items: center; font-weight: 800; font-size: 14px; }
 </style>
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Islam Quiz">
@@ -5369,7 +5372,7 @@ return exports;})();
       h += '<div class="player-card' + (p.id === S.current ? " active" : "") + '">' +
         '<button class="player-main" data-act="select-player" data-id="' + p.id + '">' + avatarHtml(p, 52) +
         '<span class="pinfo"><b>' + esc(p.name) + "</b><small>" + allStars(p) + (allStars(p) === 1 ? " ster" : " sterren") + " · " + p.played + (p.played === 1 ? " quiz" : " quizzen") + (p.mode ? " · " + (p.mode === "junior" ? "Junior" : "Expert") : "") + "</small></span></button>" +
-        '<button class="icon-btn small" data-act="avatar-pick" data-id="' + p.id + '" aria-label="Kies avatar voor ' + esc(p.name) + '" title="Kies avatar">' + icon("star", 18) + "</button>" +
+        '<button class="icon-btn small" data-act="avatar-pick" data-id="' + p.id + '" aria-label="Kies avatar voor ' + esc(p.name) + '" title="Kies avatar">' + icon("star", 16) + "<span>Avatar</span></button>" +
         '<button class="icon-btn small" data-act="remove-player" data-id="' + p.id + '" aria-label="Verwijder speler ' + esc(p.name) + '" title="Verwijder speler ' + esc(p.name) + '">' + icon("trash", 18) + "</button></div>";
     });
     h += "</div>";
@@ -6878,7 +6881,7 @@ return exports;})();
     const nm = esc(P.name), stars = starsAt(P, level), xp = xpAt(P, level), gems = gemsAt(P, level);
     let h = '<h1 class="sr-only" tabindex="-1">De Reis – Land ' + (i + 1) + ": " + esc(c.title) + "</h1>";
     /* zwevende topbalk */
-    h += '<header class="j-head"><button class="jh-player" data-act="players" aria-label="Speler: ' + nm + '. Wissel van speler">' + avatarHtml(P, 30) + "<span>" + nm + "</span></button>" +
+    h += '<header class="j-head"><div class="jh-pw"><button class="jh-player jh-av" data-act="avatar-pick" data-id="' + P.id + '" aria-label="Kies je avatar">' + avatarHtml(P, 30) + '</button><button class="jh-player" data-act="players" aria-label="Speler: ' + nm + '. Wissel van speler"><span>' + nm + "</span></button></div>" +
       '<div class="jh-stats" role="group" aria-label="Jouw punten in de ' + modeName(level) + '-modus"><span>' + icon("star", 15, "fill") + "<b>" + stars + '</b><i class="sr-only"> sterren</i></span><span class="xp"><b>' + xp + '</b> XP</span><span class="gem">' + gemSvg(15) + "<b>" + gems + '</b><i class="sr-only"> edelstenen</i></span></div>' +
       '<button class="jh-mode ' + level + '" data-act="switch-mode" aria-label="Niveau wisselen. Nu: ' + (level === "junior" ? "Junior, tik voor Expert" : "Expert, tik voor Junior") + '">' + icon(level === "junior" ? "smile" : "cap", 16) + "<span>" + (level === "junior" ? "Junior" : "Expert") + "</span></button>" +
       '<button class="jh-gear" data-act="settings" aria-label="Instellingen">' + icon("gear", 20) + "</button></header>";
