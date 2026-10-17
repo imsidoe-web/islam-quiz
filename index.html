@@ -1315,6 +1315,117 @@ body.jfull .reward-flyer { top: 160px; }
 .back-toast { position: fixed; left: 50%; bottom: calc(96px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 20px); opacity: 0; pointer-events: none; z-index: 9000; background: #1b4332; color: #fff3b0; border: 2px solid #f0c75e; font-weight: 800; padding: 10px 18px; border-radius: 999px; box-shadow: 0 8px 24px rgba(0, 0, 0, .35); transition: opacity .2s, transform .2s; max-width: 90vw; text-align: center; font-size: .9rem; }
 .back-toast.show { opacity: 1; transform: translate(-50%, 0); }
 
+/* ── Ajalat al-Ilm · Rad van Kennis (v69) ── */
+.jrad { position: fixed; z-index: 28; left: 50%; transform: translateX(-50%); bottom: calc(92px + env(safe-area-inset-bottom, 0px)); appearance: none; display: inline-flex; align-items: center; gap: 6px; padding: 5px 14px 5px 6px; border-radius: 999px; border: 3px solid #fff3b0; background: linear-gradient(180deg, #2d8a63, #1b4332); color: #fff3b0; font: inherit; font-weight: 900; font-size: .95rem; box-shadow: 0 4px 0 #0d2a1e, 0 6px 14px rgba(0, 0, 0, .35); cursor: pointer; white-space: nowrap; }
+.jrad:active { transform: translateX(-50%) translateY(3px); box-shadow: 0 1px 0 #0d2a1e; } .jrad:focus-visible { outline: 3px solid #ffb703; outline-offset: 3px; }
+.jrad svg { animation: jradSpin 9s linear infinite; } @media (prefers-reduced-motion: reduce) { .jrad svg { animation: none; } }
+@keyframes jradSpin { to { transform: rotate(360deg); } }
+.rad { max-width: 520px; margin: 0 auto; padding: 4px 12px 24px; text-align: center; }
+.rad-title { display: grid; justify-items: center; gap: 2px; margin: 4px 0 10px; }
+.rt-ar { font-family: "Amiri", "Scheherazade New", "Noto Naskh Arabic", "Traditional Arabic", serif; font-size: 2.6rem; line-height: 1.3; font-weight: 700; background: linear-gradient(180deg, #ffe58a, #e0a100 60%, #a86a00); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 2px 0 rgba(90, 50, 0, .35)); }
+.rt-lat { font-size: 1.35rem; font-weight: 900; color: var(--emerald-dark, #1b4332); letter-spacing: .02em; } .rt-nl { font-size: .9rem; font-weight: 700; color: #6b5a3c; font-style: italic; }
+.rad-title.small .rt-ar { font-size: 1.8rem; } .rad-title.small .rt-lat { font-size: 1.05rem; }
+.rad-intro { font-weight: 600; color: #3b4a40; margin: 0 0 12px; }
+.rad-master { display: inline-block; margin: 0 0 10px; padding: 4px 14px; border-radius: 999px; background: linear-gradient(180deg, #fff3b0, #f0c75e); color: #4a2c05; font-weight: 900; box-shadow: 0 3px 0 #8a5a0a; }
+.rad-warn { background: #fff4e0; border: 2px solid #f0c75e; border-radius: 14px; padding: 10px; font-weight: 700; color: #6b4a00; }
+.rad-choice { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 6px 0 10px; }
+.rad-opt { appearance: none; border: 3px solid #e6cf9b; background: #fffaf0; border-radius: 18px; padding: 12px 8px; font: inherit; color: #3b2a08; display: grid; gap: 4px; cursor: pointer; box-shadow: 0 4px 0 #d8c08a; }
+.rad-opt b { font-size: 1rem; } .rad-opt small { font-size: .78rem; color: #6b5a3c; font-weight: 600; }
+.rad-opt.on { border-color: #1f8f6a; background: #e3f6ec; box-shadow: 0 4px 0 #1b4332; } .rad-opt:disabled { opacity: .55; cursor: default; }
+.rad-n, .rad-mates { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 0 0 10px; }
+.rad-chip { appearance: none; border: 2px solid #1f8f6a; background: #fff; color: #1b4332; border-radius: 999px; padding: 8px 16px; font: inherit; font-weight: 800; cursor: pointer; min-height: 44px; }
+.rad-chip.on { background: #1f8f6a; color: #fff; }
+.rad-mate { appearance: none; display: inline-flex; align-items: center; gap: 8px; padding: 4px 14px 4px 4px; border-radius: 999px; border: 2px solid #e6cf9b; background: #fff; font: inherit; font-weight: 800; cursor: pointer; min-height: 44px; }
+.rad-mate.on { border-color: #1f8f6a; background: #e3f6ec; }
+.rad-lands { font-size: .82rem; color: #4a5a50; font-weight: 700; margin: 4px 0 10px; }
+.rad-go { font-size: 1.15rem; } .rad-go:disabled { opacity: .5; }
+.rad-rw { font-size: .82rem; color: #3b4a40; font-weight: 700; margin: 12px 0 6px; line-height: 1.5; } .rad-rw svg { vertical-align: -3px; }
+.rad-rules { text-align: left; background: #fffaf0; border: 2px solid #e6cf9b; border-radius: 14px; padding: 8px 12px; margin-top: 8px; } .rad-rules summary { font-weight: 900; cursor: pointer; min-height: 32px; } .rad-rules li { margin: 4px 0; font-weight: 600; font-size: .9rem; }
+.rad-studio { position: relative; overflow: hidden; margin: 0 -12px 10px; padding: 10px 6px 0; min-height: 250px;
+  background: radial-gradient(ellipse at 50% 115%, rgba(255, 213, 79, .35), transparent 55%), linear-gradient(180deg, #0b2a22 0%, #12392d 45%, #1b4d3c 70%, #3a2a12 70.5%, #6b4a1c 100%); border-bottom: 4px solid #f0c75e; }
+.rs-lights i { position: absolute; top: -20px; width: 90px; height: 260px; background: linear-gradient(180deg, rgba(255, 240, 180, .55), rgba(255, 240, 180, 0)); clip-path: polygon(40% 0, 60% 0, 100% 100%, 0 100%); pointer-events: none; mix-blend-mode: screen; transform-origin: top center; animation: rsBeam 6s ease-in-out infinite alternate; }
+.rs-lights i:nth-child(1) { left: 2%; transform: rotate(-18deg); } .rs-lights i:nth-child(2) { left: 28%; transform: rotate(-6deg); animation-delay: -2s; } .rs-lights i:nth-child(3) { right: 28%; transform: rotate(6deg); animation-delay: -4s; } .rs-lights i:nth-child(4) { right: 2%; transform: rotate(18deg); animation-delay: -1s; }
+@keyframes rsBeam { from { opacity: .55; } to { opacity: .95; } }
+.rs-crowd { position: relative; display: grid; gap: 0; justify-items: center; margin-bottom: -6px; }
+.rs-row { display: flex; justify-content: center; } .rs-row + .rs-row { margin-top: -10px; }
+.rs-fan { display: block; width: 34px; height: 34px; margin: 0 1px; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 4px rgba(0, 0, 0, .45); animation: rsSway 3.2s ease-in-out infinite; } .rs-fan svg { display: block; width: 100%; height: 100%; }
+.rs-row.r0 .rs-fan { width: 28px; height: 28px; filter: brightness(.55) saturate(.8); } .rs-row.r1 .rs-fan { width: 32px; height: 32px; filter: brightness(.7); } .rs-row.r2 .rs-fan { width: 38px; height: 38px; filter: brightness(.85); }
+.rs-fan:nth-child(3n) { animation-delay: -1s; } .rs-fan:nth-child(3n+1) { animation-delay: -2.1s; }
+@keyframes rsSway { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+.rad-studio.cheer .rs-fan { animation: rsCheer .5s ease-in-out 4; } @keyframes rsCheer { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+.rs-stage { position: relative; list-style: none; display: flex; justify-content: center; align-items: flex-end; gap: 8px; padding: 0 4px; margin: 0; z-index: 1; }
+.rs-lect { position: relative; flex: 1 1 0; max-width: 118px; display: grid; justify-items: center; }
+.rs-spot { position: absolute; left: 50%; bottom: 0; width: 140%; height: 190%; transform: translateX(-50%); background: radial-gradient(ellipse at 50% 100%, rgba(255, 230, 140, .55), transparent 65%); opacity: 0; transition: opacity .3s; pointer-events: none; }
+.rs-lect.on .rs-spot { opacity: 1; }
+.rs-head { position: relative; z-index: 1; margin-bottom: -4px; padding: 3px; border-radius: 16px; background: linear-gradient(180deg, #fff3b0, #d9a520); box-shadow: 0 4px 8px rgba(0, 0, 0, .45); }
+.rs-head .avatar { border-radius: 13px; display: block; }
+.rs-lect.on .rs-head { box-shadow: 0 0 0 3px #ffd54f, 0 0 18px rgba(255, 213, 79, .9); animation: rsBob 1.6s ease-in-out infinite; } @keyframes rsBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+.rs-desk { position: relative; width: 100%; display: grid; justify-items: center; gap: 1px; padding: 10px 4px 8px; color: #fff; clip-path: polygon(6% 0, 94% 0, 100% 100%, 0 100%);
+  background: radial-gradient(circle at 10% 30%, #fff8c4 0 2px, transparent 3px) 0 0 / 14px 100% repeat-x, linear-gradient(180deg, color-mix(in srgb, var(--seat) 75%, #fff), var(--seat) 35%, color-mix(in srgb, var(--seat) 60%, #000)); border-top: 4px solid #f0c75e; }
+.rs-plate { display: block; max-width: 100%; padding: 1px 8px; border-radius: 6px; background: rgba(0, 0, 0, .35); font-size: .82rem; line-height: 1.25; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rs-score { font-size: 1.3rem; font-weight: 900; color: #ffe08a; line-height: 1.1; padding: 0 10px; border-radius: 6px; background: #0b2a22; box-shadow: inset 0 0 0 2px rgba(255, 224, 138, .35); font-variant-numeric: tabular-nums; }
+.rs-total, .rs-cpu { font-size: .68rem; font-weight: 700; color: #f2f7f4; } .rs-cpu { opacity: .85; font-style: italic; }
+@media (prefers-reduced-motion: reduce) { .rs-lights i, .rs-fan, .rad-studio.cheer .rs-fan, .rs-lect.on .rs-head { animation: none; } }
+.rad-cat { display: grid; gap: 2px; margin: 0 0 8px; padding: 6px 12px; border-radius: 14px; background: linear-gradient(180deg, #2b7bb9, #1d5f94); color: #fff; box-shadow: 0 3px 0 #0f3f66; }
+.rad-cat b { font-size: 1.05rem; letter-spacing: .02em; } .rad-cat span { font-weight: 700; font-size: .9rem; } .rad-cat small { font-size: .72rem; opacity: .9; font-weight: 700; }
+.rad-board { display: grid; gap: 4px; justify-items: center; padding: 10px 4px; overflow: hidden; border-radius: 16px; background: linear-gradient(180deg, #1f8f6a, #135c43); border: 4px solid #f0c75e; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .25), 0 5px 0 #8a5a0a; }
+.rad-row { display: flex; gap: 2px; }
+.rad-c { flex: none; width: min(calc((100vw - 84px) / 13), 30px); height: min(calc((100vw - 84px) / 10), 38px); border-radius: 6px; display: grid; place-items: center; font-weight: 900; font-size: clamp(.95rem, 4.6vw, 1.4rem); }
+.rad-c.hid { background: #fffaf0; box-shadow: inset 0 -3px 0 #d8c08a; } .rad-c.open { background: #fff; color: #1b4332; box-shadow: inset 0 -3px 0 #c9d8cf; animation: radFlip .35s ease-out; } .rad-c.gap { width: min(calc((100vw - 84px) / 26), 14px); }
+@keyframes radFlip { from { transform: rotateY(90deg); } to { transform: none; } } @media (prefers-reduced-motion: reduce) { .rad-c.open { animation: none; } }
+.rad-msg { min-height: 2.6em; margin: 10px 0 6px; font-weight: 800; color: #1b4332; }
+.rad-wheel-wrap { width: min(78vw, 300px); margin: 0 auto 8px; } .rad-svg { width: 100%; height: auto; display: block; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .3)); }
+#radWheel { transform-origin: center; transform-box: fill-box; }
+.rad-acts { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; } .rad-acts .btn { flex: 1 1 140px; margin: 0; }
+.rad-keys { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; max-width: 400px; margin: 0 auto 8px; } .rad-keys.vow { grid-template-columns: repeat(5, 1fr); max-width: 300px; }
+.rad-k { appearance: none; min-height: 44px; border-radius: 10px; border: 0; background: linear-gradient(180deg, #fff, #f3efe7); box-shadow: 0 3px 0 #d8c08a; font: inherit; font-weight: 900; font-size: 1.15rem; color: #1b4332; cursor: pointer; }
+.rad-k:active { transform: translateY(2px); box-shadow: 0 1px 0 #d8c08a; } .rad-k:disabled { opacity: .3; cursor: default; box-shadow: none; } .rad-k:focus-visible { outline: 3px solid #ffb703; }
+.rad-solve { display: grid; gap: 8px; } .rad-solve label { font-weight: 800; } .rad-solve input { text-transform: uppercase; text-align: center; font-weight: 900; letter-spacing: .08em; }
+.rad-q { background: #fffaf0; border: 3px solid #2b7bb9; border-radius: 18px; padding: 12px; } .rq-q { font-weight: 800; margin: 0 0 10px; } .rq-opts { display: grid; gap: 8px; } .rq-opts .btn { margin: 0; white-space: normal; }
+.rad-cpu { font-weight: 800; color: #4a5a50; }
+.rad-end-h { margin: 6px 0 10px; color: #1b4332; }
+.rad-final { list-style: none; padding: 0; margin: 0 0 14px; display: grid; gap: 8px; }
+.rad-final li { display: grid; grid-template-columns: auto 1fr auto; grid-template-areas: "av n s" "av r r"; align-items: center; gap: 2px 10px; padding: 8px 12px; border-radius: 16px; background: #fff; box-shadow: 0 3px 0 #e6cf9b; text-align: left; }
+.rad-final li > .avatar { grid-area: av; } .rf-n { grid-area: n; font-weight: 800; } .rad-final li > b { grid-area: s; font-size: 1.3rem; color: #1b4332; } .rf-rw { grid-area: r; font-size: .82rem; font-weight: 800; color: #0b6a94; } .rf-rw.muted { color: #6b5a3c; } .rf-rw svg { vertical-align: -3px; }
+.rad-final li.win { background: linear-gradient(180deg, #fff8d6, #ffe08a); box-shadow: 0 3px 0 #b98a22; }
+
+
+/* Ajalat al-Ilm: hele scherm smaragdgroen met goud */
+html:has(body.radfull) { background: #072a1f; }
+body.radfull { min-height: 100vh; min-height: 100dvh; background: radial-gradient(ellipse 120% 900px at 50% 0%, #1f8f6a 0%, #0f5a3d 45%, #072a1f 100%) no-repeat, #072a1f; }
+body.radfull .topbar .brand { color: #fff3b0; text-shadow: 0 2px 0 rgba(0, 0, 0, .3); }
+body.radfull .rt-lat, body.radfull .rad-end-h { color: #fff3b0; text-shadow: 0 2px 0 rgba(0, 0, 0, .3); }
+body.radfull .rt-nl, body.radfull .rad-intro, body.radfull .rad-lands, body.radfull .rad-rw, body.radfull .rad-cpu { color: #d6efe2; }
+body.radfull .rad-msg { color: #fff3b0; }
+body.radfull .rad-studio { border-radius: 0 0 18px 18px; }
+body.radfull .rad-cat { background: linear-gradient(180deg, #145c43, #0b3d2c); border: 3px solid #f0c75e; box-shadow: 0 4px 0 #8a5a0a; color: #fff; } body.radfull .rad-cat b { color: #ffe08a; }
+body.radfull .rad-q { background: linear-gradient(180deg, #145c43, #0b3d2c); border-color: #f0c75e; color: #fff; } body.radfull .rq-q { color: #fff3b0; }
+body.radfull .rad-solve label { color: #fff3b0; }
+body.radfull .rad-opt { background: linear-gradient(180deg, #145c43, #0b3d2c); border-color: #b98a22; color: #fff; box-shadow: 0 4px 0 #062219; } body.radfull .rad-opt small { color: #cfe8da; }
+body.radfull .rad-opt.on { border-color: #ffd54f; background: linear-gradient(180deg, #1f8f6a, #145c43); box-shadow: 0 0 0 2px #ffd54f, 0 4px 0 #062219; }
+body.radfull .rad-chip { background: transparent; border-color: #f0c75e; color: #fff3b0; } body.radfull .rad-chip.on { background: linear-gradient(180deg, #ffe08a, #e0a100); color: #3b2410; }
+body.radfull .rad-mate { background: #0b3d2c; border-color: #b98a22; color: #fff; } body.radfull .rad-mate.on { border-color: #ffd54f; background: #1f8f6a; }
+body.radfull .rad-rules { background: rgba(0, 0, 0, .22); border-color: #b98a22; color: #f2f7f4; }
+body.radfull .rad-k { background: linear-gradient(180deg, #fffaf0, #f3e3b5); color: #0b3d2c; box-shadow: 0 3px 0 #8a5a0a; }
+body.radfull .rad-final li { background: linear-gradient(180deg, #145c43, #0b3d2c); box-shadow: 0 3px 0 #062219, inset 0 0 0 2px #b98a22; color: #fff; } body.radfull .rad-final li > b { color: #ffe08a; } body.radfull .rf-rw { color: #a8f0c6; } body.radfull .rf-rw.muted { color: #cfe8da; }
+body.radfull .rad-final li.win { background: linear-gradient(180deg, #ffe08a, #e0a100); color: #3b2410; } body.radfull .rad-final li.win > b { color: #3b2410; } body.radfull .rad-final li.win .rf-rw { color: #0b3d2c; }
+body.radfull .btn.ghost { background: linear-gradient(180deg, #145c43, #0b3d2c); color: #fff3b0; border-color: #b98a22; box-shadow: 0 4px 0 #062219; }
+body.radfull .btn.ghost:disabled { opacity: .45; }
+
+/* rustige gloed (Ajalat al-Ilm) */
+.rad-wheel-wrap { position: relative; }
+.rad-wheel-wrap::before { content: ""; position: absolute; inset: -12%; border-radius: 50%; background: radial-gradient(circle, rgba(255, 224, 138, .55) 0%, rgba(240, 199, 94, .25) 40%, transparent 68%); animation: radGlow 5s ease-in-out infinite alternate; pointer-events: none; z-index: 0; }
+.rad-wheel-wrap .rad-svg { position: relative; z-index: 1; }
+.rad-wheel-wrap.hit::before { animation: radHit 1.4s ease-out 1, radGlow 5s ease-in-out 1.4s infinite alternate; }
+@keyframes radGlow { from { opacity: .45; transform: scale(.97); } to { opacity: .8; transform: scale(1.03); } }
+@keyframes radHit { 0% { opacity: 1; transform: scale(1.12); filter: brightness(1.5); } 100% { opacity: .6; transform: scale(1); filter: none; } }
+.rs-dust { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+.rs-dust i { position: absolute; width: 4px; height: 4px; border-radius: 50%; background: #ffe9a8; box-shadow: 0 0 6px 2px rgba(255, 224, 138, .7); opacity: 0; animation: rsDust 11s ease-in-out infinite; }
+@keyframes rsDust { 0% { opacity: 0; transform: translate(0, 10px); } 20% { opacity: .85; } 80% { opacity: .6; } 100% { opacity: 0; transform: translate(14px, -40px); } }
+.rad-final li.win { position: relative; animation: radWin 2.4s ease-in-out infinite alternate; }
+@keyframes radWin { from { box-shadow: 0 3px 0 #b98a22, 0 0 10px rgba(255, 213, 79, .4); } to { box-shadow: 0 3px 0 #b98a22, 0 0 26px 4px rgba(255, 213, 79, .85); } }
+@media (prefers-reduced-motion: reduce) { .rad-wheel-wrap::before, .rad-wheel-wrap.hit::before, .rs-dust i, .rad-final li.win { animation: none; } .rs-dust { display: none; } }
+
 /* ── Kwartet-album: dikke 3D-kaarten in Candy-Crush-stijl (smaragd, goud, crème) ── */
 .album-head { background: linear-gradient(180deg, #fffaf0, #f6e3b4); border: 3px solid #e0b24a; border-radius: 22px; padding: 12px 14px; box-shadow: 0 5px 0 #b98a22; color: #4a3208; margin-bottom: 16px; }
 .album-head .bar { background: rgba(0, 0, 0, .12); } .album-head small { color: #6b4e12; opacity: 1; }
@@ -4647,6 +4758,8 @@ return exports;})();
     wrong() { tone(260, 0, 0.22, "triangle", 0.12); tone(207.65, 0.18, 0.34, "triangle", 0.1); },
     click() { tone(660, 0, 0.06, "sine", 0.06); },
     win() { [523.25, 659.25, 783.99, 1046.5].forEach(function (f, i) { tone(f, i * 0.14, 0.28); }); },
+    bell() { tone(880, 0, 0.3, "sine", 0.07); tone(1318.5, 0.09, 0.4, "sine", 0.045); },   /* rustig belletje (Ajalat al-Ilm) */
+    softno() { tone(330, 0, 0.28, "sine", 0.06); tone(262, 0.16, 0.34, "sine", 0.05); },
     lose() { tone(392, 0, 0.25, "triangle", 0.1); tone(329.63, 0.22, 0.4, "triangle", 0.1); },
     fanfare() { [523.25, 659.25, 783.99, 1046.5, 783.99, 1046.5, 1318.5].forEach(function (f, i) { tone(f, i * 0.12, 0.3, i > 3 ? "triangle" : "sine", 0.14); }); tone(1567.98, 0.9, 0.5, "sine", 0.07); },
     swoosh() { /* zachte zwiep als je avatar naar de volgende stop springt */
@@ -5894,6 +6007,7 @@ return exports;})();
     if (screen !== "journey") { const fl = document.getElementById("flyer"); if (fl) fl.remove(); }
     const prevA = a11yBefore(); speakStop();
     stopTimer(); mgClear(); idleStop();
+    if (screen !== "rad") { clearTimeout(radCpuT); radCpuT = null; }
     document.body.className = "";
     if (screen !== "result" && screen !== "chestopen" && screen !== "minigame") { const cel = document.getElementById("celebrate"); if (cel) cel.remove(); }
     const inDuelQuiz = screen === "quiz" && quiz && quiz.kind === "duel";
@@ -5920,10 +6034,12 @@ return exports;})();
     else if (screen === "chestopen") { app.innerHTML = viewChestOpen(); afterChestOpenRender(); }
     else if (screen === "minigame") app.innerHTML = viewMinigame();
     else if (screen === "album") app.innerHTML = viewAlbum();
+    else if (screen === "rad") { app.innerHTML = viewRad(); afterRadRender(); }
     const bw = document.getElementById("badgesBtnWrap");
     if (bw) bw.style.display = (screen === "board" || screen === "scores") ? "" : "none";
     window.scrollTo({ top: 0 });
     if (screen === "journey") document.body.classList.add("jfull");
+    if (screen === "rad") document.body.classList.add("radfull");
     if (screen === "journey") afterJourneyRender();
     duffUi();
     a11yAfter(prevA);
@@ -6916,9 +7032,17 @@ return exports;})();
     P.chests[level][catId][i] = { t: Date.now(), game: game };
     saveState();
   }
-  function chestGame(catId, i) {
+  /* volgorde van de minigames in de kisten (v68): woordzoeker vaker, memory minder vaak; kwartet blijft vaak (albumkaarten).
+     Per 8 kisten: 2x kwartet, 2x woordzoeker, 2x puzzel, 1x letters rangschikken, 1x memory. Elk land begint op een andere plek in het rijtje.
+     Een kist die al geopend is, onthoudt zijn eigen spel (chestSave), dus bestaande voortgang verandert niet. */
+  const CHEST_CYCLE = ["kwartet", "zoeker", "puzzel", "anagram", "kwartet", "zoeker", "memory", "puzzel"];
+  function chestSlot(catId, i) {
     const ci = Math.max(0, landIdx(catId));
-    return MG_GAMES[(Math.floor(i / J_MILE) + ci) % MG_GAMES.length];
+    return CHEST_CYCLE[(Math.floor(i / J_MILE) + ci * 3) % CHEST_CYCLE.length];
+  }
+  function chestGame(catId, i) {
+    const s = chestSlot(catId, i);
+    return s === "zoeker" || s === "anagram" ? "woord" : s;
   }
   /* closed-dim (level nog niet bereikt), closed (level is aan de beurt), ready (springt, wacht op jou), open, gold (open + alle levels sinds de vorige kist met 3 sterren) */
   function jChestState(level, catId, i, n) {
@@ -7756,19 +7880,403 @@ return exports;})();
   }
 
 
+  /* ───────────── Ajalat al-Ilm (عجلة العلم) · Rad van Kennis (v69) ─────────────
+     Een rad-spel op één toestel: tegen 1–2 computerspelers of samen met andere spelers van dit toestel (telefoon doorgeven).
+     Puzzels komen alleen uit landen die alle (echte) spelers al gespeeld hebben; modi worden nooit gemengd.
+     Halal: geen inzet, niets te verliezen, geen muziek; alleen een zacht tikkend rad en rustige belletjes. */
+  const RAD_PUZ = {
+    beginner: {
+      reinheid: [["WUDHU", "De wassing vóór het gebed"], ["SCHOON WATER", "Hiermee doe je wudhu"], ["HANDEN WASSEN", "Hiermee begin je"], ["MOND SPOELEN", "Water in je mond en weer uit"], ["GEZICHT WASSEN", "Van je voorhoofd tot je kin"], ["VOETEN WASSEN", "Dit doe je als laatste"]],
+      gebed: [["SALAH", "Het gebed"], ["VIJF GEBEDEN", "Zo vaak bid je per dag"], ["ALLAHU AKBAR", "Hiermee begin je het gebed"], ["GEBEDSKLEED", "Hierop bid je"], ["NAAR DE MOSKEE", "Samen gaan bidden"], ["DE QIBLA", "De richting waarin je bidt"]],
+      elkedag: [["BISMILLAH", "Dit zeg je voordat je begint"], ["ALHAMDULILLAH", "Dit zeg je als je dankbaar bent"], ["AS-SALAMU ALAYKUM", "De groet van moslims"], ["GLIMLACHEN", "Ook dit is sadaqa"], ["ETEN MET RECHTS", "Met welke hand eet je?"], ["ANDEREN HELPEN", "Een mooie gewoonte"]],
+      ramadan: [["RAMADAN", "De maand van het vasten"], ["VASTEN", "Overdag niet eten en drinken"], ["IFTAR", "De maaltijd na zonsondergang"], ["DADELS", "Hiermee verbreek je vaak het vasten"], ["SUHOOR", "De maaltijd vóór zonsopkomst"], ["EID MUBARAK", "Dit zeg je op het feest"]]
+    },
+    junior: {
+      profeten: [["DE ARK VAN NUH", "Een groot schip"], ["PROFEET IBRAHIM", "Hij bouwde de Ka’ba met zijn zoon"], ["MUSA", "Hij sprak met Allah bij de berg"], ["YUSUF", "Zijn broers gooiden hem in een put"], ["YUNUS", "Hij zat in de buik van een grote vis"], ["SULAYMAN", "Hij verstond de taal van de dieren"], ["DAWUD", "Hij kreeg de Zabur"], ["ISA ZOON VAN MARYAM", "Een profeet zonder vader"]],
+      zuilen: [["SHAHADA", "De eerste zuil"], ["SALAH", "Vijf keer per dag"], ["ZAKAAT", "Een deel van je geld delen"], ["VASTEN IN RAMADAN", "Een zuil: een maand lang"], ["HADJ NAAR MEKKA", "Een zuil: één keer in je leven, als je kunt"], ["DE VIJF ZUILEN", "Waarop de islam is gebouwd"], ["TAWHID", "Allah is Eén"], ["DE KA’BA", "Het huis van Allah in Mekka"]],
+      seerah: [["MEKKA", "Waar de Profeet ﷺ geboren werd"], ["MEDINA", "De stad van de Profetenmoskee"], ["DE HIJRA", "De reis van Mekka naar Medina"], ["KHADIJA", "De eerste vrouw van de Profeet ﷺ"], ["ABU BAKR", "Zijn beste vriend"], ["BILAL", "De eerste muezzin"], ["DE GROT HIRA", "Hier kwam de eerste openbaring"], ["UMAR", "De tweede kalief"]],
+      koran: [["DE KORAN", "Het heilige boek"], ["AL-FATIHA", "De eerste soera"], ["AYAT AL-KURSI", "Het bekende vers uit Al-Baqara"], ["JIBRIEL", "De engel die de openbaring bracht"], ["SOERA", "Een hoofdstuk van de Koran"], ["ARABISCH", "De taal van de Koran"], ["KENNIS ZOEKEN", "Een plicht voor iedere moslim"], ["LAYLAT AL-QADR", "Beter dan duizend maanden"]],
+      akhlaaq: [["GEDULD", "Sabr in het Nederlands"], ["EERLIJKHEID", "Altijd de waarheid zeggen"], ["DE OUDERS EREN", "Goed zijn voor je vader en moeder"], ["DU’A", "Allah om iets vragen"], ["SADAQA", "Een vrijwillige gift"], ["DANKBAARHEID", "Shukr in het Nederlands"], ["VRIENDELIJK", "Zo spreek je met anderen"], ["BUREN HELPEN", "Goed zijn voor wie naast je woont"]]
+    },
+    expert: {
+      profeten: [["NUH BOUWDE DE ARK", "Zijn volk lachte hem uit"], ["IBRAHIM EN ISMAIL", "Samen bouwden zij de Ka’ba"], ["MUSA EN HARUN", "Twee broers, allebei profeet"], ["YUSUF IN DE PUT", "Door zijn broers achtergelaten"], ["SULAYMAN EN DE MIER", "Soera an-Naml"], ["AYYUB EN GEDULD", "Hij bleef geduldig in ziekte"], ["YUNUS IN DE VIS", "La ilaha illa anta, subhanaka…"], ["ADAM EN HAWWA", "De eerste mensen"]],
+      zuilen: [["TAWHID", "De eenheid van Allah"], ["AQEEDA", "De geloofsleer"], ["DE ZES ZUILEN VAN IMAN", "Waarin een moslim gelooft"], ["IHRAM", "De gewijde staat van de pelgrim"], ["TAWAAF", "Zeven rondes om de Ka’ba"], ["SA’I", "Tussen Safa en Marwa"], ["DE DAG VAN ARAFAT", "De negende dag van Dhul-Hijja"], ["ZAKAAT AL-FITR", "Te geven vóór het Eid-gebed"]],
+      seerah: [["DE SLAG BIJ BADR", "De eerste grote slag"], ["DE GROT THAWR", "Schuilplaats tijdens de hijra"], ["ABU BAKR AS-SIDDIQ", "De eerste kalief"], ["UMAR IBN AL-KHATTAB", "Al-Faruq"], ["UTHMAN", "De derde kalief"], ["ALI", "De vierde kalief"], ["DE BERG UHUD", "Bij Medina, een bekende slag"], ["AL-ISRA", "De nachtreis naar Jeruzalem"]],
+      koran: [["TAFSIR", "Uitleg van de Koran"], ["TAJWID", "Regels voor het reciteren"], ["HADITH", "Overgeleverde woorden van de Profeet ﷺ"], ["SUNNA", "De levenswijze van de Profeet ﷺ"], ["SOERA AL-IKHLAS", "Een derde van de Koran waard"], ["LAYLAT AL-QADR", "In de laatste tien nachten"], ["AYAT AL-KURSI", "Het grootste vers"], ["HAFIDH", "Iemand die de hele Koran uit het hoofd kent"]],
+      akhlaaq: [["SABR", "Geduld"], ["SHUKR", "Dankbaarheid"], ["TAWAKKUL", "Vertrouwen op Allah"], ["ISTIKHARA", "Allah om leiding vragen bij een keuze"], ["DHIKR", "Het gedenken van Allah"], ["IKHLAS", "Oprechtheid"], ["FAMILIEBANDEN", "Silat ar-rahm"], ["GOEDE MANIEREN", "Adab"]]
+    }
+  };
+  /* het rad: 12 vakken (getal = punten per letter; "q" = kennisvraag; "x" = beurt voorbij) */
+  const RAD_SEGS = [100, 50, 150, "q", 100, 200, 50, "x", 150, 100, 200, 50];
+  const RAD_COLS = ["#1f8f6a", "#f0c75e", "#2d6a4f", null, "#e0a100", "#157a5c", "#ffe08a", null, "#0f6b4f", "#f6d36b", "#2a9d8f", "#d9a520"];
+  const RAD_VOWELS = "AEIOU", RAD_CONS = "BCDFGHJKLMNPQRSTVWXYZ";
+  const RAD_VOWEL_COST = 50, RAD_ROUNDS = 3, RAD_SOLVE_BONUS = 200, RAD_Q_PTS = 200;
+  const RAD_DAY_MAX = 3, RAD_WIN_GEMS = 30, RAD_WIN_XP = 20, RAD_PLAY_GEMS = 10, RAD_Q_GEMS = 5, RAD_MASTER = 10;
+  const RAD_CPU = [{ name: "Hamza", av: "kufi", color: "#2d6a4f" }, { name: "Noor", av: "hijabroze", color: "#1d5fa8" }];
+  const RAD_SEAT = ["#1f8f6a", "#157a5c", "#2d8a63", "#0f6b4f"];   /* kleur van de spreektafel per plek */
+  let rad = null, radSetup = { vs: "cpu", n: 1, with: {} }, radSpinT = null, radCpuT = null, radAngle = 0;
+
+  function radMeta(p) {
+    const r = p.rad || (p.rad = { day: "", n: 0, wins: 0 });
+    if (r.day !== todayStr()) { r.day = todayStr(); r.n = 0; }
+    return r;
+  }
+  function radLeft(p) { return Math.max(0, RAD_DAY_MAX - radMeta(p).n); }
+  /* landen die deze speler in modus lv al gespeeld heeft (minstens één level gehaald) */
+  function radLandsOf(p, lv) { return asPlayer(p, function () { return landsFor(lv).filter(function (c) { return jLandStats(lv, c.id).passed > 0; }).map(function (c) { return c.id; }); }); }
+  function radCommonLands(humans, lv) {
+    let ids = null;
+    humans.forEach(function (p) { const l = radLandsOf(p, lv); ids = ids === null ? l : ids.filter(function (x) { return l.indexOf(x) !== -1; }); });
+    return (ids || []).filter(function (id) { return RAD_PUZ[lv] && RAD_PUZ[lv][id] && RAD_PUZ[lv][id].length; });
+  }
+  function radMates(lv) {   /* andere spelers op dit toestel die in deze modus al iets gespeeld hebben */
+    return S.players.filter(function (x) { return x.id !== P.id && radLandsOf(x, lv).length > 0; });
+  }
+  function radAvHtml(pl, size) {
+    if (pl.kind !== "cpu") { const p = S.players.find(function (x) { return x.id === pl.pid; }); if (p && (avOf(p) || p.photo && /^https:\/\//i.test(p.photo))) return avatarHtml(p, size); }
+    const a = avById(pl.av || pl.tmpAv);
+    return a ? '<span class="avatar av-art" style="width:' + size + "px;height:" + size + 'px">' + avSvg(a) + "</span>" :
+      '<span class="avatar" style="--c:' + pl.color + ";width:" + size + "px;height:" + size + "px;font-size:" + Math.round(size * 0.46) + 'px">' + esc(pl.name.charAt(0)) + "</span>";
+  }
+  function radLetters(ans) { return ans.replace(/[^A-Z]/g, ""); }
+  function radHidden() { return radLetters(rad.puz.ans).split("").filter(function (ch) { return !rad.open[ch]; }); }
+  function radHas(ch) { return rad.puz.ans.indexOf(ch) !== -1; }
+  function radCount(ch) { return rad.puz.ans.split(ch).length - 1; }
+  function radConsLeft() { return RAD_CONS.split("").filter(function (c) { return !rad.used[c]; }); }
+  function radVowLeft() { return RAD_VOWELS.split("").filter(function (c) { return !rad.used[c]; }); }
+  function radCur() { return rad.players[rad.cur]; }
+
+  function radStart() {
+    const lv = P.mode, humans = [P];
+    if (radSetup.vs === "local") radMates(lv).forEach(function (x) { if (radSetup.with[x.id] && humans.length < 4) humans.push(x); });
+    const lands = radCommonLands(humans, lv);
+    if (!lands.length) return;
+    const players = humans.map(function (p) { return { kind: p === P ? "me" : "local", pid: p.id, name: publicName(p), color: p.color, total: 0, round: 0, qOk: 0 }; });
+    if (radSetup.vs === "cpu") RAD_CPU.slice(0, radSetup.n === 2 ? 2 : 1).forEach(function (c) { players.push({ kind: "cpu", name: c.name, av: c.av, color: c.color, total: 0, round: 0, qOk: 0 }); });
+    if (players.length < 2) return;
+    /* wie geen avatar en geen foto heeft, krijgt alleen voor dit spel een tijdelijke avatar: een dier of voorwerp, omdat we niet weten of het een jongen of meisje is (wordt niet bewaard) */
+    const taken = players.map(function (x) { return x.av; }).filter(Boolean), free = shuffle(AVATARS.ANIMALS.concat(AVATARS.THINGS).map(function (a) { return a.id; }).filter(function (id) { return taken.indexOf(id) === -1 && ["kaaba", "moskee", "rehal"].indexOf(id) === -1; }), Math.random);   /* geen Ka’ba, moskee of Koranstandaard als tijdelijk gezicht */
+    players.forEach(function (x) { if (x.kind === "cpu") return; const p = S.players.find(function (y) { return y.id === x.pid; }); if (p && !avOf(p) && !(p.photo && /^https:\/\//i.test(p.photo))) x.tmpAv = free.shift() || "maan"; });
+    const crowd = []; let pool = [];
+    for (let k = 0; k < 27; k++) { if (!pool.length) pool = shuffle(AVATARS.PEOPLE.map(function (a) { return a.id; }), Math.random); crowd.push(pool.shift()); }
+    rad = { crowd: crowd, lv: lv, lands: lands, players: players, cur: 0, round: 0, seen: {}, phase: "intro", msg: "" };
+    play("click"); radNextRound();
+  }
+  function radNextRound() {
+    rad.round++;
+    const pool = [];
+    rad.lands.forEach(function (id) { RAD_PUZ[rad.lv][id].forEach(function (x) { if (!rad.seen[x[0]]) pool.push({ ans: x[0], hint: x[1], land: id }); }); });
+    const pick = pool.length ? pool[Math.floor(Math.random() * pool.length)] : { ans: "BISMILLAH", hint: "Dit zeg je voordat je begint", land: rad.lands[0] };
+    rad.seen[pick.ans] = 1;
+    rad.puz = pick; rad.open = {}; rad.used = {};
+    rad.players.forEach(function (pl) { pl.round = 0; });
+    rad.cur = (rad.round - 1) % rad.players.length;
+    rad.phase = "spin"; rad.val = 0; rad.q = null;
+    rad.msg = "Ronde " + rad.round + " van " + RAD_ROUNDS + ". " + radCur().name + " mag draaien.";
+    screen = "rad"; render(); announce(rad.msg);
+  }
+  function radNextTurn(why) {
+    rad.cur = (rad.cur + 1) % rad.players.length; rad.phase = "spin"; rad.val = 0; rad.q = null;
+    rad.msg = (why ? why + " " : "") + "Nu is " + radCur().name + " aan de beurt.";
+    render(); announce(rad.msg);
+  }
+  /* rad draaien (mens of computer) */
+  function radSpin() {
+    if (!rad || rad.phase !== "spin" && rad.phase !== "act" || radSpinT) return;
+    const seg = Math.floor(Math.random() * RAD_SEGS.length), step = 360 / RAD_SEGS.length;
+    const target = (360 - seg * step) % 360, jitter = (Math.random() - 0.5) * step * 0.6;
+    const base = radAngle - (radAngle % 360);
+    radAngle = base + 360 * 4 + target + jitter;
+    const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches, dur = reduce ? 600 : 3600;
+    const wh = document.getElementById("radWheel");
+    rad.phase = "spinning"; rad.msg = radCur().name + " draait…";
+    const st = document.getElementById("radMsg"); if (st) st.textContent = rad.msg;
+    document.querySelectorAll(".rad-acts button").forEach(function (b) { b.disabled = true; });
+    if (wh) { wh.style.transition = "transform " + dur + "ms cubic-bezier(.12,.72,.18,1)"; wh.style.transform = "rotate(" + radAngle + "deg)"; }
+    if (S.sound && !reduce) { const N = 34; for (let k = 1; k <= N; k++) tone(1150, (dur / 1000) * (1 - Math.pow(1 - k / N, 1 / 3)), 0.03, "sine", 0.035); }
+    radSpinT = setTimeout(function () { radSpinT = null; if (screen === "rad" && rad) radLand(RAD_SEGS[seg]); }, dur + 150);
+  }
+  function radLand(v) {
+    const who = radCur().name;
+    rad.flash = true;   /* gloed even feller op het rad na het stoppen */
+    if (v === "x") { play("softno"); radNextTurn("Beurt voorbij."); return; }
+    if (v === "q") { radQuestion(); return; }
+    rad.val = v;
+    if (!radConsLeft().some(radHas)) {   /* alle medeklinkers staan al open */
+      rad.phase = "act"; rad.msg = v + " punten, maar alle medeklinkers staan al open. Koop een klinker of los op!";
+    } else { rad.phase = "letter"; rad.msg = who + " draaide " + v + ". Kies een medeklinker."; }
+    render(); announce(rad.msg);
+  }
+  function radPickLetter(ch) {
+    if (!rad || rad.used[ch]) return;
+    const vowel = RAD_VOWELS.indexOf(ch) !== -1, pl = radCur();
+    if (vowel) { if (rad.phase !== "spin" && rad.phase !== "act" && rad.phase !== "vowel" || pl.round < RAD_VOWEL_COST) return; pl.round -= RAD_VOWEL_COST; }
+    else if (rad.phase !== "letter") return;
+    rad.used[ch] = 1;
+    const n = radCount(ch);
+    if (n > 0) {
+      rad.open[ch] = 1;
+      if (!vowel) pl.round += rad.val * n;
+      play("bell");
+      rad.msg = (n === 1 ? "Er is 1 " : "Er zijn " + n + " ") + ch + "! " + (vowel ? "" : "+" + (rad.val * n) + " punten. ");
+      if (!radHidden().length) { radSolved(); return; }
+      rad.phase = "act"; rad.msg += pl.name + ": draai opnieuw, koop een klinker of los op.";
+      render(); announce(rad.msg);
+    } else { play("softno"); radNextTurn("Geen " + ch + "."); }
+  }
+  function radTrySolve(txt) {
+    if (!rad || rad.phase !== "solve" && rad.phase !== "act" && rad.phase !== "spin") return;
+    const ok = String(txt || "").toUpperCase().normalize("NFKD").replace(/[^A-Z]/g, "") === radLetters(rad.puz.ans);
+    if (ok) radSolved(); else { play("softno"); radNextTurn("Helaas, dat is het niet."); }
+  }
+  function radSolved() {
+    const pl = radCur();
+    radLetters(rad.puz.ans).split("").forEach(function (c) { rad.open[c] = 1; });
+    pl.round += RAD_SOLVE_BONUS;
+    rad.players.forEach(function (x) { x.total += x.round; });   /* vriendelijk: iedereen houdt zijn rondepunten */
+    rad.phase = "roundend"; rad.winner = rad.cur;
+    rad.msg = "Goed opgelost door " + pl.name + "! Het antwoord is: " + wShowPhrase(rad.puz.ans) + ". +" + RAD_SOLVE_BONUS + " bonus.";
+    play("win"); render(); announce(rad.msg, true);
+  }
+  function wShowPhrase(a) { return a; }
+  /* kennisvraag: makkelijke vraag uit gespeelde landen, in de eigen modus */
+  function radQuestion() {
+    const pool = [];
+    rad.lands.forEach(function (id) { poolFor(rad.lv, id, 1).forEach(function (q) { if (typeof q.answer === "number" && q.options && q.options.length >= 2) pool.push(q); }); });
+    if (!pool.length) { rad.val = 100; rad.phase = "letter"; rad.msg = "100 punten. Kies een medeklinker."; render(); return; }
+    rad.q = pool[Math.floor(Math.random() * pool.length)];
+    rad.phase = "question"; rad.msg = "Kennisvraag voor " + radCur().name + "! Goed = +" + RAD_Q_PTS + " punten.";
+    render(); announce(rad.msg + " " + rad.q.question);
+  }
+  function radAnswer(i) {
+    if (!rad || rad.phase !== "question" || !rad.q) return;
+    const pl = radCur();
+    if (i === rad.q.answer) {
+      pl.round += RAD_Q_PTS; pl.qOk++; play("bell");
+      rad.q = null; rad.phase = "act"; rad.msg = "Goed! +" + RAD_Q_PTS + " punten. " + pl.name + ": draai opnieuw, koop een klinker of los op.";
+      render(); announce(rad.msg);
+    } else { play("softno"); const right = rad.q.options[rad.q.answer]; radNextTurn("Helaas. Het goede antwoord was: " + right + "."); }
+  }
+  function radAfterRound() {
+    if (rad.round >= RAD_ROUNDS) radFinish(); else radNextRound();
+  }
+  function radFinish() {
+    const best = Math.max.apply(null, rad.players.map(function (x) { return x.total; }));
+    rad.result = [];
+    rad.players.forEach(function (pl) {
+      const win = pl.total === best;
+      let rw = null;
+      if (pl.kind !== "cpu") {
+        const p = S.players.find(function (x) { return x.id === pl.pid; });
+        if (p) {
+          const m = radMeta(p);
+          if (win) m.wins = (m.wins || 0) + 1;
+          if (m.n < RAD_DAY_MAX) {
+            m.n++;
+            rw = { gems: (win ? RAD_WIN_GEMS : RAD_PLAY_GEMS) + pl.qOk * RAD_Q_GEMS, xp: win ? RAD_WIN_XP : 0 };
+            asPlayer(p, function () { addReward(rad.lv, rw.xp, rw.gems); });
+          }
+          rw = rw || { none: true };
+          rw.wins = m.wins;
+          if (rw.xp) { if (sbUser && p.sbId === sbUser.id) sbSyncSoon(rad.lv); else if (!p.sbId) guestSyncSoon(p, rad.lv); }
+        }
+      }
+      rad.result.push({ pl: pl, win: win, rw: rw });
+    });
+    saveState();
+    rad.phase = "end"; render(); play("fanfare"); celebrate(true);
+    const w = rad.players.filter(function (x) { return x.total === best; }).map(function (x) { return x.name; }).join(" en ");
+    announce("Einde van het spel. Winnaar: " + w + " met " + best + " punten.", true);
+  }
+  /* computerspeler: vriendelijk niveau */
+  function radCpuMove() {
+    radCpuT = null;
+    if (screen !== "rad" || !rad || radCur().kind !== "cpu" || radSpinT) return;
+    const pl = radCur(), hid = radHidden(), total = radLetters(rad.puz.ans).length;
+    if (rad.phase === "spin" || rad.phase === "act") {
+      if (rad.phase === "act" && (hid.length / total < 0.4 && Math.random() < 0.7 || !radConsLeft().some(radHas) && Math.random() < 0.5)) { rad.msg = pl.name + " lost op…"; render(); setTimeout(function () { if (rad && screen === "rad") radSolved(); }, 900); return; }
+      const vows = radVowLeft().filter(radHas);
+      if (rad.phase === "act" && pl.round >= RAD_VOWEL_COST && vows.length && Math.random() < 0.3) { radPickLetter(vows[Math.floor(Math.random() * vows.length)]); return; }
+      radSpin(); return;
+    }
+    if (rad.phase === "letter") {
+      const left = radConsLeft(), good = left.filter(radHas);
+      const pick = good.length && Math.random() < 0.65 ? good[Math.floor(Math.random() * good.length)] : left[Math.floor(Math.random() * left.length)];
+      radPickLetter(pick); return;
+    }
+    if (rad.phase === "question" && rad.q) {
+      const n = rad.q.options.length, ans = Math.random() < 0.7 ? rad.q.answer : (rad.q.answer + 1 + Math.floor(Math.random() * (n - 1))) % n;
+      radAnswer(ans);
+    }
+  }
+  function afterRadRender() {
+    clearTimeout(radCpuT); radCpuT = null;
+    if (!rad) return;
+    rad.flash = false;
+    const wh = document.getElementById("radWheel");
+    if (wh) { wh.style.transition = "none"; wh.style.transform = "rotate(" + radAngle + "deg)"; }
+    if (["spin", "act", "letter", "question"].indexOf(rad.phase) !== -1 && radCur().kind === "cpu") radCpuT = setTimeout(radCpuMove, 1300);
+    const inp = document.getElementById("radSolveIn");
+    if (inp) { inp.focus(); inp.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); radTrySolve(inp.value); } }); }
+  }
+
+  /* ── weergave ── */
+  function radWheelSvg() {
+    const n = RAD_SEGS.length, step = 360 / n, R = 140;
+    let h = '<svg class="rad-svg" viewBox="-160 -160 320 320" aria-hidden="true" focusable="false"><g id="radWheel">';
+    RAD_SEGS.forEach(function (v, i) {
+      const a0 = (i * step - step / 2 - 90) * Math.PI / 180, a1 = (i * step + step / 2 - 90) * Math.PI / 180;
+      const x0 = R * Math.cos(a0), y0 = R * Math.sin(a0), x1 = R * Math.cos(a1), y1 = R * Math.sin(a1);
+      const col = v === "q" ? "#0b3d2c" : v === "x" ? "#6b4a1c" : RAD_COLS[i];
+      const light = /^#(f|e|d)/i.test(col);
+      h += '<path d="M0 0 L' + x0.toFixed(1) + " " + y0.toFixed(1) + " A" + R + " " + R + " 0 0 1 " + x1.toFixed(1) + " " + y1.toFixed(1) + 'Z" fill="' + col + '" stroke="#fff3b0" stroke-width="2"/>';
+      const lab = v === "q" ? "VRAAG" : v === "x" ? "BEURT" : String(v);
+      h += '<g transform="rotate(' + (i * step) + ')"><text x="0" y="' + (-R + 34) + '" text-anchor="middle" font-size="' + (typeof v === "number" ? 22 : 13) + '" font-weight="900" fill="' + (light ? "#4a2c05" : "#fff") + '" transform="rotate(90 0 ' + (-R + 34) + ')" dominant-baseline="middle">' + lab + "</text></g>";
+    });
+    h += '<circle r="' + R + '" fill="none" stroke="#f0c75e" stroke-width="8"/>';
+    for (let i = 0; i < n; i++) { const a = (i * step + step / 2 - 90) * Math.PI / 180; h += '<circle cx="' + (R * Math.cos(a)).toFixed(1) + '" cy="' + (R * Math.sin(a)).toFixed(1) + '" r="4" fill="#fffaf0"/>'; }
+    h += '</g><circle r="30" fill="#1b4332" stroke="#f0c75e" stroke-width="5"/><path d="M0 -14 L4 -4 L14 -4 L6 3 L9 13 L0 7 L-9 13 L-6 3 L-14 -4 L-4 -4Z" fill="#f0c75e"/>' +
+      '<path d="M0 -136 L-13 -158 L13 -158Z" fill="#f0c75e" stroke="#8a5a0a" stroke-width="2"/></svg>';
+    return h;
+  }
+  function radBoardHtml() {
+    const words = rad.puz.ans.split(" "), rows = [];
+    let line = "";
+    words.forEach(function (w) { if (!line) line = w; else if ((line + " " + w).length <= 12) line += " " + w; else { rows.push(line); line = w; } });
+    if (line) rows.push(line);
+    let h = '<div class="rad-board" aria-hidden="true">';
+    rows.forEach(function (r) {
+      h += '<div class="rad-row">';
+      r.split("").forEach(function (ch) {
+        if (ch === " ") h += '<span class="rad-c gap"></span>';
+        else if (!/[A-Z]/.test(ch)) h += '<span class="rad-c open">' + esc(ch) + "</span>";
+        else h += '<span class="rad-c ' + (rad.open[ch] ? "open" : "hid") + '">' + (rad.open[ch] ? ch : "") + "</span>";
+      });
+      h += "</div>";
+    });
+    const sr = words.map(function (w, i) { return "woord " + (i + 1) + ": " + w.split("").map(function (ch) { return /[A-Z]/.test(ch) ? (rad.open[ch] ? ch : "leeg") : ch === "-" ? "streepje" : "apostrof"; }).join(", "); }).join(". ");
+    return h + '</div><p class="sr-only">Puzzel met ' + words.length + (words.length === 1 ? " woord" : " woorden") + ". " + sr + ".</p>";
+  }
+  /* studio: publiek (avatar-ontwerpen) achter, deelnemers achter spreektafels met hun avatar als gezicht */
+  function radCrowdTile(id) { const a = avById(id); return a ? '<span class="rs-fan"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">' + avInner(a, true) + "</svg></span>" : ""; }
+  function radStudio() {
+    const cheer = rad.phase === "roundend" ? " cheer" : "";
+    let h = '<div class="rad-studio' + cheer + '"><div class="rs-lights" aria-hidden="true"><i></i><i></i><i></i><i></i></div><div class="rs-dust" aria-hidden="true">' + [8, 19, 31, 44, 56, 67, 78, 90, 24, 72].map(function (x, k) { return '<i style="left:' + x + "%;top:" + (8 + (k * 37) % 55) + "%;animation-delay:-" + (k * 1.7).toFixed(1) + "s;animation-duration:" + (9 + (k % 4) * 2) + 's"></i>'; }).join("") + '</div><div class="rs-crowd" aria-hidden="true">';
+    [rad.crowd.slice(0, 10), rad.crowd.slice(10, 19), rad.crowd.slice(19, 27)].forEach(function (row, r) { h += '<div class="rs-row r' + r + '">' + row.map(radCrowdTile).join("") + "</div>"; });
+    h += '</div><ul class="rs-stage" aria-label="Deelnemers">';
+    rad.players.forEach(function (pl, i) {
+      const on = i === rad.cur && rad.phase !== "end";
+      h += '<li class="rs-lect' + (on ? " on" : "") + '" style="--seat:' + RAD_SEAT[i % RAD_SEAT.length] + '"' + (on ? ' aria-current="true"' : "") + '><span class="rs-spot" aria-hidden="true"></span><div class="rs-head">' + radAvHtml(pl, 54) + "</div>" +
+        '<div class="rs-desk"><b class="rs-plate">' + esc(pl.name) + '</b><span class="rs-score"><span class="sr-only">Deze ronde: </span>' + pl.round + '</span><small class="rs-total"><span class="sr-only">Totaal: </span>' + pl.total + " totaal</small>" + (pl.kind === "cpu" ? '<small class="rs-cpu">computer</small>' : "") + "</div></li>";
+    });
+    return h + "</ul></div>";
+  }
+  function radTitleHtml(small) {
+    return '<div class="rad-title' + (small ? " small" : "") + '"><span class="rt-ar" lang="ar" dir="rtl" aria-hidden="true">عجلة العلم</span><span class="rt-lat">Ajalat al-Ilm</span><span class="rt-nl">Rad van Kennis</span></div>';
+  }
+  function viewRadSetup() {
+    const lv = P.mode, mates = radMates(lv), mine = radCommonLands([P], lv), m = radMeta(P);
+    let h = mgTop("Ajalat al-Ilm") + '<section class="rad rad-setup">' + radTitleHtml(false);
+    h += '<p class="rad-intro">Draai aan het rad, raad letters en los de puzzel op. De puzzels gaan over wat je al geleerd hebt op de reis (' + esc(modeName(lv)) + ").</p>";
+    if ((m.wins || 0) >= RAD_MASTER) h += '<p class="rad-master">🏅 Meester van het Rad · ' + m.wins + " keer gewonnen</p>";
+    if (!mine.length) return h + '<p class="rad-warn">Speel eerst een level op de reiskaart. Daarna kun je hier spelen met wat je geleerd hebt.</p><button class="btn gold block" data-act="journey-back">' + icon("map", 20) + "Naar de kaart</button></section>";
+    h += '<div class="rad-choice" role="radiogroup" aria-label="Tegen wie speel je?">' +
+      '<button class="rad-opt' + (radSetup.vs === "cpu" ? " on" : "") + '" role="radio" aria-checked="' + (radSetup.vs === "cpu") + '" data-act="rad-vs" data-v="cpu"><b>Tegen de computer</b><small>Hamza' + (radSetup.n === 2 ? " en Noor spelen" : " speelt") + " mee</small></button>" +
+      '<button class="rad-opt' + (radSetup.vs === "local" ? " on" : "") + '" role="radio" aria-checked="' + (radSetup.vs === "local") + '" data-act="rad-vs" data-v="local"' + (mates.length ? "" : " disabled") + "><b>Samen op dit toestel</b><small>" + (mates.length ? "Geef de telefoon door" : "Nog geen andere spelers met " + esc(modeName(lv)) + "-levels") + "</small></button></div>";
+    if (radSetup.vs === "cpu") h += '<div class="rad-n" role="group" aria-label="Aantal computerspelers"><button class="rad-chip' + (radSetup.n === 1 ? " on" : "") + '" data-act="rad-n" data-v="1" aria-pressed="' + (radSetup.n === 1) + '">1 tegenspeler</button><button class="rad-chip' + (radSetup.n === 2 ? " on" : "") + '" data-act="rad-n" data-v="2" aria-pressed="' + (radSetup.n === 2) + '">2 tegenspelers</button></div>';
+    else {
+      h += '<div class="rad-mates" role="group" aria-label="Kies medespelers (maximaal 3)">';
+      mates.forEach(function (x) { const on = !!radSetup.with[x.id]; h += '<button class="rad-mate' + (on ? " on" : "") + '" data-act="rad-mate" data-id="' + x.id + '" aria-pressed="' + on + '">' + avatarHtml(x, 36) + "<span>" + esc(publicName(x)) + "</span></button>"; });
+      h += "</div>";
+    }
+    const humans = [P].concat(radSetup.vs === "local" ? mates.filter(function (x) { return radSetup.with[x.id]; }).slice(0, 3) : []);
+    const common = radCommonLands(humans, lv), ok = common.length && (radSetup.vs === "cpu" || humans.length >= 2);
+    if (radSetup.vs === "local" && humans.length >= 2 && !common.length) h += '<p class="rad-warn">Jullie hebben nog geen land dat iedereen gespeeld heeft.</p>';
+    h += '<p class="rad-lands">Puzzels uit: ' + common.map(function (id) { return esc((catById(id) || {}).title || id); }).join(", ") + "</p>";
+    h += '<button class="btn gold block rad-go" data-act="rad-start"' + (ok ? "" : " disabled") + ">Start het rad</button>";
+    h += '<p class="rad-rw">Beloning: winnaar +' + RAD_WIN_GEMS + " " + gemSvg(16) + " en +" + RAD_WIN_XP + " XP, meedoen +" + RAD_PLAY_GEMS + " " + gemSvg(16) + ", elke goede kennisvraag +" + RAD_Q_GEMS + " " + gemSvg(16) + ". Nog " + radLeft(P) + " van " + RAD_DAY_MAX + " potjes met beloning vandaag.</p>";
+    h += '<details class="rad-rules"><summary>Hoe speel je?</summary><ul><li>Draai aan het rad en kies een medeklinker. Staat hij in de puzzel? Dan krijg je punten voor elke keer dat hij erin staat.</li><li>Een klinker (A, E, I, O, U) kost ' + RAD_VOWEL_COST + " rondepunten.</li><li>Kennisvraag: goed = +" + RAD_Q_PTS + " punten.</li><li>Beurt voorbij: de volgende speler is aan de beurt.</li><li>Weet je het antwoord? Los op en krijg +" + RAD_SOLVE_BONUS + " bonus. Iedereen houdt zijn punten.</li><li>Na " + RAD_ROUNDS + " rondes wint wie de meeste punten heeft.</li></ul></details>";
+    return h + "</section>";
+  }
+  function viewRad() {
+    if (!rad || rad.phase === "intro") return viewRadSetup();
+    const pl = radCur(), human = pl.kind !== "cpu", land = catById(rad.puz.land) || { title: "" };
+    let h = mgTop("Ajalat al-Ilm") + '<section class="rad rad-game">';
+    if (rad.phase === "end") {
+      const best = Math.max.apply(null, rad.players.map(function (x) { return x.total; }));
+      const order = rad.result.slice().sort(function (a, b) { return b.pl.total - a.pl.total; });
+      h += radTitleHtml(true) + '<h2 class="rad-end-h">' + (order.filter(function (r) { return r.win; }).length > 1 ? "Gelijkspel!" : esc(order[0].pl.name) + " wint!") + "</h2><ol class=\"rad-final\">";
+      order.forEach(function (r) {
+        h += '<li class="' + (r.win ? "win" : "") + '">' + radAvHtml(r.pl, 48) + '<span class="rf-n">' + esc(r.pl.name) + (r.win ? " 🏆" : "") + "</span><b>" + r.pl.total + "</b>";
+        if (r.rw && !r.rw.none) h += '<span class="rf-rw">+' + r.rw.gems + " " + gemSvg(16) + (r.rw.xp ? " +" + r.rw.xp + " XP" : "") + "</span>";
+        else if (r.rw && r.rw.none) h += '<span class="rf-rw muted">Vandaag al ' + RAD_DAY_MAX + " beloningen</span>";
+        if (r.rw && r.rw.wins >= RAD_MASTER && r.win) h += '<span class="rf-rw">🏅 Meester van het Rad</span>';
+        h += "</li>";
+      });
+      h += "</ol>";
+      const me = rad.result.find(function (r) { return r.pl.kind === "me"; });
+      const txt = "🌙 Islam Quiz – Ajalat al-Ilm (Rad van Kennis, " + modeName(rad.lv) + "): " + (me && me.win ? "ik heb gewonnen met " : "ik speelde mee met ") + (me ? me.pl.total : best) + " punten!\nSpeel mee: https://islam-quiz-one.vercel.app/";
+      h += '<div class="result-actions"><button class="btn gold" data-act="rad-again">' + icon("retry", 20) + 'Nog een potje</button><button class="btn ghost" data-act="journey-back">' + icon("map", 20) + "Terug naar de kaart</button>" + shareBtn(txt, "Deel via WhatsApp") + "</div>";
+      return h + "</section>";
+    }
+    h += radStudio();
+    h += '<div class="rad-cat"><b>' + esc(land.title) + "</b><span>Hint: " + esc(rad.puz.hint) + '</span><small>Ronde ' + rad.round + " van " + RAD_ROUNDS + "</small></div>";
+    h += radBoardHtml();
+    h += '<p class="rad-msg" id="radMsg" role="status" aria-live="polite">' + esc(rad.msg) + "</p>";
+    if (rad.phase === "roundend") {
+      return h + '<div class="rad-acts"><button class="btn gold block" data-act="rad-next">' + (rad.round >= RAD_ROUNDS ? "Naar de uitslag" : "Volgende ronde") + "</button></div></section>";
+    }
+    if (rad.phase === "question" && rad.q) {
+      h += '<div class="rad-q"><p class="rq-q">' + esc(rad.q.question) + '</p><div class="rq-opts">';
+      rad.q.options.forEach(function (o, i) { h += '<button class="btn ghost" data-act="rad-ans" data-i="' + i + '"' + (human ? "" : " disabled") + ">" + esc(o) + "</button>"; });
+      return h + "</div></div></section>";
+    }
+    h += '<div class="rad-wheel-wrap' + (rad.flash ? " hit" : "") + '">' + radWheelSvg() + "</div>";
+    if (!human) return h + '<p class="rad-cpu">' + esc(pl.name) + " is aan de beurt…</p></section>";
+    if (rad.phase === "letter") {
+      h += '<div class="rad-keys" role="group" aria-label="Kies een medeklinker">';
+      RAD_CONS.split("").forEach(function (c) { h += '<button class="rad-k" data-act="rad-letter" data-l="' + c + '"' + (rad.used[c] ? ' disabled aria-label="' + c + ', al gekozen"' : "") + ">" + c + "</button>"; });
+      return h + "</div></section>";
+    }
+    if (rad.phase === "solve") {
+      return h + '<div class="rad-solve"><label for="radSolveIn">Typ het hele antwoord</label><input id="radSolveIn" class="quiz-input" autocomplete="off" autocapitalize="characters" spellcheck="false"><div class="rad-acts"><button class="btn gold" data-act="rad-solve-go">Controleer</button><button class="btn ghost" data-act="rad-solve-x">Terug</button></div></div></section>';
+    }
+    if (rad.phase === "vowel") {
+      h += '<div class="rad-keys vow" role="group" aria-label="Koop een klinker voor ' + RAD_VOWEL_COST + ' punten">';
+      RAD_VOWELS.split("").forEach(function (c) { h += '<button class="rad-k" data-act="rad-letter" data-l="' + c + '"' + (rad.used[c] ? " disabled" : "") + ">" + c + "</button>"; });
+      return h + '</div><div class="rad-acts"><button class="btn ghost" data-act="rad-solve-x">Terug</button></div></section>';
+    }
+    const canVowel = pl.round >= RAD_VOWEL_COST && radVowLeft().length > 0;
+    h += '<div class="rad-acts"><button class="btn gold" data-act="rad-spin">Draai!</button>' +
+      '<button class="btn ghost" data-act="rad-vowel"' + (canVowel ? "" : " disabled") + ">Klinker kopen (" + RAD_VOWEL_COST + ")</button>" +
+      '<button class="btn ghost" data-act="rad-solve">Oplossen</button></div>';
+    return h + "</section>";
+  }
+  function radJourneyBtn() {
+    return '<button class="jrad" data-act="rad" aria-label="Ajalat al-Ilm, Rad van Kennis"><svg viewBox="-12 -12 24 24" width="30" height="30" aria-hidden="true"><circle r="11" fill="#1f8f6a" stroke="#fff3b0" stroke-width="1.6"/>' +
+      [0, 1, 2, 3, 4, 5].map(function (i) { const a = i * 60 * Math.PI / 180; return '<path d="M0 0 L' + (10 * Math.cos(a)).toFixed(1) + " " + (10 * Math.sin(a)).toFixed(1) + " A10 10 0 0 1 " + (10 * Math.cos(a + Math.PI / 3)).toFixed(1) + " " + (10 * Math.sin(a + Math.PI / 3)).toFixed(1) + 'Z" fill="' + (i % 2 ? "#f0c75e" : "#2d6a4f") + '"/>'; }).join("") +
+      '<circle r="3" fill="#fff3b0"/></svg><span>Ajalat al-Ilm</span></button>';
+  }
+
   /* ── Woordpuzzel: letters rangschikken en woordzoeker (Junior: basisbegrippen, Expert: diepere termen) ── */
-  const WORDS_JR = [["MOSKEE", "Het gebedshuis van moslims."], ["KORAN", "Het heilige boek van de islam."], ["RAMADAN", "De maand waarin moslims vasten."], ["BIDDEN", "Vijf keer per dag doe je dit."], ["ZAKAAT", "Een deel van je geld delen met mensen die het nodig hebben."], ["MEKKA", "De stad waar de Ka’ba staat."], ["MEDINA", "De stad van de Profetenmoskee."], ["VASTEN", "Overdag niet eten en drinken in Ramadan."], ["IMAAM", "Hij leidt het gebed in de moskee."], ["ISLAM", "De godsdienst van moslims."], ["ADHAAN", "De oproep tot het gebed."], ["KAABA", "Het zwarte gebouw in Mekka."], ["WOEDOE", "De wassing vóór het gebed."], ["HADJ", "De bedevaart naar Mekka."]];
-  const WORDS_EX = [["SHAHADA", "Het geloofsgetuigenis."], ["HADITH", "Overgeleverde woorden en daden van de Profeet ﷺ."], ["SUNNA", "De levenswijze van de Profeet ﷺ."], ["TAWHID", "De eenheid van Allah."], ["MIHRAAB", "De nis in de moskee die de gebedsrichting aanwijst."], ["MINBAR", "De preekstoel in de moskee."], ["QIBLA", "De richting van de Ka’ba waarheen we bidden."], ["HIJRA", "De verhuizing van de Profeet ﷺ van Mekka naar Medina."], ["ZAMZAM", "De bron bij de Ka’ba."], ["ARAFAT", "De vlakte waar de pelgrims op de negende dag van de hadj staan."], ["TARAWIEH", "Extra nachtgebed in Ramadan."], ["IFTAAR", "De maaltijd waarmee je het vasten verbreekt."], ["SADAQA", "Vrijwillige gift uit liefde voor Allah."], ["MUEZZIN", "Degene die de adhaan reciteert."], ["KALIEF", "Opvolger en leider van de moslims."], ["SOERA", "Een hoofdstuk van de Koran."]];
+  const WORDS_JR = [["MOSKEE", "Het gebedshuis van moslims."], ["KORAN", "Het heilige boek van de islam."], ["RAMADAN", "De maand waarin moslims vasten."], ["BIDDEN", "Vijf keer per dag doe je dit."], ["ZAKAAT", "Een deel van je geld delen met mensen die het nodig hebben."], ["MEKKA", "De stad waar de Ka’ba staat."], ["MEDINA", "De stad van de Profetenmoskee."], ["VASTEN", "Overdag niet eten en drinken in Ramadan."], ["IMAAM", "Hij leidt het gebed in de moskee."], ["ISLAM", "De godsdienst van moslims."], ["ADHAAN", "De oproep tot het gebed."], ["KAABA", "Het zwarte gebouw in Mekka."], ["WUDHU", "De wassing vóór het gebed."], ["HADJ", "De bedevaart naar Mekka."], ["SALAAM", "Vrede: de groet van moslims."], ["DUA", "Je vraagt Allah om iets: een smeekbede."], ["DADEL", "Hiermee verbreek je vaak het vasten."], ["ENGEL", "Allah heeft ze geschapen uit licht."], ["PROFEET", "Een boodschapper van Allah."], ["FAJR", "Het ochtendgebed, vóór zonsopkomst."], ["DUHR", "Het middaggebed."], ["ASR", "Het namiddaggebed."], ["MAGHRIB", "Het gebed direct na zonsondergang."], ["ISHA", "Het avondgebed."], ["SUHOOR", "De maaltijd vóór zonsopkomst als je gaat vasten."], ["SUJUD", "Met je voorhoofd op de grond in het gebed."], ["TASBIH", "Allah prijzen, bijvoorbeeld door Soebhanallah te zeggen."], ["SALAH", "Het verplichte gebed, vijf keer per dag."], ["JANNAH", "Het Paradijs."], ["EID", "Het feest na Ramadan en na de hadj."]];
+  const WORDS_EX = [["SHAHADA", "Het geloofsgetuigenis."], ["HADITH", "Overgeleverde woorden en daden van de Profeet ﷺ."], ["SUNNA", "De levenswijze van de Profeet ﷺ."], ["TAWHID", "De eenheid van Allah."], ["MIHRAAB", "De nis in de moskee die de gebedsrichting aanwijst."], ["MINBAR", "De preekstoel in de moskee."], ["QIBLA", "De richting van de Ka’ba waarheen we bidden."], ["HIJRA", "De verhuizing van de Profeet ﷺ van Mekka naar Medina."], ["ZAMZAM", "De bron bij de Ka’ba."], ["ARAFAT", "De vlakte waar de pelgrims op de negende dag van de hadj staan."], ["TARAWIEH", "Extra nachtgebed in Ramadan."], ["IFTAAR", "De maaltijd waarmee je het vasten verbreekt."], ["SADAQA", "Vrijwillige gift uit liefde voor Allah."], ["MUEZZIN", "Degene die de adhaan reciteert."], ["KALIEF", "Opvolger en leider van de moslims."], ["SOERA", "Een hoofdstuk van de Koran."], ["AQEEDA", "De geloofsleer."], ["FIQH", "De islamitische rechtsleer."], ["TAFSIR", "Uitleg van de Koran."], ["TAJWID", "De regels voor het mooi reciteren van de Koran."], ["ISNAAD", "De keten van overleveraars van een hadith."], ["IHRAAM", "De gewijde staat en kleding van de pelgrim."], ["TAWAAF", "Het rondgaan om de Ka’ba."], ["SAI", "Het lopen tussen Safa en Marwa."], ["AYA", "Een vers uit de Koran."], ["SAHABA", "De metgezellen van de Profeet ﷺ."], ["ITIKAAF", "Je in de moskee terugtrekken voor aanbidding, vooral in de laatste tien nachten van Ramadan."], ["DHIKR", "Het gedenken van Allah."], ["KHOETBAH", "De preek bij het vrijdaggebed."], ["JUMMAH", "Het vrijdaggebed."], ["WITR", "Het oneven gebed waarmee je de nacht afsluit."], ["ISTIKHARA", "Het gebed waarmee je Allah om leiding vraagt bij een keuze."]];
+  /* Beginner: eenvoudige basiswoorden (v68) */
+  const WORDS_BEG = [["MOSKEE", "Het gebedshuis van moslims."], ["KORAN", "Het heilige boek van de islam."], ["BIDDEN", "Moslims doen dit vijf keer per dag."], ["VASTEN", "Overdag niet eten en drinken in Ramadan."], ["RAMADAN", "De maand van het vasten."], ["MEKKA", "De stad waar de Ka’ba staat."], ["KAABA", "Het huis van Allah in Mekka."], ["IMAAM", "Hij gaat voor in het gebed."], ["SALAAM", "Vrede: zo groeten moslims elkaar."], ["DADEL", "Hiermee verbreek je vaak het vasten."], ["SALAH", "Het gebed dat moslims vijf keer per dag doen."], ["DUA", "Je vraagt Allah om iets."], ["DELEN", "Je geeft anderen iets van wat je hebt."], ["EID", "Het feest na Ramadan."], ["ENGEL", "Allah heeft ze geschapen uit licht."], ["PROFEET", "Een boodschapper van Allah."], ["ADAM", "De eerste mens."], ["NUH", "De profeet die de ark bouwde."], ["MUSA", "De profeet die met zijn volk door de zee trok."], ["WUDHU", "De wassing vóór het gebed."], ["DANKEN", "Alhamdulillah zeggen is Allah …"], ["ISLAM", "De godsdienst van moslims."]];
+  /* hoe een woord op het scherm staat (in het rooster alleen letters) */
+  const WORD_SHOW = { SAI: "SA’I", DUA: "DU’A" };
+  function wShow(w) { return WORD_SHOW[w] || w; }
+  function wordsFor(lv) { return lv === "beginner" ? WORDS_BEG : lv === "expert" ? WORDS_EX : WORDS_JR; }
   function wzPick(list, n, maxLen) {
     const ok = list.filter(function (w) { return !maxLen || w[0].length <= maxLen; });
     return shuffle(ok.slice(), Math.random).slice(0, n);
   }
   function mgInitWord() {
-    const junior = mg.level !== "expert", ci = Math.max(0, landIdx(mg.catId)), k = Math.floor(mg.i / J_MILE) + ci;
-    mg.sub = Math.floor(k / MG_GAMES.length) % 2 === 0 ? "anagram" : "zoeker";
+    const junior = mg.level !== "expert";
+    mg.sub = chestSlot(mg.catId, mg.i) === "anagram" ? "anagram" : "zoeker";
     mg.done = false; mg.moves = 0;
     if (mg.sub === "anagram") {
-      mg.words = wzPick(junior ? WORDS_JR : WORDS_EX, junior ? 3 : 4, junior ? 7 : 8); mg.wi = 0; wzNextWord();
+      mg.words = wzPick(wordsFor(mg.level), junior ? 3 : 4, junior ? 7 : 8); mg.wi = 0; wzNextWord();
     } else wzInitSearch();
   }
   /* — letters rangschikken — */
@@ -7816,7 +8324,7 @@ return exports;})();
     const guess = mg.slots.map(function (t) { return mg.tiles[t]; }).join(""), word = mg.words[mg.wi][0];
     mg.moves++;
     if (guess === word) {
-      mg.locked = true; play("correct"); wzRedraw(); announce("Goed! " + word + ".", true);
+      mg.locked = true; play("correct"); wzRedraw(); announce("Goed! " + wShow(word) + ".", true);
       mgLater(function () {
         if (screen !== "minigame" || !mg || mg.sub !== "anagram") return;
         mg.wi++;
@@ -7837,7 +8345,7 @@ return exports;})();
     const junior = mg.level !== "expert", n = junior ? 8 : 10, count = junior ? 4 : 6;
     const dirs = junior ? [[0, 1], [1, 0]] : [[0, 1], [1, 0], [1, 1], [0, -1], [-1, 0]];
     for (let attempt = 0; attempt < 60; attempt++) {
-      const list = wzPick(junior ? WORDS_JR : WORDS_EX, count, n).sort(function (a, b) { return b[0].length - a[0].length; });
+      const list = wzPick(wordsFor(mg.level), count, n).sort(function (a, b) { return b[0].length - a[0].length; });
       const grid = []; for (let r = 0; r < n; r++) { grid.push([]); for (let c = 0; c < n; c++) grid[r].push(""); }
       let okAll = true; const placed = [];
       for (let wi = 0; wi < list.length && okAll; wi++) {
@@ -7863,7 +8371,7 @@ return exports;})();
     const n = mg.n, junior = mg.level !== "expert";
     let h = '<p class="wz-clue">' + (junior ? "Zoek de woorden in het rooster. Tik op de eerste en op de laatste letter van een woord." : "Zoek de woorden bij de omschrijvingen. Tik op de eerste en op de laatste letter. Woorden staan ook schuin of achterstevoren.") + "</p>";
     h += '<div class="wz-list" aria-label="Te vinden woorden"><ul>';
-    mg.placed.forEach(function (p) { h += '<li class="' + (p.found ? "found" : "") + '">' + (junior ? (p.found ? "✓ " : "") + "<b>" + (p.found ? esc(p.word) : esc(p.word)) + "</b>" : (p.found ? "✓ <b>" + esc(p.word) + "</b>" : "<span>" + esc(p.clue) + " <i>(" + p.word.length + " letters)</i></span>")) + (p.found ? '<span class="sr-only"> gevonden</span>' : "") + "</li>"; });
+    mg.placed.forEach(function (p) { h += '<li class="' + (p.found ? "found" : "") + '">' + (junior ? (p.found ? "✓ " : "") + "<b>" + esc(wShow(p.word)) + "</b>" : (p.found ? "✓ <b>" + esc(wShow(p.word)) + "</b>" : "<span>" + esc(p.clue) + " <i>(" + p.word.length + " letters)</i></span>")) + (p.found ? '<span class="sr-only"> gevonden</span>' : "") + "</li>"; });
     h += '</ul></div><div class="ws-grid" role="group" aria-label="Woordzoeker" style="--n:' + n + '">';
     for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) {
       const key = r + "," + c, on = mg.sel && mg.sel[0] === r && mg.sel[1] === c;
@@ -7886,7 +8394,7 @@ return exports;})();
       if (hit) { hit.found = true; for (let k = 0; k < len; k++) mg.foundCells[(r0 + dr * k) + "," + (c0 + dc * k)] = true; }
     }
     if (hit) {
-      play("correct"); announce("Gevonden: " + hit.word + "!", true);
+      play("correct"); announce("Gevonden: " + wShow(hit.word) + "!", true);
       if (mg.placed.every(function (p) { return p.found; })) { mg.done = true; wzRedraw(); mgFinishCommon(); const end = document.getElementById("mgEnd"); if (end) { end.innerHTML = mgDonePanel("Alle woorden gevonden!", "Wat een scherpe ogen, " + P.name + "!"); end.scrollIntoView({ behavior: reducedMotion() ? "auto" : "smooth", block: "center" }); } return; }
     } else { play("wrong"); announce("Dat is geen woord uit de lijst. Probeer opnieuw.", true); }
     wzRedraw();
@@ -8575,7 +9083,7 @@ return exports;})();
       '<button class="jn-item" data-act="group"><span class="jn-ic" aria-hidden="true">👥</span>Groep</button>' +
       '<a class="jn-item wa" href="' + waLink(shareJourneyText()) + '" target="_blank" rel="noopener" aria-label="Deel mijn Reis via WhatsApp"><span class="jn-ic" aria-hidden="true">💬</span>Delen</a>' +
       "</div></nav>";
-    h += streakPillHtml();
+    h += streakPillHtml() + radJourneyBtn();
     h += '<div class="j-toast" id="jToast" role="status"></div>';
     return h;
   }
@@ -9259,6 +9767,20 @@ return exports;})();
       case "journey-chest": openChest(el.dataset.cat, parseInt(el.dataset.i, 10)); break;
       case "mg-open-now": chestOpenNow(); break;
       case "mg-start": startMinigame(); break;
+      case "rad": play("click"); rad = null; screen = "rad"; render(); break;
+      case "rad-vs": if (!el.disabled) { radSetup.vs = el.dataset.v; play("click"); render(); } break;
+      case "rad-n": radSetup.n = parseInt(el.dataset.v, 10) === 2 ? 2 : 1; play("click"); render(); break;
+      case "rad-mate": { const id = el.dataset.id, cnt = Object.keys(radSetup.with).filter(function (k) { return radSetup.with[k]; }).length; if (radSetup.with[id]) radSetup.with[id] = false; else if (cnt < 3) radSetup.with[id] = true; play("click"); render(); break; }
+      case "rad-start": radStart(); break;
+      case "rad-again": rad = null; radStart(); break;
+      case "rad-spin": radSpin(); break;
+      case "rad-letter": radPickLetter(el.dataset.l); break;
+      case "rad-vowel": if (rad && radCur().round >= RAD_VOWEL_COST) { rad.prev = rad.phase; rad.phase = "vowel"; rad.msg = "Kies een klinker (" + RAD_VOWEL_COST + " punten)."; render(); } break;
+      case "rad-solve": if (rad) { rad.prev = rad.phase; rad.phase = "solve"; rad.msg = "Typ het antwoord."; render(); } break;
+      case "rad-solve-x": if (rad) { rad.phase = rad.prev || "act"; rad.msg = radCur().name + ": draai, koop een klinker of los op."; render(); } break;
+      case "rad-solve-go": { const i = document.getElementById("radSolveIn"); radTrySolve(i ? i.value : ""); break; }
+      case "rad-ans": radAnswer(parseInt(el.dataset.i, 10)); break;
+      case "rad-next": play("click"); radAfterRound(); break;
       case "mg-flip": mgFlip(parseInt(el.dataset.k, 10)); break;
       case "wz-tile": wzTile(parseInt(el.dataset.k, 10)); break;
       case "wz-slot": wzSlot(parseInt(el.dataset.k, 10)); break;
