@@ -1,6 +1,6 @@
 /* Islam Quiz – service worker (netwerk eerst, cache als terugval)
    Verhoog CACHE_VERSION bij elke release. Zo zien bezoekers altijd meteen de nieuwste versie. */
-const CACHE_VERSION = "islam-quiz-v64";
+const CACHE_VERSION = "islam-quiz-v65";
 const PRECACHE = [];
 
 self.addEventListener("install", (event) => {
