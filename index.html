@@ -976,7 +976,7 @@ a.btn.block { display: flex; margin-top: 14px; }
 body.jfull { overflow: hidden; }
 body.jfull #app { max-width: none; padding: 0; }
 .jmap-scroll { position: fixed; inset: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; background: radial-gradient(circle at 50% 0, #2d6a4f, #12362a 70%); }
-.jmap-scroll .journey-map { max-width: 560px; min-height: 100%; margin: 0 auto; padding: 118px 0 92px; border: 0; border-radius: 0; box-shadow: 0 0 40px rgba(0, 0, 0, .4); background: linear-gradient(180deg, var(--sky, #bfe3d0) 50%, var(--near, #2a7a52) 50%); overflow: visible; }
+.jmap-scroll .journey-map { max-width: 560px; min-height: 100%; margin: 0 auto; padding: 144px 0 92px; border: 0; border-radius: 0; box-shadow: 0 0 40px rgba(0, 0, 0, .4); background: linear-gradient(180deg, var(--sky, #bfe3d0) 50%, var(--near, #2a7a52) 50%); overflow: visible; }
 .j-head { position: fixed; z-index: 30; top: calc(env(safe-area-inset-top, 0px) + 8px); left: 8px; right: 8px; max-width: 704px; margin: 0 auto; display: flex; align-items: center; gap: 6px; padding: 5px 6px 5px 6px; border-radius: 22px; color: #fff; background: rgba(20, 56, 42, .72); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); border: 1px solid rgba(240, 194, 127, .5); box-shadow: 0 6px 18px rgba(0, 0, 0, .25); }
 .jh-player { appearance: none; border: 0; background: transparent; color: #fff; font: inherit; font-weight: 900; font-size: .82rem; display: inline-flex; align-items: center; gap: 6px; padding: 0 4px 0 0; cursor: pointer; min-width: 0; border-radius: 18px; }
 .jh-player span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 72px; }
@@ -1000,6 +1000,15 @@ body.jfull #app { max-width: none; padding: 0; }
 .j-shield .land-chip.on { opacity: 1; transform: scale(1.2); box-shadow: 0 0 0 2px #ffd54f; }
 .j-shield .land-chip .lc-b { top: -8px; right: -8px; width: 15px; height: 15px; font-size: .55rem; }
 .js-prog { font-weight: 900; font-size: .72rem; color: #fbefd9; white-space: nowrap; }
+.js-badge { display: flex; align-items: center; gap: 5px; width: max-content; max-width: 100%; margin: 6px auto 0; padding: 1px 11px 1px 3px; border-radius: 999px; font-weight: 900; font-size: .7rem; color: #fff7d6; text-shadow: 0 1px 1px rgba(0, 0, 0, .55); border: 1.5px solid #ffd54a; background: linear-gradient(90deg, rgba(255, 213, 74, .6) var(--p, 0%), rgba(3, 40, 28, .55) var(--p, 0%)); box-shadow: 0 2px 5px rgba(0, 0, 0, .35), inset 0 1px 0 rgba(255, 255, 255, .45), inset 0 -2px 3px rgba(0, 0, 0, .25); }
+.js-badge .jb-ic { display: grid; place-items: center; filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .4)); }
+.js-badge .jb-ic svg { display: block; }
+.js-badge.got { background: linear-gradient(180deg, #fff3b0, #f0b429 55%, #c98a0b); color: #3a2606; text-shadow: 0 1px 0 rgba(255, 255, 255, .45); animation: jbShine 3.2s ease-in-out infinite; }
+@keyframes jbShine { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.18); } }
+@media (prefers-reduced-motion: reduce) { .js-badge.got { animation: none; } }
+.gb-badge { display: inline-flex; vertical-align: middle; margin-left: 5px; filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, .4)); }
+.gb-badge svg { display: block; }
+.pe-badges { margin: 2px 0 8px; font-weight: 800; font-size: .85rem; display: flex; align-items: center; justify-content: center; gap: 6px; color: #fff3d6; text-shadow: 0 1px 2px rgba(0, 0, 0, .45); }
 .j-nav { position: fixed; z-index: 30; left: 0; right: 0; bottom: 0; padding: 8px 8px calc(8px + env(safe-area-inset-bottom, 0px)); background: linear-gradient(180deg, #1f5a43, #12362a); border-top: 3px solid #d9a05b; box-shadow: 0 -8px 20px rgba(0, 0, 0, .25); }
 .jn-in { display: flex; gap: 4px; max-width: 560px; margin: 0 auto; }
 .jn-item { appearance: none; border: 0; background: transparent; font: inherit; text-decoration: none; cursor: pointer; flex: 1; min-width: 0; position: relative; display: grid; justify-items: center; align-content: start; gap: 3px; padding: 3px 0; border-radius: 16px; color: #fbefd9; font-weight: 800; font-size: .68rem; line-height: 1.1; }
@@ -1131,7 +1140,7 @@ body.jfull .reward-flyer { top: 160px; }
 .stk-week li.today .stk-dot { box-shadow: 0 0 0 3px #f0c27f; }
 .streak-dlg .stk-best { margin: 4px 0 2px; } .streak-dlg .stk-note { margin: 2px 0 14px; font-size: .85rem; }
 
-.j-presence { position: fixed; z-index: 24; top: calc(env(safe-area-inset-top, 0px) + 136px); left: 50%; transform: translateX(-50%); width: max-content; max-width: calc(100% - 24px); pointer-events: none; padding: 5px 12px; border-radius: 999px; background: rgba(3, 40, 28, .72); color: #ffe9a8; font-weight: 800; font-size: .78rem; text-align: center; border: 1.5px solid rgba(255, 224, 138, .55); backdrop-filter: blur(4px); }
+.j-presence { position: fixed; z-index: 24; top: calc(env(safe-area-inset-top, 0px) + 162px); left: 50%; transform: translateX(-50%); width: max-content; max-width: calc(100% - 24px); pointer-events: none; padding: 5px 12px; border-radius: 999px; background: rgba(3, 40, 28, .72); color: #ffe9a8; font-weight: 800; font-size: .78rem; text-align: center; border: 1.5px solid rgba(255, 224, 138, .55); backdrop-filter: blur(4px); }
 .j-presence[hidden] { display: none; }
 
 .remind-bn { position: fixed; z-index: 60; left: 50%; bottom: calc(92px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); width: min(92vw, 420px); display: flex; align-items: flex-start; gap: 10px; padding: 12px 12px 12px 14px; border-radius: 18px; background: linear-gradient(180deg, #1f6b4a, #0f4a33); color: #fff; border: 2px solid #ffd54f; box-shadow: 0 10px 28px rgba(0, 30, 20, .45); animation: rbIn .45s cubic-bezier(.3, 1.4, .5, 1) both; }
@@ -1197,7 +1206,7 @@ body.jfull .reward-flyer { top: 160px; }
 #splash.rm .sp-half { transition: opacity .6s; } #splash.rm.open .sp-l, #splash.rm.open .sp-r { transform: none; opacity: 0; }
 @media (prefers-reduced-motion: reduce) { .sp-wave, .sp-bub, .sp-sheen, .sp-logo, .logo { animation: none; } .sp-bub { opacity: .6; } }
 
-.j-lockbanner { position: fixed; z-index: 24; top: calc(env(safe-area-inset-top, 0px) + 138px); left: 50%; transform: translateX(-50%); width: min(90vw, 420px); display: flex; gap: 8px; align-items: flex-start; padding: 8px 12px; border-radius: 16px; background: rgba(251, 239, 217, .96); color: #1b4332; border: 2px solid #d9a05b; font-size: .8rem; font-weight: 700; line-height: 1.3; box-shadow: 0 6px 16px rgba(0, 0, 0, .25); pointer-events: none; }
+.j-lockbanner { position: fixed; z-index: 24; top: calc(env(safe-area-inset-top, 0px) + 164px); left: 50%; transform: translateX(-50%); width: min(90vw, 420px); display: flex; gap: 8px; align-items: flex-start; padding: 8px 12px; border-radius: 16px; background: rgba(251, 239, 217, .96); color: #1b4332; border: 2px solid #d9a05b; font-size: .8rem; font-weight: 700; line-height: 1.3; box-shadow: 0 6px 16px rgba(0, 0, 0, .25); pointer-events: none; }
 .jmap-scroll.landlocked .journey-map { filter: saturate(.72) brightness(.95); }
 .land-chip .lc-lock { background: #1b4332; font-size: .7rem; width: 18px; height: 18px; top: -7px; right: -7px; } .j-shield .land-chip .lc-lock { top: -9px; right: -9px; }
 .rw.daily { background: #fff3c4; color: #7a4d08; }
@@ -1373,6 +1382,16 @@ body.jfull .reward-flyer { top: 160px; }
 .bc-btn:focus-visible { outline: 3px solid #ffe27a; outline-offset: 3px; }
 @media (max-height: 640px) { .bcel { --ms: min(40vw, 170px); } .bc-title { font-size: 1.8rem; } .bc-medalbox { margin-bottom: 8px; } }
 .bcel.rm .bc-rays, .bcel.rm .bc-geo, .bcel.rm .bc-halo, .bcel.rm .bc-in, .bcel.rm .bc-m, .bcel.rm .bc-flash, .bcel.rm .bc-txt { animation: none !important; opacity: 1; }
+.bcg-box { max-width: 400px; padding: 12px 6px; }
+.bcg-head { text-align: center; margin-bottom: 10px; }
+.bcg-grid { list-style: none; margin: 0 0 14px; padding: 4px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px 8px; width: 100%; max-height: 44vh; overflow-y: auto; }
+.bcg-tile { display: flex; flex-direction: column; align-items: center; text-align: center; color: #f3ecd2; opacity: 0; animation: bcgPop .55s cubic-bezier(.2, .9, .3, 1.3) calc(.35s + var(--d)) both; }
+.bcg-tile svg { width: 84px; height: 84px; filter: drop-shadow(0 6px 5px rgba(0, 0, 0, .5)); }
+.bcg-tile b { color: #ffd54a; font-size: .85rem; font-weight: 900; }
+.bcg-tile small { font-size: .68rem; font-weight: 700; line-height: 1.15; color: #dbe7ef; }
+.bcg-tile i { font-style: normal; font-size: .62rem; font-weight: 900; letter-spacing: .5px; text-transform: uppercase; color: #9ff0cf; }
+@keyframes bcgPop { 0% { opacity: 0; transform: scale(.3) rotate(-12deg); } 100% { opacity: 1; transform: none; } }
+.bcel.rm .bcg-tile { animation: none; opacity: 1; }
 .bcel.rm .bc-flash { opacity: 0; } .bcel.rm .bc-geo { opacity: .6; } .bcel.rm .bc-halo { opacity: .8; }
 @media (prefers-reduced-motion: reduce) { .bc-rays, .bc-geo, .bc-halo, .bc-in { animation: none !important; } }
 
@@ -4048,7 +4067,7 @@ return exports;})();
     sbUser = u;
     if (u) {
       const fresh = !same;
-      if (fresh) { linkPlayer(u); S.entry = "account"; saveState(); sbSyncAll(); sbLoadStreak(); closeAccount(); }
+      if (fresh) { linkPlayer(u); S.entry = "account"; saveState(); sbSyncAll(); sbLoadStreak(); sbLoadBadges(); closeAccount(); }
       remindSync();
       if (screen === "login" || screen === "authwait") enterApp();
       else if (fresh && screen === "players" && linkNote) enterApp();
@@ -4080,9 +4099,11 @@ return exports;})();
     const av = avOf(p);
     const go = function () {
       /* avatar_id ontbreekt nog (supabase-avatars.sql niet uitgevoerd)? Dan syncen we zonder dat veld */
-      const ex = soc.noAv ? {} : { avatar_id: av ? av.id : null };
+      const ex = Object.assign({}, soc.noAv ? {} : { avatar_id: av ? av.id : null }, soc.noBd ? {} : badgeFields(p, lv));
       return send(Object.assign({}, soc.noCols ? row : full, ex)).then(function (r) {
         const msg = r && r.error ? errTxt(r.error) : "";
+        /* badge-kolommen ontbreken nog (supabase-badges.sql niet uitgevoerd)? Dan syncen we zonder die velden */
+        if (msg && !soc.noBd && /master_mask|grand_mask/i.test(msg)) { soc.noBd = true; return go(); }
         if (msg && !soc.noAv && /avatar_id|42703|pgrst204/i.test(msg)) { soc.noAv = true; return go(); }
         if (msg && !soc.noCols && /column|schema|pgrst204/i.test(msg)) { soc.noCols = true; return go(); }
         return r;
@@ -4099,6 +4120,22 @@ return exports;})();
     const p = sbLinkedPlayer(); if (!sb || !p) return;
     const row = { user_id: sbUser.id, current_streak: streakOf(p), best_streak: p.streak.max || 0, last_day: p.streak.last || null };
     try { sb.from("user_streaks").upsert(row, { onConflict: "user_id" }).then(function () {}).catch(function () {}); } catch (e) {}
+  }
+  /* badges van de server ophalen en samenvoegen met de lokale (nooit weghalen, nooit dubbel), bijvoorbeeld op een nieuw toestel */
+  function sbLoadBadges() {
+    const p = sbLinkedPlayer(); if (!sb || !p || soc.noBd) return;
+    try {
+      sb.from("leaderboard").select("mode," + BADGE_KINDS.map(function (k) { return BADGE_COL[k]; }).join(",")).eq("user_id", sbUser.id).then(function (r) {
+        if (!r) return;
+        if (r.error) { if (/master_mask|grand_mask|42703|pgrst204/i.test(errTxt(r.error))) soc.noBd = true; return; }
+        let ch = false;
+        (r.data || []).forEach(function (row) {
+          if (row.mode !== "junior" && row.mode !== "expert") return;
+          BADGE_KINDS.forEach(function (k) { if (badgeMerge(p, row.mode, k, row[BADGE_COL[k]])) ch = true; });
+        });
+        if (ch) { saveState(); if (screen === "journey" || screen === "board") render(); }
+      }).catch(function () {});
+    } catch (e) {}
   }
   function sbLoadStreak() {
     const p = sbLinkedPlayer(); if (!sb || !p) return;
@@ -4122,9 +4159,10 @@ return exports;})();
     const prev = gb[lv] && gb[lv].rows;
     gb[lv] = { rows: prev, loading: true }; gbPaint(lv);
     try {
-      sb.from("leaderboard").select("user_id,display_name,avatar_url,highscore,stars" + (soc.noAv ? "" : ",avatar_id")).eq("mode", lv)
+      sb.from("leaderboard").select("user_id,display_name,avatar_url,highscore,stars" + (soc.noAv ? "" : ",avatar_id") + (soc.noBd ? "" : ",master_mask,grand_mask")).eq("mode", lv)
         .order("highscore", { ascending: false }).order("stars", { ascending: false }).limit(50)
         .then(function (r) {
+          if (r && r.error && !soc.noBd && /master_mask|grand_mask/i.test(errTxt(r.error))) { soc.noBd = true; gbLoad(lv); return; }
           if (r && r.error && !soc.noAv) { soc.noAv = true; gbLoad(lv); return; }
           if (r && r.error) gb[lv] = { rows: prev, err: "Het klassement kon niet worden geladen." };
           else { gb[lv] = { rows: (r && r.data) || [] }; announce("Klassement bijgewerkt: " + gb[lv].rows.length + " spelers."); }
@@ -4154,7 +4192,7 @@ return exports;})();
     rows.forEach(function (r, i) {
       const me = sbUser && r.user_id === sbUser.id;
       h += '<li class="gb-row' + (i < 3 ? " top" + (i + 1) : "") + (me ? " me" : "") + '"><span class="gb-rank">#' + (i + 1) + "</span>" + gbAvatar(r.display_name, r.avatar_url, r.user_id, r.avatar_id) +
-        '<span class="gb-name">' + esc(r.display_name) + (me ? ' <em class="me">jij</em>' : "") + '</span><span class="gb-score"><b>' + Number(r.highscore).toLocaleString("nl-NL") + "</b><small>" + icon("star", 12, "fill") + " " + (r.stars || 0) + "</small></span></li>";
+        '<span class="gb-name">' + esc(r.display_name) + badgeIconHtml(r.master_mask, r.grand_mask, 22) + (me ? ' <em class="me">jij</em>' : "") + '</span><span class="gb-score"><b>' + Number(r.highscore).toLocaleString("nl-NL") + "</b><small>" + icon("star", 12, "fill") + " " + (r.stars || 0) + "</small></span></li>";
     });
     return h + "</ol>";
   }
@@ -4336,12 +4374,19 @@ return exports;})();
   /* ───────────── Niveau 4 slot & badges ─────────────
      Een niveau is "gehaald" bij minstens PASS_PCT goed (beste poging).
      Niveau 4 gaat per categorie (en per Junior/Expert) pas open als álle bestaande niveaus 1-3 gehaald zijn.
-     Badge Meester (zilver) = niveau 1-3 gehaald; Grootmeester (goud) = niveau 4 gehaald. */
+     Badges (v55, via de kaart): Meester = een land voltooid (alle levels gehaald), per land en per modus.
+     Grootmeester (alleen Expert) = alle levels van een land met 3 sterren. De oude route via niveaus 1-3 / niveau 4 blijft ook werken.
+     Dezelfde sleutels (level:categorie:soort) als voorheen, dus niemand krijgt een badge dubbel. */
   const PASS_PCT = 0.6; // 2 sterren; bij 3 vragen (niveau 2/3) is dat 2 van de 3 goed
   const BADGE_META = {
-    master: { icon: "۞", title: "Meester", desc: "Niveau 1-3 gehaald" },
-    grand: { icon: "👑", title: "Grootmeester", desc: "Niveau 4 gehaald" },
+    master: { icon: "۞", title: "Meester", desc: "Land voltooid" },
+    grand: { icon: "👑", title: "Grootmeester", desc: "Alle levels met 3 sterren" },
   };
+  /* Servervelden per soort badge. Een derde soort (bijv. Talib voor Beginner) is later één regel hier + één kolom in de SQL. */
+  const BADGE_COL = { master: "master_mask", grand: "grand_mask" };
+  const BADGE_KINDS = ["master", "grand"];
+  const BADGE_SYNC_V = 55;                 /* eenmalige inhaalcontrole per speler */
+  const MASK_BITS = 10;                    /* de server bewaart per soort een getal 0..1023: bit i = land i (tot 10 landen) */
   function tierPassed(level, catId, tier) {
     const b = P && P.best[level][bkey(catId, tier)];
     return !!b && b.total > 0 && b.score / b.total >= PASS_PCT;
@@ -4367,10 +4412,10 @@ return exports;})();
     if (!P.badges) P.badges = {};
     ["junior", "expert"].forEach(function (lv) {
       CATEGORIES.forEach(function (c) {
-        const rt = requiredTiers(lv, c.id);
+        const rt = requiredTiers(lv, c.id), ls = jLandStats(lv, c.id);
         const want = [];
-        if (rt.length > 1 && rt.every(function (t) { return tierPassed(lv, c.id, t); })) want.push("master");
-        if (hasTier4(lv, c.id) && tierPassed(lv, c.id, 4) && tier4Unlocked(lv, c.id)) want.push("grand");
+        if (ls.done || (rt.length > 1 && rt.every(function (t) { return tierPassed(lv, c.id, t); }))) want.push("master");
+        if (lv === "expert" && ((ls.n > 0 && ls.stars >= ls.max) || (hasTier4(lv, c.id) && tierPassed(lv, c.id, 4) && tier4Unlocked(lv, c.id)))) want.push("grand");
         want.forEach(function (k) {
           const id = badgeId(lv, c.id, k);
           if (!P.badges[id]) { P.badges[id] = Date.now(); fresh.push({ id: id, kind: k, level: lv, catId: c.id }); }
@@ -4379,11 +4424,60 @@ return exports;})();
     });
     return fresh;
   }
+  /* badges <-> getal voor de server: bit i staat voor land i (CATEGORIES-volgorde) */
+  function badgeMask(p, lv, kind) {
+    let m = 0;
+    if (!p || !p.badges) return m;
+    CATEGORIES.forEach(function (c, i) { if (i < MASK_BITS && p.badges[badgeId(lv, c.id, kind)]) m |= 1 << i; });
+    return m;
+  }
+  function maskCount(m) { let n = 0; m = m | 0; while (m) { n += m & 1; m >>= 1; } return n; }
+  /* badges van de server erbij voegen (nooit weghalen, nooit dubbel); geeft true als er iets nieuws bij kwam */
+  function badgeMerge(p, lv, kind, m) {
+    let ch = false;
+    m = Number(m) | 0;
+    if (!p.badges) p.badges = {};
+    CATEGORIES.forEach(function (c, i) {
+      if (i >= MASK_BITS || !((m >> i) & 1)) return;
+      const id = badgeId(lv, c.id, kind);
+      if (!p.badges[id]) { p.badges[id] = Date.now(); ch = true; }
+    });
+    return ch;
+  }
+  function badgeFields(p, lv) { const o = {}; BADGE_KINDS.forEach(function (k) { o[BADGE_COL[k]] = badgeMask(p, lv, k); }); return o; }
+  function badgeLine(bm, bg) {
+    const a = []; const m = maskCount(bm), g = maskCount(bg);
+    if (m) a.push(m + "× Meester"); if (g) a.push(g + "× Grootmeester");
+    return a.join(" · ");
+  }
+  /* klein 3D-icoontje: kroontje bij minstens één Grootmeester (dan alleen dat), anders het Meester-medaillon */
+  const BADGE_ICON_COLOR = "#1f9d66";
+  function badgeIconHtml(bm, bg, size) {
+    const g = maskCount(bg), m = maskCount(bm);
+    if (!g && !m) return "";
+    const txt = badgeLine(bm, bg);
+    return '<span class="gb-badge" role="img" aria-label="' + esc(txt) + '" title="' + esc(txt) + '">' + badgeSvg(g ? "grand" : "master", BADGE_ICON_COLOR, size || 24, false) + "</span>";
+  }
+  function jThreeStars(lv, catId) {
+    const n = jCount(lv, catId); let k = 0;
+    for (let i = 0; i < n; i++) { const b = jBest(lv, catId, i); if (b && b.stars >= 3) k++; }
+    return k;
+  }
+  /* voortgangspil in de landbalk: eerst naar Meester, in Expert daarna naar Grootmeester */
+  function badgePillHtml(lv, c, st) {
+    const gotM = !!(P.badges && P.badges[badgeId(lv, c.id, "master")]) || st.done, gotG = !!(P.badges && P.badges[badgeId(lv, c.id, "grand")]);
+    let kind = "master", num = st.passed, got = gotM, txt, lab;
+    if (gotM && lv === "expert") { kind = "grand"; num = jThreeStars(lv, c.id); got = gotG || num >= st.n; }
+    const pct = Math.round(Math.min(1, num / Math.max(1, st.n)) * 100);
+    if (kind === "master") { txt = "Meester " + (got ? "✓" : num + "/" + st.n); lab = got ? "Meester-badge behaald" : "Voortgang naar de Meester-badge: " + num + " van " + st.n + " levels gehaald"; }
+    else { txt = "Grootmeester " + (got ? "✓" : num + "/" + st.n + " ★★★"); lab = got ? "Grootmeester-badge behaald" : "Voortgang naar de Grootmeester-badge: " + num + " van " + st.n + " levels met 3 sterren"; }
+    return '<div class="js-badge ' + kind + (got ? " got" : "") + '" style="--p:' + pct + '%" role="img" aria-label="' + lab + '"><span class="jb-ic" aria-hidden="true">' + badgeSvg(kind, c.color, 22, false) + '</span><span class="jb-t" aria-hidden="true">' + txt + "</span></div>";
+  }
   function badgesHtml(list) {
     return list.map(function (n) {
       const m = BADGE_META[n.kind], c = catById(n.catId);
       return '<div class="badge-earned ' + n.kind + '"><span class="be-icon">' + badgeSvg(n.kind, c.color, 56, false) + '</span><span><b>' + (n.kind === "grand" ? "Grootmeester-badge verdiend!" : "Meester-badge verdiend!") + "</b>" +
-        esc(c.title) + (n.kind === "master" && hasTier4(n.level, n.catId) ? " · Niveau 4 is vrijgespeld" : "") + "</span></div>";
+        esc(c.title) + " · " + modeName(n.level) + "</span></div>";
     }).join("");
   }
 
@@ -4420,7 +4514,7 @@ return exports;})();
       el.innerHTML = '<div class="bc-flash" aria-hidden="true"></div><div class="bc-box"><div class="bc-medalbox">' +
         '<div class="bc-rays" aria-hidden="true"></div>' + geo() + burst() + '<div class="bc-halo" aria-hidden="true"></div>' +
         '<div class="bc-m"><div class="bc-in">' + badgeSvg(n.kind, c.color, 260, false) + "</div></div></div>" +
-        '<div class="bc-txt" aria-live="polite"><div class="bc-eye">Nieuwe badge</div><div class="bc-title">' + m.title + '</div><div class="bc-sub">' + esc(c.title) + " · " + (n.kind === "grand" ? "Niveau 4 gehaald" : "Niveau 1-3 gehaald") + (n.kind === "master" && hasTier4(n.level, n.catId) ? " · Niveau 4 is vrijgespeld" : "") + "</div>" +
+        '<div class="bc-txt" aria-live="polite"><div class="bc-eye">Nieuwe badge</div><div class="bc-title">' + m.title + '</div><div class="bc-sub">' + esc(c.title) + " · " + m.desc + " · " + modeName(n.level) + "</div>" +
         '<div class="bc-btns"><button type="button" class="bc-btn bc-go">' + icon("trophy", 20) + "Bekijk mijn badges</button>" +
         '<a class="bc-btn bc-wa" href="' + waLink(shareTxt) + '" target="_blank" rel="noopener">' + icon("chat", 20) + "Deel op WhatsApp</a>" +
         '<button type="button" class="bc-btn bc-x">' + (more ? "Volgende badge" : "Verder") + "</button></div></div></div>";
@@ -4448,6 +4542,49 @@ return exports;})();
     }
     show();
   }
+  /* Gezamenlijke viering: bij de eenmalige controle met 3 of meer nieuwe badges tegelijk, alles naast elkaar in één scherm */
+  const BADGE_GROUP_MIN = 3;
+  function celebrateBadgesGroup(list) {
+    if (!list || !list.length) return;
+    const rm = reducedMotion(), prevFocus = document.activeElement;
+    const old = document.getElementById("bcel"); if (old) old.remove();
+    const el = document.createElement("div");
+    el.id = "bcel"; el.className = "bcel bcg" + (rm ? " rm" : "");
+    el.setAttribute("role", "dialog"); el.setAttribute("aria-modal", "true");
+    const names = list.map(function (n) { return BADGE_META[n.kind].title + " " + catById(n.catId).title + " " + modeName(n.level); }).join(", ");
+    el.setAttribute("aria-label", list.length + " nieuwe badges: " + names);
+    const tiles = list.map(function (n, i) {
+      const c = catById(n.catId), m = BADGE_META[n.kind];
+      return '<li class="bcg-tile" style="--d:' + i * 90 + 'ms">' + badgeSvg(n.kind, c.color, 84, false) + "<b>" + m.title + "</b><small>" + esc(c.title) + "</small><i>" + modeName(n.level) + "</i></li>";
+    }).join("");
+    const shareTxt = "🏅 Ik heb " + list.length + " badges verdiend in " + BRAND_NAME + "! Lukt het jou ook? " + SITE_URL;
+    el.innerHTML = '<div class="bc-flash" aria-hidden="true"></div><div class="bc-box bcg-box"><div class="bcg-head"><div class="bc-eye">Nieuwe badges</div><div class="bc-title">' + list.length + ' badges!</div><div class="bc-sub">Die had je al verdiend met je voortgang.</div></div>' +
+      '<ul class="bcg-grid">' + tiles + "</ul>" +
+      '<div class="bc-btns"><button type="button" class="bc-btn bc-go">' + icon("trophy", 20) + "Bekijk mijn badges</button>" +
+      '<a class="bc-btn bc-wa" href="' + waLink(shareTxt) + '" target="_blank" rel="noopener">' + icon("chat", 20) + "Deel op WhatsApp</a>" +
+      '<button type="button" class="bc-btn bc-x">Verder</button></div></div>';
+    document.body.appendChild(el);
+    function close(next) {
+      document.removeEventListener("keydown", onKey, true);
+      el.classList.add("bc-out");
+      setTimeout(function () { el.remove(); if (prevFocus && prevFocus.focus && next !== "badges") { try { prevFocus.focus({ preventScroll: true }); } catch (e) {} } }, 200);
+      if (next === "badges" && window.openBadgesModal) window.openBadgesModal();
+    }
+    function onKey(e) {
+      if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); close(); return; }
+      if (e.key === "Tab") {
+        const f = el.querySelectorAll("button, a[href]"), first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    }
+    document.addEventListener("keydown", onKey, true);
+    el.querySelector(".bc-go").addEventListener("click", function () { close("badges"); });
+    el.querySelector(".bc-x").addEventListener("click", function () { close(); });
+    play("fanfare"); setTimeout(function () { play("win"); }, 650);
+    announce(list.length + " nieuwe badges verdiend.");
+    try { el.querySelector(".bc-x").focus({ preventScroll: true }); } catch (e) {}
+  }
   function renderBadges() {
     const grid = document.getElementById("badgesGrid");
     if (!grid || !P) return;
@@ -4456,8 +4593,7 @@ return exports;})();
       h += '<div class="badge-section">' + (lv === "junior" ? "Junior Modus" : "Expert Modus") + "</div>";
       CATEGORIES.forEach(function (c) {
         ["master", "grand"].forEach(function (k) {
-          if (k === "master" && requiredTiers(lv, c.id).length < 2) return;
-          if (k === "grand" && !hasTier4(lv, c.id)) return;
+          if (k === "grand" && lv !== "expert") return;
           const got = !!(P.badges && P.badges[badgeId(lv, c.id, k)]), m = BADGE_META[k];
           h += '<div class="badge-card ' + (got ? "unlocked " + k : "locked") + '" style="--bc:' + c.color + '"><div class="badge-icon">' + badgeSvg(k, c.color, 104, !got) + '</div>' +
             '<div class="badge-title">' + m.title + '</div><div class="badge-desc">' + esc(c.title) + "<br>" + m.desc + "</div>" +
@@ -5063,7 +5199,7 @@ return exports;})();
       addReward(quiz.level, xpGain, gemGain);
     }
     P.played++;
-    const newBadges = quiz.kind === "category" ? syncBadges() : [];
+    const newBadges = (quiz.kind === "category" || quiz.kind === "journey") ? syncBadges() : [];
     const open4 = quiz.kind === "category" && quiz.tier === 3 && tier4Unlocked(quiz.level, quiz.catId);
 
     // reeks (streak): opeenvolgende dagen met minstens één afgeronde quiz
@@ -5096,7 +5232,7 @@ return exports;})();
       }
     }
     render();
-    if (newBadges.length) setTimeout(function () { celebrateBadges(newBadges); }, 750);
+    if (newBadges.length) setTimeout(function () { celebrateBadges(newBadges); }, result.kind === "journey" ? 1500 : 750);
   }
 
   function viewResult() {
@@ -6451,7 +6587,7 @@ return exports;})();
   const TOUR = [
     { t: "Welkom bij Islam Quiz", x: "Leer en speel met plezier. In een paar tikken weet je hoe het werkt, Insha’Allah." },
     { t: "Speel je reis", x: "Tik op een level op de kaart. Elk level heeft ongeveer 5 vragen. Hoe beter je antwoordt, hoe meer sterren je verdient en hoe verder je komt." },
-    { t: "Verdien beloningen", x: "Je spaart XP, edelstenen en badges, verzamelt kaarten voor je album en opent elke dag je dagbeloning." },
+    { t: "Verdien beloningen", x: "Je spaart XP en edelstenen, verzamelt kaarten voor je album en opent elke dag je dagbeloning. Voltooi een land voor de Meester-badge. In Expert haal je alle levels van een land met 3 sterren voor Grootmeester." },
     { t: "Hou je reeks vast", x: "Speel elke dag minstens één level om je reeks te verlengen. Bekijk het scorebord en speel met vrienden in een groep." },
     { t: "Maak het jouw eigen", x: "Kies een avatar: een paar zijn meteen beschikbaar, de rest ontgrendel je door te spelen. Kies Junior of Expert en begin!" }
   ];
@@ -6821,7 +6957,7 @@ return exports;})();
 
   /* ───────────── Medespelers op de kaart ───────────── */
   /* Alleen een nickname (of voornaam), een avatar en spelstatistieken. Nooit e-mail, achternaam of locatie. */
-  const soc = { all: {}, t: {}, busy: {}, noCols: false, noAv: false };
+  const soc = { all: {}, t: {}, busy: {}, noCols: false, noAv: false, noBd: false };
   const peerMap = {};
   let socUid = 0;
   function publicName(p) { return String((p && (p.nick || p.name)) || "Speler").slice(0, 14); }
@@ -6851,7 +6987,7 @@ return exports;})();
       if (P && x.id === P.id) return;
       if (passedLevels(x, lv) === 0) return;
       const pos = posOf(x, lv); if (pos.land !== land) return;
-      out.push({ key: "l:" + x.id, name: publicName(x), photo: "", color: x.color, av: (avOf(x) || {}).id || "", uid: x.sbId || x.id, land: pos.land, level: pos.level, levels: passedLevels(x, lv), xp: xpAt(x, lv), stars: starsAt(x, lv), score: scoreAt(x, lv), streak: streakOf(x), local: true, sbId: x.sbId || null });
+      out.push({ key: "l:" + x.id, name: publicName(x), photo: "", color: x.color, av: (avOf(x) || {}).id || "", uid: x.sbId || x.id, land: pos.land, level: pos.level, levels: passedLevels(x, lv), xp: xpAt(x, lv), stars: starsAt(x, lv), score: scoreAt(x, lv), streak: streakOf(x), bm: badgeMask(x, lv, "master"), bg: badgeMask(x, lv, "grand"), local: true, sbId: x.sbId || null });
     });
     return out;
   }
@@ -6860,7 +6996,7 @@ return exports;})();
     out.forEach(function (o) { if (o.sbId) have[o.sbId] = 1; });
     ((soc.all[lv] || []).filter(function (r) { return Math.max(0, r.pos_land || 0) === land; })).forEach(function (r) {
       if ((sbUser && r.user_id === sbUser.id) || have[r.user_id]) return;
-      out.push({ key: "g:" + r.user_id, name: String(r.display_name || "Speler").slice(0, 14), photo: GOOGLE_PHOTO.test(r.avatar_url || "") ? r.avatar_url : "", color: null, av: (avById(r.avatar_id) || {}).id || "", uid: r.user_id, land: r.pos_land, level: r.pos_level || 0, levels: r.levels_done || 0, xp: r.xp || 0, stars: r.stars || 0, score: r.highscore || 0, streak: r.streak || 0, local: false });
+      out.push({ key: "g:" + r.user_id, name: String(r.display_name || "Speler").slice(0, 14), photo: GOOGLE_PHOTO.test(r.avatar_url || "") ? r.avatar_url : "", color: null, av: (avById(r.avatar_id) || {}).id || "", uid: r.user_id, land: r.pos_land, level: r.pos_level || 0, levels: r.levels_done || 0, xp: r.xp || 0, stars: r.stars || 0, score: r.highscore || 0, streak: r.streak || 0, bm: r.master_mask | 0, bg: r.grand_mask | 0, local: false });
     });
     return out;
   }
@@ -6869,14 +7005,15 @@ return exports;})();
     const id = "pc" + (++socUid), ini = esc(String(pe.name || "?").trim().charAt(0).toUpperCase()), S2 = 62, H = S2 / 2;
     peerMap[pe.key] = pe;
     /* Candy-Crush-achtig: afgeronde tegel met blauwe rand, groot genoeg om te herkennen en aan te tikken */
-    return '<g class="j-peer" data-act="peer" data-key="' + esc(pe.key) + '" role="button" tabindex="0" aria-label="Medespeler ' + esc(pe.name) + ", level " + (pe.level + 1) + ". Tik voor het profiel" + '" transform="translate(' + x + " " + y + ')"><g class="j-peer-in">' +
+    return '<g class="j-peer" data-act="peer" data-key="' + esc(pe.key) + '" role="button" tabindex="0" aria-label="Medespeler ' + esc(pe.name) + ", level " + (pe.level + 1) + (badgeLine(pe.bm, pe.bg) ? ", " + badgeLine(pe.bm, pe.bg) : "") + ". Tik voor het profiel" + '" transform="translate(' + x + " " + y + ')"><g class="j-peer-in">' +
       '<rect x="' + (-H - 4) + '" y="' + (-H - 4) + '" width="' + (S2 + 8) + '" height="' + (S2 + 8) + '" rx="18" fill="#000" fill-opacity="0"/>' +
       '<rect x="' + (-H + 1) + '" y="' + (-H + 4) + '" width="' + S2 + '" height="' + S2 + '" rx="13" fill="#000" fill-opacity=".28"/>' +
       '<rect x="' + (-H) + '" y="' + (-H) + '" width="' + S2 + '" height="' + S2 + '" rx="13" fill="#2f86e0" stroke="#bfe0ff" stroke-width="2"/>' +
       '<rect x="' + (-H + 4) + '" y="' + (-H + 4) + '" width="' + (S2 - 8) + '" height="' + (S2 - 8) + '" rx="9" fill="' + peerColor(pe) + '"/>' +
       (avById(pe.av) ? '<clipPath id="' + id + 'a"><rect x="' + (-H + 4) + '" y="' + (-H + 4) + '" width="' + (S2 - 8) + '" height="' + (S2 - 8) + '" rx="9"/></clipPath><svg x="' + (-H + 4) + '" y="' + (-H + 4) + '" width="' + (S2 - 8) + '" height="' + (S2 - 8) + '" viewBox="0 0 100 100" clip-path="url(#' + id + 'a)">' + avInner(avById(pe.av)) + "</svg>" : '<text y="12" text-anchor="middle" font-size="32" font-weight="900" fill="#fff">' + ini + "</text>") +
       (pe.photo ? '<clipPath id="' + id + '"><rect x="' + (-H + 4) + '" y="' + (-H + 4) + '" width="' + (S2 - 8) + '" height="' + (S2 - 8) + '" rx="9"/></clipPath><image href="' + esc(pe.photo) + '" x="' + (-H + 4) + '" y="' + (-H + 4) + '" width="' + (S2 - 8) + '" height="' + (S2 - 8) + '" preserveAspectRatio="xMidYMid slice" clip-path="url(#' + id + ')" referrerpolicy="no-referrer"/>' : "") +
-      '<rect x="' + (-H) + '" y="' + (-H) + '" width="' + S2 + '" height="' + S2 + '" rx="13" fill="none" stroke="#ffd54f" stroke-width="1.5" stroke-opacity=".9"/></g></g>';
+      '<rect x="' + (-H) + '" y="' + (-H) + '" width="' + S2 + '" height="' + S2 + '" rx="13" fill="none" stroke="#ffd54f" stroke-width="1.5" stroke-opacity=".9"/>' +
+      (maskCount(pe.bm) || maskCount(pe.bg) ? badgeSvg(maskCount(pe.bg) ? "grand" : "master", BADGE_ICON_COLOR, 34, false, 'x="' + (H - 22) + '" y="' + (-H - 14) + '" style="filter:drop-shadow(0 2px 2px rgba(0,0,0,.45))"') : "") + "</g></g>";
   }
   function socialSvg(c, stops) {
     const lv = P.mode, li = CATEGORIES.indexOf(c), by = {};
@@ -6897,11 +7034,12 @@ return exports;})();
     if (soc.noCols || soc.busy[key] || (soc.t[key] && Date.now() - soc.t[key] < 45000)) { presenceUpdate(); return; }
     soc.busy[key] = true;
     try {
-      let q = sb.from("leaderboard").select("user_id,display_name,avatar_url,highscore,stars,xp,levels_done,pos_land,pos_level,streak,updated_at" + (soc.noAv ? "" : ",avatar_id")).eq("mode", lv);
+      let q = sb.from("leaderboard").select("user_id,display_name,avatar_url,highscore,stars,xp,levels_done,pos_land,pos_level,streak,updated_at" + (soc.noAv ? "" : ",avatar_id") + (soc.noBd ? "" : ",master_mask,grand_mask")).eq("mode", lv);
       if (sbUser) q = q.neq("user_id", sbUser.id);
       q.order("updated_at", { ascending: false }).limit(80).then(function (r) {
         soc.busy[key] = false;
         if (!r) return;
+        if (r.error && !soc.noBd && /master_mask|grand_mask/i.test(errTxt(r.error))) { soc.noBd = true; socialFetch(); return; }
         if (r.error && !soc.noAv) { soc.noAv = true; socialFetch(); return; }
         if (r.error) { if (/column|schema|pgrst204/i.test(String(r.error.message || r.error.code || ""))) soc.noCols = true; return; }
         soc.all[lv] = r.data || []; soc.t[key] = Date.now();
@@ -6932,7 +7070,7 @@ return exports;})();
   function peerStat(ic, val, lab) { return '<li><span class="pe-ic" aria-hidden="true">' + ic + '</span><b>' + val + "</b><small>" + lab + "</small></li>"; }
   function peerDialog(key) {
     const lv = P.mode, me = key === "me";
-    const pe = me ? { key: "me", name: publicName(P), photo: sbUser && P.sbId === sbUser.id && P.sharePhoto !== false && GOOGLE_PHOTO.test(P.photo || "") ? P.photo : "", color: P.color, av: (avOf(P) || {}).id || "", uid: sbUser ? sbUser.id : P.id, land: posOf(P, lv).land, level: posOf(P, lv).level, levels: passedLevels(P, lv), xp: xpAt(P, lv), stars: starsAt(P, lv), score: scoreAt(P, lv), streak: streakOf(P), local: !(sbUser && P.sbId === sbUser.id), me: true } : peerMap[key];
+    const pe = me ? { key: "me", name: publicName(P), photo: sbUser && P.sbId === sbUser.id && P.sharePhoto !== false && GOOGLE_PHOTO.test(P.photo || "") ? P.photo : "", color: P.color, av: (avOf(P) || {}).id || "", uid: sbUser ? sbUser.id : P.id, land: posOf(P, lv).land, level: posOf(P, lv).level, levels: passedLevels(P, lv), xp: xpAt(P, lv), stars: starsAt(P, lv), score: scoreAt(P, lv), streak: streakOf(P), bm: badgeMask(P, lv, "master"), bg: badgeMask(P, lv, "grand"), local: !(sbUser && P.sbId === sbUser.id), me: true } : peerMap[key];
     if (!pe) return;
     const fl = document.getElementById("flyer"); if (fl) fl.remove();
     const old = document.getElementById("peerDlg"); if (old) old.remove();
@@ -6944,6 +7082,7 @@ return exports;})();
       '<div class="pe-av' + (avById(pe.av) ? " av-art" : "") + '" style="--c:' + peerColor(pe) + '" aria-hidden="true">' + (avById(pe.av) ? avSvg(avById(pe.av)) : "<span>" + ini + "</span>") + (pe.photo && !avById(pe.av) ? '<img src="' + esc(pe.photo) + '" alt="" referrerpolicy="no-referrer" onerror="this.remove()">' : "") + "</div>" +
       '<h3 id="peT" class="pe-name">' + esc(pe.name) + (pe.me ? ' <em>(jij)</em>' : "") + "</h3>" +
       '<p class="pe-where">' + esc(land.title) + " · level " + (pe.level + 1) + " · " + modeName(lv) + "</p>" +
+      (badgeLine(pe.bm, pe.bg) ? '<p class="pe-badges">' + badgeIconHtml(pe.bm, pe.bg, 26) + "<span>" + badgeLine(pe.bm, pe.bg) + "</span></p>" : "") +
       '<ul class="pe-stats">' + peerStat("🏅", pe.levels + "/" + tot, "levels") + peerStat("⭐", pe.xp + " XP", pe.stars + (pe.stars === 1 ? " ster" : " sterren")) +
       peerStat("🔥", pe.streak + (pe.streak === 1 ? " dag" : " dagen"), "speelreeks") + peerStat("🏆", '<span id="peRank">…</span>', pe.local ? "op dit apparaat" : "wereldwijd") + "</ul>" +
       (pe.me ? '<button class="btn gold block" data-act="avatar-pick" data-id="' + P.id + '" data-d="x">Kies je avatar</button>' : "") + (pe.me && sbUser ? '<button class="btn gold block" data-act="account" data-d="x">✏️ Nickname &amp; privacy</button>' : "") +
@@ -6995,7 +7134,7 @@ return exports;})();
       const done = landDone(level, x.id);
       h += '<button class="land-chip' + (k === i ? " on" : "") + '" style="--accent:' + x.color + '" data-act="journey-land" data-i="' + k + '" aria-pressed="' + (k === i) + '" aria-label="Land ' + (k + 1) + ": " + esc(x.title) + (done ? " (voltooid)" : !jLandOpen(level, x.id) ? " (vergrendeld)" : "") + '"><span>' + (k + 1) + "</span>" + (done ? '<i class="lc-b">🚩</i>' : !jLandOpen(level, x.id) ? '<i class="lc-b lc-lock">🔒</i>' : "") + "</button>";
     });
-    h += '</span><small class="js-prog" aria-label="' + st.passed + " van " + st.n + ' levels gehaald">' + st.passed + "/" + st.n + " ⭐" + st.stars + "</small></div></div>" +
+    h += '</span><small class="js-prog" aria-label="' + st.passed + " van " + st.n + ' levels gehaald">' + st.passed + "/" + st.n + " ⭐" + st.stars + "</small></div>" + badgePillHtml(level, c, st) + "</div>" +
       (i < CATEGORIES.length - 1 ? '<button class="js-arrow" data-act="journey-land" data-i="' + (i + 1) + '" aria-label="Volgend land: ' + esc(CATEGORIES[i + 1].title) + '">' + icon("right", 20) + "</button>" : '<button class="js-arrow" disabled aria-label="Geen volgend land">' + icon("right", 20) + "</button>") + "</div>";
     h += '<div id="jPresence" class="j-presence" role="status" hidden></div>';
     /* fullscreen kaart */
@@ -7095,6 +7234,16 @@ return exports;})();
       saveState();
       if (fresh) { setTimeout(showTour, 900); return; }
     }
+    /* eenmalig per speler: badges die volgens de nieuwe regels al verdiend zijn, alsnog uitreiken met de viering */
+    if (P && P.mode && P.badgeSync !== BADGE_SYNC_V) {
+      P.badgeSync = BADGE_SYNC_V;
+      const nb = syncBadges();
+      saveState();
+      if (nb.length) {
+        if (sbUser && P.sbId === sbUser.id) sbSyncAll();
+        setTimeout(function () { if (screen === "journey") { if (nb.length >= BADGE_GROUP_MIN) celebrateBadgesGroup(nb); else celebrateBadges(nb); } }, 1400);
+      }
+    }
     if (landFly) { runLandFlight(); return; }
     if (flyerPending) { flyerPending = false; setTimeout(showFlyer, 700); }
     socialFetch();
@@ -7125,7 +7274,7 @@ return exports;})();
     ranked.forEach(function (p, i) {
       const pct = avgPct(p, lv);
       h += '<div class="rank-row' + (i === 0 && scoreAt(p, lv) > 0 ? " first" : "") + '"><span class="rank-n">' + (i + 1) + "</span>" + avatarHtml(p, 44) +
-        '<span class="pinfo"><b>' + esc(p.name) + "</b><small>" + (pct === null ? "Nog niet gespeeld" : "Gemiddeld " + pct + "% · reeks " + streakOf(p) + (streakOf(p) === 1 ? " dag" : " dagen")) + "</small></span>" +
+        '<span class="pinfo"><b>' + esc(p.name) + badgeIconHtml(badgeMask(p, lv, "master"), badgeMask(p, lv, "grand"), 22) + "</b><small>" + (pct === null ? "Nog niet gespeeld" : "Gemiddeld " + pct + "% · reeks " + streakOf(p) + (streakOf(p) === 1 ? " dag" : " dagen")) + "</small></span>" +
         '<span class="rank-stars">' + icon("star", 20, "fill") + starsAt(p, lv) + '<small class="rank-xp">' + xpAt(p, lv) + " XP</small></span></div>";
     });
     h += "</div>";
@@ -7343,7 +7492,7 @@ return exports;})();
     signUpUrl: "https://identitytoolkit.googleapis.com/v1/accounts:signUp",
     tokenUrl: "https://securetoken.googleapis.com/v1/token",
   };
-  const SITE_URL = "https://islam-quiz-nl.netlify.app/";
+  const SITE_URL = "https://islam-quiz-one.vercel.app/";
   const AUTH_KEY = "islam-quiz-auth";
   const CODE_CHARS = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
   const DUEL_N = 6;
@@ -7969,7 +8118,6 @@ return exports;})();
   document.addEventListener("pointerdown", function () { if (S.sound) ctx(); voiceUnlock(); }, { once: true });
   duffSync();   /* probeer meteen te starten; lukt dat niet (autoplay-regels), dan volgt de eerste aanraking */
 
-  if (P && syncBadges().length) saveState();
   render();
   if (P && P.mode === "expert" && !P.age14 && screen !== "login" && screen !== "authwait") chooseMode("expert", function () { render(); });
   sbInit();

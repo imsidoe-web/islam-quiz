@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Badge-test</title>
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}
+body{margin:0;padding:16px;font-family:system-ui,sans-serif;background:#0b2e22;color:#f3ecd2;line-height:1.4}
+main{max-width:460px;margin:auto}h1{font-size:1.3rem;color:#ffd54a;margin:6px 0 4px}
+.warn{background:#4a2c05;border:1.5px solid #f0c27f;border-radius:12px;padding:10px 12px;font-size:.88rem;margin:10px 0}
+.card{background:linear-gradient(180deg,#145a41,#0d3a2a);border:1.5px solid #c9a23a;border-radius:16px;padding:12px;margin:10px 0}
+.card b{color:#ffd54a}.card p{margin:4px 0 8px;font-size:.88rem;color:#dbe7ef}
+button,a.b{font:inherit;font-weight:800;border:0;border-radius:12px;padding:10px 14px;cursor:pointer;background:linear-gradient(180deg,#ffe27a,#d9a21b);color:#3a2606;text-decoration:none;display:inline-block}
+button.g{background:transparent;color:#cfe0ea;border:2px solid #ffffff44}
+#msg{margin:10px 0;padding:10px 12px;border-radius:12px;background:#0f6a52;font-weight:700;min-height:20px}
+code{background:#00000055;padding:1px 5px;border-radius:5px}
+</style></head><body><main>
+<h1>Badge-test (tijdelijk)</h1>
+<p>Maakt een <b>aparte testspeler</b> met voorbereide voortgang, zodat je de badges snel kunt testen. Je echte spelers worden niet aangepast. Testspelers zijn gasten: ze komen niet op het wereldwijde scorebord.</p>
+<div class="warn">1) Sluit de app eerst helemaal. 2) Kies hieronder een scenario. 3) Tik op "Open de app". 4) Daarna: tik op <b>Opruimen</b>. Open deze pagina in dezelfde browser als de app (op iPhone werkt dit niet voor een app op het beginscherm).</div>
+<div id="msg" role="status"></div>
+<div id="list"></div>
+<div class="card"><b>Klaar met testen</b><p>Verwijdert alle testspelers en zet je eigen speler weer als actief.</p><button id="clean">Opruimen</button> <button class="g" id="restore">Back-up terugzetten</button></div>
+<p><a class="b" href="./">Open de app</a></p>
+</main>
+<script>
+(function(){
+  var KEY="islam-quiz-v2", PRE="ztest_";
+  function load(){ try{ var s=JSON.parse(localStorage.getItem(KEY)); return s&&Array.isArray(s.players)?s:null; }catch(e){ return null; } }
+  function save(s){ localStorage.setItem(KEY,JSON.stringify(s)); }
+  function msg(t){ document.getElementById("msg").textContent=t; }
+  function lv(cat,k,stars){ var o={}; for(var i=0;i<k;i++) o[i]={score:5,total:5,stars:stars}; var r={}; r[cat]=o; return r; }
+  function merge(){ var o={}; for(var i=0;i<arguments.length;i++) for(var c in arguments[i]) o[c]=arguments[i][c]; return o; }
+  /* 15 levels = "alles gehaald", want een land heeft hooguit 15 levels; extra nummers tellen niet mee */
+  function mk(id,name,mode,jj,je,bs){
+    var p={id:PRE+id,name:name,color:"#0f7a4a",mode:mode,best:{junior:{},expert:{}},daily:{junior:{},expert:{}},streak:{count:0,last:null,max:0,days:[]},played:3,badges:{},group:null,journey:{junior:jj||{},expert:je||{}},age14:true,tourSeen:true,seen:{junior:{},expert:{}},recent:{junior:[],expert:[]},chests:{junior:{},expert:{}},album:{junior:{},expert:{}},xp:{junior:0,expert:0},gems:{junior:0,expert:0}};
+    if(bs) p.badgeSync=bs; return p;
+  }
+  var SC=[
+    {id:"A",t:"A · Meester via de kaart (Junior)",d:"Land 1 bijna af: speel het laatste level. Verwacht: viering Meester.",mk:function(){return mk("A","Test A","junior",lv("profeten",9,1),null,55);}},
+    {id:"B",t:"B · Grootmeester via de kaart (Expert)",d:"Land 1 bijna af met overal 3 sterren: speel het laatste level en beantwoord alles goed. Verwacht: Meester, daarna Grootmeester.",mk:function(){return mk("B","Test B","expert",null,lv("profeten",9,3),55);}},
+    {id:"C",t:"C · Inhaalcontrole met 2 badges",d:"Twee landen al af. Verwacht bij openen: twee vieringen na elkaar.",mk:function(){return mk("C","Test C","junior",merge(lv("profeten",15,1),lv("zuilen",15,1)),null,0);}},
+    {id:"D",t:"D · Inhaalcontrole met 3 badges",d:"Drie landen al af. Verwacht bij openen: één gezamenlijke viering.",mk:function(){return mk("D","Test D","junior",merge(lv("profeten",15,1),lv("zuilen",15,1),lv("seerah",15,1)),null,0);}},
+    {id:"E",t:"E · Inhaalcontrole met 5 badges",d:"Junior 3 landen + Expert land 1 met 3 sterren (Meester + Grootmeester). Verwacht: één gezamenlijke viering met 5 badges.",mk:function(){return mk("E","Test E","junior",merge(lv("profeten",15,1),lv("zuilen",15,1),lv("seerah",15,1)),lv("profeten",15,3),0);}}
+  ];
+  function render(){
+    var h=""; SC.forEach(function(x){ h+='<div class="card"><b>'+x.t+'</b><p>'+x.d+'</p><button data-s="'+x.id+'">Maak testspeler</button></div>'; });
+    document.getElementById("list").innerHTML=h;
+  }
+  document.getElementById("list").addEventListener("click",function(e){
+    var b=e.target.closest("button[data-s]"); if(!b) return;
+    var s=load(); if(!s){ msg("Geen app-gegevens gevonden in deze browser. Open eerst de app één keer."); return; }
+    if(!localStorage.getItem("__bt_backup")) localStorage.setItem("__bt_backup",localStorage.getItem(KEY));
+    if(!localStorage.getItem("__bt_prev")) localStorage.setItem("__bt_prev",s.current||"");
+    var sc=SC.filter(function(x){return x.id===b.dataset.s;})[0], p=sc.mk();
+    s.players=s.players.filter(function(x){return x.id!==p.id;}); s.players.push(p); s.current=p.id; save(s);
+    msg("Testspeler '"+p.name+"' staat klaar en is actief. Tik nu op 'Open de app'.");
+  });
+  document.getElementById("clean").addEventListener("click",function(){
+    var s=load(); if(!s){ msg("Niets te doen."); return; }
+    s.players=s.players.filter(function(x){return String(x.id).indexOf(PRE)!==0;});
+    var prev=localStorage.getItem("__bt_prev");
+    if(prev && s.players.some(function(x){return x.id===prev;})) s.current=prev; else if(s.players.length) s.current=s.players[0].id; else s.current=null;
+    save(s); localStorage.removeItem("__bt_prev"); localStorage.removeItem("__bt_backup");
+    msg("Opgeruimd: testspelers verwijderd. Je eigen speler is weer actief.");
+  });
+  document.getElementById("restore").addEventListener("click",function(){
+    var b=localStorage.getItem("__bt_backup"); if(!b){ msg("Geen back-up aanwezig."); return; }
+    localStorage.setItem(KEY,b); localStorage.removeItem("__bt_backup"); localStorage.removeItem("__bt_prev"); msg("Back-up teruggezet.");
+  });
+  render();
+})();
+</script></body></html>
