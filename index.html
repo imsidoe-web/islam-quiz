@@ -1059,7 +1059,7 @@ body.jfull #app { max-width: none; padding: 0; }
 @media (prefers-reduced-motion: reduce) { .js-badge.got { animation: none; } }
 .gb-badge { display: inline-flex; vertical-align: middle; margin-left: 5px; filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, .4)); }
 .gb-badge svg { display: block; }
-.pe-badges { margin: 2px 0 8px; font-weight: 800; font-size: .85rem; display: flex; align-items: center; justify-content: center; gap: 6px; color: #fff3d6; text-shadow: 0 1px 2px rgba(0, 0, 0, .45); }
+.pe-badges, .peer-dlg .pe-badges { margin: 2px 0 8px; font-weight: 800; font-size: .95rem; display: flex; align-items: center; justify-content: center; gap: 6px; color: #fffaf0; text-shadow: 0 1px 2px rgba(40, 18, 0, .75), 0 0 6px rgba(40, 18, 0, .45); }
 .j-nav { position: fixed; z-index: 30; left: 0; right: 0; bottom: 0; padding: 8px 8px calc(8px + env(safe-area-inset-bottom, 0px)); background: linear-gradient(180deg, #1f5a43, #12362a); border-top: 3px solid #d9a05b; box-shadow: 0 -8px 20px rgba(0, 0, 0, .25); }
 .jn-in { display: flex; gap: 4px; max-width: 560px; margin: 0 auto; }
 .jn-item { appearance: none; border: 0; background: transparent; font: inherit; text-decoration: none; cursor: pointer; flex: 1; min-width: 0; position: relative; display: grid; justify-items: center; align-content: start; gap: 3px; padding: 3px 0; border-radius: 16px; color: #fbefd9; font-weight: 800; font-size: .68rem; line-height: 1.1; }
@@ -1286,7 +1286,7 @@ body.jfull .reward-flyer { top: 160px; }
 .pe-av { position: relative; width: 84px; height: 84px; margin: -58px auto 8px; border-radius: 50%; background: var(--c, #2d6a4f); border: 4px solid #f0c75e; box-shadow: 0 0 0 3px #fff, 0 6px 14px rgba(0, 0, 0, .4); display: grid; place-items: center; overflow: hidden; color: #fff; font-size: 2.2rem; font-weight: 900; }
 .pe-av img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .pe-name { margin: 0; display: inline-block; padding: 3px 18px; border-radius: 999px; background: linear-gradient(180deg, #fff3b0, #f0c75e); color: #4a2c05; font-size: 1.3rem; box-shadow: 0 3px 0 #8a5a0a; } .pe-name em { font-size: .8rem; font-style: normal; opacity: .8; }
-.pe-where { margin: 8px 0 10px; color: #fff3d6; font-weight: 800; text-shadow: 0 1px 2px rgba(0, 0, 0, .4); font-size: .9rem; }
+.pe-where, .peer-dlg .pe-where { margin: 8px 0 10px; color: #fffaf0; font-weight: 800; text-shadow: 0 1px 2px rgba(40, 18, 0, .75), 0 0 6px rgba(40, 18, 0, .45); font-size: 1rem; }   /* .dialog p (grijs) won eerst van deze kleur */
 .pe-stats { list-style: none; margin: 0 0 12px; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .pe-stats li { background: #fff8e6; border-radius: 14px; padding: 8px 6px; display: grid; justify-items: center; box-shadow: inset 0 0 0 2px #e6cf9b; }
 .pe-ic { font-size: 1.3rem; } .pe-stats b { font-size: 1.05rem; color: #1b4332; } .pe-stats small { color: #6b5a3c; font-weight: 700; font-size: .72rem; }
@@ -6425,15 +6425,15 @@ return exports;})();
   function levelsDone(p) { return MODES.reduce(function (a, m) { return a + passedLevels(p, m); }, 0); }
   function avUnlocked(p, a) { return !!a && levelsDone(p) >= a.need; }
   function avOf(p) { const a = p && avById(p.avatar); return a && avUnlocked(p, a) ? a : null; }
-  function avInner(a) {
-    const u = ++avUid;
+  function avInner(a, flat) {
+    const u = ++avUid;   /* flat: zonder schaduwfilter (voor de kleine tegels op de kaart, die op sommige telefoons met een filter leeg bleven) */
     return '<defs><linearGradient id="avb' + u + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="' + a.bg[0] + '"/><stop offset="1" stop-color="' + a.bg[1] + '"/></linearGradient>' +
       '<linearGradient id="avg' + u + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff7bf"/><stop offset=".4" stop-color="#ffd23a"/><stop offset=".8" stop-color="#e79a00"/><stop offset="1" stop-color="#9a5a00"/></linearGradient>' +
       '<radialGradient id="avl' + u + '" cx=".3" cy=".18" r=".85"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".45" stop-color="#fff" stop-opacity=".08"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>' +
       '<linearGradient id="avs' + u + '" x1="0" y1="0" x2="0" y2="1"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".38"/></linearGradient>' +
-      '<filter id="avf' + u + '" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="3" stdDeviation="2.2" flood-color="#000" flood-opacity=".4"/></filter></defs>' +
+      (flat ? "" : '<filter id="avf' + u + '" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="3" stdDeviation="2.2" flood-color="#000" flood-opacity=".4"/></filter>') + "</defs>" +
       '<rect width="100" height="100" fill="url(#avb' + u + ')"/>' +
-      '<g filter="url(#avf' + u + ')">' + a.art.split("url(#G)").join("url(#avg" + u + ")") + "</g>" +
+      (flat ? "<g>" : '<g filter="url(#avf' + u + ')">') + a.art.split("url(#G)").join("url(#avg" + u + ")") + "</g>" +
       '<rect width="100" height="100" fill="url(#avs' + u + ')"/><rect width="100" height="100" fill="url(#avl' + u + ')"/>' +
       '<path d="M0 0H100V30C75 40 25 40 0 30Z" fill="#fff" opacity=".13"/>' +
       '<rect x="1.5" y="1.5" width="97" height="97" rx="2" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="3"/><rect x=".5" y=".5" width="99" height="99" fill="none" stroke="#000" stroke-opacity=".25" stroke-width="1"/>';
@@ -8373,7 +8373,7 @@ return exports;})();
     const mpos = function (st) { const R = st.last ? 27 : st.mile ? 21 : 19, side = st.x < 180 ? -1 : 1; return (st.x + side * (R + 17)) + "," + st.y; };
     const cs = stops[J.cur], key = level + ":" + c.id, prev = journeyPos[key] !== undefined ? Math.min(journeyPos[key], n - 1) : J.cur, ps = stops[prev];
     h += '<g id="jMarker" class="j-marker j-me" data-act="peer" data-key="me" role="button" tabindex="0" aria-label="Jouw profiel" data-from="' + mpos(ps) + '" data-to="' + mpos(cs) + '" style="transform:translate(' + mpos(ps).split(",")[0] + "px," + mpos(ps).split(",")[1] + 'px)"><g class="j-bob"><g transform="scale(1.4)">' +
-      '<circle r="17" fill="#fff"/><circle r="14" fill="' + P.color + '"/>' + (avOf(P) ? '<clipPath id="jmc"><circle r="14"/></clipPath><svg x="-14" y="-14" width="28" height="28" viewBox="0 0 100 100" clip-path="url(#jmc)">' + avInner(avOf(P)) + "</svg>" : '<text y="5.5" text-anchor="middle" font-size="15" font-weight="900" fill="#fff">' + ini + "</text>" + (P.photo && /^https:\/\//i.test(P.photo) ? '<clipPath id="jmc"><circle r="14"/></clipPath><image href="' + esc(P.photo) + '" x="-14" y="-14" width="28" height="28" preserveAspectRatio="xMidYMid slice" clip-path="url(#jmc)" referrerpolicy="no-referrer"/>' : "")) + "</g>" + "</g></g>";
+      '<circle r="17" fill="#fff"/><circle r="14" fill="' + P.color + '"/>' + (avOf(P) ? '<clipPath id="jmc"><circle r="14"/></clipPath><g clip-path="url(#jmc)"><svg x="-14" y="-14" width="28" height="28" viewBox="0 0 100 100">' + avInner(avOf(P), true) + "</svg></g>" : '<text y="5.5" text-anchor="middle" font-size="15" font-weight="900" fill="#fff">' + ini + "</text>" + (P.photo && /^https:\/\//i.test(P.photo) ? '<clipPath id="jmc"><circle r="14"/></clipPath><image href="' + esc(P.photo) + '" x="-14" y="-14" width="28" height="28" preserveAspectRatio="xMidYMid slice" clip-path="url(#jmc)" referrerpolicy="no-referrer"/>' : "")) + "</g>" + "</g></g>";
     journeyPos[key] = J.cur;
     return h + "</svg>";
   }
@@ -8434,7 +8434,7 @@ return exports;})();
       '<rect x="' + (-H + 1) + '" y="' + (-H + 4) + '" width="' + S2 + '" height="' + S2 + '" rx="13" fill="#000" fill-opacity=".28"/>' +
       '<rect x="' + (-H) + '" y="' + (-H) + '" width="' + S2 + '" height="' + S2 + '" rx="13" fill="#2f86e0" stroke="#bfe0ff" stroke-width="2"/>' +
       '<rect x="' + (-H + 4) + '" y="' + (-H + 4) + '" width="' + (S2 - 8) + '" height="' + (S2 - 8) + '" rx="9" fill="' + peerColor(pe) + '"/>' +
-      (avById(pe.av) ? '<clipPath id="' + id + 'a"><rect x="' + (-H + 4) + '" y="' + (-H + 4) + '" width="' + (S2 - 8) + '" height="' + (S2 - 8) + '" rx="9"/></clipPath><svg x="' + (-H + 4) + '" y="' + (-H + 4) + '" width="' + (S2 - 8) + '" height="' + (S2 - 8) + '" viewBox="0 0 100 100" clip-path="url(#' + id + 'a)">' + avInner(avById(pe.av)) + "</svg>" : '<text y="12" text-anchor="middle" font-size="32" font-weight="900" fill="#fff">' + ini + "</text>") +
+      (avById(pe.av) ? '<clipPath id="' + id + 'a"><rect x="' + (-H + 4) + '" y="' + (-H + 4) + '" width="' + (S2 - 8) + '" height="' + (S2 - 8) + '" rx="9"/></clipPath><g clip-path="url(#' + id + 'a)"><svg x="' + (-H + 4) + '" y="' + (-H + 4) + '" width="' + (S2 - 8) + '" height="' + (S2 - 8) + '" viewBox="0 0 100 100">' + avInner(avById(pe.av), true) + "</svg></g>" : '<text y="12" text-anchor="middle" font-size="32" font-weight="900" fill="#fff">' + ini + "</text>") +
       (pe.photo ? '<clipPath id="' + id + '"><rect x="' + (-H + 4) + '" y="' + (-H + 4) + '" width="' + (S2 - 8) + '" height="' + (S2 - 8) + '" rx="9"/></clipPath><image href="' + esc(pe.photo) + '" x="' + (-H + 4) + '" y="' + (-H + 4) + '" width="' + (S2 - 8) + '" height="' + (S2 - 8) + '" preserveAspectRatio="xMidYMid slice" clip-path="url(#' + id + ')" referrerpolicy="no-referrer"/>' : "") +
       '<rect x="' + (-H) + '" y="' + (-H) + '" width="' + S2 + '" height="' + S2 + '" rx="13" fill="none" stroke="#ffd54f" stroke-width="1.5" stroke-opacity=".9"/>' +
       (maskCount(pe.bm) || maskCount(pe.bg) ? badgeSvg(P.mode === "beginner" ? "talib" : maskCount(pe.bg) ? "grand" : "master", BADGE_ICON_COLOR, 34, false, 'x="' + (H - 22) + '" y="' + (-H - 14) + '" style="filter:drop-shadow(0 2px 2px rgba(0,0,0,.45))"') : "") + "</g></g>";
