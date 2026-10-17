@@ -8,7 +8,7 @@
   <meta name="description" content="Een leuke Islamitische quiz in het Nederlands voor kinderen en volwassenen.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Nunito:wght@400;600;700;800;900&family=Kaushan+Script&display=swap" rel="stylesheet">
   <style>
 :root {
   --emerald: #2d6a4f;
@@ -1528,6 +1528,93 @@ body:has(#avDlg) .back-toast { top: 92px !important; bottom: auto !important; z-
 .jh-stats > span { background: linear-gradient(180deg, rgba(255,255,255,.3), rgba(255,255,255,.08)); box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 0 2px 0 rgba(0,0,0,.28); border: 1px solid rgba(255,255,255,.22); }
 .jh-stats .i3 { margin-left: -2px; }
 @media (prefers-reduced-motion: reduce) { .i3sp { animation: none; opacity: 0; } }
+/* ───── Dadelbonbons: levelmenu, doosje, chip, resultaat ───── */
+@property --bma { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+.bm-wrap { position: fixed; inset: 0; z-index: 400; display: grid; place-items: center; padding: 16px; background: rgba(2,22,15,.72); backdrop-filter: blur(2px); animation: fade .2s ease both; overflow-y: auto; }
+.bm-dlg { position: relative; width: min(340px, 94vw); margin: 30px auto; border-radius: 28px; padding: 3px; color: #f3ecd2; font-family: inherit;
+  background: conic-gradient(from var(--bma), #fff3b8, #d9a227 12%, #0a3a28 30%, #d9a227 55%, #fff3b8 70%, #0a3a28 85%, #fff3b8);
+  animation: bmspin 5s linear infinite, bmglow 2.6s ease-in-out infinite, pop .3s ease both; box-shadow: 0 0 24px #f6d25a44, 0 18px 40px #000a; }
+@keyframes bmspin { to { --bma: 360deg; } }
+@keyframes bmglow { 50% { box-shadow: 0 0 38px #f6d25a88, 0 18px 40px #000a; } }
+.bm-in { position: relative; border-radius: 25px; background: linear-gradient(180deg, #14664a, #0a3a28 55%, #072a1d); padding: 48px 16px 18px; overflow: hidden; }
+.bm-in:before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(135deg, #ffffff08 0 10px, transparent 10px 20px); pointer-events: none; }
+.bm-in > * { position: relative; }
+.bm-x { position: absolute; right: 8px; top: 54px; width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid #c9a23a88; background: #0006; color: #f6d25a; font-size: 22px; line-height: 1; cursor: pointer; z-index: 3; }
+.bm-rib { position: absolute; left: 50%; top: -6px; width: 300px; transform: translateX(-50%); filter: drop-shadow(0 4px 4px #0008); pointer-events: none; z-index: 2; }
+.bm-rib svg { width: 100%; display: block; }
+.bm-rt { position: absolute; left: 0; right: 0; top: 9px; text-align: center; font-weight: 900; font-size: 22px; color: #fff6c2; text-shadow: 0 2px 0 #0a4a30, 0 0 10px #f6d25a66; z-index: 3; }
+.bm-title { margin: 0; text-align: center; color: #fff6c2; font-size: 22px; font-weight: 900; text-shadow: 0 2px 0 #0a4a30; }
+.bm-sub { text-align: center; font-size: 13px; opacity: .9; margin: 6px 0 12px; color: #f3ecd2; font-weight: 600; }
+.bm-sub.top { margin-top: 8px; }
+.bm-h { margin: 0 0 8px; text-align: center; color: #f6d25a; font-size: 15px; letter-spacing: .4px; font-weight: 900; }
+.bm-row { display: flex; align-items: center; gap: 10px; background: #0006; border: 1px solid #c9a23a55; border-radius: 16px; padding: 7px 10px; margin-bottom: 8px; }
+.bm-row.done { opacity: .55; }
+.bm-stars { display: flex; width: 86px; flex: none; }
+.bm-stars svg { margin-right: -2px; animation: bmst 2.4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.bm-stars svg:nth-child(2) { animation-delay: .2s; } .bm-stars svg:nth-child(3) { animation-delay: .4s; }
+@keyframes bmst { 50% { transform: scale(1.12); } }
+.bm-rw { display: flex; align-items: center; gap: 5px; font-weight: 800; font-size: 16px; color: #fff6c2; }
+.bm-rw.ok { font-size: 13px; color: #9be3bf; }
+.bm-rw .ic { transform-box: fill-box; transform-origin: center; animation: bmgem 3.4s ease-in-out infinite; }
+.bm-row:nth-of-type(4) .bm-rw .ic { animation-duration: 4.1s; animation-delay: -1.7s; animation-direction: reverse; }
+@keyframes bmgem { 0%,100% { transform: translateX(-2px) rotate(-9deg) scaleX(1); } 25% { transform: rotate(0) scaleX(.8); } 50% { transform: translateX(2px) rotate(9deg) scaleX(1); } 75% { transform: rotate(0) scaleX(.8); } }
+.bm-row.big { position: relative; background: linear-gradient(160deg, #1d6e4f, #0c3b2a); border-color: #f6d25a; box-shadow: inset 0 0 20px #f6d25a22; }
+.bm-row.big:after { content: ""; position: absolute; inset: -1px; border-radius: 16px; border: 2px solid #f6d25a; opacity: 0; animation: bmpulse 2.2s ease-in-out infinite; pointer-events: none; }
+@keyframes bmpulse { 50% { opacity: .9; } }
+.bm-bon { width: 70px; height: 70px; margin: -14px 0 -12px -4px; flex: none; }
+.bm-bon svg { width: 100%; height: 100%; overflow: visible; }
+.bm-nm { display: flex; flex-direction: column; line-height: 1.15; }
+.bm-nm b { font-size: 16px; color: #f6d25a; } .bm-nm small { opacity: .85; font-size: 12px; }
+.bm-extra { text-align: center; font-size: 12.5px; color: #f3ecd2; opacity: .85; margin: 2px 0 14px; font-weight: 600; }
+.bn-bob { animation: bnbob 2.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes bnbob { 0%,100% { transform: translate(0,0) rotate(0); } 33% { transform: translate(3px,-6px) rotate(-3deg); } 66% { transform: translate(-3px,-2px) rotate(3deg); } }
+.bn-spk { animation: bntw 2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; } .bn-spk2 { animation-delay: -.9s; }
+@keyframes bntw { 0%,100% { transform: scale(0); opacity: 0; } 50% { transform: scale(1); opacity: 1; } }
+.bm-grid { list-style: none; margin: 0 0 8px; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; justify-items: center; }
+.bm-slot { display: block; } .bm-slot svg { display: block; }
+.bm-slot.nx circle { animation: bmring 1.6s ease-in-out infinite; } @keyframes bmring { 50% { stroke: #fff3b8; stroke-width: 3.6; } }
+.bm-note { text-align: center; font-size: 12.5px; opacity: .85; margin: 6px 0 14px; font-weight: 600; }
+.bm-btns { display: flex; gap: 10px; align-items: center; }
+.bm-btn { flex: 1; border: 0; border-radius: 999px; font: inherit; font-weight: 900; font-size: 18px; padding: 13px 10px; cursor: pointer; position: relative; overflow: hidden; min-height: 48px; }
+.bm-btn.go { color: #4a2f00; background: linear-gradient(180deg, #fff3b8, #f6d25a 45%, #d9a227); box-shadow: 0 5px 0 #8a5a08, 0 8px 14px #0008, inset 0 2px 0 #fff9; }
+.bm-btn.go:after { content: ""; position: absolute; top: 0; bottom: 0; width: 36px; left: -60px; background: linear-gradient(90deg, transparent, #fffc, transparent); transform: skewX(-20deg); animation: bmsw 3s ease-in-out infinite; }
+@keyframes bmsw { 60%,100% { left: 130%; } }
+.bm-btn.sec { flex: .9; font-size: 13.5px; padding: 10px 6px; color: #f3ecd2; background: #ffffff14; border: 1px solid #c9a23a88; }
+.bm-btn:focus-visible, .bm-x:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.bon-chip { display: inline-flex; align-items: center; gap: 3px; border: 1.5px solid #f6d25a99; background: #0a3a28cc; color: #fff6c2; border-radius: 999px; padding: 1px 8px 1px 3px; font: inherit; font-weight: 900; font-size: .72rem; cursor: pointer; min-height: 28px; }
+.bon-chip svg { display: block; } .bon-chip:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.bon-win { display: flex; align-items: center; gap: 12px; text-align: left; margin: 12px auto; max-width: 420px; padding: 10px 14px; border-radius: 20px; background: linear-gradient(160deg, #145a41, #0a2f22); border: 2px solid #f6d25a; color: #f3ecd2; box-shadow: 0 6px 16px #0005, inset 0 1px 0 #ffffff25; }
+.bon-win > span.bw-art { flex: none; width: 78px; height: 78px; margin: -10px 0; } .bon-win svg.bn-svg { width: 100%; height: 100%; overflow: visible; }
+.bon-win b { display: block; color: #f6d25a; font-size: 1.05rem; } .bon-win small { display: block; opacity: .9; font-weight: 600; margin-top: 2px; }
+.bon-win .bw-btn { margin-top: 6px; border: 1.5px solid #f6d25a99; background: #ffffff14; color: #fff6c2; border-radius: 999px; padding: 6px 12px; font: inherit; font-weight: 800; font-size: .85rem; cursor: pointer; min-height: 36px; }
+@media (prefers-reduced-motion: reduce) { .bm-dlg, .bm-dlg *, .bn-bob, .bn-spk, .bon-win * { animation: none !important; } .bm-rib animate { display: none; } .bn-spk { opacity: 1; transform: none; } }
+/* ───── Jummah Mubarak ───── */
+.jm-rt { position: absolute; left: 0; right: 0; top: 6px; text-align: center; font-family: "Kaushan Script", "Brush Script MT", cursive; font-weight: 400; font-size: 31px; line-height: 1.2; z-index: 3; filter: drop-shadow(0 2px 0 #0a4a30) drop-shadow(0 0 8px #f6d25a77); pointer-events: none; }
+.jm-rt span { display: inline-block; background: linear-gradient(180deg, #fffbe0, #f6d25a 65%, #e0a92a); -webkit-background-clip: text; background-clip: text; color: transparent; animation: jmdance 1.9s ease-in-out infinite; animation-delay: calc(var(--i) * -.13s); transform-origin: 50% 80%; }
+@keyframes jmdance { 0%,100% { transform: translateY(1px) rotate(-5deg) scale(1); } 25% { transform: translateY(-5px) rotate(3deg) scale(1.07); } 50% { transform: translateY(1px) rotate(5deg) scale(1); } 75% { transform: translateY(-3px) rotate(-3deg) scale(1.04); } }
+.jm-dlg .bm-in { padding-top: 52px; }
+.jm-rem { margin: 12px 0 10px; }
+.jm-ri { display: flex; align-items: center; gap: 10px; background: #0006; border: 1px solid #c9a23a55; border-radius: 14px; padding: 7px 10px; margin-bottom: 6px; font-weight: 700; font-size: 14px; line-height: 1.25; color: #fff6c2; text-align: left; }
+.jm-ri svg { flex: none; } .jm-ri small { display: block; opacity: .8; font-weight: 600; font-size: 12px; }
+.jm-scene { display: block; width: 100%; height: auto; margin: 0 auto 6px; }
+.jm-reward { justify-content: center; gap: 18px; }
+.jm-reward .bm-rw .ic { animation: bmgem 3.4s ease-in-out infinite; }
+.jm-streak { text-align: center; margin: 4px 0 14px; font-size: 13px; color: #f3ecd2; font-weight: 600; } .jm-streak b { color: #f6d25a; font-size: 14px; }
+.jm-dots { display: flex; justify-content: center; gap: 8px; margin-top: 6px; }
+.jm-dot { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; border: 2px solid #c9a23a88; background: #0006; font-size: 16px; color: #c9a23a; }
+.jm-dot.on { background: linear-gradient(180deg, #fff3b8, #f6d25a); color: #4a2f00; font-weight: 900; border-color: #fff3b8; }
+.jm-dot.now { color: #fff3b8; border-color: #f6d25a; animation: bmpulse2 1.8s ease-in-out infinite; } @keyframes bmpulse2 { 50% { box-shadow: 0 0 12px #f6d25a; border-color: #fff3b8; } }
+.jm-btns .bm-btn { width: 100%; }
+.jm-later { display: block; margin: 10px auto 0; background: none; border: 0; color: #f3ecd2; opacity: .85; font: inherit; font-weight: 700; font-size: 14px; cursor: pointer; padding: 8px 14px; min-height: 40px; text-decoration: underline; text-underline-offset: 3px; }
+.jm-later:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.jm-swing { animation: jmsw 3.6s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 0; } @keyframes jmsw { 0%,100% { transform: rotate(5deg); } 50% { transform: rotate(-5deg); } }
+.jm-flame { animation: jmfl 1.1s ease-in-out infinite; transform-box: fill-box; transform-origin: center; } @keyframes jmfl { 50% { transform: scale(1.15,.9); opacity: .8; } }
+.jm-breath { animation: jmbr 4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; } @keyframes jmbr { 50% { transform: scale(1.12); opacity: .8; } }
+.jm-breath2 { animation: jmbr2 5s ease-in-out infinite; transform-box: fill-box; transform-origin: center; } @keyframes jmbr2 { 50% { transform: rotate(-4deg); } }
+.jm-bob { animation: jmbob 3s ease-in-out infinite; transform-box: fill-box; transform-origin: center; } .jm-bob2 { animation-duration: 3.6s; animation-delay: -1s; } .jm-bob3 { animation-duration: 2.8s; animation-delay: -2s; }
+@keyframes jmbob { 50% { transform: translateY(-3px) rotate(3deg); } }
+.jm-gift { animation: jmgf 2.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; } @keyframes jmgf { 0%,100% { transform: translateY(0) rotate(0); } 30% { transform: translateY(-6px) rotate(-4deg); } 60% { transform: translateY(-2px) rotate(3deg); } }
+@media (prefers-reduced-motion: reduce) { .jm-dlg *, .jm-dlg { animation: none !important; } .jm-rib animate { display: none; } }
 </style>
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Islam Quiz">
@@ -4475,6 +4562,7 @@ return exports;})();
       album: { beginner: {}, junior: {}, expert: {} },    // Kwartet-album per modus: album[level][kaartId] = aantal
       xp: { beginner: 0, junior: 0, expert: 0 },         // Kennis-XP per modus
       gems: { beginner: 0, junior: 0, expert: 0 },       // edelstenen per modus
+      jum: { last: null, count: 0, max: 0 },             // Jummah Mubarak: laatste vrijdag en reeks
     };
   }
   function normalizePlayer(p) {
@@ -5571,6 +5659,8 @@ return exports;})();
       (P && P.mode === "expert" ? row('data-act="toggle-timer"' + (S.timer ? " checked" : ""), "Timer per vraag", TIMER_SECONDS + " seconden per vraag (Ervaren)") : "") +
       row('id="optSpeak"' + (S.speak ? " checked" : ""), "Spreek vragen uit", "Leest vraag, antwoorden en uitleg voor") +
       row('id="optAuto"' + (autoOn() ? " checked" : ""), "Automatisch doorgaan", "Na een level vanzelf verder") +
+      row('id="optLvMenu"' + (S.lvmenu !== false ? " checked" : ""), "Levelmenu met beloningen", "Toont vooraf wat je kunt winnen (Gevorderd en Ervaren)") +
+      row('id="optJummah"' + (S.jummah !== false ? " checked" : ""), "Jummah-cadeau op vrijdag", "Een groet met cadeau en herinnering, elke vrijdag") +
       (pushSupported() ? row('id="optRemind"' + (S.remind ? " checked" : ""), "Dagelijkse herinnering", "Melding om " + REMIND_HOUR + ":00 als je reeks in gevaar is") + '<p class="set-info" id="remindMsg" role="status" hidden></p>' : "") +
       '<p class="set-info">ⓘ Gebruik je een schermlezer (VoiceOver of TalkBack)? Zet “Spreek vragen uit” dan uit.</p>' +
       '<p class="set-h">Account &amp; Synchronisatie</p>' +
@@ -5589,6 +5679,8 @@ return exports;})();
         else { speakStop(); S.autoNext = true; const a = document.getElementById("optAuto"); if (a) a.checked = true; }
       }
       if (e.target.id === "optAuto") S.autoNext = e.target.checked;
+      if (e.target.id === "optLvMenu") S.lvmenu = e.target.checked;
+      if (e.target.id === "optJummah") S.jummah = e.target.checked;
       if (e.target.id === "optRemind") {
         const box = e.target, msg = document.getElementById("remindMsg");
         if (box.checked) { remindEnable().then(function (r) { if (!r.ok) box.checked = false; if (msg) { msg.textContent = r.msg; msg.hidden = false; } }); }
@@ -5603,6 +5695,7 @@ return exports;})();
 
   /* ───────────── Weergave ───────────── */
   function render() {
+    bonEnsureDefs();
     if (screen === "home") screen = "journey";
     if (screen !== "journey") { const fl = document.getElementById("flyer"); if (fl) fl.remove(); }
     const prevA = a11yBefore(); speakStop();
@@ -5932,6 +6025,7 @@ return exports;})();
         prevStars: prev ? prev.stars || 0 : 0,
       };
       { const LS = landsFor(lv), li = LS.findIndex(function (x) { return x.id === cid; }); landFly = jr.landDone && passed && li + 1 < LS.length ? { from: li, to: li + 1 } : null; }
+      if (bonOn(lv) && stars === 3 && jr.prevStars < 3) { const bs = bonStats(lv, cid); jr.newBon = { kind: bonKind(lv, cid, ji).id, name: bonKind(lv, cid, ji).name, slot: ji + 1, have: bs.have, n: bs.n, full: bs.have >= bs.n, gold: ji >= BON_KINDS.length }; }
     } else if (quiz.kind === "daily") {
       const prev = P.daily[quiz.level][todayStr()];
       dailyFirst = !prev;                                   /* de dagbeloning is er maar één keer per dag */
@@ -5950,6 +6044,7 @@ return exports;})();
       if (jr) {
         const extra = Math.max(0, stars - (jr.prevStars || 0));
         xpGain += extra * 10; gemGain = (jr.firstPass ? 5 : 0) + extra * 3;
+        if (jr.newBon && jr.newBon.full) gemGain += BON_FULL_GEMS;
       } else {
         dailyDs = dailyStreak(quiz.level); weekBonus = dailyDs > 0 && dailyDs % 7 === 0;
         xpGain += 20; gemGain = stars * 2 + 3 + Math.min(dailyDs, 7) + (weekBonus ? 15 : 0);
@@ -5975,7 +6070,7 @@ return exports;})();
     if (sbUser && P.sbId === sbUser.id) { sbSyncSoon(quiz.level); sbSyncStreak(); }
 
     result = { kind: quiz.kind, catId: quiz.catId, level: quiz.level, tier: quiz.tier || 1, next: nextTier(quiz, stars), score: score, total: total, stars: stars, record: isRecord, items: quiz.items, newBadges: newBadges, open4: open4, noAuto: (journeyReturn && quiz.kind === "category") || !autoOn() };
-    if (jr) Object.assign(result, jr, { noAuto: !autoOn() });
+    if (jr) Object.assign(result, jr, { noAuto: !autoOn() || !!jr.newBon });
     result.xpGain = xpGain; result.gemGain = gemGain; flyerPending = true;
     result.streakUp = streakUp; result.streakCount = P.streak.count;
     result.dailyFirst = dailyFirst; result.dailyDs = dailyDs; result.weekBonus = weekBonus;
@@ -6708,6 +6803,238 @@ return exports;})();
     return '<a class="btn wa" data-act="hold-auto" href="' + waLink(text) + '" target="_blank" rel="noopener">' + icon("chat", 20) + (label || "Deel mijn score via WhatsApp") + "</a>";
   }
 
+  /* ───────────── Dadelbonbons (alleen Gevorderd en Ervaren) ─────────────
+     Elk level met 3 sterren geeft 1 bonbon in het doosje van dat land. Er is geen extra opslag nodig:
+     een bonbon is "van jou" zodra jBest(...).stars >= 3. Bestaande spelers hebben hun bonbons dus meteen. */
+  const BON_FULL_GEMS = 25;                       /* eenmalige bonus als het doosje van een land vol is */
+  const BON_KINDS = [
+    { id: "pist", name: "Pistache", sub: "Donkere chocolade", a: "#6b3b1e", b: "#2c140a" },
+    { id: "aman", name: "Amandel", sub: "Karamel", a: "#c98a52", b: "#6b3a1a" },
+    { id: "kokos", name: "Kokos", sub: "Witte chocolade", a: "#ffffff", b: "#d9d2bd" },
+    { id: "sesam", name: "Sesam", sub: "Goud van tahin", a: "#f3c35a", b: "#b87a12" },
+    { id: "roos", name: "Roos", sub: "Rozenwater", a: "#ffc2d4", b: "#d9708f" },
+    { id: "saf", name: "Saffraan", sub: "Gouden glans", a: "#ffd34d", b: "#e0861a" }
+  ];
+  const BON_TOP = (function () {
+    let seed = 7; const rnd = function () { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
+    const T = {}; let s;
+    s = '<path d="M30 56 Q45 46 60 58 T92 52" fill="none" stroke="#f6d25a" stroke-width="2.2" stroke-linecap="round" opacity=".9"/>';
+    [[52, 44, 3.4], [63, 41, 3], [72, 46, 3.6], [58, 50, 2.6], [68, 52, 2.8], [46, 52, 2.4]].forEach(function (a) { s += '<ellipse cx="' + a[0] + '" cy="' + a[1] + '" rx="' + (a[2] + .8) + '" ry="' + a[2] + '" fill="#7bc043" transform="rotate(' + a[0] * 3 + " " + a[0] + " " + a[1] + ')"/><ellipse cx="' + (a[0] - .8) + '" cy="' + (a[1] - .8) + '" rx="' + a[2] / 2 + '" ry="' + a[2] / 3 + '" fill="#c8f08a"/>'; });
+    T.pist = s;
+    T.aman = '<path d="M44 52 Q60 30 80 50 Q66 66 44 52Z" fill="#e8c28e" stroke="#9a6a35" stroke-width="1"/><path d="M50 51 Q62 40 74 50" fill="none" stroke="#fff" opacity=".6" stroke-width="2" stroke-linecap="round"/><path d="M52 52 Q64 56 76 51" fill="none" stroke="#b37c3e" stroke-width="1" opacity=".7"/>';
+    s = ""; for (let i = 0; i < 26; i++) { const a = rnd() * 6.28, r = rnd() * 27, x = 60 + Math.cos(a) * r * 1.25, y = 56 + Math.sin(a) * r * .75; s += '<rect x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="7" height="2.6" rx="1.3" fill="#fff" stroke="#e4dcc3" stroke-width=".4" transform="rotate(' + Math.floor(rnd() * 170) + " " + x.toFixed(1) + " " + y.toFixed(1) + ')"/>'; } T.kokos = s;
+    s = ""; for (let i = 0; i < 34; i++) { const a = rnd() * 6.28, r = rnd() * 30, x = 60 + Math.cos(a) * r * 1.2, y = 58 + Math.sin(a) * r * .75; s += '<ellipse cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" rx="2.6" ry="1.4" fill="#fff4d0" stroke="#a87218" stroke-width=".3" transform="rotate(' + Math.floor(rnd() * 170) + " " + x.toFixed(1) + " " + y.toFixed(1) + ')"/>'; } T.sesam = s;
+    s = ""; [[-7, -3, -30], [7, -3, 30], [0, -9, 0], [0, 2, 180]].forEach(function (a) { s += '<path d="M0 0 C-9 -6 -8 -16 0 -18 C8 -16 9 -6 0 0Z" transform="translate(' + (60 + a[0]) + " " + (50 + a[1]) + ") rotate(" + a[2] + ') scale(.62)" fill="#e8527f" stroke="#a02050" stroke-width="1.2"/>'; });
+    T.roos = s + '<circle cx="60" cy="50" r="2.6" fill="#f6d25a"/><path d="M80 44 l5 -2 -1 5 z M40 60 l4 3 -4 3 z" fill="#f6d25a"/>';
+    s = '<path d="M60 36 l4 11 12 .6 -9.4 7.6 3.2 11.6 -9.8 -6.6 -9.8 6.6 3.2 -11.6 -9.4 -7.6 12 -.6z" fill="#fff6c2" stroke="#b8860b" stroke-width="1.2" transform="translate(0 3)" opacity=".95"/>';
+    [[-16, -40], [-8, -20], [14, 30], [22, 50]].forEach(function (a) { s += '<path d="M0 0 Q4 -9 2 -18" fill="none" stroke="#d6280a" stroke-width="2" stroke-linecap="round" transform="translate(' + (60 + a[0]) + " 66) rotate(" + a[1] + ')"/>'; });
+    T.saf = s; return T;
+  })();
+  const BON_CUP = '<path d="M18 70 Q60 96 102 70 L95 98 Q60 111 25 98 Z" fill="url(#bnCup)" stroke="#8a5a08" stroke-width="1"/>' +
+    (function () { let p = ""; for (let x = 30; x < 95; x += 8) p += '<path d="M' + x + ' 74 L' + (x + (x - 60) * .12).toFixed(1) + ' 99" stroke="#6b4206" stroke-width="1" opacity=".55"/>'; return p; })() +
+    '<path d="M18 70 Q60 96 102 70" fill="none" stroke="#fff3b8" stroke-width="1.6" opacity=".8"/>';
+  function bonEnsureDefs() {
+    if (document.getElementById("bnDefs")) return;
+    let d = ""; BON_KINDS.forEach(function (k) { d += '<radialGradient id="bn_' + k.id + '" cx=".35" cy=".28" r=".85"><stop offset="0" stop-color="' + k.a + '"/><stop offset="1" stop-color="' + k.b + '"/></radialGradient>'; });
+    d += '<linearGradient id="bnCup" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8a5a08"/><stop offset=".3" stop-color="#ffe79a"/><stop offset=".6" stop-color="#d9a227"/><stop offset="1" stop-color="#7a4d06"/></linearGradient>' +
+      '<radialGradient id="bnSlot" cx=".5" cy=".4" r=".7"><stop offset="0" stop-color="#05231a"/><stop offset="1" stop-color="#0b3a2a"/></radialGradient>' +
+      '<linearGradient id="bnStar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3b8"/><stop offset=".5" stop-color="#f6d25a"/><stop offset="1" stop-color="#d9a227"/></linearGradient>' +
+      '<clipPath id="bnClip"><ellipse cx="60" cy="60" rx="38" ry="29"/></clipPath><symbol id="bnSpark" viewBox="-10 -10 20 20"><path d="M0-9 2 -2 9 0 2 2 0 9-2 2-9 0-2-2Z" fill="#fff6c2"/></symbol>';
+    const w = document.createElement("div"); w.id = "bnDefs"; w.setAttribute("aria-hidden", "true");
+    w.innerHTML = '<svg width="0" height="0" style="position:absolute" focusable="false"><defs>' + d + "</defs></svg>"; document.body.appendChild(w);
+  }
+  /* de tekening zelf: tweede en derde ronde door de zes smaken krijgen een gouden sterretje */
+  function bonInner(kid, cls, gold) {
+    return '<g class="' + (cls || "") + '">' + BON_CUP + '<ellipse cx="60" cy="60" rx="38" ry="29" fill="url(#bn_' + kid + ')"/>' +
+      '<g clip-path="url(#bnClip)"><ellipse cx="46" cy="47" rx="14" ry="6" fill="#fff" opacity=".55" transform="rotate(-18 46 47)"/><ellipse cx="84" cy="70" rx="6" ry="2.5" fill="#fff" opacity=".25" transform="rotate(-18 84 70)"/>' + BON_TOP[kid] + "</g>" +
+      (gold ? '<path d="M96 30 l2.6 6.6 7 .4 -5.4 4.4 1.8 6.8 -6 -3.8 -6 3.8 1.8 -6.8 -5.4 -4.4 7 -.4z" fill="url(#bnStar)" stroke="#b8860b" stroke-width="1"/>' : "") + "</g>";
+  }
+  function bonSvg(kid, size, cls, gold, spark) {
+    return '<svg class="bn-svg" viewBox="0 0 120 120" width="' + size + '" height="' + size + '" aria-hidden="true" focusable="false"><ellipse cx="60" cy="108" rx="38" ry="5" fill="#000" opacity=".35"/>' + bonInner(kid, cls, gold) +
+      (spark ? '<use href="#bnSpark" x="86" y="14" width="20" height="20" class="bn-spk"/><use href="#bnSpark" x="8" y="30" width="14" height="14" class="bn-spk bn-spk2"/>' : "") + "</svg>";
+  }
+  function bonOn(lv) { return lv !== "beginner"; }
+  function bonKind(lv, catId, ji) { const li = Math.max(0, landsFor(lv).findIndex(function (x) { return x.id === catId; })); return BON_KINDS[(li + ji) % BON_KINDS.length]; }
+  function bonOwned(lv, catId, ji) { const b = jBest(lv, catId, ji); return !!b && (b.stars || 0) >= 3; }
+  function bonStats(lv, catId) { const n = jCount(lv, catId); let have = 0; for (let i = 0; i < n; i++) if (bonOwned(lv, catId, i)) have++; return { have: have, n: n }; }
+  function bonRewards(ps, s) { const extra = Math.max(0, s - ps); return { gems: (ps < 1 && s >= 1 ? 5 : 0) + extra * 3, xp: extra * 10 }; }
+  function bonMenuWanted(lv, catId, ji) { const b = jBest(lv, catId, ji); return bonOn(lv) && S.lvmenu !== false && !((b && b.stars || 0) >= 3); }
+  function bonChipHtml(lv, c) {
+    if (!bonOn(lv)) return "";
+    const st = bonStats(lv, c.id);
+    return '<button class="bon-chip" data-act="bon-box" data-cat="' + c.id + '" aria-label="Bonbondoos van ' + esc(c.title) + ": " + st.have + " van " + st.n + ' bonbons. Tik om te openen">' + bonSvg(bonKind(lv, c.id, Math.min(st.have, st.n - 1)).id, 22, "", false, false) + "<b>" + st.have + "/" + st.n + "</b></button>";
+  }
+  function startJLevel(jc, ji) {
+    play("click"); journeyReturn = true;
+    journeyLand = Math.max(0, landsFor(P.mode).findIndex(function (x) { return x.id === jc; }));
+    startQuiz("journey", jc, null, ji);
+  }
+  function bonBoxHtml(lv, catId, hiJi) {
+    const c = catById(catId), st = bonStats(lv, catId);
+    let h = '<h2 class="bm-title">Bonbondoos</h2><p class="bm-sub">' + esc(c.title) + " · " + st.have + " van " + st.n + ' bonbons</p><ul class="bm-grid">';
+    for (let i = 0; i < st.n; i++) {
+      const k = bonKind(lv, catId, i), own = bonOwned(lv, catId, i), gold = i >= BON_KINDS.length, nx = i === hiJi && !own;
+      h += '<li class="bm-slot' + (nx ? " nx" : "") + '" aria-label="Vakje ' + (i + 1) + ": " + (own ? k.name + "-bonbon, gevonden" : "nog leeg" + (nx ? ", dit level kan hem opleveren" : "")) + '">' +
+        '<svg viewBox="0 0 56 56" width="52" height="52" aria-hidden="true"><circle cx="28" cy="28" r="26" fill="url(#bnSlot)" stroke="#c9a23a" stroke-opacity=".6" stroke-width="2"/>' +
+        (own ? '<g transform="translate(5 4) scale(.38)">' + bonInner(k.id, "", gold) + "</g>" : '<text x="28" y="36" text-anchor="middle" font-size="22" font-weight="800" fill="#c9a23a" opacity=".55" font-family="system-ui">?</text>') + "</svg></li>";
+    }
+    h += '</ul><p class="bm-note">Haal een level met 3 sterren voor een bonbon.' + (st.have < st.n ? " Doosje vol: +" + BON_FULL_GEMS + " edelstenen." : " Je doosje is vol, masha’Allah!") + "</p>";
+    return h;
+  }
+  function bonMenuHtml(lv, catId, ji) {
+    const c = catById(catId), prev = jBest(lv, catId, ji), ps = prev ? prev.stars || 0 : 0, k = bonKind(lv, catId, ji), st = bonStats(lv, catId);
+    const star = function (on) { return '<svg width="26" height="26" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 3l5 11.5 12.5 1.2-9.4 8.4 2.8 12.2L20 29.6 9.1 36.3l2.8-12.2-9.4-8.4L15 14.5z" fill="' + (on ? "url(#bnStar)" : "#164b37") + '" stroke="#b8860b" stroke-width="1.4" stroke-linejoin="round"/></svg>'; };
+    const stars = function (s) { let x = '<span class="bm-stars">'; for (let i = 1; i <= 3; i++) x += star(i <= s); return x + "</span>"; };
+    const rw = function (s) { const r = bonRewards(ps, s); return '<span class="bm-rw">' + gemSvg(26) + "<b>+" + r.gems + "</b>" + xpSvg(24) + "<b>+" + r.xp + "</b></span>"; };
+    let h = '<div class="bm-rib" aria-hidden="true"><svg viewBox="0 0 300 70"><path fill="#0a4a30" stroke="#f6d25a" stroke-width="2" stroke-linejoin="round" d="M2 20 L36 20 L36 56 L2 56 L14 38Z"><animate attributeName="d" dur="3s" repeatCount="indefinite" values="M2 20 L36 20 L36 56 L2 56 L14 38Z;M2 24 L36 22 L36 58 L2 52 L14 38Z;M2 20 L36 20 L36 56 L2 56 L14 38Z"/></path>' +
+      '<path fill="#0a4a30" stroke="#f6d25a" stroke-width="2" stroke-linejoin="round" d="M298 20 L264 20 L264 56 L298 56 L286 38Z"><animate attributeName="d" dur="3s" begin="-1s" repeatCount="indefinite" values="M298 20 L264 20 L264 56 L298 56 L286 38Z;M298 24 L264 22 L264 58 L298 52 L286 38Z;M298 20 L264 20 L264 56 L298 56 L286 38Z"/></path>' +
+      '<path fill="url(#bnRib)" stroke="#f6d25a" stroke-width="2.4" stroke-linejoin="round" d="M20 12 Q85 4 150 12 T280 12 L280 52 Q215 60 150 52 T20 52 Z"><animate attributeName="d" dur="2.8s" repeatCount="indefinite" values="M20 12 Q85 4 150 12 T280 12 L280 52 Q215 60 150 52 T20 52 Z;M20 12 Q85 20 150 12 T280 12 L280 52 Q215 44 150 52 T20 52 Z;M20 12 Q85 4 150 12 T280 12 L280 52 Q215 60 150 52 T20 52 Z"/></path>' +
+      '<defs><linearGradient id="bnRib" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3fd08a"/><stop offset=".5" stop-color="#14935a"/><stop offset="1" stop-color="#0a5233"/></linearGradient></defs></svg></div>' +
+      '<div class="bm-rt" id="bmT">Level ' + (ji + 1) + '</div><p class="bm-sub top">' + esc(c.title) + " · " + modeName(lv) + '</p><h3 class="bm-h">Je kunt winnen</h3>';
+    [1, 2].forEach(function (s) {
+      h += '<div class="bm-row' + (s <= ps ? " done" : "") + '">' + stars(s) + (s <= ps ? '<span class="bm-rw ok">✓ al behaald</span>' : rw(s)) + "</div>";
+    });
+    const last = st.have === st.n - 1;
+    h += '<div class="bm-row big">' + stars(3) + '<span class="bm-bon" aria-hidden="true">' + bonSvg(k.id, 74, "bn-bob", ji >= BON_KINDS.length, true) + '</span><span class="bm-nm"><b>' + k.name + "-bonbon</b><small>vakje " + (ji + 1) + " van " + st.n + "</small></span></div>" +
+      '<p class="bm-extra">' + (function () { const r = bonRewards(ps, 3); return "Ook: " + r.gems + " edelstenen en " + r.xp + " XP" + (last ? " · doosje vol: +" + BON_FULL_GEMS + " edelstenen" : ""); })() + "</p>";
+    return h;
+  }
+  function bonOverlay(o) {   /* o: {catId, ji, box:true} — ji alleen bij het levelmenu */
+    bonEnsureDefs();
+    const old = document.getElementById("bmWrap"); if (old) old.remove();
+    const lv = P.mode, c = catById(o.catId), prevFocus = document.activeElement;
+    let view = o.box ? "box" : "menu";
+    const w = document.createElement("div"); w.className = "bm-wrap"; w.id = "bmWrap";
+    const label = function () {
+      if (view === "box") return "Bonbondoos van " + c.title + ": " + bonStats(lv, o.catId).have + " van " + bonStats(lv, o.catId).n + " bonbons.";
+      const ps = (jBest(lv, o.catId, o.ji) || {}).stars || 0, k = bonKind(lv, o.catId, o.ji), st = bonStats(lv, o.catId), t = [];
+      [1, 2, 3].forEach(function (s) { const r = bonRewards(ps, s); t.push(s <= ps ? s + (s === 1 ? " ster: al behaald" : " sterren: al behaald") : s + (s === 1 ? " ster: " : " sterren: ") + (s === 3 ? k.name + "-bonbon, vakje " + (o.ji + 1) + " van " + st.n + ", " : "") + r.gems + " edelstenen en " + r.xp + " XP"); });
+      return "Level " + (o.ji + 1) + ", " + c.title + ". Je kunt winnen. " + t.join(". ") + ".";
+    };
+    const paint = function () {
+      const inner = view === "box" ? bonBoxHtml(lv, o.catId, o.ji) : bonMenuHtml(lv, o.catId, o.ji);
+      let btns;
+      if (o.box && o.ji === undefined) btns = '<div class="bm-btns"><button class="bm-btn go" data-bm="x">Sluiten</button></div>';
+      else if (view === "box") btns = '<div class="bm-btns"><button class="bm-btn sec" data-bm="menu">Terug</button><button class="bm-btn go" data-bm="start">Start</button></div>';
+      else btns = '<div class="bm-btns"><button class="bm-btn sec" data-bm="box">Doosje bekijken</button><button class="bm-btn go" data-bm="start">Start</button></div>';
+      w.innerHTML = '<div class="bm-dlg" role="dialog" aria-modal="true" aria-label="' + esc(label()) + '"><div class="bm-in"><button class="bm-x" data-bm="x" aria-label="Sluiten">×</button>' + inner + btns + "</div></div>";
+      const f = w.querySelector(".bm-btn.go"); if (f) f.focus({ preventScroll: true });
+    };
+    const close = function () { document.removeEventListener("keydown", onKey, true); w.remove(); if (prevFocus && prevFocus.focus && document.contains(prevFocus)) { try { prevFocus.focus({ preventScroll: true }); } catch (e) {} } };
+    const onKey = function (e) {
+      if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); close(); return; }
+      if (e.key === "Tab") { const f = [].slice.call(w.querySelectorAll("button")); if (!f.length) return; const i = f.indexOf(document.activeElement); e.preventDefault(); f[(i + (e.shiftKey ? f.length - 1 : 1)) % f.length].focus(); }
+    };
+    w.addEventListener("click", function (e) {
+      const b = e.target.closest("[data-bm]");
+      if (e.target === w || (b && b.dataset.bm === "x")) { close(); return; }
+      if (!b) return;
+      if (b.dataset.bm === "box") { play("click"); view = "box"; paint(); announce("Bonbondoos."); }
+      else if (b.dataset.bm === "menu") { play("click"); view = "menu"; paint(); }
+      else if (b.dataset.bm === "start") { close(); startJLevel(o.catId, o.ji); }
+    });
+    document.addEventListener("keydown", onKey, true);
+    document.body.appendChild(w); paint();
+  }
+  function levelMenu(catId, ji) { bonOverlay({ catId: catId, ji: ji }); }
+  function openBonBox(catId) { play("click"); bonOverlay({ catId: catId, box: true }); }
+
+  /* ───────────── Jummah Mubarak: elke vrijdag een cadeau (één keer per speler per vrijdag) ─────────────
+     P.jum = { last: "JJJJ-MM-DD", count: vrijdagen op rij, max }. Elke 4e vrijdag op rij geeft een extra cadeau. */
+  const JUM_GEMS = 15, JUM_XP = 20, JUM_EXTRA_GEMS = 30;
+  let jumAsked = false;                            /* per sessie maar één keer ongevraagd tonen */
+  function weekAgoStr() { const d = new Date(); d.setDate(d.getDate() - 7); return dateStr(d); }
+  function jumLast() { return (P && P.jum && P.jum.last) || null; }
+  function jumNext() { return jumLast() === weekAgoStr() ? ((P.jum && P.jum.count) || 0) + 1 : 1; }
+  function jumDue() { return !!(P && P.mode) && S.jummah !== false && new Date().getDay() === 5 && jumLast() !== todayStr(); }
+  function maybeJummah() {
+    if (jumAsked || !jumDue() || document.getElementById("bmWrap") || document.getElementById("jmWrap")) return false;
+    jumAsked = true;
+    setTimeout(function () { if (screen === "journey" && jumDue() && !document.getElementById("bmWrap") && !document.getElementById("jmWrap")) jummahDialog(); }, 1100);
+    return true;
+  }
+  function jmLantern(x, delay) {
+    return '<g transform="translate(' + x + ' 0)"><g class="jm-swing" style="animation-delay:' + delay + 's">' +
+      '<line x1="0" y1="0" x2="0" y2="46" stroke="#d9a227" stroke-width="1.6"/><circle cx="0" cy="46" r="4" fill="none" stroke="#f6d25a" stroke-width="2"/>' +
+      '<path d="M-9 50 L9 50 L12 58 L-12 58 Z" fill="url(#jmGold)" stroke="#8a5a08" stroke-width="1"/>' +
+      '<path d="M-12 58 H12 L13 90 Q0 100 -13 90Z" fill="#0f9d6a" stroke="#f6d25a" stroke-width="1.6" opacity=".95"/>' +
+      '<ellipse cx="0" cy="76" rx="9" ry="14" fill="#fff3b8" class="jm-flame"/><ellipse cx="0" cy="78" rx="4.5" ry="8" fill="#ffb300"/>' +
+      '<path d="M-13 90 Q0 100 13 90 L9 98 L-9 98 Z" fill="url(#jmGold)" stroke="#8a5a08" stroke-width="1"/>' +
+      '<path d="M-4 60 V92 M4 60 V92" stroke="#f6d25a" stroke-width="1" opacity=".7"/><ellipse cx="-7" cy="68" rx="2" ry="6" fill="#fff" opacity=".4"/>' +
+      '<use href="#bnSpark" x="-26" y="62" width="14" height="14" class="bn-spk"/></g></g>';
+  }
+  function jmScene() {
+    return '<svg class="jm-scene" viewBox="0 0 300 200" aria-hidden="true" focusable="false"><defs>' +
+      '<linearGradient id="jmSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#062a3a"/><stop offset=".55" stop-color="#0d5a52"/><stop offset="1" stop-color="#1b8a62"/></linearGradient>' +
+      '<linearGradient id="jmGold" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8a5a08"/><stop offset=".35" stop-color="#ffe79a"/><stop offset=".7" stop-color="#d9a227"/><stop offset="1" stop-color="#7a4d06"/></linearGradient>' +
+      '<radialGradient id="jmGlow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff3b8" stop-opacity=".8"/><stop offset="1" stop-color="#fff3b8" stop-opacity="0"/></radialGradient>' +
+      '<linearGradient id="jmGift" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3fd08a"/><stop offset="1" stop-color="#0a6a43"/></linearGradient>' +
+      '<radialGradient id="jmDate" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#c98a52"/><stop offset=".5" stop-color="#7a3d1a"/><stop offset="1" stop-color="#3b1a0a"/></radialGradient>' +
+      '<mask id="jmCres"><rect x="0" y="0" width="300" height="200" fill="#fff"/><circle cx="162" cy="48" r="24" fill="#000"/></mask>' +
+      '<clipPath id="jmArch"><path d="M6 200 V96 Q6 6 150 6 Q294 6 294 96 V200Z"/></clipPath></defs>' +
+      '<path d="M6 200 V96 Q6 6 150 6 Q294 6 294 96 V200Z" fill="url(#jmSky)"/><g clip-path="url(#jmArch)">' +
+      '<circle cx="150" cy="50" r="46" fill="url(#jmGlow)" class="jm-breath"/><circle cx="150" cy="48" r="30" fill="url(#jmGold)" mask="url(#jmCres)" class="jm-breath2"/>' +
+      '<use href="#bnSpark" x="168" y="26" width="22" height="22" class="bn-spk"/><use href="#bnSpark" x="60" y="40" width="14" height="14" class="bn-spk bn-spk2"/><use href="#bnSpark" x="238" y="60" width="16" height="16" class="bn-spk"/><use href="#bnSpark" x="96" y="84" width="10" height="10" class="bn-spk bn-spk2"/><use href="#bnSpark" x="212" y="30" width="10" height="10" class="bn-spk"/>' +
+      '<g fill="#06382a" stroke="#0a5a40" stroke-width="1"><path d="M86 150 V112 Q86 90 112 90 Q138 90 138 112 V150Z"/><rect x="82" y="148" width="60" height="8"/><path d="M112 90 V82 M112 82 l-3 -6 h6z"/><rect x="150" y="104" width="9" height="50"/><path d="M149 104 l5.5 -12 5.5 12z"/><rect x="62" y="116" width="9" height="40"/><path d="M61 116 l5.5 -12 5.5 12z"/></g>' +
+      '<g fill="#ffd54a" opacity=".85"><rect x="152" y="118" width="4" height="7" rx="2"/></g>' + jmLantern(48, 0) + jmLantern(252, -1.4) +
+      '<rect x="0" y="150" width="300" height="50" fill="#0a3a28"/></g>' +
+      '<path d="M6 200 V96 Q6 6 150 6 Q294 6 294 96 V200Z" fill="none" stroke="#f6d25a" stroke-width="3"/>' +
+      '<g transform="translate(150 168)"><ellipse cx="0" cy="22" rx="60" ry="8" fill="#000" opacity=".4"/>' +
+      '<g class="jm-gift"><rect x="-56" y="-14" width="30" height="28" rx="4" fill="url(#jmGift)" stroke="#f6d25a" stroke-width="1.5" transform="rotate(-8 -41 0)"/><path d="M-41 -14 v28 M-56 0 h30" stroke="#f6d25a" stroke-width="3" transform="rotate(-8 -41 0)"/><path d="M-41 -14 c-9 -10 -14 -2 -4 0 m4 0 c9 -10 14 -2 4 0" fill="none" stroke="#f6d25a" stroke-width="2.4" stroke-linecap="round" transform="rotate(-8 -41 0)"/></g>' +
+      '<path d="M-34 4 Q0 44 34 4 Z" fill="url(#jmGold)" stroke="#8a5a08" stroke-width="1.5"/><ellipse cx="0" cy="4" rx="34" ry="8" fill="#f6d25a" stroke="#8a5a08"/>' +
+      '<g class="jm-bob"><ellipse cx="-14" cy="-2" rx="12" ry="7.5" fill="url(#jmDate)"/><ellipse cx="-17" cy="-5" rx="4.5" ry="2" fill="#fff" opacity=".5"/></g>' +
+      '<g class="jm-bob jm-bob2"><ellipse cx="12" cy="-4" rx="12" ry="7.5" fill="url(#jmDate)" transform="rotate(12 12 -4)"/><ellipse cx="9" cy="-7" rx="4.5" ry="2" fill="#fff" opacity=".5"/></g>' +
+      '<g class="jm-bob jm-bob3"><ellipse cx="-1" cy="-12" rx="12" ry="7.5" fill="url(#jmDate)" transform="rotate(-6 -1 -12)"/><ellipse cx="-4" cy="-15" rx="4.5" ry="2" fill="#fff" opacity=".5"/></g>' +
+      '<g transform="translate(34 -22) scale(.38)">' + bonInner("pist", "bn-bob", false) + "</g></g></svg>";
+  }
+  function jummahDialog() {
+    bonEnsureDefs();
+    const old = document.getElementById("jmWrap"); if (old) old.remove();
+    const prevFocus = document.activeElement, n = jumNext(), cur = (n - 1) % 4, extra = n % 4 === 0, gems = JUM_GEMS + (extra ? JUM_EXTRA_GEMS : 0);
+    const streakT = n === 1 ? "Je eerste vrijdag" : n + " vrijdagen op rij";
+    const streakS = extra ? "Extra cadeau: +" + JUM_EXTRA_GEMS + " edelstenen!" : "Bij " + (n + 4 - (n % 4)) + " vrijdagen op rij wacht een extra cadeau";
+    let dots = "";
+    for (let i = 0; i < 4; i++) dots += '<span class="jm-dot' + (i < cur ? " on" : i === cur ? " now" : "") + '" aria-hidden="true">' + (i < cur ? "✓" : i === cur ? (i === 3 ? "🎁" : "★") : i === 3 ? "🎁" : "·") + "</span>";
+    const letters = "Jummah Mubarak".split("").map(function (c, i) { return '<span style="--i:' + i + '">' + (c === " " ? "&nbsp;" : c) + "</span>"; }).join("");
+    const book = '<svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 8 Q9 5 3 7 V25 Q9 23 16 26 Q23 23 29 25 V7 Q23 5 16 8Z" fill="#fff6c2" stroke="#d9a227" stroke-width="1.6" stroke-linejoin="round"/><path d="M16 8 V26" stroke="#d9a227" stroke-width="1.6"/><path d="M6 11 Q10 10 13 11.5 M6 15 Q10 14 13 15.5 M19 11.5 Q22 10 26 11 M19 15.5 Q22 14 26 15" stroke="#0a6a43" stroke-width="1.4" fill="none" stroke-linecap="round" opacity=".7"/></svg>';
+    const star = '<svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2 l3.2 9 9.4 .4 -7.4 5.8 2.6 9.2 -7.8 -5.2 -7.8 5.2 2.6 -9.2 -7.4 -5.8 9.4 -.4z" fill="url(#bnStar)" stroke="#8a5a08" stroke-width="1.2" stroke-linejoin="round"/></svg>';
+    const rib = '<div class="bm-rib" aria-hidden="true"><svg viewBox="0 0 300 70"><path fill="#0a4a30" stroke="#f6d25a" stroke-width="2" stroke-linejoin="round" d="M2 20 L36 20 L36 56 L2 56 L14 38Z"><animate attributeName="d" dur="3s" repeatCount="indefinite" values="M2 20 L36 20 L36 56 L2 56 L14 38Z;M2 24 L36 22 L36 58 L2 52 L14 38Z;M2 20 L36 20 L36 56 L2 56 L14 38Z"/></path>' +
+      '<path fill="#0a4a30" stroke="#f6d25a" stroke-width="2" stroke-linejoin="round" d="M298 20 L264 20 L264 56 L298 56 L286 38Z"><animate attributeName="d" dur="3s" begin="-1s" repeatCount="indefinite" values="M298 20 L264 20 L264 56 L298 56 L286 38Z;M298 24 L264 22 L264 58 L298 52 L286 38Z;M298 20 L264 20 L264 56 L298 56 L286 38Z"/></path>' +
+      '<path fill="url(#bnRib)" stroke="#f6d25a" stroke-width="2.4" stroke-linejoin="round" d="M20 12 Q85 4 150 12 T280 12 L280 52 Q215 60 150 52 T20 52 Z"><animate attributeName="d" dur="2.8s" repeatCount="indefinite" values="M20 12 Q85 4 150 12 T280 12 L280 52 Q215 60 150 52 T20 52 Z;M20 12 Q85 20 150 12 T280 12 L280 52 Q215 44 150 52 T20 52 Z;M20 12 Q85 4 150 12 T280 12 L280 52 Q215 60 150 52 T20 52 Z"/></path>' +
+      '<defs><linearGradient id="bnRib" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3fd08a"/><stop offset=".5" stop-color="#14935a"/><stop offset="1" stop-color="#0a5233"/></linearGradient></defs></svg></div>';
+    const label = "Jummah Mubarak. Vergeet je niet Surah al-Kahf te reciteren? Heb je de salawat verricht? Je cadeau: " + gems + " edelstenen en " + JUM_XP + " XP. " + streakT + ". " + streakS + ".";
+    const w = document.createElement("div"); w.className = "bm-wrap"; w.id = "jmWrap";
+    w.innerHTML = '<div class="bm-dlg jm-dlg" role="dialog" aria-modal="true" aria-label="' + esc(label) + '"><div class="bm-in">' + rib + '<div class="jm-rt" aria-hidden="true">' + letters + "</div>" +
+      '<div class="jm-rem"><div class="jm-ri">' + book + "<span>Vergeet je niet Surah al-Kahf te reciteren?</span></div>" +
+      '<div class="jm-ri">' + star + "<span>Heb je de salawat verricht?<small>(Salat ʿalan-Nabi ﷺ)</small></span></div></div>" + jmScene() +
+      '<div class="bm-row jm-reward"><span class="bm-rw">' + gemSvg(26) + "<b>+" + gems + "</b></span>" + '<span class="bm-rw">' + xpSvg(24) + "<b>+" + JUM_XP + "</b></span></div>" +
+      '<div class="jm-streak"><b>' + streakT + "</b><br>" + streakS + '<div class="jm-dots">' + dots + "</div></div>" +
+      '<div class="bm-btns jm-btns"><button class="bm-btn go" data-jm="claim">Ontvang</button></div><button class="jm-later" data-jm="x">Later</button></div></div>';
+    const close = function () { document.removeEventListener("keydown", onKey, true); w.remove(); if (prevFocus && prevFocus.focus && document.contains(prevFocus)) { try { prevFocus.focus({ preventScroll: true }); } catch (e) {} } };
+    const onKey = function (e) {
+      if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); close(); return; }
+      if (e.key === "Tab") { const f = [].slice.call(w.querySelectorAll("button")); if (!f.length) return; const i = f.indexOf(document.activeElement); e.preventDefault(); f[(i + (e.shiftKey ? f.length - 1 : 1)) % f.length].focus(); }
+    };
+    w.addEventListener("click", function (e) {
+      const b = e.target.closest("[data-jm]");
+      if (e.target === w || (b && b.dataset.jm === "x")) { close(); return; }
+      if (b && b.dataset.jm === "claim") {
+        const lv = P.mode, nn = jumNext(), ex = nn % 4 === 0, g = JUM_GEMS + (ex ? JUM_EXTRA_GEMS : 0);
+        addReward(lv, JUM_XP, g);
+        P.jum = { last: todayStr(), count: nn, max: Math.max(nn, (P.jum && P.jum.max) || 0) };
+        saveState(); pushMember();
+        if (sbUser && P.sbId === sbUser.id) sbSyncSoon(lv);
+        close(); play("fanfare"); render();
+        const msg = "Jummah Mubarak! Je kreeg " + g + " edelstenen en " + JUM_XP + " XP.";
+        announce(msg); jToast("🎁 " + msg);
+      }
+    });
+    document.addEventListener("keydown", onKey, true);
+    document.body.appendChild(w); play("click");
+    const f = w.querySelector(".bm-btn.go"); if (f) f.focus({ preventScroll: true });
+  }
+
+
   /* ───────────── Resultaat van een reis-level ───────────── */
   function rewardsHtml(r) {
     if (!r.xpGain && !r.gemGain && !r.streakUp && r.kind !== "daily") return "";
@@ -6732,6 +7059,7 @@ return exports;})();
     h += rewardsHtml(r);
     if (r.chestReady) h += '<div class="chest-win ready"><svg viewBox="-34 -36 68 62" width="84" height="76" aria-hidden="true"><g class="chest-bounce">' + chest(0, 4, "closed", 1.3, "stop") + "</g></svg>" +
       "<span><b>Een schatkist wacht op je!</b>Tik op de springende kist op de kaart om hem te openen.</span></div>";
+    if (r.newBon) h += '<div class="bon-win" role="status"><span class="bw-art">' + bonSvg(r.newBon.kind, 78, "bn-bob", r.newBon.gold, true) + "</span><span><b>Nieuwe bonbon! " + esc(r.newBon.name) + "</b><small>Vakje " + r.newBon.slot + " van " + r.newBon.n + " in je doosje" + (r.newBon.full ? ". Doosje vol! +" + BON_FULL_GEMS + " edelstenen" : "") + '</small><button class="bw-btn" data-act="bon-box" data-cat="' + r.catId + '">Bekijk doosje</button></span></div>';
     if (r.landDone) h += '<div class="land-win"><span class="lw-flag">' + FLAG_SVG + "</span><span><b>Land voltooid!</b>Je hebt alle " + r.jCount + " levels van " + esc(catById(r.catId).title) + " gehaald.</span></div>";
     h += '<div class="result-actions">';
     if (r.passed) {
@@ -8038,7 +8366,7 @@ return exports;})();
       const done = landDone(level, x.id);
       h += '<button class="land-chip' + (k === i ? " on" : "") + '" style="--accent:' + x.color + '" data-act="journey-land" data-i="' + k + '" aria-pressed="' + (k === i) + '" aria-label="Land ' + (k + 1) + ": " + esc(x.title) + (done ? " (voltooid)" : !jLandOpen(level, x.id) ? " (vergrendeld)" : "") + '"><span>' + (k + 1) + "</span>" + (done ? '<i class="lc-b">🚩</i>' : !jLandOpen(level, x.id) ? '<i class="lc-b lc-lock">🔒</i>' : "") + "</button>";
     });
-    h += '</span><small class="js-prog" aria-label="' + st.passed + " van " + st.n + ' levels gehaald">' + st.passed + "/" + st.n + " ⭐" + st.stars + "</small></div>" + badgePillHtml(level, c, st) + "</div>" +
+    h += '</span><small class="js-prog" aria-label="' + st.passed + " van " + st.n + ' levels gehaald">' + st.passed + "/" + st.n + " ⭐" + st.stars + "</small>" + bonChipHtml(level, c) + "</div>" + badgePillHtml(level, c, st) + "</div>" +
       (i < LS.length - 1 ? '<button class="js-arrow" data-act="journey-land" data-i="' + (i + 1) + '" aria-label="Volgend land: ' + esc(LS[i + 1].title) + '">' + icon("right", 20) + "</button>" : '<button class="js-arrow" disabled aria-label="Geen volgend land">' + icon("right", 20) + "</button>") + "</div>";
     h += '<div id="jPresence" class="j-presence" role="status" hidden></div>';
     /* fullscreen kaart */
@@ -8149,6 +8477,7 @@ return exports;})();
       }
     }
     if (landFly) { runLandFlight(); return; }
+    if (maybeJummah()) return;
     if (flyerPending) { flyerPending = false; setTimeout(showFlyer, 700); }
     socialFetch();
     setTimeout(remindCheck, 1500);
@@ -8721,7 +9050,8 @@ return exports;})();
       case "journey-level": {
         const jc = el.dataset.cat, ji = parseInt(el.dataset.i, 10);
         if (jLocked(P.mode, jc, ji)) { play("wrong"); jToast(jLockText(P.mode, jc, ji)); break; }
-        play("click"); journeyReturn = true; journeyLand = Math.max(0, landsFor(P.mode).findIndex(function (x) { return x.id === jc; })); startQuiz("journey", jc, null, ji); break;
+        if (bonMenuWanted(P.mode, jc, ji)) { play("click"); levelMenu(jc, ji); break; }
+        startJLevel(jc, ji); break;
       }
       case "hold-auto": stopTimer(); if (result) result.noAuto = true; { const t = document.getElementById("autoTxt"); if (t) t.textContent = result && result.kind === "journey" ? "Naar de kaart" : "Ga door naar Niveau " + result.next; const hb = document.querySelector('button[data-act="hold-auto"]'); if (hb) hb.remove(); announce("Automatisch doorgaan is gestopt."); } break;
       case "hint": showHint(); break;
@@ -8729,6 +9059,7 @@ return exports;})();
       case "read-aloud": if (quiz) { const it = quiz.items[quiz.idx]; speak(quiz.answered ? feedbackSpeech(it) : questionSpeech(it)); } break;
       case "duff-toggle": duffToggle(); break;
       case "settings": case "a11y": play("click"); settingsDialog(); break;
+      case "bon-box": stopTimer(); if (result) result.noAuto = true; openBonBox(el.dataset.cat); break;
       case "journey-chest": openChest(el.dataset.cat, parseInt(el.dataset.i, 10)); break;
       case "mg-open-now": chestOpenNow(); break;
       case "mg-start": startMinigame(); break;
