@@ -139,6 +139,8 @@ p { margin: 0; }
   transform: rotate(-6deg);
   animation: wobble 4s ease-in-out infinite;
 }
+.logo:has(.brand-svg) { background: none; box-shadow: none; border-radius: 0; }
+.logo .brand-svg { width: 100%; height: 100%; display: block; filter: drop-shadow(0 6px 8px rgba(0, 40, 25, .35)); }
 .welcome h1 { font-size: 2rem; color: var(--emerald-dark); }
 .welcome .greet { margin-top: 6px; color: var(--muted); font-weight: 600; }
 .welcome .arabic { text-align: center; font-size: 1.9rem; line-height: 2; margin-top: 6px; }
@@ -9192,7 +9194,15 @@ return exports;})();
   /* ───────────── Merk & logo: één neutrale plek (nog in beraad) ─────────────
      Pas hier later de definitieve merknaam en het logo aan. */
   const BRAND_NAME = "Islam Quiz";
-  function brandLogo(size) { return icon("moon", size || 44); }
+  function brandLogo(size) {
+    return '<svg class="brand-svg" viewBox="0 0 210 210" aria-hidden="true" focusable="false"><defs>' +
+      '<linearGradient id="blg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4fb585"/><stop offset=".55" stop-color="#2d8a5f"/><stop offset="1" stop-color="#14583a"/></linearGradient>' +
+      '<linearGradient id="blr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3b8"/><stop offset=".5" stop-color="#f6d25a"/><stop offset="1" stop-color="#b8860b"/></linearGradient>' +
+      '<mask id="blm"><rect width="210" height="210" fill="#fff"/><circle cx="123" cy="92" r="52" fill="#000"/></mask></defs>' +
+      '<rect x="6" y="6" width="198" height="198" rx="46" fill="url(#blg)" stroke="url(#blr)" stroke-width="7"/>' +
+      '<rect x="16" y="16" width="178" height="80" rx="38" fill="#fff" opacity=".16"/>' +
+      '<circle cx="102" cy="108" r="58" fill="#fff9e0" mask="url(#blm)"/></svg>';
+  }
 
   /* ───────────── Introductiescherm: dansend logo, letters, sparkle-geluid, gordijnen ───────────── */
   const SPL_NOTES = [659.25, 783.99, 880, 987.77, 1174.66, 1318.5, 1174.66, 1318.5, 1567.98, 1760];
