@@ -275,6 +275,7 @@ p { margin: 0; }
 .bar > i { display: block; height: 100%; width: 0; border-radius: 999px; background: linear-gradient(90deg, var(--mint), var(--emerald)); transition: width .45s cubic-bezier(.3,1.2,.5,1); }
 .timer { margin-top: 8px; height: 8px; }
 .timer > i { background: linear-gradient(90deg, var(--gold), #e9724c); transition: none; }
+.colofon { text-align: left; max-height: 86vh; overflow: auto; } .colofon h3 { text-align: center; margin-bottom: 2px; } .col-sub { text-align: center; color: var(--muted); font-weight: 700; margin: 0 0 12px; } .col-row h4 { margin: 10px 0 2px; font-size: .9rem; color: var(--emerald-dark, #1b4332); } .col-row p { margin: 0; font-size: .88rem; line-height: 1.4; } .col-dua { text-align: center; font-weight: 800; margin: 14px 0 10px; color: #8a5a12; }
 .imp-tag { display: inline-block; margin: 2px 0 6px; padding: 3px 10px; border-radius: 999px; background: #fff3c4; color: #7a4d0f; font-weight: 900; font-size: .78rem; border: 1.5px solid #f2c94c; }
 .next-lock { position: relative; overflow: hidden; opacity: .85; } .next-lock::before { content: ""; position: absolute; inset: 0; width: 0; background: rgba(255, 255, 255, .35); animation: lockFill var(--lk, 2000ms) linear forwards; }
 @keyframes lockFill { to { width: 100%; } }
@@ -6167,7 +6168,7 @@ return exports;})();
       '<button class="btn ghost" data-act="scores" data-d="x">' + icon("trophy", 18) + "Mijn scores</button>" +
       '<button class="btn ghost" data-act="group" data-d="x">' + icon("users", 18) + "Groep &amp; duel</button>" +
       '<button class="btn ghost" data-act="bazaar" data-d="x">' + gemSvg(18) + "Bazaar</button>" +
-      '<button class="btn ghost" data-act="tour" data-d="x">Uitleg bekijken</button>' + (isStandalone() ? "" : '<button class="btn ghost" data-act="install" data-d="x">Zet op beginscherm</button>') + "</div>" +
+      '<button class="btn ghost" data-act="tour" data-d="x">Uitleg bekijken</button>' + (COLOFON_ON ? '<button class="btn ghost" data-act="colofon" data-d="x">Over de app (colofon)</button>' : "") + (isStandalone() ? "" : '<button class="btn ghost" data-act="install" data-d="x">Zet op beginscherm</button>') + "</div>" +
       '<button class="set-danger" data-act="reset" data-d="x">' + icon("trash", 16) + "Voortgang van " + esc(P.name) + " wissen</button>" +
       '<button class="btn block" data-d="ok">Klaar</button></div></div>';
     w.addEventListener("change", function (e) {
@@ -6931,7 +6932,7 @@ return exports;})();
         if (S.remind && "Notification" in window && Notification.permission === "granted" && navigator.serviceWorker) {
           S.remindDay = todayStr(); saveState();
           const t = remindText();
-          navigator.serviceWorker.ready.then(function (reg) { reg.showNotification(t.title, { body: t.body, icon: "icon-192.png", badge: "icon-192.png", tag: "streak", data: { url: "./" } }); }).catch(function () {});
+          navigator.serviceWorker.ready.then(function (reg) { reg.showNotification(t.title, { body: t.body, icon: "icon-192.png", badge: "badge-96.png", tag: "streak", data: { url: "./" } }); }).catch(function () {});
         }
         return;
       }
@@ -10703,6 +10704,33 @@ return exports;})();
     document.body.appendChild(w);
     const b = w.querySelector("button"); if (b) b.focus();
   }
+  /* ───────────── Colofon (klaargezet, v81) ─────────────
+     Zet COLOFON_ON op true om de knop 'Over de app (colofon)' in Instellingen te tonen.
+     Alles met [TIJDELIJK] nog invullen voordat het aan gaat. */
+  const COLOFON_ON = false;
+  const COLOFON = {
+    versie: "v81",
+    jaar: "2026",
+    maker: "Een initiatief van Zeno Innovation",
+    contact: "contact@voorbeeld.nl [TIJDELIJK]",
+    nagekeken: "",                     /* bijvoorbeeld: "Imam … van moskee …" (leeg = regel weglaten) */
+  };
+  function colofonDialog() {
+    const C = COLOFON, row = function (t, b) { return '<div class="col-row"><h4>' + t + "</h4><p>" + b + "</p></div>"; };
+    const w = document.createElement("div"); w.className = "dialog-wrap";
+    w.innerHTML = '<div class="dialog colofon" role="dialog" aria-modal="true" aria-labelledby="colT">' +
+      '<h3 id="colT">Islam Quiz</h3><p class="col-sub">Versie ' + esc(C.versie) + " · " + esc(C.jaar) + "<br>" + esc(C.maker) + "</p>" +
+      row("Inhoud", "Gebaseerd op de Koran en de erkende hadith-verzamelingen (o.a. Bukhari, Muslim, Abu Dawud en Tirmidhi), binnen Ahl as-Sunnah wal-Jama‘ah. We zoeken naar wat de Ummah verbindt.") +
+      row("Fiqh", "Vragen over de praktijk gaan uit van de Hanafi-school. Waar de andere wetscholen anders denken, staat dat in de verdieping.") +
+      (C.nagekeken ? row("Nagekeken door", esc(C.nagekeken)) : "") +
+      row("Illustraties en geluid", "Eigen, originele tekeningen, zonder gezichten van levende wezens. Alleen halal geluiden, zonder muziekinstrumenten.") +
+      row("Privacy", "Alleen een bijnaam, avatar en scores worden gedeeld. Geen chat en geen betalingen met echt geld. Je voortgang staat op je eigen toestel.") +
+      row("Gemaakt met", "Code en vragen zijn mede opgesteld met hulp van een AI-assistent (Claude) en door mensen nagekeken.") +
+      row("Contact", "Fout gezien in een vraag of een idee? Mail naar " + esc(C.contact) + ".") +
+      '<p class="col-dua">Moge Allah deze kennis tot nut maken. Ameen.</p><button class="btn block" data-d="ok">Sluiten</button></div>';
+    w.addEventListener("click", function (e) { if (e.target === w || e.target.closest("[data-d]")) w.remove(); });
+    document.body.appendChild(w); const b = w.querySelector("button"); if (b) b.focus();
+  }
   function installHelp() {
     const ua = navigator.userAgent || "";
     const ios = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
@@ -10752,6 +10780,7 @@ return exports;})();
       case "read-aloud": if (quiz) { const it = quiz.items[quiz.idx]; speak(quiz.answered ? feedbackSpeech(it) : questionSpeech(it)); } break;
       case "duff-toggle": duffToggle(); break;
       case "settings": case "a11y": play("click"); settingsDialog(); break;
+      case "colofon": play("click"); colofonDialog(); break;
       case "bon-box": stopTimer(); if (result) result.noAuto = true; openBonBox(el.dataset.cat); break;
       case "journey-chest": openChest(el.dataset.cat, parseInt(el.dataset.i, 10)); break;
       case "mg-open-now": chestOpenNow(); break;
