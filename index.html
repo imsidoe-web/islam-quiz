@@ -1319,8 +1319,8 @@ body.jfull .reward-flyer { top: 160px; }
 .back-toast.show { opacity: 1; transform: translate(-50%, 0); }
 
 /* ── Ajalat al-Ilm · Rad van Kennis (v69) ── */
-.jrad { position: fixed; z-index: 28; left: 50%; transform: translateX(-50%); bottom: calc(84px + env(safe-area-inset-bottom, 0px)); appearance: none; padding: 0; border: 0; background: none; cursor: pointer; border-radius: 50%; filter: drop-shadow(0 5px 6px rgba(0, 0, 0, .4)) drop-shadow(0 0 10px rgba(255, 213, 79, .35)); }
-.jrad:active { transform: translateX(-50%) translateY(3px); } .jrad:focus-visible { outline: 3px solid #ffb703; outline-offset: 3px; }
+.jrad { position: fixed; z-index: 28; left: max(88px, calc(50% - 112px)); transform: none; bottom: calc(84px + env(safe-area-inset-bottom, 0px)); appearance: none; padding: 0; border: 0; background: none; cursor: pointer; border-radius: 50%; filter: drop-shadow(0 5px 6px rgba(0, 0, 0, .4)) drop-shadow(0 0 10px rgba(255, 213, 79, .35)); }
+.jrad:active { transform: translateY(3px); } .jrad:focus-visible { outline: 3px solid #ffb703; outline-offset: 3px; }
 .jrad svg { display: block; } .jrad-w { transform-box: fill-box; transform-origin: 50% 50%; animation: jradSpin 14s linear infinite; }
 @media (prefers-reduced-motion: reduce) { .jrad-w { animation: none; } }
 @keyframes jradSpin { to { transform: rotate(360deg); } }
@@ -1548,6 +1548,15 @@ body.radgame { overflow: hidden; } body.radgame #app { max-width: 560px; padding
 .bz-gv:disabled { opacity: .4; cursor: default; }
 .bz-hadith { margin-top: 10px !important; padding: 8px 10px; border-radius: 12px; background: rgba(0, 0, 0, .25); font-style: italic; color: #f2f7f4 !important; } .bz-hadith small { font-style: normal; color: #cfe8da; }
 .bz-note { text-align: center; font-size: .74rem; color: #cfe8da; font-weight: 700; margin: 4px 0 0; }
+
+/* ── Bovenbalk voorstel A (v74): naam met modus eronder; rechts alleen sterren, edelstenen en instellingen ── */
+.jh-who { display: grid; justify-items: start; min-width: 0; line-height: 1.1; }
+.jh-who .jh-player { padding: 0; min-height: 0; } .jh-who .jh-player span { max-width: 130px; font-size: .95rem; }
+.jh-modesub { appearance: none; border: 0; background: none; cursor: pointer; font: inherit; font-weight: 800; font-size: .72rem; color: #a8f0c6; display: inline-flex; align-items: center; gap: 3px; padding: 1px 0 0; min-height: 22px; }
+.jh-modesub.junior { color: #ffd98a; } .jh-modesub.beginner { color: #bff0e0; } .jh-modesub i { font-style: normal; font-size: .62rem; opacity: .85; }
+.jh-modesub:focus-visible { outline: 3px solid #ffb703; outline-offset: 2px; border-radius: 6px; }
+.j-head .jh-stats { justify-content: flex-end; gap: 6px; } .j-head .jh-stats > span, .j-head .jh-stats > .jh-gembtn { padding: 4px 10px; font-size: .9rem; }
+@media (max-width: 400px) { .jh-who .jh-player span { max-width: 96px; } .j-head .jh-stats > span, .j-head .jh-stats > .jh-gembtn { padding: 3px 7px; font-size: .82rem; } }
 
 /* ── Kwartet-album: dikke 3D-kaarten in Candy-Crush-stijl (smaragd, goud, crème) ── */
 .album-head { background: linear-gradient(180deg, #fffaf0, #f6e3b4); border: 3px solid #e0b24a; border-radius: 22px; padding: 12px 14px; box-shadow: 0 5px 0 #b98a22; color: #4a3208; margin-bottom: 16px; }
@@ -9713,9 +9722,9 @@ return exports;})();
     const nm = esc(P.name), stars = starsAt(P, level), xp = xpAt(P, level), gems = gemsAt(P, level);
     let h = '<h1 class="sr-only" tabindex="-1">De Reis – Land ' + (i + 1) + ": " + esc(c.title) + "</h1>";
     /* zwevende topbalk */
-    h += '<header class="j-head"><div class="jh-pw"><button class="jh-player jh-av" data-act="avatar-pick" data-id="' + P.id + '" aria-label="Kies je avatar">' + avatarHtml(P, 30) + '</button><button class="jh-player" data-act="players" aria-label="Speler: ' + nm + '. Wissel van speler"><span>' + nm + "</span></button></div>" +
-      '<div class="jh-stats" role="group" aria-label="Jouw punten in de ' + modeName(level) + '-modus"><span>' + icon("star", 15, "fill") + "<b>" + stars + '</b><i class="sr-only"> sterren</i></span><span class="xp">' + xpSvg(16) + '<b>' + xp + '</b> XP</span><button class="gem jh-gembtn" data-act="bazaar" aria-label="' + gems + ' edelstenen. Open de bazaar">' + gemSvg(15) + "<b>" + gems + '</b><i class="jh-plus" aria-hidden="true">+</i></button></div>' +
-      '<button class="jh-mode ' + level + '" data-act="switch-mode" aria-label="Modus wisselen. Nu: ' + modeName(level) + '. Tik om te kiezen">' + icon(MODE_ICON[level], 16) + "<span>" + modeName(level) + "</span></button>" +
+    h += '<header class="j-head"><div class="jh-pw"><button class="jh-player jh-av" data-act="avatar-pick" data-id="' + P.id + '" aria-label="Kies je avatar">' + avatarHtml(P, 30) + '</button><div class="jh-who"><button class="jh-player" data-act="players" aria-label="Speler: ' + nm + '. Wissel van speler"><span>' + nm + "</span></button>" +
+      '<button class="jh-modesub ' + level + '" data-act="switch-mode" aria-label="Modus wisselen. Nu: ' + modeName(level) + '. Tik om te kiezen">' + icon(MODE_ICON[level], 13) + "<span>" + modeName(level) + '</span><i aria-hidden="true">▾</i></button></div></div>' +
+      '<div class="jh-stats" role="group" aria-label="Jouw punten in de ' + modeName(level) + '-modus"><span>' + icon("star", 15, "fill") + "<b>" + stars + '</b><i class="sr-only"> sterren</i></span><button class="gem jh-gembtn" data-act="bazaar" aria-label="' + gems + ' edelstenen. Open de bazaar">' + gemSvg(15) + "<b>" + gems + '</b><i class="jh-plus" aria-hidden="true">+</i></button></div>' +
       '<button class="jh-gear" data-act="settings" aria-label="Instellingen">' + icon("gear", 20) + "</button></header>";
     /* land-schild */
     h += '<div class="j-shield" style="--accent:' + c.color + '" role="group" aria-label="Land kiezen">' +
