@@ -261,6 +261,9 @@ p { margin: 0; }
   background: var(--accent); color: #fff; border-radius: 999px; padding: 8px 14px; font-weight: 800; font-size: .85rem;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
+.cat-badge .cb-t { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.cat-badge .cb-l { flex: none; }
+.cat-badge svg { flex: none; }
 .score-pill {
   display: inline-flex; align-items: center; gap: 6px; background: var(--gold-soft); color: #7a4d0f;
   border-radius: 999px; padding: 8px 14px; font-weight: 900; font-size: .9rem;
@@ -1005,7 +1008,7 @@ a.btn.block { display: flex; margin-top: 14px; }
 .option.eliminated { opacity: .45; filter: grayscale(1); text-decoration: line-through; pointer-events: none; }
 .option.eliminated.just { animation: elimShake .5s ease both; }
 @keyframes elimShake { 0% { transform: translateX(0); opacity: 1; filter: none; } 20% { transform: translateX(-7px); } 40% { transform: translateX(6px); } 60% { transform: translateX(-4px); } 80% { transform: translateX(2px); } 100% { transform: translateX(0); } }
-.reward-flyer { position: fixed; z-index: 55; left: 50%; top: 14px; transform: translateX(-50%); max-width: min(92vw, 420px); display: flex; align-items: center; gap: 12px; background: linear-gradient(135deg, #fff3c4, #ffd36a); color: #4a3000; border: 3px solid #fff; border-radius: 22px; padding: 12px 18px; font-weight: 800; box-shadow: 0 10px 26px rgba(120, 80, 0, .35); animation: flyIn .6s cubic-bezier(.3, 1.5, .5, 1) both; cursor: pointer; }
+.reward-flyer { position: fixed; z-index: 55; left: 50%; top: 14px; transform: translateX(-50%); width: max-content; max-width: min(92vw, 420px); display: flex; align-items: center; gap: 12px; background: linear-gradient(135deg, #fff3c4, #ffd36a); color: #4a3000; border: 3px solid #fff; border-radius: 22px; padding: 12px 18px; font-weight: 800; box-shadow: 0 10px 26px rgba(120, 80, 0, .35); animation: flyIn .6s cubic-bezier(.3, 1.5, .5, 1) both; cursor: pointer; }
 .reward-flyer.out { animation: flyOut .5s ease both; }
 .rf-e { font-size: 2rem; }
 @keyframes flyIn { from { transform: translate(-50%, -140%) rotate(-4deg); } to { transform: translate(-50%, 0); } }
@@ -2738,13 +2741,13 @@ exports.questions = [
     explanation: "Soera Al-Falaq en Soera An-Nas worden zo genoemd omdat men hiermee bescherming zoekt bij Allah tegen allerlei kwaad.",
     arabic: {
       text: "قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ",
-      translation: "Zeg: Ik zoek mijn refuge bij de Heer van de dageraad.",
+      translation: "Zeg: Ik zoek mijn toevlucht bij de Heer van de dageraad.",
       source: "Soera Al-Falaq 113:1"
     }
   },
   {
     id: "k-l4-7", category: "koran", level: "expert", tier: 4,
-    question: "Wat is de naam van de Sahabi die als enige namentlijk in de Koran wordt genoemd?",
+    question: "Welke Sahabi (metgezel) is de enige die bij naam in de Koran wordt genoemd?",
     options: ["Zayd ibn Harithah (r.a.)", "Abu Bakr as-Siddiq (r.a.)", "Bilal ibn Rabah (r.a.)", "Umar ibn al-Khattab (r.a.)"], answer: 0,
     explanation: "Zayd ibn Harithah (r.a.) is de enige metgezel wiens naam expliciet vermeld staat in Soera Al-Ahzab (33:37).",
     arabic: {
@@ -6254,7 +6257,7 @@ return exports;})();
     document.body.className = quiz.level;
 
     let h = '<div class="quiz-top"><button class="icon-btn" data-act="leave" aria-label="Stoppen met de quiz">' + icon("left", 22) + "</button>" +
-      '<span class="cat-badge" style="--accent:' + cat.color + '">' + icon(CAT_ICON[cat.icon], 16) + "<span>" + esc(isDaily || isDuel ? label + " · " + cat.title : label) + "</span></span>" +
+      '<span class="cat-badge" style="--accent:' + cat.color + '">' + icon(CAT_ICON[cat.icon], 16) + (quiz.kind === "journey" && !isDaily && !isDuel ? '<span class="cb-t">' + esc(cat.title) + '</span><span class="cb-l">· Level ' + (quiz.jIdx + 1) + "</span>" : '<span class="cb-t">' + esc(isDaily || isDuel ? label + " · " + cat.title : label) + "</span>") + "</span>" +
       '<span class="score-pill" id="scorePill">' + icon("star", 16, "fill") + '<span id="scoreVal">' + quiz.score + "/" + total + "</span></span></div>";
 
     h += '<div class="progress-row"><span>Vraag ' + (quiz.idx + 1) + " van " + total + "</span><span>" + Math.round(pct) + "%</span></div>" +
@@ -9671,8 +9674,8 @@ return exports;})();
     if (!tot) t = "👥 Nog geen andere spelers. Nodig vrienden uit!";
     else if (here) t = "👥 " + here + (here === 1 ? " medespeler" : " medespelers") + " in dit land" + (tot > here ? " · " + (tot - here) + " elders" : "");
     else {
-      const where = Object.keys(per).map(function (k) { return "Land " + (+k + 1) + " (" + per[k] + ")"; }).join(", ");
-      t = "👥 " + tot + (tot === 1 ? " medespeler" : " medespelers") + " in " + where;
+      const where = Object.keys(per).map(function (k) { return per[k] + " in Land " + (+k + 1); }).join(" · ");
+      t = "👥 Medespelers: " + where;
     }
     el.textContent = t; el.hidden = false;
   }
@@ -9822,7 +9825,7 @@ return exports;})();
     if (left > 0 && left <= 3) list.push({ e: "🚩", t: li + 1 < LS.length ? "Nog " + left + (left === 1 ? " level" : " levels") + " tot Land " + (li + 2) + "!" : "Nog " + left + (left === 1 ? " level" : " levels") + " tot het einde van de Reis!", w: 3 });
     if (st.passed > 0 && st.stars < st.passed * 3 && st.passed >= 3) list.push({ e: "⭐", t: "Speel een level opnieuw voor een extra ster en meer edelstenen!", w: 1 });
     if (streakAtRisk(P)) list.push({ e: "🔥", t: "Je reeks van " + streakOf(P) + (streakOf(P) === 1 ? " dag" : " dagen") + " staat op het spel! Speel vandaag een level.", w: 3 });
-    if (currentStreak() >= 2) list.push({ e: "🔥", t: currentStreak() + " dagen op rij! Doe zo door, " + P.name + "!", w: 2 });
+    if (currentStreak() >= 2) list.push({ e: "🔥", t: currentStreak() + " dagen op rij! Ga zo door, " + P.name + "!", w: 2 });
     ["Masha’Allah, je doet het super!", "Elke vraag maakt je slimmer.", "Nieuwe edelstenen wachten op je!", "Jij bent goed bezig, " + P.name + "!"].forEach(function (t, k) { list.push({ e: ["🌟", "📚", "💎", "👏"][k], t: t, w: 1 }); });
     if (list[0] && list[0].w === 4) return list[0];
     const pool = []; list.forEach(function (f) { if (f.t !== flyerLast) for (let k = 0; k < f.w; k++) pool.push(f); });
@@ -9836,6 +9839,8 @@ return exports;})();
     const d = document.createElement("div"); d.id = "flyer"; d.className = "reward-flyer"; d.setAttribute("aria-hidden", "true");
     d.innerHTML = '<span class="rf-e">' + f.e + '</span><span class="rf-t">' + esc(f.t) + "</span>";
     d.addEventListener("click", function () { d.remove(); });
+    let fy = 0; document.querySelectorAll(".j-shield, .j-presence:not([hidden]), .j-lockbanner").forEach(function (e) { const r = e.getBoundingClientRect(); if (r.height) fy = Math.max(fy, r.bottom); });
+    if (fy) d.style.top = Math.round(fy + 10) + "px";
     document.body.appendChild(d); announce(f.t);
     setTimeout(function () { d.classList.add("out"); setTimeout(function () { d.remove(); }, 500); }, 4500 + 90 * f.t.length);
   }
