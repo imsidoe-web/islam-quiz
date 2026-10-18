@@ -1558,6 +1558,17 @@ body.radgame { overflow: hidden; } body.radgame #app { max-width: 560px; padding
 .j-head .jh-stats { justify-content: flex-end; gap: 6px; } .j-head .jh-stats > span, .j-head .jh-stats > .jh-gembtn { padding: 4px 10px; font-size: .9rem; }
 @media (max-width: 400px) { .jh-who .jh-player span { max-width: 96px; } .j-head .jh-stats > span, .j-head .jh-stats > .jh-gembtn { padding: 3px 7px; font-size: .82rem; } }
 
+/* ── land-schild in drie rustige regels (v75) ── */
+.j-shield.js3 { display: block; padding-top: 8px; padding-bottom: 8px; }
+.js3 .js-top { display: flex; align-items: center; gap: 8px; }
+.js3 .js-top > b { flex: 1; min-width: 0; font-size: .95rem; font-weight: 900; line-height: 1.15; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.js3 .js-top .js-arrow { width: 34px; height: 34px; }
+.js3 .js-row { margin-top: 10px; gap: 14px; }
+.j-shield.js3 .land-strip { gap: 15px !important; }
+@media (max-width: 380px) { .j-shield.js3 .land-strip { gap: 11px !important; } .js3 .js-row { gap: 10px; } }
+.js3 .js-row2 { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+.js3 .js-row2 .js-badge { margin: 0; }
+
 /* ── Kwartet-album: dikke 3D-kaarten in Candy-Crush-stijl (smaragd, goud, crème) ── */
 .album-head { background: linear-gradient(180deg, #fffaf0, #f6e3b4); border: 3px solid #e0b24a; border-radius: 22px; padding: 12px 14px; box-shadow: 0 5px 0 #b98a22; color: #4a3208; margin-bottom: 16px; }
 .album-head .bar { background: rgba(0, 0, 0, .12); } .album-head small { color: #6b4e12; opacity: 1; }
@@ -9726,16 +9737,17 @@ return exports;})();
       '<button class="jh-modesub ' + level + '" data-act="switch-mode" aria-label="Modus wisselen. Nu: ' + modeName(level) + '. Tik om te kiezen">' + icon(MODE_ICON[level], 13) + "<span>" + modeName(level) + '</span><i aria-hidden="true">▾</i></button></div></div>' +
       '<div class="jh-stats" role="group" aria-label="Jouw punten in de ' + modeName(level) + '-modus"><span>' + icon("star", 15, "fill") + "<b>" + stars + '</b><i class="sr-only"> sterren</i></span><button class="gem jh-gembtn" data-act="bazaar" aria-label="' + gems + ' edelstenen. Open de bazaar">' + gemSvg(15) + "<b>" + gems + '</b><i class="jh-plus" aria-hidden="true">+</i></button></div>' +
       '<button class="jh-gear" data-act="settings" aria-label="Instellingen">' + icon("gear", 20) + "</button></header>";
-    /* land-schild */
-    h += '<div class="j-shield" style="--accent:' + c.color + '" role="group" aria-label="Land kiezen">' +
-      (i > 0 ? '<button class="js-arrow" data-act="journey-land" data-i="' + (i - 1) + '" aria-label="Vorig land: ' + esc(LS[i - 1].title) + '">' + icon("left", 20) + "</button>" : '<button class="js-arrow" disabled aria-label="Geen vorig land">' + icon("left", 20) + "</button>") +
-      '<div class="js-mid"><b>Land ' + (i + 1) + ": " + esc(c.title) + '</b><div class="js-row"><span class="land-strip" role="group" aria-label="Spring naar een land">';
+    /* land-schild (v75): pijlen naast de titel; bolletjes + voortgang; bonbons en badge op een eigen regel */
+    const jsPrev = i > 0 ? '<button class="js-arrow" data-act="journey-land" data-i="' + (i - 1) + '" aria-label="Vorig land: ' + esc(LS[i - 1].title) + '">' + icon("left", 18) + "</button>" : '<button class="js-arrow" disabled aria-label="Geen vorig land">' + icon("left", 18) + "</button>";
+    const jsNext = i < LS.length - 1 ? '<button class="js-arrow" data-act="journey-land" data-i="' + (i + 1) + '" aria-label="Volgend land: ' + esc(LS[i + 1].title) + '">' + icon("right", 18) + "</button>" : '<button class="js-arrow" disabled aria-label="Geen volgend land">' + icon("right", 18) + "</button>";
+    h += '<div class="j-shield js3" style="--accent:' + c.color + '" role="group" aria-label="Land kiezen"><div class="js-mid">' +
+      '<div class="js-top">' + jsPrev + "<b>Land " + (i + 1) + ": " + esc(c.title) + "</b>" + jsNext + '</div><div class="js-row"><span class="land-strip" role="group" aria-label="Spring naar een land">';
     LS.forEach(function (x, k) {
       const done = landDone(level, x.id);
       h += '<button class="land-chip' + (k === i ? " on" : "") + '" style="--accent:' + x.color + '" data-act="journey-land" data-i="' + k + '" aria-pressed="' + (k === i) + '" aria-label="Land ' + (k + 1) + ": " + esc(x.title) + (done ? " (voltooid)" : !jLandOpen(level, x.id) ? " (vergrendeld)" : "") + '"><span>' + (k + 1) + "</span>" + (done ? '<i class="lc-b">🚩</i>' : !jLandOpen(level, x.id) ? '<i class="lc-b lc-lock">🔒</i>' : "") + "</button>";
     });
-    h += '</span><small class="js-prog" aria-label="' + st.passed + " van " + st.n + ' levels gehaald">' + st.passed + "/" + st.n + " ⭐" + st.stars + "</small>" + bonChipHtml(level, c) + "</div>" + badgePillHtml(level, c, st) + "</div>" +
-      (i < LS.length - 1 ? '<button class="js-arrow" data-act="journey-land" data-i="' + (i + 1) + '" aria-label="Volgend land: ' + esc(LS[i + 1].title) + '">' + icon("right", 20) + "</button>" : '<button class="js-arrow" disabled aria-label="Geen volgend land">' + icon("right", 20) + "</button>") + "</div>";
+    h += '</span><small class="js-prog" aria-label="' + st.passed + " van " + st.n + ' levels gehaald">' + st.passed + "/" + st.n + " ⭐" + st.stars + "</small></div>" +
+      '<div class="js-row2">' + bonChipHtml(level, c) + badgePillHtml(level, c, st) + "</div></div></div>";
     h += '<div id="jPresence" class="j-presence" role="status" hidden></div>';
     /* fullscreen kaart */
     const landLocked = !jLandOpen(level, c.id);
@@ -9828,6 +9840,9 @@ return exports;})();
     setTimeout(function () { d.classList.add("out"); setTimeout(function () { d.remove(); }, 500); }, 4500 + 90 * f.t.length);
   }
   function afterJourneyRender() {
+    /* meldingen onder het land-schild altijd net eronder zetten (het schild kan per telefoon iets hoger zijn) */
+    const jsh = document.querySelector(".j-shield");
+    if (jsh) { const y = Math.round(jsh.getBoundingClientRect().bottom + 8); document.querySelectorAll(".j-presence, .j-lockbanner").forEach(function (e) { e.style.top = y + "px"; }); }
     if (P && P.mode && !P.tourSeen) {
       P.tourSeen = true; S.tour = true;
       const fresh = !(P.played > 0);
