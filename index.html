@@ -585,6 +585,20 @@ table.board thead th .avatar { display: grid; margin: 0 auto; }
     }
    .hidden {display:none !important;
    }
+   /* ── Bismillah & intentie (v80): zelfde stijl als de mededeling ── */
+   #bismillahModal .modal-content { max-height: calc(100vh - 40px); overflow-y: auto; }
+   .bsm-ar { font-family: "Amiri", "Scheherazade New", "Noto Naskh Arabic", serif; font-weight: 700; font-size: clamp(24px, 7.6vw, 36px); white-space: nowrap; line-height: 1.8; color: #1b5e20; margin: 0 0 2px; text-shadow: 0 1px 0 #fff, 0 2px 6px rgba(217, 160, 91, .35); }
+   .bsm-orn { display: flex; align-items: center; justify-content: center; gap: 8px; color: #d9a05b; margin: 0 auto 10px; font-size: 14px; }
+   .bsm-orn::before, .bsm-orn::after { content: ""; height: 2px; width: 70px; border-radius: 2px; background: linear-gradient(90deg, transparent, #d9a05b); }
+   .bsm-orn::after { background: linear-gradient(90deg, #d9a05b, transparent); }
+   .bsm-ph { font-style: italic; font-weight: 800; color: #2e7d32; font-size: 16px; margin-bottom: 4px; }
+   .bsm-tr { color: #37474f; font-size: 14px; margin-bottom: 18px; }
+   .bsm-box { color: #37474f; font-size: 14px; line-height: 1.6; margin-bottom: 22px; background: #f1f8e9; padding: 15px; border-radius: 12px; border-left: 4px solid #2e7d32; text-align: left; }
+   .bsm-box h4 { color: #1b5e20; font-size: 15px; margin: 0 0 6px; }
+   .bsm-box .bsm-du { text-align: center; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #a5d6a7; }
+   .bsm-du .ar { font-family: "Amiri", "Scheherazade New", serif; font-weight: 700; font-size: 24px; color: #1b5e20; line-height: 1.6; }
+   .bsm-du i { display: block; color: #2e7d32; font-weight: 700; }
+   .bsm-du small { display: block; color: #546e7a; font-size: 12.5px; }
    /* ==========================================
    BADGES & ACHIEVEMENTS SYSTEM STYLES
    ========================================== */
@@ -1962,6 +1976,25 @@ body:has(#avDlg) .back-toast { top: 92px !important; bottom: auto !important; z-
       <button class="btn" onclick="acceptDisclaimer()">Gelezen & Akkoord</button>
     </div>
   </div>
+  <!-- Bismillah & intentie (na de mededeling) -->
+  <div id="bismillahModal" class="modal-overlay hidden">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="bsmT" aria-describedby="bsmTr">
+      <div class="bsm-ar" id="bsmT" lang="ar" dir="rtl">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
+      <div class="bsm-orn" aria-hidden="true">✦</div>
+      <div class="bsm-ph">Bismillaahir-Rahmaanir-Rahiem</div>
+      <div class="bsm-tr" id="bsmTr">In de naam van Allah, de Meest Barmhartige, de Meest Genadevolle.</div>
+      <div class="bsm-box">
+        <h4>🤲 Mijn intentie</h4>
+        Ik speel deze quiz voor Allah alleen: om mijn Deen beter te leren kennen, wat ik leer in praktijk te brengen en het met liefde door te geven aan anderen. Moge Allah deze kennis tot nut maken en mijn hart ermee verlichten.
+        <div class="bsm-du">
+          <div class="ar" lang="ar" dir="rtl">رَّبِّ زِدْنِي عِلْمًا</div>
+          <i>Rabbi zidnie ʿilmaa</i>
+          <small>“Mijn Heer, vermeerder mij in kennis.” (Soera Taha, 20:114)</small>
+        </div>
+      </div>
+      <button class="btn" onclick="acceptBismillah()">Bismillah, ik begin</button>
+    </div>
+  </div>
   <!-- Knop voor Achievements / Badges -->
 <div id="badgesBtnWrap" style="display:none; text-align: center; margin: 15px auto; max-width: 400px; padding: 0 15px;">
   <button class="btn-achievements" onclick="openBadgesModal()">
@@ -1994,6 +2027,15 @@ body:has(#avDlg) .back-toast { top: 92px !important; bottom: auto !important; z-
     if (modal) {
       modal.classList.add('hidden');
     }
+    const bsm = document.getElementById('bismillahModal');
+    if (bsm) {
+      bsm.classList.remove('hidden');
+      const b = bsm.querySelector('.btn'); if (b) setTimeout(function () { b.focus(); }, 50);
+    }
+  }
+  function acceptBismillah() {
+    const bsm = document.getElementById('bismillahModal');
+    if (bsm) bsm.classList.add('hidden');
   }
 var QuizData=(function(){var exports={};
 "use strict";
@@ -6122,12 +6164,13 @@ return exports;})();
   let dlgUid = 0, lastOpener = null, lastOpenerSig = null;
   document.addEventListener("focusin", function (e) {
     const t = e.target; if (!t || !t.closest) return;
-    if (t.closest(".dialog-wrap, #disclaimerModal, #badgesModal")) return;
+    if (t.closest(".dialog-wrap, #disclaimerModal, #bismillahModal, #badgesModal")) return;
     lastOpener = t; lastOpenerSig = sigOf(t.closest("[data-act]"));
   });
   function syncInert() {
-    const disc = document.getElementById("disclaimerModal"), bm = document.getElementById("badgesModal");
-    const discOpen = !!disc && !disc.classList.contains("hidden") && getComputedStyle(disc).display !== "none";
+    const disc = document.getElementById("disclaimerModal"), bm = document.getElementById("badgesModal"), bsm = document.getElementById("bismillahModal");
+    const isOpen = function (el) { return !!el && !el.classList.contains("hidden") && getComputedStyle(el).display !== "none"; };
+    const discOpen = isOpen(disc) || isOpen(bsm);
     const bmOpen = !!bm && bm.classList.contains("active"), dlgOpen = !!document.querySelector(".dialog-wrap");
     const any = discOpen || bmOpen || dlgOpen;
     ["app", "badgesBtnWrap"].forEach(function (id) { const el = document.getElementById(id); if (el) { if (any) el.setAttribute("inert", ""); else el.removeAttribute("inert"); } });
@@ -6167,7 +6210,7 @@ return exports;})();
   a11yObserver.wasOpen = null;
   (function initA11y() {
     a11yObserver.observe(document.body, { childList: true });
-    ["disclaimerModal", "badgesModal"].forEach(function (id) { const el = document.getElementById(id); if (el) a11yObserver.observe(el, { attributes: true, attributeFilter: ["class", "style"] }); });
+    ["disclaimerModal", "bismillahModal", "badgesModal"].forEach(function (id) { const el = document.getElementById(id); if (el) a11yObserver.observe(el, { attributes: true, attributeFilter: ["class", "style"] }); });
     const st = syncInert(); a11yObserver.wasOpen = st.discOpen ? "disc" : st.any ? "dlg" : null;
     if (st.discOpen) { const b = document.querySelector("#disclaimerModal .btn"); if (b) setTimeout(function () { b.focus(); }, 50); }
   })();
@@ -11030,7 +11073,8 @@ return exports;})();
     if (backNav.exiting) return;
     if (backCloseTop() || backScreen()) { backNav.armed = false; try { history.pushState({ iq: "guard" }, ""); } catch (e) {} return; }
     const disc = document.getElementById("disclaimerModal");
-    if (disc && !disc.classList.contains("hidden")) { try { history.pushState({ iq: "guard" }, ""); } catch (e) {} return; }
+    const bsmM = document.getElementById("bismillahModal");
+    if ((disc && !disc.classList.contains("hidden")) || (bsmM && !bsmM.classList.contains("hidden"))) { try { history.pushState({ iq: "guard" }, ""); } catch (e) {} return; }
     if (backNav.armed) { backNav.exiting = true; clearTimeout(backNav.timer); try { history.back(); } catch (e) {} return; }
     backNav.armed = true; clearTimeout(backNav.timer); backNav.timer = setTimeout(function () { backNav.armed = false; }, 2000);
     backToast("Tik nogmaals op Terug om af te sluiten");
