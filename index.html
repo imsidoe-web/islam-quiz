@@ -888,6 +888,9 @@ a.btn.block { display: flex; margin-top: 14px; }
 .age-dialog .dlg-body::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #5be3a0, #14894f); border-radius: 9px; }
 @media (prefers-reduced-motion: reduce) { .celebrate { display: none; } }
   /* ── Schatkist, minigames, album ── */
+.daily-wiggle { transform-box: fill-box; transform-origin: 50% 100%; animation: dailyWiggle 3.4s ease-in-out infinite; }
+@keyframes dailyWiggle { 0%, 58%, 100% { transform: translateY(0) rotate(0); } 64% { transform: translateY(-7px) rotate(0); } 70% { transform: translateY(-4px) rotate(-7deg); } 76% { transform: translateY(-2px) rotate(6deg); } 82% { transform: translateY(0) rotate(-4deg); } 88% { transform: rotate(2deg); } 94% { transform: rotate(0); } }
+@media (prefers-reduced-motion: reduce) { .daily-wiggle { animation: none; } }
 .chest-bounce { transform-box: fill-box; transform-origin: 50% 100%; animation: chestHop 1.1s ease-in-out infinite; }
 @keyframes chestHop { 0%, 100% { transform: translateY(0) scale(1, 1); } 10% { transform: translateY(0) scale(1.1, .88); } 32% { transform: translateY(-12px) scale(.94, 1.1); } 52% { transform: translateY(0) scale(1.08, .92); } 66% { transform: translateY(-5px) scale(.98, 1.03); } 78% { transform: translateY(0) scale(1.02, .98); } }
 .j-ready { cursor: pointer; }
@@ -1447,7 +1450,7 @@ body.radgame { overflow: hidden; } body.radgame #app { max-width: 560px; padding
 .rad-game .rs-head { padding: 2px; border-radius: 12px; margin-bottom: -3px; } .rad-game .rs-head .avatar { border-radius: 10px; }
 .rad-game .rs-desk { padding: 10px 3px 5px; }
 .rad-game .rs-plate { font-size: .74rem; } .rad-game .rs-score { font-size: 1.05rem; } .rad-game .rs-total { font-size: .62rem; }
-.rad-game .rs-total::after { content: " totaal"; }
+
 .rad-game .rad-studio::after { content: ""; display: block; height: 6px; margin: 0 -8px; background: linear-gradient(180deg, #f0c75e, #8a5a0a); box-shadow: 0 3px 8px rgba(0, 0, 0, .5); }
 .rg-screen { flex: none; margin: 8px 0 0; padding: 8px 6px 8px; border-radius: 14px; background: radial-gradient(circle, #fff3b0 0 2px, rgba(255, 224, 138, .25) 3px, transparent 4px) 6px 2px / 14px 14px repeat-x, radial-gradient(circle, #fff3b0 0 2px, rgba(255, 224, 138, .25) 3px, transparent 4px) 6px calc(100% - 2px) / 14px 14px repeat-x, linear-gradient(180deg, #8a5a0a, #5e3d06); box-shadow: 0 0 0 2px #f0c75e, 0 6px 14px rgba(0, 0, 0, .45); }
 .rg-cat { margin: 2px 4px 6px; color: #fff3b0; font-size: .8rem; font-weight: 700; line-height: 1.25; text-align: center; } .rg-cat b { color: #ffe08a; text-transform: uppercase; letter-spacing: .04em; }
@@ -1492,6 +1495,57 @@ body.radgame { overflow: hidden; } body.radgame #app { max-width: 560px; padding
 .rg-timer { display: block; height: 4px; margin: 6px auto 0; width: 70%; border-radius: 4px; background: #ffe08a; transform-origin: left; animation: rgTimer 32s linear forwards; }
 @keyframes rgTimer { from { transform: scaleX(1); } to { transform: scaleX(0); } }
 @media (prefers-reduced-motion: reduce) { .rg-timer { animation: none; } }
+
+/* ── Edelstenen-bazaar (v72) ── */
+.bz-stall { display: block; width: 100%; height: auto; overflow: visible; }
+.bz-flap { transform-box: fill-box; transform-origin: 50% 0; animation: bzFlap 3.2s ease-in-out infinite; }
+.bz-wave { transform-box: fill-box; transform-origin: 50% 0; animation: bzWave 1.9s ease-in-out infinite; }
+.bz-cloth { transform-box: fill-box; transform-origin: 50% 0; animation: bzCloth 4.4s ease-in-out infinite; } .bz-cloth.b { animation-delay: -1.7s; }
+@keyframes bzFlap { 0%, 100% { transform: skewX(0) scaleY(1); } 30% { transform: skewX(-1.6deg) scaleY(1.02); } 65% { transform: skewX(1.1deg) scaleY(.99); } }
+@keyframes bzWave { 0%, 100% { transform: scaleY(1) skewX(0); } 50% { transform: scaleY(1.22) skewX(-3deg); } }
+@keyframes bzCloth { 0%, 100% { transform: skewX(0); } 50% { transform: skewX(1.8deg); } }
+@media (prefers-reduced-motion: reduce) { .bz-flap, .bz-wave, .bz-cloth { animation: none; } }
+.jbz { position: fixed; z-index: 28; left: 4px; bottom: calc(140px + env(safe-area-inset-bottom, 0px)); width: 84px; padding: 0; border: 0; background: none; cursor: pointer; display: grid; justify-items: center; filter: drop-shadow(0 4px 5px rgba(0, 0, 0, .35)); }
+.jbz:focus-visible { outline: 3px solid #ffb703; outline-offset: 2px; border-radius: 12px; }
+.jbz:active { transform: translateY(2px); }
+.jbz-gems { margin-top: -10px; display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px; border-radius: 999px; background: linear-gradient(180deg, #ffe08a, #e0a100); color: #3b2410; font-weight: 900; font-size: .78rem; border: 2px solid #fff; box-shadow: 0 2px 0 #8a5a0a; }
+.jh-stats > .jh-gembtn { appearance: none; font: inherit; color: inherit; cursor: pointer; display: inline-flex; align-items: center; gap: 3px; font-weight: 900; font-size: .78rem; padding: 3px 8px; border-radius: 999px; white-space: nowrap; background: linear-gradient(180deg, rgba(255,255,255,.3), rgba(255,255,255,.08)); box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 0 2px 0 rgba(0,0,0,.28); border: 1px solid rgba(255,255,255,.22); }
+.jh-gembtn b { color: #bff0ff; } .jh-plus { font-style: normal; display: inline-grid; place-items: center; width: 15px; height: 15px; margin-left: 2px; border-radius: 50%; background: #ffd54f; color: #3b2410; font-size: .72rem; font-weight: 900; line-height: 1; }
+.jh-gembtn:focus-visible { outline: 3px solid #ffb703; outline-offset: 2px; }
+@media (max-width: 400px) { .jh-stats > .jh-gembtn { padding: 3px 4px; gap: 2px; } }
+.avatar.fr-smaragd { box-shadow: 0 0 0 3px #1fbf86, 0 0 0 5px #0b3d2c !important; }
+.avatar.fr-goud { box-shadow: 0 0 0 3px #f0c75e, 0 0 9px rgba(255, 213, 79, .85) !important; }
+.avatar.fr-zilver { box-shadow: 0 0 0 3px #e9eef2, 0 0 0 5px #9aa7b0 !important; }
+.avatar.fr-sterren { box-shadow: 0 0 0 3px #f0c75e !important; outline: 2px dotted #ffe08a; outline-offset: 3px; }
+.avatar.fr-paleis { box-shadow: 0 0 0 2px #f0c75e, 0 0 0 4px #1f8f6a, 0 0 0 6px #f0c75e !important; }
+.bazaar .bz-head { width: min(76vw, 300px); margin: -6px auto 4px; }
+.bz-purse { margin: 4px 0 4px; padding: 10px; border-radius: 18px; background: linear-gradient(180deg, #ffe08a, #e0a100); color: #3b2410; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 900; box-shadow: 0 4px 0 #8a5a0a; }
+.bz-purse b { font-size: 1.7rem; }
+.bz-sub { text-align: center; font-size: .78rem; color: #d6efe2; font-weight: 700; margin: 4px 0 10px; }
+.bz-msg { margin: 0 0 10px; padding: 8px 10px; border-radius: 12px; background: rgba(0, 0, 0, .3); color: #fff3b0; font-weight: 800; text-align: center; }
+.bz-card { text-align: left; border-radius: 18px; background: linear-gradient(180deg, #145c43, #0b3d2c); box-shadow: inset 0 0 0 2px #b98a22, 0 4px 0 #062219; padding: 12px; margin-bottom: 12px; color: #fff; }
+.bz-card h2 { margin: 0 0 4px; font-size: 1rem; color: #ffe08a; } .bz-card p { margin: 0 0 8px; font-size: .82rem; color: #d6efe2; font-weight: 600; line-height: 1.35; }
+.bz-row { display: flex; align-items: center; gap: 10px; } .bz-own { font-size: .78rem; color: #a8f0c6; font-weight: 800; margin: 4px 0 0; }
+.bz-buy { margin-left: auto; appearance: none; border: 0; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; padding: 9px 16px; min-height: 44px; border-radius: 999px; background: linear-gradient(180deg, #ffe08a, #e0a100); color: #3b2410; font: inherit; font-weight: 900; font-size: 1rem; box-shadow: 0 3px 0 #8a5a0a; }
+.bz-buy:disabled { opacity: .45; cursor: default; } .bz-buy:focus-visible, .bz-fr:focus-visible, .bz-kc:focus-visible, .bz-gv:focus-visible { outline: 3px solid #ffb703; outline-offset: 2px; }
+.bz-frames { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.bz-fr { appearance: none; border: 0; background: none; color: #fff3b0; font: inherit; cursor: pointer; display: grid; justify-items: center; gap: 3px; padding: 6px 0; border-radius: 12px; min-height: 44px; }
+.bz-fr[aria-pressed="true"] { background: rgba(255, 224, 138, .14); }
+.bz-tile { display: inline-block; border-radius: 50%; padding: 4px; } .bz-tile .avatar { display: block; }
+.bz-tile.fr-smaragd .avatar { box-shadow: 0 0 0 3px #1fbf86, 0 0 0 5px #0b3d2c; } .bz-tile.fr-goud .avatar { box-shadow: 0 0 0 3px #f0c75e, 0 0 9px rgba(255, 213, 79, .85); }
+.bz-tile.fr-zilver .avatar { box-shadow: 0 0 0 3px #e9eef2, 0 0 0 5px #9aa7b0; } .bz-tile.fr-sterren .avatar { box-shadow: 0 0 0 3px #f0c75e; outline: 2px dotted #ffe08a; outline-offset: 3px; }
+.bz-tile.fr-paleis .avatar { box-shadow: 0 0 0 2px #f0c75e, 0 0 0 4px #1f8f6a, 0 0 0 6px #f0c75e; }
+.bz-fr b { font-size: .72rem; } .bz-fr small { font-size: .68rem; color: #cfe8da; font-weight: 800; } .bz-fr[aria-pressed="true"] small { color: #a8f0c6; }
+.bz-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.bz-kc { appearance: none; border: 3px solid #f0c75e; border-radius: 12px; background: #fffaf0; padding: 0 0 4px; cursor: pointer; overflow: hidden; display: grid; gap: 2px; font: inherit; }
+.bz-kc svg { width: 100%; aspect-ratio: 1; display: block; } .bz-kc small { font-size: .62rem; font-weight: 800; color: #3b2410; line-height: 1.1; padding: 0 2px; }
+.bz-well { display: flex; gap: 10px; align-items: center; } .bz-well b { color: #ffe08a; white-space: nowrap; }
+.bz-bar { flex: 1; height: 14px; border-radius: 999px; background: rgba(0, 0, 0, .35); overflow: hidden; box-shadow: inset 0 0 0 1px rgba(240, 199, 94, .5); } .bz-bar i { display: block; height: 100%; background: linear-gradient(90deg, #35d0ff, #1f8f6a); transition: width .5s; }
+.bz-give { display: flex; gap: 8px; margin-top: 10px; }
+.bz-gv { flex: 1; appearance: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 4px; min-height: 44px; border-radius: 999px; border: 2px solid #f0c75e; background: transparent; color: #fff3b0; font: inherit; font-weight: 900; }
+.bz-gv:disabled { opacity: .4; cursor: default; }
+.bz-hadith { margin-top: 10px !important; padding: 8px 10px; border-radius: 12px; background: rgba(0, 0, 0, .25); font-style: italic; color: #f2f7f4 !important; } .bz-hadith small { font-style: normal; color: #cfe8da; }
+.bz-note { text-align: center; font-size: .74rem; color: #cfe8da; font-weight: 700; margin: 4px 0 0; }
 
 /* ── Kwartet-album: dikke 3D-kaarten in Candy-Crush-stijl (smaragd, goud, crème) ── */
 .album-head { background: linear-gradient(180deg, #fffaf0, #f6e3b4); border: 3px solid #e0b24a; border-radius: 22px; padding: 12px 14px; box-shadow: 0 5px 0 #b98a22; color: #4a3208; margin-bottom: 16px; }
@@ -6042,6 +6096,7 @@ return exports;})();
       '<div class="set-grid">' +
       '<button class="btn ghost" data-act="scores" data-d="x">' + icon("trophy", 18) + "Mijn scores</button>" +
       '<button class="btn ghost" data-act="group" data-d="x">' + icon("users", 18) + "Groep &amp; duel</button>" +
+      '<button class="btn ghost" data-act="bazaar" data-d="x">' + gemSvg(18) + "Bazaar</button>" +
       '<button class="btn ghost" data-act="tour" data-d="x">Uitleg bekijken</button>' + (isStandalone() ? "" : '<button class="btn ghost" data-act="install" data-d="x">Zet op beginscherm</button>') + "</div>" +
       '<button class="set-danger" data-act="reset" data-d="x">' + icon("trash", 16) + "Voortgang van " + esc(P.name) + " wissen</button>" +
       '<button class="btn block" data-d="ok">Klaar</button></div></div>';
@@ -6102,11 +6157,12 @@ return exports;})();
     else if (screen === "minigame") app.innerHTML = viewMinigame();
     else if (screen === "album") app.innerHTML = viewAlbum();
     else if (screen === "rad") { app.innerHTML = viewRad(); afterRadRender(); }
+    else if (screen === "bazaar") app.innerHTML = viewBazaar();
     const bw = document.getElementById("badgesBtnWrap");
     if (bw) bw.style.display = (screen === "board" || screen === "scores") ? "" : "none";
     window.scrollTo({ top: 0 });
     if (screen === "journey") document.body.classList.add("jfull");
-    if (screen === "rad") document.body.classList.add("radfull");
+    if (screen === "rad" || screen === "bazaar") document.body.classList.add("radfull");
     if (screen === "rad" && rad && rad.phase !== "intro" && rad.phase !== "end") document.body.classList.add("radgame");
     if (screen === "journey") afterJourneyRender();
     duffUi();
@@ -6435,9 +6491,11 @@ return exports;})();
 
     // reeks (streak): opeenvolgende dagen met minstens één afgeronde quiz
     const t = todayStr();
-    let streakUp = false;
+    let streakUp = false, streakSaved = false;
     if (P.streak.last !== t) {
-      P.streak.count = P.streak.last === yesterdayStr() ? P.streak.count + 1 : 1;
+      const twoAgo = (function () { const d = new Date(); d.setDate(d.getDate() - 2); return dateStr(d); })();
+      if (P.streak.last === twoAgo && (P.streakSave || 0) > 0) { P.streakSave--; P.streak.count++; streakSaved = true; }   /* reeks-bewaarder uit de bazaar: één gemiste dag */
+      else P.streak.count = P.streak.last === yesterdayStr() ? P.streak.count + 1 : 1;
       P.streak.last = t; streakUp = true;
       P.streak.max = Math.max(P.streak.max || 0, P.streak.count);
     }
@@ -6630,10 +6688,11 @@ return exports;})();
   }
   function avatarHtml(p, size) {
     const av = avOf(p), dot = size >= 30 && p === P && avNewCount(p) > 0 ? '<i class="av-dot" aria-hidden="true"></i>' : "";
-    if (av) return '<span class="avatar av-art" style="width:' + size + 'px;height:' + size + 'px">' + avSvg(av) + dot + "</span>";
+    const frc = bzFrameOf(p) ? " fr-" + bzFrameOf(p) : "";
+    if (av) return '<span class="avatar av-art' + frc + '" style="width:' + size + 'px;height:' + size + 'px">' + avSvg(av) + dot + "</span>";
     const initial = esc((p.name || "?").trim().charAt(0).toUpperCase());
     const ph = p.photo && /^https:\/\//i.test(p.photo) ? '<img src="' + esc(p.photo) + '" alt="" referrerpolicy="no-referrer" onerror="this.remove()">' : "";
-    return '<span class="avatar' + (ph ? " has-photo" : "") + '" style="--c:' + p.color + ';width:' + size + 'px;height:' + size + 'px;font-size:' + Math.round(size * 0.46) + 'px">' + initial + ph + dot + "</span>";
+    return '<span class="avatar' + (ph ? " has-photo" : "") + frc + '" style="--c:' + p.color + ';width:' + size + 'px;height:' + size + 'px;font-size:' + Math.round(size * 0.46) + 'px">' + initial + ph + dot + "</span>";
   }
   function starsAt(p, lv) {
     let t = 0; Object.keys(p.best[lv]).forEach(function (k) { t += p.best[lv][k].stars || 0; });
@@ -6654,7 +6713,11 @@ return exports;})();
     let t = 0; ks.forEach(function (k) { t += p.best[lv][k].score / p.best[lv][k].total; });
     return Math.round((t / ks.length) * 100);
   }
-  function streakOf(p) { return p.streak.last === todayStr() || p.streak.last === yesterdayStr() ? p.streak.count : 0; }
+  function streakOf(p) {
+    if (p.streak.last === todayStr() || p.streak.last === yesterdayStr()) return p.streak.count;
+    const d = new Date(); d.setDate(d.getDate() - 2);
+    return (p.streakSave || 0) > 0 && p.streak.last === dateStr(d) ? p.streak.count : 0;   /* één dag gemist, maar de reeks-bewaarder houdt hem vast */
+  }
   function playedToday(p) { return p.streak.last === todayStr(); }
   function streakAtRisk(p) { return streakOf(p) > 0 && !playedToday(p); }
   /* de laatste 7 dagen (oud naar nieuw, vandaag laatst) voor het weekoverzicht */
@@ -6886,8 +6949,64 @@ return exports;})();
       '<ellipse cx="52" cy="-96" rx="3" ry="5" transform="rotate(-20 52 -96)" fill="' + dark + '"/><circle cx="72" cy="-84" r="1" fill="#7a4a1c"/>' +
       '<path d="M51 -86 L68 -80" stroke="#ffc95d" stroke-width="2"/><circle cx="52" cy="-86" r="2" fill="#ffd23f"/></g>';
   }
+  function dailyChest3d(open) {   /* Dagbeloning-kist in 3D (v72): smaragd met goud, zijkant in perspectief */
+    const d='<defs>'+
+     '<linearGradient id="dcFront" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#32c48e"/><stop offset=".55" stop-color="#1a9468"/><stop offset="1" stop-color="#0d5e43"/></linearGradient>'+
+     '<linearGradient id="dcSide" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0e6247"/><stop offset="1" stop-color="#073a2a"/></linearGradient>'+
+     '<linearGradient id="dcLid" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7cf0c2"/><stop offset=".45" stop-color="#2db383"/><stop offset="1" stop-color="#147a56"/></linearGradient>'+
+     '<linearGradient id="dcLidS" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1b8a62"/><stop offset="1" stop-color="#0a4532"/></linearGradient>'+
+     '<linearGradient id="dcGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff6c2"/><stop offset=".35" stop-color="#ffd23a"/><stop offset=".7" stop-color="#e09a00"/><stop offset="1" stop-color="#8a5a0a"/></linearGradient>'+
+     '<linearGradient id="dcGoldV" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6c2"/><stop offset=".5" stop-color="#f0b820"/><stop offset="1" stop-color="#a86b00"/></linearGradient>'+
+     '<radialGradient id="dcGem" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#e6fbff"/><stop offset=".4" stop-color="#5fdcff"/><stop offset="1" stop-color="#0a6fa8"/></radialGradient>'+
+    '</defs>';
+    let h=d+'<ellipse cx="2" cy="17.5" rx="23" ry="4.2" fill="#000" opacity=".28"/>';
+    if (open) {   /* open: deksel naar achteren, edelstenen erin */
+      h+='<path d="M-17 -6 L-14 -24 Q-2 -29 14 -26 L17 -8Z" fill="url(#dcLidS)" stroke="#5a3a06" stroke-width="1.2" stroke-linejoin="round"/>';
+      h+='<path d="M-15.5 -10 L-13.2 -22.5 Q-2 -26.8 13 -24.4 L15.2 -11.5Z" fill="#0a3a2a" opacity=".55"/>';
+      h+='<path d="M-14 -24 Q-2 -29 14 -26" stroke="url(#dcGoldV)" stroke-width="3" fill="none"/>';
+    }
+    // body side (right, in perspective)
+    h+='<path d="M14 -2 L21 -6.5 L21 11.5 L14 16Z" fill="url(#dcSide)" stroke="#5a3a06" stroke-width="1.2" stroke-linejoin="round"/>';
+    // body front
+    h+='<rect x="-19" y="-2" width="33" height="18" rx="2" fill="url(#dcFront)" stroke="#5a3a06" stroke-width="1.2"/>';
+    // planks
+    h+='<path d="M-18 4.5 H13 M-18 10 H13" stroke="#0a4a35" stroke-width="1" opacity=".55"/>';
+    // gold bottom rim + side rim
+    h+='<rect x="-19.5" y="12.5" width="34" height="4" rx="1.5" fill="url(#dcGoldV)" stroke="#7a4d05" stroke-width=".8"/>';
+    h+='<path d="M14 12.5 L21 8 L21 11.8 L14 16.5Z" fill="#b97f10" stroke="#7a4d05" stroke-width=".8"/>';
+    if (open) {
+      h+='<path d="M-18 -2 Q-3 -9 13 -2Z" fill="#0a3a2a"/>';
+      h+='<ellipse cx="-3" cy="-3" rx="15" ry="4.5" fill="#ffd54f"/><circle cx="-10" cy="-6" r="3.2" fill="#ffc44f" stroke="#c78a00" stroke-width=".6"/><path d="M-2 -12 L2 -8 L-2 -3 L-6 -8Z" fill="url(#dcGem)" stroke="#fff3b0" stroke-width=".8"/><circle cx="6" cy="-6" r="3" fill="#7dff6a" stroke="#2c8a1c" stroke-width=".6"/><circle cx="1" cy="-4" r="2.4" fill="#ffd54f" stroke="#c78a00" stroke-width=".6"/>';
+      h+='<rect x="-19.5" y="-4.5" width="34" height="4.2" rx="1.5" fill="url(#dcGoldV)" stroke="#7a4d05" stroke-width=".8"/>';
+      [-13,6].forEach(function(x){ h+='<rect x="'+x+'" y="-4" width="4" height="20" fill="url(#dcGold)" stroke="#7a4d05" stroke-width=".7"/>'; });
+      h+='<path d="M-7.5 -2 H3.5 V6 Q3.5 10 -2 11.5 Q-7.5 10 -7.5 6Z" fill="url(#dcGold)" stroke="#7a4d05" stroke-width="1"/>';
+      return h;
+    }
+    // lid side cap
+    h+='<path d="M14 -2 L21 -6.5 L21 -11 Q21 -21 15.5 -21.5 Q14 -14 14 -8Z" fill="url(#dcLidS)" stroke="#5a3a06" stroke-width="1.2" stroke-linejoin="round"/>';
+    // lid front (barrel)
+    h+='<path d="M-19 -2 V-9 Q-19 -21 -2.5 -21.5 L15.5 -21.5 Q14 -14 14 -8 V-2Z" fill="url(#dcLid)" stroke="#5a3a06" stroke-width="1.2" stroke-linejoin="round"/>';
+    // lid gold rim (front edge)
+    h+='<rect x="-19.5" y="-4.5" width="34" height="4.2" rx="1.5" fill="url(#dcGoldV)" stroke="#7a4d05" stroke-width=".8"/>';
+    h+='<path d="M14 -4.5 L21 -9 L21 -5 L14 -0.3Z" fill="#b97f10" stroke="#7a4d05" stroke-width=".8"/>';
+    // vertical gold bands
+    [-13,6].forEach(function(x){ h+='<path d="M'+x+' -20.6 Q'+(x+0.3)+' -21.4 '+(x+4)+' -21.4 V16 H'+x+'Z" fill="url(#dcGold)" stroke="#7a4d05" stroke-width=".7"/>'; });
+    // gold corner on side
+    h+='<path d="M18 -7.5 L21 -9.5 L21 10 L18 12Z" fill="url(#dcGold)" opacity=".9"/>';
+    // gloss
+    h+='<path d="M-15 -13 Q-9 -19 1 -19.2" stroke="#fff" stroke-width="2.2" stroke-linecap="round" fill="none" opacity=".7"/>';
+    h+='<path d="M-16 1 V8" stroke="#fff" stroke-width="1.4" stroke-linecap="round" opacity=".35"/>';
+    // lock plate + gem
+    h+='<path d="M-7.5 -5 H3.5 V6 Q3.5 10 -2 11.5 Q-7.5 10 -7.5 6Z" fill="url(#dcGold)" stroke="#7a4d05" stroke-width="1"/>';
+    h+='<path d="M-2 -2.5 L2 1.8 L-2 7.5 L-6 1.8Z" fill="url(#dcGem)" stroke="#fff3b0" stroke-width="1"/>';
+    h+='<path d="M-3.6 1 L-2 -0.7 L-0.8 0.6" stroke="#fff" stroke-width=".9" fill="none"/>';
+    // rivets
+    [[-16.5,7],[11,7],[-16.5,-14],[11,-15]].forEach(function(p){ h+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="1.2" fill="#ffe08a" stroke="#8a5a0a" stroke-width=".5"/>'; });
+    return h;
+  }
   function chest(x, y, state, k, kind) {
-    const body = kind === "daily" ? "#4d9be0" : state === "gold" ? "#f0a500" : "#b5651d", lid = kind === "daily" ? "#78c0ff" : state === "gold" ? "#ffd04a" : "#d08a36", edge = kind === "daily" ? "#2a669a" : state === "gold" ? "#a86b00" : "#7a3f0c";
+    if (kind === "daily") return '<g transform="translate(' + x + " " + y + ") scale(" + k + ')">' + dailyChest3d(state === "open" || state === "gold") + "</g>";
+    const body = kind === "daily" ? "#178a63" : state === "gold" ? "#f0a500" : "#b5651d", lid = kind === "daily" ? "#2db383" : state === "gold" ? "#ffd04a" : "#d08a36", edge = kind === "daily" ? "#8a5a0a" : state === "gold" ? "#a86b00" : "#7a3f0c";
     let h = '<g transform="translate(' + x + " " + y + ") scale(" + k + ')" ' + (state === "closed-dim" ? 'opacity=".6"' : "") + ">";
     if (state === "open" || state === "gold") {
       h += '<circle cy="-6" r="26" fill="#fff3a0" opacity=".55"/>' +
@@ -6898,7 +7017,14 @@ return exports;})();
     } else {
       h += '<rect x="-17" y="-2" width="34" height="18" rx="3" fill="' + body + '" stroke="' + edge + '" stroke-width="2"/>' +
         '<path d="M-17 -2 Q-17 -17 0 -17 Q17 -17 17 -2Z" fill="' + lid + '" stroke="' + edge + '" stroke-width="2" stroke-linejoin="round"/>' +
-        '<rect x="-3.5" y="-17" width="7" height="33" fill="#ffd54f" stroke="' + edge + '" stroke-width="1"/><circle cy="3" r="3.8" fill="#fff3b0" stroke="' + edge + '" stroke-width="1.5"/>';
+        '<rect x="-3.5" y="-17" width="7" height="33" fill="#ffd54f" stroke="' + edge + '" stroke-width="1"/>' +
+        (kind === "daily"
+          ? /* Dagbeloning (v72): smaragd met gouden randen, glans en een edelsteen als slot */
+            '<path d="M-17 -2 H17" stroke="#ffd54f" stroke-width="2.5"/><path d="M-16 14 H16" stroke="#ffd54f" stroke-width="2"/>' +
+            '<path d="M-12 -12 Q-6 -16 2 -15.5" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none" opacity=".55"/>' +
+            '<circle cx="-12" cy="5" r="1.4" fill="#ffe08a"/><circle cx="12" cy="5" r="1.4" fill="#ffe08a"/>' +
+            '<path d="M0 -2.5 L5 2.5 L0 9 L-5 2.5Z" fill="#35d0ff" stroke="#fff3b0" stroke-width="1.4"/><path d="M-2 1 L0 -1 L1.5 1" stroke="#fff" stroke-width="1" fill="none" opacity=".8"/>'
+          : '<circle cy="3" r="3.8" fill="#fff3b0" stroke="' + edge + '" stroke-width="1.5"/>');
     }
     return h + "</g>";
   }
@@ -7765,7 +7891,7 @@ return exports;})();
     const txt = "🌙 Islam Quiz (" + modeName(mg.level) + "): schatkist geopend bij " + c.title + "! " + mgIcon(mg.game) + " " + MG_NAME[mg.game] + " gespeeld. " + (albumTotal(mg.level) ? modeName(mg.level) + "-album: " + albumOwned(mg.level) + "/" + albumTotal(mg.level) + " kaarten." : "") + "\nLukt het jou ook? " + SITE_URL;
     return '<div class="mg-done" role="status"><div class="mg-done-star">' + GOLD_STAR_SVG + "</div><h2>" + esc(title) + "</h2><p>" + esc(msg) + "</p>" + '<div class="rewards"><span class="rw gem">+' + (GEMS_CHEST + (mg.bonusGems || 0)) + " " + gemSvg(20) + '<span class="sr-only">edelstenen</span></span>' + (mg.bonusXp ? '<span class="rw xp">+' + mg.bonusXp + " " + xpSvg(20) + '<span class="sr-only">XP</span></span>' : "") + "</div>" + (extra || "") +
       '<div class="result-actions"><button class="btn gold" data-act="journey-back">' + icon("map", 20) + "Terug naar de kaart</button>" +
-      (albumTotal(mg.level) ? '<button class="btn ghost" data-act="album">' + icon("layers", 20) + "Mijn Kwartet-album</button>" : "") + shareBtn(txt, "Deel via WhatsApp") + "</div></div>";
+      (albumTotal(mg.level) ? '<button class="btn ghost" data-act="album">' + icon("layers", 20) + "Mijn Kwartet-album</button>" : "") + '<button class="btn ghost" data-act="bazaar">' + gemSvg(18) + "Naar de bazaar</button>" + shareBtn(txt, "Deel via WhatsApp") + "</div></div>";
   }
 
   /* ── Memory ── */
@@ -8539,7 +8665,7 @@ return exports;})();
     rad.players.forEach(function (pl, i) {
       const on = i === rad.cur && rad.phase !== "end";
       h += '<li class="rs-lect' + (on ? " on" : "") + '" style="--seat:' + RAD_SEAT[i % RAD_SEAT.length] + '"' + (on ? ' aria-current="true"' : "") + '><span class="rs-spot" aria-hidden="true"></span><div class="rs-head">' + radAvHtml(pl, 40) + "</div>" +
-        '<div class="rs-desk"><b class="rs-plate">' + esc(pl.name) + (pl.kind === "cpu" ? '<span class="sr-only"> (computer)</span>' : "") + '</b><span class="rs-score"><span class="sr-only">Deze ronde: </span>' + pl.round + '</span><small class="rs-total"><span class="sr-only">Totaal: </span>' + pl.total + "</small></div></li>";
+        '<div class="rs-desk"><b class="rs-plate">' + esc(pl.name) + (pl.kind === "cpu" ? '<span class="sr-only"> (computer)</span>' : "") + '</b><span class="rs-score"><span class="sr-only">Totaal: </span>' + (rad.phase === "roundend" || rad.phase === "end" ? pl.total : pl.total + pl.round) + '</span><small class="rs-total">' + (pl.round > 0 ? "+" + pl.round : "0") + " deze ronde</small></div></li>";
     });
     return h + "</ul></div>";
   }
@@ -8600,7 +8726,7 @@ return exports;})();
       h += "</ol>";
       const me = rad.result.find(function (r) { return r.me; });
       const txt = "🌙 Islam Quiz – Ajalat al-Ilm (Rad van Kennis, " + modeName(rad.lv) + "): " + (me && me.win ? "ik heb gewonnen met " : "ik speelde mee met ") + (me ? me.pl.total : best) + " punten!\nSpeel mee: https://islam-quiz-one.vercel.app/";
-      h += '<div class="result-actions"><button class="btn gold" data-act="rad-again">' + icon("retry", 20) + 'Nog een potje</button><button class="btn ghost" data-act="journey-back">' + icon("map", 20) + "Terug naar de kaart</button>" + shareBtn(txt, "Deel via WhatsApp") + "</div>";
+      h += '<div class="result-actions"><button class="btn gold" data-act="rad-again">' + icon("retry", 20) + 'Nog een potje</button><button class="btn ghost" data-act="journey-back">' + icon("map", 20) + "Terug naar de kaart</button>" + '<button class="btn ghost" data-act="bazaar">' + gemSvg(18) + "Naar de bazaar</button>" + shareBtn(txt, "Deel via WhatsApp") + "</div>";
       return h + "</section>";
     }
     h = '<section class="rad-game' + (rad.phase === "roundend" ? " cheer" : "") + '">' + radStudioBg() +
@@ -8610,7 +8736,7 @@ return exports;})();
     h += '<p class="rg-msg" id="radMsg" role="status" aria-live="polite">' + esc(rad.msg) + (rad.online && human && ["spin", "act", "letter", "question", "vowel", "solve"].indexOf(rad.phase) !== -1 ? '<i class="rg-timer" aria-hidden="true"></i>' : "") + "</p>";
     const zone = function (cls, inner) { return h + '<div class="rg-zone ' + cls + '">' + inner + "</div></section>"; };
     const wheel = '<div class="rg-wheel' + (rad.flash ? " hit" : "") + '"><div class="rg-wheel-in">' + radWheelSvg() + "</div></div>";
-    if (rad.phase === "roundend") return zone("z-end", '<p class="rg-answer"><small>Het antwoord</small>' + esc(rad.puz.ans) + "</p>" + (human ? '<button class="btn gold block" data-act="rad-next">' + (rad.round >= RAD_ROUNDS ? "Naar de uitslag" : "Volgende ronde") + "</button>" : '<p class="rad-cpu">Wachten op ' + esc(pl.name) + "…</p>"));
+    if (rad.phase === "roundend") return zone("z-end", '<p class="rg-answer"><small>Het antwoord</small>' + esc(rad.puz.ans) + "</p>" + (human || !rad.online ? '<button class="btn gold block" data-act="rad-next">' + (rad.round >= RAD_ROUNDS ? "Naar de uitslag" : "Volgende ronde") + "</button>" : '<p class="rad-cpu">Wachten op ' + esc(pl.name) + "…</p>"));
     if (rad.phase === "question" && rad.q) {
       let q = '<div class="rad-q"><p class="rq-q">' + esc(rad.q.question) + '</p><div class="rq-opts">';
       rad.q.options.forEach(function (o, i) { q += '<button class="btn ghost" data-act="rad-ans" data-i="' + i + '"' + (human ? "" : " disabled") + ">" + esc(o) + "</button>"; });
@@ -8637,6 +8763,142 @@ return exports;})();
     return '<button class="jrad" data-act="rad" aria-label="Ajalat al-Ilm, Rad van Kennis"><svg viewBox="-12 -12 24 24" width="30" height="30" aria-hidden="true"><circle r="11" fill="#1f8f6a" stroke="#fff3b0" stroke-width="1.6"/>' +
       [0, 1, 2, 3, 4, 5].map(function (i) { const a = i * 60 * Math.PI / 180; return '<path d="M0 0 L' + (10 * Math.cos(a)).toFixed(1) + " " + (10 * Math.sin(a)).toFixed(1) + " A10 10 0 0 1 " + (10 * Math.cos(a + Math.PI / 3)).toFixed(1) + " " + (10 * Math.sin(a + Math.PI / 3)).toFixed(1) + 'Z" fill="' + (i % 2 ? "#f0c75e" : "#2d6a4f") + '"/>'; }).join("") +
       '<circle r="3" fill="#fff3b0"/></svg><span>Ajalat al-Ilm</span></button>';
+  }
+
+  /* ───────────── Edelstenen-bazaar (v72) ─────────────
+     Edelstenen uitgeven aan: reeks-bewaarder, avatar-randen, een ontbrekende kwartetkaart en de sadaqa-pot.
+     Niets geeft punten of XP (het klassement is niet te koop); geen betaling met echt geld. Je betaalt met de edelstenen van je huidige modus. */
+  const BZ_SAVE_PRICE = 40, BZ_SAVE_MAX = 2, BZ_CARD_PRICE = 60;
+  const BZ_FRAMES = [
+    { id: "smaragd", n: "Smaragd", p: 30, c: "#1fbf86" },
+    { id: "goud", n: "Goud", p: 40, c: "#f0c75e" },
+    { id: "zilver", n: "Zilver", p: 40, c: "#e9eef2" },
+    { id: "sterren", n: "Sterren", p: 60, c: "#ffe08a" },
+    { id: "paleis", n: "Paleis", p: 80, c: "#f0c75e" }
+  ];
+  /* sadaqa-doelen (gedeeld door alle spelers op dit toestel); teksten: te controleren door Irshaad */
+  const BZ_GOALS = [
+    { t: "Een waterput", ic: "💧", need: 500, txt: "De beste sadaqa is water geven.", src: "Abu Dawud" },
+    { t: "Iftar voor de buurt", ic: "🍽️", need: 400, txt: "Wie een vastende iftar geeft, krijgt dezelfde beloning als hij, zonder dat er iets afgaat van de beloning van de vastende.", src: "Tirmidhi" },
+    { t: "Bomen planten", ic: "🌳", need: 450, txt: "Geen moslim plant een boom of zaait een zaadje waarvan een vogel, een mens of een dier eet, of het is voor hem een sadaqa.", src: "Bukhari en Muslim" },
+    { t: "Boeken voor een school", ic: "📚", need: 600, txt: "Als de mens sterft, houden zijn daden op, behalve drie: een doorlopende sadaqa, kennis waar anderen baat bij hebben, of een vroom kind dat voor hem du’a doet.", src: "Muslim" },
+    { t: "Een glimlach voor iedereen", ic: "✨", need: 300, txt: "Je glimlach naar je broeder is een sadaqa.", src: "Tirmidhi" }
+  ];
+  function bzFrames(p) { return p.frames || (p.frames = { own: {}, on: null }); }
+  function bzFrameOf(p) { const f = p && p.frames && p.frames.on; return f && BZ_FRAMES.some(function (x) { return x.id === f; }) ? f : null; }
+  function bzFrameColor(p) { const f = bzFrameOf(p); return f ? BZ_FRAMES.find(function (x) { return x.id === f; }).c : null; }
+  function bzSadaqa() { const s = S.sadaqa || (S.sadaqa = { g: 0, fill: 0, done: 0 }); if (!BZ_GOALS[s.g]) s.g = 0; return s; }
+  function bzSpend(n) {
+    const lv = P.mode;
+    if (gemsAt(P, lv) < n) { announce("Je hebt niet genoeg edelstenen.", true); bzMsg = "Je hebt nog niet genoeg edelstenen. Speel levels, kisten of Ajalat al-Ilm om meer te verdienen."; render(); return false; }
+    P.gems[lv] = gemsAt(P, lv) - n; return true;
+  }
+  let bzMsg = "";
+  function bzBuy(kind, id) {
+    if (!P) return;
+    if (kind === "save") {
+      if ((P.streakSave || 0) >= BZ_SAVE_MAX) return;
+      confirmDialog("Reeks-bewaarder kopen?", "Dit kost " + BZ_SAVE_PRICE + " edelstenen. Mis je een dag, dan blijft je dagreeks staan.", "Kopen", function () {
+        if (!bzSpend(BZ_SAVE_PRICE)) return;
+        P.streakSave = (P.streakSave || 0) + 1; saveState(); play("bell"); bzMsg = "Je hebt nu " + P.streakSave + " reeks-bewaarder" + (P.streakSave === 1 ? "" : "s") + "."; render(); announce(bzMsg);
+      });
+    } else if (kind === "frame") {
+      const f = BZ_FRAMES.find(function (x) { return x.id === id; }), fr = bzFrames(P); if (!f) return;
+      if (fr.own[id]) { fr.on = fr.on === id ? null : id; saveState(); play("click"); bzMsg = fr.on ? "Rand " + f.n + " staat aan." : "Rand uitgezet."; render(); announce(bzMsg); return; }
+      confirmDialog("Rand " + f.n + " kopen?", "Dit kost " + f.p + " edelstenen. Je kunt hem daarna altijd aan- of uitzetten.", "Kopen", function () {
+        if (!bzSpend(f.p)) return;
+        fr.own[id] = 1; fr.on = id; saveState(); play("bell"); bzMsg = "Rand " + f.n + " gekocht en aangezet!"; render(); announce(bzMsg);
+      });
+    } else if (kind === "card") {
+      if (P.bzCardDay === todayStr()) return;
+      const lv = P.mode;
+      confirmDialog("Kaart “" + cardTitle(id) + "” kopen?", "Dit kost " + BZ_CARD_PRICE + " edelstenen. Eén kaart per dag.", "Kopen", function () {
+        if (!bzSpend(BZ_CARD_PRICE)) return;
+        albumMap(lv)[id] = 1; P.bzCardDay = todayStr(); saveState(); play("bell"); bzMsg = "“" + cardTitle(id) + "” zit nu in je album!"; render(); announce(bzMsg);
+      });
+    } else if (kind === "give") {
+      const n = parseInt(id, 10) || 0; if (!n) return;
+      confirmDialog("Sadaqa geven?", "Je geeft " + n + " edelstenen aan het doel “" + BZ_GOALS[bzSadaqa().g].t + "”. Je krijgt er niets voor terug, net als bij echte sadaqa.", "Geven", function () {
+        if (!bzSpend(n)) return;
+        const s = bzSadaqa(), g = BZ_GOALS[s.g];
+        s.fill += n; P.sadaqaGiven = (P.sadaqaGiven || 0) + n;
+        if (s.fill >= g.need) { s.done++; s.g = (s.g + 1) % BZ_GOALS.length; s.fill = 0; saveState(); play("fanfare"); celebrate(true); bzMsg = "Alhamdulillah! “" + g.t + "” is helemaal vol. Een nieuw doel staat klaar."; }
+        else { saveState(); play("bell"); bzMsg = "Jazak Allahu khairan! Je gaf " + n + " edelstenen."; }
+        render(); announce(bzMsg);
+      });
+    }
+  }
+  /* het marktkraampje (eigen tekening): hout, smaragd/crème luifel die zachtjes in de wind beweegt */
+  function bzStallSvg(cls) {
+    return '<svg class="bz-stall ' + (cls || "") + '" viewBox="0 0 240 200" aria-hidden="true" focusable="false"><defs>' +
+      '<linearGradient id="bzw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a86a34"/><stop offset="1" stop-color="#6b3e16"/></linearGradient>' +
+      '<linearGradient id="bzwh" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7a4a1c"/><stop offset=".5" stop-color="#b9783a"/><stop offset="1" stop-color="#7a4a1c"/></linearGradient>' +
+      '<linearGradient id="bzg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3b0"/><stop offset=".45" stop-color="#ffd23a"/><stop offset="1" stop-color="#b9780f"/></linearGradient>' +
+      '<linearGradient id="bzc" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd2a8"/><stop offset=".5" stop-color="#c8743c"/><stop offset="1" stop-color="#7a3a12"/></linearGradient>' +
+      '<clipPath id="bzaw"><path d="M22 36 L218 36 L232 78 L8 78Z"/></clipPath></defs>' +
+      '<ellipse cx="120" cy="190" rx="108" ry="8" fill="#000" opacity=".25"/>' +
+      '<rect x="30" y="72" width="11" height="112" rx="3" fill="url(#bzw)"/><rect x="199" y="72" width="11" height="112" rx="3" fill="url(#bzw)"/>' +
+      '<g class="bz-cloth"><path d="M44 82 H112 V130 Q78 138 44 130Z" fill="#1f8f6a"/><path d="M50 90 H106 M50 100 H106 M50 110 H106 M50 120 H106" stroke="#ffe08a" stroke-width="4" opacity=".85"/></g>' +
+      '<g class="bz-cloth b"><path d="M116 82 H196 V136 L156 146 L116 136Z" fill="#8a3a1c"/><path d="M156 94 L180 114 L156 134 L132 114Z" fill="none" stroke="#ffd23a" stroke-width="4"/><path d="M156 106 L164 114 L156 122 L148 114Z" fill="#ffd23a"/>' +
+      '<g fill="#ffd23a"><circle cx="124" cy="140" r="2.5"/><circle cx="140" cy="143" r="2.5"/><circle cx="172" cy="143" r="2.5"/><circle cx="188" cy="140" r="2.5"/></g></g>' +
+      '<rect x="22" y="148" width="196" height="11" rx="4" fill="url(#bzwh)"/><path d="M22 149 H218" stroke="#ffd23a" stroke-width="2"/>' +
+      '<rect x="28" y="158" width="184" height="28" rx="4" fill="url(#bzw)"/><path d="M38 166 H202 M38 176 H202" stroke="#5a3410" stroke-width="1.5" opacity=".45"/>' +
+      '<path d="M52 148 Q46 134 56 128 L60 122 H66 L70 128 Q80 134 74 148Z" fill="url(#bzc)"/><path d="M74 134 Q86 130 82 122" stroke="#7a3a12" stroke-width="3" fill="none"/>' +
+      '<path d="M94 140 Q120 156 146 140Z" fill="url(#bzg)"/><g fill="#5a240c"><ellipse cx="108" cy="138" rx="5" ry="3.5"/><ellipse cx="118" cy="135" rx="5" ry="3.5"/><ellipse cx="128" cy="138" rx="5" ry="3.5"/><ellipse cx="114" cy="141" rx="4" ry="3"/><ellipse cx="124" cy="141" rx="4" ry="3"/><ellipse cx="134" cy="141" rx="4" ry="3"/></g>' +
+      '<path d="M170 118 V124" stroke="#b9780f" stroke-width="2"/><path d="M162 124 H178 L182 132 H158Z" fill="url(#bzg)"/><rect x="160" y="132" width="20" height="14" rx="3" fill="#ffe9a8" stroke="#b9780f" stroke-width="2"/><circle cx="170" cy="139" r="3.5" fill="#ffb703"/>' +
+      '<path d="M190 134 L198 128 L206 134 L198 147Z" fill="#35d0ff" stroke="#0a7fb3" stroke-width="1.5"/>' +
+      '<rect x="5" y="142" width="22" height="46" rx="6" fill="#1f8f6a"/><ellipse cx="16" cy="142" rx="11" ry="5" fill="#2db383"/><path d="M5 158 H27 M5 172 H27" stroke="#ffd23a" stroke-width="3"/>' +
+      '<rect x="204" y="168" width="32" height="18" rx="9" fill="#a0522d"/><ellipse cx="234" cy="177" rx="5" ry="9" fill="#c06a3a"/><path d="M210 172 L220 182 L230 172" stroke="#ffe08a" stroke-width="2.5" fill="none"/>' +
+      '<g class="bz-flap"><path d="M22 36 L218 36 L232 78 L8 78Z" fill="#fff3d6"/>' +
+      '<g clip-path="url(#bzaw)" fill="#1f8f6a"><path d="M20 30 L44 30 L40 82 L10 82Z"/><path d="M68 30 L92 30 L92 82 L62 82Z"/><path d="M116 30 L132 30 L138 82 L112 82Z"/><path d="M156 30 L178 30 L188 82 L162 82Z"/><path d="M200 30 L224 30 L238 82 L210 82Z"/></g>' +
+      '<g class="bz-wave"><path d="M8 78 Q22 92 36 78 Q50 92 64 78 Q78 92 92 78 Q106 92 120 78 Q134 92 148 78 Q162 92 176 78 Q190 92 204 78 Q218 92 232 78Z" fill="#fff3d6"/>' +
+      '<path d="M8 78 Q22 92 36 78Z M64 78 Q78 92 92 78Z M120 78 Q134 92 148 78Z M176 78 Q190 92 204 78Z" fill="#1f8f6a"/>' +
+      '<path d="M8 78 Q22 92 36 78 Q50 92 64 78 Q78 92 92 78 Q106 92 120 78 Q134 92 148 78 Q162 92 176 78 Q190 92 204 78 Q218 92 232 78" fill="none" stroke="#b9780f" stroke-width="2"/></g></g>' +
+      '<rect x="14" y="26" width="212" height="13" rx="4" fill="url(#bzwh)"/><path d="M14 38 H226" stroke="#ffd23a" stroke-width="2"/>' +
+      '<rect x="76" y="4" width="88" height="24" rx="7" fill="url(#bzw)" stroke="#ffd23a" stroke-width="2.5"/>' +
+      '<text x="120" y="21" text-anchor="middle" font-weight="900" font-size="13" fill="#ffe08a" letter-spacing="1">BAZAAR</text></svg>';
+  }
+  function bazaarMapBtn() {
+    return '<button class="jbz" data-act="bazaar" aria-label="Bazaar. Je hebt ' + gemsAt(P, P.mode) + ' edelstenen. Open de bazaar">' + bzStallSvg("small") + '<span class="jbz-gems">' + gemSvg(13) + gemsAt(P, P.mode) + "</span></button>";
+  }
+  function viewBazaar() {
+    const lv = P.mode, gems = gemsAt(P, lv), fr = bzFrames(P), sv = P.streakSave || 0, s = bzSadaqa(), g = BZ_GOALS[s.g];
+    const price = function (n, act, id, label, dis) { return '<button class="bz-buy" data-act="bz-buy" data-k="' + act + '"' + (id ? ' data-id="' + esc(id) + '"' : "") + (dis ? " disabled" : "") + ' aria-label="' + esc(label) + '">' + gemSvg(16) + n + "</button>"; };
+    let h = mgTop("") + '<section class="rad bazaar"><div class="bz-head">' + bzStallSvg("big") + "</div>";
+    h += '<div class="bz-purse" role="status">' + gemSvg(28) + "<b>" + gems + "</b><span>edelstenen</span></div>";
+    h += '<p class="bz-sub">' + esc(modeName(lv)) + " · je betaalt met de edelstenen van deze modus</p>";
+    if (bzMsg) h += '<p class="bz-msg" role="status">' + esc(bzMsg) + "</p>";
+    /* reeks-bewaarder */
+    h += '<div class="bz-card"><h2>🔥 Reeks-bewaarder</h2><p>Mis je een dag? Dan blijft je dagreeks gewoon staan. Hij wordt vanzelf gebruikt.</p><div class="bz-row"><span class="bz-own">Je hebt er ' + sv + " (max. " + BZ_SAVE_MAX + ")</span>" +
+      price(BZ_SAVE_PRICE, "save", "", "Reeks-bewaarder kopen voor " + BZ_SAVE_PRICE + " edelstenen", sv >= BZ_SAVE_MAX) + "</div></div>";
+    /* avatar-randen */
+    h += '<div class="bz-card"><h2>🖼️ Avatar-randen</h2><p>Een mooie rand om je avatar: bovenaan, op de kaart, op het scorebord en in de studio. Tik op een rand die je hebt om hem aan of uit te zetten.</p><div class="bz-frames">';
+    BZ_FRAMES.forEach(function (f) {
+      const own = !!fr.own[f.id], on = fr.on === f.id;
+      h += '<button class="bz-fr" data-act="bz-buy" data-k="frame" data-id="' + f.id + '" aria-pressed="' + on + '" aria-label="Rand ' + f.n + (own ? (on ? ", staat aan. Tik om uit te zetten" : ", gekocht. Tik om aan te zetten") : ", kost " + f.p + " edelstenen") + '"><span class="bz-tile fr-' + f.id + '">' + avatarHtml(Object.assign({}, P, { frames: null }), 40) + "</span><b>" + f.n + "</b><small>" + (on ? "✓ aan" : own ? "gekocht" : "💎 " + f.p) + "</small></button>";
+    });
+    h += "</div></div>";
+    /* kwartetkaart (niet in Beginner: daar is nog geen album) */
+    if (albumTotal(lv)) {
+      const m = albumMap(lv), miss = kwIdsFor(lv).filter(function (k) { return !(m[k] > 0) && KW_CARDS[k]; }), today = P.bzCardDay === todayStr();
+      h += '<div class="bz-card"><h2>🎴 Kwartetkaart</h2><p>Kies één kaart die nog ontbreekt in je album. Eén keer per dag, voor ' + BZ_CARD_PRICE + ' edelstenen.</p>';
+      if (!miss.length) h += '<p class="bz-own">Je album is compleet. MashaAllah!</p>';
+      else if (today) h += '<p class="bz-own">Je hebt vandaag al een kaart gekocht. Morgen kan het weer.</p>';
+      else {
+        h += '<div class="bz-cards">';
+        miss.slice(0, 8).forEach(function (k) { h += '<button class="bz-kc" data-act="bz-buy" data-k="card" data-id="' + k + '" aria-label="Kaart ' + esc(cardTitle(k)) + ' kopen voor ' + BZ_CARD_PRICE + ' edelstenen">' + artSvg(k, true) + "<small>" + esc(cardTitle(k)) + "</small></button>"; });
+        h += "</div>";
+      }
+      h += '<p class="bz-own">' + albumOwned(lv) + "/" + albumTotal(lv) + " kaarten in je " + esc(modeName(lv)) + "-album</p></div>";
+    }
+    /* sadaqa-pot */
+    const pct = Math.min(100, Math.round(s.fill / g.need * 100));
+    h += '<div class="bz-card"><h2>' + g.ic + " Sadaqa-pot: " + esc(g.t) + "</h2><p>Geef samen voor een goed doel in de app. Je krijgt er niets voor terug, net als bij echte sadaqa.</p>" +
+      '<div class="bz-well"><div class="bz-bar" role="progressbar" aria-valuemin="0" aria-valuemax="' + g.need + '" aria-valuenow="' + s.fill + '" aria-label="Sadaqa-pot"><i style="width:' + pct + '%"></i></div><b>' + s.fill + "/" + g.need + "</b></div>" +
+      '<div class="bz-give">' + [10, 25, 50].map(function (n) { return '<button class="bz-gv" data-act="bz-buy" data-k="give" data-id="' + n + '"' + (gems < n ? " disabled" : "") + ">" + gemSvg(15) + n + "</button>"; }).join("") + "</div>" +
+      '<p class="bz-hadith">“' + esc(g.txt) + "” <small>(" + esc(g.src) + ")</small></p>" + (s.done ? '<p class="bz-own">Al ' + s.done + " doel" + (s.done === 1 ? "" : "en") + " vol gemaakt op dit toestel.</p>" : "") + "</div>";
+    h += '<p class="bz-note">Niets in de bazaar geeft punten of XP. Geen betaling met echt geld.</p>';
+    return h + "</section>";
   }
 
   /* ── Woordpuzzel: letters rangschikken en woordzoeker (Junior: basisbegrippen, Expert: diepere termen) ── */
@@ -9225,7 +9487,7 @@ return exports;})();
     segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="1 10"/>'; });
     // dagelijkse kist (Quiz van de Dag)
     const dDone = !!P.daily[level][todayStr()];
-    h += '<g class="j-stop j-daily" data-act="start-daily" role="button" tabindex="0" aria-label="Quiz van de Dag' + (dDone ? " (vandaag gespeeld, kom morgen terug voor een nieuwe beloning)" : ": speel vandaag voor een dagbeloning en een bonus op je reeks") + '" style="cursor:pointer">' + (dDone ? "" : '<circle cx="318" cy="748" r="34" fill="#ffe08a" opacity=".5"><animate attributeName="opacity" values=".2;.7;.2" dur="1.4s" repeatCount="indefinite"/></circle>') + chest(318, 752, dDone ? "open" : "closed", 1.3, "daily") + (dDone ? "" : '<g transform="translate(336 716)"><circle r="10" fill="#e8590c" stroke="#fff" stroke-width="2"/><text y="4.5" text-anchor="middle" font-size="12" font-weight="900" fill="#fff">!</text></g>') + lbl(318, 786, dDone ? "Morgen weer" : "Dagbeloning", 10) + "</g>";
+    h += '<g class="j-stop j-daily" data-act="start-daily" role="button" tabindex="0" aria-label="Quiz van de Dag' + (dDone ? " (vandaag gespeeld, kom morgen terug voor een nieuwe beloning)" : ": speel vandaag voor een dagbeloning en een bonus op je reeks") + '" style="cursor:pointer">' + (dDone ? "" : '<circle cx="318" cy="748" r="34" fill="#ffe08a" opacity=".5"><animate attributeName="opacity" values=".2;.7;.2" dur="1.4s" repeatCount="indefinite"/></circle>') + (dDone ? "" : sparkle(286, 724, 5, 0.2) + sparkle(352, 730, 4, 0.9) + sparkle(300, 778, 3.5, 1.5)) + '<g class="' + (dDone ? "" : "daily-wiggle") + '">' + chest(318, 752, dDone ? "open" : "closed", 1.3, "daily") + "</g>" + (dDone ? "" : '<g transform="translate(336 716)"><circle r="10" fill="#e8590c" stroke="#fff" stroke-width="2"/><text y="4.5" text-anchor="middle" font-size="12" font-weight="900" fill="#fff">!</text></g>') + lbl(318, 786, dDone ? "Morgen weer" : "Dagbeloning", 10) + "</g>";
     // mijlpalen: schatkisten naast het pad (springen als ze klaarstaan; tik om te openen)
     stops.forEach(function (st) {
       if (!st.mile) return;
@@ -9262,7 +9524,7 @@ return exports;})();
     const mpos = function (st) { const R = st.last ? 27 : st.mile ? 21 : 19, side = st.x < 180 ? -1 : 1; return (st.x + side * (R + 17)) + "," + st.y; };
     const cs = stops[J.cur], key = level + ":" + c.id, prev = journeyPos[key] !== undefined ? Math.min(journeyPos[key], n - 1) : J.cur, ps = stops[prev];
     h += '<g id="jMarker" class="j-marker j-me" data-act="peer" data-key="me" role="button" tabindex="0" aria-label="Jouw profiel" data-from="' + mpos(ps) + '" data-to="' + mpos(cs) + '" style="transform:translate(' + mpos(ps).split(",")[0] + "px," + mpos(ps).split(",")[1] + 'px)"><g class="j-bob"><g transform="scale(1.4)">' +
-      '<circle r="17" fill="#fff"/><circle r="14" fill="' + P.color + '"/>' + (avOf(P) ? '<clipPath id="jmc"><circle r="14"/></clipPath><g clip-path="url(#jmc)"><svg x="-14" y="-14" width="28" height="28" viewBox="0 0 100 100">' + avInner(avOf(P), true) + "</svg></g>" : '<text y="5.5" text-anchor="middle" font-size="15" font-weight="900" fill="#fff">' + ini + "</text>" + (P.photo && /^https:\/\//i.test(P.photo) ? '<clipPath id="jmc"><circle r="14"/></clipPath><image href="' + esc(P.photo) + '" x="-14" y="-14" width="28" height="28" preserveAspectRatio="xMidYMid slice" clip-path="url(#jmc)" referrerpolicy="no-referrer"/>' : "")) + "</g>" + "</g></g>";
+      '<circle r="17" fill="' + (bzFrameColor(P) || "#fff") + '"/><circle r="14" fill="' + P.color + '"/>' + (avOf(P) ? '<clipPath id="jmc"><circle r="14"/></clipPath><g clip-path="url(#jmc)"><svg x="-14" y="-14" width="28" height="28" viewBox="0 0 100 100">' + avInner(avOf(P), true) + "</svg></g>" : '<text y="5.5" text-anchor="middle" font-size="15" font-weight="900" fill="#fff">' + ini + "</text>" + (P.photo && /^https:\/\//i.test(P.photo) ? '<clipPath id="jmc"><circle r="14"/></clipPath><image href="' + esc(P.photo) + '" x="-14" y="-14" width="28" height="28" preserveAspectRatio="xMidYMid slice" clip-path="url(#jmc)" referrerpolicy="no-referrer"/>' : "")) + "</g>" + "</g></g>";
     journeyPos[key] = J.cur;
     return h + "</svg>";
   }
@@ -9438,7 +9700,7 @@ return exports;})();
     let h = '<h1 class="sr-only" tabindex="-1">De Reis – Land ' + (i + 1) + ": " + esc(c.title) + "</h1>";
     /* zwevende topbalk */
     h += '<header class="j-head"><div class="jh-pw"><button class="jh-player jh-av" data-act="avatar-pick" data-id="' + P.id + '" aria-label="Kies je avatar">' + avatarHtml(P, 30) + '</button><button class="jh-player" data-act="players" aria-label="Speler: ' + nm + '. Wissel van speler"><span>' + nm + "</span></button></div>" +
-      '<div class="jh-stats" role="group" aria-label="Jouw punten in de ' + modeName(level) + '-modus"><span>' + icon("star", 15, "fill") + "<b>" + stars + '</b><i class="sr-only"> sterren</i></span><span class="xp">' + xpSvg(16) + '<b>' + xp + '</b> XP</span><span class="gem">' + gemSvg(15) + "<b>" + gems + '</b><i class="sr-only"> edelstenen</i></span></div>' +
+      '<div class="jh-stats" role="group" aria-label="Jouw punten in de ' + modeName(level) + '-modus"><span>' + icon("star", 15, "fill") + "<b>" + stars + '</b><i class="sr-only"> sterren</i></span><span class="xp">' + xpSvg(16) + '<b>' + xp + '</b> XP</span><button class="gem jh-gembtn" data-act="bazaar" aria-label="' + gems + ' edelstenen. Open de bazaar">' + gemSvg(15) + "<b>" + gems + '</b><i class="jh-plus" aria-hidden="true">+</i></button></div>' +
       '<button class="jh-mode ' + level + '" data-act="switch-mode" aria-label="Modus wisselen. Nu: ' + modeName(level) + '. Tik om te kiezen">' + icon(MODE_ICON[level], 16) + "<span>" + modeName(level) + "</span></button>" +
       '<button class="jh-gear" data-act="settings" aria-label="Instellingen">' + icon("gear", 20) + "</button></header>";
     /* land-schild */
@@ -9464,7 +9726,7 @@ return exports;})();
       '<button class="jn-item" data-act="group"><span class="jn-ic" aria-hidden="true">👥</span>Groep</button>' +
       '<a class="jn-item wa" href="' + waLink(shareJourneyText()) + '" target="_blank" rel="noopener" aria-label="Deel mijn Reis via WhatsApp"><span class="jn-ic" aria-hidden="true">💬</span>Delen</a>' +
       "</div></nav>";
-    h += streakPillHtml() + radJourneyBtn();
+    h += streakPillHtml() + radJourneyBtn() + bazaarMapBtn();
     h += '<div class="j-toast" id="jToast" role="status"></div>';
     return h;
   }
@@ -10149,6 +10411,8 @@ return exports;})();
       case "mg-open-now": chestOpenNow(); break;
       case "mg-start": startMinigame(); break;
       case "rad": play("click"); rad = null; radNet = null; screen = "rad"; radGrpCheck(); render(); break;
+      case "bazaar": play("click"); bzMsg = ""; screen = "bazaar"; render(); break;
+      case "bz-buy": bzBuy(el.dataset.k, el.dataset.id); break;
       case "radn-search": play("click"); radNetSearch(); break;
       case "radn-open": play("click"); radNetOpen(el.dataset.share === "1"); break;
       case "radn-join": { play("click"); const c = el.dataset.code || ((document.getElementById("radnCode") || {}).value || ""); radNetJoin(c); break; }
