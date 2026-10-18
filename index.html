@@ -1426,6 +1426,73 @@ body.radfull .btn.ghost:disabled { opacity: .45; }
 @keyframes radWin { from { box-shadow: 0 3px 0 #b98a22, 0 0 10px rgba(255, 213, 79, .4); } to { box-shadow: 0 3px 0 #b98a22, 0 0 26px 4px rgba(255, 213, 79, .85); } }
 @media (prefers-reduced-motion: reduce) { .rad-wheel-wrap::before, .rad-wheel-wrap.hit::before, .rs-dust i, .rad-final li.win { animation: none; } .rs-dust { display: none; } }
 
+/* ── Ajalat al-Ilm v70: het hele spelscherm is de studio, alles in één beeld (geen scrollen) ── */
+body.radgame { overflow: hidden; } body.radgame #app { max-width: 560px; padding: 0; }
+.rad-game { position: relative; height: 100vh; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; padding: env(safe-area-inset-top, 0px) 8px env(safe-area-inset-bottom, 0px); box-sizing: border-box; isolation: isolate;
+  background: radial-gradient(ellipse 90% 34% at 50% 100%, rgba(255, 213, 79, .32), transparent 70%), linear-gradient(180deg, #06231a 0%, #0b3326 30%, #0f4a37 52%, #0b3326 70%, #3a2a12 84%, #5e4218 100%); }
+.rad-game > * { position: relative; z-index: 1; }
+.rad-game .rs-bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.rad-game .rs-lights i { height: 70%; }
+.rg-top { flex: none; display: flex; align-items: center; gap: 8px; height: 46px; }
+.rg-back { appearance: none; flex: none; width: 40px; height: 40px; border-radius: 12px; border: 2px solid #b98a22; background: rgba(0, 0, 0, .3); color: #fff3b0; display: grid; place-items: center; cursor: pointer; }
+.rg-back:focus-visible { outline: 3px solid #ffb703; }
+.rg-title { flex: 1; text-align: center; font-weight: 900; color: #fff3b0; font-size: 1rem; text-shadow: 0 2px 0 rgba(0, 0, 0, .35); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rg-title span { font-family: "Amiri", "Scheherazade New", "Noto Naskh Arabic", serif; color: #f0c75e; font-size: 1.15rem; margin-right: 4px; }
+.rg-round { flex: none; padding: 4px 10px; border-radius: 999px; background: linear-gradient(180deg, #ffe08a, #e0a100); color: #3b2410; font-weight: 900; font-size: .8rem; box-shadow: 0 2px 0 #8a5a0a; }
+.rad-game .rad-studio { flex: none; margin: 0; padding: 0; min-height: 0; background: none; border: 0; overflow: visible; }
+.rad-game .rs-row.r1 .rs-fan { width: 24px; height: 24px; } .rad-game .rs-row.r2 .rs-fan { width: 28px; height: 28px; }
+.rad-game .rs-row + .rs-row { margin-top: -6px; }
+.rad-game .rs-crowd { margin-bottom: -4px; }
+.rad-game .rs-lect { max-width: 104px; }
+.rad-game .rs-head { padding: 2px; border-radius: 12px; margin-bottom: -3px; } .rad-game .rs-head .avatar { border-radius: 10px; }
+.rad-game .rs-desk { padding: 10px 3px 5px; }
+.rad-game .rs-plate { font-size: .74rem; } .rad-game .rs-score { font-size: 1.05rem; } .rad-game .rs-total { font-size: .62rem; }
+.rad-game .rs-total::after { content: " totaal"; }
+.rad-game .rad-studio::after { content: ""; display: block; height: 6px; margin: 0 -8px; background: linear-gradient(180deg, #f0c75e, #8a5a0a); box-shadow: 0 3px 8px rgba(0, 0, 0, .5); }
+.rg-screen { flex: none; margin: 8px 0 0; padding: 8px 6px 8px; border-radius: 14px; background: radial-gradient(circle, #fff3b0 0 2px, rgba(255, 224, 138, .25) 3px, transparent 4px) 6px 2px / 14px 14px repeat-x, radial-gradient(circle, #fff3b0 0 2px, rgba(255, 224, 138, .25) 3px, transparent 4px) 6px calc(100% - 2px) / 14px 14px repeat-x, linear-gradient(180deg, #8a5a0a, #5e3d06); box-shadow: 0 0 0 2px #f0c75e, 0 6px 14px rgba(0, 0, 0, .45); }
+.rg-cat { margin: 2px 4px 6px; color: #fff3b0; font-size: .8rem; font-weight: 700; line-height: 1.25; text-align: center; } .rg-cat b { color: #ffe08a; text-transform: uppercase; letter-spacing: .04em; }
+.rad-game .rad-board { padding: 6px 4px; border-width: 3px; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .2); }
+.rad-game .rad-c { height: min(calc((100vw - 84px) / 11), 34px); }
+.rg-msg { flex: none; margin: 6px 0 0; padding: 4px 10px; min-height: 1.6em; border-radius: 8px; background: #041a13; box-shadow: inset 0 0 0 1px rgba(240, 199, 94, .45); color: #ffe08a; font-weight: 800; font-size: .82rem; line-height: 1.3; text-align: center; }
+.rg-zone { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; justify-content: center; gap: 8px; padding: 8px 0 10px; overflow-y: auto; overscroll-behavior: contain; }
+.rg-zone.z-wheel { overflow: hidden; }
+.rg-wheel { flex: 1 1 auto; min-height: 120px; container-type: size; display: grid; place-items: center; position: relative; }
+.rg-wheel::after { content: ""; position: absolute; left: 12%; right: 12%; bottom: -2px; height: 18px; border-radius: 50%; background: radial-gradient(ellipse, rgba(0, 0, 0, .45), transparent 70%); z-index: -1; }
+.rg-wheel-in { position: relative; width: 240px; height: 240px; width: min(100cqw, 100cqh, 340px); height: min(100cqw, 100cqh, 340px); }
+.rg-wheel-in .rad-svg { position: relative; z-index: 1; width: 100%; height: 100%; }
+.rg-wheel-in::before { content: ""; position: absolute; inset: -12%; border-radius: 50%; background: radial-gradient(circle, rgba(255, 224, 138, .55) 0%, rgba(240, 199, 94, .25) 40%, transparent 68%); animation: radGlow 5s ease-in-out infinite alternate; pointer-events: none; z-index: 0; }
+.rg-wheel.hit .rg-wheel-in::before { animation: radHit 1.4s ease-out 1, radGlow 5s ease-in-out 1.4s infinite alternate; }
+.rad-game .rad-acts { flex: none; flex-wrap: nowrap; } .rad-game .rad-acts .btn { flex: 1 1 0; min-width: 0; padding: 10px 6px; font-size: .95rem; min-height: 48px; }
+.rg-val { margin: 0; text-align: center; color: #fff3b0; font-weight: 900; }
+.rad-game .rad-keys { gap: 5px; max-width: 420px; width: 100%; margin: 0 auto; } .rad-game .rad-k { min-height: 46px; }
+.rad-game .rad-q { padding: 10px; } .rad-game .rq-q { font-size: .95rem; margin-bottom: 8px; } .rad-game .rq-opts { grid-template-columns: 1fr 1fr; gap: 6px; } .rad-game .rq-opts .btn { min-height: 48px; padding: 8px 6px; font-size: .88rem; line-height: 1.2; }
+.rg-answer { margin: 0; text-align: center; color: #fff3b0; font-size: 1.35rem; font-weight: 900; letter-spacing: .04em; } .rg-answer small { display: block; font-size: .75rem; color: #cfe8da; letter-spacing: 0; font-weight: 700; }
+.rad-game .rad-cpu { margin: 0; text-align: center; color: #cfe8da; font-weight: 800; }
+.rad-game.cheer .rs-fan { animation: rsCheer .5s ease-in-out 4; }
+@media (max-height: 700px) { .rad-game .rs-row.r1 { display: none; } .rg-cat { font-size: .74rem; margin-bottom: 4px; } .rg-top { height: 40px; } }
+@media (max-height: 600px) { .rad-game .rs-crowd { display: none; } .rad-game .rad-k { min-height: 40px; } }
+@media (prefers-reduced-motion: reduce) { .rg-wheel-in::before, .rg-wheel.hit .rg-wheel-in::before { animation: none; } }
+
+/* ── Ajalat al-Ilm online ── */
+.rad-choice:has(.rad-opt:nth-child(3)) { grid-template-columns: repeat(3, 1fr); gap: 8px; } .rad-choice .rad-opt b { font-size: .92rem; } .rad-choice .rad-opt small { font-size: .72rem; }
+.radn-opts, .radn-col { display: grid; gap: 10px; margin: 6px 0 10px; } .radn-opts .btn, .radn-col .btn { margin: 0; }
+.radn-note { margin: 0; font-size: .8rem; font-weight: 700; color: #d6efe2; line-height: 1.35; }
+.radn-code-row { display: flex; gap: 8px; } .radn-code-row input { flex: 1; min-width: 0; margin: 0; text-transform: uppercase; text-align: center; font-weight: 900; letter-spacing: .1em; } .radn-code-row .btn { flex: none; width: auto; margin: 0; padding: 0 16px; }
+.radn-box { margin: 6px 0 12px; padding: 12px; border-radius: 16px; background: rgba(0, 0, 0, .25); border: 2px solid #b98a22; color: #f2f7f4; } .radn-box p { margin: 2px 0; font-weight: 700; font-size: .85rem; }
+.radn-big { font-size: 1.05rem !important; font-weight: 900 !important; color: #fff3b0; } #radnClock { font-variant-numeric: tabular-nums; color: #ffe08a; }
+.radn-code { font-size: 2rem !important; font-weight: 900 !important; letter-spacing: .12em; color: #ffe08a; }
+.radn-list { list-style: none; margin: 0 0 12px; padding: 0; display: grid; gap: 8px; }
+.radn-list li { display: flex; align-items: center; gap: 10px; padding: 6px 8px; border-radius: 14px; background: linear-gradient(180deg, #145c43, #0b3d2c); box-shadow: inset 0 0 0 2px #b98a22; color: #fff; font-weight: 800; }
+.radn-list li span { flex: 1; text-align: left; } .radn-list li small { color: #cfe8da; font-weight: 700; } .radn-list .btn { width: auto; margin: 0; padding: 8px 14px; }
+.radn-inv { display: grid; justify-items: center; gap: 6px; margin: 4px 0 12px; padding: 12px; border-radius: 16px; background: linear-gradient(180deg, #ffe08a, #e0a100); color: #3b2410; box-shadow: 0 4px 0 #8a5a0a, 0 0 18px rgba(255, 213, 79, .6); }
+.radn-inv p { margin: 0; font-weight: 800; } .radn-row { display: flex; gap: 8px; width: 100%; } .radn-row .btn { flex: 1; margin: 0; }
+.radn-inv .btn.ghost { background: #fff8e6; color: #3b2410; border-color: #8a5a0a; box-shadow: 0 3px 0 #8a5a0a; }
+.radn-block { appearance: none; border: 0; background: none; color: #6b3a00; font: inherit; font-weight: 800; text-decoration: underline; cursor: pointer; min-height: 32px; }
+.radn-msg { text-align: center; font-weight: 800; color: #fff3b0; margin: 4px 0; }
+.rg-timer { display: block; height: 4px; margin: 6px auto 0; width: 70%; border-radius: 4px; background: #ffe08a; transform-origin: left; animation: rgTimer 32s linear forwards; }
+@keyframes rgTimer { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+@media (prefers-reduced-motion: reduce) { .rg-timer { animation: none; } }
+
 /* ── Kwartet-album: dikke 3D-kaarten in Candy-Crush-stijl (smaragd, goud, crème) ── */
 .album-head { background: linear-gradient(180deg, #fffaf0, #f6e3b4); border: 3px solid #e0b24a; border-radius: 22px; padding: 12px 14px; box-shadow: 0 5px 0 #b98a22; color: #4a3208; margin-bottom: 16px; }
 .album-head .bar { background: rgba(0, 0, 0, .12); } .album-head small { color: #6b4e12; opacity: 1; }
@@ -6007,7 +6074,7 @@ return exports;})();
     if (screen !== "journey") { const fl = document.getElementById("flyer"); if (fl) fl.remove(); }
     const prevA = a11yBefore(); speakStop();
     stopTimer(); mgClear(); idleStop();
-    if (screen !== "rad") { clearTimeout(radCpuT); radCpuT = null; }
+    if (screen !== "rad") { clearTimeout(radCpuT); radCpuT = null; if (radNet || rad && rad.online) { radNetLeave(); rad = null; } }
     document.body.className = "";
     if (screen !== "result" && screen !== "chestopen" && screen !== "minigame") { const cel = document.getElementById("celebrate"); if (cel) cel.remove(); }
     const inDuelQuiz = screen === "quiz" && quiz && quiz.kind === "duel";
@@ -6040,6 +6107,7 @@ return exports;})();
     window.scrollTo({ top: 0 });
     if (screen === "journey") document.body.classList.add("jfull");
     if (screen === "rad") document.body.classList.add("radfull");
+    if (screen === "rad" && rad && rad.phase !== "intro" && rad.phase !== "end") document.body.classList.add("radgame");
     if (screen === "journey") afterJourneyRender();
     duffUi();
     a11yAfter(prevA);
@@ -7945,6 +8013,8 @@ return exports;})();
   function radConsLeft() { return RAD_CONS.split("").filter(function (c) { return !rad.used[c]; }); }
   function radVowLeft() { return RAD_VOWELS.split("").filter(function (c) { return !rad.used[c]; }); }
   function radCur() { return rad.players[rad.cur]; }
+  /* mag dit toestel nu iets doen? (online: alleen wie aan de beurt is; lokaal: iedereen behalve de computer) */
+  function radMine() { return !!rad && !!rad.players && (rad.online ? !!radCur() && radCur().key === rad.online.me : radCur().kind !== "cpu"); }
 
   function radStart() {
     const lv = P.mode, humans = [P];
@@ -7971,12 +8041,15 @@ return exports;})();
     rad.puz = pick; rad.open = {}; rad.used = {};
     rad.players.forEach(function (pl) { pl.round = 0; });
     rad.cur = (rad.round - 1) % rad.players.length;
+    for (let k = 0; rad.online && k < rad.players.length && radNetGone(radCur().key); k++) rad.cur = (rad.cur + 1) % rad.players.length;
     rad.phase = "spin"; rad.val = 0; rad.q = null;
     rad.msg = "Ronde " + rad.round + " van " + RAD_ROUNDS + ". " + radCur().name + " mag draaien.";
     screen = "rad"; render(); announce(rad.msg);
   }
   function radNextTurn(why) {
-    rad.cur = (rad.cur + 1) % rad.players.length; rad.phase = "spin"; rad.val = 0; rad.q = null;
+    rad.cur = (rad.cur + 1) % rad.players.length;
+    for (let k = 0; rad.online && k < rad.players.length && radNetGone(radCur().key); k++) rad.cur = (rad.cur + 1) % rad.players.length;
+    rad.phase = "spin"; rad.val = 0; rad.q = null;
     rad.msg = (why ? why + " " : "") + "Nu is " + radCur().name + " aan de beurt.";
     render(); announce(rad.msg);
   }
@@ -7988,13 +8061,24 @@ return exports;})();
     const base = radAngle - (radAngle % 360);
     radAngle = base + 360 * 4 + target + jitter;
     const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches, dur = reduce ? 600 : 3600;
-    const wh = document.getElementById("radWheel");
     rad.phase = "spinning"; rad.msg = radCur().name + " draait…";
+    if (rad.online) { rad.spin = { seg: seg, n: ((rad.spin && rad.spin.n) || 0) + 1 }; rad.online.spinN = rad.spin.n; radNetPush(); }
+    radAnimate(seg, null, radAngle, dur, reduce);
+    radSpinT = setTimeout(function () { radSpinT = null; if (screen === "rad" && rad) radLand(RAD_SEGS[seg]); }, dur + 150);
+  }
+  /* het rad laten draaien naar vak 'seg' (ook voor wie online meekijkt) */
+  function radAnimate(seg, done, angle, dur, reduce) {
+    if (angle === undefined) {
+      const step = 360 / RAD_SEGS.length, target = (360 - seg * step) % 360;
+      reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches; dur = reduce ? 600 : 3600;
+      radAngle = radAngle - (radAngle % 360) + 360 * 4 + target; angle = radAngle;
+    }
+    const wh = document.getElementById("radWheel");
     const st = document.getElementById("radMsg"); if (st) st.textContent = rad.msg;
     document.querySelectorAll(".rad-acts button").forEach(function (b) { b.disabled = true; });
-    if (wh) { wh.style.transition = "transform " + dur + "ms cubic-bezier(.12,.72,.18,1)"; wh.style.transform = "rotate(" + radAngle + "deg)"; }
+    if (wh) { wh.style.transition = "transform " + dur + "ms cubic-bezier(.12,.72,.18,1)"; wh.style.transform = "rotate(" + angle + "deg)"; }
     if (S.sound && !reduce) { const N = 34; for (let k = 1; k <= N; k++) tone(1150, (dur / 1000) * (1 - Math.pow(1 - k / N, 1 / 3)), 0.03, "sine", 0.035); }
-    radSpinT = setTimeout(function () { radSpinT = null; if (screen === "rad" && rad) radLand(RAD_SEGS[seg]); }, dur + 150);
+    if (done) setTimeout(done, dur + 150);
   }
   function radLand(v) {
     const who = radCur().name;
@@ -8061,32 +8145,35 @@ return exports;})();
     if (rad.round >= RAD_ROUNDS) radFinish(); else radNextRound();
   }
   function radFinish() {
+    rad.phase = "end"; radApplyRewards(); render(); play("fanfare"); celebrate(true);
+    const best = Math.max.apply(null, rad.players.map(function (x) { return x.total; }));
+    const w = rad.players.filter(function (x) { return x.total === best; }).map(function (x) { return x.name; }).join(" en ");
+    announce("Einde van het spel. Winnaar: " + w + " met " + best + " punten.", true);
+  }
+  /* beloning alleen voor de spelers van dit toestel (online: alleen jijzelf) */
+  function radApplyRewards() {
+    if (rad.rewarded) return; rad.rewarded = true;
     const best = Math.max.apply(null, rad.players.map(function (x) { return x.total; }));
     rad.result = [];
     rad.players.forEach(function (pl) {
       const win = pl.total === best;
       let rw = null;
-      if (pl.kind !== "cpu") {
-        const p = S.players.find(function (x) { return x.id === pl.pid; });
-        if (p) {
-          const m = radMeta(p);
-          if (win) m.wins = (m.wins || 0) + 1;
-          if (m.n < RAD_DAY_MAX) {
-            m.n++;
-            rw = { gems: (win ? RAD_WIN_GEMS : RAD_PLAY_GEMS) + pl.qOk * RAD_Q_GEMS, xp: win ? RAD_WIN_XP : 0 };
-            asPlayer(p, function () { addReward(rad.lv, rw.xp, rw.gems); });
-          }
-          rw = rw || { none: true };
-          rw.wins = m.wins;
-          if (rw.xp) { if (sbUser && p.sbId === sbUser.id) sbSyncSoon(rad.lv); else if (!p.sbId) guestSyncSoon(p, rad.lv); }
+      const p = rad.online ? (pl.key === rad.online.me ? P : null) : (pl.kind !== "cpu" ? S.players.find(function (x) { return x.id === pl.pid; }) : null);
+      if (p) {
+        const m = radMeta(p);
+        if (win) m.wins = (m.wins || 0) + 1;
+        if (m.n < RAD_DAY_MAX) {
+          m.n++;
+          rw = { gems: (win ? RAD_WIN_GEMS : RAD_PLAY_GEMS) + (pl.qOk || 0) * RAD_Q_GEMS, xp: win ? RAD_WIN_XP : 0 };
+          asPlayer(p, function () { addReward(rad.lv, rw.xp, rw.gems); });
         }
+        rw = rw || { none: true };
+        rw.wins = m.wins;
+        if (rw.xp) { if (sbUser && p.sbId === sbUser.id) sbSyncSoon(rad.lv); else if (!p.sbId) guestSyncSoon(p, rad.lv); }
       }
-      rad.result.push({ pl: pl, win: win, rw: rw });
+      rad.result.push({ pl: pl, win: win, rw: rw, me: rad.online ? pl.key === rad.online.me : pl.kind === "me" });
     });
     saveState();
-    rad.phase = "end"; render(); play("fanfare"); celebrate(true);
-    const w = rad.players.filter(function (x) { return x.total === best; }).map(function (x) { return x.name; }).join(" en ");
-    announce("Einde van het spel. Winnaar: " + w + " met " + best + " punten.", true);
   }
   /* computerspeler: vriendelijk niveau */
   function radCpuMove() {
@@ -8118,6 +8205,289 @@ return exports;})();
     if (["spin", "act", "letter", "question"].indexOf(rad.phase) !== -1 && radCur().kind === "cpu") radCpuT = setTimeout(radCpuMove, 1300);
     const inp = document.getElementById("radSolveIn");
     if (inp) { inp.focus(); inp.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); radTrySolve(inp.value); } }); }
+    if (rad.online) radNetPush();
+  }
+
+  /* ───────────── Ajalat al-Ilm online (v70): ieder op zijn eigen telefoon ─────────────
+     Drie manieren, in deze volgorde: 1) iemand zoeken die nu online is, 2) studio openen voor je groep of meedoen met een studiocode, 3) uitnodigen via WhatsApp-link.
+     Veilig: geen chat; anderen zien alleen bijnaam en avatar (nooit een foto); Beginner alleen met bekenden (groep, code of link); weigeren en blokkeren kan.
+     Firebase-paden: rad/lobby/<modus>/<uid>, rad/inv/<uid>/<van-uid>, rad/rooms/<code>, rad/grp/<groepscode>. */
+  const RADN_FRESH = 45000, RADN_TURN = 32000, RADN_SPIN = 9000, RADN_ROUNDEND = 20000, RADN_SEARCH = 30000;
+  const RAD_SHARED = ["lv", "lands", "players", "cur", "round", "seen", "puz", "open", "used", "phase", "val", "q", "msg", "winner", "crowd", "spin"];
+  let radNet = null;   /* wachtruimte / studio vóór het spel: { view, msg, list, invites, room, code, ... } */
+  let radNetSubs = [], radNetTimers = [], radNetTurnT = null, radNetSeen = {}, radNetHb = {}, radNetTmp = null;
+  let radPendingStudio = normCode(new URLSearchParams(location.search).get("studio"));
+  function radBlocked() { return S.radBlock || (S.radBlock = []); }
+  function radNetMe(auth) {
+    if (!radNetTmp) { const pool = AVATARS.ANIMALS.concat(AVATARS.THINGS).map(function (a) { return a.id; }).filter(function (id) { return ["kaaba", "moskee", "rehal"].indexOf(id) === -1; }); radNetTmp = pool[Math.floor(Math.random() * pool.length)]; }
+    const nm = publicName(P), av = avOf(P);
+    return { key: auth.uid + "-" + P.id, uid: auth.uid, name: nameError(nm) ? "Speler" : nm, av: av ? av.id : radNetTmp, color: P.color || "#2d6a4f" };
+  }
+  function radNetLv() { return (radNet && radNet.room && radNet.room.meta && radNet.room.meta.mode) || P.mode; }
+  function radNetStop() {
+    radNetSubs.forEach(function (s) { try { s.close(); } catch (e) {} }); radNetSubs = [];
+    radNetTimers.forEach(clearInterval); radNetTimers = [];
+    clearTimeout(radNetTurnT); radNetTurnT = null;
+  }
+  function radNetErr(e) {
+    const st = e && e.status;
+    return st === 401 || st === 403 ? "Online spelen is nog niet ingesteld (Firebase-regels). Speel tegen de computer of probeer het later." : "Geen verbinding. Controleer je internet en probeer het opnieuw.";
+  }
+  function radNetFail(e) { radNetStop(); radNet = { view: "error", msg: radNetErr(e) }; if (screen === "rad") render(); }
+  /* ── 1) iemand zoeken die nu online is ── */
+  async function radNetSearch() {
+    radNetStop(); rad = null;
+    radNet = { view: "search", t0: Date.now(), list: [], invites: [], msg: "" };
+    screen = "rad"; render();
+    try {
+      const auth = await cloudAuth(), me = radNetMe(auth), lv = P.mode;
+      radNet.me = me; radNet.lv = lv;
+      const lands = radLandsOf(P, lv).join(",");
+      const beat = function () { return dbReq("PUT", "rad/lobby/" + lv + "/" + auth.uid, { key: me.key, name: me.name, av: me.av, lands: lands, t: SV }).catch(function () {}); };
+      await dbReq("PUT", "rad/lobby/" + lv + "/" + auth.uid, { key: me.key, name: me.name, av: me.av, lands: lands, t: SV });
+      radNetTimers.push(setInterval(beat, 15000));
+      radNetTimers.push(setInterval(function () { const el = document.getElementById("radnClock"); if (el && radNet) { const s = Math.floor((Date.now() - radNet.t0) / 1000); el.textContent = Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); if (!radNet.nobody && Date.now() - radNet.t0 > RADN_SEARCH && !radNet.list.length) { radNet.nobody = true; render(); } } }, 1000));
+      radNetSubs.push(listen("rad/lobby/" + lv, function (d) {
+        if (!radNet || radNet.view !== "search") return;
+        const mine = d && d[auth.uid], ref = mine && typeof mine.t === "number" ? mine.t : null, myLands = lands.split(",");
+        radNet.list = Object.keys(d || {}).filter(function (u) {
+          const x = d[u];
+          return u !== auth.uid && x && radBlocked().indexOf(u) === -1 && (ref === null || typeof x.t !== "number" || x.t > ref - RADN_FRESH) && String(x.lands || "").split(",").some(function (l) { return myLands.indexOf(l) !== -1; });
+        }).map(function (u) { return Object.assign({ uid: u }, d[u]); });
+        render();
+      }));
+      radNetSubs.push(listen("rad/inv/" + auth.uid, function (d) {
+        if (!radNet) return;
+        radNet.invites = Object.keys(d || {}).filter(function (u) { return d[u] && radBlocked().indexOf(u) === -1 && d[u].mode === lv; }).map(function (u) { return Object.assign({ uid: u }, d[u]); });
+        if (radNet.invites.length) { play("bell"); announce(radNet.invites[0].name + " daagt je uit voor Ajalat al-Ilm."); }
+        render();
+      }));
+    } catch (e) { radNetFail(e); }
+  }
+  async function radNetLobbyLeave() {
+    try { const auth = await cloudAuth(); await dbReq("DELETE", "rad/lobby/" + (radNet && radNet.lv || P.mode) + "/" + auth.uid); } catch (e) {}
+  }
+  async function radNetInvite(uid) {
+    const who = radNet && radNet.list.find(function (x) { return x.uid === uid; }); if (!who) return;
+    try {
+      const code = await radNetCreate(2, true);
+      const me = radNet.me;
+      await dbReq("PUT", "rad/inv/" + uid + "/" + me.uid, { key: me.key, name: me.name, av: me.av, mode: P.mode, room: code, t: SV });
+      radNet.invited = { uid: uid, name: who.name };
+      radNetLobbyLeave(); render();
+    } catch (e) { radNetFail(e); }
+  }
+  async function radNetAccept(uid) {
+    const inv = radNet && radNet.invites.find(function (x) { return x.uid === uid; }); if (!inv) return;
+    try { const auth = await cloudAuth(); dbReq("DELETE", "rad/inv/" + auth.uid + "/" + uid).catch(function () {}); } catch (e) {}
+    radNetLobbyLeave();
+    radNetJoin(inv.room);
+  }
+  async function radNetDecline(uid, block) {
+    if (block && radBlocked().indexOf(uid) === -1) { radBlocked().push(uid); saveState(); }
+    if (radNet) radNet.invites = radNet.invites.filter(function (x) { return x.uid !== uid; });
+    render();
+    try { const auth = await cloudAuth(); await dbReq("DELETE", "rad/inv/" + auth.uid + "/" + uid); } catch (e) {}
+  }
+  /* ── 2 en 3) studio openen (groep, code of WhatsApp-link) of meedoen ── */
+  async function radNetCreate(max, auto) {
+    const auth = await cloudAuth(), me = radNetMe(auth);
+    radNetStop();
+    for (let i = 0; i < 6; i++) {
+      const code = genCode();
+      const ex = await dbReq("GET", "rad/rooms/" + code + "/meta");
+      if (ex) continue;
+      await dbReq("PUT", "rad/rooms/" + code, { meta: { host: me.key, mode: P.mode, max: max, auto: !!auto, status: "wait", created: SV }, players: (function () { const o = {}; o[me.key] = { uid: me.uid, name: me.name, av: me.av, color: me.color, lands: radLandsOf(P, P.mode).join(","), seat: Date.now() }; return o; })() });
+      if (P.group && !auto) dbReq("PUT", "rad/grp/" + P.group.code, { room: code, name: me.name, mode: P.mode, t: SV }).catch(function () {});
+      radNet = Object.assign(radNet || {}, { view: "wait", code: code, me: me, host: true, room: null, msg: "" });
+      radNetWatch(code);
+      return code;
+    }
+    throw new Error("geen vrije code");
+  }
+  async function radNetOpen(share) {
+    try {
+      rad = null; radNet = { view: "busy" }; screen = "rad"; render();
+      const code = await radNetCreate(4, false);
+      render();
+      if (share) radNetShare(code);
+    } catch (e) { radNetFail(e); }
+  }
+  function radNetLink(code) { return SITE_URL + "?studio=" + code; }
+  function radNetShare(code) {
+    const txt = "🌙 Speel je mee met Ajalat al-Ilm (Rad van Kennis) in Islam Quiz? Tik op de link en doe mee in mijn studio (code " + showCode(code) + "):\n" + radNetLink(code);
+    const url = "https://wa.me/?text=" + encodeURIComponent(txt);
+    try { window.open(url, "_blank", "noopener"); } catch (e) { location.href = url; }
+  }
+  async function radNetJoin(code) {
+    code = normCode(code);
+    rad = null; radNetStop(); radNet = { view: "busy" }; screen = "rad"; render();
+    if (code.length !== 6) { radNet = { view: "error", msg: "Een studiocode heeft 6 tekens, bijvoorbeeld KRM-7QX." }; render(); return; }
+    try {
+      const auth = await cloudAuth(), me = radNetMe(auth);
+      const room = await dbReq("GET", "rad/rooms/" + code);
+      if (!room || !room.meta) { radNet = { view: "error", msg: "Deze studio bestaat niet (meer). Controleer de code." }; render(); return; }
+      const ps = room.players || {}, n = Object.keys(ps).filter(function (k) { return !ps[k].left; }).length, mine = !!ps[me.key];
+      if (!mine && room.meta.status !== "wait") { radNet = { view: "error", msg: "Deze studio is al begonnen. Vraag om een nieuwe uitnodiging." }; render(); return; }
+      if (!mine && n >= (room.meta.max || 4)) { radNet = { view: "error", msg: "Deze studio is vol (maximaal " + (room.meta.max || 4) + " spelers)." }; render(); return; }
+      const lv = room.meta.mode;
+      if (!radLandsOf(P, lv).length) { radNet = { view: "error", msg: "Deze studio speelt in " + modeName(lv) + ". Speel daar eerst een level op de reis, dan kun je meedoen." }; render(); return; }
+      await dbReq("PUT", "rad/rooms/" + code + "/players/" + me.key, { uid: me.uid, name: me.name, av: me.av, color: me.color, lands: radLandsOf(P, lv).join(","), seat: mine ? ps[me.key].seat : Date.now() });
+      radNet = { view: "wait", code: code, me: me, host: room.meta.host === me.key, room: null, msg: "" };
+      radNetWatch(code); render();
+    } catch (e) { radNetFail(e); }
+  }
+  function radNetWatch(code) {
+    const me = radNet.me;
+    radNetSeen = {}; radNetHb = {};
+    const hb = function () { return dbReq("PUT", "rad/rooms/" + code + "/hb/" + me.key, SV).catch(function () {}); };
+    hb(); radNetTimers.push(setInterval(hb, 10000));
+    radNetTimers.push(setInterval(function () { if (rad && rad.online) radNetCheckGone(); }, 5000));
+    radNetSubs.push(listen("rad/rooms/" + code, function (d) { radNetOnRoom(code, d); }));
+  }
+  function radNetOnRoom(code, d) {
+    if (!radNet || radNet.code !== code || !d) return;
+    radNet.room = d;
+    Object.keys(d.hb || {}).forEach(function (k) { if (radNetHb[k] !== d.hb[k]) { radNetHb[k] = d.hb[k]; radNetSeen[k] = Date.now(); } });
+    Object.keys(d.players || {}).forEach(function (k) { if (!radNetSeen[k]) radNetSeen[k] = Date.now(); });
+    const meta = d.meta || {}, ps = d.players || {}, live = Object.keys(ps).filter(function (k) { return !ps[k].left; });
+    if (meta.status === "play" && d.state) { radNetApply(d.state); return; }
+    if (meta.status === "wait") {
+      if (radNet.host && meta.auto && live.length >= 2) { radNetStart(); return; }
+      if (screen === "rad" && !rad) render();
+    }
+  }
+  /* de opener start het spel: puzzels uit landen die iedereen gespeeld heeft */
+  function radNetStart() {
+    const d = radNet && radNet.room; if (!d || !radNet.host || rad) return;
+    const ps = d.players || {}, keys = Object.keys(ps).filter(function (k) { return !ps[k].left; }).sort(function (a, b) { return (ps[a].seat || 0) - (ps[b].seat || 0); });
+    if (keys.length < 2) return;
+    const lv = d.meta.mode;
+    let lands = null;
+    keys.forEach(function (k) { const l = String(ps[k].lands || "").split(",").filter(Boolean); lands = lands === null ? l : lands.filter(function (x) { return l.indexOf(x) !== -1; }); });
+    lands = (lands || []).filter(function (id) { return RAD_PUZ[lv] && RAD_PUZ[lv][id]; });
+    if (!lands.length) { radNet.msg = "Jullie hebben nog geen land dat iedereen gespeeld heeft. Speel eerst een level in hetzelfde land."; render(); return; }
+    const crowd = []; let pool = [];
+    for (let k = 0; k < 27; k++) { if (!pool.length) pool = shuffle(AVATARS.PEOPLE.map(function (a) { return a.id; }), Math.random); crowd.push(pool.shift()); }
+    rad = { crowd: crowd, lv: lv, lands: lands, cur: 0, round: 0, seen: {}, phase: "intro", msg: "", seq: 0,
+      players: keys.map(function (k) { return { kind: "net", key: k, name: ps[k].name, av: ps[k].av, color: ps[k].color || "#2d6a4f", total: 0, round: 0, qOk: 0 }; }),
+      online: { code: radNet.code, me: radNet.me.key, lastSig: "", spinN: 0 } };
+    dbReq("PATCH", "rad/rooms/" + radNet.code + "/meta", { status: "play" }).catch(function () {});
+    if (P.group) dbReq("DELETE", "rad/grp/" + P.group.code).catch(function () {});
+    play("click"); radNextRound();
+  }
+  function radNetShared() { const o = {}; RAD_SHARED.forEach(function (k) { o[k] = rad[k] === undefined ? null : rad[k]; }); return o; }
+  function radNetPush() {
+    if (!rad || !rad.online) return;
+    const sh = radNetShared(), sig = JSON.stringify(sh);
+    if (sig === rad.online.lastSig) return;
+    rad.online.lastSig = sig; rad.seq = (rad.seq || 0) + 1; sh.seq = rad.seq; sh.w = rad.online.me;
+    dbReq("PUT", "rad/rooms/" + rad.online.code + "/state", sh).catch(function () {});
+    radNetArm();
+  }
+  function radNetApply(st) {
+    if (!radNet || !radNet.me) return;
+    if (!rad || !rad.online) {   /* eerste toestand: spel begint op dit toestel */
+      rad = { seq: 0, online: { code: radNet.code, me: radNet.me.key, lastSig: "", spinN: 0 } };
+    }
+    const inc = {}; RAD_SHARED.forEach(function (k) { inc[k] = st[k] === undefined ? null : st[k]; });
+    if ((st.seq || 0) < (rad.seq || 0)) return;
+    if ((st.seq || 0) === (rad.seq || 0) && (st.w === rad.online.me || !(String(st.w) < String(rad.online.me)))) return;   /* gelijk volgnummer: de laagste schrijver wint, zodat alle telefoons hetzelfde zien */
+    const prevPhase = rad.phase;
+    RAD_SHARED.forEach(function (k) { rad[k] = st[k] === undefined ? null : st[k]; });
+    ["seen", "open", "used"].forEach(function (k) { if (!rad[k]) rad[k] = {}; });
+    const arr = function (x) { return Array.isArray(x) ? x.filter(function (v) { return v !== null && v !== undefined; }) : x && typeof x === "object" ? Object.keys(x).sort(function (a, b) { return a - b; }).map(function (k) { return x[k]; }) : []; };   /* Firebase geeft lijstjes soms terug als object */
+    rad.players = arr(rad.players); rad.crowd = arr(rad.crowd); rad.lands = arr(rad.lands);
+    if (rad.q) rad.q.options = arr(rad.q.options);
+    rad.seq = st.seq; rad.online.lastSig = JSON.stringify(radNetShared());
+    screen = "rad";
+    if (rad.phase === "spinning" && rad.spin && rad.spin.n !== rad.online.spinN) {
+      rad.online.spinN = rad.spin.n; render(); radAnimate(rad.spin.seg, function () {}); radNetArm(); return;
+    }
+    if (rad.phase === "end" && !rad.rewarded) { radApplyRewards(); render(); play("fanfare"); celebrate(true); radNetArm(); return; }
+    if (rad.phase === "roundend" && prevPhase !== "roundend") play("win");
+    render(); announce(rad.msg); radNetArm();
+  }
+  /* beurt-tijd: wie als eerste aanwezig is aan tafel, bewaakt de tijd zodat het spel nooit blijft hangen */
+  function radNetGone(k) {
+    const ps = radNet && radNet.room && radNet.room.players || {};
+    if (ps[k] && ps[k].left) return true;
+    if (rad && rad.online && k === rad.online.me) return false;
+    return Date.now() - (radNetSeen[k] || 0) > 30000;
+  }
+  function radNetEnforcer() { if (!rad || !rad.players) return false; const f = rad.players.find(function (p) { return !radNetGone(p.key); }); return !!f && f.key === rad.online.me; }
+  function radNetArm() {
+    clearTimeout(radNetTurnT); radNetTurnT = null;
+    if (!rad || !rad.online || rad.phase === "end") return;
+    const lim = rad.phase === "spinning" ? RADN_SPIN : rad.phase === "roundend" ? RADN_ROUNDEND : RADN_TURN;
+    radNetTurnT = setTimeout(function () {
+      if (!rad || !rad.online || screen !== "rad" || !radNetEnforcer()) { radNetArm(); return; }
+      if (rad.phase === "roundend") radAfterRound(); else radNextTurn("Tijd voorbij.");
+    }, lim);
+  }
+  function radNetCheckGone() {
+    if (!rad || !rad.online || rad.phase === "end" || !radNetEnforcer()) return;
+    const live = rad.players.filter(function (p) { return !radNetGone(p.key); });
+    if (live.length < 2) { rad.msg = "De andere speler is weggegaan."; radFinish(); return; }
+    if (radNetGone(radCur().key) && rad.phase !== "roundend") radNextTurn(radCur().name + " is weg.");
+  }
+  async function radNetLeave() {
+    const r = rad && rad.online ? rad.online.code : radNet && radNet.code, me = radNet && radNet.me;
+    const searching = radNet && radNet.view === "search";
+    radNetStop();
+    if (searching) radNetLobbyLeave();
+    if (r && me) {
+      dbReq("PATCH", "rad/rooms/" + r + "/players/" + me.key, { left: true }).catch(function () {});
+      if (radNet && radNet.host && P.group && (!rad || !rad.online)) dbReq("DELETE", "rad/grp/" + P.group.code).catch(function () {});
+    }
+    radNet = null;
+  }
+  /* open studio's van je groep (alleen tonen, alleen lezen) */
+  let radGrpSeen = null;
+  function radGrpCheck() {
+    if (!P || !P.group || radGrpSeen === "busy") return;
+    radGrpSeen = "busy";
+    dbReq("GET", "rad/grp/" + P.group.code).then(function (g) {
+      radGrpSeen = g && g.room && typeof g.t === "number" && Date.now() - g.t < 2 * 3600 * 1000 ? g : null;
+      if (screen === "rad" && !rad && !radNet) render();
+    }).catch(function () { radGrpSeen = null; });
+  }
+
+  /* ── weergave van de online wachtruimte en studio ── */
+  function radNetAvHtml(x, size) { const a = avById(x.av); return a ? '<span class="avatar av-art" style="width:' + size + "px;height:" + size + 'px">' + avSvg(a) + "</span>" : '<span class="avatar" style="--c:#2d6a4f;width:' + size + "px;height:" + size + 'px">' + esc(String(x.name || "?").charAt(0)) + "</span>"; }
+  function viewRadNet() {
+    let h = mgTop("") + '<section class="rad rad-net">' + radTitleHtml(true);
+    const v = radNet.view;
+    if (v === "busy") return h + '<p class="radn-msg">Even geduld…</p></section>';
+    if (v === "error") return h + '<p class="rad-warn">' + esc(radNet.msg) + '</p><div class="radn-col"><button class="btn gold block" data-act="radn-cpu">Speel tegen de computer</button><button class="btn ghost block" data-act="radn-back">Terug</button></div></section>';
+    if (v === "search") {
+      if (radNet.invited) return h + '<div class="radn-box"><p class="radn-big">Wachten op ' + esc(radNet.invited.name) + "…</p><p>Zodra " + esc(radNet.invited.name) + ' accepteert, begint het spel.</p></div><div class="radn-col"><button class="btn ghost block" data-act="radn-back">Annuleren</button></div></section>';
+      (radNet.invites || []).slice(0, 1).forEach(function (inv) {
+        h += '<div class="radn-inv" role="alertdialog" aria-label="Uitdaging">' + radNetAvHtml(inv, 48) + '<p><b>' + esc(inv.name) + "</b> daagt je uit!</p>" +
+          '<div class="radn-row"><button class="btn gold" data-act="radn-accept" data-u="' + esc(inv.uid) + '">Accepteren</button><button class="btn ghost" data-act="radn-decline" data-u="' + esc(inv.uid) + '">Weigeren</button></div>' +
+          '<button class="radn-block" data-act="radn-block" data-u="' + esc(inv.uid) + '">Blokkeren</button></div>';
+      });
+      h += '<div class="radn-box"><p class="radn-big">We zoeken een tegenspeler… <span id="radnClock">0:00</span></p><p>' + esc(modeName(radNet.lv || P.mode)) + " · alleen spelers met een land dat jij ook gespeeld hebt</p></div>";
+      if (radNet.list.length) {
+        h += '<ul class="radn-list" aria-label="Nu online">';
+        radNet.list.forEach(function (x) { h += "<li>" + radNetAvHtml(x, 40) + "<span>" + esc(x.name) + '</span><button class="btn gold" data-act="radn-invite" data-u="' + esc(x.uid) + '">Uitdagen</button></li>'; });
+        h += "</ul>";
+      } else if (radNet.nobody) {
+        h += '<div class="radn-box"><p class="radn-big">Er is nu niemand online.</p><p>Speel tegen de computer, of nodig iemand uit.</p></div><div class="radn-col"><button class="btn gold block" data-act="radn-cpu">Speel tegen de computer</button><button class="btn ghost block" data-act="radn-open" data-share="1">Nodig iemand uit via WhatsApp</button></div>';
+      }
+      return h + '<div class="radn-col"><button class="btn ghost block" data-act="radn-back">Stoppen met zoeken</button></div></section>';
+    }
+    /* wachtkamer van een studio */
+    const d = radNet.room || {}, meta = d.meta || {}, ps = d.players || {};
+    const keys = Object.keys(ps).filter(function (k) { return !ps[k].left; }).sort(function (a, b) { return (ps[a].seat || 0) - (ps[b].seat || 0); });
+    h += '<div class="radn-box"><p>Studiocode</p><p class="radn-code">' + esc(showCode(radNet.code || "")) + "</p><p>" + esc(modeName(meta.mode || P.mode)) + " · " + keys.length + " van " + (meta.max || 4) + " spelers</p></div>";
+    h += '<ul class="radn-list">' + keys.map(function (k) { return "<li>" + radNetAvHtml(ps[k], 40) + "<span>" + esc(ps[k].name) + (k === meta.host ? " <small>(opener)</small>" : "") + "</span></li>"; }).join("") + "</ul>";
+    if (radNet.msg) h += '<p class="rad-warn">' + esc(radNet.msg) + "</p>";
+    h += '<div class="radn-col">';
+    if (!meta.auto) h += '<button class="btn ghost block" data-act="radn-share">' + "Nodig uit via WhatsApp</button>";
+    if (radNet.host && !meta.auto) h += '<button class="btn gold block" data-act="radn-start"' + (keys.length >= 2 ? "" : " disabled") + ">" + (keys.length >= 2 ? "Start het spel" : "Wachten op spelers…") + "</button>";
+    else h += '<p class="radn-msg">' + (meta.auto ? "Het spel begint zo…" : "Wachten tot de opener het spel start…") + "</p>";
+    return h + '<button class="btn ghost block" data-act="radn-back">Studio verlaten</button></div></section>';
   }
 
   /* ── weergave ── */
@@ -8159,15 +8529,17 @@ return exports;})();
   }
   /* studio: publiek (avatar-ontwerpen) achter, deelnemers achter spreektafels met hun avatar als gezicht */
   function radCrowdTile(id) { const a = avById(id); return a ? '<span class="rs-fan"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">' + avInner(a, true) + "</svg></span>" : ""; }
+  function radStudioBg() {
+    return '<div class="rs-bg" aria-hidden="true"><div class="rs-lights"><i></i><i></i><i></i><i></i></div><div class="rs-dust">' + [8, 19, 31, 44, 56, 67, 78, 90, 24, 72].map(function (x, k) { return '<i style="left:' + x + "%;top:" + (4 + (k * 37) % 40) + "%;animation-delay:-" + (k * 1.7).toFixed(1) + "s;animation-duration:" + (9 + (k % 4) * 2) + 's"></i>'; }).join("") + "</div></div>";
+  }
   function radStudio() {
-    const cheer = rad.phase === "roundend" ? " cheer" : "";
-    let h = '<div class="rad-studio' + cheer + '"><div class="rs-lights" aria-hidden="true"><i></i><i></i><i></i><i></i></div><div class="rs-dust" aria-hidden="true">' + [8, 19, 31, 44, 56, 67, 78, 90, 24, 72].map(function (x, k) { return '<i style="left:' + x + "%;top:" + (8 + (k * 37) % 55) + "%;animation-delay:-" + (k * 1.7).toFixed(1) + "s;animation-duration:" + (9 + (k % 4) * 2) + 's"></i>'; }).join("") + '</div><div class="rs-crowd" aria-hidden="true">';
-    [rad.crowd.slice(0, 10), rad.crowd.slice(10, 19), rad.crowd.slice(19, 27)].forEach(function (row, r) { h += '<div class="rs-row r' + r + '">' + row.map(radCrowdTile).join("") + "</div>"; });
+    let h = '<div class="rad-studio"><div class="rs-crowd" aria-hidden="true">';
+    [rad.crowd.slice(0, 11), rad.crowd.slice(11, 21)].forEach(function (row, r) { h += '<div class="rs-row r' + (r + 1) + '">' + row.map(radCrowdTile).join("") + "</div>"; });
     h += '</div><ul class="rs-stage" aria-label="Deelnemers">';
     rad.players.forEach(function (pl, i) {
       const on = i === rad.cur && rad.phase !== "end";
-      h += '<li class="rs-lect' + (on ? " on" : "") + '" style="--seat:' + RAD_SEAT[i % RAD_SEAT.length] + '"' + (on ? ' aria-current="true"' : "") + '><span class="rs-spot" aria-hidden="true"></span><div class="rs-head">' + radAvHtml(pl, 54) + "</div>" +
-        '<div class="rs-desk"><b class="rs-plate">' + esc(pl.name) + '</b><span class="rs-score"><span class="sr-only">Deze ronde: </span>' + pl.round + '</span><small class="rs-total"><span class="sr-only">Totaal: </span>' + pl.total + " totaal</small>" + (pl.kind === "cpu" ? '<small class="rs-cpu">computer</small>' : "") + "</div></li>";
+      h += '<li class="rs-lect' + (on ? " on" : "") + '" style="--seat:' + RAD_SEAT[i % RAD_SEAT.length] + '"' + (on ? ' aria-current="true"' : "") + '><span class="rs-spot" aria-hidden="true"></span><div class="rs-head">' + radAvHtml(pl, 40) + "</div>" +
+        '<div class="rs-desk"><b class="rs-plate">' + esc(pl.name) + (pl.kind === "cpu" ? '<span class="sr-only"> (computer)</span>' : "") + '</b><span class="rs-score"><span class="sr-only">Deze ronde: </span>' + pl.round + '</span><small class="rs-total"><span class="sr-only">Totaal: </span>' + pl.total + "</small></div></li>";
     });
     return h + "</ul></div>";
   }
@@ -8176,13 +8548,25 @@ return exports;})();
   }
   function viewRadSetup() {
     const lv = P.mode, mates = radMates(lv), mine = radCommonLands([P], lv), m = radMeta(P);
-    let h = mgTop("Ajalat al-Ilm") + '<section class="rad rad-setup">' + radTitleHtml(false);
+    let h = mgTop("") + '<section class="rad rad-setup">' + radTitleHtml(false);
     h += '<p class="rad-intro">Draai aan het rad, raad letters en los de puzzel op. De puzzels gaan over wat je al geleerd hebt op de reis (' + esc(modeName(lv)) + ").</p>";
     if ((m.wins || 0) >= RAD_MASTER) h += '<p class="rad-master">🏅 Meester van het Rad · ' + m.wins + " keer gewonnen</p>";
     if (!mine.length) return h + '<p class="rad-warn">Speel eerst een level op de reiskaart. Daarna kun je hier spelen met wat je geleerd hebt.</p><button class="btn gold block" data-act="journey-back">' + icon("map", 20) + "Naar de kaart</button></section>";
     h += '<div class="rad-choice" role="radiogroup" aria-label="Tegen wie speel je?">' +
       '<button class="rad-opt' + (radSetup.vs === "cpu" ? " on" : "") + '" role="radio" aria-checked="' + (radSetup.vs === "cpu") + '" data-act="rad-vs" data-v="cpu"><b>Tegen de computer</b><small>Hamza' + (radSetup.n === 2 ? " en Noor spelen" : " speelt") + " mee</small></button>" +
-      '<button class="rad-opt' + (radSetup.vs === "local" ? " on" : "") + '" role="radio" aria-checked="' + (radSetup.vs === "local") + '" data-act="rad-vs" data-v="local"' + (mates.length ? "" : " disabled") + "><b>Samen op dit toestel</b><small>" + (mates.length ? "Geef de telefoon door" : "Nog geen andere spelers met " + esc(modeName(lv)) + "-levels") + "</small></button></div>";
+      '<button class="rad-opt' + (radSetup.vs === "local" ? " on" : "") + '" role="radio" aria-checked="' + (radSetup.vs === "local") + '" data-act="rad-vs" data-v="local"' + (mates.length ? "" : " disabled") + "><b>Samen op dit toestel</b><small>" + (mates.length ? "Geef de telefoon door" : "Nog geen andere spelers met " + esc(modeName(lv)) + "-levels") + "</small></button>" +
+      '<button class="rad-opt' + (radSetup.vs === "online" ? " on" : "") + '" role="radio" aria-checked="' + (radSetup.vs === "online") + '" data-act="rad-vs" data-v="online"><b>Online</b><small>Ieder op zijn eigen telefoon</small></button></div>';
+    if (radSetup.vs === "online") {
+      h += '<div class="radn-opts">';
+      if (lv === "beginner") h += '<p class="radn-note">In Beginner speel je online alleen met bekenden: via je groep, een studiocode of een link.</p>';
+      else h += '<button class="btn gold block" data-act="radn-search">1 · Zoek iemand die nu online is</button>';
+      if (radGrpSeen && radGrpSeen.room && radGrpSeen.mode === lv) h += '<div class="radn-inv"><p><b>' + esc(radGrpSeen.name) + "</b> heeft een studio geopend voor jullie groep.</p><button class=\"btn gold\" data-act=\"radn-join\" data-code=\"" + esc(radGrpSeen.room) + '">Meedoen</button></div>';
+      h += '<button class="btn ghost block" data-act="radn-open">2 · Open een studio' + (P.group ? " voor je groep" : "") + "</button>" +
+        '<div class="radn-code-row"><label class="sr-only" for="radnCode">Studiocode</label><input id="radnCode" class="quiz-input" placeholder="Studiocode" maxlength="8" autocapitalize="characters" autocomplete="off"><button class="btn ghost" data-act="radn-join">Meedoen</button></div>' +
+        '<button class="btn ghost block" data-act="radn-open" data-share="1">3 · Nodig uit via WhatsApp</button>' +
+        '<p class="radn-note">Online zie je van anderen alleen hun bijnaam en avatar. Er is geen chat.</p></div>';
+      return h + "</section>";
+    }
     if (radSetup.vs === "cpu") h += '<div class="rad-n" role="group" aria-label="Aantal computerspelers"><button class="rad-chip' + (radSetup.n === 1 ? " on" : "") + '" data-act="rad-n" data-v="1" aria-pressed="' + (radSetup.n === 1) + '">1 tegenspeler</button><button class="rad-chip' + (radSetup.n === 2 ? " on" : "") + '" data-act="rad-n" data-v="2" aria-pressed="' + (radSetup.n === 2) + '">2 tegenspelers</button></div>';
     else {
       h += '<div class="rad-mates" role="group" aria-label="Kies medespelers (maximaal 3)">';
@@ -8199,9 +8583,9 @@ return exports;})();
     return h + "</section>";
   }
   function viewRad() {
-    if (!rad || rad.phase === "intro") return viewRadSetup();
-    const pl = radCur(), human = pl.kind !== "cpu", land = catById(rad.puz.land) || { title: "" };
-    let h = mgTop("Ajalat al-Ilm") + '<section class="rad rad-game">';
+    if (!rad || rad.phase === "intro" || !rad.players || !rad.puz) return radNet ? viewRadNet() : viewRadSetup();
+    const pl = radCur(), human = radMine(), land = catById(rad.puz.land) || { title: "" };
+    let h = mgTop("") + '<section class="rad rad-game">';
     if (rad.phase === "end") {
       const best = Math.max.apply(null, rad.players.map(function (x) { return x.total; }));
       const order = rad.result.slice().sort(function (a, b) { return b.pl.total - a.pl.total; });
@@ -8214,43 +8598,40 @@ return exports;})();
         h += "</li>";
       });
       h += "</ol>";
-      const me = rad.result.find(function (r) { return r.pl.kind === "me"; });
+      const me = rad.result.find(function (r) { return r.me; });
       const txt = "🌙 Islam Quiz – Ajalat al-Ilm (Rad van Kennis, " + modeName(rad.lv) + "): " + (me && me.win ? "ik heb gewonnen met " : "ik speelde mee met ") + (me ? me.pl.total : best) + " punten!\nSpeel mee: https://islam-quiz-one.vercel.app/";
       h += '<div class="result-actions"><button class="btn gold" data-act="rad-again">' + icon("retry", 20) + 'Nog een potje</button><button class="btn ghost" data-act="journey-back">' + icon("map", 20) + "Terug naar de kaart</button>" + shareBtn(txt, "Deel via WhatsApp") + "</div>";
       return h + "</section>";
     }
+    h = '<section class="rad-game' + (rad.phase === "roundend" ? " cheer" : "") + '">' + radStudioBg() +
+      '<header class="rg-top"><button class="rg-back" data-act="journey-back" aria-label="Stoppen en terug naar de kaart">' + icon("left", 20) + '</button><span class="rg-title"><span lang="ar" dir="rtl" aria-hidden="true">عجلة العلم</span> Ajalat al-Ilm</span><span class="rg-round">Ronde ' + rad.round + "/" + RAD_ROUNDS + "</span></header>";
     h += radStudio();
-    h += '<div class="rad-cat"><b>' + esc(land.title) + "</b><span>Hint: " + esc(rad.puz.hint) + '</span><small>Ronde ' + rad.round + " van " + RAD_ROUNDS + "</small></div>";
-    h += radBoardHtml();
-    h += '<p class="rad-msg" id="radMsg" role="status" aria-live="polite">' + esc(rad.msg) + "</p>";
-    if (rad.phase === "roundend") {
-      return h + '<div class="rad-acts"><button class="btn gold block" data-act="rad-next">' + (rad.round >= RAD_ROUNDS ? "Naar de uitslag" : "Volgende ronde") + "</button></div></section>";
-    }
+    h += '<div class="rg-screen"><p class="rg-cat"><b>' + esc(land.title) + "</b> · " + esc(rad.puz.hint) + "</p>" + radBoardHtml() + "</div>";
+    h += '<p class="rg-msg" id="radMsg" role="status" aria-live="polite">' + esc(rad.msg) + (rad.online && human && ["spin", "act", "letter", "question", "vowel", "solve"].indexOf(rad.phase) !== -1 ? '<i class="rg-timer" aria-hidden="true"></i>' : "") + "</p>";
+    const zone = function (cls, inner) { return h + '<div class="rg-zone ' + cls + '">' + inner + "</div></section>"; };
+    const wheel = '<div class="rg-wheel' + (rad.flash ? " hit" : "") + '"><div class="rg-wheel-in">' + radWheelSvg() + "</div></div>";
+    if (rad.phase === "roundend") return zone("z-end", '<p class="rg-answer"><small>Het antwoord</small>' + esc(rad.puz.ans) + "</p>" + (human ? '<button class="btn gold block" data-act="rad-next">' + (rad.round >= RAD_ROUNDS ? "Naar de uitslag" : "Volgende ronde") + "</button>" : '<p class="rad-cpu">Wachten op ' + esc(pl.name) + "…</p>"));
     if (rad.phase === "question" && rad.q) {
-      h += '<div class="rad-q"><p class="rq-q">' + esc(rad.q.question) + '</p><div class="rq-opts">';
-      rad.q.options.forEach(function (o, i) { h += '<button class="btn ghost" data-act="rad-ans" data-i="' + i + '"' + (human ? "" : " disabled") + ">" + esc(o) + "</button>"; });
-      return h + "</div></div></section>";
+      let q = '<div class="rad-q"><p class="rq-q">' + esc(rad.q.question) + '</p><div class="rq-opts">';
+      rad.q.options.forEach(function (o, i) { q += '<button class="btn ghost" data-act="rad-ans" data-i="' + i + '"' + (human ? "" : " disabled") + ">" + esc(o) + "</button>"; });
+      return zone("z-q", q + "</div></div>");
     }
-    h += '<div class="rad-wheel-wrap' + (rad.flash ? " hit" : "") + '">' + radWheelSvg() + "</div>";
-    if (!human) return h + '<p class="rad-cpu">' + esc(pl.name) + " is aan de beurt…</p></section>";
+    if (!human) return zone("z-wheel", wheel + '<p class="rad-cpu">' + esc(pl.name) + " is aan de beurt…" + (rad.online ? '<i class="rg-timer" aria-hidden="true"></i>' : "") + "</p>");
     if (rad.phase === "letter") {
-      h += '<div class="rad-keys" role="group" aria-label="Kies een medeklinker">';
-      RAD_CONS.split("").forEach(function (c) { h += '<button class="rad-k" data-act="rad-letter" data-l="' + c + '"' + (rad.used[c] ? ' disabled aria-label="' + c + ', al gekozen"' : "") + ">" + c + "</button>"; });
-      return h + "</div></section>";
+      let k = '<p class="rg-val">' + rad.val + ' punten per letter</p><div class="rad-keys" role="group" aria-label="Kies een medeklinker">';
+      RAD_CONS.split("").forEach(function (c) { k += '<button class="rad-k" data-act="rad-letter" data-l="' + c + '"' + (rad.used[c] ? ' disabled aria-label="' + c + ', al gekozen"' : "") + ">" + c + "</button>"; });
+      return zone("z-keys", k + "</div>");
     }
-    if (rad.phase === "solve") {
-      return h + '<div class="rad-solve"><label for="radSolveIn">Typ het hele antwoord</label><input id="radSolveIn" class="quiz-input" autocomplete="off" autocapitalize="characters" spellcheck="false"><div class="rad-acts"><button class="btn gold" data-act="rad-solve-go">Controleer</button><button class="btn ghost" data-act="rad-solve-x">Terug</button></div></div></section>';
-    }
+    if (rad.phase === "solve") return zone("z-solve", '<div class="rad-solve"><label for="radSolveIn">Typ het hele antwoord</label><input id="radSolveIn" class="quiz-input" autocomplete="off" autocapitalize="characters" spellcheck="false"><div class="rad-acts"><button class="btn gold" data-act="rad-solve-go">Controleer</button><button class="btn ghost" data-act="rad-solve-x">Terug</button></div></div>');
     if (rad.phase === "vowel") {
-      h += '<div class="rad-keys vow" role="group" aria-label="Koop een klinker voor ' + RAD_VOWEL_COST + ' punten">';
-      RAD_VOWELS.split("").forEach(function (c) { h += '<button class="rad-k" data-act="rad-letter" data-l="' + c + '"' + (rad.used[c] ? " disabled" : "") + ">" + c + "</button>"; });
-      return h + '</div><div class="rad-acts"><button class="btn ghost" data-act="rad-solve-x">Terug</button></div></section>';
+      let k = '<p class="rg-val">Een klinker kost ' + RAD_VOWEL_COST + ' punten</p><div class="rad-keys vow" role="group" aria-label="Koop een klinker voor ' + RAD_VOWEL_COST + ' punten">';
+      RAD_VOWELS.split("").forEach(function (c) { k += '<button class="rad-k" data-act="rad-letter" data-l="' + c + '"' + (rad.used[c] ? " disabled" : "") + ">" + c + "</button>"; });
+      return zone("z-keys", k + '</div><div class="rad-acts"><button class="btn ghost" data-act="rad-solve-x">Terug</button></div>');
     }
     const canVowel = pl.round >= RAD_VOWEL_COST && radVowLeft().length > 0;
-    h += '<div class="rad-acts"><button class="btn gold" data-act="rad-spin">Draai!</button>' +
-      '<button class="btn ghost" data-act="rad-vowel"' + (canVowel ? "" : " disabled") + ">Klinker kopen (" + RAD_VOWEL_COST + ")</button>" +
-      '<button class="btn ghost" data-act="rad-solve">Oplossen</button></div>';
-    return h + "</section>";
+    return zone("z-wheel", wheel + '<div class="rad-acts"><button class="btn gold" data-act="rad-spin">Draai!</button>' +
+      '<button class="btn ghost" data-act="rad-vowel"' + (canVowel ? "" : " disabled") + ">Klinker (" + RAD_VOWEL_COST + ")</button>" +
+      '<button class="btn ghost" data-act="rad-solve">Oplossen</button></div>');
   }
   function radJourneyBtn() {
     return '<button class="jrad" data-act="rad" aria-label="Ajalat al-Ilm, Rad van Kennis"><svg viewBox="-12 -12 24 24" width="30" height="30" aria-hidden="true"><circle r="11" fill="#1f8f6a" stroke="#fff3b0" stroke-width="1.6"/>' +
@@ -9749,7 +10130,7 @@ return exports;})();
         break;
       case "home": play("click"); stopTimer(); landFly = null; journeyReturn = false; screen = "journey"; render(); break;
       case "journey": play("click"); landFly = null; if (!voiceOnce.reis) { voiceOnce.reis = 1; voice("reis", undefined, 500); } stopTimer(); journeyReturn = false; journeyLand = null; screen = "journey"; render(); break;
-      case "journey-back": play("click"); stopTimer(); if (mg && mg.saved) flyerPending = true; screen = "journey"; render(); break;
+      case "journey-back": if (screen === "rad" && (radNet || rad && rad.online)) { radNetLeave(); rad = null; } play("click"); stopTimer(); if (mg && mg.saved) flyerPending = true; screen = "journey"; render(); break;
       case "journey-land": play("click"); journeyLand = parseInt(el.dataset.i, 10); render(); break;
       case "journey-level": {
         const jc = el.dataset.cat, ji = parseInt(el.dataset.i, 10);
@@ -9767,20 +10148,31 @@ return exports;})();
       case "journey-chest": openChest(el.dataset.cat, parseInt(el.dataset.i, 10)); break;
       case "mg-open-now": chestOpenNow(); break;
       case "mg-start": startMinigame(); break;
-      case "rad": play("click"); rad = null; screen = "rad"; render(); break;
+      case "rad": play("click"); rad = null; radNet = null; screen = "rad"; radGrpCheck(); render(); break;
+      case "radn-search": play("click"); radNetSearch(); break;
+      case "radn-open": play("click"); radNetOpen(el.dataset.share === "1"); break;
+      case "radn-join": { play("click"); const c = el.dataset.code || ((document.getElementById("radnCode") || {}).value || ""); radNetJoin(c); break; }
+      case "radn-invite": play("click"); radNetInvite(el.dataset.u); break;
+      case "radn-accept": play("click"); radNetAccept(el.dataset.u); break;
+      case "radn-decline": play("click"); radNetDecline(el.dataset.u, false); break;
+      case "radn-block": play("click"); radNetDecline(el.dataset.u, true); break;
+      case "radn-start": play("click"); radNetStart(); break;
+      case "radn-share": play("click"); if (radNet && radNet.code) radNetShare(radNet.code); break;
+      case "radn-back": play("click"); radNetLeave(); rad = null; radSetup.vs = "online"; render(); break;
+      case "radn-cpu": play("click"); radNetLeave(); rad = null; radSetup.vs = "cpu"; render(); break;
       case "rad-vs": if (!el.disabled) { radSetup.vs = el.dataset.v; play("click"); render(); } break;
       case "rad-n": radSetup.n = parseInt(el.dataset.v, 10) === 2 ? 2 : 1; play("click"); render(); break;
       case "rad-mate": { const id = el.dataset.id, cnt = Object.keys(radSetup.with).filter(function (k) { return radSetup.with[k]; }).length; if (radSetup.with[id]) radSetup.with[id] = false; else if (cnt < 3) radSetup.with[id] = true; play("click"); render(); break; }
       case "rad-start": radStart(); break;
-      case "rad-again": rad = null; radStart(); break;
-      case "rad-spin": radSpin(); break;
-      case "rad-letter": radPickLetter(el.dataset.l); break;
-      case "rad-vowel": if (rad && radCur().round >= RAD_VOWEL_COST) { rad.prev = rad.phase; rad.phase = "vowel"; rad.msg = "Kies een klinker (" + RAD_VOWEL_COST + " punten)."; render(); } break;
-      case "rad-solve": if (rad) { rad.prev = rad.phase; rad.phase = "solve"; rad.msg = "Typ het antwoord."; render(); } break;
+      case "rad-again": if (rad && rad.online) { radNetLeave(); rad = null; radSetup.vs = "online"; render(); } else { rad = null; radStart(); } break;
+      case "rad-spin": if (!radMine()) break; radSpin(); break;
+      case "rad-letter": if (!radMine()) break; radPickLetter(el.dataset.l); break;
+      case "rad-vowel": if (rad && radMine() && radCur().round >= RAD_VOWEL_COST) { rad.prev = rad.phase; rad.phase = "vowel"; rad.msg = "Kies een klinker (" + RAD_VOWEL_COST + " punten)."; render(); } break;
+      case "rad-solve": if (rad && radMine()) { rad.prev = rad.phase; rad.phase = "solve"; rad.msg = "Typ het antwoord."; render(); } break;
       case "rad-solve-x": if (rad) { rad.phase = rad.prev || "act"; rad.msg = radCur().name + ": draai, koop een klinker of los op."; render(); } break;
-      case "rad-solve-go": { const i = document.getElementById("radSolveIn"); radTrySolve(i ? i.value : ""); break; }
-      case "rad-ans": radAnswer(parseInt(el.dataset.i, 10)); break;
-      case "rad-next": play("click"); radAfterRound(); break;
+      case "rad-solve-go": if (!radMine()) break; { const i = document.getElementById("radSolveIn"); radTrySolve(i ? i.value : ""); break; }
+      case "rad-ans": if (!radMine()) break; radAnswer(parseInt(el.dataset.i, 10)); break;
+      case "rad-next": if (!rad || rad.online && !radMine()) break; play("click"); radAfterRound(); break;
       case "mg-flip": mgFlip(parseInt(el.dataset.k, 10)); break;
       case "wz-tile": wzTile(parseInt(el.dataset.k, 10)); break;
       case "wz-slot": wzSlot(parseInt(el.dataset.k, 10)); break;
@@ -10079,6 +10471,7 @@ return exports;})();
   duffSync();   /* probeer meteen te starten; lukt dat niet (autoplay-regels), dan volgt de eerste aanraking */
 
   render();
+  if (radPendingStudio && P && P.mode) { const c = radPendingStudio; radPendingStudio = ""; try { history.replaceState(history.state, "", location.pathname); } catch (e) {} setTimeout(function () { radSetup.vs = "online"; radNetJoin(c); }, 700); }
   if (P && P.mode === "expert" && !P.age14 && screen !== "login" && screen !== "authwait") chooseMode("expert", function () { render(); });
   sbInit();
   initBackGuard();
