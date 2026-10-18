@@ -1319,9 +1319,10 @@ body.jfull .reward-flyer { top: 160px; }
 .back-toast.show { opacity: 1; transform: translate(-50%, 0); }
 
 /* ── Ajalat al-Ilm · Rad van Kennis (v69) ── */
-.jrad { position: fixed; z-index: 28; left: 50%; transform: translateX(-50%); bottom: calc(92px + env(safe-area-inset-bottom, 0px)); appearance: none; display: inline-flex; align-items: center; gap: 6px; padding: 5px 14px 5px 6px; border-radius: 999px; border: 3px solid #fff3b0; background: linear-gradient(180deg, #2d8a63, #1b4332); color: #fff3b0; font: inherit; font-weight: 900; font-size: .95rem; box-shadow: 0 4px 0 #0d2a1e, 0 6px 14px rgba(0, 0, 0, .35); cursor: pointer; white-space: nowrap; }
-.jrad:active { transform: translateX(-50%) translateY(3px); box-shadow: 0 1px 0 #0d2a1e; } .jrad:focus-visible { outline: 3px solid #ffb703; outline-offset: 3px; }
-.jrad svg { animation: jradSpin 9s linear infinite; } @media (prefers-reduced-motion: reduce) { .jrad svg { animation: none; } }
+.jrad { position: fixed; z-index: 28; left: 50%; transform: translateX(-50%); bottom: calc(84px + env(safe-area-inset-bottom, 0px)); appearance: none; padding: 0; border: 0; background: none; cursor: pointer; border-radius: 50%; filter: drop-shadow(0 5px 6px rgba(0, 0, 0, .4)) drop-shadow(0 0 10px rgba(255, 213, 79, .35)); }
+.jrad:active { transform: translateX(-50%) translateY(3px); } .jrad:focus-visible { outline: 3px solid #ffb703; outline-offset: 3px; }
+.jrad svg { display: block; } .jrad-w { transform-box: fill-box; transform-origin: 50% 50%; animation: jradSpin 14s linear infinite; }
+@media (prefers-reduced-motion: reduce) { .jrad-w { animation: none; } }
 @keyframes jradSpin { to { transform: rotate(360deg); } }
 .rad { max-width: 520px; margin: 0 auto; padding: 4px 12px 24px; text-align: center; }
 .rad-title { display: grid; justify-items: center; gap: 2px; margin: 4px 0 10px; }
@@ -1512,6 +1513,7 @@ body.radgame { overflow: hidden; } body.radgame #app { max-width: 560px; padding
 .jh-stats > .jh-gembtn { appearance: none; font: inherit; color: inherit; cursor: pointer; display: inline-flex; align-items: center; gap: 3px; font-weight: 900; font-size: .78rem; padding: 3px 8px; border-radius: 999px; white-space: nowrap; background: linear-gradient(180deg, rgba(255,255,255,.3), rgba(255,255,255,.08)); box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 0 2px 0 rgba(0,0,0,.28); border: 1px solid rgba(255,255,255,.22); }
 .jh-gembtn b { color: #bff0ff; } .jh-plus { font-style: normal; display: inline-grid; place-items: center; width: 15px; height: 15px; margin-left: 2px; border-radius: 50%; background: #ffd54f; color: #3b2410; font-size: .72rem; font-weight: 900; line-height: 1; }
 .jh-gembtn:focus-visible { outline: 3px solid #ffb703; outline-offset: 2px; }
+@media (max-width: 440px) { .jh-plus { display: none; } .jh-mode span { display: none; } .jh-mode { padding: 0; width: 34px; justify-content: center; } .jh-player span { max-width: 70px; } .jh-stats { gap: 3px; } .jh-stats > span, .jh-stats > .jh-gembtn { padding: 3px 6px; } }
 @media (max-width: 400px) { .jh-stats > .jh-gembtn { padding: 3px 4px; gap: 2px; } }
 .avatar.fr-smaragd { box-shadow: 0 0 0 3px #1fbf86, 0 0 0 5px #0b3d2c !important; }
 .avatar.fr-goud { box-shadow: 0 0 0 3px #f0c75e, 0 0 9px rgba(255, 213, 79, .85) !important; }
@@ -8759,11 +8761,23 @@ return exports;})();
       '<button class="btn ghost" data-act="rad-vowel"' + (canVowel ? "" : " disabled") + ">Klinker (" + RAD_VOWEL_COST + ")</button>" +
       '<button class="btn ghost" data-act="rad-solve">Oplossen</button></div>');
   }
-  function radJourneyBtn() {
-    return '<button class="jrad" data-act="rad" aria-label="Ajalat al-Ilm, Rad van Kennis"><svg viewBox="-12 -12 24 24" width="30" height="30" aria-hidden="true"><circle r="11" fill="#1f8f6a" stroke="#fff3b0" stroke-width="1.6"/>' +
-      [0, 1, 2, 3, 4, 5].map(function (i) { const a = i * 60 * Math.PI / 180; return '<path d="M0 0 L' + (10 * Math.cos(a)).toFixed(1) + " " + (10 * Math.sin(a)).toFixed(1) + " A10 10 0 0 1 " + (10 * Math.cos(a + Math.PI / 3)).toFixed(1) + " " + (10 * Math.sin(a + Math.PI / 3)).toFixed(1) + 'Z" fill="' + (i % 2 ? "#f0c75e" : "#2d6a4f") + '"/>'; }).join("") +
-      '<circle r="3" fill="#fff3b0"/></svg><span>Ajalat al-Ilm</span></button>';
+  function radJourneyBtn() {   /* alleen het rad (groot, zonder tekst); naam blijft voor de schermlezer */
+    const segs = [0, 1, 2, 3, 4, 5, 6, 7].map(function (i) {
+      const a0 = (i * 45 - 90) * Math.PI / 180, a1 = ((i + 1) * 45 - 90) * Math.PI / 180;
+      return '<path d="M0 0 L' + (26 * Math.cos(a0)).toFixed(1) + " " + (26 * Math.sin(a0)).toFixed(1) + " A26 26 0 0 1 " + (26 * Math.cos(a1)).toFixed(1) + " " + (26 * Math.sin(a1)).toFixed(1) + 'Z" fill="' + ["#1f8f6a", "#ffd23a", "#2d6a4f", "#ffe9a8", "#157a5c", "#f0b820", "#0f6b4f", "#fff3d6"][i] + '"/>';
+    }).join("");
+    const bulbs = [0, 1, 2, 3, 4, 5, 6, 7].map(function (i) { const a = (i * 45 - 67.5) * Math.PI / 180; return '<circle cx="' + (29.5 * Math.cos(a)).toFixed(1) + '" cy="' + (29.5 * Math.sin(a)).toFixed(1) + '" r="1.8" fill="#fffaf0"/>'; }).join("");
+    return '<button class="jrad" data-act="rad" aria-label="Ajalat al-Ilm, Rad van Kennis"><svg viewBox="-36 -40 72 76" width="78" height="82" aria-hidden="true" focusable="false"><defs>' +
+      '<radialGradient id="jrRim" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff6c2"/><stop offset=".5" stop-color="#f0b820"/><stop offset="1" stop-color="#8a5a0a"/></radialGradient>' +
+      '<radialGradient id="jrGl" cx=".35" cy=".25" r=".7"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>' +
+      '<ellipse cx="0" cy="33" rx="24" ry="3.5" fill="#000" opacity=".3"/>' +
+      '<circle r="33" fill="url(#jrRim)" stroke="#6b4304" stroke-width="1.5"/><circle r="27.5" fill="#0b3d2c"/>' +
+      '<g class="jrad-w">' + segs + '<circle r="26" fill="none" stroke="#b9780f" stroke-width="1"/></g>' + bulbs +
+      '<circle r="7.5" fill="#0b3d2c" stroke="#f0c75e" stroke-width="2"/><path d="M0 -4 L1.2 -1.3 L4 -1.2 L1.8 .6 L2.5 3.4 L0 1.9 L-2.5 3.4 L-1.8 .6 L-4 -1.2 L-1.2 -1.3Z" fill="#ffd23a"/>' +
+      '<circle r="26" fill="url(#jrGl)"/>' +
+      '<path d="M0 -24 L-5.5 -36 L5.5 -36Z" fill="#ffd23a" stroke="#6b4304" stroke-width="1.2" stroke-linejoin="round"/></svg></button>';
   }
+
 
   /* ───────────── Edelstenen-bazaar (v72) ─────────────
      Edelstenen uitgeven aan: reeks-bewaarder, avatar-randen, een ontbrekende kwartetkaart en de sadaqa-pot.
