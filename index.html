@@ -2208,6 +2208,14 @@ body.kosmos .jrad.kos .jrad-w { transform-box: fill-box; transform-origin: cente
 .kos-drift { animation: kosDrift 18s ease-in-out infinite alternate; } @keyframes kosDrift { to { transform: translate(14px, -8px); } }
 .kos-sway { animation: kosSway 9s ease-in-out infinite alternate; } @keyframes kosSway { to { transform: translate(-24px, 10px) skewX(-6deg); } }
 @media (prefers-reduced-motion: reduce) { .kos-drift, .kos-sway { animation: none; } }
+/* v90b: uitnodiging Ajalat al-Ilm */
+.rad-inv-ban { position: fixed; z-index: 60; left: 10px; right: 10px; top: calc(env(safe-area-inset-top, 0px) + 10px); max-width: 560px; margin: 0 auto; display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 18px; background: linear-gradient(180deg, #1f5a43, #12362a); color: #fff; border: 2px solid #ffd54f; box-shadow: 0 10px 28px rgba(0,0,0,.45); animation: ribIn .35s ease both; }
+.rad-inv-ban .rib-ic { font-size: 1.6rem; } .rad-inv-ban .rib-t { flex: 1; font-weight: 700; font-size: .9rem; line-height: 1.3; }
+.rad-inv-ban .rib-x { appearance: none; border: 0; background: rgba(255,255,255,.15); color: #fff; width: 36px; height: 36px; border-radius: 50%; font-weight: 900; cursor: pointer; }
+body.kosmos .rad-inv-ban { background: rgba(8,12,40,.95); border-color: #3fe6d0; box-shadow: 0 0 18px rgba(63,230,208,.5); }
+@keyframes ribIn { from { transform: translateY(-20px); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .rad-inv-ban { animation: none; } }
+.d-mode { appearance: none; align-self: flex-start; margin-top: 3px; display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; min-height: 28px; border-radius: 999px; border: 1.5px solid #ffd54f; background: rgba(255,213,79,.12); color: #ffe08a; font: inherit; font-weight: 900; font-size: .78rem; cursor: pointer; } .d-mode i { font-style: normal; font-size: .65rem; } .d-mode:focus-visible { outline: 3px solid #ffb703; outline-offset: 2px; }
 </style>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2">
@@ -6698,7 +6706,7 @@ return exports;})();
     const LS = landsFor(P.mode), li = Math.min(defaultLand(), LS.length - 1), c = LS[li], st = jLandStats(P.mode, c.id);
     const cur = Math.min(st.passed + 1, st.n), pct = st.n ? Math.round(st.passed / st.n * 100) : 0, nf = foutList().length;
     let h = '<h1 class="sr-only" tabindex="-1">Startscherm</h1>';
-    h += '<header class="d-head"><button class="d-av" data-act="avatar-pick" data-id="' + P.id + '" aria-label="Kies je avatar">' + avatarHtml(P, 44) + '</button><div class="d-hello"><small>As-salamu ‘alaykum</small><b>' + esc(P.name) + "</b></div>" +
+    h += '<header class="d-head"><button class="d-av" data-act="avatar-pick" data-id="' + P.id + '" aria-label="Kies je avatar">' + avatarHtml(P, 44) + '</button><div class="d-hello"><small>As-salamu ‘alaykum</small><b>' + esc(P.name) + '</b><button class="d-mode" data-act="switch-mode" aria-label="Modus wisselen. Nu: ' + modeName(P.mode) + '. Tik om te kiezen">' + icon(MODE_ICON[P.mode], 13) + " " + modeName(P.mode) + ' <i aria-hidden="true">▾</i></button></div>' +
       '<div class="d-stats">' + streakPillHtml() + lifeBtnHtml() + '</div><button class="d-gear" data-act="settings" aria-label="Instellingen">' + icon("gear", 22) + "</button></header>";
     h += todayCardHtml();
     h += calBarHtml();
@@ -7070,6 +7078,8 @@ return exports;})();
     if (P && P.group && (screen === "group" || screen === "duelresult" || inDuelQuiz)) openGroupSub();
     else closeGroupSub();
     if (P && P.group) hulpOpen(); else hulpClose();
+    if (P && P.mode) radAlertOpen();
+    if (screen === "rad" || screen === "quiz") radAlertHide();
     if (screen !== "journey") { const hb = document.getElementById("hulpBan"); if (hb) hb.remove(); }
     if (screen === "login") app.innerHTML = viewLogin();
     else if (screen === "authwait") app.innerHTML = viewAuthWait();
@@ -9446,7 +9456,7 @@ return exports;})();
       const ex = await dbReq("GET", "rad/rooms/" + code + "/meta");
       if (ex) continue;
       await dbReq("PUT", "rad/rooms/" + code, { meta: { host: me.key, mode: P.mode, max: max, auto: !!auto, status: "wait", created: SV }, players: (function () { const o = {}; o[me.key] = { uid: me.uid, name: me.name, av: me.av, color: me.color, lands: radLandsOf(P, P.mode).join(","), seat: Date.now() }; return o; })() });
-      if (P.group && !auto) dbReq("PUT", "rad/grp/" + P.group.code, { room: code, name: me.name, mode: P.mode, t: SV }).catch(function () {});
+      if (P.group && !auto) dbReq("PUT", "rad/grp/" + P.group.code, { room: code, name: me.name, key: me.key, mode: P.mode, t: SV }).catch(function () {});
       radNet = Object.assign(radNet || {}, { view: "wait", code: code, me: me, host: true, room: null, msg: "" });
       radNetWatch(code);
       return code;
@@ -9880,6 +9890,44 @@ return exports;})();
      gift/<mid>/<sleutel> = een geschenk voor <mid>; de ontvanger verwerkt en verwijdert het. */
   let hulpSub = null, hulpData = null, hulpCode = null;
   function hulpMe() { return P && P.group && hulpData && hulpData.st ? hulpData.st[P.group.mid] : null; }
+  /* v90b: uitnodigingen voor Ajalat al-Ilm overal in de app tonen (niet alleen in het rad-scherm) */
+  let radAlSub = null, radAlCode = null, radInvSub = null, radInvUid = null, radAlNow = null;
+  const radAlSeen = {};
+  function radAlertOpen() {
+    if (!P) return;
+    if (P.group && radAlCode !== P.group.code) {
+      if (radAlSub) radAlSub.close(); radAlCode = P.group.code;
+      radAlSub = listen("rad/grp/" + radAlCode, function (g) {
+        if (!g || !g.room || radAlSeen[g.room]) return;
+        if (typeof g.t === "number" && Date.now() - g.t > 30 * 60 * 1000) return;
+        cloudAuth().then(function (auth) {
+          if (g.key && g.key === radNetMe(auth).key) return;
+          if (!g.key && g.name === P.name) return;
+          return dbReq("GET", "rad/rooms/" + g.room + "/meta").then(function (m) { if (m && m.status === "wait") radAlertShow({ room: g.room, name: g.name, mode: g.mode, kind: "grp" }); });
+        }).catch(function () {});
+      });
+    } else if (!P.group && radAlSub) { radAlSub.close(); radAlSub = null; radAlCode = null; }
+    cloudAuth().then(function (auth) {
+      if (radInvSub && radInvUid === auth.uid) return;
+      if (radInvSub) radInvSub.close(); radInvUid = auth.uid;
+      radInvSub = listen("rad/inv/" + auth.uid, function (d) {
+        Object.keys(d || {}).forEach(function (u) {
+          const x = d[u]; if (!x || !x.room || radAlSeen[x.room] || radBlocked().indexOf(u) !== -1) return;
+          if (typeof x.t === "number" && Date.now() - x.t > 10 * 60 * 1000) return;
+          radAlertShow({ room: x.room, name: x.name, mode: x.mode, kind: "inv", from: u });
+        });
+      });
+    }).catch(function () {});
+  }
+  function radAlertShow(a) {
+    if (screen === "rad" || screen === "quiz" || (rad && rad.online)) return;
+    radAlNow = a;
+    let b = document.getElementById("radInvBan");
+    if (!b) { b = document.createElement("div"); b.id = "radInvBan"; b.className = "rad-inv-ban"; b.setAttribute("role", "alertdialog"); b.setAttribute("aria-label", "Uitnodiging voor Ajalat al-Ilm"); document.body.appendChild(b); }
+    b.innerHTML = '<span class="rib-ic" aria-hidden="true">🎡</span><span class="rib-t"><b>' + esc(a.name || "Iemand") + '</b> ' + (a.kind === "inv" ? "daagt je uit" : "nodigt je uit") + ' voor <b>Ajalat al-‘Ilm</b>' + (a.mode && a.mode !== P.mode ? " (" + modeName(a.mode) + ")" : "") + '</span><button class="btn gold small" data-act="rad-inv-join">Doe mee</button><button class="rib-x" data-act="rad-inv-x" aria-label="Later">✕</button>';
+    play("bell"); announce((a.name || "Iemand") + " nodigt je uit voor Ajalat al-Ilm.");
+  }
+  function radAlertHide() { const b = document.getElementById("radInvBan"); if (b) b.remove(); }
   function hulpOpen() {
     if (!P || !P.group) { hulpClose(); return; }
     if (hulpSub && hulpCode === P.group.code) return;
@@ -11727,6 +11775,8 @@ return exports;})();
       case "mg-open-now": chestOpenNow(); break;
       case "mg-start": startMinigame(); break;
       case "rad": play("click"); rad = null; radNet = null; screen = "rad"; radGrpCheck(); render(); break;
+      case "rad-inv-join": { const a = radAlNow; radAlertHide(); if (!a) break; radAlSeen[a.room] = 1; play("click"); if (a.kind === "inv" && a.from) cloudAuth().then(function (auth) { dbReq("DELETE", "rad/inv/" + auth.uid + "/" + a.from).catch(function () {}); }).catch(function () {}); radNetJoin(a.room); break; }
+      case "rad-inv-x": { const a = radAlNow; radAlertHide(); if (a) radAlSeen[a.room] = 1; play("click"); break; }
       case "bazaar": play("click"); bzMsg = ""; screen = "bazaar"; render(); break;
       case "lives": play("click"); lifeDialog(); break;
       case "hulp-give": hulpGive(el.dataset.mid); break;
