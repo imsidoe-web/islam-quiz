@@ -9149,7 +9149,7 @@ return exports;})();
   }
   function radLeft(p) { return Math.max(0, RAD_DAY_MAX - radMeta(p).n); }
   /* landen die deze speler in modus lv al gespeeld heeft (minstens één level gehaald) */
-  function radLandsOf(p, lv) { return asPlayer(p, function () { return landsFor(lv).filter(function (c) { return jLandStats(lv, c.id).passed > 0; }).map(function (c) { return c.id; }); }); }
+  function radLandsOf(p, lv) { return asPlayer(p, function () { const LS = landsFor(lv), l = LS.filter(function (c) { return jLandStats(lv, c.id).passed > 0; }).map(function (c) { return c.id; }); return l.length ? l : (LS[0] ? [LS[0].id] : []); }); }   /* v90b: nog niets gespeeld? dan meedoen met land 1 */
   function radCommonLands(humans, lv) {
     let ids = null;
     humans.forEach(function (p) { const l = radLandsOf(p, lv); ids = ids === null ? l : ids.filter(function (x) { return l.indexOf(x) !== -1; }); });
