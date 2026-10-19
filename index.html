@@ -2214,8 +2214,13 @@ body.kosmos .jrad.kos .jrad-w { transform-box: fill-box; transform-origin: cente
 .rad-inv-ban .rib-x { appearance: none; border: 0; background: rgba(255,255,255,.15); color: #fff; width: 36px; height: 36px; border-radius: 50%; font-weight: 900; cursor: pointer; }
 body.kosmos .rad-inv-ban { background: rgba(8,12,40,.95); border-color: #3fe6d0; box-shadow: 0 0 18px rgba(63,230,208,.5); }
 @keyframes ribIn { from { transform: translateY(-20px); opacity: 0; } }
+.rad-inv-ban.low { top: auto; bottom: calc(env(safe-area-inset-bottom, 0px) + 12px); }
 @media (prefers-reduced-motion: reduce) { .rad-inv-ban { animation: none; } }
 .d-mode { appearance: none; align-self: flex-start; margin-top: 3px; display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; min-height: 28px; border-radius: 999px; border: 1.5px solid #ffd54f; background: rgba(255,213,79,.12); color: #ffe08a; font: inherit; font-weight: 900; font-size: .78rem; cursor: pointer; } .d-mode i { font-style: normal; font-size: .65rem; } .d-mode:focus-visible { outline: 3px solid #ffb703; outline-offset: 2px; }
+/* v90d: hint-knop overlapt de vraag niet meer */
+.q-card:has(.hint-btn) h2, .q-card:has(.hint-btn) .imp-tag + h2 { padding-right: 52px; }
+.q-card:has(.hint-btn) .imp-tag { margin-right: 52px; }
+.hint-btn { width: 40px !important; height: 40px !important; top: 12px !important; right: 10px !important; }
 </style>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2">
@@ -7079,7 +7084,8 @@ return exports;})();
     else closeGroupSub();
     if (P && P.group) hulpOpen(); else hulpClose();
     if (P && P.mode) radAlertOpen();
-    if (screen === "rad" || screen === "quiz") radAlertHide();
+    if (screen === "rad") radAlertHide();
+    if (screen !== "quiz" && screen !== "rad" && radAlQueue) { const q = radAlQueue; radAlQueue = null; setTimeout(function () { radAlertShow(q); }, 600); }
     if (screen !== "journey") { const hb = document.getElementById("hulpBan"); if (hb) hb.remove(); }
     if (screen === "login") app.innerHTML = viewLogin();
     else if (screen === "authwait") app.innerHTML = viewAuthWait();
@@ -9891,7 +9897,8 @@ return exports;})();
   let hulpSub = null, hulpData = null, hulpCode = null;
   function hulpMe() { return P && P.group && hulpData && hulpData.st ? hulpData.st[P.group.mid] : null; }
   /* v90b: uitnodigingen voor Ajalat al-Ilm overal in de app tonen (niet alleen in het rad-scherm) */
-  let radAlSub = null, radAlCode = null, radInvSub = null, radInvUid = null, radAlNow = null;
+  let radAlSub = null, radAlCode = null, radInvSub = null, radInvUid = null, radAlNow = null, radLobSub = null, radLobLv = null, radAlQueue = null;
+  const radLobSeen = {};
   const radAlSeen = {};
   function radAlertOpen() {
     if (!P) return;
@@ -9908,6 +9915,19 @@ return exports;})();
       });
     } else if (!P.group && radAlSub) { radAlSub.close(); radAlSub = null; radAlCode = null; }
     cloudAuth().then(function (auth) {
+      if (!radLobSub || radLobLv !== P.mode) {
+        if (radLobSub) radLobSub.close(); radLobLv = P.mode;
+        radLobSub = listen("rad/lobby/" + radLobLv, function (d) {
+          if (radNet && radNet.view === "search") return;
+          Object.keys(d || {}).forEach(function (u) {
+            const x = d[u]; if (!x || u === auth.uid || radBlocked().indexOf(u) !== -1) return;
+            if (typeof x.t === "number" && Date.now() - x.t > RADN_FRESH) return;
+            if (radLobSeen[u] && Date.now() - radLobSeen[u] < 10 * 60 * 1000) return;
+            radLobSeen[u] = Date.now();
+            radAlertShow({ name: x.name, mode: radLobLv, kind: "lobby", from: u });
+          });
+        });
+      }
       if (radInvSub && radInvUid === auth.uid) return;
       if (radInvSub) radInvSub.close(); radInvUid = auth.uid;
       radInvSub = listen("rad/inv/" + auth.uid, function (d) {
@@ -9920,11 +9940,13 @@ return exports;})();
     }).catch(function () {});
   }
   function radAlertShow(a) {
-    if (screen === "rad" || screen === "quiz" || (rad && rad.online)) return;
+    if (screen === "rad" || (rad && rad.online)) return;
     radAlNow = a;
+    const inQuiz = screen === "quiz";
     let b = document.getElementById("radInvBan");
     if (!b) { b = document.createElement("div"); b.id = "radInvBan"; b.className = "rad-inv-ban"; b.setAttribute("role", "alertdialog"); b.setAttribute("aria-label", "Uitnodiging voor Ajalat al-Ilm"); document.body.appendChild(b); }
-    b.innerHTML = '<span class="rib-ic" aria-hidden="true">🎡</span><span class="rib-t"><b>' + esc(a.name || "Iemand") + '</b> ' + (a.kind === "inv" ? "daagt je uit" : "nodigt je uit") + ' voor <b>Ajalat al-‘Ilm</b>' + (a.mode && a.mode !== P.mode ? " (" + modeName(a.mode) + ")" : "") + '</span><button class="btn gold small" data-act="rad-inv-join">Doe mee</button><button class="rib-x" data-act="rad-inv-x" aria-label="Later">✕</button>';
+    b.classList.toggle("low", inQuiz);
+    b.innerHTML = '<span class="rib-ic" aria-hidden="true">🎡</span><span class="rib-t"><b>' + esc(a.name || "Iemand") + '</b> ' + (a.kind === "inv" ? "daagt je uit" : a.kind === "lobby" ? "zoekt een tegenspeler" : "nodigt je uit") + ' voor <b>Ajalat al-‘Ilm</b>' + (a.mode && a.mode !== P.mode ? " (" + modeName(a.mode) + ")" : "") + '</span>' + (inQuiz ? '<button class="btn gold small" data-act="rad-inv-later">Na dit level</button>' : '<button class="btn gold small" data-act="rad-inv-join">' + (a.kind === "lobby" ? "Speel mee" : "Doe mee") + "</button>") + '<button class="rib-x" data-act="rad-inv-x" aria-label="Sluiten">✕</button>';
     play("bell"); announce((a.name || "Iemand") + " nodigt je uit voor Ajalat al-Ilm.");
   }
   function radAlertHide() { const b = document.getElementById("radInvBan"); if (b) b.remove(); }
@@ -11775,8 +11797,9 @@ return exports;})();
       case "mg-open-now": chestOpenNow(); break;
       case "mg-start": startMinigame(); break;
       case "rad": play("click"); rad = null; radNet = null; screen = "rad"; radGrpCheck(); render(); break;
-      case "rad-inv-join": { const a = radAlNow; radAlertHide(); if (!a) break; radAlSeen[a.room] = 1; play("click"); if (a.kind === "inv" && a.from) cloudAuth().then(function (auth) { dbReq("DELETE", "rad/inv/" + auth.uid + "/" + a.from).catch(function () {}); }).catch(function () {}); radNetJoin(a.room); break; }
-      case "rad-inv-x": { const a = radAlNow; radAlertHide(); if (a) radAlSeen[a.room] = 1; play("click"); break; }
+      case "rad-inv-later": { radAlQueue = radAlNow; radAlertHide(); play("click"); break; }
+      case "rad-inv-join": { const a = radAlNow; radAlertHide(); if (!a) break; if (a.kind === "lobby") { play("click"); radNetSearch(); break; } radAlSeen[a.room] = 1; play("click"); if (a.kind === "inv" && a.from) cloudAuth().then(function (auth) { dbReq("DELETE", "rad/inv/" + auth.uid + "/" + a.from).catch(function () {}); }).catch(function () {}); radNetJoin(a.room); break; }
+      case "rad-inv-x": { const a = radAlNow; radAlertHide(); if (a && a.room) radAlSeen[a.room] = 1; play("click"); break; }
       case "bazaar": play("click"); bzMsg = ""; screen = "bazaar"; render(); break;
       case "lives": play("click"); lifeDialog(); break;
       case "hulp-give": hulpGive(el.dataset.mid); break;
