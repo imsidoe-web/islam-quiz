@@ -2204,6 +2204,10 @@ body.kosmos .jrad.kos .jrad-w { transform-box: fill-box; transform-origin: cente
 .kos-rot { animation: kosRot 10s linear infinite; } @keyframes kosRot { to { transform: translateX(var(--d)); } }
 .kos-flt { animation: kosFlt 7s ease-in-out infinite; } @keyframes kosFlt { 50% { transform: translate(3px, -7px); } }
 @media (prefers-reduced-motion: reduce) { .kos-rot, .kos-flt { animation: none; } }
+/* v90: beweging per kosmos-wereld */
+.kos-drift { animation: kosDrift 18s ease-in-out infinite alternate; } @keyframes kosDrift { to { transform: translate(14px, -8px); } }
+.kos-sway { animation: kosSway 9s ease-in-out infinite alternate; } @keyframes kosSway { to { transform: translate(-24px, 10px) skewX(-6deg); } }
+@media (prefers-reduced-motion: reduce) { .kos-drift, .kos-sway { animation: none; } }
 </style>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2">
@@ -6943,17 +6947,9 @@ return exports;})();
   function kosmosOn() { return S.look === "kosmos"; }
   const KOS_SCREENS = ["journey", "quiz", "result", "review"];
   function kosRand(seed) { let x = seed; return function () { x = (x * 16807) % 2147483647; return (x - 1) / 2147483646; }; }
-  function kosBg(uid) {
-    const r = kosRand(97);
-    let h = '<rect width="360" height="800" fill="#060a22"/>' +
-      '<g filter="url(#' + uid + 'nb)"><ellipse cx="70" cy="300" rx="140" ry="105" fill="#6b2a8f" opacity=".55"/><ellipse cx="290" cy="150" rx="115" ry="85" fill="#1fb5c9" opacity=".33"/><ellipse cx="300" cy="520" rx="100" ry="130" fill="#2fbf71" opacity=".27"/><ellipse cx="150" cy="680" rx="135" ry="75" fill="#3a2a9f" opacity=".45"/><ellipse cx="200" cy="420" rx="65" ry="45" fill="#d0458f" opacity=".17"/></g>' +
-      '<rect width="360" height="800" fill="url(#' + uid + 'kp)"/><g fill="#fff">';
-    for (let i = 0; i < 80; i++) h += '<circle' + (i % 4 ? "" : ' class="kos-tw"') + ' cx="' + Math.round(r() * 360) + '" cy="' + Math.round(r() * 800) + '" r="' + [0.5, 0.7, 0.9, 1.1, 1.4][Math.floor(r() * 5)] + '" opacity="' + [0.55, 0.75, 1][Math.floor(r() * 3)] + '"/>';
-    h += "</g>";
-    for (let i = 0; i < 8; i++) h += '<g class="kos-tw" transform="translate(' + Math.round(20 + r() * 320) + " " + Math.round(120 + r() * 640) + ") scale(" + (0.6 + r() * 0.6).toFixed(2) + ')" filter="url(#' + uid + 'ng)"><path d="M0 -7 L1.4 -1.4 L7 0 L1.4 1.4 L0 7 L-1.4 1.4 L-7 0 L-1.4 -1.4Z" fill="' + ["#fff", "#bff8ff", "#fff3c4", "#e6b8ff"][i % 4] + '"/></g>';
-    h += '<g transform="translate(180 60)"><circle r="62" fill="url(#' + uid + 'ks)"/><circle r="9" fill="#fff" filter="url(#' + uid + 'ng)"/><g stroke="#bff8ff" stroke-width="1.4" stroke-linecap="round" filter="url(#' + uid + 'ng)"><path d="M0 -40V-18M0 18V40M-40 0H-18M18 0H40M-26 -26L-12 -12M12 12L26 26M26 -26L12 -12M-12 12L-26 26"/></g></g>';
+  function kosPlanets(uid) {
     let pn = 0;
-    const pl = function (x, y, r, c, o) {
+    return function (x, y, r, c, o) {
       o = o || {}; pn++;
       const rd = kosRand(pn * 131 + Math.round(r)), d = 2 * r, cid = uid + "pc" + pn, sw = Math.max(1.5, r / 9), ringDelay = (rd() * 7).toFixed(1);
       const ring = function (a, b) { return '<g>' + (reducedMotion() ? "" : '<animateTransform attributeName="transform" type="rotate" values="0 0 0;7 0 0;0 0 0" dur="7s" begin="-' + ringDelay + 's" repeatCount="indefinite"/>') + '<path d="M' + (a * r * 1.9) + " 0 A" + (r * 1.9) + " " + (r * 0.5) + " 0 0 1 " + (b * r * 1.9) + ' 0" fill="none" stroke="' + o.ring + '" stroke-width="' + sw + '" transform="rotate(-16)"' + (a < 0 ? ' opacity=".8"' : "") + "/></g>"; };
@@ -6970,6 +6966,17 @@ return exports;})();
       if (o.ring) g += ring(1, -1);
       return g + "</g></g>";
     };
+  }
+  function kosBg(uid) {
+    const r = kosRand(97);
+    let h = '<rect width="360" height="800" fill="#060a22"/>' +
+      '<g filter="url(#' + uid + 'nb)"><ellipse cx="70" cy="300" rx="140" ry="105" fill="#6b2a8f" opacity=".55"/><ellipse cx="290" cy="150" rx="115" ry="85" fill="#1fb5c9" opacity=".33"/><ellipse cx="300" cy="520" rx="100" ry="130" fill="#2fbf71" opacity=".27"/><ellipse cx="150" cy="680" rx="135" ry="75" fill="#3a2a9f" opacity=".45"/><ellipse cx="200" cy="420" rx="65" ry="45" fill="#d0458f" opacity=".17"/></g>' +
+      '<rect width="360" height="800" fill="url(#' + uid + 'kp)"/><g fill="#fff">';
+    for (let i = 0; i < 80; i++) h += '<circle' + (i % 4 ? "" : ' class="kos-tw"') + ' cx="' + Math.round(r() * 360) + '" cy="' + Math.round(r() * 800) + '" r="' + [0.5, 0.7, 0.9, 1.1, 1.4][Math.floor(r() * 5)] + '" opacity="' + [0.55, 0.75, 1][Math.floor(r() * 3)] + '"/>';
+    h += "</g>";
+    for (let i = 0; i < 8; i++) h += '<g class="kos-tw" transform="translate(' + Math.round(20 + r() * 320) + " " + Math.round(120 + r() * 640) + ") scale(" + (0.6 + r() * 0.6).toFixed(2) + ')" filter="url(#' + uid + 'ng)"><path d="M0 -7 L1.4 -1.4 L7 0 L1.4 1.4 L0 7 L-1.4 1.4 L-7 0 L-1.4 -1.4Z" fill="' + ["#fff", "#bff8ff", "#fff3c4", "#e6b8ff"][i % 4] + '"/></g>';
+    h += '<g transform="translate(180 60)"><circle r="62" fill="url(#' + uid + 'ks)"/><circle r="9" fill="#fff" filter="url(#' + uid + 'ng)"/><g stroke="#bff8ff" stroke-width="1.4" stroke-linecap="round" filter="url(#' + uid + 'ng)"><path d="M0 -40V-18M0 18V40M-40 0H-18M18 0H40M-26 -26L-12 -12M12 12L26 26M26 -26L12 -12M-12 12L-26 26"/></g></g>';
+    const pl = kosPlanets(uid);
     h += pl(330, 300, 15, "#e9e2d4", { ring: "#f2d9a6" }) + pl(346, 336, 10, "#f0a23a") + pl(24, 430, 14, "#e8c9a8", { bands: 1 }) + pl(10, 250, 32, "#8a4fc4", { bands: 1 }) + pl(52, 160, 20, "#3a7bd5", { ring: "#bff8ff" }) + pl(318, 565, 21, "#c45a3a", { bands: 1 }) + pl(96, 556, 30, "#e6e9f0", { craters: 1, glow: 1 }) +
       pl(44, 612, 10, "#7fe4ff", { glow: 1 }) + pl(338, 455, 8, "#9fe07a", { glow: 1 }) + pl(300, 150, 7, "#e6b8ff", { glow: 1 }) + pl(268, 250, 5, "#ffd54f", { glow: 1 }) + pl(110, 340, 6, "#ff9ab2", { glow: 1 }) +
       pl(345, 200, 13, "#1fb5c9", { ring: "#ffd54f" });
@@ -6978,6 +6985,60 @@ return exports;})();
     h += '<g transform="translate(46 782) scale(.6)"><circle r="168" fill="#4fb6ff" opacity=".25" filter="url(#' + uid + 'nb)"/><circle r="150" fill="url(#' + uid + 'ke)" stroke="#7fd8ff" stroke-width="3" filter="url(#' + uid + 'ng)"/>' +
       '<clipPath id="' + uid + 'ec"><circle r="150"/></clipPath><g clip-path="url(#' + uid + 'ec)"><g class="kos-rot" style="--d:-300px;animation-duration:45s"><g transform="scale(2.6)" fill="#7cc35a"><path d="M-6 -44 C8 -48 22 -40 24 -28 C14 -22 4 -26 -2 -18 C-10 -22 -14 -34 -6 -44Z M6 -12 C20 -16 34 -6 34 8 C34 22 24 34 14 40 C6 32 0 20 2 6 C-2 0 0 -8 6 -12Z M-40 -30 C-30 -36 -20 -30 -22 -20 C-30 -16 -38 -20 -40 -30Z"/><path d="M8 4 C14 2 22 8 22 16 C16 20 8 16 8 4Z" fill="#e3c98e"/></g><g transform="translate(300 0)"><g transform="scale(2.6)" fill="#7cc35a"><path d="M-6 -44 C8 -48 22 -40 24 -28 C14 -22 4 -26 -2 -18 C-10 -22 -14 -34 -6 -44Z M6 -12 C20 -16 34 -6 34 8 C34 22 24 34 14 40 C6 32 0 20 2 6 C-2 0 0 -8 6 -12Z M-40 -30 C-30 -36 -20 -30 -22 -20 C-30 -16 -38 -20 -40 -30Z"/><path d="M8 4 C14 2 22 8 22 16 C16 20 8 16 8 4Z" fill="#e3c98e"/></g></g></g></g>' +
       '<circle r="150" fill="none" stroke="#bff8ff" stroke-width="1.2" opacity=".5"/></g>';
+    return h;
+  }
+  /* v90: eigen kosmos-wereld per land: steeds dieper de ruimte in */
+  const KOS_WORLDS = ["aarde", "melkweg", "tornado", "reuzen", "rotsen", "aurora", "stelsels"];
+  function kosWorldOf(c) { const LS = landsFor(P.mode), i = Math.max(0, LS.indexOf(c)); if (i > 0 && i === LS.length - 1) return "licht"; return i === 0 ? "aarde" : KOS_WORLDS[1 + ((i - 1) % 6)]; }
+  function kosWorldBg(uid, c) {
+    const w = kosWorldOf(c);
+    if (w === "aarde") return kosBg(uid);
+    const PAL = { melkweg: ["#04061a", "#2a1f8f", "#5a1f8f", "#1f5fc9"], tornado: ["#0c0614", "#7a1f6f", "#8f3a1f", "#c94a8f"], reuzen: ["#05101a", "#1f6f6a", "#8f6a1f", "#1f3a8f"], rotsen: ["#040c18", "#1f5f9f", "#bfe6ff", "#3a2a9f"], aurora: ["#03100c", "#0f6f4a", "#5a1f8f", "#1fb58f"], stelsels: ["#05040e", "#3a2a6f", "#8f6a1f", "#1f2a6f"], licht: ["#0a0820", "#8f6a1f", "#3a2a9f", "#c9a24a"] }[w];
+    const r = kosRand(w.length * 997 + 13), pl = kosPlanets(uid);
+    let h = '<rect width="360" height="800" fill="' + PAL[0] + '"/><g filter="url(#' + uid + 'nb)"><ellipse cx="60" cy="220" rx="160" ry="120" fill="' + PAL[1] + '" opacity=".55"/><ellipse cx="320" cy="640" rx="150" ry="140" fill="' + PAL[2] + '" opacity=".4"/><ellipse cx="200" cy="420" rx="120" ry="90" fill="' + PAL[3] + '" opacity=".3"/></g><rect width="360" height="800" fill="url(#' + uid + 'kp)"/><g fill="#fff">';
+    for (let i = 0; i < 110; i++) h += '<circle' + (i % 4 ? "" : ' class="kos-tw"') + ' cx="' + Math.round(r() * 360) + '" cy="' + Math.round(r() * 800) + '" r="' + [0.4, 0.6, 0.8, 1, 1.3][Math.floor(r() * 5)] + '" opacity="' + [0.5, 0.75, 1][Math.floor(r() * 3)] + '"/>';
+    h += "</g>";
+    for (let i = 0; i < 7; i++) h += '<g class="kos-tw" transform="translate(' + Math.round(20 + r() * 320) + " " + Math.round(100 + r() * 640) + ") scale(" + (0.6 + r() * 0.7).toFixed(2) + ')" filter="url(#' + uid + 'ng)"><path d="M0 -7 L1.4 -1.4 L7 0 L1.4 1.4 L0 7 L-1.4 1.4 L-7 0 L-1.4 -1.4Z" fill="' + ["#fff", "#bff8ff", "#fff3c4", "#e6b8ff"][i % 4] + '"/></g>';
+    const spin = function (dur, rev) { return reducedMotion() ? "" : '<animateTransform attributeName="transform" type="rotate" from="0 0 0" to="' + (rev ? -360 : 360) + ' 0 0" dur="' + dur + 's" repeatCount="indefinite"/>'; };
+    if (w === "melkweg") {
+      h += '<g class="kos-drift"><g transform="rotate(-32 180 400)"><rect x="-220" y="320" width="800" height="170" fill="#dfe8ff" opacity=".16" filter="url(#' + uid + 'nb)"/><rect x="-220" y="375" width="800" height="60" fill="#fff" opacity=".16" filter="url(#' + uid + 'ns)"/><g fill="#04061a" opacity=".5" filter="url(#' + uid + 'ns)"><ellipse cx="100" cy="410" rx="90" ry="8"/><ellipse cx="320" cy="398" rx="120" ry="6"/></g><g fill="#fff">';
+      for (let i = 0; i < 260; i++) h += '<circle cx="' + Math.round(-220 + r() * 800) + '" cy="' + Math.round(330 + r() * 150) + '" r="' + [0.4, 0.6, 0.8, 1.1][Math.floor(r() * 4)] + '" opacity="' + (0.4 + r() * 0.6).toFixed(2) + '"' + (i % 7 ? "" : ' class="kos-tw"') + "/>";
+      h += "</g></g></g>";
+      h += '<g transform="translate(300 110)" filter="url(#' + uid + 'ng)"><circle r="34" fill="#fff3c4" opacity=".14"/><path d="M0 -22 a22 22 0 1 0 0 44 a17 17 0 1 1 0 -44z" fill="#fff3c4"/></g>';
+      h += pl(330, 470, 16, "#c45a3a", { bands: 1 }) + pl(30, 330, 22, "#3a7bd5", { ring: "#bff8ff" }) + pl(70, 600, 7, "#9fe07a", { glow: 1 });
+      h += '<g transform="translate(34 770)"><circle r="6" fill="#4fb6ff" filter="url(#' + uid + 'ng)"/></g>';
+    } else if (w === "tornado") {
+      h += '<g filter="url(#' + uid + 'nb)" opacity=".65"><path d="M50 120 Q180 80 310 120 Q235 380 192 640 Q180 650 168 640 Q125 380 50 120Z" fill="#ff7a5a"/></g>';
+      [[130, 140, 42, "#ffd1a6"], [200, 125, 38, "#ff9a7a"], [270, 108, 33, "#ff7ac6"], [340, 92, 28, "#d07dff"], [410, 76, 24, "#ff9a7a"], [480, 60, 20, "#ffd54f"], [550, 44, 16, "#ff7ac6"], [615, 28, 11, "#ffe9b0"]].forEach(function (q, i) {
+        h += '<g transform="translate(' + Math.round(180 + Math.sin(i * 0.9) * 16) + " " + q[0] + ')"><g>' + spin(6 + (i % 3) * 3, i % 2) + '<ellipse rx="' + q[1] + '" ry="' + q[2] + '" fill="none" stroke="' + q[3] + '" stroke-width="' + (3 - i * 0.2).toFixed(1) + '" stroke-dasharray="30 18" opacity=".85" filter="url(#' + uid + 'ng)"/></g></g>';
+      });
+      h += pl(330, 560, 17, "#d07dff", { ring: "#ffd54f" }) + pl(30, 380, 11, "#ffb347", { glow: 1 }) + pl(310, 90, 8, "#ff7ac6", { glow: 1 });
+    } else if (w === "reuzen") {
+      h += pl(345, 330, 105, "#c9a24a", { ring: "#bff8ff", bands: 1 }) + pl(150, 240, 14, "#7fe4ff", { craters: 1 }) + pl(60, 520, 11, "#e6b8ff", { glow: 1 }) + pl(220, 640, 9, "#9fe07a", { glow: 1 }) + pl(20, 150, 30, "#1fb5c9", { bands: 1 });
+    } else if (w === "rotsen") {
+      [[60, 220, 1.3], [300, 180, 1], [320, 520, 1.5], [40, 560, 1.1], [190, 330, .8], [250, 690, .9]].forEach(function (q, i) {
+        h += '<g transform="translate(' + q[0] + " " + q[1] + ") scale(" + q[2] + ')"><g class="kos-flt" style="animation-delay:-' + i + 's"><g filter="url(#' + uid + 'ng)"><path d="M0 -26 L14 -8 L10 18 L-8 24 L-16 2 Z" fill="#bfe6ff" opacity=".85"/><path d="M0 -26 L14 -8 L0 0 Z" fill="#fff" opacity=".8"/><path d="M-16 2 L0 0 L-8 24Z" fill="#7fb6ff" opacity=".7"/></g></g></g>';
+      });
+      h += '<g fill="#6a74a8" opacity=".85">';
+      for (let i = 0; i < 40; i++) { const x = r() * 360, y = 760 - x * 1.6 + (r() - 0.5) * 60, s = 2 + r() * 4; h += '<rect x="' + x.toFixed(0) + '" y="' + y.toFixed(0) + '" width="' + s.toFixed(1) + '" height="' + (s * 0.8).toFixed(1) + '" rx="1" transform="rotate(' + Math.round(r() * 90) + " " + x.toFixed(0) + " " + y.toFixed(0) + ')"/>'; }
+      h += "</g>" + pl(330, 360, 13, "#7fe4ff", { ring: "#fff" });
+    } else if (w === "aurora") {
+      [["#2fe08a", 120, 0], ["#7dffd8", 230, 1.5], ["#d07dff", 340, 3], ["#2fe08a", 470, 4.5]].forEach(function (q) {
+        h += '<g class="kos-sway" style="animation-delay:-' + q[2] + 's"><path d="M-20 ' + q[1] + " C60 " + (q[1] - 60) + " 120 " + (q[1] + 50) + " 200 " + (q[1] - 20) + " S320 " + (q[1] - 70) + " 380 " + (q[1] - 10) + " L380 " + (q[1] + 70) + " C300 " + (q[1] + 20) + " 220 " + (q[1] + 90) + " 140 " + (q[1] + 40) + " S20 " + (q[1] + 80) + " -20 " + (q[1] + 60) + 'Z" fill="' + q[0] + '" opacity=".22" filter="url(#' + uid + 'ns)"/></g>';
+      });
+      h += pl(310, 600, 18, "#1fb58f", { bands: 1 }) + pl(40, 640, 10, "#e6b8ff", { glow: 1 }) + pl(60, 150, 14, "#bfe6ff", { craters: 1 });
+    } else if (w === "stelsels") {
+      [[90, 200, 1, "#ffd54f"], [290, 420, 1.3, "#7fe4ff"], [110, 610, .9, "#e6b8ff"]].forEach(function (q, i) {
+        h += '<g transform="translate(' + q[0] + " " + q[1] + ") scale(" + q[2] + ')"><g>' + spin(40 + i * 10, i % 2) + '<circle r="10" fill="#fff" opacity=".9" filter="url(#' + uid + 'ng)"/>';
+        for (let k = 0; k < 2; k++) h += '<path d="M0 0 C 20 -10 40 0 45 20 C 48 34 36 46 22 46" transform="rotate(' + (k * 180) + ')" fill="none" stroke="' + q[3] + '" stroke-width="5" stroke-linecap="round" opacity=".55" filter="url(#' + uid + 'ns)"/>';
+        h += '<ellipse rx="34" ry="14" fill="' + q[3] + '" opacity=".15"/></g></g>';
+      });
+      h += pl(330, 150, 12, "#c9a24a", { ring: "#fff3c4" }) + pl(40, 420, 8, "#7fe4ff", { glow: 1 });
+    } else if (w === "licht") {
+      h += '<g transform="translate(180 160)"><circle r="220" fill="url(#' + uid + 'ks)" opacity=".85"/><g stroke="#fff3c4" stroke-width="2" stroke-linecap="round" opacity=".7" filter="url(#' + uid + 'ng)"><g>' + spin(60) + '<path d="M0 -150V-60M0 60V150M-150 0H-60M60 0H150M-106 -106L-42 -42M42 42L106 106M106 -106L42 -42M-42 42L-106 106"/></g></g><circle r="24" fill="#fff" filter="url(#' + uid + 'ng)"/></g>';
+      h += pl(40, 600, 10, "#ffd54f", { glow: 1 }) + pl(320, 560, 8, "#fff3c4", { glow: 1 });
+    }
+    if (w !== "licht") h += '<g transform="translate(180 60)" opacity=".8"><circle r="40" fill="url(#' + uid + 'ks)"/><circle r="6" fill="#fff" filter="url(#' + uid + 'ng)"/></g>';
     return h;
   }
   function kosDefs(uid) {
@@ -10643,7 +10704,7 @@ return exports;})();
       '<radialGradient id="' + uid + 'lock" cx=".35" cy=".3"><stop offset="0" stop-color="' + (kos ? "#3b4580" : "#dcd7cd") + '"/><stop offset="1" stop-color="' + (kos ? "#1c2257" : "#9a9488") + '"/></radialGradient>' +
       '<radialGradient id="' + uid + 'gold" cx=".35" cy=".3"><stop offset="0" stop-color="' + (kos ? "#fffbe0" : "#fff3b0") + '"/><stop offset="1" stop-color="' + (kos ? "#ffc21a" : "#e0a100") + '"/></radialGradient>' +
       '<pattern id="' + uid + 'tile" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M15 2 L28 15 L15 28 L2 15Z" fill="#26c6da" opacity=".55"/><path d="M15 8 L22 15 L15 22 L8 15Z" fill="#fff" opacity=".55"/><circle cx="15" cy="15" r="3.2" fill="#ffd54f"/><path d="M0 0 H6 L0 6Z M30 0 H24 L30 6Z M0 30 H6 L0 24Z M30 30 H24 L30 24Z" fill="#ff7a59" opacity=".6"/></pattern></defs>';
-    if (kos) h += kosBg(uid); else {
+    if (kos) h += kosWorldBg(uid, c); else {
     h += '<rect width="360" height="800" fill="url(#' + uid + 'sky)"/>';
     h += L.sky(th);
     h += '<path d="M0 235 C 80 190, 160 225, 240 200 S 340 205, 360 190 L360 800 L0 800Z" fill="' + th.far + '"/>';
