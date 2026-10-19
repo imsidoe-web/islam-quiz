@@ -2200,6 +2200,10 @@ body.kosmos .jrad.kos .jrad-w { transform-box: fill-box; transform-origin: cente
 .kos-chest { transform-box: fill-box; transform-origin: 50% 100%; animation: kosChest 2.4s ease-in-out infinite; }
 @keyframes kosChest { 0%, 100% { transform: none; } 10% { transform: rotate(-6deg) translateY(-3px); } 20% { transform: rotate(6deg) translateY(-3px); } 30% { transform: none; } }
 @media (prefers-reduced-motion: reduce) { body.kosmos .jbz.kos svg, body.kosmos .jrad.kos, body.kosmos .jrad.kos .jrad-w, .kos-chest { animation: none; } }
+/* v89c: draaiende en zwevende planeten (Kosmos) */
+.kos-rot { animation: kosRot 10s linear infinite; } @keyframes kosRot { to { transform: translateX(var(--d)); } }
+.kos-flt { animation: kosFlt 7s ease-in-out infinite; } @keyframes kosFlt { 50% { transform: translate(3px, -7px); } }
+@media (prefers-reduced-motion: reduce) { .kos-rot, .kos-flt { animation: none; } }
 </style>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2">
@@ -6948,26 +6952,31 @@ return exports;})();
     h += "</g>";
     for (let i = 0; i < 8; i++) h += '<g class="kos-tw" transform="translate(' + Math.round(20 + r() * 320) + " " + Math.round(120 + r() * 640) + ") scale(" + (0.6 + r() * 0.6).toFixed(2) + ')" filter="url(#' + uid + 'ng)"><path d="M0 -7 L1.4 -1.4 L7 0 L1.4 1.4 L0 7 L-1.4 1.4 L-7 0 L-1.4 -1.4Z" fill="' + ["#fff", "#bff8ff", "#fff3c4", "#e6b8ff"][i % 4] + '"/></g>';
     h += '<g transform="translate(180 60)"><circle r="62" fill="url(#' + uid + 'ks)"/><circle r="9" fill="#fff" filter="url(#' + uid + 'ng)"/><g stroke="#bff8ff" stroke-width="1.4" stroke-linecap="round" filter="url(#' + uid + 'ng)"><path d="M0 -40V-18M0 18V40M-40 0H-18M18 0H40M-26 -26L-12 -12M12 12L26 26M26 -26L12 -12M-12 12L-26 26"/></g></g>';
-    h += '<g transform="translate(330 300)"><ellipse rx="30" ry="8" fill="none" stroke="#f2d9a6" stroke-width="2.6" transform="rotate(-18)"/><circle r="15" fill="#e9e2d4"/></g><circle cx="346" cy="336" r="10" fill="#f0a23a"/>' +
-      '<g transform="translate(24 430)"><circle r="14" fill="#e8c9a8"/><path d="M-13 -4h26M-14 3h28M-11 9h22" stroke="#b58a62" stroke-width="2.2" opacity=".7"/></g>';
+    let pn = 0;
     const pl = function (x, y, r, c, o) {
-      o = o || {};
-      let g = '<g transform="translate(' + x + " " + y + ')"' + (o.glow ? ' filter="url(#' + uid + 'ng)"' : "") + ">";
-      if (o.ring) g += '<path d="M' + (-r * 1.9) + " 0 A" + (r * 1.9) + " " + (r * 0.5) + ' 0 0 1 ' + (r * 1.9) + ' 0" fill="none" stroke="' + o.ring + '" stroke-width="' + Math.max(1.5, r / 9) + '" opacity=".8" transform="rotate(-16)"/>';
-      g += '<circle r="' + r + '" fill="' + c + '"/>';
-      if (o.bands) g += '<g opacity=".35" stroke="#000" stroke-width="' + (r / 7) + '"><path d="M' + (-r * .9) + " " + (-r * .3) + "H" + (r * .9) + "M" + (-r * .95) + " " + (r * .25) + "H" + (r * .95) + '"/></g>';
-      if (o.craters) g += '<g fill="#000" opacity=".18"><circle cx="' + (-r * .3) + '" cy="' + (-r * .25) + '" r="' + (r * .22) + '"/><circle cx="' + (r * .35) + '" cy="' + (r * .2) + '" r="' + (r * .16) + '"/><circle cx="' + (-r * .1) + '" cy="' + (r * .45) + '" r="' + (r * .12) + '"/></g>';
+      o = o || {}; pn++;
+      const rd = kosRand(pn * 131 + Math.round(r)), d = 2 * r, cid = uid + "pc" + pn, sw = Math.max(1.5, r / 9), ringDelay = (rd() * 7).toFixed(1);
+      const ring = function (a, b) { return '<g>' + (reducedMotion() ? "" : '<animateTransform attributeName="transform" type="rotate" values="0 0 0;7 0 0;0 0 0" dur="7s" begin="-' + ringDelay + 's" repeatCount="indefinite"/>') + '<path d="M' + (a * r * 1.9) + " 0 A" + (r * 1.9) + " " + (r * 0.5) + " 0 0 1 " + (b * r * 1.9) + ' 0" fill="none" stroke="' + o.ring + '" stroke-width="' + sw + '" transform="rotate(-16)"' + (a < 0 ? ' opacity=".8"' : "") + "/></g>"; };
+      let g = '<g transform="translate(' + x + " " + y + ')"' + (o.glow ? ' filter="url(#' + uid + 'ng)"' : "") + '><g class="kos-flt" style="animation-delay:-' + (rd() * 6).toFixed(1) + "s;animation-duration:" + (5 + rd() * 4).toFixed(1) + 's">';
+      if (o.ring) g += ring(-1, 1);
+      g += '<clipPath id="' + cid + '"><circle r="' + r + '"/></clipPath><circle r="' + r + '" fill="' + c + '"/>';
+      if (o.bands) g += '<g opacity=".35" stroke="#000" stroke-width="' + (r / 7) + '"><path d="M' + (-r) + " " + (-r * .3) + "H" + r + "M" + (-r) + " " + (r * .25) + "H" + r + '"/></g>';
+      let surf = "";
+      const spots = o.glow ? [] : [0, 1, 2].map(function () { return [(rd() * 2 - 1) * r, (rd() - 0.5) * r, r * (0.14 + rd() * 0.12), rd() < 0.5 ? "#000" : "#fff", 0.12 + rd() * 0.18]; });
+      if (o.craters) [[-.3, -.25, .22], [.35, .2, .16], [-.1, .45, .12], [.6, -.4, .1]].forEach(function (q) { spots.push([q[0] * r, q[1] * r, q[2] * r, "#000", 0.18]); });
+      spots.forEach(function (q) { for (let k = 0; k < 2; k++) surf += '<circle cx="' + (q[0] + k * d).toFixed(1) + '" cy="' + q[1].toFixed(1) + '" r="' + q[2].toFixed(1) + '" fill="' + q[3] + '" opacity="' + q[4].toFixed(2) + '"/>'; });
+      if (surf) g += '<g clip-path="url(#' + cid + ')"><g class="kos-rot" style="--d:-' + d + "px;animation-duration:" + (8 + r / 3).toFixed(1) + 's">' + surf + "</g></g>";
       g += '<circle r="' + r + '" fill="url(#' + uid + 'psh)"/>';
-      if (o.ring) g += '<path d="M' + (r * 1.9) + " 0 A" + (r * 1.9) + " " + (r * 0.5) + ' 0 0 1 ' + (-r * 1.9) + ' 0" fill="none" stroke="' + o.ring + '" stroke-width="' + Math.max(1.5, r / 9) + '" transform="rotate(-16)"/>';
-      return g + "</g>";
+      if (o.ring) g += ring(1, -1);
+      return g + "</g></g>";
     };
-    h += pl(10, 250, 32, "#8a4fc4", { bands: 1 }) + pl(52, 160, 20, "#3a7bd5", { ring: "#bff8ff" }) + pl(318, 565, 21, "#c45a3a", { bands: 1 }) + pl(296, 645, 14, "#cfd3dc", { craters: 1 }) +
+    h += pl(330, 300, 15, "#e9e2d4", { ring: "#f2d9a6" }) + pl(346, 336, 10, "#f0a23a") + pl(24, 430, 14, "#e8c9a8", { bands: 1 }) + pl(10, 250, 32, "#8a4fc4", { bands: 1 }) + pl(52, 160, 20, "#3a7bd5", { ring: "#bff8ff" }) + pl(318, 565, 21, "#c45a3a", { bands: 1 }) + pl(96, 556, 30, "#e6e9f0", { craters: 1, glow: 1 }) +
       pl(44, 612, 10, "#7fe4ff", { glow: 1 }) + pl(338, 455, 8, "#9fe07a", { glow: 1 }) + pl(300, 150, 7, "#e6b8ff", { glow: 1 }) + pl(268, 250, 5, "#ffd54f", { glow: 1 }) + pl(110, 340, 6, "#ff9ab2", { glow: 1 }) +
       pl(345, 200, 13, "#1fb5c9", { ring: "#ffd54f" });
     h += '<g transform="translate(232 112) rotate(-28)"><path d="M0 0 L70 -3 L70 3Z" fill="url(#' + uid + 'cm)" opacity=".8"/><circle r="3.5" fill="#fff" filter="url(#' + uid + 'ng)"/></g>';
     h += '<g fill="#5a6290" opacity=".8"><path d="M206 560 l5 -3 l5 2 l-1 5 l-6 1z"/><path d="M220 572 l3 -2 l4 1 l-1 4 l-4 0z"/><path d="M196 576 l4 -1 l2 3 l-3 3 l-3 -1z"/></g>';
     h += '<g transform="translate(46 782) scale(.6)"><circle r="168" fill="#4fb6ff" opacity=".25" filter="url(#' + uid + 'nb)"/><circle r="150" fill="url(#' + uid + 'ke)" stroke="#7fd8ff" stroke-width="3" filter="url(#' + uid + 'ng)"/>' +
-      '<g transform="scale(2.6)" fill="#7cc35a"><path d="M-6 -44 C8 -48 22 -40 24 -28 C14 -22 4 -26 -2 -18 C-10 -22 -14 -34 -6 -44Z M6 -12 C20 -16 34 -6 34 8 C34 22 24 34 14 40 C6 32 0 20 2 6 C-2 0 0 -8 6 -12Z M-40 -30 C-30 -36 -20 -30 -22 -20 C-30 -16 -38 -20 -40 -30Z"/><path d="M8 4 C14 2 22 8 22 16 C16 20 8 16 8 4Z" fill="#e3c98e"/></g>' +
+      '<clipPath id="' + uid + 'ec"><circle r="150"/></clipPath><g clip-path="url(#' + uid + 'ec)"><g class="kos-rot" style="--d:-300px;animation-duration:45s"><g transform="scale(2.6)" fill="#7cc35a"><path d="M-6 -44 C8 -48 22 -40 24 -28 C14 -22 4 -26 -2 -18 C-10 -22 -14 -34 -6 -44Z M6 -12 C20 -16 34 -6 34 8 C34 22 24 34 14 40 C6 32 0 20 2 6 C-2 0 0 -8 6 -12Z M-40 -30 C-30 -36 -20 -30 -22 -20 C-30 -16 -38 -20 -40 -30Z"/><path d="M8 4 C14 2 22 8 22 16 C16 20 8 16 8 4Z" fill="#e3c98e"/></g><g transform="translate(300 0)"><g transform="scale(2.6)" fill="#7cc35a"><path d="M-6 -44 C8 -48 22 -40 24 -28 C14 -22 4 -26 -2 -18 C-10 -22 -14 -34 -6 -44Z M6 -12 C20 -16 34 -6 34 8 C34 22 24 34 14 40 C6 32 0 20 2 6 C-2 0 0 -8 6 -12Z M-40 -30 C-30 -36 -20 -30 -22 -20 C-30 -16 -38 -20 -40 -30Z"/><path d="M8 4 C14 2 22 8 22 16 C16 20 8 16 8 4Z" fill="#e3c98e"/></g></g></g></g>' +
       '<circle r="150" fill="none" stroke="#bff8ff" stroke-width="1.2" opacity=".5"/></g>';
     return h;
   }
