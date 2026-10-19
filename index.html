@@ -2097,7 +2097,7 @@ body.dashfull { background: #0f2e22; color: #f4efe2; }
 .q-list .q-no { transform: none; border-radius: 50%; }
 .q-nm { flex: 1; display: flex; flex-direction: column; min-width: 0; } .q-nm small { color: #9fc4b0; font-weight: 700; font-size: .76rem; }
 .q-ar { font-family: "Amiri", serif; font-size: 1.3rem; color: #ffd54f; }
-.q-list button:focus-visible, .q-cont:focus-visible, .q-num:focus-visible, .q-bar button:focus-visible { outline: 3px solid #ffb703; outline-offset: 2px; }
+.q-list button:focus-visible, .q-cont:focus-visible, .q-bar button:focus-visible { outline: 3px solid #ffb703; outline-offset: 2px; }
 .q-src { margin: 4px 0 0; font-size: .74rem; color: #9fc4b0; }
 .q-bar { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 10px 0 0; padding: 8px 10px; border-radius: 14px; background: rgba(15,46,34,.94); border: 1.5px solid #2d6a4f; color: #cfe8d8; font-weight: 800; font-size: .85rem; }
 .q-bar button { appearance: none; font: inherit; font-weight: 900; cursor: pointer; border: 0; border-radius: 10px; background: #1b4332; color: #ffd54f; min-width: 44px; min-height: 40px; }
@@ -2108,10 +2108,81 @@ body.dashfull { background: #0f2e22; color: #f4efe2; }
 .q-text { font-family: "IndoPakQ", "Amiri", serif; color: #f4efe2; text-align: justify; text-align-last: center; word-spacing: .06em; }
 .q-s1 { font-size: 1.45rem; line-height: 2.3; } .q-s2 { font-size: 1.7rem; line-height: 2.3; } .q-s3 { font-size: 1.95rem; line-height: 2.25; } .q-s4 { font-size: 2.25rem; line-height: 2.2; } .q-s5 { font-size: 2.6rem; line-height: 2.15; }
 .qa.hl { background: rgba(255,213,79,.14); border-radius: 8px; }
-.q-num { appearance: none; border: 1.5px solid #d9a05b; background: radial-gradient(circle, #1b4332 55%, #14251d 56%); color: #ffd54f; font-family: "Amiri", serif; font-size: .5em; font-weight: 700; min-width: 1.9em; height: 1.9em; padding: 0 .25em; border-radius: 999px; cursor: pointer; vertical-align: middle; line-height: 1; box-shadow: 0 0 0 2px #14251d, 0 0 0 3px rgba(217,160,91,.6); }
-.q-num.on { background: #ffd54f; color: #2a1d08; }
 .q-jz { display: inline-block; font-family: "Nunito", sans-serif; font-size: .9rem; font-weight: 900; color: #0f2e22; background: #4ff0c8; border-radius: 999px; padding: 2px 10px; vertical-align: middle; }
 .q-nav { display: flex; flex-direction: column; gap: 10px; }
+.qa { cursor: pointer; border-radius: 8px; }
+.qa.bm { background: rgba(255,213,79,.12); box-shadow: inset 0 -2px 0 rgba(255,213,79,.55); }
+.qa.sel { background: rgba(79,240,200,.18); }
+.qa:focus-visible { outline: 3px solid #ffb703; outline-offset: 2px; }
+.q-selbar { position: fixed; z-index: 40; left: 10px; right: 10px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); max-width: 700px; margin: 0 auto; display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 16px; background: #0f2e22; border: 2px solid #d9a05b; color: #f4efe2; font-weight: 800; box-shadow: 0 8px 24px rgba(0,0,0,.4); }
+.q-selbar[hidden] { display: none; } .q-selbar span { flex: 1; }
+/* ── v89: Kosmos-look (tieners) ── */
+body.kosmos { color: #eef4ff; background:
+  radial-gradient(1.2px 1.2px at 12% 18%, #fff, transparent), radial-gradient(1px 1px at 78% 12%, #fff, transparent), radial-gradient(1.4px 1.4px at 44% 36%, #bff8ff, transparent), radial-gradient(1px 1px at 88% 44%, #fff, transparent), radial-gradient(1.2px 1.2px at 22% 62%, #fff, transparent), radial-gradient(1px 1px at 64% 70%, #e6b8ff, transparent), radial-gradient(1.3px 1.3px at 8% 86%, #fff, transparent), radial-gradient(1px 1px at 92% 90%, #fff, transparent), radial-gradient(1px 1px at 52% 94%, #bff8ff, transparent), radial-gradient(1.2px 1.2px at 34% 8%, #fff, transparent),
+  radial-gradient(ellipse 60% 40% at 5% 30%, rgba(107,42,143,.45), transparent 70%), radial-gradient(ellipse 55% 45% at 100% 78%, rgba(47,191,113,.22), transparent 70%), radial-gradient(ellipse 60% 35% at 85% 0%, rgba(31,181,201,.3), transparent 70%), #060a22; background-attachment: fixed; }
+body.kosmos .jmap-scroll { background: #060a22 !important; }
+.kos-tw { animation: kosTw 3.2s ease-in-out infinite; } .kos-tw:nth-of-type(3n) { animation-delay: 1.1s; } .kos-tw:nth-of-type(3n+1) { animation-delay: 2.1s; }
+@keyframes kosTw { 50% { opacity: .25; } }
+@media (prefers-reduced-motion: reduce) { .kos-tw { animation: none; } }
+.kos-moon { vertical-align: -3px; margin-right: 3px; }
+body.kosmos .j-head { background: rgba(8,12,40,.8); border: 1.5px solid #3fe6d0; box-shadow: 0 0 14px rgba(63,230,208,.45); }
+body.kosmos .j-shield { background: rgba(8,12,40,.85) !important; border-color: #3fe6d0 !important; box-shadow: 0 0 14px rgba(63,230,208,.4) !important; color: #fff; }
+body.kosmos .j-shield b, body.kosmos .js-top b { color: #fff; text-shadow: 0 0 8px rgba(125,255,216,.5); }
+body.kosmos .j-nav, body.kosmos .j-nav .jn-in { background: rgba(8,12,40,.92) !important; border-color: #3fe6d0 !important; box-shadow: 0 -2px 14px rgba(63,230,208,.3); }
+body.kosmos .jn-item { color: #cfe0ff; }
+body.kosmos .j-lockbanner { background: rgba(8,12,40,.9); color: #e6b8ff; border-color: #d07dff; }
+/* vragen */
+body.kosmos .cat-badge { background: transparent; border: 1.5px solid #ffd54f; color: #ffe08a; box-shadow: 0 0 12px rgba(255,213,79,.4); text-shadow: 0 0 6px rgba(255,213,79,.5); }
+body.kosmos .score-pill { background: rgba(255,255,255,.07); color: #ffd54f; }
+body.kosmos .quiz-top .icon-btn { background: rgba(8,12,40,.7); color: #7dffd8; border: 1.5px solid #3fe6d0; box-shadow: 0 0 10px rgba(63,230,208,.45); }
+body.kosmos .progress-row { color: #b9c6ff; }
+body.kosmos .bar { background: rgba(255,255,255,.08); }
+body.kosmos .bar > i { background: linear-gradient(90deg, #2fe08a, #3fe6d0); box-shadow: 0 0 10px #3fe6d0; }
+body.kosmos .timer > i, body.kosmos .hgbar > i { background: linear-gradient(90deg, #d07dff, #ff7ac6) !important; box-shadow: 0 0 10px #d07dff; }
+body.kosmos .timer-label, body.kosmos .hglabel { color: #e6b8ff !important; text-shadow: 0 0 6px rgba(208,125,255,.6); }
+body.kosmos .q-card { background: rgba(255,255,255,.06); border: 1.5px solid rgba(125,255,216,.55); box-shadow: 0 0 18px rgba(63,230,208,.22), inset 0 0 20px rgba(63,230,208,.07); }
+body.kosmos .q-card h2 { color: #fff; }
+body.kosmos .q-card .arabic { background: rgba(125,255,216,.1); color: #ffe08a; }
+body.kosmos .imp-tag { background: rgba(255,213,79,.12); color: #ffe08a; border-color: #ffd54f; }
+body.kosmos .multi-hint { color: #bff8ff; }
+body.kosmos .hint-btn { background: rgba(8,12,40,.7); border: 1.5px solid #ffd54f; box-shadow: 0 0 12px rgba(255,213,79,.55); }
+body.kosmos .option { background: rgba(255,255,255,.05); border: 1.5px solid rgba(150,170,255,.38); box-shadow: none; color: #eef4ff; }
+body.kosmos .option .letter { background: transparent; border: 1.5px solid #7fe4ff; color: #7fe4ff; }
+body.kosmos .option:hover:not(:disabled) { border-color: #7dffd8; box-shadow: 0 0 10px rgba(125,255,216,.35); }
+body.kosmos .option.selected { border-color: #7dffd8; background: rgba(125,255,216,.12); }
+body.kosmos .option.correct { background: rgba(47,224,138,.14); border-color: #7dffd8; box-shadow: 0 0 16px rgba(125,255,216,.55); }
+body.kosmos .option.correct .letter { background: #7dffd8; color: #06281c; border-color: #7dffd8; }
+body.kosmos .option.correct .mark { color: #7dffd8; }
+body.kosmos .option.wrong { background: rgba(255,90,120,.12); border-color: #ff7a9a; box-shadow: 0 0 14px rgba(255,122,154,.45); }
+body.kosmos .option.wrong .letter { background: #ff7a9a; color: #2a0a14; border-color: #ff7a9a; }
+body.kosmos .option.wrong .mark { color: #ff9ab2; }
+body.kosmos .feedback.good { background: rgba(47,224,138,.12); border-color: #7dffd8; color: #eef4ff; }
+body.kosmos .feedback.bad { background: rgba(255,90,120,.1); border-color: #ff7a9a; color: #eef4ff; }
+body.kosmos .feedback.good .head { color: #7dffd8; } body.kosmos .feedback.bad .head { color: #ff9ab2; }
+body.kosmos .ref { background: rgba(255,255,255,.05); border-color: #ffd54f; }
+body.kosmos .ref .ref-label { color: #ffd54f; } body.kosmos .ref .tr { color: #dfe6ff; } body.kosmos .ref .src { color: #7dffd8; }
+body.kosmos .mh-card { background: rgba(127,228,255,.08); border-color: #7fe4ff; color: #eef4ff; }
+body.kosmos .mh-tag { background: rgba(127,228,255,.18); color: #bff8ff; }
+body.kosmos .btn.ghost { background: rgba(255,255,255,.06); color: #eef4ff; border-color: rgba(150,170,255,.45); box-shadow: 0 5px 0 rgba(0,0,0,.35); }
+/* uitslag */
+body.kosmos .result h1, body.kosmos .result h2 { color: #fff; text-shadow: 0 0 10px rgba(125,255,216,.45); }
+body.kosmos .result .msg, body.kosmos .result p { color: #cfe0ff; }
+body.kosmos .topbar .brand { color: #fff; }
+body.kosmos .topbar .icon-btn { background: rgba(8,12,40,.7); color: #7dffd8; border: 1.5px solid #3fe6d0; }
+/* ── v89b: smalle kalenderbalk met automatisch wisselende feestdagen ── */
+.d-calbar { border-radius: 18px; background: #1b4332; border: 2px solid #2d6a4f; overflow: hidden; }
+.d-calrow { appearance: none; font: inherit; cursor: pointer; width: 100%; display: grid; grid-template-columns: 1fr auto; grid-template-areas: "g a" "h a"; align-items: start; column-gap: 10px; padding: 7px 14px 5px; background: transparent; border: 0; color: #f4efe2; text-align: left; line-height: 1.25; }
+.d-cg { grid-area: g; font-weight: 900; font-size: .9rem; }
+.d-ch { grid-area: h; font-weight: 700; font-size: .76rem; color: #9fc4b0; }
+.d-ca { grid-area: a; align-self: center; padding-top: 3px; font-family: "Amiri", serif; font-size: 1.02rem; line-height: 1.3; color: #ffd54f; }
+.d-calrow:focus-visible { outline: 3px solid #ffb703; outline-offset: -3px; }
+.d-tick { position: relative; height: 30px; border-top: 1px solid #2d6a4f; background: #133a2b; }
+.d-ti { position: absolute; inset: 0; display: flex; align-items: center; gap: 8px; padding: 0 14px; font-size: .84rem; opacity: 0; transform: translateY(100%); transition: opacity .5s ease, transform .5s ease; }
+.d-ti.on { opacity: 1; transform: none; } .d-ti.out { opacity: 0; transform: translateY(-100%); }
+.d-ti b { font-weight: 900; color: #f4efe2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.d-ti small { color: #9fc4b0; font-weight: 700; white-space: nowrap; }
+.d-ti em { margin-left: auto; font-style: normal; font-weight: 900; color: #ffd54f; white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { .d-ti { transition: none; } }
 </style>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2">
@@ -6366,6 +6437,7 @@ return exports;})();
       row('id="optSound"' + (S.sound ? " checked" : ""), "Geluid", "Effecten en de stem van de presentator") +
       (P && P.mode === "expert" ? row('data-act="toggle-timer"' + (S.timer ? " checked" : ""), "Timer per vraag", TIMER_SECONDS + " seconden per vraag (Ervaren)") : "") +
       row('data-act="toggle-hg"' + (S.hgOff ? "" : " checked"), "Zandloper-levels", "Elk " + HG_EVERY + "e level heeft een tijd per vraag (" + (P ? HG_SECS[P.mode] : 20) + " sec). Uitzetten kan altijd.") +
+      row('data-act="toggle-kos"' + (S.look === "kosmos" ? " checked" : ""), "Kosmos-look (tieners)", "Een sterrenhemel met neon voor de reiskaart, de vragen en de uitslag. Speciaal voor tieners.") +
       row('id="optSpeak"' + (S.speak ? " checked" : ""), "Spreek vragen uit", "Leest vraag, antwoorden en uitleg voor") +
       row('id="optAuto"' + (autoOn() ? " checked" : ""), "Automatisch doorgaan", "Na een level vanzelf verder") +
       row('id="optLvMenu"' + (S.lvmenu !== false ? " checked" : ""), "Levelmenu met beloningen", "Toont vooraf wat je kunt winnen (Gevorderd en Ervaren)") +
@@ -6525,6 +6597,31 @@ return exports;})();
     }).join("") + "</ul>";
     return s + '<p class="d-fine">Berekend. Het begin van een maand kan een dag verschillen door de maanzichting; zet de datum gelijk met je moskee via ‘Datum ±1’.</p></section>';
   }
+  let calTick = null;
+  function calBarHtml() {
+    const now = new Date(), h = hijParts(now);
+    const greg = now.toLocaleDateString("nl-NL", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
+    let s = '<section class="d-calbar" aria-label="Kalender"><button class="d-calrow" data-act="dash-hijri" aria-label="Vandaag ' + esc(greg) + (h ? ", " + hijTxt(h) : "") + '. Tik om de islamitische datum gelijk te zetten met je moskee">' +
+      '<span class="d-cg">' + esc(greg.charAt(0).toUpperCase() + greg.slice(1)) + "</span>" + (h ? '<span class="d-ch">' + h.d + " " + HIJ_NL[h.m - 1] + " " + h.y + '</span><span class="d-ca" lang="ar" dir="rtl">' + arNum(h.d) + " " + HIJ_AR[h.m - 1] + "</span>" : "") + "</button>";
+    const up = h ? hijUpcoming(6) : [];
+    if (up.length) {
+      s += '<div class="d-tick" aria-hidden="true">' + up.map(function (e, i) {
+        return '<div class="d-ti' + (i ? "" : " on") + '"><span>' + e.ic + "</span><b>" + e.name + "</b><small>" + esc(e.date.toLocaleDateString("nl-NL", { day: "numeric", month: "short" })) + "</small><em>" + (e.days === 0 ? "vandaag" : e.days === 1 ? "morgen" : "nog " + e.days + " d") + "</em></div>";
+      }).join("") + '</div><span class="sr-only">Komende islamitische dagen: ' + up.map(function (e) { return e.name + ", " + (e.days === 0 ? "vandaag" : e.days === 1 ? "morgen" : "over " + e.days + " dagen"); }).join("; ") + "</span>";
+    }
+    return s + "</section>";
+  }
+  function calTickStart() {
+    clearInterval(calTick);
+    const items = document.querySelectorAll(".d-tick .d-ti"); if (items.length < 2 || reducedMotion()) return;
+    let i = 0;
+    calTick = setInterval(function () {
+      if (screen !== "dash" || !document.body.contains(items[0])) { clearInterval(calTick); return; }
+      items[i].classList.remove("on"); items[i].classList.add("out");
+      const prev = items[i]; setTimeout(function () { prev.classList.remove("out"); }, 600);
+      i = (i + 1) % items.length; items[i].classList.add("on");
+    }, 3800);
+  }
   function hijriDialog() {
     const old = document.getElementById("hijDlg"); if (old) old.remove();
     const w = document.createElement("div"); w.className = "dialog-wrap"; w.id = "hijDlg";
@@ -6579,6 +6676,7 @@ return exports;})();
     h += '<header class="d-head"><button class="d-av" data-act="avatar-pick" data-id="' + P.id + '" aria-label="Kies je avatar">' + avatarHtml(P, 44) + '</button><div class="d-hello"><small>As-salamu ‘alaykum</small><b>' + esc(P.name) + "</b></div>" +
       '<div class="d-stats">' + streakPillHtml() + lifeBtnHtml() + '</div><button class="d-gear" data-act="settings" aria-label="Instellingen">' + icon("gear", 22) + "</button></header>";
     h += todayCardHtml();
+    h += calBarHtml();
     h += '<button class="d-rihla" data-act="journey" aria-label="Rihlat al-‘Ilm, het spel. ' + modeName(P.mode) + ", land " + (li + 1) + ": " + esc(c.title) + ", level " + cur + " van " + st.n + '. Verder spelen">' + rkScene(cur > 1 ? cur - 1 : 0, cur, cur < st.n ? cur + 1 : 0) +
       '<span class="d-rb"><span class="d-rt"><small>SPELWERELD</small><b>Rihlat al-‘Ilm <span lang="ar" dir="rtl">رحلة العلم</span></b><span class="d-rl">Land ' + (li + 1) + ": " + esc(c.title) + '</span><span class="d-rx"><b>Lvl ' + cur + '</b><span class="d-bar"><i style="width:' + pct + '%"></i></span><span>' + modeName(P.mode) + '</span></span></span><span class="d-go">Verder</span></span></button>';
     h += '<nav class="d-grid" aria-label="Onderdelen">' +
@@ -6586,12 +6684,13 @@ return exports;})();
       '<button class="d-tile kids" disabled aria-label="KidsZone, komt binnenkort">' + dIc("star", "#ffd54f") + '<small class="d-k">KIDSZONE</small><b>[Naam volgt]</b><small>Binnenkort, insha’Allah</small></button>' +
       '<button class="d-tile" data-act="rad">' + dIc("wheel", "#ffd54f", 30) + '<b>Ajalat al-‘Ilm</b><small>Rad van Kennis</small></button>' +
       '<button class="d-tile" data-act="group">' + dIc("users", "#ffd54f", 30) + "<b>Groep & Duel</b><small>Samen leren</small></button></nav>";
-    h += salHtml() + calHtml();
+    h += salHtml();
     h += '<nav class="d-small" aria-label="Meer"><button data-act="board">Score</button><button data-act="album">Album</button><button data-act="bazaar">Bazaar</button></nav>';
     return '<section class="dash">' + h + "</section>";
   }
   function afterDashRender() {
     clearInterval(dashTick);
+    calTickStart();
     dashTick = setInterval(function () {
       if (screen !== "dash") { clearInterval(dashTick); return; }
       const el = document.getElementById("dSalNext"); if (!el) return;
@@ -6782,16 +6881,18 @@ return exports;})();
     if (!QDATA) { qLoad(); return h + '<section class="hub"><p class="hub-intro">' + (qErr ? "De Koran kon niet geladen worden. Controleer je verbinding en probeer het opnieuw." : "De Koran wordt geladen…") + "</p>" + (qErr ? '<button class="btn block" data-act="q-open" data-s="' + s + '" data-a="1">Opnieuw proberen</button>' : "") + "</section>"; }
     const ay = QDATA[s - 1], marks = qState().marks;
     let t = '<div class="q-page"><div class="q-head"><span lang="ar" dir="rtl">' + Q_AR[s - 1] + "</span></div>";
-    if (s !== 1 && s !== 9) t += '<p class="q-bsm" lang="ar" dir="rtl">' + QDATA[0][0] + "</p>";
+    if (s !== 1 && s !== 9) t += '<p class="q-bsm" lang="ar" dir="rtl">' + QDATA[0][0].replace(/[\uE000-\uF8FF]/g, "").replace(/\s*\u06DF\s*$/, "") + "</p>";
     t += '<div class="q-text q-s' + sz + '" lang="ar" dir="rtl">';
     ay.forEach(function (txt, i) {
       const a = i + 1, k = s + ":" + a, jz = Q_JUZ.indexOf(k);
       if (jz > 0) t += '<span class="q-jz" dir="ltr">Juz’ ' + (jz + 1) + "</span> ";
-      t += '<span class="qa" id="qa-' + a + '" data-k="' + k + '">' + txt + ' <button class="q-num' + (marks.indexOf(k) !== -1 ? " on" : "") + '" data-act="q-mark" data-k="' + k + '" aria-label="Ayah ' + a + (marks.indexOf(k) !== -1 ? ", bladwijzer. Tik om te verwijderen" : ". Tik voor een bladwijzer") + '">' + arNum(a) + "</button></span> ";
+      const bm = marks.indexOf(k) !== -1;
+      t += '<span class="qa' + (bm ? " bm" : "") + '" id="qa-' + a + '" data-k="' + k + '" data-act="q-sel" role="button" tabindex="0" aria-label="Ayah ' + a + (bm ? ", met bladwijzer" : "") + '">' + txt + "</span> ";
     });
     t += "</div></div>";
     h += '<section class="hub">' + t + '<div class="q-nav">' + (s < 114 ? '<button class="btn" data-act="q-open" data-s="' + (s + 1) + '" data-a="1">Volgende: ' + Q_TR[s] + "</button>" : "") + (s > 1 ? '<button class="btn ghost" data-act="q-open" data-s="' + (s - 1) + '" data-a="1">Vorige: ' + Q_TR[s - 2] + "</button>" : "") + "</div>" +
-      '<p class="q-src">Tekst en lettertype: Ayman Siddiqui / Quranic Universal Library by Tarteel. Tik op een ayah-nummer voor een bladwijzer.</p></section>';
+      '<p class="q-src">Tekst en lettertype: Ayman Siddiqui / Quranic Universal Library by Tarteel. Tik op een ayah voor een bladwijzer. De ayah-nummers staan in de rondjes, zoals in een IndoPak-mushaf.</p></section>' +
+      '<div class="q-selbar" id="qSel" hidden><span id="qSelT"></span><button class="t-btn" data-act="q-mark" id="qSelB">🔖 Bladwijzer</button><button class="t-btn" data-act="q-unsel" aria-label="Sluiten">✕</button></div>';
     return h;
   }
   function afterQreadRender() {
@@ -6817,10 +6918,40 @@ return exports;})();
     }, 15000);
   }
 
+  /* ── v89: Kosmos-look (tieners): sterrenhemel met neon voor reiskaart, vragen en uitslag. Gebaseerd op eigen kunst (The Universe). ── */
+  function kosmosOn() { return S.look === "kosmos"; }
+  const KOS_SCREENS = ["journey", "quiz", "result", "review"];
+  function kosRand(seed) { let x = seed; return function () { x = (x * 16807) % 2147483647; return (x - 1) / 2147483646; }; }
+  function kosBg(uid) {
+    const r = kosRand(97);
+    let h = '<rect width="360" height="800" fill="#060a22"/>' +
+      '<g filter="url(#' + uid + 'nb)"><ellipse cx="70" cy="300" rx="140" ry="105" fill="#6b2a8f" opacity=".55"/><ellipse cx="290" cy="150" rx="115" ry="85" fill="#1fb5c9" opacity=".33"/><ellipse cx="300" cy="520" rx="100" ry="130" fill="#2fbf71" opacity=".27"/><ellipse cx="150" cy="680" rx="135" ry="75" fill="#3a2a9f" opacity=".45"/><ellipse cx="200" cy="420" rx="65" ry="45" fill="#d0458f" opacity=".17"/></g>' +
+      '<rect width="360" height="800" fill="url(#' + uid + 'kp)"/><g fill="#fff">';
+    for (let i = 0; i < 80; i++) h += '<circle' + (i % 4 ? "" : ' class="kos-tw"') + ' cx="' + Math.round(r() * 360) + '" cy="' + Math.round(r() * 800) + '" r="' + [0.5, 0.7, 0.9, 1.1, 1.4][Math.floor(r() * 5)] + '" opacity="' + [0.55, 0.75, 1][Math.floor(r() * 3)] + '"/>';
+    h += "</g>";
+    for (let i = 0; i < 8; i++) h += '<g class="kos-tw" transform="translate(' + Math.round(20 + r() * 320) + " " + Math.round(120 + r() * 640) + ") scale(" + (0.6 + r() * 0.6).toFixed(2) + ')" filter="url(#' + uid + 'ng)"><path d="M0 -7 L1.4 -1.4 L7 0 L1.4 1.4 L0 7 L-1.4 1.4 L-7 0 L-1.4 -1.4Z" fill="' + ["#fff", "#bff8ff", "#fff3c4", "#e6b8ff"][i % 4] + '"/></g>';
+    h += '<g transform="translate(180 60)"><circle r="62" fill="url(#' + uid + 'ks)"/><circle r="9" fill="#fff" filter="url(#' + uid + 'ng)"/><g stroke="#bff8ff" stroke-width="1.4" stroke-linecap="round" filter="url(#' + uid + 'ng)"><path d="M0 -40V-18M0 18V40M-40 0H-18M18 0H40M-26 -26L-12 -12M12 12L26 26M26 -26L12 -12M-12 12L-26 26"/></g></g>';
+    h += '<g transform="translate(330 300)"><ellipse rx="30" ry="8" fill="none" stroke="#f2d9a6" stroke-width="2.6" transform="rotate(-18)"/><circle r="15" fill="#e9e2d4"/></g><circle cx="346" cy="336" r="10" fill="#f0a23a"/>' +
+      '<g transform="translate(24 430)"><circle r="14" fill="#e8c9a8"/><path d="M-13 -4h26M-14 3h28M-11 9h22" stroke="#b58a62" stroke-width="2.2" opacity=".7"/></g>';
+    h += '<g transform="translate(30 790)"><circle r="64" fill="#4fb6ff" opacity=".22" filter="url(#' + uid + 'nb)"/><circle r="54" fill="url(#' + uid + 'ke)" stroke="#7fd8ff" stroke-width="2.5" filter="url(#' + uid + 'ng)"/><path d="M-6 -44 C8 -48 22 -40 24 -28 C14 -22 4 -26 -2 -18 C-10 -22 -14 -34 -6 -44Z M6 -12 C20 -16 34 -6 34 8 C34 22 24 34 14 40 C6 32 0 20 2 6 C-2 0 0 -8 6 -12Z" fill="#7cc35a"/><path d="M8 4 C14 2 22 8 22 16 C16 20 8 16 8 4Z" fill="#e3c98e"/></g>';
+    return h;
+  }
+  function kosDefs(uid) {
+    return '<filter id="' + uid + 'ng" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>' +
+      '<filter id="' + uid + 'nb"><feGaussianBlur stdDeviation="16"/></filter><filter id="' + uid + 'ns"><feGaussianBlur stdDeviation="6"/></filter>' +
+      '<pattern id="' + uid + 'kp" width="70" height="70" patternUnits="userSpaceOnUse"><g transform="translate(35 35)" fill="none" stroke="#3a5bd6" stroke-width=".7" opacity=".2"><rect x="-12" y="-12" width="24" height="24"/><rect x="-12" y="-12" width="24" height="24" transform="rotate(45)"/><circle r="5"/></g></pattern>' +
+      '<radialGradient id="' + uid + 'ks" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff"/><stop offset=".25" stop-color="#bff8ff"/><stop offset="1" stop-color="#3fd6e8" stop-opacity="0"/></radialGradient>' +
+      '<radialGradient id="' + uid + 'ke" cx=".35" cy=".35" r=".8"><stop offset="0" stop-color="#4fb6ff"/><stop offset=".7" stop-color="#1e5fc0"/><stop offset="1" stop-color="#0d2c6e"/></radialGradient>';
+  }
+  function moonSvg(f, sz) {
+    f = Math.max(0, Math.min(1, f || 0)); const s = sz || 16, off = (1 - f) * 18 + 1;
+    return '<svg class="kos-moon" width="' + s + '" height="' + s + '" viewBox="-10 -10 20 20" aria-hidden="true"><circle r="9" fill="#2a2f66"/>' + (f >= 1 ? '<circle r="9" fill="#fff3c4"/>' : '<clipPath id="km' + Math.round(f * 100) + '"><circle r="9"/></clipPath><g clip-path="url(#km' + Math.round(f * 100) + ')"><circle r="9" fill="#fff3c4"/><circle cx="' + (-off).toFixed(1) + '" r="9.5" fill="#2a2f66"/></g>') + '<circle r="9" fill="none" stroke="#ffd54f" stroke-width="1.2"/></svg>';
+  }
+
   function render() {
     bonEnsureDefs();
     if (screen === "home") screen = lastRoot || "journey";
-    clearInterval(dashTick); clearInterval(qTick); if (qObs) { qObs.disconnect(); qObs = null; }
+    clearInterval(dashTick); clearInterval(calTick); clearInterval(qTick); if (qObs) { qObs.disconnect(); qObs = null; }
     if (screen === "dash" || screen === "journey") lastRoot = screen;
     if (screen !== "journey") { const fl = document.getElementById("flyer"); if (fl) fl.remove(); }
     const prevA = a11yBefore(); speakStop();
@@ -6871,6 +7002,7 @@ return exports;})();
     if (screen === "rad" || screen === "bazaar") document.body.classList.add("radfull");
     if (screen === "dash" || screen === "hub" || screen === "fout" || screen === "dua" || screen === "today" || screen === "prog" || screen === "quran" || screen === "qread") document.body.classList.add("dashfull");
     if (screen === "rad" && rad && rad.phase !== "intro" && rad.phase !== "end") document.body.classList.add("radgame");
+    if (kosmosOn() && KOS_SCREENS.indexOf(screen) !== -1) document.body.classList.add("kosmos");
     if (screen === "journey") afterJourneyRender();
     duffUi();
     a11yAfter(prevA);
@@ -6952,7 +7084,7 @@ return exports;})();
         '<div class="timer-label' + (hg ? " hglabel" : "") + '" aria-hidden="true">' + (hg ? '<span id="hgIcon">' + hgSvg(quiz.answered ? 0 : 1, 20) + "</span>Zandloper-level · " : icon("timer", 14)) + '<span id="timerTxt">' + (quiz.answered ? "" : quizSecs() + " sec") + "</span></div>";
     }
 
-    h += '<div class="q-card' + (quiz.answered ? " static" : "") + '" id="qcard" role="group" tabindex="-1" aria-labelledby="qh" aria-describedby="qopts"><div class="q-num">' + (isDaily ? "Dagelijkse vraag " : "Vraag ") + (quiz.idx + 1) + " van " + total + "</div>" + (qImportant(q) ? '<div class="imp-tag">📖 Belangrijke les</div>' : "") +
+    h += '<div class="q-card' + (quiz.answered ? " static" : "") + '" id="qcard" role="group" tabindex="-1" aria-labelledby="qh" aria-describedby="qopts"><div class="q-num sr-only">' + (isDaily ? "Dagelijkse vraag " : "Vraag ") + (quiz.idx + 1) + " van " + total + "</div>" + (qImportant(q) ? '<div class="imp-tag">📖 Belangrijke les</div>' : "") +
       '<h2 id="qh">' + esc(q.question) + "</h2>" + (isMulti(q) ? '<div class="multi-hint">Meerdere antwoorden mogelijk: kies álle juiste antwoorden</div>' : "") + (q.questionArabic ? ar(q.questionArabic) : "") +
       '<span class="sr-only" id="qopts">' + (isMulti(q) ? "Meerdere antwoorden mogelijk. " : "") + "Antwoordopties: " + it.order.map(function (o, p) { return LETTERS[p] + ": " + esc(q.options[o]); }).join(". ") + "</span>" +
       (S.speak && "speechSynthesis" in window ? '<button class="btn ghost small read-btn" data-act="read-aloud">' + icon("sound", 18) + "Lees voor</button>" : "") +
@@ -10035,15 +10167,23 @@ return exports;})();
     else if (i === 1) a = '<path d="M30 100 Q70 40 100 70 T170 30" fill="none" stroke="#f4e3a6" stroke-width="7" stroke-linecap="round" stroke-dasharray="1 12"/>' + [[34, 98], [100, 70], [168, 32]].map(function (p, k) { return '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="17" fill="url(#tg)" stroke="#fff" stroke-width="3"/><text x="' + p[0] + '" y="' + (p[1] + 6) + '" text-anchor="middle" font-size="18" font-weight="900" fill="#5a3600">' + (k + 1) + "</text>"; }).join("") + star(100, 98, 9) + star(120, 98, 9) + star(80, 98, 9);
     else if (i === 2) a = '<g transform="translate(34 30) scale(2.7)" style="filter:drop-shadow(0 3px 2px rgba(0,0,0,.35))">' + gemInner("#35d0ff") + "</g>" + star(132, 62, 26) + '<g transform="translate(150 80) scale(1.1)" style="filter:drop-shadow(0 2px 1.5px rgba(0,0,0,.35))">' + gemInner("#ff5c7a") + '</g><g transform="translate(30 84) scale(.9)" style="filter:drop-shadow(0 2px 1.5px rgba(0,0,0,.35))">' + gemInner("#5cf08a") + '</g>';
     else if (i === 3) a = '<g transform="translate(46 8) scale(4.2)" style="filter:drop-shadow(0 3px 2px rgba(0,0,0,.35))">' + flameInner() + "</g>";
+    else if (i === 5) a = '<rect x="22" y="14" width="156" height="40" rx="10" fill="#0d1a33" stroke="#4ff0c8" stroke-width="2.5"/><path d="M30 46 C70 40 100 44 130 30 S160 22 172 20" fill="none" stroke="#4ff0c8" stroke-width="3" stroke-linecap="round"/><circle cx="130" cy="30" r="5" fill="#ffd54f"/>' +
+      '<rect x="22" y="62" width="74" height="54" rx="10" fill="#fff8e6" stroke="#f2c94c" stroke-width="2.5"/><path d="M42 78h14a3 3 0 0 1 3 3v22a3 3 0 0 0-3-3H42zM76 78H62a3 3 0 0 0-3 3v22a3 3 0 0 1 3-3h14z" fill="none" stroke="#1b4332" stroke-width="2.5"/>' +
+      '<rect x="104" y="62" width="74" height="54" rx="10" fill="#1b4332" stroke="#ffd54f" stroke-width="2"/><text x="141" y="86" text-anchor="middle" font-size="13" font-weight="900" fill="#ffd54f">13:29</text><text x="141" y="104" text-anchor="middle" font-size="10" font-weight="800" fill="#cfe8da">Dhuhr</text>';
+    else if (i === 6) a = '<rect x="40" y="16" width="120" height="98" rx="12" fill="#14251d" stroke="#d9a05b" stroke-width="3"/><rect x="48" y="24" width="104" height="82" rx="8" fill="none" stroke="#4f8f70" stroke-width="1.5"/><rect x="62" y="34" width="76" height="16" rx="8" fill="#2d6a4f" stroke="#d9a05b" stroke-width="1.5"/>' +
+      '<path d="M60 64h80M60 78h80M60 92h56" stroke="#f4efe2" stroke-width="3" stroke-linecap="round" opacity=".8"/><circle cx="128" cy="92" r="6" fill="none" stroke="#ffd54f" stroke-width="2"/>' + star(170, 30, 9) + star(30, 100, 7);
     else a = '<rect x="62" y="22" width="76" height="76" rx="18" fill="#ffd54a" stroke="#fff3b0" stroke-width="3"/><g transform="translate(66 26) scale(.68)">' + (AVATARS.PEOPLE[1] ? avInner(AVATARS.PEOPLE[1]) : "") + "</g>" + star(160, 40, 10) + star(40, 92, 8);
     return '<svg viewBox="0 0 200 130" aria-hidden="true" focusable="false">' + bg + a + "</svg>";
   }
+  /* v88: elke stap heeft een eigen plaatje (art); nieuwe stappen voor startscherm en Bayt al-'Ilm */
   const TOUR = [
-    { t: "Welkom bij Islam Quiz", x: "Leer en speel met plezier. In een paar tikken weet je hoe het werkt, Insha’Allah." },
-    { t: "Speel je reis", x: "Tik op een level op de kaart. Elk level heeft ongeveer 5 vragen. Hoe beter je antwoordt, hoe meer sterren je verdient en hoe verder je komt." },
-    { t: "Verdien beloningen", x: "Je spaart XP en edelstenen, verzamelt kaarten voor je album en opent elke dag je dagbeloning. Voltooi een land voor een badge: Talib in Beginner, Meester in Gevorderd en Ervaren. In Ervaren haal je alle levels van een land met 3 sterren voor Grootmeester." },
-    { t: "Hou je reeks vast", x: "Speel elke dag minstens één level om je reeks te verlengen. Bekijk het scorebord en speel met vrienden in een groep." },
-    { t: "Maak het jouw eigen", x: "Kies een avatar: een paar zijn meteen beschikbaar, de rest ontgrendel je door te spelen. Kies Beginner, Gevorderd of Ervaren en begin!" }
+    { art: 0, t: "Welkom bij Islam Quiz", x: "Leer en speel met plezier. In een paar tikken weet je hoe het werkt, Insha’Allah." },
+    { art: 5, t: "Je startscherm", x: "Hier begin je elke keer. Bovenaan zie je Vandaag: je doelen voor vandaag. Daaronder Rihlat al-‘Ilm (het spel), Bayt al-‘Ilm (leren), Ajalat al-‘Ilm en Groep & Duel. Ook staan hier de gebedstijden van jouw stad en de islamitische kalender." },
+    { art: 1, t: "Speel je reis", x: "Tik op Rihlat al-‘Ilm en dan op een level op de kaart. Elk level heeft ongeveer 5 vragen. Hoe beter je antwoordt, hoe meer sterren je verdient en hoe verder je komt. Je hebt 5 levens: haal je een level niet, dan kost dat 1 leven. Elke 30 minuten komt er een terug." },
+    { art: 2, t: "Verdien beloningen", x: "Je spaart XP en edelstenen, verzamelt kaarten voor je album en opent elke dag je dagbeloning. Voltooi een land voor een badge: Talib in Beginner, Meester in Gevorderd en Ervaren. In Ervaren haal je alle levels van een land met 3 sterren voor Grootmeester." },
+    { art: 3, t: "Hou je reeks vast", x: "Speel elke dag minstens één level om je reeks te verlengen. Haal je doelen bij Vandaag en bekijk Mijn voortgang. Speel met vrienden in een groep: daar kun je elkaar ook helpen met sadaqa als de levens op zijn." },
+    { art: 6, t: "Bayt al-‘Ilm: rustig leren", x: "Zonder punten en zonder tijd. Herhaal Mijn foutjes, lees het Du’a-boekje en lees de volledige Koran in IndoPak-schrift. Tik op een ayah voor een bladwijzer; de app onthoudt waar je gebleven bent." },
+    { art: 4, t: "Maak het jouw eigen", x: "Kies een avatar: een paar zijn meteen beschikbaar, de rest ontgrendel je door te spelen. Kies Beginner, Gevorderd of Ervaren en begin!" }
   ];
   function showTour() {
     const old = document.getElementById("tourDlg"); if (old) old.remove();
@@ -10052,7 +10192,7 @@ return exports;})();
     function paint(dir) {
       const st = TOUR[i], last = i === TOUR.length - 1;
       w.innerHTML = '<div class="dialog tour-dlg" role="dialog" aria-modal="true" aria-labelledby="tourT">' +
-        '<div class="tour-art' + (dir ? " in" + dir : "") + '">' + tourArt(i) + "</div>" +
+        '<div class="tour-art' + (dir ? " in" + dir : "") + '">' + tourArt(st.art) + "</div>" +
         '<div class="tour-body" aria-live="polite"><h3 id="tourT">' + esc(st.t) + "</h3><p>" + esc(st.x) + "</p></div>" +
         '<div class="tour-dots" role="group" aria-label="Stap ' + (i + 1) + " van " + TOUR.length + '">' + TOUR.map(function (_, k) { return '<i class="' + (k === i ? "on" : "") + '"></i>'; }).join("") + "</div>" +
         '<div class="tour-btns">' + (i > 0 ? '<button type="button" class="btn ghost" data-t="prev">Terug</button>' : '<button type="button" class="btn ghost" data-t="skip">Overslaan</button>') +
@@ -10429,14 +10569,16 @@ return exports;})();
   function journeyMap(c) {
     const level = P.mode, L = LANDS[c.id] || LANDS.profeten, th = L.pal[level] || L.pal.junior, J = journeyStops(level, c), stops = J.stops, n = stops.length;
     curTh = th;
+    const kos = kosmosOn();
     const uid = "j" + level[0] + c.id.charAt(0);
     let h = '<svg class="jsvg" viewBox="0 0 360 800" role="group" aria-label="Routekaart ' + esc(c.title) + ", " + n + ' levels" xmlns="http://www.w3.org/2000/svg"><defs>' +
       '<linearGradient id="' + uid + 'sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + th.sky[0] + '"/><stop offset=".35" stop-color="' + th.sky[1] + '"/><stop offset=".7" stop-color="' + th.sky[2] + '"/><stop offset="1" stop-color="' + th.sky[3] + '"/></linearGradient>' +
-      '<radialGradient id="' + uid + 'done" cx=".35" cy=".3"><stop offset="0" stop-color="#7ae6b4"/><stop offset="1" stop-color="#14935f"/></radialGradient>' +
-      '<radialGradient id="' + uid + 'cur" cx=".35" cy=".3"><stop offset="0" stop-color="#fff0a8"/><stop offset="1" stop-color="#f0a02e"/></radialGradient>' +
-      '<radialGradient id="' + uid + 'lock" cx=".35" cy=".3"><stop offset="0" stop-color="#dcd7cd"/><stop offset="1" stop-color="#9a9488"/></radialGradient>' +
-      '<radialGradient id="' + uid + 'gold" cx=".35" cy=".3"><stop offset="0" stop-color="#fff3b0"/><stop offset="1" stop-color="#e0a100"/></radialGradient>' +
+      (kos ? kosDefs(uid) : "") + '<radialGradient id="' + uid + 'done" cx=".35" cy=".3"><stop offset="0" stop-color="' + (kos ? "#fff2b8" : "#7ae6b4") + '"/><stop offset="1" stop-color="' + (kos ? "#e8a33a" : "#14935f") + '"/></radialGradient>' +
+      '<radialGradient id="' + uid + 'cur" cx=".35" cy=".3"><stop offset="0" stop-color="' + (kos ? "#d6fffa" : "#fff0a8") + '"/><stop offset="1" stop-color="' + (kos ? "#2bd4c8" : "#f0a02e") + '"/></radialGradient>' +
+      '<radialGradient id="' + uid + 'lock" cx=".35" cy=".3"><stop offset="0" stop-color="' + (kos ? "#3b4580" : "#dcd7cd") + '"/><stop offset="1" stop-color="' + (kos ? "#1c2257" : "#9a9488") + '"/></radialGradient>' +
+      '<radialGradient id="' + uid + 'gold" cx=".35" cy=".3"><stop offset="0" stop-color="' + (kos ? "#fffbe0" : "#fff3b0") + '"/><stop offset="1" stop-color="' + (kos ? "#ffc21a" : "#e0a100") + '"/></radialGradient>' +
       '<pattern id="' + uid + 'tile" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M15 2 L28 15 L15 28 L2 15Z" fill="#26c6da" opacity=".55"/><path d="M15 8 L22 15 L15 22 L8 15Z" fill="#fff" opacity=".55"/><circle cx="15" cy="15" r="3.2" fill="#ffd54f"/><path d="M0 0 H6 L0 6Z M30 0 H24 L30 6Z M0 30 H6 L0 24Z M30 30 H24 L30 24Z" fill="#ff7a59" opacity=".6"/></pattern></defs>';
+    if (kos) h += kosBg(uid); else {
     h += '<rect width="360" height="800" fill="url(#' + uid + 'sky)"/>';
     h += L.sky(th);
     h += '<path d="M0 235 C 80 190, 160 225, 240 200 S 340 205, 360 190 L360 800 L0 800Z" fill="' + th.far + '"/>';
@@ -10447,14 +10589,21 @@ return exports;})();
     h += '<path d="' + nearD + '" fill="' + th.near + '"/>';
     if (L.tile) h += '<path d="' + nearD + '" fill="url(#' + uid + 'tile)" opacity=".55"/>';
     h += L.front(th);
+    }
     // pad
     const seg = function (a, b) { const ym = (a.y + b.y) / 2; return "M" + a.x + " " + a.y + " C" + a.x + " " + ym + " " + b.x + " " + ym + " " + b.x + " " + b.y; };
     const s0 = stops[0];
     let segs = [["M" + (s0.x - 90) + " 800 C" + (s0.x - 90) + " " + (s0.y + 50) + " " + s0.x + " " + (s0.y + 70) + " " + s0.x + " " + s0.y, true]];
     for (let i = 0; i < n - 1; i++) segs.push([seg(stops[i], stops[i + 1]), stops[i].passed]);
+    if (kos) {
+      segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="#2fe08a" stroke-width="24" stroke-linecap="round" opacity=".22" filter="url(#' + uid + 'ns)"/>'; });
+      segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="' + (S[1] ? "#7dffd8" : "#3b4a9a") + '" stroke-width="5" stroke-linecap="round"' + (S[1] ? ' filter="url(#' + uid + 'ng)"' : "") + '/>'; });
+      segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="2 12"/>'; });
+    } else {
     segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="' + th.edge + '" stroke-width="26" stroke-linecap="round"/>'; });
     segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="' + (S[1] ? "#ffe08a" : th.path) + '" stroke-width="18" stroke-linecap="round"/>'; });
     segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="1 10"/>'; });
+    }
     // dagelijkse kist (Quiz van de Dag)
     const dDone = !!P.daily[level][todayStr()];
     h += '<g class="j-stop j-daily" data-act="start-daily" role="button" tabindex="0" aria-label="Quiz van de Dag' + (dDone ? " (vandaag gespeeld, kom morgen terug voor een nieuwe beloning)" : ": speel vandaag voor een dagbeloning en een bonus op je reeks") + '" style="cursor:pointer">' + (dDone ? "" : '<circle cx="318" cy="748" r="34" fill="#ffe08a" opacity=".5"><animate attributeName="opacity" values=".2;.7;.2" dur="1.4s" repeatCount="indefinite"/></circle>') + (dDone ? "" : sparkle(286, 724, 5, 0.2) + sparkle(352, 730, 4, 0.9) + sparkle(300, 778, 3.5, 1.5)) + '<g class="' + (dDone ? "" : "daily-wiggle") + '">' + chest(318, 752, dDone ? "open" : "closed", 1.3, "daily") + "</g>" + (dDone ? "" : '<g transform="translate(336 716)"><circle r="10" fill="#e8590c" stroke="#fff" stroke-width="2"/><text y="4.5" text-anchor="middle" font-size="12" font-weight="900" fill="#fff">!</text></g>') + lbl(318, 786, dDone ? "Morgen weer" : "Dagbeloning", 10) + "</g>";
@@ -10479,11 +10628,12 @@ return exports;})();
       const name = "Level " + (st.i + 1) + " van " + n + " in " + c.title + (jHourglass(level, st.i) && !S.hgOff ? ", zandloper-level met tijd per vraag" : "") + (st.mile ? ", mijlpaal met schatkist" : "") + (st.last ? ", laatste level" : "") + (st.locked ? " (vergrendeld)" : st.passed ? " (gehaald, " + st.stars + " van 3 sterren)" : " (volgende)");
       h += '<g class="j-stop ' + state + (st.i === J.cur ? " j-current" : "") + '" data-act="journey-level" data-cat="' + c.id + '" data-i="' + st.i + '" role="button" tabindex="0"' + (st.locked ? ' aria-disabled="true"' : "") + ' aria-label="' + name + '" transform="translate(' + st.x + " " + st.y + ')">';
       h += '<circle r="' + (R + 7) + '" fill="#000" fill-opacity="0"/>';
-      if (state === "current") h += '<circle class="j-glow" r="' + (R + 12) + '" fill="#ffe08a" opacity=".55"/>';
-      h += '<circle r="' + (R + 4) + '" fill="' + (st.mile ? "#ffd54f" : "#fff") + '"/><circle r="' + R + '" fill="url(#' + uid + fill + ')"/>';
+      if (state === "current") h += '<circle class="j-glow" r="' + (R + 12) + '" fill="' + (kos ? "#3fe6d0" : "#ffe08a") + '" opacity="' + (kos ? ".45" : ".55") + '"/>';
+      if (kos) { const rc = state === "locked" ? "#5a6bd6" : state === "done" ? "#ffd54f" : "#7dffd8"; h += '<ellipse cy="' + Math.round(R * 0.62) + '" rx="' + (R + 10) + '" ry="' + Math.round(R * 0.5) + '" fill="#0c0f2e" stroke="' + rc + '" stroke-opacity=".75" stroke-width="2"/><circle r="' + (R + 3.5) + '" fill="' + rc + '"' + (state === "locked" ? "" : ' filter="url(#' + uid + 'ng)"') + '/><circle r="' + R + '" fill="url(#' + uid + fill + ')"/>'; }
+      else h += '<circle r="' + (R + 4) + '" fill="' + (st.mile ? "#ffd54f" : "#fff") + '"/><circle r="' + R + '" fill="url(#' + uid + fill + ')"/>';
       if (st.mile) h += '<circle r="' + (R - 5) + '" fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="1.6" stroke-dasharray="3 4"/>';
       if (state === "locked") h += '<g transform="translate(-7 -9)" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><rect x="0" y="7" width="14" height="11" rx="2.5" fill="#fff" stroke="none"/><path d="M3 7 V4 a4 4 0 0 1 8 0 V7"/></g>';
-      else h += '<text y="' + (R > 22 ? 9 : 7) + '" text-anchor="middle" font-size="' + (R > 22 ? 25 : 20) + '" font-weight="900" fill="#fff" stroke="' + (state === "done" ? "#0b6b44" : "#c77d12") + '" stroke-width="1" paint-order="stroke">' + (st.i + 1) + "</text>";
+      else h += '<text y="' + (R > 22 ? 9 : 7) + '" text-anchor="middle" font-size="' + (R > 22 ? 25 : 20) + '" font-weight="900" fill="#fff" stroke="' + (kos ? (state === "done" ? "#7a4a00" : "#0a5b66") : state === "done" ? "#0b6b44" : "#c77d12") + '" stroke-width="1" paint-order="stroke">' + (st.i + 1) + "</text>";
       if (state === "done") for (let k = 0; k < 3; k++) h += (k < st.stars ? '<g transform="translate(' + ((k - 1) * 15) + " " + (R + (k === 1 ? 8 : 5)) + ') scale(.72)" style="filter:drop-shadow(0 1.5px 1px rgba(0,0,0,.4))">' + starInner() + "</g>" : '<polygon points="' + starPoly((k - 1) * 15, R + (k === 1 ? 8 : 5), 7.5) + '" fill="rgba(0,0,0,.35)" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/>');
       if (jHourglass(level, st.i) && !S.hgOff) h += '<g transform="translate(-8 ' + (-R - 19) + ')"><circle cx="8" cy="9" r="10" fill="#1b4332" stroke="#ffd54f" stroke-width="1.6"/><g transform="translate(2 -1) scale(.5)">' + hgSvg(.6, 24).replace(/<svg[^>]*>/, "").replace("</svg>", "") + "</g></g>";
       if (st.last) h += '<g transform="translate(0 ' + (-R - 3) + ')"><line y2="-38" stroke="#b07a1a" stroke-width="3" stroke-linecap="round"/><path d="M1 -38 L33 -38 L27 -28 L33 -18 L1 -18Z" fill="#1f9d55" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"><animate attributeName="d" values="M1 -38 L33 -38 L27 -28 L33 -18 L1 -18Z;M1 -38 Q17 -42 33 -38 L27 -28 L33 -18 Q17 -14 1 -18Z;M1 -38 L33 -38 L27 -28 L33 -18 L1 -18Z" dur="2.2s" repeatCount="indefinite"/></path><circle cx="13" cy="-28" r="5.2" fill="#fff"/><circle cx="15.4" cy="-29" r="4.4" fill="#1f9d55"/><polygon points="' + starPoly(23.5, -28, 3.6) + '" fill="#ffd23f"/></g>';
@@ -10683,7 +10833,7 @@ return exports;})();
       const done = landDone(level, x.id);
       h += '<button class="land-chip' + (k === i ? " on" : "") + '" style="--accent:' + x.color + '" data-act="journey-land" data-i="' + k + '" aria-pressed="' + (k === i) + '" aria-label="Land ' + (k + 1) + ": " + esc(x.title) + (done ? " (voltooid)" : !jLandOpen(level, x.id) ? " (vergrendeld)" : "") + '"><span>' + (k + 1) + "</span>" + (done ? '<i class="lc-b">🚩</i>' : !jLandOpen(level, x.id) ? '<i class="lc-b lc-lock">🔒</i>' : "") + "</button>";
     });
-    h += '</span><small class="js-prog" aria-label="' + st.passed + " van " + st.n + ' levels gehaald">' + st.passed + "/" + st.n + " ⭐" + st.stars + "</small></div>" +
+    h += '</span><small class="js-prog" aria-label="' + st.passed + " van " + st.n + ' levels gehaald">' + (kosmosOn() ? moonSvg(st.n ? st.passed / st.n : 0, 15) : "") + st.passed + "/" + st.n + " ⭐" + st.stars + "</small></div>" +
       '<div class="js-row2">' + bonChipHtml(level, c) + badgePillHtml(level, c, st) + "</div></div></div>";
     h += '<div id="jPresence" class="j-presence" role="status" hidden></div>';
     /* fullscreen kaart */
@@ -11407,7 +11557,23 @@ return exports;})();
       case "today": play("click"); screen = "today"; render(); break;
       case "quran": play("click"); screen = "quran"; render(); break;
       case "q-open": { const qs = parseInt(el.dataset.s, 10) || 1, qa = parseInt(el.dataset.a, 10) || 1; qSurah = Math.max(1, Math.min(114, qs)); qJump = qa; if (qa === 1) qState().last = qSurah + ":1"; saveState(); screen = "qread"; render(); if (qa === 1) window.scrollTo({ top: 0 }); break; }
-      case "q-mark": { const qk = el.dataset.k, qm = qState().marks, qi = qm.indexOf(qk); if (qi === -1) { qm.unshift(qk); qm.splice(50); } else qm.splice(qi, 1); saveState(); el.classList.toggle("on", qi === -1); el.setAttribute("aria-label", "Ayah " + qk.split(":")[1] + (qi === -1 ? ", bladwijzer. Tik om te verwijderen" : ". Tik voor een bladwijzer")); announce(qi === -1 ? "Bladwijzer gezet bij " + qk : "Bladwijzer verwijderd"); break; }
+      case "q-sel": {
+        document.querySelectorAll(".qa.sel").forEach(function (x) { x.classList.remove("sel"); });
+        el.classList.add("sel");
+        const qk = el.dataset.k, on = qState().marks.indexOf(qk) !== -1, bar = document.getElementById("qSel");
+        if (bar) { bar.hidden = false; bar.dataset.k = qk; document.getElementById("qSelT").textContent = Q_TR[qk.split(":")[0] - 1] + " " + qk; document.getElementById("qSelB").textContent = on ? "🔖 Weghalen" : "🔖 Bladwijzer"; }
+        break;
+      }
+      case "q-unsel": { const bar = document.getElementById("qSel"); if (bar) bar.hidden = true; document.querySelectorAll(".qa.sel").forEach(function (x) { x.classList.remove("sel"); }); break; }
+      case "q-mark": {
+        const bar = document.getElementById("qSel"), qk = bar && bar.dataset.k; if (!qk) break;
+        const qm = qState().marks, qi = qm.indexOf(qk);
+        if (qi === -1) { qm.unshift(qk); qm.splice(50); } else qm.splice(qi, 1);
+        saveState();
+        const sp = document.querySelector('.qa[data-k="' + qk + '"]'); if (sp) { sp.classList.toggle("bm", qi === -1); sp.classList.remove("sel"); }
+        bar.hidden = true; announce(qi === -1 ? "Bladwijzer gezet bij " + qk : "Bladwijzer verwijderd");
+        break;
+      }
       case "q-size": { S.qSize = Math.max(1, Math.min(5, (S.qSize || 3) + (parseInt(el.dataset.d, 10) || 0))); saveState(); const qt = document.querySelector(".q-text"); if (qt) qt.className = "q-text q-s" + S.qSize; break; }
       case "prog": play("click"); screen = "prog"; render(); break;
       case "goal-tog": { const gk = el.dataset.g, gd = goalsDay(); if (gd.done[gk]) delete gd.done[gk]; else { gd.done[gk] = 1; play("correct"); } goalSync(); saveState(); render(); break; }
@@ -11580,6 +11746,7 @@ return exports;})();
     const el = e.target;
     if (el && el.dataset && el.dataset.act === "toggle-timer") { S.timer = el.checked; saveState(); play("click"); }
     if (el && el.dataset && el.dataset.act === "toggle-hg") { S.hgOff = !el.checked; saveState(); play("click"); }
+    if (el && el.dataset && el.dataset.act === "toggle-kos") { S.look = el.checked ? "kosmos" : ""; saveState(); play("click"); render(); }
   });
 
   document.addEventListener("keydown", function (e) {
