@@ -1945,83 +1945,173 @@ body:has(#avDlg) .back-toast { top: 92px !important; bottom: auto !important; z-
 @keyframes jmbob { 50% { transform: translateY(-3px) rotate(3deg); } }
 .jm-gift { animation: jmgf 2.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; } @keyframes jmgf { 0%,100% { transform: translateY(0) rotate(0); } 30% { transform: translateY(-6px) rotate(-4deg); } 60% { transform: translateY(-2px) rotate(3deg); } }
 @media (prefers-reduced-motion: reduce) { .jm-dlg *, .jm-dlg { animation: none !important; } .jm-rib animate { display: none; } }
-/* ── v86: startscherm, Bayt al-'Ilm, gebedstijden, kalender ── */
-.dash { display: flex; flex-direction: column; gap: 14px; padding-bottom: 24px; }
-.d-head { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 22px; color: #fff; background: linear-gradient(180deg, #2d6a4f, #1b4332); box-shadow: 0 5px 0 #12301f, var(--shadow); }
-.d-hello { display: flex; flex-direction: column; min-width: 0; flex: 1; line-height: 1.15; }
-.d-hello small { color: #cfe8da; font-weight: 800; font-size: .78rem; }
-.d-hello b { font-size: 1.08rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.d-stats { display: flex; align-items: center; gap: 6px; font-weight: 900; font-size: .9rem; }
-.d-stats > span, .d-stats > .jh-lifebtn { display: inline-flex; align-items: center; gap: 3px; padding: 4px 8px; border-radius: 999px; background: rgba(255,255,255,.14); border: 1.5px solid rgba(255,255,255,.2); color: #fff; font: inherit; font-weight: 900; cursor: pointer; }
-.d-stats > span { cursor: default; }
-@media (max-width: 400px) { .d-stats > span, .d-stats > .jh-lifebtn { padding: 3px 6px; font-size: .82rem; } .d-hello small { display: none; } }
-.d-rihla { appearance: none; border: 0; font: inherit; text-align: left; cursor: pointer; display: flex; flex-direction: column; gap: 8px; padding: 18px; border-radius: 24px; color: #fff; background: radial-gradient(circle at 85% 10%, rgba(255,214,79,.35), transparent 45%), linear-gradient(160deg, var(--accent), #1b4332 75%); box-shadow: 0 6px 0 #12301f, var(--shadow-lift); }
-.d-rihla:active { transform: translateY(4px); box-shadow: 0 2px 0 #12301f; }
-.d-rihla:focus-visible, .d-tile:focus-visible, .d-small button:focus-visible, .d-link:focus-visible, .hub-card:focus-visible, .d-city:focus-visible { outline: 3px solid #ffb703; outline-offset: 3px; }
-.d-rt { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 10px; }
-.d-rt small { width: 100%; font-weight: 900; letter-spacing: .12em; font-size: .72rem; color: #ffe08a; }
-.d-rt b { font-size: 1.5rem; }
-.d-rt span { font-family: "Amiri", serif; font-size: 1.3rem; color: #ffe08a; }
-.d-rl { font-weight: 800; font-size: .92rem; color: #e6f5ec; display: flex; align-items: center; gap: 4px; }
-.d-bar { height: 10px; border-radius: 99px; background: rgba(0,0,0,.25); overflow: hidden; }
-.d-bar i { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, #ffd54f, #f2a33c); }
-.d-rf { display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: .9rem; }
-.d-go { background: linear-gradient(180deg, #ffd54f, #f2a33c); color: #3a2606; padding: 8px 16px; border-radius: 999px; font-weight: 900; box-shadow: 0 4px 0 #a8742f; }
-.d-card { background: var(--card); border: 2px solid var(--line); border-radius: 22px; padding: 14px 16px; box-shadow: 0 5px 0 var(--line); }
-.d-card h2 { margin: 0; font-size: 1.05rem; color: var(--emerald-dark); }
+/* ── v86: startscherm (donker, zoals het concept), gebedstijden, kalender ── */
+body.dashfull { background: #0f2e22; color: #f4efe2; }
+.dash { display: flex; flex-direction: column; gap: 14px; padding-bottom: 24px; color: #f4efe2; }
+.d-head { display: flex; align-items: center; gap: 10px; }
+.d-av { appearance: none; border: 3px solid #ffd54f; border-radius: 50%; padding: 0; background: #2d6a4f; cursor: pointer; display: grid; place-items: center; overflow: hidden; flex: none; width: 52px; height: 52px; }
+.d-hello { display: flex; flex-direction: column; min-width: 0; flex: 1; line-height: 1.2; }
+.d-hello small { color: #b9d6c6; font-weight: 700; font-size: .82rem; }
+.d-hello b { font-size: 1.25rem; font-weight: 900; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.d-stats { display: flex; align-items: center; gap: 6px; }
+.d-stats .jstreak { position: static; margin: 0; transform: none; }
+.d-stats > .jh-lifebtn { appearance: none; display: inline-flex; align-items: center; gap: 3px; padding: 6px 10px; border-radius: 999px; background: #3a1f24; border: 0; color: #fff; font: inherit; font-weight: 900; cursor: pointer; }
+.d-gear { appearance: none; border: 0; cursor: pointer; width: 44px; height: 44px; border-radius: 14px; background: #1b4332; color: #ffd54f; display: grid; place-items: center; flex: none; }
+.d-rihla { appearance: none; font: inherit; text-align: left; cursor: pointer; padding: 0; border-radius: 22px; overflow: hidden; border: 2px solid #4ff0c8; background: #0d1a33; box-shadow: 0 0 22px rgba(79,240,200,.25); display: flex; flex-direction: column; color: #fff; }
+.d-rihla:active { transform: scale(.985); }
+.rk-svg { display: block; width: 100%; height: 160px; }
+.d-rb { display: flex; align-items: center; gap: 12px; padding: 12px 16px; }
+.d-rt { flex: 1; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.d-rt small { font-size: .7rem; font-weight: 900; color: #4ff0c8; letter-spacing: .12em; }
+.d-rt > b { font-size: 1.25rem; font-weight: 900; }
+.d-rt > b span { font-family: "Amiri", serif; font-size: 1.1rem; color: #ffd54f; font-weight: 700; }
+.d-rl { font-size: .85rem; font-weight: 800; color: #cfe0ff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.d-rx { display: flex; align-items: center; gap: 8px; font-size: .78rem; color: #9fb2d9; }
+.d-rx b { color: #fff; }
+.d-bar { flex: 1; height: 6px; background: #1d3866; border-radius: 99px; overflow: hidden; }
+.d-bar i { display: block; height: 100%; background: #4ff0c8; border-radius: 99px; }
+.d-go { background: #4ff0c8; color: #0a0f2c; font-weight: 900; border-radius: 14px; padding: 12px 16px; box-shadow: 0 0 16px rgba(79,240,200,.55); flex: none; }
+.d-rihla:focus-visible, .d-tile:focus-visible, .d-small button:focus-visible, .d-link:focus-visible, .hub-card:focus-visible, .d-city:focus-visible, .d-av:focus-visible, .d-gear:focus-visible { outline: 3px solid #ffb703; outline-offset: 3px; }
+.rk-tw { animation: rkTw 3s ease-in-out infinite; } .rk-tw2 { animation-delay: 1s; } .rk-tw3 { animation-delay: 2s; }
+@keyframes rkTw { 50% { opacity: .2; } }
+.rk-spark { offset-path: path("M-6 160 C60 140 110 150 160 126 S250 100 318 74"); animation: rkRun 4s linear infinite; } .rk-spark2 { animation-delay: 2s; }
+@keyframes rkRun { from { offset-distance: 0%; opacity: 0; } 15% { opacity: 1; } to { offset-distance: 62%; opacity: 0; } }
+.rk-pulse { transform-box: fill-box; transform-origin: center; animation: rkPulse 1.6s ease-in-out infinite; }
+@keyframes rkPulse { 50% { transform: scale(1.4); opacity: .35; } }
+.rk-bob { animation: rkBob 1.8s ease-in-out infinite; } @keyframes rkBob { 50% { transform: translateY(-4px); } }
+@media (prefers-reduced-motion: reduce) { .rk-tw, .rk-spark, .rk-pulse, .rk-bob { animation: none; } .rk-spark { opacity: 0; } }
+.d-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.d-tile { appearance: none; font: inherit; cursor: pointer; text-align: left; display: flex; flex-direction: column; gap: 6px; padding: 14px; border-radius: 20px; border: 2px solid #2d6a4f; background: #1b4332; color: #f4efe2; min-height: 120px; }
+.d-tile:active { transform: scale(.97); }
+.d-tile b { font-size: 1.05rem; font-weight: 900; }
+.d-tile small { color: #b9d6c6; font-size: .78rem; font-weight: 700; }
+.d-tile small.d-k { font-weight: 900; letter-spacing: .05em; color: #ffd54f; }
+.d-tile.hub { background: #fff8e6; color: #2a1d08; border: 3px solid #f2c94c; min-height: 150px; }
+.d-tile.hub small { color: #6b5a3a; } .d-tile.hub small.d-k { color: #8a5a12; }
+.d-tile.kids { border: 2px dashed #6f9f86; min-height: 150px; cursor: default; }
+.d-card { background: #1b4332; border: 2px solid #2d6a4f; border-radius: 20px; padding: 14px 16px; color: #f4efe2; }
+.d-card h2 { margin: 0; font-size: 1.05rem; font-weight: 900; color: #fff; }
 .d-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; }
-.d-link { appearance: none; font: inherit; font-weight: 900; font-size: .88rem; color: var(--emerald-dark); background: var(--emerald-soft); border: 0; border-radius: 999px; padding: 6px 12px; cursor: pointer; min-height: 36px; }
-.d-fine { margin: 8px 0 0; font-size: .8rem; color: var(--muted); }
-.d-next { margin: 0 0 8px; font-weight: 800; color: var(--emerald-dark); background: var(--gold-soft); border-radius: 12px; padding: 8px 12px; }
+.d-link { appearance: none; font: inherit; font-weight: 900; font-size: .85rem; color: #0f2e22; background: #ffd54f; border: 0; border-radius: 999px; padding: 6px 12px; cursor: pointer; min-height: 36px; }
+.d-fine { margin: 8px 0 0; font-size: .78rem; color: #9fc4b0; }
+.d-card .btn { margin-top: 10px; }
+.d-next { margin: 0 0 8px; font-weight: 800; color: #0a0f2c; background: #4ff0c8; border-radius: 12px; padding: 8px 12px; }
 .d-times { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-.d-times li { display: flex; flex-direction: column; align-items: center; padding: 8px 4px; border-radius: 14px; background: var(--bg); border: 1.5px solid var(--line); font-weight: 800; font-size: .85rem; color: var(--muted); }
-.d-times li b { font-size: 1.05rem; color: var(--ink); }
-.d-times li.sub { opacity: .75; }
-.d-times li.on { background: var(--emerald); border-color: var(--emerald-dark); color: #d8f3dc; }
-.d-times li.on b { color: #fff; }
-.d-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.d-tile { appearance: none; font: inherit; cursor: pointer; text-align: left; display: flex; flex-direction: column; gap: 2px; padding: 14px; border-radius: 20px; border: 2px solid var(--line); background: var(--card); box-shadow: 0 5px 0 var(--line); color: var(--ink); min-height: 104px; }
-.d-tile:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--line); }
-.d-tile > span { font-size: 1.7rem; }
-.d-tile b { font-size: 1rem; color: var(--emerald-dark); }
-.d-tile small { color: var(--muted); font-weight: 700; font-size: .8rem; }
-.d-tile.hub { background: linear-gradient(160deg, #fff8e6, #fbefd9); border-color: #ecd3a6; box-shadow: 0 5px 0 #ecd3a6; }
-.d-tile.rad { background: linear-gradient(160deg, #e9f7ef, #d8f3dc); border-color: #b7e2c6; box-shadow: 0 5px 0 #b7e2c6; }
-.d-tile.kids { cursor: default; opacity: .6; border-style: dashed; box-shadow: none; }
+.d-times li { display: flex; flex-direction: column; align-items: center; padding: 8px 4px; border-radius: 14px; background: #133a2b; font-weight: 800; font-size: .82rem; color: #b9d6c6; }
+.d-times li b { font-size: 1.05rem; color: #fff; }
+.d-times li.sub { opacity: .7; }
+.d-times li.on { background: #ffd54f; color: #3b2410; } .d-times li.on b { color: #2a1d08; }
 .d-greg { margin: 0; font-weight: 800; }
-.d-hij { margin: 4px 0 8px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 10px; color: var(--emerald-dark); }
-.d-hij span { font-family: "Amiri", serif; font-size: 1.15rem; color: var(--gold-text); }
+.d-hij { margin: 4px 0 8px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 10px; color: #cfe8da; }
+.d-hij span { font-family: "Amiri", serif; font-size: 1.15rem; color: #ffd54f; }
 .d-days { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
-.d-days li { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 14px; background: var(--bg); border: 1.5px solid var(--line); font-weight: 800; }
+.d-days li { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 14px; background: #133a2b; font-weight: 800; }
 .d-days li > span:nth-child(2) { flex: 1; display: flex; flex-direction: column; }
-.d-days small { color: var(--muted); font-weight: 700; font-size: .78rem; }
-.d-days b { color: var(--gold-text); font-size: .88rem; white-space: nowrap; }
-.d-small { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.d-small button { appearance: none; font: inherit; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 10px 4px; border-radius: 16px; border: 2px solid var(--line); background: var(--card); box-shadow: 0 4px 0 var(--line); font-size: 1.4rem; }
-.d-small span { font-size: .85rem; font-weight: 900; color: var(--emerald-dark); }
+.d-days small { color: #9fc4b0; font-weight: 700; font-size: .76rem; }
+.d-days b { color: #ffd54f; font-size: .85rem; white-space: nowrap; }
+.d-small { display: flex; gap: 10px; }
+.d-small button { appearance: none; font: inherit; cursor: pointer; flex: 1; text-align: center; padding: 12px; border-radius: 14px; border: 0; background: #133a2b; color: #f4efe2; font-weight: 800; font-size: .9rem; min-height: 44px; }
 .d-cities { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; max-height: 50vh; overflow: auto; margin: 10px 0 14px; padding: 2px; }
 .d-cities.one { grid-template-columns: 1fr; max-height: none; }
 .d-city { appearance: none; font: inherit; font-weight: 800; cursor: pointer; padding: 10px; border-radius: 12px; border: 2px solid var(--line); background: #fff; color: var(--ink); display: flex; flex-direction: column; align-items: flex-start; gap: 2px; min-height: 44px; }
 .d-city small { color: var(--muted); font-weight: 700; }
 .d-city.on { border-color: var(--emerald); background: var(--emerald-soft); }
-.hub { display: flex; flex-direction: column; gap: 12px; padding-bottom: 24px; }
-.hub-intro { margin: 0; color: var(--muted); font-weight: 700; }
-.hub-card { appearance: none; font: inherit; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 14px; padding: 16px; border-radius: 20px; border: 2px solid var(--line); background: var(--card); box-shadow: 0 5px 0 var(--line); color: var(--ink); }
-.hub-card > span:first-child { font-size: 2rem; }
-.hub-card b { display: block; font-size: 1.05rem; color: var(--emerald-dark); }
-.hub-card small { color: var(--muted); font-weight: 700; }
-.hub-card.off { cursor: default; opacity: .55; border-style: dashed; box-shadow: none; }
-.fout { background: var(--card); border: 2px solid var(--line); border-radius: 18px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+.hub-head { position: relative; margin: -4px -4px 0; padding: 18px 56px 16px; border-radius: 0 0 22px 22px; background: #1b4332; border-bottom: 3px solid #d9a05b; text-align: center; color: #f4efe2; }
+.hub-head h1 { margin: 0; font-size: 1.4rem; font-weight: 900; }
+.hub-head p { margin: 2px 0 0; font-size: .85rem; color: #cfe8d8; }
+.hub-ar { font-family: "Amiri", serif; font-size: 2rem; color: #ffd54f; line-height: 1.2; }
+.hub-back { position: absolute; left: 10px; top: 14px; appearance: none; border: 0; cursor: pointer; width: 44px; height: 44px; border-radius: 14px; background: #133a2b; color: #ffd54f; display: grid; place-items: center; }
+.hub { display: flex; flex-direction: column; gap: 12px; padding: 16px 0 24px; color: #f4efe2; }
+.hub-intro { margin: 0; color: #cfe8d8; font-weight: 700; }
+.hub-fout { appearance: none; font: inherit; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 18px; background: #3a2412; border: 2px solid #d9a05b; color: #f4efe2; }
+.hub-fout > span { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.hub-fout b { font-size: 1.05rem; } .hub-fout small { color: #f0d9b5; font-weight: 700; }
+.hub-fout em { font-style: normal; background: #ffd54f; color: #3b2410; font-weight: 900; border-radius: 99px; padding: 4px 10px; }
+.hub-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.hub-tile { appearance: none; font: inherit; cursor: pointer; text-align: left; position: relative; display: flex; flex-direction: column; gap: 6px; min-height: 108px; padding: 14px; border-radius: 18px; background: #1b4332; border: 2px solid #2d6a4f; color: #f4efe2; }
+.hub-tile b { font-size: 1rem; font-weight: 900; } .hub-tile small { color: #b9d6c6; font-weight: 700; font-size: .78rem; }
+.hub-tile.off { cursor: default; opacity: .6; border-style: dashed; }
+.hub-tile i { position: absolute; top: 10px; right: 10px; font-style: normal; font-size: .68rem; font-weight: 900; color: #0f2e22; background: #9fc4b0; border-radius: 99px; padding: 2px 8px; }
+.hub-fout:focus-visible, .hub-tile:focus-visible, .hub-back:focus-visible { outline: 3px solid #ffb703; outline-offset: 3px; }
+.hub-hadith { background: #133a2b; border: 1.5px dashed #4f8f70; border-radius: 16px; padding: 12px 14px; }
+.hub-hadith small { font-weight: 900; color: #ffd54f; letter-spacing: .05em; font-size: .75rem; }
+.hub-hadith p { margin: 4px 0; line-height: 1.4; } .hub-hadith span { font-size: .75rem; color: #9fc4b0; }
+.fout { background: #1b4332; border: 2px solid #2d6a4f; border-radius: 18px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
 .fq { margin: 0; font-weight: 800; }
-.fout summary, .dua summary { cursor: pointer; font-weight: 900; color: var(--emerald-dark); min-height: 32px; display: flex; align-items: center; }
-.fa { margin: 6px 0; font-weight: 800; color: var(--ok); }
-.fe { margin: 0; color: var(--muted); }
-.dua-g { margin: 8px 0 0; font-size: 1rem; color: var(--gold-text); }
-.dua { background: var(--card); border: 2px solid var(--line); border-radius: 16px; padding: 10px 14px; }
-.dua-ar { font-family: "Amiri", serif; font-size: 1.45rem; line-height: 1.9; color: var(--emerald-dark); margin: 8px 0 4px; text-align: right; }
-.dua-tr { margin: 0 0 4px; color: var(--muted); }
+.fout summary, .dua summary { cursor: pointer; font-weight: 900; color: #ffd54f; min-height: 32px; display: flex; align-items: center; }
+.fa { margin: 6px 0; font-weight: 800; color: #4ff0c8; }
+.fe { margin: 0; color: #cfe8d8; }
+.dash .btn.ghost, .hub .btn.ghost { background: #133a2b; color: #f4efe2; border-color: #2d6a4f; box-shadow: 0 5px 0 #0b2219; }
+.dua-g { margin: 8px 0 0; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: #ffd54f; }
+.dua { background: #1b4332; border: 2px solid #2d6a4f; border-radius: 16px; padding: 10px 14px; }
+.dua-ar { font-family: "Amiri", serif; font-size: 1.5rem; line-height: 1.9; color: #ffe08a; margin: 8px 0 4px; text-align: right; }
+.dua-tr { margin: 0 0 4px; color: #b9d6c6; }
 .dua-nl { margin: 0 0 4px; font-weight: 700; }
-.dua-src { margin: 0; font-size: .8rem; color: var(--muted); }
+.dua-src { margin: 0; font-size: .78rem; color: #9fc4b0; }
+/* ── v87: Vandaag en Mijn voortgang ── */
+.d-today { appearance: none; font: inherit; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-radius: 20px; background: #1b4332; border: 2px solid #2d6a4f; color: #f4efe2; }
+.d-today > span { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.d-today b { font-size: 1.05rem; font-weight: 900; } .d-today small { color: #cfe8d8; font-weight: 700; font-size: .82rem; }
+.d-today:focus-visible, .t-btn:focus-visible { outline: 3px solid #ffb703; outline-offset: 3px; }
+.t-sum { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 20px; background: #1b4332; border: 2px solid #2d6a4f; }
+.t-sum span { display: flex; flex-direction: column; gap: 2px; } .t-sum b { font-size: 1.15rem; } .t-sum small { color: #cfe8d8; font-weight: 700; }
+.t-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.t-list li { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 16px; background: #fff8e6; color: #2a1d08; border: 2px solid #ecd3a6; }
+.t-list li.self:not(.on) { border-style: dashed; border-color: #d9a05b; }
+.t-list li.on { background: #e9f7ef; border-color: #9fd6b4; }
+.t-ck { width: 28px; height: 28px; border-radius: 50%; flex: none; display: grid; place-items: center; border: 2.5px solid #c9b48a; font-weight: 900; color: #fff; }
+.t-list li.on .t-ck { background: #2d8a5f; border-color: #2d8a5f; }
+.t-tx { flex: 1; display: flex; flex-direction: column; min-width: 0; } .t-tx b { font-weight: 900; } .t-tx small { color: #6b5a3a; font-weight: 700; font-size: .8rem; }
+.t-btn { appearance: none; font: inherit; font-weight: 900; font-size: .85rem; cursor: pointer; border: 0; border-radius: 12px; padding: 8px 12px; min-height: 40px; background: #1b4332; color: #fff; flex: none; }
+.t-btn.on { background: #2d8a5f; }
+.t-note { margin: 0; font-size: .8rem; color: #9fc4b0; }
+.p-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.p-stats div { background: #1b4332; border: 2px solid #2d6a4f; border-radius: 16px; padding: 10px; display: flex; flex-direction: column; }
+.p-stats b { font-size: 1.5rem; font-weight: 900; color: #ffd54f; } .p-stats small { color: #cfe8d8; font-weight: 700; font-size: .75rem; }
+.p-card { background: #1b4332; border: 2px solid #2d6a4f; border-radius: 18px; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
+.p-k { font-weight: 900; letter-spacing: .06em; color: #4ff0c8; font-size: .75rem; }
+.p-bars { display: flex; align-items: flex-end; gap: 8px; height: 120px; }
+.p-bars span { flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 4px; }
+.p-bars i { display: block; width: 100%; background: #ffd54f; border-radius: 6px 6px 2px 2px; }
+.p-bars span.t i { background: #4ff0c8; }
+.p-bars em { font-style: normal; font-size: .72rem; color: #cfe8d8; font-weight: 800; }
+.p-f { color: #9fc4b0; font-size: .72rem; }
+.p-land span:first-child { display: flex; justify-content: space-between; font-size: .88rem; } .p-land em { font-style: normal; color: #ffd54f; font-weight: 900; }
+.p-bar { display: block; height: 7px; border-radius: 99px; background: #133a2b; overflow: hidden; margin-top: 4px; } .p-bar i { display: block; height: 100%; border-radius: 99px; }
+.p-next { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 16px; background: #fff8e6; color: #2a1d08; border: 2px solid #f2c94c; font-size: 1.5rem; }
+.p-next span { display: flex; flex-direction: column; font-size: 1rem; } .p-next small { color: #6b5a3a; font-weight: 700; font-size: .8rem; }
+/* ── v88: Al-Qur'an (IndoPak) ── */
+@font-face { font-family: "IndoPakQ"; src: url("quran/indopak-nastaleeq.woff2") format("woff2"); font-display: block; }
+.q-cont { appearance: none; font: inherit; cursor: pointer; text-align: left; display: flex; flex-direction: column; gap: 2px; padding: 14px 16px; border-radius: 18px; background: #fff8e6; color: #2a1d08; border: 3px solid #f2c94c; }
+.q-cont small { font-weight: 900; letter-spacing: .06em; color: #8a5a12; font-size: .72rem; } .q-cont b { font-size: 1.05rem; }
+.q-cont span { font-family: "Amiri", serif; font-size: 1.3rem; color: #1b4332; text-align: right; }
+.q-goal { margin: 0; font-weight: 800; color: #4ff0c8; }
+.q-marks { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; } .q-marks small { width: 100%; font-weight: 900; color: #ffd54f; font-size: .72rem; letter-spacing: .06em; }
+.q-marks button, .q-juz button { appearance: none; font: inherit; font-weight: 800; cursor: pointer; border: 1.5px solid #2d6a4f; background: #133a2b; color: #f4efe2; border-radius: 12px; padding: 6px 10px; min-height: 40px; }
+.q-juz { background: #1b4332; border: 2px solid #2d6a4f; border-radius: 16px; padding: 10px 14px; }
+.q-juz summary { cursor: pointer; font-weight: 900; color: #ffd54f; min-height: 32px; display: flex; align-items: center; }
+.q-juz div { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-top: 8px; }
+.q-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.q-list button { appearance: none; font: inherit; cursor: pointer; width: 100%; text-align: left; display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 14px; background: #1b4332; border: 1.5px solid #2d6a4f; color: #f4efe2; }
+.q-no { width: 34px; height: 34px; flex: none; display: grid; place-items: center; font-weight: 900; font-size: .85rem; color: #ffd54f; border: 2px solid #d9a05b; border-radius: 10px; transform: rotate(45deg); } .q-no { line-height: 1; }
+.q-list .q-no { transform: none; border-radius: 50%; }
+.q-nm { flex: 1; display: flex; flex-direction: column; min-width: 0; } .q-nm small { color: #9fc4b0; font-weight: 700; font-size: .76rem; }
+.q-ar { font-family: "Amiri", serif; font-size: 1.3rem; color: #ffd54f; }
+.q-list button:focus-visible, .q-cont:focus-visible, .q-num:focus-visible, .q-bar button:focus-visible { outline: 3px solid #ffb703; outline-offset: 2px; }
+.q-src { margin: 4px 0 0; font-size: .74rem; color: #9fc4b0; }
+.q-bar { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 10px 0 0; padding: 8px 10px; border-radius: 14px; background: rgba(15,46,34,.94); border: 1.5px solid #2d6a4f; color: #cfe8d8; font-weight: 800; font-size: .85rem; }
+.q-bar button { appearance: none; font: inherit; font-weight: 900; cursor: pointer; border: 0; border-radius: 10px; background: #1b4332; color: #ffd54f; min-width: 44px; min-height: 40px; }
+.q-page { position: relative; padding: 18px 14px 22px; border-radius: 10px; background: #14251d; border: 3px solid #d9a05b; box-shadow: 0 0 0 5px #1b4332, 0 0 0 7px #4f8f70, inset 0 0 0 5px #14251d, inset 0 0 0 7px rgba(217,160,91,.45); margin: 8px 7px; }
+.q-head { margin: 0 auto 10px; max-width: 320px; text-align: center; padding: 6px 18px; border-radius: 999px; background: linear-gradient(90deg, #1b4332, #2d6a4f 30%, #2d6a4f 70%, #1b4332); border: 2px solid #d9a05b; box-shadow: 0 0 0 3px #14251d, 0 0 0 4.5px #d9a05b; }
+.q-head span { font-family: "IndoPakQ", "Amiri", serif; font-size: 1.7rem; color: #ffe08a; line-height: 1.6; }
+.q-bsm { font-family: "IndoPakQ", "Amiri", serif; text-align: center; font-size: 1.7rem; color: #f4efe2; margin: 4px 0 10px; line-height: 2; }
+.q-text { font-family: "IndoPakQ", "Amiri", serif; color: #f4efe2; text-align: justify; text-align-last: center; word-spacing: .06em; }
+.q-s1 { font-size: 1.45rem; line-height: 2.3; } .q-s2 { font-size: 1.7rem; line-height: 2.3; } .q-s3 { font-size: 1.95rem; line-height: 2.25; } .q-s4 { font-size: 2.25rem; line-height: 2.2; } .q-s5 { font-size: 2.6rem; line-height: 2.15; }
+.qa.hl { background: rgba(255,213,79,.14); border-radius: 8px; }
+.q-num { appearance: none; border: 1.5px solid #d9a05b; background: radial-gradient(circle, #1b4332 55%, #14251d 56%); color: #ffd54f; font-family: "Amiri", serif; font-size: .5em; font-weight: 700; min-width: 1.9em; height: 1.9em; padding: 0 .25em; border-radius: 999px; cursor: pointer; vertical-align: middle; line-height: 1; box-shadow: 0 0 0 2px #14251d, 0 0 0 3px rgba(217,160,91,.6); }
+.q-num.on { background: #ffd54f; color: #2a1d08; }
+.q-jz { display: inline-block; font-family: "Nunito", sans-serif; font-size: .9rem; font-weight: 900; color: #0f2e22; background: #4ff0c8; border-radius: 999px; padding: 2px 10px; vertical-align: middle; }
+.q-nav { display: flex; flex-direction: column; gap: 10px; }
 </style>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2">
@@ -6464,25 +6554,40 @@ return exports;})();
   let qById = null;
   function qFind(id) { if (!qById) { qById = {}; QUESTIONS.forEach(function (q) { qById[q.id] = q; }); } return qById[id]; }
 
+  function rkScene(prev, cur, next) {
+    const hex = function (r) { const q = (r * .866).toFixed(1), h = (r / 2).toFixed(1); return "0," + (-r) + " " + q + "," + (-h) + " " + q + "," + h + " 0," + r + " " + (-q) + "," + h + " " + (-q) + "," + (-h); };
+    let g = '<svg class="rk-svg" viewBox="0 0 352 160" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="rkSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a0f2c"/><stop offset=".55" stop-color="#1c2f5c"/><stop offset="1" stop-color="#2d6a6a"/></linearGradient><linearGradient id="rkPath" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#ffd54f"/><stop offset="1" stop-color="#4ff0c8"/></linearGradient><radialGradient id="rkGlow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#4ff0c8" stop-opacity=".9"/><stop offset="1" stop-color="#4ff0c8" stop-opacity="0"/></radialGradient><radialGradient id="rkGold" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffd54f" stop-opacity=".8"/><stop offset="1" stop-color="#ffd54f" stop-opacity="0"/></radialGradient><filter id="rkBlur"><feGaussianBlur stdDeviation="2.2"/></filter></defs>' +
+      '<rect width="352" height="160" fill="url(#rkSky)"/><g fill="#fff"><circle class="rk-tw" cx="30" cy="20" r="1.2"/><circle class="rk-tw rk-tw2" cx="80" cy="42" r="1"/><circle class="rk-tw" cx="130" cy="14" r="1.4"/><circle class="rk-tw rk-tw3" cx="210" cy="30" r="1"/><circle class="rk-tw rk-tw2" cx="250" cy="12" r="1.2"/><circle class="rk-tw" cx="330" cy="46" r="1"/></g>' +
+      '<path d="M300 18 a14 14 0 1 0 11 22 a11 11 0 1 1 -11 -22z" fill="#ffe9a8"/><polygon points="0,96 40,62 72,84 110,50 150,88 190,58 236,92 280,54 320,80 352,64 352,160 0,160" fill="#15284d"/><polygon points="110,50 130,70 150,88 120,88" fill="#1d3866"/><polygon points="280,54 300,70 320,80 290,82" fill="#1d3866"/><polygon points="0,118 60,96 120,112 170,92 230,110 290,90 352,104 352,160 0,160" fill="#123a3a"/><polygon points="170,92 200,101 230,110 186,110" fill="#174a48"/><polygon points="0,140 90,124 180,136 260,122 352,132 352,160 0,160" fill="#0d2a26"/>' +
+      '<path d="M-6 160 C60 140 110 150 160 126 S250 100 318 74" fill="none" stroke="#4ff0c8" stroke-width="10" stroke-linecap="round" opacity=".35" filter="url(#rkBlur)"/><path d="M-6 160 C60 140 110 150 160 126 S250 100 318 74" fill="none" stroke="url(#rkPath)" stroke-width="3.5" stroke-linecap="round"/><circle class="rk-spark" r="3" fill="#fff"/><circle class="rk-spark rk-spark2" r="2.2" fill="#ffd54f"/>';
+    if (prev) g += '<g transform="translate(82 145)"><circle r="16" fill="url(#rkGold)"/><polygon points="' + hex(11) + '" fill="#ffd54f" stroke="#fff6c8" stroke-width="1.5"/><text y="4" text-anchor="middle" font-size="10" font-weight="900" fill="#3b2410">' + prev + "</text></g>";
+    g += '<g transform="translate(166 123)"><circle class="rk-pulse" r="22" fill="url(#rkGlow)"/><polygon points="' + hex(13) + '" fill="#0d2a26" stroke="#4ff0c8" stroke-width="2.5"/><text y="4.5" text-anchor="middle" font-size="12" font-weight="900" fill="#4ff0c8">' + cur + "</text></g>";
+    if (next) g += '<g transform="translate(252 98)"><polygon points="' + hex(10) + '" fill="#1d3866" stroke="#6f86b5" stroke-width="1.5"/><rect x="-3" y="-2.5" width="6" height="5" rx="1" fill="#9fb2d9"/><path d="M-1.8 -2.5 V-4.2 a1.8 1.8 0 0 1 3.6 0 V-2.5" stroke="#9fb2d9" stroke-width="1.3" fill="none"/></g>';
+    return g + '<g class="rk-bob"><g transform="translate(166 96)"><path d="M0 14 L-9 -1 A10 10 0 1 1 9 -1Z" fill="#ffd54f" stroke="#fff6c8" stroke-width="1.5"/><circle cy="-4" r="5" fill="#0d2a26"/></g></g></svg>';
+  }
+  const DI = {
+    book: '<path d="M4 5h7a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2H4z"/><path d="M20 5h-7a2 2 0 0 0-2 2v12a2 2 0 0 1 2-2h7z"/>',
+    star: '<path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9z"/>',
+    wheel: '<circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6L5.6 18.4"/>',
+    users: '<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-4 3-6 6-6s6 2 6 6M14 20c0-3 1.5-5 4-5s3 2 3 5"/>'
+  };
+  function dIc(k, c, sz) { return '<svg width="' + (sz || 32) + '" height="' + (sz || 32) + '" viewBox="0 0 24 24" fill="none" stroke="' + c + '" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + DI[k] + "</svg>"; }
   function viewDash() {
     const LS = landsFor(P.mode), li = Math.min(defaultLand(), LS.length - 1), c = LS[li], st = jLandStats(P.mode, c.id);
-    const stars = starsAt(P, P.mode), gems = gemsAt(P, P.mode), pct = st.n ? Math.round(st.passed / st.n * 100) : 0;
+    const cur = Math.min(st.passed + 1, st.n), pct = st.n ? Math.round(st.passed / st.n * 100) : 0, nf = foutList().length;
     let h = '<h1 class="sr-only" tabindex="-1">Startscherm</h1>';
-    h += '<header class="d-head"><button class="jh-player jh-av" data-act="avatar-pick" data-id="' + P.id + '" aria-label="Kies je avatar">' + avatarHtml(P, 40) + '</button><div class="d-hello"><small>As-salamu ‘alaykum</small><b>' + esc(P.name) + "</b></div>" +
-      '<div class="d-stats"><span>' + icon("star", 15, "fill") + "<b>" + stars + '</b><i class="sr-only"> sterren</i></span>' + lifeBtnHtml() + '<span>' + gemSvg(15) + "<b>" + gems + '</b><i class="sr-only"> edelstenen</i></span></div>' +
-      '<button class="jh-gear" data-act="settings" aria-label="Instellingen">' + icon("gear", 20) + "</button></header>";
-    h += '<button class="d-rihla" data-act="journey" style="--accent:' + c.color + '" aria-label="Rihlat al-‘Ilm, het spel. ' + modeName(P.mode) + ", land " + (li + 1) + ": " + esc(c.title) + ", " + st.passed + " van " + st.n + ' levels. Verder spelen">' +
-      '<span class="d-rt"><small>SPELWERELD</small><b>Rihlat al-‘Ilm</b><span lang="ar" dir="rtl">رحلة العلم</span></span>' +
-      '<span class="d-rl">' + icon(MODE_ICON[P.mode], 14) + " " + modeName(P.mode) + " · Land " + (li + 1) + ": " + esc(c.title) + "</span>" +
-      '<span class="d-bar" aria-hidden="true"><i style="width:' + pct + '%"></i></span><span class="d-rf"><span>' + st.passed + "/" + st.n + " levels · ⭐ " + st.stars + '</span><span class="d-go">Verder ▶</span></span></button>';
-    h += salHtml();
+    h += '<header class="d-head"><button class="d-av" data-act="avatar-pick" data-id="' + P.id + '" aria-label="Kies je avatar">' + avatarHtml(P, 44) + '</button><div class="d-hello"><small>As-salamu ‘alaykum</small><b>' + esc(P.name) + "</b></div>" +
+      '<div class="d-stats">' + streakPillHtml() + lifeBtnHtml() + '</div><button class="d-gear" data-act="settings" aria-label="Instellingen">' + icon("gear", 22) + "</button></header>";
+    h += todayCardHtml();
+    h += '<button class="d-rihla" data-act="journey" aria-label="Rihlat al-‘Ilm, het spel. ' + modeName(P.mode) + ", land " + (li + 1) + ": " + esc(c.title) + ", level " + cur + " van " + st.n + '. Verder spelen">' + rkScene(cur > 1 ? cur - 1 : 0, cur, cur < st.n ? cur + 1 : 0) +
+      '<span class="d-rb"><span class="d-rt"><small>SPELWERELD</small><b>Rihlat al-‘Ilm <span lang="ar" dir="rtl">رحلة العلم</span></b><span class="d-rl">Land ' + (li + 1) + ": " + esc(c.title) + '</span><span class="d-rx"><b>Lvl ' + cur + '</b><span class="d-bar"><i style="width:' + pct + '%"></i></span><span>' + modeName(P.mode) + '</span></span></span><span class="d-go">Verder</span></span></button>';
     h += '<nav class="d-grid" aria-label="Onderdelen">' +
-      '<button class="d-tile hub" data-act="hub"><span aria-hidden="true">📚</span><b>Bayt al-‘Ilm</b><small>Leren en herhalen</small></button>' +
-      '<button class="d-tile rad" data-act="rad"><span aria-hidden="true">🎡</span><b>Ajalat al-‘Ilm</b><small>Het rad van kennis</small></button>' +
-      '<button class="d-tile grp" data-act="group"><span aria-hidden="true">👥</span><b>Groep & Duel</b><small>Samen spelen</small></button>' +
-      '<button class="d-tile kids" disabled aria-label="KidsZone, komt binnenkort"><span aria-hidden="true">🧸</span><b>KidsZone</b><small>Binnenkort</small></button></nav>';
-    h += calHtml();
-    h += '<nav class="d-small" aria-label="Meer"><button data-act="board">🏆<span>Score</span></button><button data-act="album">🎴<span>Album</span></button><button data-act="bazaar">🛍️<span>Bazaar</span></button></nav>';
+      '<button class="d-tile hub" data-act="hub">' + dIc("book", "#1b4332") + '<small class="d-k">LEARNING HUB</small><b>Bayt al-‘Ilm</b><small>' + (nf ? "Mijn foutjes: " + nf + " · du’a-boekje" : "Foutjes en du’a-boekje") + "</small></button>" +
+      '<button class="d-tile kids" disabled aria-label="KidsZone, komt binnenkort">' + dIc("star", "#ffd54f") + '<small class="d-k">KIDSZONE</small><b>[Naam volgt]</b><small>Binnenkort, insha’Allah</small></button>' +
+      '<button class="d-tile" data-act="rad">' + dIc("wheel", "#ffd54f", 30) + '<b>Ajalat al-‘Ilm</b><small>Rad van Kennis</small></button>' +
+      '<button class="d-tile" data-act="group">' + dIc("users", "#ffd54f", 30) + "<b>Groep & Duel</b><small>Samen leren</small></button></nav>";
+    h += salHtml() + calHtml();
+    h += '<nav class="d-small" aria-label="Meer"><button data-act="board">Score</button><button data-act="album">Album</button><button data-act="bazaar">Bazaar</button></nav>';
     return '<section class="dash">' + h + "</section>";
   }
   function afterDashRender() {
@@ -6496,20 +6601,32 @@ return exports;})();
     }, 30000);
   }
 
-  function hubTop(title, back) {
-    return '<div class="topbar"><button class="icon-btn" data-act="' + back + '" aria-label="Terug">' + icon("left", 22) + '</button><div class="brand">' + title + '</div><span style="width:44px"></span></div>';
+  function hubTop(title, back, ar, sub) {
+    return '<header class="hub-head"><button class="hub-back" data-act="' + back + '" aria-label="Terug">' + icon("left", 22) + "</button>" + (ar ? '<div class="hub-ar" lang="ar" dir="rtl">' + ar + "</div>" : "") + "<h1>" + title + "</h1>" + (sub ? "<p>" + sub + "</p>" : "") + "</header>";
   }
+  const HI = {
+    les: '<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h8M8 17h5"/>',
+    dua: '<path d="M7 21V11a5 5 0 0 1 10 0v10"/><path d="M12 6V3"/><path d="M5 21h14"/>',
+    stap: '<path d="M5 19l4-4 3 3 7-8"/><circle cx="5" cy="19" r="1.5"/><circle cx="19" cy="10" r="1.5"/>',
+    woord: '<path d="M4 6h10M4 12h16M4 18h12"/><circle cx="18" cy="6" r="2"/>',
+    fout: '<path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><circle cx="12" cy="12" r="4"/>'
+  };
+  function hIc(k, c) { return '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="' + (c || "#ffd54f") + '" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + HI[k] + "</svg>"; }
   function viewHub() {
     const nf = foutList().length;
-    return hubTop("📚 Bayt al-‘Ilm", "dash") + '<section class="hub"><p class="hub-intro">Het huis van kennis: rustig leren en herhalen, zonder punten en zonder tijd.</p>' +
-      '<button class="hub-card" data-act="fout"><span aria-hidden="true">📝</span><span><b>Mijn foutjes</b><small>' + (nf ? nf + " vraag" + (nf === 1 ? "" : "en") + " om te herhalen (" + modeName(P.mode) + ")" : "Nog niets: vragen die je fout hebt komen hier") + "</small></span></button>" +
-      '<button class="hub-card" data-act="dua"><span aria-hidden="true">🤲</span><span><b>Du’a-boekje</b><small>Korte du’a’s voor elke dag</small></span></button>' +
-      '<div class="hub-card off" aria-disabled="true"><span aria-hidden="true">🗺️</span><span><b>Lessen per land</b><small>Binnenkort</small></span></div>' +
-      '<div class="hub-card off" aria-disabled="true"><span aria-hidden="true">📖</span><span><b>Woordenboek</b><small>Binnenkort</small></span></div></section>';
+    const soon = function (k, t, sub) { return '<div class="hub-tile off" aria-label="' + t + ', binnenkort">' + hIc(k) + "<b>" + t + "</b><small>" + sub + '</small><i>Binnenkort</i></div>'; };
+    const ql = P.quran && P.quran.last ? P.quran.last.split(":") : null;
+    return hubTop("Bayt al-‘Ilm", "dash", "بيت العلم", "Huis van Kennis · rustig leren, zonder punten en zonder tijd") + '<section class="hub">' +
+      '<button class="q-cont" data-act="quran"><small>AL-QUR’AN · INDOPAK</small><b>' + (ql ? "Verder lezen: " + Q_TR[ql[0] - 1] + " " + ql.join(":") : "De volledige Koran lezen") + '</b><span lang="ar" dir="rtl">القرآن الكريم</span></button>' +
+      '<button class="hub-fout" data-act="fout">' + hIc("fout", "#ffb703") + '<span><b>Mijn foutjes</b><small>' + (nf ? nf + " vraag" + (nf === 1 ? "" : "en") + " om te herhalen (" + modeName(P.mode) + ")" : "Nog niets: vragen die je fout hebt komen hier") + "</small></span>" + (nf ? '<em>' + nf + "</em>" : "") + "</button>" +
+      '<div class="hub-grid">' + soon("les", "Lessen per land", "Korte kaartjes vóór de levels") +
+      '<button class="hub-tile" data-act="dua">' + hIc("dua") + "<b>Du’a-boekje</b><small>Leren en uit je hoofd</small></button>" +
+      soon("stap", "Stap voor stap", "Wudhu, Salah, Hadj") + soon("woord", "Woordenboek", "Van Adhaan tot Zakat") + "</div>" +
+      '<div class="hub-hadith"><small>HADITH VAN DE WEEK</small><p>‘De besten onder jullie zijn degenen met het mooiste karakter.’</p><span>Bukhari 3559 · eigen vertaling</span></div></section>';
   }
   function viewFout() {
     const ids = foutList().slice().reverse();
-    let h = hubTop("📝 Mijn foutjes", "hub") + '<section class="hub">';
+    let h = hubTop("Mijn foutjes", "hub", "", "Herhalen wat nog lastig was") + '<section class="hub">';
     if (!ids.length) return h + '<p class="hub-intro">Geen foutjes om te herhalen in de ' + modeName(P.mode) + '-modus. Goed bezig, Masha’Allah!</p><button class="btn block" data-act="journey">Naar Rihlat al-‘Ilm</button></section>';
     h += '<p class="hub-intro">Lees de vraag, denk even na en tik dan op <b>Toon antwoord</b>. Snap je het? Tik op <b>Ik snap het nu</b>.</p>';
     ids.forEach(function (id) {
@@ -6542,7 +6659,7 @@ return exports;})();
       ["Bij het niezen", "الْحَمْدُ لِلَّهِ — يَرْحَمُكَ اللَّهُ — يَهْدِيكُمُ اللَّهُ وَيُصْلِحُ بَالَكُمْ", "Alhamdulillah — Yarhamukallah — Yahdikumullahu wa yuslihu balakum", "Jij: Alle lof is voor Allah. De ander: Allah zij je barmhartig. Jij: Allah leide jullie en verbetere jullie toestand.", "Bukhari"]]]
   ];
   function viewDua() {
-    let h = hubTop("🤲 Du’a-boekje", "hub") + '<section class="hub"><p class="hub-intro">Tik op een du’a om hem te openen.</p>';
+    let h = hubTop("Du’a-boekje", "hub", "الأدعية", "Tik op een du’a om hem te openen") + '<section class="hub">';
     DUA_BOOK.forEach(function (g) {
       h += '<h2 class="dua-g">' + g[0] + "</h2>";
       g[1].forEach(function (d) {
@@ -6552,10 +6669,158 @@ return exports;})();
     return h + "</section>";
   }
 
+  /* ── v87: Vandaag (dagdoelen) en Mijn voortgang ── */
+  const GOALS = [
+    ["level", "Eén level spelen", "Haal een level in Rihlat al-‘Ilm", "auto"],
+    ["daily", "Quiz van de Dag", "De schatkist op de kaart", "auto"],
+    ["dua", "Een du’a lezen", "Open het Du’a-boekje", "auto"],
+    ["quran", "Koran lezen", "5 min in de app, of zelf afvinken", "self"],
+    ["adhm", "Ochtend-adhkar", "Na Fajr · zelf afvinken", "self"],
+    ["adha", "Avond-adhkar", "Na Asr of Maghrib · zelf afvinken", "self"]
+  ];
+  function goalsDay() {
+    if (!P.goals) P.goals = { d: "", done: {}, hist: {}, ok: 0, n: 0 };
+    const g = P.goals, t = todayStr();
+    if (g.d !== t) { g.d = t; g.done = {}; }
+    return g;
+  }
+  function goalDone(k) {
+    const g = goalsDay();
+    if (k === "daily") return ["beginner", "junior", "expert"].some(function (lv) { return P.daily && P.daily[lv] && P.daily[lv][todayStr()]; });
+    return !!g.done[k];
+  }
+  function goalCount() { return GOALS.filter(function (x) { return goalDone(x[0]); }).length; }
+  function goalSync() {
+    const g = goalsDay(); g.hist[g.d] = goalCount();
+    const keys = Object.keys(g.hist).sort(); while (keys.length > 60) delete g.hist[keys.shift()];
+  }
+  function goalHit(k) { if (!P) return; const g = goalsDay(); if (!g.done[k]) { g.done[k] = 1; goalSync(); } }
+  function goalAns(ok) { if (!P) return; const g = goalsDay(); g.n = (g.n || 0) + 1; if (ok) g.ok = (g.ok || 0) + 1; }
+  function ringSvg(n, tot, sz) {
+    const r = 40, c = 2 * Math.PI * r, f = tot ? n / tot : 0;
+    return '<svg width="' + sz + '" height="' + sz + '" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="40" fill="none" stroke="#2d6a4f" stroke-width="12"/><circle cx="50" cy="50" r="40" fill="none" stroke="#ffd54f" stroke-width="12" stroke-linecap="round" stroke-dasharray="' + (c * f).toFixed(1) + " " + c.toFixed(1) + '" transform="rotate(-90 50 50)"/><text x="50" y="58" text-anchor="middle" font-size="24" font-weight="900" fill="#fff">' + n + "/" + tot + "</text></svg>";
+  }
+  function todayCardHtml() {
+    const n = goalCount(), tot = GOALS.length, open = GOALS.filter(function (x) { return !goalDone(x[0]); });
+    const txt = !open.length ? "Alle doelen gehaald, Masha’Allah!" : open.length === 1 ? "Nog 1 doel: " + open[0][1] : "Nog " + open.length + " doelen · eerst: " + open[0][1];
+    return '<button class="d-today" data-act="today" aria-label="Vandaag: ' + n + " van " + tot + " doelen gehaald. " + txt + '">' + ringSvg(n, tot, 64) + '<span><b>Vandaag</b><small>' + txt + '</small></span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffd54f" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>';
+  }
+  function viewToday() {
+    goalSync(); saveState();
+    const n = goalCount(), tot = GOALS.length, sk = streakOf(P);
+    const date = new Date().toLocaleDateString("nl-NL", { weekday: "long", day: "numeric", month: "long" });
+    let h = hubTop("Vandaag", "dash", "", esc(date.charAt(0).toUpperCase() + date.slice(1)) + " · 🔥 " + sk + (sk === 1 ? " dag" : " dagen") + " op rij") + '<section class="hub">';
+    h += '<div class="t-sum">' + ringSvg(n, tot, 72) + "<span><b>" + (n === tot ? "Alles gehaald!" : n >= tot - 1 ? "Bijna klaar!" : n ? "Goed bezig!" : "Bismillah, begin maar!") + "</b><small>" + (n === tot ? "Masha’Allah, al je doelen van vandaag zijn gehaald." : "Nog " + (tot - n) + " doel" + (tot - n === 1 ? "" : "en") + " voor vandaag.") + "</small></span></div>";
+    h += '<ul class="t-list">' + GOALS.map(function (x) {
+      const on = goalDone(x[0]), self = x[3] === "self";
+      const go = x[0] === "level" ? "journey" : x[0] === "daily" ? "journey" : x[0] === "dua" ? "dua" : "";
+      let act = "";
+      if (x[0] === "quran" && !on) act = '<button class="t-btn" data-act="quran">Lees</button> ';
+      if (self) act += '<button class="t-btn' + (on ? " on" : "") + '" data-act="goal-tog" data-g="' + x[0] + '" aria-pressed="' + on + '">' + (on ? "Gedaan ✓" : "Gedaan") + "</button>";
+      else if (!on && go) act = '<button class="t-btn" data-act="' + go + '">Ga</button>';
+      return '<li class="' + (on ? "on" : "") + (self ? " self" : "") + '"><span class="t-ck" aria-hidden="true">' + (on ? "✓" : "") + '</span><span class="t-tx"><b>' + x[1] + "</b><small>" + x[2] + '</small></span><span class="sr-only">' + (on ? "gehaald" : "nog niet gehaald") + "</span>" + act + "</li>";
+    }).join("") + "</ul>";
+    h += '<p class="t-note">Koran lezen telt vanzelf na 5 minuten lezen in de app; lees je in je eigen mushaf, vink het dan zelf af. Adhkar vink je zelf af. Doelen beginnen elke dag opnieuw.</p>';
+    h += '<button class="btn block" data-act="prog">📊 Mijn voortgang</button></section>';
+    return h;
+  }
+  function viewProg() {
+    const g = goalsDay(); goalSync();
+    const LS = landsFor(P.mode); let lv = 0, lvTot = 0;
+    const lands = LS.map(function (c) { const st = jLandStats(P.mode, c.id); lv += st.passed; lvTot += st.n; return { c: c, st: st }; });
+    const pct = g.n ? Math.round(g.ok / g.n * 100) + "%" : "–";
+    let h = hubTop("Mijn voortgang", "today", "", modeName(P.mode) + "-modus") + '<section class="hub">';
+    h += '<div class="p-stats"><div><b>' + streakOf(P) + "</b><small>dagen op rij</small></div><div><b>" + lv + "</b><small>levels gehaald</small></div><div><b>" + pct + "</b><small>goed beantwoord" + (g.n ? "" : " (telt vanaf nu)") + "</small></div></div>";
+    const days = [], now = new Date();
+    for (let i = 6; i >= 0; i--) { const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i); days.push({ k: dateStr(d), l: ["zo", "ma", "di", "wo", "do", "vr", "za"][d.getDay()], v: g.hist[dateStr(d)] || 0, t: i === 0 }); }
+    h += '<div class="p-card"><small class="p-k">DOELEN PER DAG</small><div class="p-bars" role="img" aria-label="Doelen per dag, afgelopen week: ' + days.map(function (d) { return d.l + " " + d.v; }).join(", ") + '">' +
+      days.map(function (d) { return '<span class="' + (d.t ? "t" : "") + '"><i style="height:' + Math.max(4, Math.round(d.v / GOALS.length * 100)) + '%"></i><em>' + d.l + "</em></span>"; }).join("") + '</div><small class="p-f">Hoogte = aantal gehaalde doelen (max ' + GOALS.length + ")</small></div>";
+    h += '<div class="p-card"><small class="p-k">MIJN LANDEN</small>' + lands.map(function (x) {
+      return '<div class="p-land"><span><b>' + esc(x.c.title) + "</b><em>" + x.st.passed + " / " + x.st.n + '</em></span><span class="p-bar"><i style="width:' + (x.st.n ? Math.round(x.st.passed / x.st.n * 100) : 0) + "%;background:" + x.c.color + '"></i></span></div>';
+    }).join("") + "</div>";
+    const nx = lands.find(function (x) { return !x.st.done && x.st.passed < x.st.n; });
+    if (nx) h += '<div class="p-next">🏅<span><b>Volgende: ' + esc(nx.c.title) + " voltooien</b><small>Nog " + (nx.st.n - nx.st.passed) + " level" + (nx.st.n - nx.st.passed === 1 ? "" : "s") + "</small></span></div>";
+    h += '<p class="t-note">Lessen en leertrajecten komen hier later bij, insha’Allah.</p></section>';
+    return h;
+  }
+
+  const Q_AR = ["الفاتحة", "البقرة", "آل عمران", "النساء", "المائدة", "الأنعام", "الأعراف", "الأنفال", "التوبة", "يونس", "هود", "يوسف", "الرعد", "إبراهيم", "الحجر", "النحل", "الإسراء", "الكهف", "مريم", "طه", "الأنبياء", "الحج", "المؤمنون", "النور", "الفرقان", "الشعراء", "النمل", "القصص", "العنكبوت", "الروم", "لقمان", "السجدة", "الأحزاب", "سبأ", "فاطر", "يس", "الصافات", "ص", "الزمر", "غافر", "فصلت", "الشورى", "الزخرف", "الدخان", "الجاثية", "الأحقاف", "محمد", "الفتح", "الحجرات", "ق", "الذاريات", "الطور", "النجم", "القمر", "الرحمن", "الواقعة", "الحديد", "المجادلة", "الحشر", "الممتحنة", "الصف", "الجمعة", "المنافقون", "التغابن", "الطلاق", "التحريم", "الملك", "القلم", "الحاقة", "المعارج", "نوح", "الجن", "المزمل", "المدثر", "القيامة", "الإنسان", "المرسلات", "النبأ", "النازعات", "عبس", "التكوير", "الانفطار", "المطففين", "الانشقاق", "البروج", "الطارق", "الأعلى", "الغاشية", "الفجر", "البلد", "الشمس", "الليل", "الضحى", "الشرح", "التين", "العلق", "القدر", "البينة", "الزلزلة", "العاديات", "القارعة", "التكاثر", "العصر", "الهمزة", "الفيل", "قريش", "الماعون", "الكوثر", "الكافرون", "النصر", "المسد", "الإخلاص", "الفلق", "الناس"];
+  const Q_TR = ["Al-Fatiha", "Al-Baqara", "Aal ‘Imran", "An-Nisa’", "Al-Ma’ida", "Al-An‘am", "Al-A‘raf", "Al-Anfal", "At-Tawba", "Yunus", "Hud", "Yusuf", "Ar-Ra‘d", "Ibrahim", "Al-Hijr", "An-Nahl", "Al-Isra’", "Al-Kahf", "Maryam", "Ta-Ha", "Al-Anbiya’", "Al-Hajj", "Al-Mu’minun", "An-Nur", "Al-Furqan", "Ash-Shu‘ara’", "An-Naml", "Al-Qasas", "Al-‘Ankabut", "Ar-Rum", "Luqman", "As-Sajda", "Al-Ahzab", "Saba’", "Fatir", "Ya-Sin", "As-Saffat", "Sad", "Az-Zumar", "Ghafir", "Fussilat", "Ash-Shura", "Az-Zukhruf", "Ad-Dukhan", "Al-Jathiya", "Al-Ahqaf", "Muhammad", "Al-Fath", "Al-Hujurat", "Qaf", "Adh-Dhariyat", "At-Tur", "An-Najm", "Al-Qamar", "Ar-Rahman", "Al-Waqi‘a", "Al-Hadid", "Al-Mujadila", "Al-Hashr", "Al-Mumtahana", "As-Saff", "Al-Jumu‘a", "Al-Munafiqun", "At-Taghabun", "At-Talaq", "At-Tahrim", "Al-Mulk", "Al-Qalam", "Al-Haqqa", "Al-Ma‘arij", "Nuh", "Al-Jinn", "Al-Muzzammil", "Al-Muddaththir", "Al-Qiyama", "Al-Insan", "Al-Mursalat", "An-Naba’", "An-Nazi‘at", "‘Abasa", "At-Takwir", "Al-Infitar", "Al-Mutaffifin", "Al-Inshiqaq", "Al-Buruj", "At-Tariq", "Al-A‘la", "Al-Ghashiya", "Al-Fajr", "Al-Balad", "Ash-Shams", "Al-Layl", "Ad-Duha", "Ash-Sharh", "At-Tin", "Al-‘Alaq", "Al-Qadr", "Al-Bayyina", "Az-Zalzala", "Al-‘Adiyat", "Al-Qari‘a", "At-Takathur", "Al-‘Asr", "Al-Humaza", "Al-Fil", "Quraysh", "Al-Ma‘un", "Al-Kawthar", "Al-Kafirun", "An-Nasr", "Al-Masad", "Al-Ikhlas", "Al-Falaq", "An-Nas"];
+  const Q_N = [7, 286, 200, 176, 120, 165, 206, 75, 129, 109, 123, 111, 43, 52, 99, 128, 111, 110, 98, 135, 112, 78, 118, 64, 77, 227, 93, 88, 69, 60, 34, 30, 73, 54, 45, 83, 182, 88, 75, 85, 54, 53, 89, 59, 37, 35, 38, 29, 18, 45, 60, 49, 62, 55, 78, 96, 29, 22, 24, 13, 14, 11, 11, 18, 12, 12, 30, 52, 52, 44, 28, 28, 20, 56, 40, 31, 50, 40, 46, 42, 29, 19, 36, 25, 22, 17, 19, 26, 30, 20, 15, 21, 11, 8, 8, 19, 5, 8, 8, 11, 11, 8, 3, 9, 5, 4, 7, 3, 6, 3, 5, 4, 5, 6];
+  /* ── v88: Al-Qur'an (IndoPak, Hafs). Tekst en lettertype: Ayman Siddiqui / Quranic Universal Library (Tarteel). Tekst ongewijzigd. ── */
+  const Q_JUZ = ["1:1", "2:142", "2:253", "3:93", "4:24", "4:148", "5:82", "6:111", "7:88", "8:41", "9:93", "11:6", "12:53", "15:1", "17:1", "18:75", "21:1", "23:1", "25:21", "27:56", "29:46", "33:31", "36:28", "39:32", "41:47", "46:1", "51:31", "58:1", "67:1", "78:1"];
+  const Q_GOAL_MIN = 5;
+  let QDATA = null, qLoading = false, qErr = false, qSurah = 1, qJump = null, qTick = null, qObs = null;
+  function qState() { if (!P.quran) P.quran = { last: "", marks: [], sec: {} }; if (!P.quran.sec) P.quran.sec = {}; if (!P.quran.marks) P.quran.marks = []; return P.quran; }
+  function qJuzOf(s, a) { let j = 1; Q_JUZ.forEach(function (k, i) { const p = k.split(":"), ps = +p[0], pa = +p[1]; if (s > ps || (s === ps && a >= pa)) j = i + 1; }); return j; }
+  function qLoad() {
+    if (QDATA || qLoading) return;
+    qLoading = true; qErr = false;
+    fetch("quran/indopak.json").then(function (r) { if (!r.ok) throw new Error("http"); return r.json(); })
+      .then(function (d) { QDATA = d; qLoading = false; if (screen === "quran" || screen === "qread") render(); })
+      .catch(function () { qLoading = false; qErr = true; if (screen === "quran" || screen === "qread") render(); });
+  }
+  function qMinToday() { return Math.floor((qState().sec[todayStr()] || 0) / 60); }
+  function qGoalTxt() { const m = Math.min(qMinToday(), Q_GOAL_MIN); return "Leesdoel: " + m + "/" + Q_GOAL_MIN + " min" + (m >= Q_GOAL_MIN ? " ✓" : ""); }
+  function viewQuran() {
+    const q = qState();
+    let h = hubTop("Al-Qur’an", "hub", "القرآن الكريم", "IndoPak-schrift · Hafs") + '<section class="hub">';
+    if (q.last) { const p = q.last.split(":"); h += '<button class="q-cont" data-act="q-open" data-s="' + p[0] + '" data-a="' + p[1] + '"><small>VERDER LEZEN</small><b>' + Q_TR[p[0] - 1] + " · " + q.last + '</b><span lang="ar" dir="rtl">' + Q_AR[p[0] - 1] + "</span></button>"; }
+    h += '<p class="q-goal">' + qGoalTxt() + "</p>";
+    if (q.marks.length) h += '<div class="q-marks"><small>BLADWIJZERS</small>' + q.marks.map(function (k) { const p = k.split(":"); return '<button data-act="q-open" data-s="' + p[0] + '" data-a="' + p[1] + '">🔖 ' + Q_TR[p[0] - 1] + " " + k + "</button>"; }).join("") + "</div>";
+    h += '<details class="q-juz"><summary>Ga naar een juz’</summary><div>' + Q_JUZ.map(function (k, i) { const p = k.split(":"); return '<button data-act="q-open" data-s="' + p[0] + '" data-a="' + p[1] + '" aria-label="Juz ' + (i + 1) + '">' + (i + 1) + "</button>"; }).join("") + "</div></details>";
+    h += '<ol class="q-list">' + Q_AR.map(function (n, i) {
+      return '<li><button data-act="q-open" data-s="' + (i + 1) + '" data-a="1"><span class="q-no">' + (i + 1) + '</span><span class="q-nm"><b>' + Q_TR[i] + "</b><small>" + Q_N[i] + ' ayaat · juz’ ' + qJuzOf(i + 1, 1) + '</small></span><span class="q-ar" lang="ar" dir="rtl">' + n + "</span></button></li>";
+    }).join("") + "</ol>";
+    h += '<p class="q-src">Korantekst (IndoPak, Hafs) en lettertype: Ayman Siddiqui / Quranic Universal Library by Tarteel (qul.tarteel.ai). De tekst wordt ongewijzigd getoond.</p></section>';
+    return h;
+  }
+  function viewQread() {
+    const s = qSurah, sz = S.qSize || 3;
+    let h = hubTop(Q_TR[s - 1], "quran", "", "Soera " + s + " · " + Q_N[s - 1] + " ayaat") +
+      '<div class="q-bar"><button data-act="q-size" data-d="-1" aria-label="Kleinere letters">A−</button><span id="qGoal">' + qGoalTxt() + '</span><button data-act="q-size" data-d="1" aria-label="Grotere letters">A+</button></div>';
+    if (!QDATA) { qLoad(); return h + '<section class="hub"><p class="hub-intro">' + (qErr ? "De Koran kon niet geladen worden. Controleer je verbinding en probeer het opnieuw." : "De Koran wordt geladen…") + "</p>" + (qErr ? '<button class="btn block" data-act="q-open" data-s="' + s + '" data-a="1">Opnieuw proberen</button>' : "") + "</section>"; }
+    const ay = QDATA[s - 1], marks = qState().marks;
+    let t = '<div class="q-page"><div class="q-head"><span lang="ar" dir="rtl">' + Q_AR[s - 1] + "</span></div>";
+    if (s !== 1 && s !== 9) t += '<p class="q-bsm" lang="ar" dir="rtl">' + QDATA[0][0] + "</p>";
+    t += '<div class="q-text q-s' + sz + '" lang="ar" dir="rtl">';
+    ay.forEach(function (txt, i) {
+      const a = i + 1, k = s + ":" + a, jz = Q_JUZ.indexOf(k);
+      if (jz > 0) t += '<span class="q-jz" dir="ltr">Juz’ ' + (jz + 1) + "</span> ";
+      t += '<span class="qa" id="qa-' + a + '" data-k="' + k + '">' + txt + ' <button class="q-num' + (marks.indexOf(k) !== -1 ? " on" : "") + '" data-act="q-mark" data-k="' + k + '" aria-label="Ayah ' + a + (marks.indexOf(k) !== -1 ? ", bladwijzer. Tik om te verwijderen" : ". Tik voor een bladwijzer") + '">' + arNum(a) + "</button></span> ";
+    });
+    t += "</div></div>";
+    h += '<section class="hub">' + t + '<div class="q-nav">' + (s < 114 ? '<button class="btn" data-act="q-open" data-s="' + (s + 1) + '" data-a="1">Volgende: ' + Q_TR[s] + "</button>" : "") + (s > 1 ? '<button class="btn ghost" data-act="q-open" data-s="' + (s - 1) + '" data-a="1">Vorige: ' + Q_TR[s - 2] + "</button>" : "") + "</div>" +
+      '<p class="q-src">Tekst en lettertype: Ayman Siddiqui / Quranic Universal Library by Tarteel. Tik op een ayah-nummer voor een bladwijzer.</p></section>';
+    return h;
+  }
+  function afterQreadRender() {
+    clearInterval(qTick); if (qObs) { qObs.disconnect(); qObs = null; }
+    if (!QDATA) return;
+    if (qJump && qJump > 1) { const el = document.getElementById("qa-" + qJump); if (el) setTimeout(function () { el.scrollIntoView({ block: "center" }); el.classList.add("hl"); }, 60); }
+    qJump = null;
+    let lastSave = 0;
+    if ("IntersectionObserver" in window) {
+      qObs = new IntersectionObserver(function (ents) {
+        ents.forEach(function (e) { if (e.isIntersecting) { qState().last = e.target.dataset.k; if (Date.now() - lastSave > 4000) { lastSave = Date.now(); saveState(); } } });
+      }, { rootMargin: "-40% 0px -50% 0px" });
+      document.querySelectorAll(".qa").forEach(function (el) { qObs.observe(el); });
+    }
+    qTick = setInterval(function () {
+      if (screen !== "qread") { clearInterval(qTick); return; }
+      if (document.visibilityState !== "visible") return;
+      const q = qState(), d = todayStr(); q.sec[d] = (q.sec[d] || 0) + 15;
+      const ks = Object.keys(q.sec).sort(); while (ks.length > 60) delete q.sec[ks.shift()];
+      if (qMinToday() >= Q_GOAL_MIN) goalHit("quran");
+      saveState();
+      const g = document.getElementById("qGoal"); if (g) g.textContent = qGoalTxt();
+    }, 15000);
+  }
+
   function render() {
     bonEnsureDefs();
     if (screen === "home") screen = lastRoot || "journey";
-    clearInterval(dashTick);
+    clearInterval(dashTick); clearInterval(qTick); if (qObs) { qObs.disconnect(); qObs = null; }
     if (screen === "dash" || screen === "journey") lastRoot = screen;
     if (screen !== "journey") { const fl = document.getElementById("flyer"); if (fl) fl.remove(); }
     const prevA = a11yBefore(); speakStop();
@@ -6594,12 +6859,17 @@ return exports;})();
     else if (screen === "dash") { app.innerHTML = viewDash(); afterDashRender(); }
     else if (screen === "hub") app.innerHTML = viewHub();
     else if (screen === "fout") app.innerHTML = viewFout();
-    else if (screen === "dua") app.innerHTML = viewDua();
+    else if (screen === "dua") { goalHit("dua"); saveState(); app.innerHTML = viewDua(); }
+    else if (screen === "today") app.innerHTML = viewToday();
+    else if (screen === "prog") app.innerHTML = viewProg();
+    else if (screen === "quran") app.innerHTML = viewQuran();
+    else if (screen === "qread") { app.innerHTML = viewQread(); afterQreadRender(); }
     const bw = document.getElementById("badgesBtnWrap");
     if (bw) bw.style.display = (screen === "board" || screen === "scores") ? "" : "none";
     window.scrollTo({ top: 0 });
     if (screen === "journey") document.body.classList.add("jfull");
     if (screen === "rad" || screen === "bazaar") document.body.classList.add("radfull");
+    if (screen === "dash" || screen === "hub" || screen === "fout" || screen === "dua" || screen === "today" || screen === "prog" || screen === "quran" || screen === "qread") document.body.classList.add("dashfull");
     if (screen === "rad" && rad && rad.phase !== "intro" && rad.phase !== "end") document.body.classList.add("radgame");
     if (screen === "journey") afterJourneyRender();
     duffUi();
@@ -6893,7 +7163,7 @@ return exports;})();
     quiz.answered = true;
     if (quiz.kind === "category" || quiz.kind === "journey" || quiz.kind === "daily" || quiz.kind === "duel") markSeen(quiz.level, it.q.id);
     if (quiz.kind === "duel") { quiz.ms += Date.now() - quiz.qStart; pushDuelProgress(); }
-    else if (quiz.level) foutMark(quiz.level, it.q.id, it.correct);
+    else if (quiz.level) { foutMark(quiz.level, it.q.id, it.correct); goalAns(it.correct); }
     if (it.correct) {
       quiz.score++;
       lastPraise = pick(PRAISE);
@@ -6959,7 +7229,7 @@ return exports;})();
         landDone: first && jLandStats(lv, cid).done,
         prevStars: prev ? prev.stars || 0 : 0,
       };
-      if (!passed) { loseLife(); jr.lifeLost = true; jr.livesLeft = livesNow(); }
+      if (!passed) { loseLife(); jr.lifeLost = true; jr.livesLeft = livesNow(); } else goalHit("level");
       jr.starChest = starChestCheck(lv, cid);
       { const LS = landsFor(lv), li = LS.findIndex(function (x) { return x.id === cid; }); landFly = jr.landDone && passed && li + 1 < LS.length ? { from: li, to: li + 1 } : null; }
       if (bonOn(lv) && stars === 3 && jr.prevStars < 3) { const bs = bonStats(lv, cid); jr.newBon = { kind: bonKind(lv, cid, ji).id, name: bonKind(lv, cid, ji).name, slot: ji + 1, have: bs.have, n: bs.n, full: bs.have >= bs.n, gold: ji >= BON_KINDS.length }; }
@@ -11134,6 +11404,13 @@ return exports;})();
       case "hub": play("click"); screen = "hub"; render(); break;
       case "fout": play("click"); screen = "fout"; render(); break;
       case "dua": play("click"); screen = "dua"; render(); break;
+      case "today": play("click"); screen = "today"; render(); break;
+      case "quran": play("click"); screen = "quran"; render(); break;
+      case "q-open": { const qs = parseInt(el.dataset.s, 10) || 1, qa = parseInt(el.dataset.a, 10) || 1; qSurah = Math.max(1, Math.min(114, qs)); qJump = qa; if (qa === 1) qState().last = qSurah + ":1"; saveState(); screen = "qread"; render(); if (qa === 1) window.scrollTo({ top: 0 }); break; }
+      case "q-mark": { const qk = el.dataset.k, qm = qState().marks, qi = qm.indexOf(qk); if (qi === -1) { qm.unshift(qk); qm.splice(50); } else qm.splice(qi, 1); saveState(); el.classList.toggle("on", qi === -1); el.setAttribute("aria-label", "Ayah " + qk.split(":")[1] + (qi === -1 ? ", bladwijzer. Tik om te verwijderen" : ". Tik voor een bladwijzer")); announce(qi === -1 ? "Bladwijzer gezet bij " + qk : "Bladwijzer verwijderd"); break; }
+      case "q-size": { S.qSize = Math.max(1, Math.min(5, (S.qSize || 3) + (parseInt(el.dataset.d, 10) || 0))); saveState(); const qt = document.querySelector(".q-text"); if (qt) qt.className = "q-text q-s" + S.qSize; break; }
+      case "prog": play("click"); screen = "prog"; render(); break;
+      case "goal-tog": { const gk = el.dataset.g, gd = goalsDay(); if (gd.done[gk]) delete gd.done[gk]; else { gd.done[gk] = 1; play("correct"); } goalSync(); saveState(); render(); break; }
       case "fout-ok": play("correct"); foutMark(P.mode, el.dataset.id, true); saveState(); render(); break;
       case "dash-city": play("click"); cityDialog(); break;
       case "dash-hijri": play("click"); hijriDialog(); break;
@@ -11458,7 +11735,7 @@ return exports;})();
   function backScreen() {
     if (ROOT_SCREENS.indexOf(screen) !== -1) return false;
     if (screen === "newplayer" && !S.players.length) return false;
-    const btn = app.querySelector('.quiz-top .icon-btn[data-act], .topbar .icon-btn[data-act]');
+    const btn = app.querySelector('.quiz-top .icon-btn[data-act], .topbar .icon-btn[data-act], .hub-back[data-act]');
     if (btn) { btn.click(); return true; }
     if (P && P.mode) { screen = screen === "journey" ? "dash" : (lastRoot || "journey"); render(); return true; }
     return false;

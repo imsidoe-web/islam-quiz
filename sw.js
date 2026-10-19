@@ -1,6 +1,7 @@
 /* Islam Quiz – service worker (netwerk eerst, cache als terugval)
    Verhoog CACHE_VERSION bij elke release. Zo zien bezoekers altijd meteen de nieuwste versie. */
-const CACHE_VERSION = "islam-quiz-v86";
+const CACHE_VERSION = "islam-quiz-v88";
+const QURAN_CACHE = "iq-quran-1";   // Koran-tekst en -lettertype: blijven bewaard tussen versies (offline lezen)
 const PRECACHE = [];
 
 self.addEventListener("install", (event) => {
@@ -16,7 +17,7 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
-    await Promise.all(keys.filter((k) => k !== CACHE_VERSION).map((k) => caches.delete(k)));
+    await Promise.all(keys.filter((k) => k !== CACHE_VERSION && k !== QURAN_CACHE).map((k) => caches.delete(k)));
     await self.clients.claim();
   })());
 });
@@ -43,6 +44,17 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;                 // Firebase, lettertypen enz. rechtstreeks
   if (req.headers.has("range")) return;
+
+  if (url.pathname.indexOf("/quran/") !== -1) {                     // Koran: eerst uit de eigen cache, anders ophalen en bewaren
+    event.respondWith((async () => {
+      const cache = await caches.open(QURAN_CACHE);
+      const hit = await cache.match(req, { ignoreSearch: true });
+      if (hit) return hit;
+      try { const res = await fetch(req); if (res.ok) cache.put(req, res.clone()); return res; }
+      catch (e) { return new Response("Geen verbinding.", { status: 503, headers: { "Content-Type": "text/plain; charset=utf-8" } }); }
+    })());
+    return;
+  }
 
   event.respondWith((async () => {
     try {
