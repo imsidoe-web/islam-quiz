@@ -12180,7 +12180,7 @@ return exports;})();
   if (P && P.mode === "expert" && !P.age14 && screen !== "login" && screen !== "authwait") chooseMode("expert", function () { render(); });
   sbInit();
   initBackGuard();
-  startSplash(function () { if (screen === "login") accountDialog(); });
+  startSplash(function () {});   /* v91b: eerst het welkomstscherm met logo en salaam; het inlogvenster opent pas na een tik op "Account & Inloggen" */
 })();
 </script>
 <script>
