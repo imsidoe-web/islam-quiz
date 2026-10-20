@@ -2222,6 +2222,57 @@ body.kosmos .rad-inv-ban { background: rgba(8,12,40,.95); border-color: #3fe6d0;
 .q-card:has(.hint-btn) .imp-tag { margin-right: 52px; }
 .hint-btn { width: 40px !important; height: 40px !important; top: 12px !important; right: 10px !important; }
 
+
+/* ── v91c: Testlab (organisatiekamers) ── */
+.hub-tile.lab-tile { grid-column: 1 / -1; border: 2px dashed #7ee8c8; background: #133a2b; min-height: 0; }
+.lab-h { margin: 8px 0 0; font-size: 1.05rem; font-weight: 900; color: #ffd54f; }
+.lab-l { display: block; margin: 10px 0 4px; font-weight: 800; font-size: .9rem; } .lab-l small { font-weight: 600; opacity: .8; }
+.lab-join { background: #133a2b; border: 2px solid #2d6a4f; border-radius: 18px; padding: 12px 14px; }
+.lab-join .lab-l { margin-top: 0; color: #f4efe2; }
+.lab-jrow { display: flex; gap: 8px; } .lab-jrow input { flex: 1; min-width: 0; text-transform: uppercase; } .lab-jrow .btn { flex: none; width: auto; }
+.lab-err { margin: 6px 0 0; color: #ffb4a8; font-weight: 700; font-size: .85rem; min-height: 0; } .lab-err:empty { display: none; }
+.lab-room { appearance: none; font: inherit; cursor: pointer; text-align: left; display: flex; flex-direction: column; gap: 2px; padding: 14px 16px; border-radius: 18px; background: #1b4332; border: 2px solid var(--rc, #2d6a4f); border-left-width: 8px; color: #f4efe2; }
+.lab-room b { font-size: 1.05rem; font-weight: 900; } .lab-room small { color: #b9d6c6; font-weight: 700; }
+.lab-badge { align-self: flex-start; font-size: .7rem; font-weight: 900; letter-spacing: .04em; text-transform: uppercase; color: #0f2e22; background: #ffd54f; border-radius: 99px; padding: 2px 8px; }
+.lab-roles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: #133a2b; border-radius: 16px; padding: 4px; }
+.lab-roles button { appearance: none; font: inherit; font-weight: 900; border: 0; border-radius: 12px; padding: 10px; min-height: 44px; background: transparent; color: #cfe8d8; cursor: pointer; }
+.lab-roles button.on { background: #ffd54f; color: #2a1d08; }
+.lab-banner { border-radius: 20px; padding: 18px; background: var(--rc, #2d6a4f); color: #fff; display: flex; flex-direction: column; gap: 2px; box-shadow: inset 0 -4px 0 rgba(0,0,0,.2); }
+.lab-banner small { font-weight: 900; letter-spacing: .05em; text-transform: uppercase; opacity: .85; font-size: .75rem; } .lab-banner b { font-size: 1.3rem; font-weight: 900; }
+.lab-x { margin: 0; line-height: 1.55; white-space: pre-line; }
+.lab-best { text-align: center; }
+.lab-share { text-align: center; background: #fff8e6; color: #2a1d08; border: 3px solid #f2c94c; border-radius: 18px; padding: 14px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.lab-share small { font-weight: 800; color: #6b5a3a; } .lab-share b { font-size: 1.6rem; font-weight: 900; letter-spacing: .06em; } .lab-share .btn { width: auto; margin-top: 4px; }
+.lab-item { display: flex; align-items: center; gap: 10px; background: #1b4332; border: 2px solid #2d6a4f; border-radius: 14px; padding: 10px 12px; }
+.lab-item span { flex: 1; min-width: 0; font-weight: 700; } .lab-item small { display: block; color: #9fc4b0; font-weight: 700; font-size: .78rem; }
+.lab-del { appearance: none; border: 0; cursor: pointer; width: 44px; height: 44px; flex: none; border-radius: 12px; background: #3a1f24; color: #ffb4a8; display: grid; place-items: center; }
+.lab-prog { margin: 0; text-align: center; color: #9fc4b0; font-weight: 800; }
+.lab-q { background: #1b4332; border: 2px solid #2d6a4f; border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.lab-q h2 { margin: 0; font-size: 1.2rem; font-weight: 900; color: #fff; }
+.lab-opts { display: flex; flex-direction: column; gap: 8px; }
+.lab-ans { appearance: none; font: inherit; font-weight: 800; text-align: left; cursor: pointer; padding: 14px; min-height: 48px; border-radius: 14px; border: 2px solid #4f8f70; background: #133a2b; color: #f4efe2; }
+.lab-ans.ok { background: #2e7d4f; border-color: #8ff0b4; color: #fff; } .lab-ans.bad { background: #6b2a2a; border-color: #ffb4a8; color: #fff; } .lab-ans:disabled { cursor: default; }
+.lab-fb { margin: 0; line-height: 1.5; color: #f4efe2; }
+.lab-end { text-align: center; padding: 18px; background: #1b4332; border-radius: 20px; border: 2px solid #ffd54f; } .lab-end b { font-size: 2rem; font-weight: 900; color: #ffd54f; } .lab-end p { margin: 6px 0 0; }
+.lab-form { display: flex; flex-direction: column; text-align: left; max-height: 60vh; overflow-y: auto; }
+.lab-form .quiz-input { width: 100%; }
+.lab-ta { resize: vertical; min-height: 80px; font: inherit; }
+.lab-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.lab-chip input, .lab-col input, .lab-ok input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.lab-chip, .lab-col, .lab-ok { position: relative; }
+.lab-dlg .lab-l { color: #1b4332; } .lab-dlg .lab-l small { color: #4a5a50; }
+.lab-form .quiz-input { padding: 10px 12px; border-radius: 12px; border: 2px solid #c9d8cf; font-size: 16px; background: #fff; color: #1f2a24; }
+.lab-form .quiz-input:focus { outline: 3px solid #ffb703; outline-offset: 1px; }
+.lab-chip span { display: inline-block; padding: 8px 12px; border-radius: 99px; border: 2px solid #c9d8cf; font-weight: 800; font-size: .85rem; cursor: pointer; color: #1b4332; background: #fff; }
+.lab-chip input:checked + span { background: #2d6a4f; border-color: #2d6a4f; color: #fff; }
+.lab-chip input:focus-visible + span, .lab-col input:focus-visible + span, .lab-ok input:focus-visible + span { outline: 3px solid #ffb703; outline-offset: 2px; }
+.lab-cols { display: flex; gap: 10px; }
+.lab-col span { display: block; width: 40px; height: 40px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 0 0 2px #c9d8cf; cursor: pointer; }
+.lab-col input:checked + span { box-shadow: 0 0 0 3px #ffb703; }
+.lab-opt { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; } .lab-opt .quiz-input { flex: 1; min-width: 0; }
+.lab-ok span { display: inline-block; padding: 6px 8px; border-radius: 10px; border: 2px solid #c9d8cf; font-size: .75rem; font-weight: 900; cursor: pointer; color: #6b7a70; }
+.lab-ok input:checked + span { background: #2e7d4f; border-color: #2e7d4f; color: #fff; }
+.lab-dlg .row { margin-top: 12px; }
 /* ── v91: NurSpark-merk ── */
 .wm-title { margin: 6px 0 2px; line-height: 1; }
 .wm-title .brand-wm { display: block; height: 2.6rem; width: auto; max-width: 92%; margin: 0 auto; }
@@ -6507,6 +6558,7 @@ return exports;})();
       row('id="optAuto"' + (autoOn() ? " checked" : ""), "Automatisch doorgaan", "Na een level vanzelf verder") +
       row('id="optLvMenu"' + (S.lvmenu !== false ? " checked" : ""), "Levelmenu met beloningen", "Toont vooraf wat je kunt winnen (Gevorderd en Ervaren)") +
       row('id="optJummah"' + (S.jummah !== false ? " checked" : ""), "Jummah-cadeau op vrijdag", "Een groet met cadeau en herinnering, elke vrijdag") +
+      row('id="optLab"' + (labState().on ? " checked" : ""), "Testlab (in ontwikkeling)", "Organisatiekamers in Bayt al-‘Ilm uitproberen: school, docent, imam of uitgeverij. Alleen op dit toestel.") +
       (pushSupported() ? row('id="optRemind"' + (S.remind ? " checked" : ""), "Dagelijkse herinnering", "Melding om " + REMIND_HOUR + ":00 als je reeks in gevaar is") + '<p class="set-info" id="remindMsg" role="status" hidden></p>' : "") +
       '<p class="set-info">ⓘ Gebruik je een schermlezer (VoiceOver of TalkBack)? Zet “Spreek vragen uit” dan uit.</p>' +
       '<p class="set-h">Account &amp; Synchronisatie</p>' +
@@ -6528,6 +6580,7 @@ return exports;})();
       if (e.target.id === "optAuto") S.autoNext = e.target.checked;
       if (e.target.id === "optLvMenu") S.lvmenu = e.target.checked;
       if (e.target.id === "optJummah") S.jummah = e.target.checked;
+      if (e.target.id === "optLab") labState().on = e.target.checked;
       if (e.target.id === "optRemind") {
         const box = e.target, msg = document.getElementById("remindMsg");
         if (box.checked) { remindEnable().then(function (r) { if (!r.ok) box.checked = false; if (msg) { msg.textContent = r.msg; msg.hidden = false; } }); }
@@ -6536,7 +6589,7 @@ return exports;})();
       if (e.target.id === "optDuff") { S.duff = e.target.checked; if (S.duff) duffMuted = false; duffSync(); }
       saveState();
     });
-    w.addEventListener("click", function (e) { if (e.target === w || e.target.closest("[data-d]")) { w.remove(); if (screen === "journey") render(); } });
+    w.addEventListener("click", function (e) { if (e.target === w || e.target.closest("[data-d]")) { w.remove(); if (screen === "journey" || screen === "hub") render(); } });
     document.body.appendChild(w);
   }
 
@@ -6785,10 +6838,195 @@ return exports;})();
     return hubTop("Bayt al-‘Ilm", "dash", "بيت العلم", "Huis van Kennis · rustig leren, zonder punten en zonder tijd") + '<section class="hub">' +
       '<button class="q-cont" data-act="quran"><small>AL-QUR’AN · INDOPAK</small><b>' + (ql ? "Verder lezen: " + Q_TR[ql[0] - 1] + " " + ql.join(":") : "De volledige Koran lezen") + '</b><span lang="ar" dir="rtl">القرآن الكريم</span></button>' +
       '<button class="hub-fout" data-act="fout">' + hIc("fout", "#ffb703") + '<span><b>Mijn foutjes</b><small>' + (nf ? nf + " vraag" + (nf === 1 ? "" : "en") + " om te herhalen (" + modeName(P.mode) + ")" : "Nog niets: vragen die je fout hebt komen hier") + "</small></span>" + (nf ? '<em>' + nf + "</em>" : "") + "</button>" +
+      (labState().on ? '<button class="hub-tile lab-tile" data-act="lab">' + hIc("les", "#7ee8c8") + "<b>Testlab · Organisatiekamers</b><small>School, docent, imam of uitgeverij: maak een kamer en probeer het uit</small></button>" : "") +
       '<div class="hub-grid">' + soon("les", "Lessen per land", "Korte kaartjes vóór de levels") +
       '<button class="hub-tile" data-act="dua">' + hIc("dua") + "<b>Du’a-boekje</b><small>Leren en uit je hoofd</small></button>" +
       soon("stap", "Stap voor stap", "Wudhu, Salah, Hadj") + soon("woord", "Woordenboek", "Van Adhaan tot Zakat") + "</div>" +
       '<div class="hub-hadith"><small>HADITH VAN DE WEEK</small><p>‘De besten onder jullie zijn degenen met het mooiste karakter.’</p><span>Bukhari 3559 · eigen vertaling</span></div></section>';
+  }
+
+  /* ───────────── v91c: Testlab – organisatiekamers (alleen op dit toestel) ─────────────
+     Een kamer = een school, docent, imam of uitgeverij met eigen lessen en quizvragen.
+     Docent maakt de kamer en de inhoud; leerling opent de kamer met een code en speelt de quiz.
+     Alles staat in S.lab (localStorage). Later gaat dit naar de database. */
+  const LAB_ORGS = { school: "School", docent: "Docent / leraar", imam: "Imam / moskee", uitgever: "Uitgeverij" };
+  const LAB_COLORS = ["#2d6a4f", "#2f5d8a", "#7a2f3a", "#b07a1e"];
+  let labQ = null;
+  function labState() {
+    if (!S.lab || typeof S.lab !== "object") S.lab = { on: false, rooms: [] };
+    if (!Array.isArray(S.lab.rooms)) S.lab.rooms = [];
+    return S.lab;
+  }
+  function labRoom(code) { return labState().rooms.find(function (r) { return r.code === code; }) || null; }
+  function labUid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+  function labCode(name) {
+    const base = (String(name || "").normalize("NFD").replace(/[^A-Za-z0-9]/g, "").toUpperCase().slice(0, 4) || "KAMER");
+    let code;
+    do { code = base + "-" + (1000 + Math.floor(Math.random() * 9000)); } while (labRoom(code));
+    return code;
+  }
+  function labSeed() {
+    const L = labState();
+    if (L.seeded) return;
+    L.seeded = true;
+    L.rooms.push({
+      code: "DEMO-1234", name: "Demo · Godsdienstles", org: "docent", color: LAB_COLORS[0], best: 0,
+      lessons: [{ id: labUid(), t: "De vijf zuilen van de Islam", x: "De Islam is gebouwd op vijf zuilen: de shahada (de geloofsgetuigenis), de Salah (het gebed), de zakat (de verplichte armenbijdrage), het vasten in de maand Ramadan en de hadj (de bedevaart naar Mekka) voor wie daartoe in staat is." }],
+      qs: [
+        { id: labUid(), q: "Op hoeveel zuilen is de Islam gebouwd?", o: ["Drie", "Vier", "Vijf", "Zes"], a: 2, e: "De Islam is gebouwd op vijf zuilen." },
+        { id: labUid(), q: "Wat is de zakat?", o: ["Het verplichte gebed", "De verplichte armenbijdrage", "De bedevaart naar Mekka", "Het vasten in Ramadan"], a: 1, e: "Zakat is de verplichte bijdrage voor mensen die het nodig hebben." },
+        { id: labUid(), q: "Hoe vaak per dag is de Salah verplicht?", o: ["Drie keer", "Vier keer", "Vijf keer", "Zeven keer"], a: 2, e: "De Salah is vijf keer per dag verplicht." }
+      ]
+    });
+    saveState();
+  }
+  function labForm(title, body, onSave) {
+    const w = document.createElement("div");
+    w.className = "dialog-wrap";
+    w.innerHTML = '<div class="dialog lab-dlg" role="dialog" aria-modal="true"><h3>' + esc(title) + '</h3><div class="lab-form">' + body +
+      '<p class="lab-err" role="alert"></p></div><div class="row"><button class="btn ghost" data-d="x">Annuleren</button><button class="btn gold" data-d="save">Opslaan</button></div></div>';
+    w.addEventListener("click", function (e) {
+      const d = e.target.closest("[data-d]");
+      if (!d && e.target !== w) return;
+      if (d && d.dataset.d === "save") {
+        const err = onSave(w);
+        if (err) { const p = w.querySelector(".lab-err"); if (p) p.textContent = err; return; }
+        w.remove(); saveState(); render(); return;
+      }
+      w.remove();
+    });
+    document.body.appendChild(w);
+    const f = w.querySelector("input, textarea"); if (f) f.focus();
+  }
+  const labVal = function (w, id) { const el = w.querySelector("#" + id); return el ? String(el.value || "").trim() : ""; };
+  function labNewRoom() {
+    let orgs = "", cols = "";
+    Object.keys(LAB_ORGS).forEach(function (k, i) { orgs += '<label class="lab-chip"><input type="radio" name="lfOrg" value="' + k + '"' + (i === 0 ? " checked" : "") + "><span>" + LAB_ORGS[k] + "</span></label>"; });
+    LAB_COLORS.forEach(function (c, i) { cols += '<label class="lab-col"><input type="radio" name="lfCol" value="' + c + '"' + (i === 0 ? " checked" : "") + ' aria-label="Kleur ' + (i + 1) + '"><span style="background:' + c + '"></span></label>'; });
+    labForm("Nieuwe kamer",
+      '<label class="lab-l" for="lfName">Naam van de kamer</label><input id="lfName" class="quiz-input" maxlength="40" placeholder="Bijv. AIDA College – klas 2">' +
+      '<p class="lab-l">Soort organisatie</p><div class="lab-chips">' + orgs + "</div>" +
+      '<p class="lab-l">Kleur</p><div class="lab-cols">' + cols + "</div>",
+      function (w) {
+        const name = labVal(w, "lfName");
+        if (!name) return "Geef de kamer een naam.";
+        const org = (w.querySelector('input[name="lfOrg"]:checked') || {}).value || "school";
+        const color = (w.querySelector('input[name="lfCol"]:checked') || {}).value || LAB_COLORS[0];
+        const room = { code: labCode(name), name: name, org: org, color: color, best: 0, lessons: [], qs: [] };
+        labState().rooms.push(room); labState().cur = room.code; labState().role = "doc";
+        screen = "labroom"; return "";
+      });
+  }
+  function labAddLesson(room) {
+    labForm("Les toevoegen",
+      '<label class="lab-l" for="lfT">Titel</label><input id="lfT" class="quiz-input" maxlength="60" placeholder="Bijv. De voorwaarden van de Salah">' +
+      '<label class="lab-l" for="lfX">Tekst van de les</label><textarea id="lfX" class="quiz-input lab-ta" maxlength="1500" rows="6" placeholder="Schrijf hier de uitleg…"></textarea>',
+      function (w) {
+        const t = labVal(w, "lfT"), x = labVal(w, "lfX");
+        if (!t || !x) return "Vul een titel en de tekst in.";
+        room.lessons.push({ id: labUid(), t: t, x: x }); return "";
+      });
+  }
+  function labAddQuestion(room) {
+    let opts = "";
+    for (let i = 0; i < 4; i++) opts += '<div class="lab-opt"><label class="lab-ok"><input type="radio" name="qfA" value="' + i + '"' + (i === 0 ? " checked" : "") + ' aria-label="Antwoord ' + (i + 1) + ' is goed"><span>goed</span></label><input id="qfO' + i + '" class="quiz-input" maxlength="80" placeholder="Antwoord ' + (i + 1) + '"></div>';
+    labForm("Vraag toevoegen",
+      '<label class="lab-l" for="qfQ">Vraag</label><input id="qfQ" class="quiz-input" maxlength="140" placeholder="Bijv. Hoeveel rak’aat heeft het Fajr-gebed?">' +
+      '<p class="lab-l">Antwoorden <small>(kies welke goed is)</small></p>' + opts +
+      '<label class="lab-l" for="qfE">Uitleg na het antwoord <small>(mag leeg)</small></label><textarea id="qfE" class="quiz-input lab-ta" maxlength="500" rows="3"></textarea>',
+      function (w) {
+        const q = labVal(w, "qfQ"), o = [0, 1, 2, 3].map(function (i) { return labVal(w, "qfO" + i); });
+        if (!q) return "Vul de vraag in.";
+        if (o.some(function (x) { return !x; })) return "Vul alle vier de antwoorden in.";
+        const a = parseInt((w.querySelector('input[name="qfA"]:checked') || {}).value || "0", 10);
+        room.qs.push({ id: labUid(), q: q, o: o, a: a, e: labVal(w, "qfE") }); return "";
+      });
+  }
+  function viewLab() {
+    labSeed();
+    const L = labState();
+    let h = hubTop("Testlab", "hub", "", "Organisatiekamers uitproberen · alleen op dit toestel") + '<section class="hub">';
+    h += '<p class="hub-intro">Maak een kamer zoals een school, docent, imam of uitgeverij die zou doen. Voeg lessen en vragen toe als <b>docent</b>, en speel ze daarna als <b>leerling</b>.</p>';
+    h += '<button class="btn gold block" data-act="lab-new">＋ Nieuwe kamer maken</button>';
+    h += '<div class="lab-join"><label class="lab-l" for="labCodeIn">Kamer openen met code</label><div class="lab-jrow"><input id="labCodeIn" class="quiz-input" maxlength="12" placeholder="Bijv. DEMO-1234" autocapitalize="characters"><button class="btn" data-act="lab-join">Open</button></div><p class="lab-err" id="labJoinMsg" role="alert"></p></div>';
+    h += '<h2 class="lab-h">Kamers op dit toestel</h2>';
+    L.rooms.forEach(function (r) {
+      h += '<button class="lab-room" data-act="lab-open" data-code="' + esc(r.code) + '" style="--rc:' + esc(r.color) + '"><span class="lab-badge">' + esc(LAB_ORGS[r.org] || "") + '</span><b>' + esc(r.name) + '</b><small>Code ' + esc(r.code) + " · " + r.lessons.length + (r.lessons.length === 1 ? " les" : " lessen") + " · " + r.qs.length + (r.qs.length === 1 ? " vraag" : " vragen") + "</small></button>";
+    });
+    return h + "</section>";
+  }
+  function viewLabRoom() {
+    const L = labState(), r = labRoom(L.cur);
+    if (!r) { screen = "lab"; return viewLab(); }
+    const doc = L.role === "doc";
+    let h = hubTop(esc(r.name), "lab", "", esc(LAB_ORGS[r.org] || "") + " · code " + esc(r.code)) + '<section class="hub">';
+    h += '<div class="lab-roles" role="group" aria-label="Bekijk als"><button class="' + (doc ? "" : "on") + '" data-act="lab-role" data-r="lln" aria-pressed="' + !doc + '">Leerling</button><button class="' + (doc ? "on" : "") + '" data-act="lab-role" data-r="doc" aria-pressed="' + doc + '">Docent</button></div>';
+    if (!doc) {
+      h += '<div class="lab-banner" style="--rc:' + esc(r.color) + '"><small>' + esc(LAB_ORGS[r.org] || "") + "</small><b>" + esc(r.name) + "</b></div>";
+      if (!r.lessons.length && !r.qs.length) h += '<p class="hub-intro">Deze kamer is nog leeg. Kies <b>Docent</b> om lessen en vragen toe te voegen.</p>';
+      if (r.lessons.length) h += '<h2 class="lab-h">Lessen</h2>';
+      r.lessons.forEach(function (l) { h += '<details class="fout lab-les"><summary>' + esc(l.t) + '</summary><p class="lab-x">' + esc(l.x) + "</p></details>"; });
+      if (r.qs.length) h += '<button class="btn gold block" data-act="lab-quiz">Start de quiz (' + r.qs.length + (r.qs.length === 1 ? " vraag" : " vragen") + ")</button>" + (r.best ? '<p class="hub-intro lab-best">Beste score: ' + r.best + " van " + r.qs.length + "</p>" : "");
+    } else {
+      h += '<div class="lab-share"><small>Geef leerlingen deze code</small><b>' + esc(r.code) + '</b><button class="btn ghost small" data-act="lab-copy">Kopieer code</button></div>';
+      h += '<h2 class="lab-h">Lessen (' + r.lessons.length + ")</h2>";
+      r.lessons.forEach(function (l, i) { h += '<div class="lab-item"><span>' + esc(l.t) + '</span><button class="lab-del" data-act="lab-del" data-k="l" data-i="' + i + '" aria-label="Les ' + esc(l.t) + ' verwijderen">' + icon("trash", 16) + "</button></div>"; });
+      h += '<button class="btn ghost block" data-act="lab-add-les">＋ Les toevoegen</button>';
+      h += '<h2 class="lab-h">Quizvragen (' + r.qs.length + ")</h2>";
+      r.qs.forEach(function (q, i) { h += '<div class="lab-item"><span>' + esc(q.q) + "<small>✓ " + esc(q.o[q.a]) + '</small></span><button class="lab-del" data-act="lab-del" data-k="q" data-i="' + i + '" aria-label="Vraag verwijderen">' + icon("trash", 16) + "</button></div>"; });
+      h += '<button class="btn ghost block" data-act="lab-add-q">＋ Vraag toevoegen</button>';
+      h += '<button class="set-danger" data-act="lab-del-room">' + icon("trash", 16) + "Kamer verwijderen</button>";
+    }
+    return h + "</section>";
+  }
+  function viewLabQuiz() {
+    const r = labQ && labRoom(labQ.code);
+    if (!r) { screen = "labroom"; return viewLabRoom(); }
+    let h = hubTop(esc(r.name), "labroom", "", "Quiz") + '<section class="hub">';
+    if (labQ.i >= r.qs.length) {
+      const n = r.qs.length, sc = labQ.score;
+      if (sc > (r.best || 0)) { r.best = sc; saveState(); }
+      return h + '<div class="lab-end"><b>' + sc + " van " + n + "</b><p>" + (sc === n ? "Alles goed, Masha’Allah!" : sc >= n / 2 ? "Goed gedaan! Probeer het nog eens voor alles goed." : "Lees de lessen nog eens en probeer het opnieuw.") + '</p></div><button class="btn gold block" data-act="lab-quiz">Opnieuw</button><button class="btn ghost block" data-act="lab-back">Terug naar de kamer</button></section>';
+    }
+    const q = r.qs[labQ.i], done = labQ.picked !== null;
+    h += '<p class="lab-prog">Vraag ' + (labQ.i + 1) + " van " + r.qs.length + '</p><div class="lab-q"><h2>' + esc(q.q) + '</h2><div class="lab-opts">';
+    q.o.forEach(function (o, i) {
+      const cls = !done ? "" : i === q.a ? " ok" : i === labQ.picked ? " bad" : "";
+      h += '<button class="lab-ans' + cls + '" data-act="lab-ans" data-i="' + i + '"' + (done ? " disabled" : "") + ">" + esc(o) + "</button>";
+    });
+    h += "</div>";
+    if (done) h += '<p class="lab-fb" role="status"><b>' + (labQ.picked === q.a ? "Goed!" : "Helaas.") + "</b> " + (q.e ? esc(q.e) : "Het goede antwoord is: " + esc(q.o[q.a])) + '</p><button class="btn gold block" data-act="lab-next">' + (labQ.i + 1 < r.qs.length ? "Volgende" : "Uitslag") + "</button>";
+    return h + "</div></section>";
+  }
+  function labAction(act, el) {
+    const L = labState(), r = labRoom(L.cur);
+    switch (act) {
+      case "lab": play("click"); screen = "lab"; render(); return true;
+      case "lab-new": play("click"); labNewRoom(); return true;
+      case "lab-open": play("click"); L.cur = el.dataset.code; L.role = "lln"; saveState(); screen = "labroom"; render(); return true;
+      case "lab-join": {
+        const inp = document.getElementById("labCodeIn"), code = inp ? inp.value.trim().toUpperCase() : "", msg = document.getElementById("labJoinMsg");
+        if (labRoom(code)) { play("click"); L.cur = code; L.role = "lln"; saveState(); screen = "labroom"; render(); }
+        else if (msg) msg.textContent = code ? "Kamer niet gevonden. In deze testversie werken alleen kamers die op dit toestel zijn gemaakt." : "Vul eerst een code in.";
+        return true;
+      }
+      case "lab-role": play("click"); L.role = el.dataset.r === "doc" ? "doc" : "lln"; saveState(); render(); return true;
+      case "lab-add-les": if (r) { play("click"); labAddLesson(r); } return true;
+      case "lab-add-q": if (r) { play("click"); labAddQuestion(r); } return true;
+      case "lab-del": if (r) { const arr = el.dataset.k === "l" ? r.lessons : r.qs; arr.splice(parseInt(el.dataset.i, 10), 1); if (el.dataset.k === "q") r.best = 0; saveState(); render(); } return true;
+      case "lab-del-room": if (r) confirmDialog("Kamer verwijderen?", "‘" + r.name + "’ met alle lessen en vragen wordt van dit toestel verwijderd.", "Verwijderen", function () { L.rooms = L.rooms.filter(function (x) { return x !== r; }); L.cur = null; saveState(); screen = "lab"; render(); }); return true;
+      case "lab-copy": if (r) { try { navigator.clipboard.writeText(r.code); announce("Code gekopieerd"); el.textContent = "Gekopieerd ✓"; } catch (e) {} } return true;
+      case "lab-quiz": if (r && r.qs.length) { play("click"); labQ = { code: r.code, i: 0, score: 0, picked: null }; screen = "labquiz"; render(); } return true;
+      case "lab-ans": {
+        const rr = labQ && labRoom(labQ.code); if (!rr || labQ.picked !== null) return true;
+        labQ.picked = parseInt(el.dataset.i, 10);
+        const good = labQ.picked === rr.qs[labQ.i].a; if (good) labQ.score++;
+        play(good ? "correct" : "wrong"); render(); return true;
+      }
+      case "lab-next": play("click"); labQ.i++; labQ.picked = null; render(); return true;
+      case "lab-back": play("click"); screen = "labroom"; render(); return true;
+    }
+    return false;
   }
   function viewFout() {
     const ids = foutList().slice().reverse();
@@ -7141,6 +7379,9 @@ return exports;})();
     else if (screen === "bazaar") app.innerHTML = viewBazaar();
     else if (screen === "dash") { app.innerHTML = viewDash(); afterDashRender(); }
     else if (screen === "hub") app.innerHTML = viewHub();
+    else if (screen === "lab") app.innerHTML = viewLab();
+    else if (screen === "labroom") app.innerHTML = viewLabRoom();
+    else if (screen === "labquiz") app.innerHTML = viewLabQuiz();
     else if (screen === "fout") app.innerHTML = viewFout();
     else if (screen === "dua") { goalHit("dua"); saveState(); app.innerHTML = viewDua(); }
     else if (screen === "today") app.innerHTML = viewToday();
@@ -7152,7 +7393,7 @@ return exports;})();
     window.scrollTo({ top: 0 });
     if (screen === "journey") document.body.classList.add("jfull");
     if (screen === "rad" || screen === "bazaar") document.body.classList.add("radfull");
-    if (screen === "dash" || screen === "hub" || screen === "fout" || screen === "dua" || screen === "today" || screen === "prog" || screen === "quran" || screen === "qread") document.body.classList.add("dashfull");
+    if (screen === "dash" || screen === "hub" || screen === "lab" || screen === "labroom" || screen === "labquiz" || screen === "fout" || screen === "dua" || screen === "today" || screen === "prog" || screen === "quran" || screen === "qread") document.body.classList.add("dashfull");
     if (screen === "rad" && rad && rad.phase !== "intro" && rad.phase !== "end") document.body.classList.add("radgame");
     if (kosmosOn() && KOS_SCREENS.indexOf(screen) !== -1) document.body.classList.add("kosmos");
     if (screen === "journey") afterJourneyRender();
@@ -11795,6 +12036,7 @@ return exports;})();
       case "home": play("click"); stopTimer(); landFly = null; journeyReturn = false; screen = lastRoot || "journey"; render(); break;
       case "dash": play("click"); stopTimer(); landFly = null; journeyReturn = false; screen = "dash"; render(); break;
       case "hub": play("click"); screen = "hub"; render(); break;
+      case "lab": case "lab-new": case "lab-open": case "lab-join": case "lab-role": case "lab-add-les": case "lab-add-q": case "lab-del": case "lab-del-room": case "lab-copy": case "lab-quiz": case "lab-ans": case "lab-next": case "lab-back": labAction(act, el); break;
       case "fout": play("click"); screen = "fout"; render(); break;
       case "dua": play("click"); screen = "dua"; render(); break;
       case "today": play("click"); screen = "today"; render(); break;
