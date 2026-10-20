@@ -4,12 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#2D6A4F">
-  <title>NurSpark – Leer en speel</title>
-  <meta name="description" content="Een leuke Islamitische quiz in het Nederlands voor kinderen en volwassenen.">
+  <title>NurSpark – Islamitische quiz-app: leer je Deen spelenderwijs</title>
+  <meta name="description" content="NurSpark is een gratis Islamitische quiz-app in het Nederlands voor kinderen, tieners en volwassenen. Leer spelenderwijs over de profeten, de vijf zuilen, de Koran, de Seerah en meer.">
+  <link rel="canonical" href="https://nurspark.app/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="NurSpark">
   <meta property="og:locale" content="nl_NL">
-  <meta property="og:title" content="NurSpark">
+  <meta property="og:title" content="NurSpark – leer je Deen spelenderwijs">
   <meta property="og:description" content="Leer en speel met plezier! Een Islamitische quiz voor kinderen en volwassenen.">
   <meta property="og:url" content="https://nurspark.app/">
   <meta property="og:image" content="https://nurspark.app/og-image.jpg?v=2">
@@ -17,6 +18,13 @@
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="NurSpark">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"NurSpark","url":"https://nurspark.app/","inLanguage":"nl",
+   "description":"Gratis Islamitische quiz-app in het Nederlands voor kinderen, tieners en volwassenen.",
+   "applicationCategory":"EducationalApplication","operatingSystem":"Web, Android, iOS","image":"https://nurspark.app/icon-512.png",
+   "offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},
+   "publisher":{"@type":"Organization","name":"Zeno Innovation"}}
+  </script>
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://nurspark.app/og-image.jpg?v=2">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2273,6 +2281,10 @@ body.kosmos .rad-inv-ban { background: rgba(8,12,40,.95); border-color: #3fe6d0;
 .lab-ok span { display: inline-block; padding: 6px 8px; border-radius: 10px; border: 2px solid #c9d8cf; font-size: .75rem; font-weight: 900; cursor: pointer; color: #6b7a70; }
 .lab-ok input:checked + span { background: #2e7d4f; border-color: #2e7d4f; color: #fff; }
 .lab-dlg .row { margin-top: 12px; }
+/* ── v92: links naar Over en Privacy ── */
+.legal-links { text-align: center; margin: 14px 0 6px; font-size: .85rem; font-weight: 700; }
+.legal-links a { color: inherit; opacity: .85; }
+.legal-links a:focus-visible { outline: 3px solid #ffb703; outline-offset: 2px; }
 /* ── v91: NurSpark-merk ── */
 .wm-title { margin: 6px 0 2px; line-height: 1; }
 .wm-title .brand-wm { display: block; height: 2.6rem; width: auto; max-width: 92%; margin: 0 auto; }
@@ -2381,7 +2393,7 @@ body.kosmos .rad-inv-ban { background: rgba(8,12,40,.95); border-color: #3fe6d0;
   <main id="app" tabindex="-1"></main>
   <div id="liveP" class="sr-only" aria-live="polite" aria-atomic="true"></div>
   <div id="liveA" class="sr-only" aria-live="assertive" aria-atomic="true" role="alert"></div>
-  <noscript>Deze quiz heeft JavaScript nodig. Zet JavaScript aan in je browser.</noscript>
+  <noscript><p>NurSpark is een gratis Islamitische quiz-app in het Nederlands voor kinderen, tieners en volwassenen. De app heeft JavaScript nodig: zet JavaScript aan in je browser.</p><p><a href="/over/">Over NurSpark</a> · <a href="/privacy/">Privacybeleid</a></p></noscript>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     function acceptDisclaimer() {
@@ -5935,7 +5947,7 @@ return exports;})();
       '<div class="logo">' + brandLogo(44) + '</div><h1 class="wm-title"><span class="sr-only">Welkom bij NurSpark</span>' + brandWordmark(false) + "</h1>" + ar("السَّلَامُ عَلَيْكُمْ") +
       '<p class="greet">Log in of speel als gast.</p>' +
       '<div class="stack login-btns"><button class="btn block" data-act="account">' + icon("users", 20) + "Account &amp; Inloggen</button></div>" +
-      '<p class="login-note"><b>Met een account</b> bewaar je je voortgang ook op andere apparaten. Alleen je voornaam of bijnaam, je profielfoto (als je die hebt), je avatar en je score zijn dan zichtbaar voor anderen.<br><b>Als gast</b> speel je ook mee op het wereldwijde klassement. Je voortgang blijft dan op dit apparaat; anderen zien alleen je naam, avatar en score.</p></section>';
+      '<p class="login-note"><b>Met een account</b> bewaar je je voortgang ook op andere apparaten. Alleen je voornaam of bijnaam, je profielfoto (als je die hebt), je avatar en je score zijn dan zichtbaar voor anderen.<br><b>Als gast</b> speel je ook mee op het wereldwijde klassement. Je voortgang blijft dan op dit apparaat; anderen zien alleen je naam, avatar en score.</p>' + legalLinks() + "</section>";
   }
   /* ── Account-pop-up: e-mail, Google, Facebook, gast en uitloggen ── */
   let acctTab = "in", acctBusy = false;
@@ -6569,7 +6581,7 @@ return exports;})();
       '<button class="btn ghost" data-act="bazaar" data-d="x">' + gemSvg(18) + "Bazaar</button>" +
       '<button class="btn ghost" data-act="tour" data-d="x">Uitleg bekijken</button>' + (COLOFON_ON ? '<button class="btn ghost" data-act="colofon" data-d="x">Over de app (colofon)</button>' : "") + (isStandalone() ? "" : '<button class="btn ghost" data-act="install" data-d="x">Zet op beginscherm</button>') + "</div>" +
       '<button class="set-danger" data-act="reset" data-d="x">' + icon("trash", 16) + "Voortgang van " + esc(P.name) + " wissen</button>" +
-      '<button class="btn block" data-d="ok">Klaar</button></div></div>';
+      legalLinks() + '<button class="btn block" data-d="ok">Klaar</button></div></div>';
     w.addEventListener("change", function (e) {
       if (e.target.id === "optSound") { S.sound = e.target.checked; if (!S.sound) voiceStop(); }
       if (e.target.id === "optSpeak") {
@@ -11947,6 +11959,8 @@ return exports;})();
   window.addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); deferredInstall = e; });
   window.addEventListener("appinstalled", function () { deferredInstall = null; if (screen === "journey") render(); });
 
+  /* v92: links naar de vaste pagina's (ook nodig voor Google) */
+  function legalLinks() { return '<p class="legal-links"><a href="/over/">Over NurSpark</a> · <a href="/privacy/">Privacybeleid</a></p>'; }
   /* v91: tik op je avatar op het startscherm → avatar kiezen of instellingen */
   function profileMenu() {
     const w = document.createElement("div");
