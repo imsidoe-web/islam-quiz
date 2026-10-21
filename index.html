@@ -11273,7 +11273,7 @@ return exports;})();
     landsFor(lv).forEach(function (c) {
       const s = jLandStats(lv, c.id);
       levels += s.passed; stars += s.stars;
-      lines += "\n" + (s.done ? "✅" : "▫️") + " " + c.title + ": " + s.passed + "/" + s.n + " levels";
+      lines += "\n" + (s.done ? "✅" : "▫️") + " " + c.title;   /* v91f: zonder aantallen, netjes op een rij */
     });
     return "🌙 Mijn Reis in NurSpark (" + modeName(lv) + "-modus): " + levels + " levels gehaald en " + stars + " ⭐ verzameld!" + lines + "\nKun jij mij inhalen? " + SITE_URL;
   }
