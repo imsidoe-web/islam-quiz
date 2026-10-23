@@ -6571,6 +6571,7 @@ return exports;})();
       row('id="optLvMenu"' + (S.lvmenu !== false ? " checked" : ""), "Levelmenu met beloningen", "Toont vooraf wat je kunt winnen (Gevorderd en Ervaren)") +
       row('id="optJummah"' + (S.jummah !== false ? " checked" : ""), "Jummah-cadeau op vrijdag", "Een groet met cadeau en herinnering, elke vrijdag") +
       row('id="optLab"' + (labState().on ? " checked" : ""), "Testlab (in ontwikkeling)", "Organisatiekamers in Bayt al-‘Ilm uitproberen: school, docent, imam of uitgeverij. Alleen op dit toestel.") +
+      (OLD_HOST ? '<button class="btn gold block" data-act="move-out" style="margin:10px 0">Verhuis naar nurspark.app</button>' : "") +
       (pushSupported() ? row('id="optRemind"' + (S.remind ? " checked" : ""), "Dagelijkse herinnering", "Melding om " + REMIND_HOUR + ":00 als je reeks in gevaar is") + '<p class="set-info" id="remindMsg" role="status" hidden></p>' : "") +
       '<p class="set-info">ⓘ Gebruik je een schermlezer (VoiceOver of TalkBack)? Zet “Spreek vragen uit” dan uit.</p>' +
       '<p class="set-h">Account &amp; Synchronisatie</p>' +
@@ -12095,6 +12096,7 @@ return exports;})();
       case "duff-toggle": duffToggle(); break;
       case "settings": case "a11y": play("click"); settingsDialog(); break;
       case "profile-menu": play("click"); profileMenu(); break;
+      case "move-out": play("click"); moveDialog(); break;
       case "colofon": play("click"); colofonDialog(); break;
       case "bon-box": stopTimer(); if (result) result.noAuto = true; openBonBox(el.dataset.cat); break;
       case "journey-chest": openChest(el.dataset.cat, parseInt(el.dataset.i, 10)); break;
@@ -12436,7 +12438,90 @@ return exports;})();
   if (P && P.mode === "expert" && !P.age14 && screen !== "login" && screen !== "authwait") chooseMode("expert", function () { render(); });
   sbInit();
   initBackGuard();
-  startSplash(function () {});   /* v91b: eerst het welkomstscherm met logo en salaam; het inlogvenster opent pas na een tik op "Account & Inloggen" */
+  /* ───────────── v93: verhuizen van het oude adres (….vercel.app) naar nurspark.app ─────────────
+     Voortgang staat per webadres in de browser. Op het oude adres neemt één tik alles mee via de link (#verhuis=…):
+     alle spelers, instellingen, gastaccounts (scorebord) en de groepssleutel. Op nurspark.app wordt het samengevoegd. */
+  const NEW_HOME = "https://nurspark.app/";
+  const OLD_HOST = /\.vercel\.app$/i.test(location.hostname);
+  function b64u(bytes) { let t = ""; for (let i = 0; i < bytes.length; i += 0x8000) t += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000)); return btoa(t).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""); }
+  function unb64u(t) { t = t.replace(/-/g, "+").replace(/_/g, "/"); while (t.length % 4) t += "="; const r = atob(t), a = new Uint8Array(r.length); for (let i = 0; i < r.length; i++) a[i] = r.charCodeAt(i); return a; }
+  async function gzBytes(str) { const out = new Response(new Blob([new TextEncoder().encode(str)]).stream().pipeThrough(new CompressionStream("gzip"))); return new Uint8Array(await out.arrayBuffer()); }
+  async function gunzipText(bytes) { const out = new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"))); return await out.text(); }
+  async function moveOut() {
+    saveState();
+    const g = {};
+    try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.indexOf(GUEST_PREFIX) === 0) g[k] = localStorage.getItem(k); } } catch (e) {}
+    let auth = null; try { auth = localStorage.getItem(AUTH_KEY); } catch (e) {}
+    const json = JSON.stringify({ v: 1, s: S, auth: auth, g: g });
+    let frag;
+    try { frag = "z" + b64u(await gzBytes(json)); } catch (e) { frag = "j" + b64u(new TextEncoder().encode(json)); }
+    S.movedOut = todayStr(); saveState();
+    location.href = NEW_HOME + "#verhuis=" + frag;
+  }
+  function moveDialog() {
+    const n = S.players.length;
+    confirmDialog("NurSpark heeft een nieuw adres",
+      (S.movedOut ? "Je bent al eerder verhuisd. Je kunt nurspark.app openen of je voortgang nog een keer meenemen. " : "De app woont nu op nurspark.app. ") +
+      "Neem je voortgang in één tik mee: levels, sterren, edelstenen, album en avatars" + (n > 1 ? " van alle " + n + " spelers op dit toestel" : "") +
+      ". Daarna zet je het nieuwe icoon op je beginscherm.", "Verhuizen", moveOut);
+  }
+  function overlayOpen() {
+    if (document.querySelector(".dialog-wrap")) return true;
+    return Array.prototype.some.call(document.querySelectorAll(".modal-overlay, [role=dialog]"), function (el) { return el.offsetParent !== null || getComputedStyle(el).position === "fixed" && getComputedStyle(el).display !== "none" && getComputedStyle(el).visibility !== "hidden"; });
+  }
+  function moveNudge() {
+    if (!OLD_HOST) return;
+    try { if (sessionStorage.getItem("iq-mvask")) return; } catch (e) {}
+    if (overlayOpen() || !document.getElementById("app")) { setTimeout(moveNudge, 2000); return; }
+    try { sessionStorage.setItem("iq-mvask", "1"); } catch (e) {}
+    moveDialog();
+  }
+  async function moveIn() {
+    const m = /[#&]verhuis=([zj])([A-Za-z0-9_-]+)/.exec(location.hash);
+    if (!m) return false;
+    try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
+    try {
+      const bytes = unb64u(m[2]);
+      const d = JSON.parse(m[1] === "z" ? await gunzipText(bytes) : new TextDecoder().decode(bytes));
+      const src = d && d.s && Array.isArray(d.s.players) ? d.s : null;
+      if (!src) throw new Error("leeg");
+      const had = S.players.length;
+      let n = 0;
+      S.moveIn = S.moveIn || {};
+      src.players.map(normalizePlayer).forEach(function (ip) {
+        if (S.moveIn[ip.id]) return;
+        const loc = S.players.find(function (x) { return x.id === ip.id || (ip.sbId && x.sbId === ip.sbId); });
+        if (loc) mergePlayers(loc, ip); else S.players.push(ip);
+        S.moveIn[ip.id] = 1; n++;
+      });
+      if (!had) Object.keys(src).forEach(function (k) { if (["players", "current", "moveIn", "movedOut"].indexOf(k) < 0) S[k] = src[k]; });
+      if (!had || !S.players.some(function (p) { return p.id === S.current; })) S.current = S.players.some(function (p) { return p.id === src.current; }) ? src.current : (S.players[0] ? S.players[0].id : null);
+      try {
+        Object.keys(d.g || {}).forEach(function (k) { if (k.indexOf(GUEST_PREFIX) === 0 && localStorage.getItem(k) == null) localStorage.setItem(k, d.g[k]); });
+        if (d.auth && !localStorage.getItem(AUTH_KEY)) localStorage.setItem(AUTH_KEY, d.auth);
+      } catch (e) {}
+      saveState();
+      try { sessionStorage.setItem("iq-moved", String(n)); } catch (e) {}
+      location.reload();
+    } catch (e) {
+      setTimeout(function () { infoDialog("Verhuizen lukte niet", "<p>Open de app nog een keer via je <b>oude icoon</b> en tik opnieuw op <b>Verhuizen</b>.</p>"); }, 1500);
+    }
+    return true;
+  }
+  function moveWelcome() {
+    let n = null; try { n = sessionStorage.getItem("iq-moved"); sessionStorage.removeItem("iq-moved"); } catch (e) {}
+    if (n === null) return;
+    const go = function () {
+      if (overlayOpen()) { setTimeout(go, 1500); return; }
+      infoDialog("Welkom op nurspark.app",
+        "<p>" + (+n > 0 ? "Je voortgang is verhuisd ✅" : "Je voortgang stond hier al ✅") + "</p>" +
+        "<p><b>Zet nu het nieuwe icoon op je beginscherm:</b> tik in je browser op ⋮ en kies <i>Toevoegen aan startscherm</i> (iPhone: deelknop → <i>Zet op beginscherm</i>). Het oude icoon kun je daarna verwijderen.</p>" +
+        "<p>Was je ingelogd met Google of Facebook? Log dan hier opnieuw in via <b>Account &amp; Inloggen</b>.</p>");
+    };
+    setTimeout(go, 1200);
+  }
+  moveIn();
+  startSplash(function () { if (OLD_HOST) setTimeout(moveNudge, 1500); else moveWelcome(); });   /* v91b: eerst het welkomstscherm met logo en salaam; het inlogvenster opent pas na een tik op "Account & Inloggen" */
 })();
 </script>
 <script>
