@@ -9678,7 +9678,10 @@ return exports;})();
   }
   function radNetErr(e) {
     const st = e && e.status;
-    return st === 401 || st === 403 ? "Online spelen is nog niet ingesteld (Firebase-regels). Speel tegen de computer of probeer het later." : "Geen verbinding. Controleer je internet en probeer het opnieuw.";
+    const tag = " (code " + (st || (e && e.message) || "?") + ")";
+    if (st === 401 || st === 403 || st === 400) return "Online spelen lukt nu niet: de server weigert de verbinding. Speel tegen de computer of probeer het later." + tag;
+    if (st === "timeout") return "De server reageert niet. Controleer je internet en probeer het opnieuw." + tag;
+    return "Geen verbinding. Controleer je internet en probeer het opnieuw." + tag;
   }
   function radNetFail(e) { radNetStop(); radNet = { view: "error", msg: radNetErr(e) }; if (screen === "rad") render(); }
   /* ── 1) iemand zoeken die nu online is ── */
@@ -11692,6 +11695,12 @@ return exports;})();
   function loadAuth() { try { return JSON.parse(localStorage.getItem(AUTH_KEY)); } catch (e) { return null; } }
   function saveAuth(a) { try { localStorage.setItem(AUTH_KEY, JSON.stringify(a)); } catch (e) { /* opslag niet beschikbaar */ } }
 
+  /* v93c: nooit eindeloos wachten op de server */
+  function fetchT(url, opt, ms) {
+    const c = typeof AbortController === "function" ? new AbortController() : null;
+    const t = c ? setTimeout(function () { c.abort(); }, ms || 15000) : null;
+    return fetch(url, Object.assign({}, opt || {}, c ? { signal: c.signal } : {})).then(function (r) { clearTimeout(t); return r; }, function (e) { clearTimeout(t); const x = new Error(e && e.name === "AbortError" ? "timeout" : "net"); x.status = e && e.name === "AbortError" ? "timeout" : "net"; throw x; });
+  }
   function cloudAuth() {
     if (!cloud.auth) cloud.auth = loadAuth();
     const a = cloud.auth;
@@ -11700,7 +11709,7 @@ return exports;})();
     cloud.pending = (async function () {
       try {
         if (a && a.refreshToken) {
-          const r = await fetch(FB.tokenUrl + "?key=" + FB.apiKey, {
+          const r = await fetchT(FB.tokenUrl + "?key=" + FB.apiKey, {
             method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: "grant_type=refresh_token&refresh_token=" + encodeURIComponent(a.refreshToken),
           });
@@ -11710,7 +11719,7 @@ return exports;})();
             saveAuth(cloud.auth); return cloud.auth;
           }
         }
-        const r2 = await fetch(FB.signUpUrl + "?key=" + FB.apiKey, {
+        const r2 = await fetchT(FB.signUpUrl + "?key=" + FB.apiKey, {
           method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ returnSecureToken: true }),
         });
         if (!r2.ok) { const e = new Error("auth"); e.status = r2.status; throw e; }
@@ -11727,7 +11736,7 @@ return exports;})();
     const url = FB.db + "/" + path + ".json?auth=" + encodeURIComponent(auth.idToken) + (query ? "&" + query : "");
     const opt = { method: method };
     if (body !== undefined) { opt.headers = { "Content-Type": "application/json" }; opt.body = JSON.stringify(body); }
-    const r = await fetch(url, opt);
+    const r = await fetchT(url, opt);
     if (!r.ok) { const e = new Error("db " + r.status); e.status = r.status; throw e; }
     return r.json();
   }
