@@ -10190,7 +10190,7 @@ return exports;})();
     if (!P) return;
     if (P.group && radAlCode !== P.group.code) {
       if (radAlSub) radAlSub.close(); radAlCode = P.group.code;
-      radAlSub = listen("rad/grp/" + radAlCode, function (g) {
+      radAlSub = poll("rad/grp/" + radAlCode, function (g) {
         if (!g || !g.room || radAlSeen[g.room]) return;
         if (typeof g.t === "number" && Date.now() - g.t > 30 * 60 * 1000) return;
         cloudAuth().then(function (auth) {
@@ -10203,7 +10203,7 @@ return exports;})();
     cloudAuth().then(function (auth) {
       if (!radLobSub || radLobLv !== P.mode) {
         if (radLobSub) radLobSub.close(); radLobLv = P.mode;
-        radLobSub = listen("rad/lobby/" + radLobLv, function (d) {
+        radLobSub = poll("rad/lobby/" + radLobLv, function (d) {
           if (radNet && radNet.view === "search") return;
           Object.keys(d || {}).forEach(function (u) {
             const x = d[u]; if (!x || u === auth.uid || radBlocked().indexOf(u) !== -1) return;
@@ -10216,7 +10216,7 @@ return exports;})();
       }
       if (radInvSub && radInvUid === auth.uid) return;
       if (radInvSub) radInvSub.close(); radInvUid = auth.uid;
-      radInvSub = listen("rad/inv/" + auth.uid, function (d) {
+      radInvSub = poll("rad/inv/" + auth.uid, function (d) {
         Object.keys(d || {}).forEach(function (u) {
           const x = d[u]; if (!x || !x.room || radAlSeen[x.room] || radBlocked().indexOf(u) !== -1) return;
           if (typeof x.t === "number" && Date.now() - x.t > 10 * 60 * 1000) return;
@@ -10240,7 +10240,7 @@ return exports;})();
     if (!P || !P.group) { hulpClose(); return; }
     if (hulpSub && hulpCode === P.group.code) return;
     hulpClose(); hulpCode = P.group.code;
-    hulpSub = listen("hulp/" + hulpCode, function (d) { hulpData = d || {}; hulpOnData(); });
+    hulpSub = poll("hulp/" + hulpCode, function (d) { hulpData = d || {}; hulpOnData(); }, 10000);
     hulpStatus();
   }
   function hulpClose() { if (hulpSub) { hulpSub.close(); hulpSub = null; } hulpData = null; hulpCode = null; }
@@ -11785,6 +11785,20 @@ return exports;})();
     return { close: function () { closed = true; if (es) es.close(); if (timer) clearTimeout(timer); } };
   }
 
+  /* v93d: achtergrond-meldingen via korte verzoeken i.p.v. open verbindingen.
+     Browsers staan maar ~6 open verbindingen per server toe; te veel live-luisteraars lieten online spelen hangen. */
+  function poll(path, onData, ms) {
+    let closed = false, timer = null, last;
+    async function tick() {
+      if (closed) return;
+      if (document.visibilityState !== "hidden") {
+        try { const d = await dbReq("GET", path); const j = JSON.stringify(d); if (!closed && j !== last) { last = j; onData(d); } } catch (e) {}
+      }
+      if (!closed) timer = setTimeout(tick, ms || 8000);
+    }
+    tick();
+    return { close: function () { closed = true; if (timer) clearTimeout(timer); } };
+  }
   /* groepscode */
   function normCode(s) { return String(s || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6); }
   function showCode(c) { return c.length > 3 ? c.slice(0, 3) + "-" + c.slice(3) : c; }
