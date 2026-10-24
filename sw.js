@@ -1,6 +1,6 @@
 /* Islam Quiz – service worker (netwerk eerst, cache als terugval)
    Verhoog CACHE_VERSION bij elke release. Zo zien bezoekers altijd meteen de nieuwste versie. */
-const CACHE_VERSION = "islam-quiz-v93d";
+const CACHE_VERSION = "islam-quiz-v93e";
 const QURAN_CACHE = "iq-quran-1";   // Koran-tekst en -lettertype: blijven bewaard tussen versies (offline lezen)
 const PRECACHE = [];
 
@@ -88,8 +88,10 @@ self.addEventListener("push", (event) => {
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  const url = (event.notification.data && event.notification.data.url) || "./";
+  const OLD = /\.vercel\.app$/i.test(self.location.hostname);   // v93e: oud adres → altijd naar nurspark.app
+  const url = OLD ? "https://nurspark.app/" : ((event.notification.data && event.notification.data.url) || "./");
   event.waitUntil((async () => {
+    if (OLD) { if (self.clients.openWindow) await self.clients.openWindow(url); return; }
     const wins = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
     for (const c of wins) { if ("focus" in c) { await c.focus(); return; } }
     if (self.clients.openWindow) await self.clients.openWindow(url);

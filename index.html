@@ -12543,8 +12543,21 @@ return exports;})();
     };
     setTimeout(go, 1200);
   }
+  /* v93e: al verhuisd? Dan stuurt het oude adres meteen door naar nurspark.app (en stopt het oude meldingen-abonnement) */
+  async function moveRedirect() {
+    try {
+      if ("serviceWorker" in navigator) {
+        const reg = await Promise.race([navigator.serviceWorker.getRegistration(), new Promise(function (r) { setTimeout(r, 1500); })]);
+        const sub = reg && reg.pushManager ? await reg.pushManager.getSubscription() : null;
+        if (sub) await Promise.race([sub.unsubscribe(), new Promise(function (r) { setTimeout(r, 1500); })]);
+      }
+    } catch (e) {}
+    location.replace(NEW_HOME);
+  }
+  const MOVED_AWAY = OLD_HOST && !!S.movedOut && !/[?#&](code|access_token|error|verhuis)=/.test(location.href);
+  if (MOVED_AWAY) moveRedirect();
   moveIn();
-  startSplash(function () { if (OLD_HOST) setTimeout(moveNudge, 1500); else moveWelcome(); });   /* v91b: eerst het welkomstscherm met logo en salaam; het inlogvenster opent pas na een tik op "Account & Inloggen" */
+  if (!MOVED_AWAY) startSplash(function () { if (OLD_HOST) setTimeout(moveNudge, 1500); else moveWelcome(); });   /* v91b: eerst het welkomstscherm met logo en salaam; het inlogvenster opent pas na een tik op "Account & Inloggen" */
 })();
 </script>
 <script>
