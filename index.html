@@ -1138,6 +1138,8 @@ body.jfull .reward-flyer { top: 160px; }
 .login-btns { margin-top: 22px; }
 .login-err { min-height: 1.4em; margin-top: 12px; color: var(--bad); font-weight: 800; }
 /* tekstballon met advies bij het kiezen van een naam */
+.ts-box { position: fixed; z-index: 9600; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 16px); transform: translateX(-50%); }
+.ts-box:empty { display: none; }
 .nb-balloon { position: relative; display: flex; gap: 10px; align-items: flex-start; text-align: left; margin: 6px 0 16px; padding: 12px 14px; border-radius: 18px; background: linear-gradient(180deg, #fffdf0, #fff3c4); color: #3d2b00; border: 2px solid #e6b422; box-shadow: 0 6px 14px rgba(0, 0, 0, .18), inset 0 2px 0 #fff; font-size: .9rem; font-weight: 700; line-height: 1.4; animation: nbPop .55s cubic-bezier(.3, 1.4, .5, 1) both, nbBob 3.4s ease-in-out .7s infinite; }
 .nb-balloon::after { content: ""; position: absolute; left: 28px; bottom: -11px; width: 18px; height: 18px; background: #fff3c4; border-right: 2px solid #e6b422; border-bottom: 2px solid #e6b422; transform: rotate(45deg); border-radius: 0 0 6px 0; }
 .nb-balloon b { display: block; color: #0b5a3a; font-weight: 900; }
@@ -5498,6 +5500,37 @@ return exports;})();
      Gasten krijgen een eigen anoniem account (zie 'Gasten op het wereldwijde scorebord') en doen dus ook mee op het scorebord. */
   const SB_URL = "https://mkjqaahxyljmczpinpvc.supabase.co";
   const SB_KEY = "sb_publishable_cJ7mtK6JKPs9fMkT6U6shw_pTwJbwmi";
+  /* v96: captcha (Cloudflare Turnstile) tegen nepaccounts. Leeg = uit. Zet eerst deze sleutel live, pas daarna Captcha aan in Supabase. */
+  const TS_KEY = "0x4AAAAAAFnF7qD013gHnAwX";
+  let tsLoad = null;
+  function tsScript() {
+    if (!tsLoad) tsLoad = new Promise(function (res, rej) {
+      const s = document.createElement("script");
+      s.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"; s.async = true;
+      s.onload = function () { window.turnstile ? res(window.turnstile) : rej(new Error("geen turnstile")); };
+      s.onerror = function () { tsLoad = null; rej(new Error("captcha laden mislukt")); };
+      document.head.appendChild(s);
+    });
+    return tsLoad;
+  }
+  /* geeft een captcha-token (of undefined als de captcha uit staat of niet laadt); meestal onzichtbaar, alleen bij twijfel verschijnt een vinkje */
+  function captchaToken() {
+    if (!TS_KEY) return Promise.resolve(undefined);
+    return tsScript().then(function (ts) {
+      return new Promise(function (res) {
+        let box = document.getElementById("tsBox");
+        if (!box) { box = document.createElement("div"); box.id = "tsBox"; box.className = "ts-box"; box.setAttribute("role", "region"); box.setAttribute("aria-label", "Controle: ben je een mens?"); document.body.appendChild(box); }
+        const el = document.createElement("div"); box.appendChild(el);
+        let done = false, wid = null;
+        const fin = function (t) { if (done) return; done = true; setTimeout(function () { try { ts.remove(wid); } catch (e) {} if (el.parentNode) el.remove(); }, 0); res(t || undefined); };
+        try {
+          wid = ts.render(el, { sitekey: TS_KEY, appearance: "interaction-only", language: "nl", callback: fin,
+            "error-callback": function () { fin(); return true; }, "timeout-callback": function () { fin(); }, "expired-callback": function () {} });
+        } catch (e) { fin(); }
+        setTimeout(fin, 45000);
+      });
+    }).catch(function () { return undefined; });
+  }
   let sb = null, sbUser = null, boardScope = null, loginMsg = "";
   try {
     if (window.supabase && window.supabase.createClient) sb = window.supabase.createClient(SB_URL, SB_KEY, { auth: { flowType: "pkce", persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
@@ -5776,7 +5809,7 @@ return exports;})();
     const one = function (x) { return x.replace(/(.)\1+/g, "$1"); };
     const f = nameFold(v), joined = f.replace(/[^a-z]/g, ""), collapsed = one(joined);
     const toks = f.split(/[^a-z]+/).filter(Boolean).map(one);
-    const bad = toks.some(function (t) { return BAD_SHORT.indexOf(t) !== -1; }) ||
+    const bad = toks.some(function (t) { return BAD_SHORT.some(function (w) { return one(w) === t; }); }) ||
       BAD_LONG.some(function (w) { return joined.indexOf(w) !== -1 || collapsed.indexOf(one(w)) !== -1; });
     return bad ? "Deze naam kan niet worden gebruikt. Kies een andere naam of bijnaam." : "";
   }
@@ -5808,7 +5841,7 @@ return exports;})();
     guestBusy[p.id] = c.auth.getSession().then(function (r) {
       const ses = r && r.data && r.data.session;
       if (ses && ses.user) { if (p.gid !== ses.user.id) { p.gid = ses.user.id; saveState(); } return c; }
-      return c.auth.signInAnonymously().then(function (r2) {
+      return captchaToken().then(function (tok) { return c.auth.signInAnonymously(tok ? { options: { captchaToken: tok } } : undefined); }).then(function (r2) {
         if (r2 && r2.error) { guestWait = Date.now() + (/disabled|not enabled|anonymous/i.test(errTxt(r2.error)) ? 30 * 60000 : 3 * 60000); return null; }
         const u = r2 && r2.data && r2.data.user; if (!u) return null;
         p.gid = u.id; saveState(); return c;
@@ -6101,8 +6134,10 @@ return exports;})();
     };
     const fail = function () { acctBusy = false; sbMsg("Dat is niet gelukt. Controleer je verbinding en probeer het opnieuw."); };
     try {
-      if (up) sb.auth.signUp({ email: em, password: pw, options: { data: { full_name: nm }, emailRedirectTo: location.origin + location.pathname } }).then(done).catch(fail);
-      else sb.auth.signInWithPassword({ email: em, password: pw }).then(done).catch(fail);
+      captchaToken().then(function (tok) {
+        if (up) return sb.auth.signUp({ email: em, password: pw, options: { data: { full_name: nm }, emailRedirectTo: location.origin + location.pathname, captchaToken: tok } });
+        return sb.auth.signInWithPassword({ email: em, password: pw, options: tok ? { captchaToken: tok } : undefined });
+      }).then(done).catch(fail);
     } catch (e) { fail(); }
   }
   /* gast: een ingevulde naam maakt meteen een speler; leeg laten gaat naar het bestaande naam- en kleurscherm */
