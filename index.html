@@ -5554,7 +5554,7 @@ return exports;})();
     const w = document.createElement("div"); w.className = "dialog-wrap";
     w.innerHTML = '<div class="dialog" role="dialog" aria-modal="true" aria-labelledby="delT"><h3 id="delT">Account verwijderen?</h3>' +
       "<p>Je account, je e-mailadres, je plek op het klassement, je dagreeks, je herinneringen en je voortgang op dit toestel worden <b>definitief gewist</b>. Dit kan niet ongedaan worden gemaakt.</p>" +
-      '<label for="delWord">Typ <b>VERWIJDER</b> om te bevestigen:</label><input id="delWord" class="del-type" type="text" autocomplete="off" autocapitalize="characters">' +
+      '<label for="delWord" style="display:block;color:#1f2a24;font-weight:700;margin-top:6px">Typ <b style="color:#c62828">VERWIJDER</b> om te bevestigen:</label><input id="delWord" class="del-type" type="text" autocomplete="off" autocapitalize="characters">' +
       '<div class="row" style="margin-top:14px"><button class="btn ghost" data-d="no">Annuleren</button><button class="btn danger" data-d="yes" disabled>Verwijderen</button></div></div>';
     const yes = w.querySelector('[data-d="yes"]'), inp = w.querySelector("#delWord");
     inp.addEventListener("input", function () { yes.disabled = inp.value.trim().toUpperCase() !== "VERWIJDER"; });
