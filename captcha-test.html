@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
+<title>Captcha-test – NurSpark</title>
+<style>body{font-family:system-ui,sans-serif;background:#fbf6ea;color:#1f2a24;margin:0;padding:24px;max-width:520px}h1{font-size:20px;color:#1b4332}#st{font-size:18px;font-weight:700;padding:14px;border-radius:12px;background:#fff;border:2px solid #e8dcc0;white-space:pre-wrap}</style>
+</head><body>
+<h1>Captcha-test</h1>
+<p>Wacht een paar seconden. Stuur daarna een screenshot van het vak hieronder.</p>
+<div id="st">Bezig…</div>
+<div id="w" style="margin-top:16px"></div>
+<script>
+(function () {
+  var st = document.getElementById("st"), t0 = Date.now();
+  function log(m) { st.textContent += "\n" + Math.round((Date.now() - t0) / 100) / 10 + "s: " + m; }
+  st.textContent = "Adres: " + location.hostname;
+  var s = document.createElement("script");
+  s.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+  s.onload = function () {
+    log("script geladen");
+    try {
+      window.turnstile.render("#w", { sitekey: "0x4AAAAAAFnF7qD013gHnAwX", language: "nl",
+        callback: function (tok) { log("GELUKT ✅ code ontvangen (" + tok.length + " tekens)"); },
+        "error-callback": function (code) { log("FOUT ❌ code " + code); return true; },
+        "timeout-callback": function () { log("FOUT ❌ timeout"); },
+        "unsupported-callback": function () { log("FOUT ❌ browser niet ondersteund"); } });
+      log("widget gestart");
+    } catch (e) { log("FOUT ❌ " + e.message); }
+  };
+  s.onerror = function () { log("FOUT ❌ script kon niet laden (geblokkeerd?)"); };
+  document.head.appendChild(s);
+  setTimeout(function () { log("(30 seconden voorbij)"); }, 30000);
+})();
+</script>
+</body></html>
