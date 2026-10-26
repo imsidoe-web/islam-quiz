@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Het web van Thawr – NurSpark</title>
+<style>
+  :root { --cream:#fbf6ea; --gold:#d9a227; --em-d:#1b4332; --ink:#2a1d08; }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { margin:0; height:100%; background:#0b1a24; font-family:"Nunito","Segoe UI",system-ui,sans-serif; color:var(--ink); overscroll-behavior:none; }
+  .wrap { max-width:460px; margin:0 auto; min-height:100%; min-height:100dvh; display:flex; flex-direction:column; padding:10px 12px 16px; gap:10px; }
+  .top { display:flex; align-items:center; justify-content:space-between; color:#fff; gap:8px; }
+  .top h1 { margin:0; font-size:20px; font-weight:900; color:#ffe7a0; }
+  .top small { display:block; color:#bcd3e0; font-weight:700; font-size:12px; }
+  .pills { display:flex; gap:6px; }
+  .pill { background:rgba(0,0,0,.35); border:1.5px solid rgba(255,231,160,.5); color:#fff; border-radius:999px; padding:6px 10px; font:inherit; font-weight:900; font-size:14px; white-space:nowrap; }
+  .board { width:100%; max-width:calc((100dvh - 84px) * .75); align-self:center; position:relative; border-radius:22px; overflow:hidden; border:4px solid var(--gold); box-shadow:0 12px 30px rgba(0,0,0,.5); touch-action:none; background:#0d2233; }
+  canvas { display:block; width:100%; height:auto; }
+  .bar { position:absolute; left:14px; right:14px; top:12px; display:flex; gap:8px; align-items:center; pointer-events:none; }
+  .meter { flex:1; height:12px; border-radius:8px; background:rgba(0,0,0,.4); overflow:hidden; border:1.5px solid rgba(255,255,255,.25); }
+  .meter i { display:block; height:100%; width:0; background:linear-gradient(90deg,#cfe3ff,#ffffff); transition:width .25s; }
+  .lab { color:#fff; font-weight:900; font-size:13px; text-shadow:0 1px 3px #000; min-width:92px; }
+  .task { position:absolute; left:0; right:0; bottom:12px; text-align:center; color:#fff7d6; font-weight:900; font-size:15px; text-shadow:0 2px 6px #000; pointer-events:none; }
+  .ov { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; padding:18px; background:rgba(8,20,30,.55); backdrop-filter:blur(2px); }
+  .card { background:var(--cream); border-radius:20px; padding:18px; width:100%; max-width:340px; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,.35); }
+  .card h2 { margin:0 0 6px; color:var(--em-d); font-size:22px; font-weight:900; }
+  .card p { margin:0 0 12px; color:#3a4a40; font-weight:600; line-height:1.4; }
+  .ar { font-family:"Amiri","Traditional Arabic",serif; font-size:30px; color:#8a5a12; margin:4px 0 2px; direction:rtl; }
+  .btn { appearance:none; border:0; border-radius:14px; padding:12px 18px; font:inherit; font-weight:900; font-size:16px; cursor:pointer; width:100%; background:#f6d25a; color:var(--ink); box-shadow:0 4px 0 #a8742f; }
+  .opt { display:block; width:100%; margin:8px 0 0; padding:11px 12px; border-radius:12px; border:2px solid #cfe0d5; background:#fff; font:inherit; font-weight:800; text-align:left; cursor:pointer; color:var(--em-d); }
+  .opt.ok { background:#2e7d4f; color:#fff; border-color:#2e7d4f; } .opt.no { background:#fde2df; border-color:#e5484d; color:#8a1c1c; }
+  .stars { font-size:34px; letter-spacing:4px; margin:4px 0 6px; color:#d9a227; }
+  .hint { color:#bcd3e0; text-align:center; font-size:12px; font-weight:700; margin:0; }
+  .btn2 { margin-top:8px; background:#fff; box-shadow:0 3px 0 #cfc3a4; color:var(--em-d); }
+  .emb .hint { display:none; }
+  .emb .wrap { justify-content:center; }
+  [hidden] { display:none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div><h1>🕸️ Het web van Thawr</h1><small>Bonuslevel · De Hijra</small></div>
+    <div class="pills"><button class="pill" id="close" aria-label="Sluiten en terug naar de kaart" hidden>✕</button><button class="pill" id="snd" aria-label="Geluid aan of uit">🔊</button><span class="pill" id="gems">💎 0</span></div>
+  </div>
+  <div class="board" id="board">
+    <canvas id="c" width="840" height="1120" aria-label="Nacht bij de grot Thawr: span een web en help de duiven"></canvas>
+    <div class="bar"><span class="lab" id="lab">Web 0%</span><div class="meter"><i id="meter"></i></div></div>
+    <div class="task" id="task"></div>
+    <div class="ov" id="start"><div class="card">
+      <h2>Het web van Thawr</h2>
+      <p>De Profeet ﷺ en Abu Bakr (ra) schuilen in de grot. <b>Sleep met je vinger</b> van punt naar punt om een web voor de ingang te spinnen. Daarna help je de <b>duiven</b> hun nest te bouwen: tik op de takjes. Zie je een <b>gouden takje</b>? Snel tikken voor extra edelstenen! Wees klaar voordat de fakkels boven zijn!</p>
+      <button class="btn" id="go">Bismillah, start</button>
+    </div></div>
+    <div class="ov" id="quiz" hidden><div class="card"><h2 id="qT">⭐ Gouden vraag</h2><p id="qText"></p><div id="qOpts"></div></div></div>
+    <div class="ov" id="end" hidden><div class="card">
+      <h2 id="endT"></h2><div class="stars" id="endStars"></div>
+      <div class="ar" id="endAr"></div><p id="endText"></p>
+      <button class="btn" id="again">Opnieuw</button>
+      <button class="btn btn2" id="back" hidden>Terug naar de kaart</button>
+    </div></div>
+  </div>
+  <p class="hint">Bonuslevel van NurSpark · 3 sterren als je ruim op tijd klaar bent</p>
+</div>
+<script>
+(function () {
+  const C = document.getElementById("c"), X = C.getContext("2d"), W = C.width, H = C.height;
+  const $ = (id) => document.getElementById(id);
+  const CAVE = { x: 430, y: 610, rx: 150, ry: 175 };          // ingang van de grot
+  const NEST = { x: 250, y: 395 };                               // richel voor het duivennest
+  const QS = new URLSearchParams(location.search), EMB = window.parent !== window, EXPERT = QS.get("lv") === "expert";
+  const TIME = EXPERT ? 75 : 90, WEB_GOAL = EXPERT ? .9 : .85, TWIGS_GOAL = 6, GOLD_LIFE = 4200, GOLD_GEMS = 3;
+  function tell(m) { if (EMB) try { parent.postMessage(Object.assign({ nurspark: 1 }, m), location.origin); } catch (e) {} }
+  const PATH = [[90, 1110], [210, 1040], [140, 960], [300, 900], [200, 830], [330, 790], [300, 760]]; // bergpad (fakkels)
+  const Q = [
+    { q: "In welke grot schuilden de Profeet ﷺ en Abu Bakr (ra) tijdens de Hijra?", o: ["De grot Thawr", "De grot Hira", "Bij de berg Uhud"], a: 0 },
+    { q: "Wie reisde met de Profeet ﷺ mee tijdens de Hijra?", o: ["Abu Bakr (ra)", "Umar (ra)", "Uthman (ra)"], a: 0 },
+    { q: "Naar welke stad trokken zij tijdens de Hijra?", o: ["Madinah", "Taif", "Jeruzalem"], a: 0 },
+    { q: "Hoeveel dagen bleven zij ongeveer in de grot?", o: ["Drie dagen", "Tien dagen", "Eén dag"], a: 0 },
+  ];
+  let anchors, threads, drag, phase, t0, timeLeft, strength, twigs, twigN, goldN, floats, taskT, doves, star, starDone, egg, gems, running, paused, parts, glow, gust, qi = 0, mx = 0, finished;
+
+  /* ── geluid ── */
+  let AC = null, windGain = null, soundOn = QS.get("snd") !== "0";
+  function ac() { if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return null; } } if (AC.state === "suspended") AC.resume(); return AC; }
+  function nb(a, sec) { const b = a.createBuffer(1, a.sampleRate * sec, a.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; return b; }
+  function windStart() { const a = ac(); if (!a || windGain) return; const s = a.createBufferSource(); s.buffer = nb(a, 4); s.loop = true; const f = a.createBiquadFilter(); f.type = "bandpass"; f.frequency.value = 300; f.Q.value = .8; const l = a.createOscillator(), lg = a.createGain(); l.frequency.value = .1; lg.gain.value = 180; l.connect(lg); lg.connect(f.frequency); l.start(); windGain = a.createGain(); windGain.gain.value = soundOn ? .045 : 0; s.connect(f); f.connect(windGain); windGain.connect(a.destination); s.start(); }
+  function tone(fs, dur, vol, type, glide) { const a = ac(); if (!a || !soundOn) return; fs.forEach(function (fr, i) { const o = a.createOscillator(), g = a.createGain(), t = a.currentTime + i * dur * .7; o.type = type || "sine"; o.frequency.setValueAtTime(fr, t); if (glide) o.frequency.exponentialRampToValueAtTime(fr * glide, t + dur); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + .01); g.gain.exponentialRampToValueAtTime(.001, t + dur); o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + dur + .02); }); }
+  function flutter() { const a = ac(); if (!a || !soundOn) return; for (let i = 0; i < 6; i++) { const s = a.createBufferSource(); s.buffer = nb(a, .05); const f = a.createBiquadFilter(); f.type = "bandpass"; f.frequency.value = 1400; const g = a.createGain(), t = a.currentTime + i * .07; g.gain.setValueAtTime(.08, t); g.gain.exponentialRampToValueAtTime(.001, t + .05); s.connect(f); f.connect(g); g.connect(a.destination); s.start(t); } }
+  const sfx = { zing: () => tone([1200], .18, .07, "sine", 1.6), snap: () => tone([500], .12, .08, "triangle", .5), pop: () => tone([620, 930], .09, .1), good: () => tone([784, 988, 1319], .16, .13), bad: () => tone([330, 247], .22, .12), win: () => tone([523, 659, 784, 1047], .22, .12, "triangle"), lose: () => tone([392, 330, 262], .3, .1) };
+
+  /* ── opbouw ── */
+  function reset() {
+    anchors = [];
+    const n = 11;
+    for (let i = 0; i < n; i++) { const a = Math.PI * (1.05 + i * .9 / (n - 1)) - Math.PI * .02; const r = 1.08 + (i % 2) * .07; anchors.push({ x: CAVE.x + Math.cos(a) * CAVE.rx * r * 1.05, y: CAVE.y + Math.sin(a) * CAVE.ry * r, k: i }); }
+    // onderste hoekpunten links en rechts + een paar in het midden van de bodem
+    anchors.push({ x: CAVE.x - CAVE.rx * 1.1, y: CAVE.y + CAVE.ry * .75 }, { x: CAVE.x + CAVE.rx * 1.12, y: CAVE.y + CAVE.ry * .72 }, { x: CAVE.x - 40, y: CAVE.y + CAVE.ry * .98 }, { x: CAVE.x + 55, y: CAVE.y + CAVE.ry * .96 });
+    threads = []; drag = null; phase = "web"; timeLeft = TIME; strength = 0; twigs = []; twigN = 0; goldN = 0; floats = []; taskT = 0; star = null; starDone = false; egg = null; gems = 0; parts = []; glow = 0; gust = 0; finished = false;
+    doves = [{ x: -60, y: 260, tx: NEST.x - 34, ty: NEST.y - 26, f: 0 }, { x: W + 60, y: 300, tx: NEST.x + 36, ty: NEST.y - 22, f: 1 }];
+    $("gems").textContent = "💎 0"; setTask("Span het web: sleep van punt naar punt"); upd();
+  }
+  function setTask(t) { $("task").textContent = t; }
+  function upd() {
+    if (phase === "web") { $("lab").textContent = "Web " + Math.round(strength / WEB_GOAL * 100 > 100 ? 100 : strength / WEB_GOAL * 100) + "%"; $("meter").style.width = Math.min(100, strength / WEB_GOAL * 100) + "%"; }
+    else { $("lab").textContent = "Nest " + twigN + "/" + TWIGS_GOAL; $("meter").style.width = (twigN / TWIGS_GOAL * 100) + "%"; }
+  }
+  /* sterkte: hoeveel van de grotopening wordt bedekt door draden */
+  const SAMPLES = (function () { const s = []; for (let y = -1; y <= 1; y += .12) for (let x = -1; x <= 1; x += .12) if (x * x + y * y <= .9) s.push({ x: CAVE.x + x * CAVE.rx, y: CAVE.y + y * CAVE.ry }); return s; })();
+  function segDist(p, a, b) { const dx = b.x - a.x, dy = b.y - a.y, l = dx * dx + dy * dy || 1; let t = ((p.x - a.x) * dx + (p.y - a.y) * dy) / l; t = Math.max(0, Math.min(1, t)); const x = a.x + t * dx, y = a.y + t * dy; return Math.hypot(p.x - x, p.y - y); }
+  function calcStrength() { let c = 0; SAMPLES.forEach((p) => { if (threads.some((t) => segDist(p, anchors[t[0]], anchors[t[1]]) < 19)) c++; }); strength = c / SAMPLES.length; }
+
+  /* ── invoer ── */
+  function pos(e) { const r = C.getBoundingClientRect(), t = e.touches ? e.touches[0] : e; return { x: (t.clientX - r.left) * W / r.width, y: (t.clientY - r.top) * H / r.height }; }
+  function nearAnchor(p) { let best = -1, bd = 60; anchors.forEach((a, i) => { const d = Math.hypot(a.x - p.x, a.y - p.y); if (d < bd) { bd = d; best = i; } }); return best; }
+  function down(e) {
+    if (!running || paused) return; const p = pos(e); mx = p.x;
+    if (star && Math.hypot(p.x - star.x, p.y - star.y) < 55) { star = null; starDone = true; ask("⭐ Gouden vraag"); return; }
+    if (egg && egg.ready && Math.hypot(p.x - egg.x, p.y - egg.y) < 50) { egg = null; ask("🥚 Gouden ei"); return; }
+    if (phase === "nest") { for (let i = twigs.length - 1; i >= 0; i--) { const tw = twigs[i]; if (!tw.fly && !tw.gone && Math.hypot(p.x - tw.x, p.y - tw.y) < (tw.gold ? 70 : 55)) { tw.fly = true; if (tw.gold) goldHit(tw); else sfx.pop(); return; } } return; }
+    const a = nearAnchor(p); if (a >= 0) drag = { from: a, x: p.x, y: p.y };
+  }
+  function move(e) { if (!drag) return; const p = pos(e); drag.x = p.x; drag.y = p.y; mx = p.x; }
+  function up() {
+    if (!drag) return; const b = nearAnchor({ x: drag.x, y: drag.y });
+    if (b >= 0 && b !== drag.from && !threads.some((t) => (t[0] === drag.from && t[1] === b) || (t[1] === drag.from && t[0] === b))) {
+      threads.push([drag.from, b, 0]); sfx.zing(); calcStrength(); upd();
+      const A = anchors[drag.from], B = anchors[b]; for (let i = 0; i < 8; i++) parts.push({ x: lerp(A.x, B.x, i / 7), y: lerp(A.y, B.y, i / 7), vx: 0, vy: -.3, life: 1, col: "#ffffff", r: 2 });
+      if (!starDone && !star && strength > WEB_GOAL * .45) star = { x: CAVE.x + 20, y: CAVE.y - 20 };
+      if (strength >= WEB_GOAL) toNest();
+    }
+    drag = null;
+  }
+  C.addEventListener("pointerdown", (e) => { e.preventDefault(); down(e); });
+  C.addEventListener("pointermove", (e) => { move(e); });
+  window.addEventListener("pointerup", up);
+
+  function toNest() {
+    phase = "nest"; sfx.win(); flutter(); setTask("Tik op de takjes voor het duivennest");
+    for (let i = 0; i < 5; i++) spawnTwig(); upd();
+  }
+  function spawnTwig(gold) { twigs.push({ x: 120 + Math.random() * 600, y: 760 + Math.random() * 260, vx: (Math.random() - .5) * (gold ? 1.6 : .6), rot: Math.random() * 3, fly: false, t: 0, gold: !!gold, born: performance.now() }); }
+  /* gouden takje: verschijnt even, wie snel tikt krijgt extra edelstenen */
+  function spawnGold() { goldN++; spawnTwig(true); flash("Snel! Een gouden takje: +" + GOLD_GEMS + " 💎", 2200); }
+  function goldHit(tw) {
+    gems += GOLD_GEMS; $("gems").textContent = "💎 " + gems; sfx.good();
+    floats.push({ x: tw.x, y: tw.y - 30, t: 1, txt: "+" + GOLD_GEMS + " 💎" });
+    for (let i = 0; i < 16; i++) parts.push({ x: tw.x, y: tw.y, vx: (Math.random() - .5) * 7, vy: (Math.random() - .5) * 7, life: 1, col: i % 2 ? "#ffd23f" : "#fff6c8", r: 3.2 });
+  }
+  function flash(t, ms) { setTask(t); taskT = performance.now() + ms; }
+  function ask(title) {
+    paused = true; $("qT").textContent = title;
+    const it = Q[qi++ % Q.length]; $("qText").textContent = it.q;
+    const box = $("qOpts"); box.innerHTML = "";
+    it.o.map((t, i) => ({ t, i })).sort(() => Math.random() - .5).forEach(({ t, i }) => {
+      const b = document.createElement("button"); b.className = "opt"; b.textContent = t;
+      b.onclick = () => { [...box.children].forEach((x) => { x.disabled = true; if (x.textContent === it.o[it.a]) x.classList.add("ok"); }); if (i === it.a) { gems += 5; sfx.good(); } else { b.classList.add("no"); sfx.bad(); } $("gems").textContent = "💎 " + gems; setTimeout(() => { $("quiz").hidden = true; paused = false; if (finished) showEnd(true); }, 1100); };
+      box.appendChild(b);
+    });
+    $("quiz").hidden = false;
+  }
+  function win() {
+    finished = true; running = false; glow = .01; sfx.win(); setTask("");
+    egg = { x: NEST.x, y: NEST.y - 14, ready: true };
+    setTimeout(() => { if (egg) { egg = null; showEnd(true); } }, 6000);
+    setTask("Tik op het gouden ei in het nest!");
+  }
+  function showEnd(ok) {
+    if (!$("end").hidden) return;
+    const frac = timeLeft / TIME, s = !ok ? 0 : frac > .45 ? 3 : frac > .2 ? 2 : 1;
+    $("endT").textContent = ok ? "De grot is beschermd!" : "De fakkels waren te snel";
+    $("endStars").textContent = "★".repeat(s) + "☆".repeat(3 - s);
+    $("endAr").textContent = ok ? "لَا تَحْزَنْ إِنَّ ٱللَّهَ مَعَنَا" : "";
+    $("endText").textContent = ok ? "“Wees niet bedroefd, voorwaar Allah is met ons.” (Surah at-Tawbah 9:40) · " + gems + " edelstenen" : "Allah beschermde de Profeet ﷺ. Probeer het opnieuw: span je web sneller.";
+    setTask(""); $("end").hidden = false;
+    tell({ type: "result", game: "thawr", ok: !!ok, stars: s, gems: ok ? gems : 0 });
+  }
+
+  /* ── tekenen ── */
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const STARS = Array.from({ length: 90 }, (_, i) => ({ x: (i * 211) % W, y: (i * 97) % 420, r: (i % 3) + .8, p: i }));
+  function sceneBack(now) {
+    const g = X.createLinearGradient(0, 0, 0, H); g.addColorStop(0, "#081626"); g.addColorStop(.45, "#123049"); g.addColorStop(1, "#1d3b4f"); X.fillStyle = g; X.fillRect(0, 0, W, H);
+    STARS.forEach((s) => { X.globalAlpha = .4 + .6 * Math.abs(Math.sin(now * .001 + s.p)); X.fillStyle = "#fff"; X.fillRect(s.x, s.y, s.r, s.r); }); X.globalAlpha = 1;
+    // maan
+    const ox = (mx - W / 2) * -.02;
+    const mg = X.createRadialGradient(650 + ox, 150, 10, 650 + ox, 150, 170); mg.addColorStop(0, "rgba(255,248,215,.55)"); mg.addColorStop(1, "rgba(255,248,215,0)"); X.fillStyle = mg; X.beginPath(); X.arc(650 + ox, 150, 170, 0, Math.PI * 2); X.fill();
+    X.fillStyle = "#fff6d6"; X.beginPath(); X.arc(650 + ox, 150, 50, 0, Math.PI * 2); X.fill();
+    X.fillStyle = "#132a40"; X.beginPath(); X.arc(672 + ox, 138, 46, 0, Math.PI * 2); X.fill();
+    // verre bergen (parallax)
+    [[340, "#1c3a52", .03, 60], [430, "#24465c", .05, 45]].forEach(([y0, col, p, a], k) => { const o = (mx - W / 2) * -p; X.fillStyle = col; X.beginPath(); X.moveTo(0, H); for (let x = -20; x <= W + 20; x += 20) X.lineTo(x + o, y0 + Math.sin(x * .008 + k * 3) * a + Math.sin(x * .021 + k) * a * .3); X.lineTo(W, H); X.closePath(); X.fill(); });
+    // de berg Thawr (rots rond de grot)
+    const o = (mx - W / 2) * -.08;
+    const rg = X.createLinearGradient(0, 300, 0, H); rg.addColorStop(0, "#5a4a44"); rg.addColorStop(1, "#2e2622"); X.fillStyle = rg;
+    X.beginPath(); X.moveTo(-20, H); X.lineTo(-20, 520); X.quadraticCurveTo(120 + o, 330, 300 + o, 300); X.quadraticCurveTo(470 + o, 250, 620 + o, 330); X.quadraticCurveTo(800 + o, 420, W + 20, 560); X.lineTo(W + 20, H); X.closePath(); X.fill();
+    // maanlicht op de rotsen
+    X.fillStyle = "rgba(200,220,255,.08)"; X.beginPath(); X.moveTo(300 + o, 300); X.quadraticCurveTo(470 + o, 250, 620 + o, 330); X.lineTo(560 + o, 380); X.quadraticCurveTo(450 + o, 320, 320 + o, 360); X.closePath(); X.fill();
+    // rotsblokken
+    [[150, 520, 70], [700, 520, 80], [110, 860, 90], [740, 840, 100], [430, 860, 60]].forEach(([x, y, r]) => { const gg = X.createRadialGradient(x - r * .3, y - r * .4, 5, x, y, r); gg.addColorStop(0, "#7a6860"); gg.addColorStop(1, "#3a302b"); X.fillStyle = gg; X.beginPath(); X.ellipse(x + o * .5, y, r, r * .7, 0, 0, Math.PI * 2); X.fill(); });
+    // groene woestijnstruiken (bewegen mee met de wind)
+    SHRUBS.forEach((b) => shrub(b[0] + o * .6, b[1], b[2], now, b[3]));
+    // bergpad
+    X.strokeStyle = "rgba(210,190,150,.35)"; X.lineWidth = 14; X.lineCap = "round"; X.beginPath(); PATH.forEach(([x, y], i) => i ? X.lineTo(x, y) : X.moveTo(x, y)); X.stroke();
+    // grotopening
+    X.save(); X.translate(CAVE.x, CAVE.y);
+    X.fillStyle = "#1a1210"; X.beginPath(); X.ellipse(0, 0, CAVE.rx, CAVE.ry, 0, 0, Math.PI * 2); X.fill();
+    const cg = X.createRadialGradient(0, 30, 10, 0, 30, CAVE.ry); cg.addColorStop(0, "rgba(255,210,130," + (.35 + glow * .5 + Math.sin(now * .003) * .04) + ")"); cg.addColorStop(1, "rgba(255,210,130,0)"); X.fillStyle = cg; X.beginPath(); X.ellipse(0, 0, CAVE.rx * .95, CAVE.ry * .95, 0, 0, Math.PI * 2); X.fill();
+    X.strokeStyle = "#6e5c52"; X.lineWidth = 16; X.beginPath(); X.ellipse(0, 0, CAVE.rx + 8, CAVE.ry + 8, 0, Math.PI * .98, Math.PI * 2.02); X.stroke();
+    X.restore();
+    // richel voor het nest
+    X.fillStyle = "#4a3c35"; X.beginPath(); X.ellipse(NEST.x, NEST.y + 14, 70, 16, -.1, 0, Math.PI * 2); X.fill();
+  }
+  const SHRUBS = [[95, 600, 1.1, 0], [235, 470, .8, 1], [640, 455, .9, 2], [760, 640, 1.2, 3], [235, 760, .9, 4], [610, 800, 1, 5], [60, 980, 1.3, 6], [800, 990, 1.2, 7], [350, 1020, .8, 8], [540, 950, .7, 9], [690, 330, .6, 10], [180, 380, .6, 11]];
+  function shrub(x, y, k, now, seed) {
+    const sway = Math.sin(now * .0016 + seed) * (2 + gust * 8);
+    X.save(); X.translate(x, y); X.scale(k, k);
+    X.fillStyle = "rgba(0,0,0,.25)"; X.beginPath(); X.ellipse(4, 6, 40, 9, 0, 0, Math.PI * 2); X.fill();
+    // takjes
+    X.strokeStyle = "#4a3a24"; X.lineWidth = 3; X.lineCap = "round";
+    for (let i = -2; i <= 2; i++) { X.beginPath(); X.moveTo(i * 4, 4); X.quadraticCurveTo(i * 9, -14, i * 15 + sway, -26 - Math.abs(i) * -3); X.stroke(); }
+    // bladerbollen in lagen: donker achter, lichter voor (maanlicht van rechtsboven)
+    const blobs = [[-22, -16, 16], [0, -28, 19], [22, -16, 16], [-11, -6, 15], [12, -6, 15], [0, -14, 17]];
+    [["#1e4a34", 1.08, 2], ["#2f6a4a", 1, 0], ["#4f8f68", .55, -4]].forEach(([col, sc, dy], layer) => {
+      X.fillStyle = col;
+      blobs.forEach(([bx, by, r], i) => { if (layer === 2 && i % 2) return; X.beginPath(); X.arc(bx + sway * (1 - by / -40) * .4 + (layer === 2 ? 4 : 0), by + dy, r * sc, 0, Math.PI * 2); X.fill(); });
+    });
+    // maanglans en een paar kleine bloesems
+    X.fillStyle = "rgba(210,235,255,.18)"; X.beginPath(); X.ellipse(8 + sway * .3, -30, 12, 6, -.4, 0, Math.PI * 2); X.fill();
+    X.fillStyle = "#f3e6b0"; [[-18, -22], [16, -26], [2, -10]].forEach(([fx, fy]) => { X.beginPath(); X.arc(fx + sway * .4, fy, 2, 0, Math.PI * 2); X.fill(); });
+    X.restore();
+  }
+  function torches(now) {
+    const frac = 1 - timeLeft / TIME;
+    for (let k = 0; k < 3; k++) {
+      const f = Math.max(0, frac - k * .04), L = PATH.length - 1, s = Math.min(L - .001, f * L), i = Math.floor(s), u = s - i;
+      const x = lerp(PATH[i][0], PATH[i + 1][0], u), y = lerp(PATH[i][1], PATH[i + 1][1], u), sz = .7 + f * .6;
+      const fl = 1 + Math.sin(now * .02 + k) * .15;
+      const g = X.createRadialGradient(x, y, 2, x, y, 46 * sz * fl); g.addColorStop(0, "rgba(255,190,90,.9)"); g.addColorStop(.3, "rgba(255,150,60,.4)"); g.addColorStop(1, "rgba(255,150,60,0)");
+      X.fillStyle = g; X.beginPath(); X.arc(x, y, 46 * sz * fl, 0, Math.PI * 2); X.fill();
+      X.fillStyle = "#fff0b0"; X.beginPath(); X.arc(x, y, 4 * sz, 0, Math.PI * 2); X.fill();
+    }
+  }
+  function web(now) {
+    X.lineCap = "round";
+    threads.forEach((t, i) => {
+      const A = anchors[t[0]], B = anchors[t[1]], wob = Math.sin(now * .004 + i) * (2 + gust * 10);
+      const mx2 = (A.x + B.x) / 2 + wob, my2 = (A.y + B.y) / 2 + 6 + wob * .5;
+      X.strokeStyle = "rgba(220,235,255,.25)"; X.lineWidth = 7; X.beginPath(); X.moveTo(A.x, A.y); X.quadraticCurveTo(mx2, my2, B.x, B.y); X.stroke();
+      X.strokeStyle = "rgba(245,250,255,.95)"; X.lineWidth = 2.2; X.beginPath(); X.moveTo(A.x, A.y); X.quadraticCurveTo(mx2, my2, B.x, B.y); X.stroke();
+      // glinster die over de draad loopt
+      const tt = (now * .0006 + i * .37) % 1; const gx = (1 - tt) * (1 - tt) * A.x + 2 * (1 - tt) * tt * mx2 + tt * tt * B.x, gy = (1 - tt) * (1 - tt) * A.y + 2 * (1 - tt) * tt * my2 + tt * tt * B.y;
+      X.fillStyle = "rgba(255,255,255,.9)"; X.beginPath(); X.arc(gx, gy, 2.6, 0, Math.PI * 2); X.fill();
+    });
+    if (drag) { const A = anchors[drag.from]; X.setLineDash([8, 8]); X.strokeStyle = "rgba(255,255,255,.7)"; X.lineWidth = 2; X.beginPath(); X.moveTo(A.x, A.y); X.lineTo(drag.x, drag.y); X.stroke(); X.setLineDash([]); spider(drag.x, drag.y, now); }
+    anchors.forEach((a, i) => { const used = threads.some((t) => t[0] === i || t[1] === i); const pul = 1 + Math.sin(now * .006 + i) * .15; X.fillStyle = used ? "rgba(255,255,255,.95)" : "rgba(255,231,160,.9)"; X.beginPath(); X.arc(a.x, a.y, (used ? 6 : 9) * pul, 0, Math.PI * 2); X.fill(); X.strokeStyle = "rgba(0,0,0,.4)"; X.lineWidth = 2; X.stroke(); });
+    if (!drag && phase === "web" && running) { const last = threads.length ? anchors[threads[threads.length - 1][1]] : anchors[5]; spider(last.x, last.y + 14, now); }
+  }
+  function spider(x, y, now) {
+    X.save(); X.translate(x, y);
+    X.strokeStyle = "#1b1410"; X.lineWidth = 2.2;
+    for (let i = 0; i < 4; i++) { const w = Math.sin(now * .02 + i) * 2; [-1, 1].forEach((s) => { X.beginPath(); X.moveTo(0, -2 + i * 3); X.quadraticCurveTo(s * 12, -10 + i * 5 + w, s * 18, 2 + i * 5); X.stroke(); }); }
+    X.fillStyle = "#2a1f19"; X.beginPath(); X.ellipse(0, 6, 8, 10, 0, 0, Math.PI * 2); X.fill();
+    X.beginPath(); X.arc(0, -5, 5.5, 0, Math.PI * 2); X.fill();
+    X.fillStyle = "rgba(255,255,255,.25)"; X.beginPath(); X.ellipse(-2, 3, 2.5, 4, 0, 0, Math.PI * 2); X.fill();
+    X.restore();
+  }
+  function dove(d, now) {
+    const flap = Math.sin(now * .03 + d.f * 2) * (d.land ? .15 : 1);
+    X.save(); X.translate(d.x, d.y); X.scale(d.tx > d.x ? 1 : d.land ? (d.f ? -1 : 1) : -1, 1);
+    X.fillStyle = "rgba(0,0,0,.2)"; X.beginPath(); X.ellipse(0, 26, 18, 4, 0, 0, Math.PI * 2); X.fill();
+    X.fillStyle = "#eef1f4";
+    X.beginPath(); X.ellipse(0, 0, 18, 10, -.15, 0, Math.PI * 2); X.fill();     // lijf
+    X.beginPath(); X.arc(15, -7, 7, 0, Math.PI * 2); X.fill();                   // kop (zonder ogen)
+    X.fillStyle = "#d9a227"; X.beginPath(); X.moveTo(21, -7); X.lineTo(27, -5); X.lineTo(21, -4); X.fill();   // snavel
+    X.fillStyle = "#cfd6dd"; X.beginPath(); X.moveTo(-16, 0); X.lineTo(-30, -6); X.lineTo(-28, 6); X.closePath(); X.fill(); // staart
+    X.fillStyle = "#dfe5ea"; X.beginPath(); X.moveTo(-4, -4); X.quadraticCurveTo(-2, -22 * flap - 4, -20, -18 * flap - 2); X.quadraticCurveTo(-12, -4, -4, -4); X.fill(); // vleugel
+    X.restore();
+  }
+  function nest(now) {
+    const n = Math.min(twigN, TWIGS_GOAL);
+    X.save(); X.translate(NEST.x, NEST.y);
+    for (let i = 0; i < n * 3; i++) { const a = i * 1.7, r = 18 + (i % 4) * 4; X.strokeStyle = i % 2 ? "#8a6a3e" : "#6e5230"; X.lineWidth = 3.2; X.beginPath(); X.moveTo(Math.cos(a) * r, Math.sin(a) * r * .35); X.lineTo(Math.cos(a + 1.3) * r, Math.sin(a + 1.3) * r * .35 - 3); X.stroke(); }
+    X.restore();
+    if (egg) { const g = X.createRadialGradient(egg.x - 4, egg.y - 6, 2, egg.x, egg.y, 18); g.addColorStop(0, "#fff7c8"); g.addColorStop(1, "#d9a227"); X.fillStyle = g; X.beginPath(); X.ellipse(egg.x, egg.y + Math.sin(now * .006) * 2, 10, 13, 0, 0, Math.PI * 2); X.fill(); const gl = X.createRadialGradient(egg.x, egg.y, 4, egg.x, egg.y, 44); gl.addColorStop(0, "rgba(255,230,150,.6)"); gl.addColorStop(1, "rgba(255,230,150,0)"); X.fillStyle = gl; X.beginPath(); X.arc(egg.x, egg.y, 44, 0, Math.PI * 2); X.fill(); }
+  }
+  function twigsDraw(now) {
+    twigs.forEach((tw) => {
+      if (tw.fly) { tw.t += .04; tw.x = lerp(tw.x, NEST.x, .12); tw.y = lerp(tw.y, NEST.y, .12) - Math.sin(tw.t * 3) * 3; if (Math.hypot(tw.x - NEST.x, tw.y - NEST.y) < 10) { tw.done = true; twigN++; upd(); flutter(); for (let i = 0; i < 6; i++) parts.push({ x: NEST.x, y: NEST.y, vx: (Math.random() - .5) * 3, vy: -Math.random() * 2, life: 1, col: "#c9a46a", r: 3, g: .08 }); if (twigN >= TWIGS_GOAL) win(); else if (twigs.filter((x) => !x.fly).length < 3) spawnTwig(); } }
+      else { tw.x += tw.vx + gust * 3; tw.y += Math.sin(now * .002 + tw.rot) * .3; tw.rot += .01; if (tw.x < 40 || tw.x > W - 40) tw.vx *= -1; tw.x = Math.max(40, Math.min(W - 40, tw.x));
+        if (tw.gold && !paused && now - tw.born > GOLD_LIFE) { tw.gone = true; for (let i = 0; i < 8; i++) parts.push({ x: tw.x, y: tw.y, vx: (Math.random() - .5) * 2, vy: -Math.random() * 2, life: .7, col: "#fff6c8", r: 2 }); return; } }
+      X.save(); X.translate(tw.x, tw.y); X.rotate(tw.rot);
+      if (!tw.fly) { const gr = tw.gold ? 70 + Math.sin(now * .012) * 10 : 44, g = X.createRadialGradient(0, 0, 2, 0, 0, gr * .78); g.addColorStop(0, tw.gold ? "rgba(255,214,70,.85)" : "rgba(255,231,160,.55)"); g.addColorStop(1, "rgba(255,231,160,0)"); X.fillStyle = g; X.beginPath(); X.arc(0, 0, gr, 0, Math.PI * 2); X.fill();
+        if (tw.gold) { const left = 1 - (now - tw.born) / GOLD_LIFE; X.strokeStyle = "rgba(255,240,180,.9)"; X.lineWidth = 4; X.beginPath(); X.arc(0, 0, 40, -Math.PI / 2 - tw.rot, -Math.PI / 2 - tw.rot + Math.PI * 2 * Math.max(0, left)); X.stroke(); if (Math.random() < .3) parts.push({ x: tw.x + (Math.random() - .5) * 50, y: tw.y + (Math.random() - .5) * 30, vx: 0, vy: -.6, life: .8, col: "#fff6c8", r: 2 }); } }
+      X.scale(tw.gold ? 1.8 : 1.5, tw.gold ? 1.8 : 1.5); X.strokeStyle = tw.gold ? "#ffd23f" : "#e0b878"; X.lineWidth = 4.5; X.lineCap = "round"; X.beginPath(); X.moveTo(-18, 0); X.lineTo(18, 0); X.moveTo(4, 0); X.lineTo(12, -9); X.moveTo(-6, 0); X.lineTo(-13, 7); X.stroke(); X.strokeStyle = tw.gold ? "#b07a1a" : "#8a6a3e"; X.lineWidth = 1.5; X.stroke();
+      X.restore();
+    });
+    twigs = twigs.filter((t) => !t.done && !t.gone);
+    if (phase === "nest" && running && twigs.filter((x) => !x.fly).length < 2) spawnTwig();
+  }
+  function goldStar(now) {
+    if (!star) return; const s = 1 + Math.sin(now * .006) * .1;
+    X.save(); X.translate(star.x, star.y); X.rotate(now * .001);
+    for (let i = 0; i < 10; i++) { X.rotate(Math.PI / 5); const gr = X.createLinearGradient(0, 0, 0, -70); gr.addColorStop(0, "rgba(255,236,150,.5)"); gr.addColorStop(1, "rgba(255,236,150,0)"); X.fillStyle = gr; X.beginPath(); X.moveTo(-4, 0); X.lineTo(0, -70); X.lineTo(4, 0); X.fill(); }
+    X.restore(); X.save(); X.translate(star.x, star.y); X.scale(s, s);
+    X.fillStyle = "#f6d25a"; X.strokeStyle = "#a8742f"; X.lineWidth = 2; X.beginPath(); for (let i = 0; i < 16; i++) { const a = i * Math.PI / 8, r = i % 2 ? 9 : 22; X.lineTo(Math.cos(a) * r, Math.sin(a) * r); } X.closePath(); X.fill(); X.stroke(); X.restore();
+  }
+  function particles() { parts.forEach((q) => { q.x += q.vx; q.y += q.vy; q.vy += q.g || 0; q.life -= .03; }); parts = parts.filter((q) => q.life > 0); parts.forEach((q) => { X.globalAlpha = q.life; X.fillStyle = q.col; X.beginPath(); X.arc(q.x, q.y, q.r, 0, Math.PI * 2); X.fill(); }); X.globalAlpha = 1;
+    floats.forEach((f) => { f.t -= .015; f.y -= 1.2; X.globalAlpha = Math.max(0, f.t); X.font = "900 40px Nunito, system-ui, sans-serif"; X.textAlign = "center"; X.lineWidth = 6; X.strokeStyle = "#2a1d08"; X.strokeText(f.txt, f.x, f.y); X.fillStyle = "#ffe27a"; X.fillText(f.txt, f.x, f.y); }); X.globalAlpha = 1; floats = floats.filter((f) => f.t > 0); }
+
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(.1, (now - last) / 1000); last = now;
+    if (running && !paused) {
+      timeLeft -= dt;
+      if (Math.random() < .002 && !gust) { gust = 1; if (threads.length > 6 && Math.random() < .5) { const i = threads.length - 1 - Math.floor(Math.random() * 3); const t = threads.splice(i, 1)[0]; if (t) { sfx.snap(); calcStrength(); upd(); } } }
+      if (phase === "nest" && goldN < 2 && !twigs.some((t) => t.gold && !t.gone && !t.fly) && twigN >= (goldN ? 3 : 0) && Math.random() < .01) spawnGold();
+      if (taskT && now > taskT) { taskT = 0; if (phase === "nest" && !finished) setTask("Tik op de takjes voor het duivennest"); }
+      if (timeLeft <= 0) { timeLeft = 0; running = false; sfx.lose(); showEnd(false); }
+    }
+    gust *= .97; if (gust < .02) gust = 0;
+    if (glow > 0) glow = Math.min(1, glow + dt * .6);
+    // duiven vliegen aan in de nest-fase
+    if (phase === "nest" || finished) doves.forEach((d) => { d.x = lerp(d.x, d.tx, .03); d.y = lerp(d.y, d.ty, .03) + Math.sin(now * .004 + d.f) * (d.land ? 0 : 1.5); if (Math.hypot(d.x - d.tx, d.y - d.ty) < 4) d.land = true; });
+    sceneBack(now); torches(now); web(now); nest(now);
+    if (phase === "nest" || finished) doves.forEach((d) => dove(d, now));
+    twigsDraw(now); goldStar(now); particles();
+    if (glow > 0) { const g = X.createRadialGradient(CAVE.x, CAVE.y, 20, CAVE.x, CAVE.y, 520); g.addColorStop(0, "rgba(255,225,150," + glow * .45 + ")"); g.addColorStop(1, "rgba(255,225,150,0)"); X.fillStyle = g; X.fillRect(0, 0, W, H); }
+    // tijdsbalk onderaan (fakkels)
+    X.fillStyle = "rgba(0,0,0,.35)"; X.fillRect(30, H - 16, W - 60, 8); X.fillStyle = timeLeft / TIME > .3 ? "#ffd27a" : "#ff8a5c"; X.fillRect(30, H - 16, (W - 60) * timeLeft / TIME, 8);
+    requestAnimationFrame(frame);
+  }
+
+  $("snd").onclick = () => { soundOn = !soundOn; $("snd").textContent = soundOn ? "🔊" : "🔇"; ac(); if (windGain) windGain.gain.value = soundOn ? .045 : 0; };
+  const start = () => { windStart(); reset(); running = true; paused = false; };
+  $("go").onclick = () => { $("start").hidden = true; start(); };
+  if (EMB) { document.body.classList.add("emb"); $("close").hidden = false; $("back").hidden = false; }
+  $("close").onclick = $("back").onclick = () => { if (AC) try { AC.close(); } catch (e) {} tell({ type: "close" }); };
+  $("again").onclick = () => { $("end").hidden = true; start(); };
+  reset(); requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

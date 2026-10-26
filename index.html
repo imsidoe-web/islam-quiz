@@ -928,6 +928,10 @@ a.btn.block { display: flex; margin-top: 14px; }
 .chest-bounce { transform-box: fill-box; transform-origin: 50% 100%; animation: chestHop 1.1s ease-in-out infinite; }
 @keyframes chestHop { 0%, 100% { transform: translateY(0) scale(1, 1); } 10% { transform: translateY(0) scale(1.1, .88); } 32% { transform: translateY(-12px) scale(.94, 1.1); } 52% { transform: translateY(0) scale(1.08, .92); } 66% { transform: translateY(-5px) scale(.98, 1.03); } 78% { transform: translateY(0) scale(1.02, .98); } }
 .j-ready { cursor: pointer; }
+.j-bonus { cursor: pointer; }
+.bonus-ov { position: fixed; inset: 0; z-index: 9000; background: #0b1a24; }
+.bonus-ov iframe { display: block; width: 100%; height: 100%; border: 0; }
+body.bonus-on { overflow: hidden; }
 .chest-win.ready { background: linear-gradient(135deg, #fff3c4, #ffd36a); box-shadow: 0 0 0 3px #fff6b8 inset, 0 6px 18px rgba(255, 180, 0, .35); }
 .co-stage { position: relative; overflow: hidden; text-align: center; padding: 18px 16px 24px; margin-top: 8px; border-radius: 28px; background: radial-gradient(circle at 50% 38%, #fff6c8, #ffd36a 45%, #f0a500); color: #5a3d00; display: flex; flex-direction: column; align-items: center; gap: 10px; }
 .co-stage > * { position: relative; z-index: 1; }
@@ -11176,6 +11180,7 @@ return exports;})();
       if (ready) h += '<g transform="translate(' + (cx + 16) + " " + (cy - 34) + ')"><circle r="9" fill="#ffbe3d" stroke="#fff" stroke-width="2"/><text y="4.5" text-anchor="middle" font-size="13" font-weight="900" fill="#fff">!</text></g>';
       h += "</g>";
     });
+    h += bonusSvg(level, c);
     // levels
     stops.forEach(function (st) {
       const R = st.last ? 27 : st.mile ? 21 : 19, state = st.locked ? "locked" : st.passed ? "done" : "current";
@@ -11204,6 +11209,74 @@ return exports;})();
     journeyPos[key] = J.cur;
     return h + "</svg>";
   }
+
+  /* ───────────── Bonuslevels (v95): een los spel op de kaart, bij een plek die bij het verhaal hoort ───────────── */
+  const BONUS = { profeten: { id: "thawr", name: "Het web van Thawr", src: "spel/thawr.html", spots: [[326, 498], [326, 548], [326, 330], [34, 520]] } };
+  const BONUS_STAR_GEMS = 10;                   /* edelstenen per nieuwe ster in een bonuslevel */
+  let bonusCur = null;
+  function bonusOf(catId) { return BONUS[catId] || null; }
+  function bonusRec(lv, id) { return (P.bonus && P.bonus[lv] && P.bonus[lv][id]) || null; }
+  /* het bonuslevel gaat open zodra je het level haalt dat er op de kaart het dichtst bij ligt */
+  /* plek op de kaart: de eerste vaste plek bij de grot die vrij ligt van de levels (anders de ruimste) */
+  function bonusPos(lv, catId, b) {
+    const pts = jLayout(jCount(lv, catId)); let best = b.spots[0], bd = -1;
+    for (let k = 0; k < b.spots.length; k++) { const sp = b.spots[k], d = Math.min.apply(null, pts.map(function (p) { return Math.hypot(p.x - sp[0], p.y - sp[1]); })); if (d >= 62) return { x: sp[0], y: sp[1] }; if (d > bd) { bd = d; best = sp; } }
+    return { x: best[0], y: best[1] };
+  }
+  function bonusNeed(lv, catId, b) { const pts = jLayout(jCount(lv, catId)), y = bonusPos(lv, catId, b).y; let bi = 0, bd = 1e9; pts.forEach(function (p, i) { const d = Math.abs(p.y - y); if (d < bd) { bd = d; bi = i; } }); return bi; }
+  function bonusOpen(lv, catId, b) { return jPassed(lv, catId, bonusNeed(lv, catId, b)); }
+  function bonusSvg(level, c) {
+    const b = bonusOf(c.id); if (!b) return "";
+    const bp = bonusPos(level, c.id, b), open = bonusOpen(level, c.id, b), rec = bonusRec(level, b.id), fresh = open && !(rec && rec.won), st = rec ? rec.stars : 0;
+    const label = "Bonuslevel " + b.name + (open ? (rec && rec.won ? ": gespeeld, " + st + " van 3 sterren" : ": nieuw, tik om te spelen") : ": vergrendeld, haal eerst level " + (bonusNeed(level, c.id, b) + 1)) + ". Je speelt dit spel door te slepen en te tikken.";
+    let h = '<g class="j-stop j-bonus" data-act="bonus-game" data-cat="' + c.id + '" role="button" tabindex="0" aria-label="' + esc(label) + '" transform="translate(' + bp.x + " " + bp.y + ')"><circle r="34" fill="#000" fill-opacity="0"/>';
+    if (fresh) h += '<circle r="31" fill="#fff3a0" opacity=".5"><animate attributeName="opacity" values=".2;.85;.2" dur="1.3s" repeatCount="indefinite"/></circle>';
+    h += '<circle r="23" fill="' + (open ? "#1d3b4f" : "#8a8478") + '" stroke="#ffd54f" stroke-width="3.5"/><g stroke="#fff" stroke-opacity=".85" stroke-width="1.1" fill="none">';
+    for (let k = 0; k < 8; k++) { const a = k * Math.PI / 4; h += '<line x1="0" y1="0" x2="' + (Math.cos(a) * 18).toFixed(1) + '" y2="' + (Math.sin(a) * 18).toFixed(1) + '"/>'; }
+    [6, 11.5, 17].forEach(function (r) { let pts = ""; for (let k = 0; k < 8; k++) { const a = k * Math.PI / 4; pts += (Math.cos(a) * r).toFixed(1) + "," + (Math.sin(a) * r).toFixed(1) + " "; } h += '<polygon points="' + pts + '"/>'; });
+    h += '</g><circle r="3.4" fill="#2a1f19" stroke="#fff" stroke-width="1"/>';
+    if (!open) h += '<g transform="translate(-7 -9)"><rect x="0" y="7" width="14" height="11" rx="2.5" fill="#fff"/><path d="M3 7 V4 a4 4 0 0 1 8 0 V7" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/></g>';
+    h += '<rect x="-25" y="25" width="50" height="16" rx="8" fill="#1b4332" stroke="#ffd54f" stroke-width="1.5"/><text y="37" text-anchor="middle" font-size="10.5" font-weight="900" fill="#ffe27a">BONUS</text>';
+    if (rec && rec.won) for (let k = 0; k < 3; k++) h += (k < st ? '<g transform="translate(' + ((k - 1) * 14) + ' 50) scale(.6)">' + starInner() + "</g>" : '<polygon points="' + starPoly((k - 1) * 14, 50, 6.5) + '" fill="rgba(0,0,0,.35)" stroke="#fff" stroke-width="1.2" stroke-linejoin="round"/>');
+    if (fresh) h += '<g transform="translate(19 -20)"><circle r="9" fill="#ffbe3d" stroke="#fff" stroke-width="2"/><text y="4.5" text-anchor="middle" font-size="13" font-weight="900" fill="#fff">!</text></g>';
+    return h + "</g>";
+  }
+  function openBonus(catId) {
+    const lv = P.mode, b = bonusOf(catId); if (!b || bonusCur) return;
+    if (!bonusOpen(lv, catId, b)) { play("wrong"); jToast("🕸️ Bonuslevel " + b.name + ": haal eerst level " + (bonusNeed(lv, catId, b) + 1) + "."); return; }
+    play("click"); stopTimer();
+    const ov = document.createElement("div");
+    ov.className = "bonus-ov"; ov.setAttribute("role", "dialog"); ov.setAttribute("aria-modal", "true"); ov.setAttribute("aria-label", "Bonuslevel " + b.name);
+    ov.innerHTML = '<iframe src="' + b.src + "?lv=" + lv + "&snd=" + (S.sound ? 1 : 0) + '" title="Bonuslevel ' + esc(b.name) + '" allow="autoplay"></iframe>';
+    document.body.appendChild(ov); document.body.classList.add("bonus-on");
+    const app = document.getElementById("app"); if (app) app.setAttribute("aria-hidden", "true");
+    bonusCur = { lv: lv, catId: catId, b: b, ov: ov, frame: ov.firstChild, msg: "" };
+    setTimeout(function () { try { bonusCur && bonusCur.frame.focus(); } catch (e) {} }, 300);
+  }
+  function closeBonus() {
+    if (!bonusCur) return;
+    const msg = bonusCur.msg; bonusCur.ov.remove(); bonusCur = null; document.body.classList.remove("bonus-on");
+    const app = document.getElementById("app"); if (app) app.removeAttribute("aria-hidden");
+    render();
+    if (msg) setTimeout(function () { jToast(msg); }, 250);
+  }
+  function bonusResult(d) {
+    const c = bonusCur, lv = c.lv, id = c.b.id;
+    if (!P.bonus) P.bonus = {}; if (!P.bonus[lv]) P.bonus[lv] = {};
+    const old = P.bonus[lv][id] || { stars: 0, plays: 0, won: false }, stars = d.ok ? Math.max(0, Math.min(3, d.stars | 0)) : 0;
+    let gems = 0;
+    if (d.ok) { if (!old.won) gems += Math.max(0, Math.min(20, d.gems | 0)); gems += Math.max(0, stars - old.stars) * BONUS_STAR_GEMS; }
+    P.bonus[lv][id] = { stars: Math.max(old.stars, stars), plays: (old.plays || 0) + 1, won: old.won || !!d.ok };
+    if (gems) { addReward(lv, 0, gems); c.msg = "💎 +" + gems + " edelstenen voor " + c.b.name + "!"; }
+    else if (d.ok && old.won) c.msg = "🕸️ Goed gedaan! Edelstenen krijg je alleen voor nieuwe sterren.";
+    saveState();
+  }
+  window.addEventListener("message", function (e) {
+    if (!bonusCur || e.origin !== location.origin || e.source !== bonusCur.frame.contentWindow) return;
+    const d = e.data || {}; if (!d.nurspark) return;
+    if (d.type === "close") closeBonus(); else if (d.type === "result") bonusResult(d);
+  });
+  document.addEventListener("keydown", function (e) { if (bonusCur && e.key === "Escape") closeBonus(); });
 
   /* ───────────── Medespelers op de kaart ───────────── */
   /* Alleen een nickname (of voornaam), een avatar en spelstatistieken. Nooit e-mail, achternaam of locatie. */
@@ -12196,6 +12269,7 @@ return exports;})();
       case "colofon": play("click"); colofonDialog(); break;
       case "bon-box": stopTimer(); if (result) result.noAuto = true; openBonBox(el.dataset.cat); break;
       case "journey-chest": openChest(el.dataset.cat, parseInt(el.dataset.i, 10)); break;
+      case "bonus-game": openBonus(el.dataset.cat); break;
       case "mg-open-now": chestOpenNow(); break;
       case "mg-start": startMinigame(); break;
       case "rad": play("click"); rad = null; radNet = null; screen = "rad"; radGrpCheck(); render(); break;
