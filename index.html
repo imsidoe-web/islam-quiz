@@ -1212,8 +1212,13 @@ body.jfull .reward-flyer { top: 160px; }
 .btn-out-quiz { appearance: none; width: 100%; margin-top: 18px; padding: 12px 16px; border-radius: 10px; border: 2px solid #ffe2a9; background: transparent; color: #ffe2a9; font: inherit; font-weight: 800; cursor: pointer; }
 .btn-out-quiz:hover { background: rgba(255, 226, 169, .12); }
 /* v94: account verwijderen + toestemming 16- */
-.btn-del-quiz { appearance: none; width: 100%; margin-top: 10px; padding: 10px 16px; border-radius: 10px; border: 2px solid #f4a99b; background: transparent; color: #ffc4b8; font: inherit; font-weight: 800; font-size: .92rem; cursor: pointer; }
-.btn-del-quiz:hover { background: rgba(244, 169, 155, .14); }
+.btn-del-quiz { appearance: none; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 26px; padding: 11px 16px; border-radius: 10px; border: 2px solid #e5484d; background: #c62828; color: #fff; font: inherit; font-weight: 900; font-size: .92rem; cursor: pointer; box-shadow: 0 3px 0 #7f1d1d; }
+.btn-del-quiz:hover { background: #b71c1c; }
+.btn-del-quiz svg { flex: none; }
+.del-sep { border: 0; border-top: 1px dashed rgba(255, 226, 169, .35); margin: 22px 0 0; }
+.del-type { width: 100%; margin-top: 10px; padding: 10px 12px; border-radius: 10px; border: 2px solid #e5484d; font: inherit; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+.btn.danger { background: #c62828; color: #fff; box-shadow: 0 4px 0 #7f1d1d; }
+.btn.danger:disabled { opacity: .45; cursor: not-allowed; }
 .acct-consent { display: flex; gap: 10px; align-items: flex-start; text-align: left; margin: 14px 0 6px; padding: 10px 12px; border-radius: 12px; background: rgba(255, 226, 169, .10); border: 1.5px solid rgba(255, 226, 169, .45); font-size: .92rem; line-height: 1.4; cursor: pointer; }
 .acct-consent input { width: 22px; height: 22px; flex: none; margin: 1px 0 0; accent-color: #f6d25a; }
 .acct-consent a { color: #ffe2a9; }
@@ -5544,6 +5549,22 @@ return exports;})();
     }
     saveState(); render();
   }
+  /* v94c: extra veilig: eerst het woord VERWIJDER typen */
+  function acctDeleteConfirm() {
+    const w = document.createElement("div"); w.className = "dialog-wrap";
+    w.innerHTML = '<div class="dialog" role="dialog" aria-modal="true" aria-labelledby="delT"><h3 id="delT">Account verwijderen?</h3>' +
+      "<p>Je account, je e-mailadres, je plek op het klassement, je dagreeks, je herinneringen en je voortgang op dit toestel worden <b>definitief gewist</b>. Dit kan niet ongedaan worden gemaakt.</p>" +
+      '<label for="delWord">Typ <b>VERWIJDER</b> om te bevestigen:</label><input id="delWord" class="del-type" type="text" autocomplete="off" autocapitalize="characters">' +
+      '<div class="row" style="margin-top:14px"><button class="btn ghost" data-d="no">Annuleren</button><button class="btn danger" data-d="yes" disabled>Verwijderen</button></div></div>';
+    const yes = w.querySelector('[data-d="yes"]'), inp = w.querySelector("#delWord");
+    inp.addEventListener("input", function () { yes.disabled = inp.value.trim().toUpperCase() !== "VERWIJDER"; });
+    w.addEventListener("click", function (e) {
+      const d = e.target.closest("[data-d]");
+      if (e.target === w || (d && d.dataset.d === "no")) { w.remove(); return; }
+      if (d && d.dataset.d === "yes" && !yes.disabled) { w.remove(); acctDelete(); }
+    });
+    document.body.appendChild(w); inp.focus();
+  }
   /* v94: account definitief verwijderen (Supabase-functie delete_my_account, zie supabase-account-verwijderen.sql) */
   async function acctDelete() {
     if (!sb || !sbUser) { infoDialog("Account verwijderen", "<p>Je bent niet ingelogd. Een gastspeler verwijder je met het prullenbakje bij Spelers.</p>"); return; }
@@ -6017,7 +6038,7 @@ return exports;})();
           : '<label class="quiz-label" for="username">Spelersnaam (Gast)</label>' + nameTipHtml() + '<input class="quiz-input" id="username" type="text" maxlength="14" autocomplete="off" placeholder="Voer je naam in..." aria-describedby="guestMsg"><p id="guestMsg" class="acct-msg" role="alert"></p><button class="btn-guest-quiz" data-act="acct-guest"><span aria-hidden="true">⚪</span> Doorgaan als Gast</button>');
     }
     if (logged || active) h += '<button class="btn-out-quiz" data-act="acct-logout">Uitloggen / Account wisselen</button>';
-    if (logged) h += '<button class="btn-del-quiz" data-act="acct-delete">Account verwijderen</button>';
+    if (logged) h += '<hr class="del-sep"><button class="btn-del-quiz" data-act="acct-delete">' + icon("trash", 18) + 'Account verwijderen</button>';
     return h + "</div>";
   }
   function nickSave() {
@@ -6620,6 +6641,7 @@ return exports;})();
       '<button class="btn ghost" data-act="bazaar" data-d="x">' + gemSvg(18) + "Bazaar</button>" +
       '<button class="btn ghost" data-act="tour" data-d="x">Uitleg bekijken</button>' + (COLOFON_ON ? '<button class="btn ghost" data-act="colofon" data-d="x">Over de app (colofon)</button>' : "") + (isStandalone() ? "" : '<button class="btn ghost" data-act="install" data-d="x">Zet op beginscherm</button>') + "</div>" +
       '<button class="set-danger" data-act="reset" data-d="x">' + icon("trash", 16) + "Voortgang van " + esc(P.name) + " wissen</button>" +
+      (sbUser && P.sbId === sbUser.id ? '<button class="set-danger" data-act="acct-delete" data-d="x">' + icon("trash", 16) + "Account verwijderen</button>" : "") +
       legalLinks() + '<button class="btn block" data-d="ok">Klaar</button></div></div>';
     w.addEventListener("change", function (e) {
       if (e.target.id === "optSound") { S.sound = e.target.checked; if (!S.sound) voiceStop(); }
@@ -12314,9 +12336,7 @@ return exports;})();
       case "nick-save": nickSave(); break;
       case "acct-tab": acctTab = el.dataset.tab; sbMsg(""); acctRefresh('.acct-tab[aria-selected="true"]'); break;
       case "acct-oauth": play("click"); sbOAuth(el.dataset.provider); break;
-      case "acct-delete": play("click"); closeAccount();
-        confirmDialog("Account verwijderen?", "Je account, je e-mailadres, je plek op het klassement, je dagreeks, je herinneringen en je voortgang op dit toestel worden definitief gewist. Dit kan niet ongedaan worden gemaakt.", "Ja, verwijderen", acctDelete);
-        break;
+      case "acct-delete": play("click"); closeAccount(); acctDeleteConfirm(); break;
       case "acct-guest": play("click"); guestEnter(); break;
       case "acct-logout": play("click"); closeAccount(); confirmDialog("Uitloggen / Account wisselen", "De voortgang van " + (P ? P.name : "deze speler") + " op dit apparaat wordt gewist" + (sbUser ? " (je highscore op het wereldwijde klassement blijft staan)" : "") + ". Andere spelers op dit apparaat blijven bewaard. Daarna kies je een nieuw account of speel je als gast.", "Ja, uitloggen", doLogout); break;
       case "login-guest": play("click"); guestEnter(); break;
