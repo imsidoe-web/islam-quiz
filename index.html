@@ -1211,6 +1211,12 @@ body.jfull .reward-flyer { top: 160px; }
 .acct-dlg .btn-guest-quiz { margin-top: 10px; }
 .btn-out-quiz { appearance: none; width: 100%; margin-top: 18px; padding: 12px 16px; border-radius: 10px; border: 2px solid #ffe2a9; background: transparent; color: #ffe2a9; font: inherit; font-weight: 800; cursor: pointer; }
 .btn-out-quiz:hover { background: rgba(255, 226, 169, .12); }
+/* v94: account verwijderen + toestemming 16- */
+.btn-del-quiz { appearance: none; width: 100%; margin-top: 10px; padding: 10px 16px; border-radius: 10px; border: 2px solid #f4a99b; background: transparent; color: #ffc4b8; font: inherit; font-weight: 800; font-size: .92rem; cursor: pointer; }
+.btn-del-quiz:hover { background: rgba(244, 169, 155, .14); }
+.acct-consent { display: flex; gap: 10px; align-items: flex-start; text-align: left; margin: 14px 0 6px; padding: 10px 12px; border-radius: 12px; background: rgba(255, 226, 169, .10); border: 1.5px solid rgba(255, 226, 169, .45); font-size: .92rem; line-height: 1.4; cursor: pointer; }
+.acct-consent input { width: 22px; height: 22px; flex: none; margin: 1px 0 0; accent-color: #f6d25a; }
+.acct-consent a { color: #ffe2a9; }
 .acct-dlg button:focus-visible, .acct-dlg input:focus-visible { outline: 3px solid #ffd54f; outline-offset: 2px; }
 .btn.acct-open { border-color: var(--gold); }
 
@@ -5496,8 +5502,19 @@ return exports;})();
     if (el) { el.textContent = t; el.classList.toggle("err", !!t && !ok); el.classList.toggle("ok", !!t && !!ok); } else { announce(t); try { window.alert(t); } catch (e) {} }
   }
   function sbLoginGoogle() { sbOAuth("google"); }
+  const CONSENT_MSG = "Vink eerst aan dat je 16 jaar of ouder bent, of dat je ouder of verzorger toestemming geeft.";
+  function consentOk() {
+    const cb = document.getElementById("acctAge");
+    if (cb && cb.checked) { S.consent16 = true; saveState(); }
+    if (S.consent16) return true;
+    sbMsg(CONSENT_MSG);
+    if (cb) { cb.focus(); const l = cb.closest(".acct-consent"); if (l) { l.style.borderColor = "#f4a99b"; } }
+    else accountDialog();
+    return false;
+  }
   function sbOAuth(provider) {
     sbMsg("");
+    if (!consentOk()) return;
     if (!sb) { sbMsg("Inloggen kan nu niet: de inlogdienst is niet bereikbaar. Controleer je verbinding of ga door als gast."); return; }
     if (P && !P.sbId && P.gid) { guestLink(provider); return; }      /* gast met eigen scorebordplek: het account wordt gekoppeld, de plek blijft */
     plainOAuth(provider);
@@ -5526,6 +5543,23 @@ return exports;})();
       saveState(); screen = "login"; render(); accountDialog(); return;
     }
     saveState(); render();
+  }
+  /* v94: account definitief verwijderen (Supabase-functie delete_my_account, zie supabase-account-verwijderen.sql) */
+  async function acctDelete() {
+    if (!sb || !sbUser) { infoDialog("Account verwijderen", "<p>Je bent niet ingelogd. Een gastspeler verwijder je met het prullenbakje bij Spelers.</p>"); return; }
+    const uid = sbUser.id, victim = S.players.find(function (p) { return p.sbId === uid; }) || P;
+    let ok = false;
+    try { const r = await sb.rpc("delete_my_account"); ok = !(r && r.error); } catch (e) { ok = false; }
+    if (!ok) {
+      try { await sb.from("leaderboard").delete().eq("user_id", uid); } catch (e) {}
+      try { await sb.from("user_streaks").delete().eq("user_id", uid); } catch (e) {}
+    }
+    try { closeGroupSub(); if (victim) leaveGroup(victim); } catch (e) {}
+    if (victim) { S.players = S.players.filter(function (p) { return p.id !== victim.id; }); afterPlayerRemoved(victim); }
+    else { sbClearSession(); saveState(); render(); }
+    infoDialog(ok ? "Account verwijderd" : "Bijna klaar",
+      ok ? "<p>Je account en je gegevens zijn gewist. Je kunt altijd opnieuw beginnen, als gast of met een nieuw account.</p>"
+         : '<p>Je plek op het klassement en je voortgang op dit toestel zijn gewist. Je account zelf kon niet automatisch worden verwijderd. Mail naar <a href="mailto:info@nurspark.app?subject=Account%20verwijderen">info@nurspark.app</a>, dan regelen we het binnen een maand.</p>');
   }
   function doLogout() {
     sbClearSession();
@@ -5968,6 +6002,7 @@ return exports;})();
     if (!logged) {
       const up = acctTab === "up";
       h += '<div class="acct-tabs" role="tablist" aria-label="Inloggen of registreren"><button type="button" role="tab" class="acct-tab' + (!up ? " on" : "") + '" aria-selected="' + !up + '" data-act="acct-tab" data-tab="in">Inloggen</button><button type="button" role="tab" class="acct-tab' + (up ? " on" : "") + '" aria-selected="' + up + '" data-act="acct-tab" data-tab="up">Registreren</button></div>' +
+        '<label class="acct-consent"><input type="checkbox" id="acctAge"' + (S.consent16 ? " checked" : "") + '><span>Ik ben <b>16 jaar of ouder</b>, of mijn ouder of verzorger geeft toestemming. <a href="/privacy/" target="_blank" rel="noopener">Privacy</a></span></label>' +
         '<form class="acct-form" novalidate>' +
         (up ? '<label class="quiz-label" for="acctName">Naam (zichtbaar op het klassement)</label><input class="quiz-input" id="acctName" type="text" maxlength="14" autocomplete="nickname" placeholder="Bijvoorbeeld Aisha">' : "") +
         '<label class="quiz-label" for="acctEmail">E-mailadres</label><input class="quiz-input" id="acctEmail" type="email" inputmode="email" autocomplete="email" placeholder="naam@voorbeeld.nl" value="' + esc(keepEmail || "") + '">' +
@@ -5982,6 +6017,7 @@ return exports;})();
           : '<label class="quiz-label" for="username">Spelersnaam (Gast)</label>' + nameTipHtml() + '<input class="quiz-input" id="username" type="text" maxlength="14" autocomplete="off" placeholder="Voer je naam in..." aria-describedby="guestMsg"><p id="guestMsg" class="acct-msg" role="alert"></p><button class="btn-guest-quiz" data-act="acct-guest"><span aria-hidden="true">⚪</span> Doorgaan als Gast</button>');
     }
     if (logged || active) h += '<button class="btn-out-quiz" data-act="acct-logout">Uitloggen / Account wisselen</button>';
+    if (logged) h += '<button class="btn-del-quiz" data-act="acct-delete">Account verwijderen</button>';
     return h + "</div>";
   }
   function nickSave() {
@@ -6028,6 +6064,7 @@ return exports;})();
     sbMsg("");
     if (!sb) { sbMsg("Inloggen kan nu niet: de inlogdienst is niet bereikbaar. Controleer je verbinding of ga door als gast."); return; }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) { sbMsg("Vul een geldig e-mailadres in."); return; }
+    if (up && !consentOk()) return;
     if (up && !nm) { sbMsg("Vul een naam in voor op het klassement."); return; }
     if (up && nameError(nm)) { sbMsg(nameError(nm)); return; }
     if (pw.length < (up ? 8 : 1)) { sbMsg(up ? "Kies een wachtwoord van minstens 8 tekens." : "Vul je wachtwoord in."); return; }
@@ -12263,6 +12300,9 @@ return exports;})();
       case "nick-save": nickSave(); break;
       case "acct-tab": acctTab = el.dataset.tab; sbMsg(""); acctRefresh('.acct-tab[aria-selected="true"]'); break;
       case "acct-oauth": play("click"); sbOAuth(el.dataset.provider); break;
+      case "acct-delete": play("click"); closeAccount();
+        confirmDialog("Account verwijderen?", "Je account, je e-mailadres, je plek op het klassement, je dagreeks, je herinneringen en je voortgang op dit toestel worden definitief gewist. Dit kan niet ongedaan worden gemaakt.", "Ja, verwijderen", acctDelete);
+        break;
       case "acct-guest": play("click"); guestEnter(); break;
       case "acct-logout": play("click"); closeAccount(); confirmDialog("Uitloggen / Account wisselen", "De voortgang van " + (P ? P.name : "deze speler") + " op dit apparaat wordt gewist" + (sbUser ? " (je highscore op het wereldwijde klassement blijft staan)" : "") + ". Andere spelers op dit apparaat blijven bewaard. Daarna kies je een nieuw account of speel je als gast.", "Ja, uitloggen", doLogout); break;
       case "login-guest": play("click"); guestEnter(); break;
@@ -12273,6 +12313,7 @@ return exports;})();
   document.addEventListener("change", function (e) {
     const el = e.target;
     if (el && el.dataset && el.dataset.act === "toggle-timer") { S.timer = el.checked; saveState(); play("click"); }
+    if (el && el.id === "acctAge") { S.consent16 = !!el.checked; saveState(); const l = el.closest(".acct-consent"); if (l) l.style.borderColor = ""; if (el.checked) sbMsg(""); }
     if (el && el.dataset && el.dataset.act === "toggle-hg") { S.hgOff = !el.checked; saveState(); play("click"); }
     if (el && el.dataset && el.dataset.act === "toggle-kos") { S.look = el.checked ? "kosmos" : ""; saveState(); play("click"); render(); }
   });
