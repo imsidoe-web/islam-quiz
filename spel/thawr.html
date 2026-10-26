@@ -114,9 +114,9 @@
   function pos(e) { const r = C.getBoundingClientRect(), t = e.touches ? e.touches[0] : e; return { x: (t.clientX - r.left) * W / r.width, y: (t.clientY - r.top) * H / r.height }; }
   function nearAnchor(p) { let best = -1, bd = 60; anchors.forEach((a, i) => { const d = Math.hypot(a.x - p.x, a.y - p.y); if (d < bd) { bd = d; best = i; } }); return best; }
   function down(e) {
-    if (!running || paused) return; const p = pos(e); mx = p.x;
+    if (paused || (!running && !(finished && egg))) return; const p = pos(e); mx = p.x;
     if (star && Math.hypot(p.x - star.x, p.y - star.y) < 55) { star = null; starDone = true; ask("⭐ Gouden vraag"); return; }
-    if (egg && egg.ready && Math.hypot(p.x - egg.x, p.y - egg.y) < 50) { egg = null; ask("🥚 Gouden ei"); return; }
+    if (egg && egg.ready && Math.hypot(p.x - egg.x, p.y - egg.y) < 70) { egg = null; ask("🥚 Gouden ei"); return; }
     if (phase === "nest") { for (let i = twigs.length - 1; i >= 0; i--) { const tw = twigs[i]; if (!tw.fly && !tw.gone && Math.hypot(p.x - tw.x, p.y - tw.y) < (tw.gold ? 70 : 55)) { tw.fly = true; if (tw.gold) goldHit(tw); else sfx.pop(); return; } } return; }
     const a = nearAnchor(p); if (a >= 0) drag = { from: a, x: p.x, y: p.y };
   }
@@ -162,8 +162,8 @@
   function win() {
     finished = true; running = false; glow = .01; sfx.win(); setTask("");
     egg = { x: NEST.x, y: NEST.y - 14, ready: true };
-    setTimeout(() => { if (egg) { egg = null; showEnd(true); } }, 6000);
-    setTask("Tik op het gouden ei in het nest!");
+    setTimeout(() => { if (egg && !paused) { egg = null; showEnd(true); } }, 10000);
+    setTask("Tik op het gouden ei: bonusvraag +5 💎");
   }
   function showEnd(ok) {
     if (!$("end").hidden) return;
