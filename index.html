@@ -6112,6 +6112,7 @@ return exports;})();
   let boardLevel = "junior";   /* wordt bij het openen van het scorebord op de actieve modus gezet */
   let flyerPending = !!(P && P.mode);   /* toon bij aankomst op de kaart een motivatieflyer */
   let flyerLast = "";
+  let landFlyAfter = null;   /* v94b: land klaar maar er staat nog een kist klaar: eerst de kist, dan pas doorvliegen */
   let landFly = null;          /* {from,to}: land net voltooid, avatar vliegt bij terugkeer op de kaart naar het volgende land */
   let quiz = null;
   let result = null;
@@ -7421,7 +7422,10 @@ return exports;})();
     else if (screen === "board") app.innerHTML = viewBoard();
     else if (screen === "group") app.innerHTML = viewGroup();
     else if (screen === "duelresult") app.innerHTML = viewDuelResult();
-    else if (screen === "journey") { if (landFly) journeyLand = landFly.from; app.innerHTML = viewJourney(); }
+    else if (screen === "journey") {
+      if (!landFly && landFlyAfter) { const LS = landsFor(P.mode), fc = LS[landFlyAfter.from]; if (!fc || chestsReady(P.mode, fc.id) === 0) { landFly = landFlyAfter; landFlyAfter = null; } else journeyLand = landFlyAfter.from; }
+      if (landFly) journeyLand = landFly.from; app.innerHTML = viewJourney();
+    }
     else if (screen === "chestopen") { app.innerHTML = viewChestOpen(); afterChestOpenRender(); }
     else if (screen === "minigame") app.innerHTML = viewMinigame();
     else if (screen === "album") app.innerHTML = viewAlbum();
@@ -7806,7 +7810,8 @@ return exports;})();
       };
       if (!passed) { loseLife(); jr.lifeLost = true; jr.livesLeft = livesNow(); } else goalHit("level");
       jr.starChest = starChestCheck(lv, cid);
-      { const LS = landsFor(lv), li = LS.findIndex(function (x) { return x.id === cid; }); landFly = jr.landDone && passed && li + 1 < LS.length ? { from: li, to: li + 1 } : null; }
+      { const LS = landsFor(lv), li = LS.findIndex(function (x) { return x.id === cid; }); landFly = jr.landDone && passed && li + 1 < LS.length ? { from: li, to: li + 1 } : null;
+        if (landFly && chestsReady(lv, cid) > 0) { landFlyAfter = landFly; landFly = null; } }
       if (bonOn(lv) && stars === 3 && jr.prevStars < 3) { const bs = bonStats(lv, cid); jr.newBon = { kind: bonKind(lv, cid, ji).id, name: bonKind(lv, cid, ji).name, slot: ji + 1, have: bs.have, n: bs.n, full: bs.have >= bs.n, gold: ji >= BON_KINDS.length }; }
     } else if (quiz.kind === "daily") {
       const prev = P.daily[quiz.level][todayStr()];
@@ -11130,7 +11135,16 @@ return exports;})();
     stops.forEach(function (st) {
       if (!st.mile) return;
       const R = st.last ? 27 : 21, side = st.x < 180 ? 1 : -1, state = jChestState(level, c.id, st.i, n), ready = state === "ready";
-      const cx = st.x + side * (R + 28), cy = st.y + 6, game = MG_NAME[chestGame(c.id, st.i)];
+      /* v94b: de kist staat op de weg ná het level (tussen dit level en het volgende), de laatste boven het eindlevel */
+      const nx = stops[st.i + 1];
+      let cx, cy;
+      if (nx) {
+        const mx = (st.x + nx.x) / 2, my = (st.y + nx.y) / 2, dx = nx.x - st.x, dy = nx.y - st.y, ln = Math.max(1, Math.hypot(dx, dy));
+        let px = -dy / ln, py = dx / ln; if (py > 0) { px = -px; py = -py; }      /* loodrecht op het pad, aan de bovenkant */
+        cx = mx + px * 42; cy = my + py * 42 + 6;
+      }
+      else { cx = st.x + side * (R + 30); cy = st.y - 34; }
+      const game = MG_NAME[chestGame(c.id, st.i)];
       const label = "Schatkist na level " + (st.i + 1) + (ready ? ": klaar om te openen, met minigame " + game : state === "open" || state === "gold" ? ": geopend" : (jLandOpen(level, c.id) ? ": nog dicht, haal eerst level " + (st.i + 1) : ": vergrendeld, rond eerst het vorige land af"));
       h += '<g class="j-stop j-chest' + (ready ? " j-ready" : "") + '" data-act="journey-chest" data-cat="' + c.id + '" data-i="' + st.i + '" role="button" tabindex="0" aria-label="' + label + '">' +
         '<circle cx="' + cx + '" cy="' + cy + '" r="26" fill="#000" fill-opacity="0"/>';
