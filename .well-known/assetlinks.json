@@ -1,0 +1,10 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "app.nurspark",
+    "sha256_cert_fingerprints": [
+      "54:4C:CC:BC:A8:DC:12:82:5D:1E:A4:9D:CC:A7:99:3F:E3:DC:5B:E6:39:15:4B:1B:DE:9C:03:62:96:AD:FD:31"
+    ]
+  }
+}]
