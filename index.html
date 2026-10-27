@@ -6686,6 +6686,7 @@ return exports;})();
       row('id="optAuto"' + (autoOn() ? " checked" : ""), "Automatisch doorgaan", "Na een level vanzelf verder") +
       row('id="optLvMenu"' + (S.lvmenu !== false ? " checked" : ""), "Levelmenu met beloningen", "Toont vooraf wat je kunt winnen (Gevorderd en Ervaren)") +
       row('id="optJummah"' + (S.jummah !== false ? " checked" : ""), "Jummah-cadeau op vrijdag", "Een groet met cadeau en herinnering, elke vrijdag") +
+      (window.nsStats ? row('id="optStats"' + (window.nsStats.on() ? " checked" : ""), "Bezoekersstatistieken", "Help ons met anonieme tellingen via Google Analytics (geen advertenties)") : "") +
       row('id="optLab"' + (labState().on ? " checked" : ""), "Testlab (in ontwikkeling)", "Organisatiekamers in Bayt al-‘Ilm uitproberen: school, docent, imam of uitgeverij. Alleen op dit toestel.") +
       (OLD_HOST ? '<button class="btn gold block" data-act="move-out" style="margin:10px 0">Verhuis naar nurspark.app</button>' : "") +
       (pushSupported() ? row('id="optRemind"' + (S.remind ? " checked" : ""), "Dagelijkse herinnering", "Melding om " + REMIND_HOUR + ":00 als je reeks in gevaar is") + '<p class="set-info" id="remindMsg" role="status" hidden></p>' : "") +
@@ -6710,6 +6711,7 @@ return exports;})();
       if (e.target.id === "optAuto") S.autoNext = e.target.checked;
       if (e.target.id === "optLvMenu") S.lvmenu = e.target.checked;
       if (e.target.id === "optJummah") S.jummah = e.target.checked;
+      if (e.target.id === "optStats" && window.nsStats) window.nsStats.set(e.target.checked);
       if (e.target.id === "optLab") labState().on = e.target.checked;
       if (e.target.id === "optRemind") {
         const box = e.target, msg = document.getElementById("remindMsg");
@@ -12766,6 +12768,63 @@ return exports;})();
 if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
   window.addEventListener("load", function () { navigator.serviceWorker.register("sw.js").catch(function () {}); });
 }
+</script>
+
+<!-- v102: Bezoekersstatistieken (Google Analytics), alleen na toestemming -->
+<style>
+.ns-cookie{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:10060;max-width:520px;margin:0 auto;background:#faf8f5;color:#1f2a24;border:2px solid #d9a05b;border-radius:20px;padding:16px 16px 14px;box-shadow:0 10px 28px rgba(27,67,50,.25);font-family:Nunito,system-ui,sans-serif;animation:nsCk .35s ease both}
+.ns-cookie h4{margin:0 0 6px;font-size:1.05rem;color:#1b4332}
+.ns-cookie p{margin:0 0 12px;font-size:.92rem;line-height:1.4;color:#3d4a42}
+.ns-cookie a{color:#8a5a14;font-weight:700}
+.ns-cookie .ns-ck-row{display:flex;gap:8px}
+.ns-cookie button{flex:1;border:0;border-radius:14px;padding:11px 10px;font:800 .95rem Nunito,system-ui,sans-serif;cursor:pointer}
+.ns-cookie .ns-ck-yes{background:#2d6a4f;color:#fff;box-shadow:inset 0 -3px 0 rgba(0,0,0,.2)}
+.ns-cookie .ns-ck-no{background:#fbefd9;color:#8a5a14;border:1.5px solid #d9a05b}
+@keyframes nsCk{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+</style>
+<script>
+(function () {
+  var GA_ID = "G-5GKS23391E", KEY = "ns-stats";
+  function get() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
+  function set(v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
+  var loaded = false;
+  function load() {
+    window["ga-disable-" + GA_ID] = false;
+    if (loaded) return; loaded = true;
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { dataLayer.push(arguments); };
+    gtag("js", new Date());
+    gtag("config", GA_ID, { allow_google_signals: false, allow_ad_personalization_signals: false });
+    var s = document.createElement("script"); s.async = true;
+    s.src = "https://www.googletagmanager.com/gtag/js?id=" + GA_ID;
+    document.head.appendChild(s);
+  }
+  function stop() {
+    window["ga-disable-" + GA_ID] = true;
+    document.cookie.split(";").forEach(function (c) {
+      var n = c.split("=")[0].trim();
+      if (n.indexOf("_ga") === 0) ["", "; domain=.nurspark.app", "; domain=" + location.hostname].forEach(function (d) { document.cookie = n + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/" + d; });
+    });
+  }
+  /* Voor de Instellingen: true = aan, false = uit */
+  window.nsStats = { on: function () { return get() === "yes"; }, set: function (on) { set(on ? "yes" : "no"); if (on) load(); else stop(); } };
+  var local = /^(localhost|127\.|192\.168\.)/.test(location.hostname);
+  if (local) return;
+  if (get() === "yes") { load(); return; }
+  if (get() === "no") return;
+  function ask() {
+    var b = document.createElement("div"); b.className = "ns-cookie"; b.setAttribute("role", "dialog"); b.setAttribute("aria-label", "Bezoekersstatistieken");
+    b.innerHTML = "<h4>Mogen we meetellen? 📊</h4><p>We willen graag zien hoeveel mensen NurSpark gebruiken, zodat we de app beter kunnen maken. Daarvoor gebruiken we Google Analytics (zonder advertenties). <a href=\"/privacy/\" target=\"_blank\" rel=\"noopener\">Meer info</a></p>" +
+      "<div class=\"ns-ck-row\"><button class=\"ns-ck-no\" type=\"button\">Liever niet</button><button class=\"ns-ck-yes\" type=\"button\">Akkoord</button></div>";
+    b.addEventListener("click", function (e) {
+      var y = e.target.closest(".ns-ck-yes"), n = e.target.closest(".ns-ck-no");
+      if (!y && !n) return;
+      window.nsStats.set(!!y); b.remove();
+    });
+    document.body.appendChild(b);
+  }
+  setTimeout(ask, 2500);
+})();
 </script>
 </body>
 </html>
