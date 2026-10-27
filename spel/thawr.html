@@ -323,14 +323,18 @@
     X.save(); X.translate(x, y);
     X.strokeStyle = "rgba(240,248,255,.7)"; X.lineWidth = 1.5; X.beginPath(); X.moveTo(0, -70); X.lineTo(0, -12); X.stroke();   // draadje
     X.scale(2.8, 2.8);
-    X.fillStyle = "rgba(0,0,0,.35)"; X.beginPath(); X.ellipse(-3, 18, 15, 4, 0, 0, Math.PI * 2); X.fill();   // schaduw
-    X.strokeStyle = "#2e2219"; X.lineWidth = 2.2;
-    for (let i = 0; i < 4; i++) { const w = Math.sin(now * .02 + i) * 2; [-1, 1].forEach((s) => { X.beginPath(); X.moveTo(0, -2 + i * 3); X.quadraticCurveTo(s * 12, -10 + i * 5 + w, s * 18, 2 + i * 5); X.stroke(); }); }
-    const bg = X.createRadialGradient(3, 1, 1, 0, 6, 11); bg.addColorStop(0, "#6b5444"); bg.addColorStop(1, "#22180f"); X.fillStyle = bg;
+    // zachte maangloed achter de spin, zodat hij loskomt van rots en grot
+    const hg = X.createRadialGradient(0, 4, 4, 0, 4, 30); hg.addColorStop(0, "rgba(255,240,200,.55)"); hg.addColorStop(1, "rgba(255,240,200,0)"); X.fillStyle = hg; X.beginPath(); X.arc(0, 4, 30, 0, Math.PI * 2); X.fill();
+    // poten: eerst een lichte rand, dan de zwarte poot erop
+    const legs = (col, lw) => { X.strokeStyle = col; X.lineWidth = lw; X.lineCap = "round"; for (let i = 0; i < 4; i++) { const w = Math.sin(now * .02 + i) * 2; [-1, 1].forEach((sd) => { X.beginPath(); X.moveTo(0, -2 + i * 3); X.quadraticCurveTo(sd * 12, -10 + i * 5 + w, sd * 18, 2 + i * 5); X.stroke(); }); } };
+    legs("#f3e6c4", 4); legs("#0d0a08", 2.2);
+    // lijf en kop: bijna zwart met een lichte rand
+    X.fillStyle = "#f3e6c4"; X.beginPath(); X.ellipse(0, 6, 9.6, 11.6, 0, 0, Math.PI * 2); X.fill(); X.beginPath(); X.arc(0, -5, 7, 0, Math.PI * 2); X.fill();
+    const bg = X.createRadialGradient(3, 2, 1, 0, 6, 11); bg.addColorStop(0, "#3a3430"); bg.addColorStop(1, "#0d0a08"); X.fillStyle = bg;
     X.beginPath(); X.ellipse(0, 6, 8, 10, 0, 0, Math.PI * 2); X.fill();
-    X.fillStyle = "#3a2b20"; X.beginPath(); X.arc(0, -5, 5.5, 0, Math.PI * 2); X.fill();
-    X.strokeStyle = "rgba(225,235,255,.55)"; X.lineWidth = .9; X.beginPath(); X.ellipse(0, 6, 8, 10, 0, -Math.PI * .5, Math.PI * .1); X.stroke(); X.beginPath(); X.arc(0, -5, 5.5, -Math.PI * .6, 0); X.stroke();
-    X.fillStyle = "rgba(246,210,90,.55)"; X.beginPath(); X.moveTo(0, 2); X.lineTo(2.5, 6); X.lineTo(0, 10); X.lineTo(-2.5, 6); X.closePath(); X.fill();   // gouden ruitje op de rug
+    X.fillStyle = "#15100d"; X.beginPath(); X.arc(0, -5, 5.5, 0, Math.PI * 2); X.fill();
+    X.fillStyle = "rgba(255,255,255,.3)"; X.beginPath(); X.ellipse(3, 1, 2.2, 3.5, -.3, 0, Math.PI * 2); X.fill();   // glans
+    X.fillStyle = "#f6d25a"; X.beginPath(); X.moveTo(0, 2); X.lineTo(2.8, 6.5); X.lineTo(0, 11); X.lineTo(-2.8, 6.5); X.closePath(); X.fill();   // gouden ruitje op de rug
     X.restore();
   }
   function dove(d, now) {
