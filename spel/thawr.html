@@ -191,7 +191,7 @@
     [[340, "#1c3a52", .03, 60], [430, "#24465c", .05, 45]].forEach(([y0, col, p, a], k) => { const o = (mx - W / 2) * -p; X.fillStyle = col; X.beginPath(); X.moveTo(0, H); for (let x = -20; x <= W + 20; x += 20) X.lineTo(x + o, y0 + Math.sin(x * .008 + k * 3) * a + Math.sin(x * .021 + k) * a * .3); X.lineTo(W, H); X.closePath(); X.fill(); });
     // de berg Thawr (rots rond de grot)
     const o = (mx - W / 2) * -.08;
-    const rg = X.createLinearGradient(0, 300, 0, H); rg.addColorStop(0, "#5a4a44"); rg.addColorStop(1, "#2e2622"); X.fillStyle = rg;
+    const rg = X.createLinearGradient(0, 300, 0, H); rg.addColorStop(0, "#6a5643"); rg.addColorStop(1, "#2c2219"); X.fillStyle = rg;
     X.beginPath(); X.moveTo(-20, H); X.lineTo(-20, 520); X.quadraticCurveTo(120 + o, 330, 300 + o, 300); X.quadraticCurveTo(470 + o, 250, 620 + o, 330); X.quadraticCurveTo(800 + o, 420, W + 20, 560); X.lineTo(W + 20, H); X.closePath(); X.fill();
     // schaduw: de maan staat rechtsboven, dus de linkerkant van de berg is donkerder
     X.save(); X.beginPath(); X.moveTo(-20, H); X.lineTo(-20, 520); X.quadraticCurveTo(120 + o, 330, 300 + o, 300); X.quadraticCurveTo(470 + o, 250, 620 + o, 330); X.quadraticCurveTo(800 + o, 420, W + 20, 560); X.lineTo(W + 20, H); X.closePath(); X.clip();
@@ -211,7 +211,7 @@
     [[150, 520, 70], [700, 520, 80], [110, 860, 90], [740, 840, 100], [430, 860, 60]].forEach(([x, y, r]) => {
       const cx = x + o * .5;
       X.fillStyle = "rgba(0,0,0,.4)"; X.beginPath(); X.ellipse(cx - r * .25, y + r * .55, r * 1.05, r * .28, 0, 0, Math.PI * 2); X.fill();   // slagschaduw
-      const gg = X.createRadialGradient(cx + r * .35, y - r * .4, 4, cx, y, r * 1.1); gg.addColorStop(0, "#8d7b72"); gg.addColorStop(.5, "#5b4b44"); gg.addColorStop(1, "#231b17"); X.fillStyle = gg; X.beginPath(); X.ellipse(cx, y, r, r * .7, 0, 0, Math.PI * 2); X.fill();
+      const gg = X.createRadialGradient(cx + r * .35, y - r * .4, 4, cx, y, r * 1.1); gg.addColorStop(0, "#a08463"); gg.addColorStop(.5, "#6a5440"); gg.addColorStop(1, "#261b13"); X.fillStyle = gg; X.beginPath(); X.ellipse(cx, y, r, r * .7, 0, 0, Math.PI * 2); X.fill();
       X.strokeStyle = "rgba(215,228,255,.28)"; X.lineWidth = 3; X.beginPath(); X.ellipse(cx, y, r * .96, r * .66, 0, Math.PI * 1.35, Math.PI * 1.95); X.stroke();   // maanrand
     });
     // groene woestijnstruiken (bewegen mee met de wind)
@@ -220,52 +220,50 @@
     X.strokeStyle = "rgba(210,190,150,.35)"; X.lineWidth = 14; X.lineCap = "round"; X.beginPath(); PATH.forEach(([x, y], i) => i ? X.lineTo(x, y) : X.moveTo(x, y)); X.stroke();
     // grotopening
     X.save(); X.translate(CAVE.x, CAVE.y);
-    const blob = (pts) => { const n = pts.length, m = (i) => [(pts[i % n][0] + pts[(i + 1) % n][0]) / 2, (pts[i % n][1] + pts[(i + 1) % n][1]) / 2]; X.beginPath(); X.moveTo(...m(0)); for (let i = 1; i <= n; i++) X.quadraticCurveTo(pts[i % n][0], pts[i % n][1], ...m(i)); X.closePath(); };
-    // slagschaduw van het rotsblok op de berg (naar linksonder)
-    X.save(); X.translate(-26, 30); X.fillStyle = "rgba(0,0,0,.45)"; blob(ROCK); X.fill(); X.restore();
-    // het rotsblok rond de ingang, licht van rechtsboven
-    const rk = X.createRadialGradient(CAVE.rx * .7, -CAVE.ry * .9, 20, 0, 0, CAVE.rx * 2.1); rk.addColorStop(0, "#9a877c"); rk.addColorStop(.45, "#62514a"); rk.addColorStop(1, "#211915");
-    X.fillStyle = rk; blob(ROCK); X.fill();
-    // kleine vlakken op het rotsblok
-    X.save(); blob(ROCK); X.clip(); ROCKF.forEach(([pts, col]) => { X.fillStyle = col; X.beginPath(); pts.forEach(([x, y], i) => i ? X.lineTo(x, y) : X.moveTo(x, y)); X.closePath(); X.fill(); });
-    const ao = X.createRadialGradient(0, 0, CAVE.rx * 1.1, 0, 0, CAVE.rx * 2); ao.addColorStop(0, "rgba(0,0,0,0)"); ao.addColorStop(1, "rgba(0,0,0,.35)"); X.fillStyle = ao; X.fillRect(-CAVE.rx * 2.2, -CAVE.ry * 2, CAVE.rx * 4.4, CAVE.ry * 4); X.restore();
-    X.strokeStyle = "rgba(225,235,255,.4)"; X.lineWidth = 4; X.lineJoin = "round"; X.beginPath(); X.ellipse(0, -8, CAVE.rx * 1.72, CAVE.ry * 1.55, 0, -Math.PI * .62, -Math.PI * .08); X.stroke();   // maanrand bovenop
-    // binnenkant van de rand (de dikte van de rots): onder licht, boven donker
-    X.fillStyle = "#3b2e28"; X.beginPath(); X.ellipse(0, 0, CAVE.rx + 14, CAVE.ry + 14, 0, 0, Math.PI * 2); X.fill();
-    // de opening, met diepte: elke ring iets kleiner en iets hoger, steeds donkerder
-    [[1, "#2a1e19"], [.86, "#1d1411"], [.7, "#140d0b"], [.52, "#0c0706"]].forEach(([k, col], i) => { X.fillStyle = col; X.beginPath(); X.ellipse(i * 6, -i * 14, CAVE.rx * k, CAVE.ry * k, 0, 0, Math.PI * 2); X.fill(); });
-    // overhangende rand werpt schaduw in de grot
-    X.save(); X.beginPath(); X.ellipse(0, 0, CAVE.rx, CAVE.ry, 0, 0, Math.PI * 2); X.clip();
-    const ov = X.createLinearGradient(0, -CAVE.ry, 0, -CAVE.ry * .2); ov.addColorStop(0, "rgba(0,0,0,.85)"); ov.addColorStop(1, "rgba(0,0,0,0)"); X.fillStyle = ov; X.fillRect(-CAVE.rx, -CAVE.ry, CAVE.rx * 2, CAVE.ry);
-    const sw = X.createLinearGradient(-CAVE.rx, 0, -CAVE.rx * .4, 0); sw.addColorStop(0, "rgba(0,0,0,.6)"); sw.addColorStop(1, "rgba(0,0,0,0)"); X.fillStyle = sw; X.fillRect(-CAVE.rx, -CAVE.ry, CAVE.rx, CAVE.ry * 2);
-    // de grotwand rechts vangt een beetje maanlicht
-    X.strokeStyle = "rgba(170,185,215,.22)"; X.lineWidth = 10; X.beginPath(); X.ellipse(-6, 4, CAVE.rx - 4, CAVE.ry - 4, 0, -Math.PI * .35, Math.PI * .3); X.stroke();
-    // warm licht van binnen
-    const cg = X.createRadialGradient(10, 10, 10, 10, 10, CAVE.ry); cg.addColorStop(0, "rgba(255,210,130," + (.35 + glow * .5 + Math.sin(now * .003) * .04) + ")"); cg.addColorStop(1, "rgba(255,210,130,0)"); X.fillStyle = cg; X.fillRect(-CAVE.rx, -CAVE.ry, CAVE.rx * 2, CAVE.ry * 2);
+    const poly = (pts) => { X.beginPath(); pts.forEach(([x, y], i) => i ? X.lineTo(x, y) : X.moveTo(x, y)); X.closePath(); };
+    // zandvlakte onder de grot + slagschaduw naar linksonder (maan staat rechtsboven)
+    X.fillStyle = "#6f5940"; X.beginPath(); X.ellipse(0, 238, 345, 48, 0, 0, Math.PI * 2); X.fill();
+    X.fillStyle = "#86704f"; X.beginPath(); X.ellipse(10, 232, 330, 36, 0, Math.PI, Math.PI * 2); X.fill();
+    X.fillStyle = "rgba(20,12,8,.5)"; X.beginPath(); X.ellipse(-40, 236, 300, 30, 0, 0, Math.PI * 2); X.fill();
+    // rotsmassa en hoekige platen (vlak getekend, licht rechtsboven, schaduw linksonder)
+    X.fillStyle = CAVE_COL.mid; poly(ROCK_BASE); X.fill();
+    SLABS.forEach(([pts, c]) => { X.fillStyle = CAVE_COL[c]; poly(pts); X.fill(); });
+    X.strokeStyle = CAVE_COL.line; X.lineWidth = 4; X.lineJoin = "round"; SLABS.forEach(([pts]) => { poly(pts); X.stroke(); });
+    X.strokeStyle = "rgba(235,225,200,.35)"; X.lineWidth = 3; X.beginPath(); X.moveTo(20, -318); X.lineTo(140, -298); X.lineTo(238, -222); X.lineTo(290, -90); X.stroke();   // maanrand
+    // de opening: boog met platte bodem, in treden naar binnen (steeds donkerder)
+    const BASE = CAVE.ry * .95;
+    const arch = (w, h, dx, dy) => { X.beginPath(); X.moveTo(dx - w, BASE); X.lineTo(dx - w, dy); X.ellipse(dx, dy, w, h, 0, Math.PI, Math.PI * 2); X.lineTo(dx + w, BASE); X.closePath(); };
+    [[CAVE.rx + 44, CAVE.ry + 40, 0, 0, CAVE_COL.f1], [CAVE.rx + 22, CAVE.ry + 18, 4, 4, CAVE_COL.f2], [CAVE.rx, CAVE.ry, 8, 10, CAVE_COL.f3], [CAVE.rx * .8, CAVE.ry * .8, 18, 28, CAVE_COL.f4], [CAVE.rx * .6, CAVE.ry * .62, 26, 48, CAVE_COL.f5]].forEach(([w, h, dx, dy, col]) => { X.fillStyle = col; arch(w, h, dx, dy); X.fill(); });
+    // schaduw van de overhang bovenin + warm licht van binnen
+    X.save(); arch(CAVE.rx, CAVE.ry, 8, 10); X.clip();
+    const ov = X.createLinearGradient(0, -CAVE.ry, 0, -CAVE.ry * .25); ov.addColorStop(0, "rgba(0,0,0,.6)"); ov.addColorStop(1, "rgba(0,0,0,0)"); X.fillStyle = ov; X.fillRect(-CAVE.rx, -CAVE.ry, CAVE.rx * 2, CAVE.ry);
+    const cg = X.createRadialGradient(20, 60, 10, 20, 60, CAVE.ry); cg.addColorStop(0, "rgba(255,200,120," + (.28 + glow * .5 + Math.sin(now * .003) * .04) + ")"); cg.addColorStop(1, "rgba(255,200,120,0)"); X.fillStyle = cg; X.fillRect(-CAVE.rx, -CAVE.ry, CAVE.rx * 2, CAVE.ry * 2);
     X.restore();
-    // rand van de opening: onderlip licht (maan + gloed), bovenlip donker
-    X.lineCap = "round";
-    X.strokeStyle = "#7d6a60"; X.lineWidth = 9; X.beginPath(); X.ellipse(0, 0, CAVE.rx + 5, CAVE.ry + 5, 0, Math.PI * .08, Math.PI * .92); X.stroke();
-    X.strokeStyle = "rgba(255,215,150,.35)"; X.lineWidth = 3; X.beginPath(); X.ellipse(0, 0, CAVE.rx + 1, CAVE.ry + 1, 0, Math.PI * .15, Math.PI * .85); X.stroke();
-    X.strokeStyle = "rgba(220,232,255,.45)"; X.lineWidth = 4; X.beginPath(); X.ellipse(0, 0, CAVE.rx + 12, CAVE.ry + 12, 0, -Math.PI * .45, -Math.PI * .05); X.stroke();
-    // stenen voor de ingang, met schaduw
-    [[-95, CAVE.ry + 18, 30], [70, CAVE.ry + 26, 24], [-10, CAVE.ry + 34, 16], [135, CAVE.ry - 4, 20]].forEach(([x, y, r]) => {
-      X.fillStyle = "rgba(0,0,0,.45)"; X.beginPath(); X.ellipse(x - r * .3, y + r * .5, r * 1.1, r * .3, 0, 0, Math.PI * 2); X.fill();
-      const sg2 = X.createRadialGradient(x + r * .4, y - r * .5, 2, x, y, r * 1.1); sg2.addColorStop(0, "#9a877c"); sg2.addColorStop(1, "#2a201b"); X.fillStyle = sg2; X.beginPath(); X.ellipse(x, y, r, r * .72, 0, 0, Math.PI * 2); X.fill();
-    });
+    // drempel: lichte rand onderaan de opening
+    X.fillStyle = CAVE_COL.lite; X.beginPath(); X.ellipse(8, BASE, CAVE.rx + 30, 14, 0, 0, Math.PI); X.fill();
+    X.restore();
+    // struiken vóór de grot, links en rechts (zoals bij een echte grotingang)
+    shrub(CAVE.x - 205, CAVE.y + 228, 1.45, now, 21); shrub(CAVE.x - 140, CAVE.y + 240, 1.05, now, 22); shrub(CAVE.x + 205, CAVE.y + 232, 1.35, now, 23);
     X.restore();
     // richel voor het nest
     X.fillStyle = "#4a3c35"; X.beginPath(); X.ellipse(NEST.x, NEST.y + 14, 70, 16, -.1, 0, Math.PI * 2); X.fill();
   }
-  /* rotsblok rond de grotingang (rond het midden van de grot), onregelmatig */
-  const ROCK = (function () { const p = [], n = 28; for (let i = 0; i < n; i++) { const a = Math.PI * 2 * i / n - Math.PI / 2, j = 1 + Math.sin(i * 2.7) * .035 + Math.cos(i * 1.3) * .03; const sn = Math.sin(a); p.push([Math.cos(a) * CAVE.rx * 1.75 * j, sn * CAVE.ry * (1.47 - .15 * sn) * j + Math.max(0, sn) * 30]); } return p; })();
-  const ROCK_LIT = [1, 9];   // de punten rechtsboven die maanlicht vangen
-  const ROCKF = [
-    [[[-250, -120], [-150, -260], [-90, -200], [-170, -60]], "rgba(10,7,6,.35)"],
-    [[[-262, 40], [-200, -30], [-165, 80], [-230, 170]], "rgba(10,7,6,.4)"],
-    [[[120, -270], [230, -190], [175, -120], [90, -200]], "rgba(215,225,250,.12)"],
-    [[[190, -60], [262, 10], [230, 120], [175, 40]], "rgba(215,225,250,.08)"],
-    [[[-60, -300], [60, -310], [30, -235], [-40, -240]], "rgba(215,225,250,.1)"],
+  /* grot in getekende stijl: kleuren (zandsteen bij maanlicht) en hoekige rotsplaten, rond het midden van de opening */
+  const CAVE_COL = { lite: "#b39672", hi: "#9c8062", mid: "#7f654d", sh: "#5d4836", deep: "#43322a", line: "#3a2a1f", f1: "#5a4433", f2: "#45332a", f3: "#2e2019", f4: "#1f1510", f5: "#140c08" };
+  const ROCK_BASE = [[-300, 232], [-305, 60], [-275, -95], [-225, -205], [-125, -292], [20, -320], [150, -300], [242, -222], [292, -90], [305, 60], [295, 232]];
+  const SLABS = [
+    [[[-225, -205], [-125, -292], [-35, -272], [-70, -200], [-172, -160]], "hi"],
+    [[[-172, -160], [-70, -200], [-62, -178], [-165, -138]], "sh"],
+    [[[-35, -272], [20, -320], [150, -300], [112, -236], [-70, -200]], "lite"],
+    [[[-70, -200], [112, -236], [108, -214], [-62, -178]], "sh"],
+    [[[150, -300], [242, -222], [202, -168], [112, -236]], "hi"],
+    [[[242, -222], [292, -90], [252, -58], [202, -168]], "lite"],
+    [[[-275, -95], [-225, -205], [-172, -160], [-205, -58]], "sh"],
+    [[[-305, 60], [-275, -95], [-205, -58], [-218, 82]], "deep"],
+    [[[292, -90], [305, 60], [242, 84], [252, -58]], "hi"],
+    [[[305, 60], [295, 232], [222, 232], [242, 84]], "mid"],
+    [[[-305, 60], [-218, 82], [-222, 232], [-300, 232]], "deep"],
+    [[[-218, 82], [-205, -58], [-190, -40], [-200, 92]], "line"],
   ];
   const FACETS = [
     [[[300, 300], [200, 420], [240, 520], [330, 380]], "rgba(10,7,6,.3)"],
@@ -323,8 +321,8 @@
   }
   function spider(x, y, now) {
     X.save(); X.translate(x, y);
-    X.strokeStyle = "rgba(240,248,255,.7)"; X.lineWidth = 1.5; X.beginPath(); X.moveTo(0, -60); X.lineTo(0, -10); X.stroke();   // draadje
-    X.scale(2.3, 2.3);
+    X.strokeStyle = "rgba(240,248,255,.7)"; X.lineWidth = 1.5; X.beginPath(); X.moveTo(0, -70); X.lineTo(0, -12); X.stroke();   // draadje
+    X.scale(2.8, 2.8);
     X.fillStyle = "rgba(0,0,0,.35)"; X.beginPath(); X.ellipse(-3, 18, 15, 4, 0, 0, Math.PI * 2); X.fill();   // schaduw
     X.strokeStyle = "#2e2219"; X.lineWidth = 2.2;
     for (let i = 0; i < 4; i++) { const w = Math.sin(now * .02 + i) * 2; [-1, 1].forEach((s) => { X.beginPath(); X.moveTo(0, -2 + i * 3); X.quadraticCurveTo(s * 12, -10 + i * 5 + w, s * 18, 2 + i * 5); X.stroke(); }); }
