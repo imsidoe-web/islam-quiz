@@ -1,2 +1,0 @@
-Zet hier de opgenomen mp3-bestanden (zie Opnamelijst). Bestandsnamen exact zoals in de lijst, bijv. goed-1.mp3.
-Ontbrekende bestanden worden overgeslagen; de app gebruikt dan de gewone geluidjes.
