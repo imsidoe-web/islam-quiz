@@ -1,10 +1,15 @@
-[{
-  "relation": ["delegate_permission/common.handle_all_urls"],
-  "target": {
-    "namespace": "android_app",
-    "package_name": "app.nurspark",
-    "sha256_cert_fingerprints": [
-      "54:4C:CC:BC:A8:DC:12:82:5D:1E:A4:9D:CC:A7:99:3F:E3:DC:5B:E6:39:15:4B:1B:DE:9C:03:62:96:AD:FD:31"
-    ]
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.nurspark",
+      "sha256_cert_fingerprints": [
+        "54:4C:CC:BC:A8:DC:12:82:5D:1E:A4:9D:CC:A7:99:3F:E3:DC:5B:E6:39:15:4B:1B:DE:9C:03:62:96:AD:FD:31",
+        "91:2C:68:B3:77:73:37:D1:93:6D:D9:78:51:F8:AF:94:F9:DF:52:45:16:21:9D:C4:49:38:0D:9B:0B:27:BA:7F"
+      ]
+    }
   }
-}]
+]
