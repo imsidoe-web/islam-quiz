@@ -6940,6 +6940,14 @@ return exports;})();
     users: '<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-4 3-6 6-6s6 2 6 6M14 20c0-3 1.5-5 4-5s3 2 3 5"/>'
   };
   function dIc(k, c, sz) { return '<svg width="' + (sz || 32) + '" height="' + (sz || 32) + '" viewBox="0 0 24 24" fill="none" stroke="' + c + '" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + DI[k] + "</svg>"; }
+  /* v104b: Al-Maktabah is voorlopig alleen te zien voor de beheerder (ingelogd met Google, eigen profiel actief). Alleen een korte code, geen e-mailadres in de broncode. */
+  const MK_OWNERS = [782862580, 3603728214];
+  function mkOwner() {
+    if (!sbUser || !sbUser.email || !P || P.sbId !== sbUser.id) return false;
+    const e = String(sbUser.email).toLowerCase(); let x = 5381;
+    for (let i = 0; i < e.length; i++) x = (Math.imul(x, 33) ^ e.charCodeAt(i)) >>> 0;
+    return MK_OWNERS.indexOf(x) >= 0;
+  }
   function viewDash() {
     const LS = landsFor(P.mode), li = Math.min(defaultLand(), LS.length - 1), c = LS[li], st = jLandStats(P.mode, c.id);
     const cur = Math.min(st.passed + 1, st.n), pct = st.n ? Math.round(st.passed / st.n * 100) : 0, nf = foutList().length;
@@ -6957,14 +6965,14 @@ return exports;})();
       '<button class="d-tile kids" disabled aria-label="KidsZone, komt binnenkort">' + dIc("star", "#ffd54f") + '<small class="d-k">KIDSZONE</small><b>[Naam volgt]</b><small>Binnenkort, insha’Allah</small></button>' +
       '<button class="d-tile" data-act="rad">' + dIc("wheel", "#ffd54f", 30) + '<b>Ajalat al-‘Ilm</b><small>Rad van Kennis</small></button>' +
       '<button class="d-tile" data-act="group">' + dIc("users", "#ffd54f", 30) + "<b>Groep & Duel</b><small>Samen leren</small></button>" +
-      /* v104: tegel voor geleerden, imams en gevorderde studenten (nog op slot, in ontwikkeling) */
-      '<button class="d-tile maktabah" disabled aria-label="Al-Maktabah al-Mutaqaddimah, geavanceerde bibliotheek voor imams, geleerden en gevorderde studenten. Nog in ontwikkeling, binnenkort beschikbaar.">' +
+      /* v104: tegel voor geleerden, imams en gevorderde studenten (nog op slot, in ontwikkeling) — v104b: alleen zichtbaar voor de beheerder */
+      (!mkOwner() ? "" : '<button class="d-tile maktabah" disabled aria-label="Al-Maktabah al-Mutaqaddimah, geavanceerde bibliotheek voor imams, geleerden en gevorderde studenten. Nog in ontwikkeling, binnenkort beschikbaar.">' +
         '<span class="mk-badge" aria-hidden="true"><i></i>In ontwikkeling</span>' +
         '<span class="mk-top" aria-hidden="true"><span class="mk-ic">' + dIc("ink", "#e6cf8f", 30) + '</span><span class="mk-t"><span class="d-k ar" lang="ar" dir="rtl">المكتبة المتقدمة</span><b>Al-Maktabah al-Mutaqaddimah</b><small>Voor imams, geleerden en gevorderde studenten</small></span></span>' +
         '<span class="mk-zoek" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>Zoek een term, bijv. Wudhu …</span>' +
         '<span class="mk-delen" aria-hidden="true"><span><em lang="ar">المكتبة</em>Bibliotheek</span><span><em lang="ar">الموسوعة</em>Encyclopedie</span><span><em lang="ar">الحديث</em>Hadith</span></span>' +
-        '<span class="mk-balk" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c9a24a" stroke-width="1.8"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span>Klassieke bronnen uit de Dars-e-Nizami, vertaald uit het Arabisch en nagekeken door geleerden. <u>Binnenkort beschikbaar, insha’Allah.</u></span></span>' +
-      "</button></nav>";
+        '<span class="mk-balk" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c9a24a" stroke-width="1.8"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span>Klassieke bronnen uit de Dars-e-Nizami, vertaald uit het Arabisch en nagekeken door geleerden. <u>Binnenkort beschikbaar, insha’Allah.</u></span></span></button>') +
+      "</nav>";
     h += salHtml();
     h += '<nav class="d-small" aria-label="Meer"><button data-act="board">Score</button><button data-act="album">Album</button><button data-act="bazaar">Bazaar</button></nav>';
     return '<section class="dash">' + h + "</section>";
