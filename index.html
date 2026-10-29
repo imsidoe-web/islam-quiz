@@ -2347,9 +2347,9 @@ body.kosmos .rad-inv-ban { background: rgba(8,12,40,.95); border-color: #3fe6d0;
 @media (prefers-reduced-motion:reduce){.d-tile::after,.d-card::after,.d-rihla::after{animation:none;display:none}}
 .d-tile.hub{padding:16px 20px!important;}
 /* v104: Al-Maktabah al-Mutaqaddimah (op slot) */
-.d-tile.maktabah{grid-column:1/-1;cursor:default;gap:12px;padding:18px 18px 0!important;opacity:1;
+.d-tile.maktabah{grid-column:1/-1;cursor:pointer;gap:12px;padding:18px 18px 0!important;opacity:1;
  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56'%3E%3Cg fill='none' stroke='%23c9a24a' stroke-width='.8' opacity='.13'%3E%3Crect x='16' y='16' width='24' height='24'/%3E%3Crect x='16' y='16' width='24' height='24' transform='rotate(45 28 28)'/%3E%3Ccircle cx='28' cy='28' r='5'/%3E%3C/g%3E%3C/svg%3E") padding-box,linear-gradient(160deg,#16503e 0%,#0f3b2e 100%) padding-box,var(--metal-gold) border-box!important;}
-.d-tile.maktabah:active{transform:none}
+.d-tile.maktabah:active{transform:scale(.99)}
 .mk-badge{position:absolute;top:12px;right:12px;display:flex;align-items:center;gap:6px;font-size:.62rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#e6cf8f;border:1px solid rgba(201,162,74,.6);background:rgba(15,59,46,.75);padding:4px 9px;border-radius:999px;z-index:1}
 .mk-badge i{width:6px;height:6px;border-radius:50%;background:#c9a24a;animation:mkPuls 2.4s ease-in-out infinite}
 @keyframes mkPuls{50%{opacity:.3}}
@@ -2366,6 +2366,32 @@ body.kosmos .rad-inv-ban { background: rgba(8,12,40,.95); border-color: #3fe6d0;
 .mk-balk svg{flex:none;margin-top:1px}
 .mk-balk u{text-decoration:none;color:#e6cf8f}
 @media (prefers-reduced-motion:reduce){.mk-badge i{animation:none}}
+/* v107: Maktabah-scherm */
+.mk{display:flex;flex-direction:column;gap:12px;padding:16px 0 28px}
+.mk-zk{display:flex;align-items:center;gap:8px;background:#fbf8ef;color:#16503e;border:2px solid #c9a24a;border-radius:14px;padding:4px 12px}
+.mk-zk input{flex:1;min-width:0;border:0;background:transparent;font:inherit;font-size:1rem;font-weight:700;color:#2a2a24;padding:10px 0;outline:none}
+.mk-zk:focus-within{box-shadow:0 0 0 3px rgba(201,162,74,.45)}
+.mk-tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.mk-tab{appearance:none;font:inherit;font-size:.85rem;font-weight:800;padding:8px 14px;border-radius:999px;border:1.5px solid #c9a24a;background:transparent;color:#f4efe2;cursor:pointer;white-space:nowrap}
+.mk-tab[aria-pressed=true]{background:#c9a24a;color:#1b2a1f}
+.mk-tab:focus-visible{outline:3px solid #ffd54f;outline-offset:2px}
+.mk-n{margin:0;font-size:.8rem;color:#cfe8d8;font-weight:700}
+.mk-res{display:flex;flex-direction:column;gap:12px}
+.mk-card{background:#fbf8ef;color:#2a2a24;border-radius:16px;border-left:5px solid #c9a24a;padding:14px 16px;line-height:1.55;font-size:.92rem}
+.mk-card[hidden],.mk-leeg-blok[hidden]{display:none}
+.mk-soort{font-size:.68rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#16503e;display:flex;gap:8px;align-items:center}
+.mk-con{background:#fbf1d6;color:#8a6d1f;border-radius:6px;padding:1px 7px;letter-spacing:.04em}
+.mk-card h3{margin:6px 0 8px;font-size:1.08rem;font-weight:900;line-height:1.25;color:#0f3b2e}
+.mk-card h4{margin:10px 0 4px;font-size:.82rem;font-weight:900;color:#16503e}
+.mk-card p{margin:4px 0}
+.mk-card ul{margin:2px 0;padding-left:20px}
+.mk-card [lang=ar]{font-family:"Amiri","Scheherazade New",serif;font-size:1.12em}
+.mk-ar{font-family:"Amiri","Scheherazade New",serif;font-size:1.25rem;line-height:1.9;text-align:right;background:#f1e9d4;border-radius:10px;padding:8px 12px;margin:8px 0}
+.mk-warn{color:#8a5a12;font-weight:800}
+.mk-bron{margin-top:10px;padding-top:9px;border-top:1px dashed #d9ceb2;font-size:.8rem;color:#5d5747}
+.mk-bron b{color:#2a2a24}
+.mk-leeg{color:#a59a7c;font-style:italic}
+.mk-leeg-blok{background:rgba(251,248,239,.08);border:1.5px dashed #c9a24a;border-radius:14px;padding:16px;font-size:.9rem;color:#efe6cc;line-height:1.5}
 </style>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=3">
@@ -6966,12 +6992,12 @@ return exports;})();
       '<button class="d-tile" data-act="rad">' + dIc("wheel", "#ffd54f", 30) + '<b>Ajalat al-‘Ilm</b><small>Rad van Kennis</small></button>' +
       '<button class="d-tile" data-act="group">' + dIc("users", "#ffd54f", 30) + "<b>Groep & Duel</b><small>Samen leren</small></button>" +
       /* v104: tegel voor geleerden, imams en gevorderde studenten (nog op slot, in ontwikkeling) — v104b: alleen zichtbaar voor de beheerder */
-      (!mkOwner() ? "" : '<button class="d-tile maktabah" disabled aria-label="Al-Maktabah al-Mutaqaddimah, geavanceerde bibliotheek voor imams, geleerden en gevorderde studenten. Nog in ontwikkeling, binnenkort beschikbaar.">' +
+      (!mkOwner() ? "" : '<button class="d-tile maktabah" data-act="maktabah" aria-label="Al-Maktabah al-Mutaqaddimah, geavanceerde bibliotheek. In ontwikkeling, alleen voor jou zichtbaar. Openen">' +
         '<span class="mk-badge" aria-hidden="true"><i></i>In ontwikkeling</span>' +
         '<span class="mk-top" aria-hidden="true"><span class="mk-ic">' + dIc("ink", "#e6cf8f", 30) + '</span><span class="mk-t"><span class="d-k ar" lang="ar" dir="rtl">المكتبة المتقدمة</span><b>Al-Maktabah al-Mutaqaddimah</b><small>Voor imams, geleerden en gevorderde studenten</small></span></span>' +
         '<span class="mk-zoek" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>Zoek een term, bijv. Wudhu …</span>' +
         '<span class="mk-delen" aria-hidden="true"><span><em lang="ar">المكتبة</em>Bibliotheek</span><span><em lang="ar">الموسوعة</em>Encyclopedie</span><span><em lang="ar">الحديث</em>Hadith</span></span>' +
-        '<span class="mk-balk" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c9a24a" stroke-width="1.8"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span>Klassieke bronnen uit de Dars-e-Nizami, vertaald uit het Arabisch en nagekeken door geleerden. <u>Binnenkort beschikbaar, insha’Allah.</u></span></span></button>') +
+        '<span class="mk-balk" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c9a24a" stroke-width="1.8"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span>Klassieke bronnen uit de Dars-e-Nizami, vertaald uit het Arabisch en nagekeken door geleerden. <u>Alleen voor jou: tik om te openen.</u></span></span></button>') +
       "</nav>";
     h += salHtml();
     h += '<nav class="d-small" aria-label="Meer"><button data-act="board">Score</button><button data-act="album">Album</button><button data-act="bazaar">Bazaar</button></nav>';
@@ -7000,6 +7026,64 @@ return exports;})();
     fout: '<path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><circle cx="12" cy="12" r="4"/>'
   };
   function hIc(k, c) { return '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="' + (c || "#ffd54f") + '" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + HI[k] + "</svg>"; }
+  /* ───────────── v107: Al-Maktabah al-Mutaqaddimah (alleen beheerder, CONCEPT) ─────────────
+     Zoeken in kaartjes op geleerdenniveau (Hanafi). Inhoud is nog niet nagekeken. Later naar Supabase. */
+  let mkTab = "alle", mkQ = "";
+  const MK_CARDS = [
+    { s: "enc", t: "Masah van het hoofd: hoeveel is verplicht?", k: "wudhu masah hoofd ras nasiyah kwart rub mujmal bayan mughirah",
+      h: '<h4>Overleveringen binnen de school</h4><ul><li>Een kwart van het hoofd (<i>rub‘ ar-ra’s</i>)</li><li>De grootte van de voorhoofdslok (<i>qadr an-nasiyah</i>); in al-Hidayah gelijkgesteld aan een kwart</li><li>Drie vingers van de hand, genoemd bij sommige Hanafi-geleerden</li></ul><h4>Redenering (al-Hidayah)</h4><p>Het vers <span lang="ar" dir="rtl">وَامْسَحُوا بِرُءُوسِكُمْ</span> (5:6) zegt niet hoeveel: het is hier <i>mujmal</i>. De hadith van al-Mughirah, dat de Profeet ﷺ over zijn voorhoofdslok streek, is de uitleg (<i>bayan</i>).</p><div class="mk-ar" lang="ar" dir="rtl">وَالْمَفْرُوضُ فِي مَسْحِ الرَّأْسِ مِقْدَارُ النَّاصِيَةِ وَهُوَ رُبُعُ الرَّأْسِ</div><p><b>Mu‘tamad:</b> een kwart van het hoofd.</p>',
+      b: "Hadith van al-Mughirah ibn Shu‘bah (Muslim ⚠ nummer)", c: "al-Hidayah → Fath al-Qadir → Radd al-Muhtar" },
+    { s: "enc", t: "Waarom de Niyyah bij Wudhu Sunnah is, maar bij Tayammum verplicht", k: "wudhu niyyah intentie tayammum sunnah qurbah water mutahhir qasd",
+      h: '<p><b>Positie:</b> Wudhu zonder Niyyah is geldig als reiniging en opent de weg naar de Salah, maar is dan geen daad van aanbidding (<i>qurbah</i>) en geeft geen beloning.</p><h4>Redenering</h4><ul><li><b>Water reinigt uit zichzelf</b> (<i>mutahhir bi-tab‘ihi</i>): de reiniging gebeurt ook zonder bedoeling.</li><li><b>Aarde reinigt niet uit zichzelf</b>, alleen bij de wil tot de Salah. Het woord <i>tayammum</i> betekent zelf al “bedoelen” (<i>qasd</i>). Daarom is de Niyyah daar verplicht.</li><li><span lang="ar" dir="rtl">إِنَّمَا الْأَعْمَالُ بِالنِّيَّاتِ</span> gaat volgens deze uitleg over de beloning, niet over de geldigheid van de reiniging.</li></ul><p><b>Praktijk:</b> wie in water valt zodat de vier Fara’id gewassen worden, heeft een geldige Wudhu.</p>',
+      b: "“Innama al-a‘malu bin-niyyat” (Bukhari 1; Muslim 1907)", c: "al-Hidayah → Bada’i‘ as-Sana’i‘ → Fath al-Qadir" },
+    { s: "enc", t: "Hardop lachen (qahqahah) in de Salah breekt de Wudhu", k: "wudhu salah lachen qahqahah qiyas mursal abu aliyah breekt nawaqid",
+      h: '<p><b>Positie:</b> een volwassene die wakker is en in een Salah met Ruku en Sujud hardop lacht, verliest Salah én Wudhu.</p><h4>Waarom dit bijzonder is</h4><ul><li>Volgens de <i>qiyas</i> breekt lachen de Wudhu niet: er komt niets uit het lichaam.</li><li>De school laat de <i>qiyas</i> los vanwege de overlevering over de blinde man die in een kuil viel, waarna sommige bidders lachten.</li><li>Schoolvoorbeeld van het principe: <b>een overlevering, ook een <i>mursal</i>, gaat vóór de <i>qiyas</i>.</b></li></ul><h4>Daarom blijft de regel beperkt tot de tekst</h4><ul><li>Niet bij de Janazah-Salah en de Sajdat at-Tilawah</li><li>Niet bij een kind</li><li>Glimlachen breekt niets; lachen dat alleen jij hoort (<i>dahik</i>) breekt de Salah, niet de Wudhu</li></ul>',
+      b: "Mursal van Abu al-‘Aliyah e.a. (⚠ vindplaatsen)", c: "al-Hidayah → Fath al-Qadir → Radd al-Muhtar" },
+    { s: "enc", t: "Braken: Abu Yusuf en Muhammad over beetje bij beetje braken", k: "wudhu braken qay mil al-fam mondvol abu yusuf muhammad majlis sabab ghathayan slijm balgham nawaqid",
+      h: '<p><b>Grondregel:</b> braken breekt de Wudhu bij een mondvol (<i>mil’ al-fam</i>).</p><h4>Meerdere keren een beetje, samen een mondvol?</h4><ul><li><b>Abu Yusuf:</b> dezelfde zitting telt (<i>ittihad al-majlis</i>).</li><li><b>Muhammad:</b> dezelfde oorzaak telt (<i>ittihad as-sabab</i>), dus dezelfde misselijkheid (<i>ghathayan</i>).</li><li><span class="mk-warn">⚠ Mufta bihi nakijken</span></li></ul><h4>Slijm (<i>balgham</i>)</h4><ul><li><b>Abu Hanifa en Muhammad:</b> breekt niet, ook niet een mondvol.</li><li><b>Abu Yusuf:</b> een mondvol slijm uit de maag breekt wel.</li><li>Slijm uit het hoofd breekt volgens allen niet.</li></ul>',
+      b: "", c: "al-Hidayah → Fath al-Qadir → al-Bahr ar-Ra’iq → Radd al-Muhtar" },
+    { s: "enc", t: "Je geslachtsdeel aanraken: twee hadith tegenover elkaar", k: "wudhu aanraken geslachtsdeel mass adh-dhakar talq busrah tarjih umum al-balwa nawaqid",
+      h: '<p><b>Positie:</b> het aanraken van je eigen geslachtsdeel breekt de Wudhu niet.</p><h4>De twee overleveringen</h4><ul><li><b>Talq ibn ‘Ali:</b> <span lang="ar" dir="rtl">هَلْ هُوَ إِلَّا بَضْعَةٌ مِنْكَ</span> (“Het is toch maar een deel van jou?”)</li><li><b>Busrah bint Safwan:</b> “wie zijn geslachtsdeel aanraakt, moet Wudhu doen.”</li></ul><h4>Hoe de school kiest (<i>tarjih</i>)</h4><ul><li>Talq past bij de <i>qiyas</i>: een ander lichaamsdeel aanraken breekt ook niet.</li><li>Wat iedereen steeds overkomt (<i>‘umum al-balwa</i>) zou breed overgeleverd moeten zijn.</li><li>Van ‘Ali, Ibn Mas‘ud en ‘Ammar wordt overgeleverd dat zij het niet als brekend zagen <span class="mk-warn">⚠</span></li><li>Het bevel bij Busrah wordt uitgelegd als handen wassen of als aanbeveling.</li></ul>',
+      b: "Talq en Busrah: Abu Dawud, Tirmidhi (⚠ nummers)", c: "al-Hidayah → Bada’i‘ as-Sana’i‘ → Fath al-Qadir" }
+  ];
+  function mkNorm(x) { return String(x).toLowerCase().normalize("NFD").replace(/[̀-ͯ‘’'’‘ʿʾ\-]/g, ""); }
+  function viewMaktabah() {
+    const tab = function (k, t) { return '<button class="mk-tab" data-mk="' + k + '" aria-pressed="' + (mkTab === k) + '">' + t + "</button>"; };
+    let h = hubTop("Al-Maktabah al-Mutaqaddimah", "dash", "المكتبة المتقدمة", "Concept · alleen zichtbaar voor jou");
+    h += '<section class="mk"><label class="mk-zk"><span class="sr-only">Zoek een term</span>' +
+      '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>' +
+      '<input id="mkIn" type="search" placeholder="Zoek een term, bijv. Wudhu" value="' + esc(mkQ) + '" autocomplete="off"></label>' +
+      '<div class="mk-tabs" role="group" aria-label="Onderdeel">' + tab("alle", "Alles") + tab("enc", "Encyclopedie") + tab("bib", "Bibliotheek") + tab("had", "Hadith") + "</div>" +
+      '<p class="mk-n" id="mkN" aria-live="polite"></p><div class="mk-res">';
+    MK_CARDS.forEach(function (c, i) {
+      h += '<article class="mk-card" data-s="' + c.s + '" data-k="' + esc(mkNorm(c.t + " " + c.k)) + '"><div class="mk-soort">Encyclopedie · Hanafi <span class="mk-con">Concept</span></div><h3>' + c.t + "</h3>" + c.h +
+        '<div class="mk-bron">' + (c.b ? "<b>Bewijs:</b> " + c.b + "<br>" : "") + "<b>Keten:</b> " + c.c + '<br><b>Uitgave:</b> <span class="mk-leeg">uitgeverij, deel, pagina</span><br><b>Nagekeken door:</b> <span class="mk-leeg">nog niet</span></div></article>';
+    });
+    h += '<div class="mk-leeg-blok" data-leeg="bib">De Bibliotheek is nog leeg. Hier komen de klassieke boeken uit de Dars-e-Nizami, Arabisch met Nederlandse vertaling.</div>' +
+      '<div class="mk-leeg-blok" data-leeg="had">Hadith is nog leeg. Hier komen hadith, vertaald uit het Arabisch, met beoordeling.</div>' +
+      '<div class="mk-leeg-blok" data-leeg="geen">Niets gevonden. Probeer een ander woord, bijv. Wudhu, braken of Niyyah.</div></div></section>';
+    return h;
+  }
+  function mkFilter() {
+    const q = mkNorm(mkQ.trim()); let n = 0;
+    document.querySelectorAll(".mk-card").forEach(function (el) {
+      const ok = (mkTab === "alle" || el.dataset.s === mkTab) && (!q || q.split(/\s+/).every(function (w) { return el.dataset.k.indexOf(w) !== -1; }));
+      el.hidden = !ok; if (ok) n++;
+    });
+    document.querySelectorAll(".mk-leeg-blok").forEach(function (el) {
+      const k = el.dataset.leeg; el.hidden = !(k === mkTab || (k === "geen" && n === 0 && mkTab !== "bib" && mkTab !== "had"));
+    });
+    const nEl = document.getElementById("mkN"); if (nEl) nEl.textContent = n + " kaartje" + (n === 1 ? "" : "s") + (q ? " gevonden" : "");
+  }
+  function afterMaktabahRender() {
+    const inp = document.getElementById("mkIn");
+    if (inp) inp.addEventListener("input", function () { mkQ = inp.value; mkFilter(); });
+    document.querySelectorAll(".mk-tab").forEach(function (b) {
+      b.addEventListener("click", function () { mkTab = b.dataset.mk; play("click"); document.querySelectorAll(".mk-tab").forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); }); mkFilter(); });
+    });
+    mkFilter();
+  }
+
   function viewHub() {
     const nf = foutList().length;
     const soon = function (k, t, sub) { return '<div class="hub-tile off" aria-label="' + t + ', binnenkort">' + hIc(k) + "<b>" + t + "</b><small>" + sub + '</small><i>Binnenkort</i></div>'; };
@@ -7551,6 +7635,7 @@ return exports;})();
     else if (screen === "bazaar") app.innerHTML = viewBazaar();
     else if (screen === "dash") { app.innerHTML = viewDash(); afterDashRender(); }
     else if (screen === "hub") app.innerHTML = viewHub();
+    else if (screen === "maktabah") { if (!mkOwner()) { screen = "dash"; app.innerHTML = viewDash(); afterDashRender(); } else { app.innerHTML = viewMaktabah(); afterMaktabahRender(); } }
     else if (screen === "lab") app.innerHTML = viewLab();
     else if (screen === "labroom") app.innerHTML = viewLabRoom();
     else if (screen === "labquiz") app.innerHTML = viewLabQuiz();
@@ -12312,6 +12397,7 @@ return exports;})();
       case "home": play("click"); stopTimer(); landFly = null; journeyReturn = false; screen = lastRoot || "journey"; render(); break;
       case "dash": play("click"); stopTimer(); landFly = null; journeyReturn = false; screen = "dash"; render(); break;
       case "hub": play("click"); screen = "hub"; render(); break;
+      case "maktabah": if (!mkOwner()) break; play("click"); screen = "maktabah"; render(); break;
       case "lab": case "lab-new": case "lab-open": case "lab-join": case "lab-role": case "lab-add-les": case "lab-add-q": case "lab-del": case "lab-del-room": case "lab-copy": case "lab-quiz": case "lab-ans": case "lab-next": case "lab-back": labAction(act, el); break;
       case "fout": play("click"); screen = "fout"; render(); break;
       case "dua": play("click"); screen = "dua"; render(); break;
