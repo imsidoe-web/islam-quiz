@@ -5415,7 +5415,8 @@ return exports;})();
     } catch (e) { /* beschadigde of ontoegankelijke opslag: begin opnieuw */ }
     return defaultState();
   }
-  function saveState() {
+  function saveState(quiet) {
+    if (!quiet && cloudReady) { try { const cp = currentPlayer(); if (cp && cp.sbId) { cp.cT = Date.now(); cloudSoon(); } } catch (e) {} }   /* v112: wijziging van een accountspeler → straks online bewaren */
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(S)); } catch (e) { /* opslag niet beschikbaar */ }
   }
   let S = loadState();
@@ -5753,6 +5754,74 @@ return exports;})();
     dst.age14 = !!(dst.age14 || src.age14);
     if (!dst.mode) dst.mode = src.mode;
   }
+  /* ── v112: voortgang online bewaren (cloud-save, Supabase-tabel player_saves) ──
+     Bij elke start of inlog wordt eerst de online voortgang opgehaald en samengevoegd (niets gaat verloren:
+     per level wint de beste score). Pas daarna wordt er geschreven, zodat een nieuw toestel met lege
+     voortgang nooit de online voortgang overschrijft. Edelstenen: de nieuwste kant wint (ze kunnen uitgegeven zijn). */
+  var cloudReady = false, cloudTimer = null, cloudBusy = false, cloudOff = false;
+  const CLOUD_SKIP = ["id", "sbId", "gid", "photo", "guestNote", "cT", "group"];
+  const CLOUD_MISSING = /player_saves|relation|schema cache|42P01|PGRST205/i;
+  function cloudClean(p) { const o = JSON.parse(JSON.stringify(p)); CLOUD_SKIP.forEach(function (k) { delete o[k]; }); return o; }
+  function cloudMerge(local, cloud, cloudNewer) {
+    const keep = { id: local.id, sbId: local.sbId, gid: local.gid, photo: local.photo, group: local.group, guestNote: local.guestNote };
+    const base = JSON.parse(JSON.stringify(cloudNewer ? cloud : local));
+    const other = cloudNewer ? local : cloud;
+    MODES.forEach(function (lv) {
+      ["best", "journey", "daily", "chests", "seen"].forEach(function (k) { base[k] = base[k] || {}; base[k][lv] = base[k][lv] || {}; mergeRecMap(base[k][lv], (other[k] || {})[lv]); });
+      base.album = base.album || {}; base.album[lv] = base.album[lv] || {}; mergeCountMap(base.album[lv], (other.album || {})[lv]);
+      base.xp = base.xp || {}; base.xp[lv] = Math.max(base.xp[lv] || 0, (other.xp || {})[lv] || 0);
+    });
+    base.badges = Object.assign({}, other.badges || {}, base.badges || {});
+    const st0 = { count: 0, last: null, max: 0, days: [] };
+    base.streak = mergeStreak(base.streak || st0, other.streak || st0);
+    base.played = Math.max(base.played || 0, other.played || 0);
+    if (!base.mode) base.mode = other.mode;
+    Object.keys(other).forEach(function (k) { if (base[k] === undefined) base[k] = other[k]; });
+    return normalizePlayer(Object.assign(base, keep));
+  }
+  function cloudPull(done) {
+    const fin = function () { try { if (done) done(); } catch (e) {} };
+    cloudReady = false;
+    const p = sbLinkedPlayer();
+    if (!sb || !sbUser || !p || cloudOff) { fin(); return; }
+    const uid = sbUser.id;
+    try {
+      sb.from("player_saves").select("data,updated_at").eq("user_id", uid).maybeSingle().then(function (r) {
+        if (!sbUser || sbUser.id !== uid) { fin(); return; }
+        if (r && r.error) { if (CLOUD_MISSING.test(errTxt(r.error))) cloudOff = true; fin(); return; }
+        const d = r && r.data, cur = sbLinkedPlayer();
+        if (d && d.data && cur) {
+          const ct = Date.parse(d.updated_at) || 0;
+          const m = cloudMerge(cur, d.data, ct > (cur.cT || 0));
+          m.cT = Math.max(ct, cur.cT || 0);
+          S.players[S.players.indexOf(cur)] = m;
+          if (P === cur) P = m;
+          cloudReady = true; saveState(true); cloudPush();
+          if (screen === "welcome" && P && P.mode) enterApp();
+          else if (["dash", "journey", "board", "scores"].indexOf(screen) !== -1 && !document.querySelector(".dialog-wrap")) render();
+        } else if (cur) { cloudReady = true; cloudPush(); }
+        fin();
+      }).catch(function () { fin(); });
+    } catch (e) { fin(); }
+  }
+  function cloudSoon() { if (!cloudReady) return; clearTimeout(cloudTimer); cloudTimer = setTimeout(cloudPush, 4000); }
+  function cloudPush() {
+    clearTimeout(cloudTimer); cloudTimer = null;
+    const p = sbLinkedPlayer();
+    if (!sb || !sbUser || !p || !cloudReady || cloudOff) return;
+    if (cloudBusy) { cloudTimer = setTimeout(cloudPush, 3000); return; }
+    cloudBusy = true;
+    const row = { user_id: sbUser.id, data: cloudClean(p), updated_at: new Date(p.cT || Date.now()).toISOString() };
+    try {
+      sb.from("player_saves").upsert(row, { onConflict: "user_id" }).then(function (r) {
+        cloudBusy = false;
+        if (r && r.error && CLOUD_MISSING.test(errTxt(r.error))) cloudOff = true;
+      }).catch(function () { cloudBusy = false; });
+    } catch (e) { cloudBusy = false; }
+  }
+  document.addEventListener("visibilitychange", function () { if (document.visibilityState === "hidden" && cloudTimer) cloudPush(); });
+  window.addEventListener("pagehide", function () { if (cloudTimer) cloudPush(); });
+
   let linkNote = null;
   /* koppel de Google-gebruiker aan een lokale speler (bestaande voortgang blijft behouden) */
   function linkPlayer(u) {
@@ -5796,7 +5865,7 @@ return exports;})();
     sbUser = u;
     if (u) {
       const fresh = !same;
-      if (fresh) { linkPlayer(u); S.entry = "account"; saveState(); sbSyncAll(); sbLoadStreak(); sbLoadBadges(); closeAccount(); }
+      if (fresh) { linkPlayer(u); S.entry = "account"; saveState(); cloudPull(function () { sbSyncAll(); sbLoadStreak(); sbLoadBadges(); }); closeAccount(); }
       remindSync();
       if (screen === "login" || screen === "authwait") enterApp();
       else if (fresh && screen === "players" && linkNote) enterApp();
