@@ -27,9 +27,7 @@
   </script>
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://nurspark.app/og-image.jpg?v=3">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Nunito:wght@400;600;700;800;900&family=Kaushan+Script&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/fonts/fonts.css">
   <style>
 :root {
   --emerald: #2d6a4f;
@@ -601,6 +599,20 @@ table.board thead th .avatar { display: grid; margin: 0 auto; }
     }
    .hidden {display:none !important;
    }
+   /* ── Leeftijdsvraag (v115) en oudercheck ── */
+   #ageModal .modal-content { background: #fbf6ea; border-color: #e7c983; width: 100%; }
+   #ageModal .age-p { text-align: center; background: #fff; border-left: 0; }
+   .age-btns { display: grid; gap: 10px; }
+   .age-btn { width: 100%; justify-content: center; font-size: 17px; min-height: 52px; }
+   .pgate { background: #fbf6ea; border: 2px solid #e7c983; border-radius: 20px; padding: 22px 20px; max-width: 360px; width: calc(100% - 32px); text-align: center; box-shadow: 0 15px 30px rgba(0,0,0,.2); }
+   .pgate h4 { margin: 0 0 6px; color: #1b4332; font-size: 19px; }
+   .pgate p { margin: 0 0 12px; color: #37474f; font-size: 14px; line-height: 1.5; }
+   .pgate .pg-sum { font-size: 26px; font-weight: 900; color: #1b4332; margin: 4px 0 10px; }
+   .pgate input { width: 100%; font: inherit; font-size: 22px; font-weight: 800; text-align: center; padding: 10px; border-radius: 12px; border: 2px solid #cfe0d5; margin-bottom: 8px; }
+   .pgate .pg-err { color: #9a3412; font-weight: 700; min-height: 1.2em; margin: 0 0 8px; font-size: 14px; }
+   .pgate button { display: block; width: 100%; margin-top: 8px; border-radius: 14px; padding: 12px; font: inherit; font-weight: 900; font-size: 16px; cursor: pointer; border: 0; }
+   .pgate .pg-ok { background: #f6d25a; color: #2a1d08; box-shadow: 0 4px 0 #a8742f; }
+   .pgate .pg-no { background: transparent; color: #1b4332; border: 2px solid #cfe0d5; }
    /* ── Bismillah & intentie (v80): zelfde stijl als de mededeling ── */
    #bismillahModal .modal-content { max-height: calc(100vh - 40px); overflow-y: auto; }
    .bsm-ar { font-family: "Amiri", "Scheherazade New", "Noto Naskh Arabic", serif; font-weight: 700; font-size: clamp(24px, 7.6vw, 36px); white-space: nowrap; line-height: 1.8; color: #1b5e20; margin: 0 0 2px; text-shadow: 0 1px 0 #fff, 0 2px 6px rgba(217, 160, 91, .35); }
@@ -2452,6 +2464,19 @@ body.mk-typing .mk-res{gap:8px}
       <button class="btn" onclick="acceptDisclaimer()">Gelezen & Akkoord</button>
     </div>
   </div>
+  <!-- v115: leeftijdsvraag (eenmalig, na de mededeling) -->
+  <div id="ageModal" class="modal-overlay hidden">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="ageT" aria-describedby="ageP">
+      <div class="modal-icon" aria-hidden="true">🌙</div>
+      <h3 id="ageT">Hoe oud ben je?</h3>
+      <p id="ageP" class="age-p">Zo past NurSpark zich aan jou aan. We bewaren alleen de groep, niet je precieze leeftijd.</p>
+      <div class="age-btns">
+        <button class="btn age-btn" onclick="nsSetAge('u13')">Jonger dan 13</button>
+        <button class="btn age-btn" onclick="nsSetAge('13-15')">13 tot 16</button>
+        <button class="btn age-btn" onclick="nsSetAge('16+')">16 of ouder</button>
+      </div>
+    </div>
+  </div>
   <!-- Bismillah & intentie (na de mededeling) -->
   <div id="bismillahModal" class="modal-overlay hidden">
     <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="bsmT" aria-describedby="bsmTr">
@@ -2502,6 +2527,12 @@ body.mk-typing .mk-res{gap:8px}
     const modal = document.getElementById('disclaimerModal');
     if (modal) {
       modal.classList.add('hidden');
+    }
+    const age = document.getElementById('ageModal');
+    if (age && window.nsNeedAge && window.nsNeedAge()) {
+      age.classList.remove('hidden');
+      const a = age.querySelector('.btn'); if (a) setTimeout(function () { a.focus(); }, 50);
+      return;
     }
     const bsm = document.getElementById('bismillahModal');
     if (bsm) {
@@ -5630,6 +5661,70 @@ return exports;})();
     if (el) { el.textContent = t; el.classList.toggle("err", !!t && !ok); el.classList.toggle("ok", !!t && !!ok); } else { announce(t); try { window.alert(t); } catch (e) {} }
   }
   function sbLoginGoogle() { sbOAuth("google"); }
+  /* ── v115: leeftijdsgroep (Google-regels voor gezinnen). Alleen de groep wordt bewaard: "u13", "13-15" of "16+". ── */
+  function kidU13() { return S.ageGroup === "u13"; }
+  window.nsNeedAge = function () { return !S.ageGroup; };
+  let ageAfter = null;
+  window.nsSetAge = function (g) {
+    S.ageGroup = g;
+    S.consent16 = g === "16+";
+    if (g === "u13") { (S.players || []).forEach(function (p) { p.sharePhoto = false; }); if (window.nsStats && window.nsStats.on()) window.nsStats.set(false); }
+    saveState();
+    const m = document.getElementById("ageModal"); if (m) m.classList.add("hidden");
+    if (ageAfter) { const f = ageAfter; ageAfter = null; f(); return; }
+    const bsm = document.getElementById("bismillahModal");
+    if (bsm) { bsm.classList.remove("hidden"); const b = bsm.querySelector(".btn"); if (b) setTimeout(function () { b.focus(); }, 50); }
+  };
+  function ageDialog() {
+    const m = document.getElementById("ageModal"); if (!m) return;
+    ageAfter = function () {
+      if (sbUser && P && P.sbId === sbUser.id) sbSyncAll();
+      announce("Leeftijd opgeslagen."); render();
+    };
+    m.classList.remove("hidden");
+    const b = m.querySelector(".btn"); if (b) setTimeout(function () { b.focus(); }, 50);
+  }
+  function ageLabel() { return S.ageGroup === "u13" ? "jonger dan 13" : S.ageGroup === "13-15" ? "13 tot 16" : S.ageGroup === "16+" ? "16 of ouder" : "nog niet gekozen"; }
+  /* oudercheck: een rekensom voordat een kind onder de 13 iets deelt of een link naar buiten opent */
+  function parentGate(go) {
+    if (!kidU13()) { go(); return; }
+    if (document.getElementById("pgDlg")) return;
+    const a = 6 + Math.floor(Math.random() * 4), b = 6 + Math.floor(Math.random() * 4);
+    const back = document.activeElement;
+    const w = document.createElement("div"); w.className = "dialog-wrap"; w.id = "pgDlg";
+    w.innerHTML = '<div class="pgate" role="dialog" aria-modal="true" aria-labelledby="pgT" aria-describedby="pgP"><h4 id="pgT">Even een ouder erbij</h4>' +
+      '<p id="pgP">Je gaat NurSpark uit (bijvoorbeeld naar WhatsApp). Vraag een ouder of verzorger om deze som op te lossen.</p>' +
+      '<div class="pg-sum" aria-hidden="true">' + a + " × " + b + " = ?</div>" +
+      '<label class="sr-only" for="pgIn">Hoeveel is ' + a + " keer " + b + "?</label>" +
+      '<input id="pgIn" type="text" inputmode="numeric" autocomplete="off" maxlength="3">' +
+      '<p class="pg-err" id="pgErr" role="alert"></p><button type="button" class="pg-ok">Verder</button><button type="button" class="pg-no">Terug</button></div>';
+    const inp = w.querySelector("#pgIn"), err = w.querySelector("#pgErr");
+    const close = function () { document.removeEventListener("keydown", onKey, true); w.remove(); try { back && back.focus(); } catch (x) {} };
+    const check = function () {
+      if (parseInt(inp.value, 10) === a * b) { close(); go(); }
+      else { err.textContent = "Dat klopt niet. Vraag een ouder om te helpen."; inp.value = ""; inp.focus(); }
+    };
+    const onKey = function (e) {
+      if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); close(); }
+      else if (e.key === "Enter" && document.activeElement === inp) { e.preventDefault(); check(); }
+    };
+    w.querySelector(".pg-ok").addEventListener("click", check);
+    w.querySelector(".pg-no").addEventListener("click", close);
+    w.addEventListener("click", function (e) { e.stopPropagation(); if (e.target === w) close(); });
+    document.addEventListener("keydown", onKey, true);
+    document.body.appendChild(w);
+    inp.focus();
+  }
+  function extOpen(url) { parentGate(function () { try { window.open(url, "_blank", "noopener"); } catch (e) { location.href = url; } }); }
+  /* alle links naar een andere website gaan voor kinderen onder 13 eerst langs de oudercheck */
+  document.addEventListener("click", function (e) {
+    if (!kidU13()) return;
+    const a = e.target.closest && e.target.closest("a[href]"); if (!a) return;
+    let u; try { u = new URL(a.getAttribute("href"), location.href); } catch (x) { return; }
+    if (!/^https?:$/.test(u.protocol) || u.origin === location.origin) return;
+    e.preventDefault(); e.stopPropagation();
+    extOpen(u.href);
+  }, true);
   const CONSENT_MSG = "Vink eerst aan dat je 16 jaar of ouder bent, of dat je ouder of verzorger toestemming geeft.";
   function consentOk(retry) {
     const cb = document.getElementById("acctAge");
@@ -5950,7 +6045,7 @@ return exports;})();
   function sbPush(cl, uid, p, lv) {
     if (lv === "beginner" && soc.noBeg) return;           /* server kent de modus Beginner nog niet (supabase-beginner.sql): Beginner blijft lokaal */
     const hs = scoreAt(p, lv); if (hs <= 0) return;
-    const row = { user_id: uid, mode: lv, display_name: publicName(p), avatar_url: p.sharePhoto !== false && GOOGLE_PHOTO.test(p.photo || "") ? p.photo : null, highscore: hs, stars: starsAt(p, lv), xp: xpAt(p, lv) };
+    const row = { user_id: uid, mode: lv, display_name: publicName(p), avatar_url: !kidU13() && p.sharePhoto !== false && GOOGLE_PHOTO.test(p.photo || "") ? p.photo : null, highscore: hs, stars: starsAt(p, lv), xp: xpAt(p, lv) };
     const pos = posOf(p, lv), full = Object.assign({}, row, { levels_done: passedLevels(p, lv), pos_land: pos.land, pos_level: pos.level, streak: streakOf(p) });
     const send = function (r) { return cl.from("leaderboard").upsert(r, { onConflict: "user_id,mode" }); };
     const av = avOf(p);
@@ -6238,7 +6333,7 @@ return exports;})();
     if (logged) h += '<div class="acct-nick"><label class="quiz-label" for="acctNick">Publieke nickname</label>' +
       '<div class="nick-row"><input class="quiz-input" id="acctNick" type="text" maxlength="14" autocomplete="off" placeholder="Bijvoorbeeld SterrenSpeler" value="' + esc(P && P.nick ? P.nick : "") + '"><button type="button" class="btn-gold-quiz" data-act="nick-save">Opslaan</button></div>' +
       '<small class="nick-help">Dit zien anderen op de kaart en het klassement. Laat je het leeg, dan is dat je voornaam. Gebruik geen achternaam, e-mailadres of woonplaats.</small>' +
-      '<label class="opt nick-photo"><input type="checkbox" id="acctPhoto"' + (P && P.sharePhoto === false ? "" : " checked") + '><span>Toon mijn profielfoto aan anderen</span></label><p id="nickMsg" class="acct-msg" role="status"></p></div>';
+      (kidU13() ? "" : '<label class="opt nick-photo"><input type="checkbox" id="acctPhoto"' + (P && P.sharePhoto === false ? "" : " checked") + '><span>Toon mijn profielfoto aan anderen</span></label>') + '<p id="nickMsg" class="acct-msg" role="status"></p></div>';
     if (logged) { /* nickname hierboven */ }
     else if (active) h += '<p class="acct-who">Je speelt als gast: <b>' + esc(P.name) + "</b><small>Je speelt mee op het wereldwijde klassement. Log in of maak een account om je voortgang ook op een ander toestel te bewaren: je levels, sterren, edelstenen en dagreeks gaan mee.</small></p>";
     else h += '<p class="acct-who">Kies hoe je wilt spelen.</p>';
@@ -6254,7 +6349,7 @@ return exports;})();
         '<p id="acctMsg" class="acct-msg" role="alert">' + esc(loginMsg) + "</p>" +
         '<div class="quiz-divider" role="separator"><span>OF</span></div>' +
         '<button class="btn-google-quiz" data-act="acct-oauth" data-provider="google">' + GOOGLE_G + "<span>Doorgaan met Google</span></button>" +
-        '<button class="btn-google-quiz" data-act="acct-oauth" data-provider="facebook">' + FB_F + "<span>Doorgaan met Facebook</span></button>" +
+        (kidU13() ? "" : '<button class="btn-google-quiz" data-act="acct-oauth" data-provider="facebook">' + FB_F + "<span>Doorgaan met Facebook</span></button>") +
         '<div class="quiz-divider" role="separator"><span>OF</span></div>' +
         (active ? '<button class="btn-guest-quiz" data-d="x">⚪ Doorgaan als Gast</button>'
           : '<label class="quiz-label" for="username">Spelersnaam (Gast)</label>' + nameTipHtml() + '<input class="quiz-input" id="username" type="text" maxlength="14" autocomplete="off" placeholder="Voer je naam in..." aria-describedby="guestMsg"><p id="guestMsg" class="acct-msg" role="alert"></p><button class="btn-guest-quiz" data-act="acct-guest"><span aria-hidden="true">⚪</span> Doorgaan als Gast</button>');
@@ -6269,7 +6364,7 @@ return exports;})();
     const v = nickClean(inp.value), err = nickError(v);
     if (err) { if (msg) { msg.textContent = err; msg.className = "acct-msg err"; } return; }
     P.nick = v || ""; if (!v) delete P.nick;
-    P.sharePhoto = ph ? !!ph.checked : true;
+    P.sharePhoto = kidU13() ? false : ph ? !!ph.checked : true;
     saveState();
     if (sbUser && P.sbId === sbUser.id) sbSyncAll(); else if (!P.sbId) guestSyncAll(P);
     if (msg) { msg.textContent = v ? "✓ Opgeslagen: anderen zien jou als “" + v + "”." : "✓ Opgeslagen: anderen zien je voornaam."; msg.className = "acct-msg ok"; }
@@ -6853,7 +6948,7 @@ return exports;})();
       row('id="optAuto"' + (autoOn() ? " checked" : ""), "Automatisch doorgaan", "Na een level vanzelf verder") +
       row('id="optLvMenu"' + (S.lvmenu !== false ? " checked" : ""), "Levelmenu met beloningen", "Toont vooraf wat je kunt winnen (Gevorderd en Ervaren)") +
       row('id="optJummah"' + (S.jummah !== false ? " checked" : ""), "Jummah-cadeau op vrijdag", "Een groet met cadeau en herinnering, elke vrijdag") +
-      (window.nsStats ? row('id="optStats"' + (window.nsStats.on() ? " checked" : ""), "Bezoekersstatistieken", "Help ons met anonieme tellingen via Google Analytics (geen advertenties)") : "") +
+      (window.nsStats && !kidU13() ? row('id="optStats"' + (window.nsStats.on() ? " checked" : ""), "Bezoekersstatistieken", "Help ons met anonieme tellingen via Google Analytics (geen advertenties)") : "") +
       row('id="optLab"' + (labState().on ? " checked" : ""), "Testlab (in ontwikkeling)", "Organisatiekamers in Bayt al-‘Ilm uitproberen: school, docent, imam of uitgeverij. Alleen op dit toestel.") +
       (OLD_HOST ? '<button class="btn gold block" data-act="move-out" style="margin:10px 0">Verhuis naar nurspark.app</button>' : "") +
       (pushSupported() ? row('id="optRemind"' + (S.remind ? " checked" : ""), "Dagelijkse herinnering", "Melding om " + REMIND_HOUR + ":00 als je reeks in gevaar is") + '<p class="set-info" id="remindMsg" role="status" hidden></p>' : "") +
@@ -6864,7 +6959,8 @@ return exports;})();
       '<button class="btn ghost" data-act="scores" data-d="x">' + icon("trophy", 18) + "Mijn scores</button>" +
       '<button class="btn ghost" data-act="group" data-d="x">' + icon("users", 18) + "Groep &amp; duel</button>" +
       '<button class="btn ghost" data-act="bazaar" data-d="x">' + gemSvg(18) + "Bazaar</button>" +
-      '<button class="btn ghost" data-act="tour" data-d="x">Uitleg bekijken</button>' + (COLOFON_ON ? '<button class="btn ghost" data-act="colofon" data-d="x">Over de app (colofon)</button>' : "") + (isStandalone() ? "" : '<button class="btn ghost" data-act="install" data-d="x">Zet op beginscherm</button>') + "</div>" +
+      '<button class="btn ghost" data-act="tour" data-d="x">Uitleg bekijken</button>' +
+      '<button class="btn ghost" data-act="age" data-d="x">Leeftijd: ' + ageLabel() + "</button>" + (COLOFON_ON ? '<button class="btn ghost" data-act="colofon" data-d="x">Over de app (colofon)</button>' : "") + (isStandalone() ? "" : '<button class="btn ghost" data-act="install" data-d="x">Zet op beginscherm</button>') + "</div>" +
       '<button class="set-danger" data-act="reset" data-d="x">' + icon("trash", 16) + "Voortgang van " + esc(P.name) + " wissen</button>" +
       (sbUser && P.sbId === sbUser.id ? '<button class="set-danger" data-act="acct-delete" data-d="x">' + icon("trash", 16) + "Account verwijderen</button>" : "") +
       legalLinks() + '<button class="btn block" data-d="ok">Klaar</button></div></div>';
@@ -10066,6 +10162,7 @@ return exports;})();
   function radNetFail(e) { radNetStop(); radNet = { view: "error", msg: radNetErr(e) }; if (screen === "rad") render(); }
   /* ── 1) iemand zoeken die nu online is ── */
   async function radNetSearch() {
+    if (kidU13() || (P && P.mode === "beginner")) { render(); return; }   /* v115: onder 13 en in Beginner geen onbekenden zoeken */
     radNetStop(); rad = null;
     radNet = { view: "search", t0: Date.now(), list: [], invites: [], msg: "" };
     screen = "rad"; render();
@@ -10146,8 +10243,7 @@ return exports;})();
   function radNetLink(code) { return SITE_URL + "?studio=" + code; }
   function radNetShare(code) {
     const txt = "🌙 Speel je mee met Ajalat al-Ilm (Rad van Kennis) in NurSpark? Tik op de link en doe mee in mijn studio (code " + showCode(code) + "):\n" + radNetLink(code);
-    const url = "https://wa.me/?text=" + encodeURIComponent(txt);
-    try { window.open(url, "_blank", "noopener"); } catch (e) { location.href = url; }
+    extOpen("https://wa.me/?text=" + encodeURIComponent(txt));
   }
   async function radNetJoin(code) {
     code = normCode(code);
@@ -10388,7 +10484,7 @@ return exports;})();
       '<button class="rad-opt' + (radSetup.vs === "online" ? " on" : "") + '" role="radio" aria-checked="' + (radSetup.vs === "online") + '" data-act="rad-vs" data-v="online"><b>Online</b><small>Ieder op zijn eigen telefoon</small></button></div>';
     if (radSetup.vs === "online") {
       h += '<div class="radn-opts">';
-      if (lv === "beginner") h += '<p class="radn-note">In Beginner speel je online alleen met bekenden: via je groep, een studiocode of een link.</p>';
+      if (lv === "beginner" || kidU13()) h += '<p class="radn-note">' + (kidU13() ? "Onder de 13 speel je online alleen met bekenden" : "In Beginner speel je online alleen met bekenden") + ': via je groep, een studiocode of een link.</p>';
       else h += '<button class="btn gold block" data-act="radn-search">1 · Zoek iemand die nu online is</button>';
       if (radGrpSeen && radGrpSeen.room && radGrpSeen.mode === lv) h += '<div class="radn-inv"><p><b>' + esc(radGrpSeen.name) + "</b> heeft een studio geopend voor jullie groep.</p><button class=\"btn gold\" data-act=\"radn-join\" data-code=\"" + esc(radGrpSeen.room) + '">Meedoen</button></div>';
       h += '<button class="btn ghost block" data-act="radn-open">2 · Open een studio' + (P.group ? " voor je groep" : "") + "</button>" +
@@ -10581,7 +10677,8 @@ return exports;})();
       });
     } else if (!P.group && radAlSub) { radAlSub.close(); radAlSub = null; radAlCode = null; }
     cloudAuth().then(function (auth) {
-      if (!radLobSub || radLobLv !== P.mode) {
+      if (kidU13()) { if (radLobSub) { radLobSub.close(); radLobSub = null; radLobLv = null; } }
+      else if (!radLobSub || radLobLv !== P.mode) {
         if (radLobSub) radLobSub.close(); radLobLv = P.mode;
         radLobSub = poll("rad/lobby/" + radLobLv, function (d) {
           if (radNet && radNet.view === "search") return;
@@ -11706,7 +11803,7 @@ return exports;})();
   function peerStat(ic, val, lab) { return '<li><span class="pe-ic" aria-hidden="true">' + ic + '</span><b>' + val + "</b><small>" + lab + "</small></li>"; }
   function peerDialog(key) {
     const lv = P.mode, me = key === "me";
-    const pe = me ? { key: "me", name: publicName(P), photo: sbUser && P.sbId === sbUser.id && P.sharePhoto !== false && GOOGLE_PHOTO.test(P.photo || "") ? P.photo : "", color: P.color, av: (avOf(P) || {}).id || "", uid: meId() || P.id, land: posOf(P, lv).land, level: posOf(P, lv).level, levels: passedLevels(P, lv), xp: xpAt(P, lv), stars: starsAt(P, lv), score: scoreAt(P, lv), streak: streakOf(P), bm: badgeMask(P, lv, "master"), bg: badgeMask(P, lv, "grand"), local: !((sbUser && P.sbId === sbUser.id) || P.gid), me: true } : peerMap[key];
+    const pe = me ? { key: "me", name: publicName(P), photo: sbUser && P.sbId === sbUser.id && !kidU13() && P.sharePhoto !== false && GOOGLE_PHOTO.test(P.photo || "") ? P.photo : "", color: P.color, av: (avOf(P) || {}).id || "", uid: meId() || P.id, land: posOf(P, lv).land, level: posOf(P, lv).level, levels: passedLevels(P, lv), xp: xpAt(P, lv), stars: starsAt(P, lv), score: scoreAt(P, lv), streak: streakOf(P), bm: badgeMask(P, lv, "master"), bg: badgeMask(P, lv, "grand"), local: !((sbUser && P.sbId === sbUser.id) || P.gid), me: true } : peerMap[key];
     if (!pe) return;
     const fl = document.getElementById("flyer"); if (fl) fl.remove();
     const old = document.getElementById("peerDlg"); if (old) old.remove();
@@ -12659,6 +12756,7 @@ return exports;})();
       case "create-player": createPlayer(); break;
       case "select-player": play("click"); selectPlayer(el.dataset.id); break;
       case "tour": showTour(); break;
+      case "age": ageDialog(); break;
       case "avatar-pick": play("click"); avatarDialog(el.dataset.id); break;
       case "remove-player": {
         const victim = S.players.find(function (p) { return p.id === el.dataset.id; });
@@ -13068,9 +13166,14 @@ if ("serviceWorker" in navigator && (location.protocol === "https:" || location.
   window.nsStats = { on: function () { return get() === "yes"; }, set: function (on) { set(on ? "yes" : "no"); if (on) load(); else stop(); } };
   var local = /^(localhost|127\.|192\.168\.)/.test(location.hostname);
   if (local) return;
+  /* v115: leeftijdsgroep uit de app; onder 13 geen statistieken */
+  function ageG() { try { return (JSON.parse(localStorage.getItem("islam-quiz-v2") || "{}") || {}).ageGroup || ""; } catch (e) { return ""; } }
+  if (ageG() === "u13") return;
   if (get() === "yes") { load(); return; }
   if (get() === "no") return;
   function ask() {
+    if (!ageG()) { setTimeout(ask, 2000); return; }   /* eerst de leeftijdsvraag */
+    if (ageG() === "u13") return;
     var b = document.createElement("div"); b.className = "ns-cookie"; b.setAttribute("role", "dialog"); b.setAttribute("aria-label", "Bezoekersstatistieken");
     b.innerHTML = "<h4>Mogen we meetellen? 📊</h4><p>We willen graag zien hoeveel mensen NurSpark gebruiken, zodat we de app beter kunnen maken. Daarvoor gebruiken we Google Analytics (zonder advertenties). <a href=\"/privacy/\" target=\"_blank\" rel=\"noopener\">Meer info</a></p>" +
       "<div class=\"ns-ck-row\"><button class=\"ns-ck-no\" type=\"button\">Liever niet</button><button class=\"ns-ck-yes\" type=\"button\">Akkoord</button></div>";
