@@ -1228,6 +1228,16 @@ body.jfull .reward-flyer { top: 160px; }
 .acct-consent { display: flex; gap: 10px; align-items: flex-start; text-align: left; margin: 14px 0 6px; padding: 10px 12px; border-radius: 12px; background: rgba(255, 226, 169, .10); border: 1.5px solid rgba(255, 226, 169, .45); font-size: .92rem; line-height: 1.4; cursor: pointer; }
 .acct-consent input { width: 22px; height: 22px; flex: none; margin: 1px 0 0; accent-color: #f6d25a; }
 .acct-consent a { color: #ffe2a9; }
+.ask-wrap { z-index: 80; background: rgba(8, 26, 18, .55); }
+.ask16 { width: 100%; max-width: 330px; background: #fbf5e6; color: #1f3a2c; border: 2px solid #d9a05b; border-radius: 22px; padding: 22px 20px 18px; text-align: center; box-shadow: 0 12px 30px rgba(0, 0, 0, .35); animation: pop .25s ease both; }
+.ask16-moon { font-size: 2rem; line-height: 1; }
+.ask16 h4 { margin: 8px 0 6px; font-size: 1.15rem; color: #0F2E22; }
+.ask16 p { margin: 0 0 16px; line-height: 1.45; font-size: .97rem; color: #1f3a2c; }
+.ask16-yes { appearance: none; width: 100%; padding: 13px; border: 0; border-radius: 12px; background: linear-gradient(180deg, #f9dd9c, #d9a05b); color: #3a2606; font: inherit; font-weight: 900; box-shadow: 0 4px 0 #a8742f; cursor: pointer; }
+.ask16-no { appearance: none; width: 100%; margin-top: 10px; padding: 11px; border: 1.5px solid #c9b48a; border-radius: 12px; background: transparent; color: #4a5a50; font: inherit; font-weight: 700; cursor: pointer; }
+.ask16 button:focus-visible { outline: 3px solid #0F2E22; outline-offset: 2px; }
+.ask16 small { display: block; margin-top: 12px; color: #5f6e64; font-size: .82rem; }
+@media (prefers-reduced-motion: reduce) { .ask16, .ask-wrap { animation: none; } }
 .acct-dlg button:focus-visible, .acct-dlg input:focus-visible { outline: 3px solid #ffd54f; outline-offset: 2px; }
 .btn.acct-open { border-color: var(--gold); }
 
@@ -5621,18 +5631,45 @@ return exports;})();
   }
   function sbLoginGoogle() { sbOAuth("google"); }
   const CONSENT_MSG = "Vink eerst aan dat je 16 jaar of ouder bent, of dat je ouder of verzorger toestemming geeft.";
-  function consentOk() {
+  function consentOk(retry) {
     const cb = document.getElementById("acctAge");
     if (cb && cb.checked) { S.consent16 = true; saveState(); }
     if (S.consent16) return true;
+    if (cb && retry) { consentAsk(retry); return false; }
     sbMsg(CONSENT_MSG);
-    if (cb) { cb.focus(); const l = cb.closest(".acct-consent"); if (l) { l.style.borderColor = "#f4a99b"; } }
-    else accountDialog();
+    if (cb) cb.focus(); else accountDialog();
     return false;
+  }
+  /* v114: vriendelijke vraag op het moment zelf (in plaats van rode rand/schudden) */
+  function consentAsk(retry) {
+    if (document.getElementById("askDlg")) return;
+    const back = document.activeElement;
+    const w = document.createElement("div"); w.className = "dialog-wrap ask-wrap"; w.id = "askDlg";
+    w.innerHTML = '<div class="ask16" role="alertdialog" aria-modal="true" aria-labelledby="askT" aria-describedby="askP">' +
+      '<div class="ask16-moon" aria-hidden="true">🌙</div><h4 id="askT">Nog één vraag</h4>' +
+      '<p id="askP">Ben je <b>16 jaar of ouder</b>?<br>Of geeft je ouder of verzorger toestemming?</p>' +
+      '<button type="button" class="ask16-yes">Ja, ga verder</button><button type="button" class="ask16-no">Nee, terug</button>' +
+      '<small>Zonder account kun je gewoon als gast spelen.</small></div>';
+    const yes = w.querySelector(".ask16-yes"), no = w.querySelector(".ask16-no");
+    const close = function () { document.removeEventListener("keydown", onKey, true); w.remove(); };
+    const onKey = function (e) {
+      if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); close(); try { back && back.focus(); } catch (x) {} }
+      else if (e.key === "Tab") { e.preventDefault(); (document.activeElement === yes ? no : yes).focus(); }
+    };
+    yes.addEventListener("click", function () {
+      close(); S.consent16 = true; saveState();
+      const cb = document.getElementById("acctAge"); if (cb) cb.checked = true;
+      sbMsg(""); retry();
+    });
+    no.addEventListener("click", function () { close(); try { back && back.focus(); } catch (x) {} });
+    w.addEventListener("click", function (e) { e.stopPropagation(); if (e.target === w) { close(); try { back && back.focus(); } catch (x) {} } });
+    document.addEventListener("keydown", onKey, true);
+    document.body.appendChild(w);
+    yes.focus();
   }
   function sbOAuth(provider) {
     sbMsg("");
-    if (!consentOk()) return;
+    if (!consentOk(function () { sbOAuth(provider); })) return;
     if (!sb) { sbMsg("Inloggen kan nu niet: de inlogdienst is niet bereikbaar. Controleer je verbinding of ga door als gast."); return; }
     if (P && !P.sbId && P.gid) { guestLink(provider); return; }      /* gast met eigen scorebordplek: het account wordt gekoppeld, de plek blijft */
     plainOAuth(provider);
@@ -6270,7 +6307,7 @@ return exports;})();
     sbMsg("");
     if (!sb) { sbMsg("Inloggen kan nu niet: de inlogdienst is niet bereikbaar. Controleer je verbinding of ga door als gast."); return; }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) { sbMsg("Vul een geldig e-mailadres in."); return; }
-    if (up && !consentOk()) return;
+    if (up && !consentOk(acctSubmit)) return;
     if (up && !nm) { sbMsg("Vul een naam in voor op het klassement."); return; }
     if (up && nameError(nm)) { sbMsg(nameError(nm)); return; }
     if (pw.length < (up ? 8 : 1)) { sbMsg(up ? "Kies een wachtwoord van minstens 8 tekens." : "Vul je wachtwoord in."); return; }
@@ -12697,7 +12734,7 @@ return exports;})();
   document.addEventListener("change", function (e) {
     const el = e.target;
     if (el && el.dataset && el.dataset.act === "toggle-timer") { S.timer = el.checked; saveState(); play("click"); }
-    if (el && el.id === "acctAge") { S.consent16 = !!el.checked; saveState(); const l = el.closest(".acct-consent"); if (l) l.style.borderColor = ""; if (el.checked) sbMsg(""); }
+    if (el && el.id === "acctAge") { S.consent16 = !!el.checked; saveState(); if (el.checked) sbMsg(""); }
     if (el && el.dataset && el.dataset.act === "toggle-hg") { S.hgOff = !el.checked; saveState(); play("click"); }
     if (el && el.dataset && el.dataset.act === "toggle-kos") { S.look = el.checked ? "kosmos" : ""; saveState(); play("click"); render(); }
   });
