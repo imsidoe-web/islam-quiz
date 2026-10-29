@@ -2346,6 +2346,26 @@ body.kosmos .rad-inv-ban { background: rgba(8,12,40,.95); border-color: #3fe6d0;
 .d-tile.hub b{background:none;color:#2a1d08;}
 @media (prefers-reduced-motion:reduce){.d-tile::after,.d-card::after,.d-rihla::after{animation:none;display:none}}
 .d-tile.hub{padding:16px 20px!important;}
+/* v104: Al-Maktabah al-Mutaqaddimah (op slot) */
+.d-tile.maktabah{grid-column:1/-1;cursor:default;gap:12px;padding:18px 18px 0!important;opacity:1;
+ background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56'%3E%3Cg fill='none' stroke='%23c9a24a' stroke-width='.8' opacity='.13'%3E%3Crect x='16' y='16' width='24' height='24'/%3E%3Crect x='16' y='16' width='24' height='24' transform='rotate(45 28 28)'/%3E%3Ccircle cx='28' cy='28' r='5'/%3E%3C/g%3E%3C/svg%3E") padding-box,linear-gradient(160deg,#16503e 0%,#0f3b2e 100%) padding-box,var(--metal-gold) border-box!important;}
+.d-tile.maktabah:active{transform:none}
+.mk-badge{position:absolute;top:12px;right:12px;display:flex;align-items:center;gap:6px;font-size:.62rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#e6cf8f;border:1px solid rgba(201,162,74,.6);background:rgba(15,59,46,.75);padding:4px 9px;border-radius:999px;z-index:1}
+.mk-badge i{width:6px;height:6px;border-radius:50%;background:#c9a24a;animation:mkPuls 2.4s ease-in-out infinite}
+@keyframes mkPuls{50%{opacity:.3}}
+.mk-top{display:flex;gap:12px;align-items:center;margin-top:22px}
+.mk-ic{flex:none;width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(201,162,74,.12);border:1px solid rgba(201,162,74,.45)}
+.mk-t{display:flex;flex-direction:column;gap:1px;min-width:0}
+.d-tile.maktabah .d-k.ar{color:#e6cf8f;font-size:1.25rem}
+.d-tile.maktabah small{color:#d9ccaa}
+.mk-zoek{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;background:rgba(246,240,225,.08);border:1px solid rgba(246,240,225,.18);font-size:.82rem;font-weight:600;color:rgba(246,240,225,.55)}
+.mk-delen{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mk-delen span{text-align:center;padding:8px 4px;border-radius:10px;border:1px solid rgba(201,162,74,.3);font-size:.72rem;font-weight:700;color:#efe6cc}
+.mk-delen em{display:block;font-style:normal;font-family:"Amiri","Scheherazade New",serif;font-size:1rem;color:#e6cf8f;line-height:1.3}
+.mk-balk{display:flex;gap:8px;align-items:flex-start;margin:0 -18px;padding:11px 18px 14px;background:rgba(0,0,0,.2);border-top:1px solid rgba(201,162,74,.3);font-size:.74rem;font-weight:600;line-height:1.45;color:rgba(246,240,225,.85)}
+.mk-balk svg{flex:none;margin-top:1px}
+.mk-balk u{text-decoration:none;color:#e6cf8f}
+@media (prefers-reduced-motion:reduce){.mk-badge i{animation:none}}
 </style>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=3">
@@ -6916,6 +6936,7 @@ return exports;})();
     book: '<path d="M4 5h7a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2H4z"/><path d="M20 5h-7a2 2 0 0 0-2 2v12a2 2 0 0 1 2-2h7z"/>',
     star: '<path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9z"/>',
     wheel: '<circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6L5.6 18.4"/>',
+    ink: '<path d="M6 15h12l1 6H5z"/><path d="M8 15v-2a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/><path d="M12 12 20 2c-3.5.6-6.5 3-8 6.5"/><path d="M20 2c-.6 3.5-3 6.5-6.5 8"/>',
     users: '<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-4 3-6 6-6s6 2 6 6M14 20c0-3 1.5-5 4-5s3 2 3 5"/>'
   };
   function dIc(k, c, sz) { return '<svg width="' + (sz || 32) + '" height="' + (sz || 32) + '" viewBox="0 0 24 24" fill="none" stroke="' + c + '" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + DI[k] + "</svg>"; }
@@ -6935,7 +6956,15 @@ return exports;})();
       '<button class="d-tile hub" data-act="hub">' + dIc("book", "#1b4332") + '<span class="d-k ar" lang="ar" dir="rtl">بيت العلم</span><b>Bayt al-‘Ilm</b><small>' + (nf ? "Mijn foutjes: " + nf + " · du’a-boekje" : "Foutjes en du’a-boekje") + "</small></button>" +
       '<button class="d-tile kids" disabled aria-label="KidsZone, komt binnenkort">' + dIc("star", "#ffd54f") + '<small class="d-k">KIDSZONE</small><b>[Naam volgt]</b><small>Binnenkort, insha’Allah</small></button>' +
       '<button class="d-tile" data-act="rad">' + dIc("wheel", "#ffd54f", 30) + '<b>Ajalat al-‘Ilm</b><small>Rad van Kennis</small></button>' +
-      '<button class="d-tile" data-act="group">' + dIc("users", "#ffd54f", 30) + "<b>Groep & Duel</b><small>Samen leren</small></button></nav>";
+      '<button class="d-tile" data-act="group">' + dIc("users", "#ffd54f", 30) + "<b>Groep & Duel</b><small>Samen leren</small></button>" +
+      /* v104: tegel voor geleerden, imams en gevorderde studenten (nog op slot, in ontwikkeling) */
+      '<button class="d-tile maktabah" disabled aria-label="Al-Maktabah al-Mutaqaddimah, geavanceerde bibliotheek voor imams, geleerden en gevorderde studenten. Nog in ontwikkeling, binnenkort beschikbaar.">' +
+        '<span class="mk-badge" aria-hidden="true"><i></i>In ontwikkeling</span>' +
+        '<span class="mk-top" aria-hidden="true"><span class="mk-ic">' + dIc("ink", "#e6cf8f", 30) + '</span><span class="mk-t"><span class="d-k ar" lang="ar" dir="rtl">المكتبة المتقدمة</span><b>Al-Maktabah al-Mutaqaddimah</b><small>Voor imams, geleerden en gevorderde studenten</small></span></span>' +
+        '<span class="mk-zoek" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>Zoek een term, bijv. Wudhu …</span>' +
+        '<span class="mk-delen" aria-hidden="true"><span><em lang="ar">المكتبة</em>Bibliotheek</span><span><em lang="ar">الموسوعة</em>Encyclopedie</span><span><em lang="ar">الحديث</em>Hadith</span></span>' +
+        '<span class="mk-balk" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c9a24a" stroke-width="1.8"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span>Klassieke bronnen uit de Dars-e-Nizami, vertaald uit het Arabisch en nagekeken door geleerden. <u>Binnenkort beschikbaar, insha’Allah.</u></span></span>' +
+      "</button></nav>";
     h += salHtml();
     h += '<nav class="d-small" aria-label="Meer"><button data-act="board">Score</button><button data-act="album">Album</button><button data-act="bazaar">Bazaar</button></nav>';
     return '<section class="dash">' + h + "</section>";
