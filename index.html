@@ -1228,10 +1228,6 @@ body.jfull .reward-flyer { top: 160px; }
 .acct-consent { display: flex; gap: 10px; align-items: flex-start; text-align: left; margin: 14px 0 6px; padding: 10px 12px; border-radius: 12px; background: rgba(255, 226, 169, .10); border: 1.5px solid rgba(255, 226, 169, .45); font-size: .92rem; line-height: 1.4; cursor: pointer; }
 .acct-consent input { width: 22px; height: 22px; flex: none; margin: 1px 0 0; accent-color: #f6d25a; }
 .acct-consent a { color: #ffe2a9; }
-.acct-consent.need { border-color: #ff8a73; background: rgba(255, 138, 115, .16); box-shadow: 0 0 0 3px rgba(255, 138, 115, .35); animation: acctNeed .5s ease 2; }
-.acct-need-tip { display: block; margin-top: 6px; color: #ffd0c4; font-weight: 800; }
-@keyframes acctNeed { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
-@media (prefers-reduced-motion: reduce) { .acct-consent.need { animation: none; } }
 .acct-dlg button:focus-visible, .acct-dlg input:focus-visible { outline: 3px solid #ffd54f; outline-offset: 2px; }
 .btn.acct-open { border-color: var(--gold); }
 
@@ -5629,16 +5625,7 @@ return exports;})();
     if (cb && cb.checked) { S.consent16 = true; saveState(); }
     if (S.consent16) return true;
     sbMsg(CONSENT_MSG);
-    if (cb) {
-      const l = cb.closest(".acct-consent");
-      if (l) {
-        l.classList.remove("need"); void l.offsetWidth; l.classList.add("need");
-        if (!l.querySelector(".acct-need-tip")) { const t = document.createElement("b"); t.className = "acct-need-tip"; t.setAttribute("role", "alert"); t.textContent = "☝️ Vink dit eerst aan om verder te gaan."; l.querySelector("span").appendChild(t); }
-        try { l.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e) {}
-      }
-      try { if (navigator.vibrate) navigator.vibrate(80); } catch (e) {}
-      cb.focus({ preventScroll: true });
-    }
+    if (cb) { cb.focus(); const l = cb.closest(".acct-consent"); if (l) { l.style.borderColor = "#f4a99b"; } }
     else accountDialog();
     return false;
   }
@@ -12637,7 +12624,7 @@ return exports;})();
   document.addEventListener("change", function (e) {
     const el = e.target;
     if (el && el.dataset && el.dataset.act === "toggle-timer") { S.timer = el.checked; saveState(); play("click"); }
-    if (el && el.id === "acctAge") { S.consent16 = !!el.checked; saveState(); const l = el.closest(".acct-consent"); if (l && el.checked) { l.classList.remove("need"); const t = l.querySelector(".acct-need-tip"); if (t) t.remove(); } if (el.checked) sbMsg(""); }
+    if (el && el.id === "acctAge") { S.consent16 = !!el.checked; saveState(); const l = el.closest(".acct-consent"); if (l) l.style.borderColor = ""; if (el.checked) sbMsg(""); }
     if (el && el.dataset && el.dataset.act === "toggle-hg") { S.hgOff = !el.checked; saveState(); play("click"); }
     if (el && el.dataset && el.dataset.act === "toggle-kos") { S.look = el.checked ? "kosmos" : ""; saveState(); play("click"); render(); }
   });
