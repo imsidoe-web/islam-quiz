@@ -5784,7 +5784,7 @@ return exports;})();
     cloudReady = false;
     const p = sbLinkedPlayer();
     if (!sb || !sbUser || !p || cloudOff) { fin(); return; }
-    const uid = sbUser.id;
+    const uid = sbUser.id, fromGuest = linkNote === "linked";   /* gast is net een account geworden: zijn punten komen bovenop de online punten */
     try {
       sb.from("player_saves").select("data,updated_at").eq("user_id", uid).maybeSingle().then(function (r) {
         if (!sbUser || sbUser.id !== uid) { fin(); return; }
@@ -5792,7 +5792,11 @@ return exports;})();
         const d = r && r.data, cur = sbLinkedPlayer();
         if (d && d.data && cur) {
           const ct = Date.parse(d.updated_at) || 0;
-          const m = cloudMerge(cur, d.data, ct > (cur.cT || 0));
+          const m = cloudMerge(cur, d.data, fromGuest || ct > (cur.cT || 0));
+          if (fromGuest) MODES.forEach(function (lv) {
+            m.gems[lv] = ((d.data.gems || {})[lv] || 0) + ((cur.gems || {})[lv] || 0);
+            m.xp[lv] = ((d.data.xp || {})[lv] || 0) + ((cur.xp || {})[lv] || 0);
+          });
           m.cT = Math.max(ct, cur.cT || 0);
           S.players[S.players.indexOf(cur)] = m;
           if (P === cur) P = m;
