@@ -5763,7 +5763,7 @@ return exports;})();
       remindSync();
       if (screen === "login" || screen === "authwait") enterApp();
       else if (fresh && screen === "players" && linkNote) enterApp();
-      else if (fresh && ["journey", "board", "scores", "welcome", "players"].indexOf(screen) !== -1) render();
+      else if (fresh && ["journey", "board", "scores", "welcome", "players", "dash"].indexOf(screen) !== -1 && !document.querySelector(".dialog-wrap")) render();   /* v106: ook startscherm verversen (beheerder-tegel) */
       if (fresh && linkNote) { const m = linkNote; linkNote = null; setTimeout(function () { if (screen === "journey") jToast(m === "merged" ? "✓ Je gastvoortgang is toegevoegd aan je account" : "✓ Account gekoppeld, je voortgang is bewaard"); }, 500); }
     } else if (screen === "authwait") { loginMsg = "Inloggen met Google is niet gelukt of is geannuleerd. Probeer het opnieuw of ga door als gast."; screen = "login"; render(); accountDialog(); }
   }
