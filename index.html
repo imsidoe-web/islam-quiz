@@ -2391,7 +2391,18 @@ body.kosmos .rad-inv-ban { background: rgba(8,12,40,.95); border-color: #3fe6d0;
 .mk-bron{margin-top:10px;padding-top:9px;border-top:1px dashed #d9ceb2;font-size:.8rem;color:#5d5747}
 .mk-bron b{color:#2a2a24}
 .mk-leeg{color:#a59a7c;font-style:italic}
-.mk-leeg-blok{background:rgba(251,248,239,.08);border:1.5px dashed #c9a24a;border-radius:14px;padding:16px;font-size:.9rem;color:#efe6cc;line-height:1.5}
+.mk-leeg-blok{background:#fbf8ef;border:1.5px dashed #c9a24a;border-radius:14px;padding:16px;font-size:.9rem;color:#5d5747;line-height:1.5}
+/* v108: leesbaar op crème + typ-modus */
+.mk-tab{color:#16503e;background:#fbf8ef}
+.mk-n{color:#5d5747}
+.mk-card{box-shadow:0 2px 8px rgba(15,59,46,.08)}
+body.mk-typing .hub-head{display:none}
+body.mk-typing .mk{padding-top:8px}
+body.mk-typing .mk-zk{position:sticky;top:8px;z-index:5}
+body.mk-typing .mk-card>:not(.mk-soort):not(h3){display:none}
+body.mk-typing .mk-card{padding:10px 14px;cursor:pointer}
+body.mk-typing .mk-card h3{margin:4px 0 0;font-size:1rem}
+body.mk-typing .mk-res{gap:8px}
 </style>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=3">
@@ -7077,7 +7088,20 @@ return exports;})();
   }
   function afterMaktabahRender() {
     const inp = document.getElementById("mkIn");
-    if (inp) inp.addEventListener("input", function () { mkQ = inp.value; mkFilter(); });
+    if (inp) {
+      inp.addEventListener("input", function () { mkQ = inp.value; mkFilter(); });
+      /* v108: tijdens typen kop weg en alleen titels tonen, zodat je de resultaten boven het toetsenbord ziet */
+      inp.addEventListener("focus", function () { document.body.classList.add("mk-typing"); window.scrollTo({ top: 0 }); });
+      inp.addEventListener("blur", function () { document.body.classList.remove("mk-typing"); });
+      inp.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); inp.blur(); } });
+    }
+    document.querySelectorAll(".mk-card").forEach(function (c) {
+      c.addEventListener("pointerdown", function (e) {
+        if (!document.body.classList.contains("mk-typing")) return;
+        e.preventDefault(); if (inp) inp.blur();
+        requestAnimationFrame(function () { c.scrollIntoView({ block: "start" }); });
+      });
+    });
     document.querySelectorAll(".mk-tab").forEach(function (b) {
       b.addEventListener("click", function () { mkTab = b.dataset.mk; play("click"); document.querySelectorAll(".mk-tab").forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); }); mkFilter(); });
     });
@@ -7607,6 +7631,7 @@ return exports;})();
     if (screen === "rad") radAlertHide();
     if (screen !== "quiz" && screen !== "rad" && radAlQueue) { const q = radAlQueue; radAlQueue = null; setTimeout(function () { radAlertShow(q); }, 600); }
     if (screen !== "journey") { const hb = document.getElementById("hulpBan"); if (hb) hb.remove(); }
+    document.body.classList.remove("mk-typing");   /* v108 */
     if (screen === "login") app.innerHTML = viewLogin();
     else if (screen === "authwait") app.innerHTML = viewAuthWait();
     else if (screen === "welcome") app.innerHTML = viewWelcome();
