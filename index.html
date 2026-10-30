@@ -12997,14 +12997,14 @@ return exports;})();
     if (P && P.mode) { screen = screen === "journey" ? "dash" : (lastRoot || "journey"); render(); return true; }
     return false;
   }
-  /* v118: Chrome op Android slaat geschiedenisstappen over die zonder aanraking zijn toegevoegd. Twee keer Terug achter elkaar
-     (bv. Testlab → Bayt al-‘Ilm → dashboard) sloot daardoor de app. Daarom houden we nu een buffer van meerdere guards aan,
-     die we alléén bijvullen bij een echte tik of toets (dan telt de stap wél mee). */
-  const BACK_DEPTH = 5;
+  /* v119: Chrome op Android slaat geschiedenisstappen over die zonder aanraking zijn toegevoegd, en per tik telt maar één
+     nieuwe stap mee. Daarom voegen we bij elke echte tik of toets precies één guard toe (tot een maximum). Wie bv. Bayt al-‘Ilm →
+     Testlab → klas opent, heeft zo genoeg stappen om met de toestelknop helemaal terug te gaan naar het dashboard. */
+  const BACK_DEPTH = 30;
   function backDepth() { const s = history.state; return s && s.iq === "guard" ? (s.n || 1) : 0; }
   function backFill() {
     if (backNav.exiting) return;
-    try { let n = backDepth(); while (n < BACK_DEPTH) { n++; history.pushState({ iq: "guard", n: n }, ""); } } catch (e) {}
+    try { const n = backDepth(); if (n < BACK_DEPTH) history.pushState({ iq: "guard", n: n + 1 }, ""); } catch (e) {}
   }
   /* binnen de Terug-afhandeling zelf: alleen bijvullen als de buffer helemaal op is */
   function backKeep() { if (!backDepth()) { try { history.pushState({ iq: "guard", n: 1 }, ""); } catch (e) {} } }
@@ -13024,7 +13024,7 @@ return exports;})();
       const st = history.state && history.state.iq;
       if (st !== "guard") { history.replaceState({ iq: "base" }, ""); history.pushState({ iq: "guard", n: 1 }, ""); }
       window.addEventListener("popstate", onBackPress);
-      ["click", "keydown", "touchend"].forEach(function (ev) { document.addEventListener(ev, backFill, { capture: true, passive: true }); });
+      ["click", "keydown"].forEach(function (ev) { document.addEventListener(ev, backFill, { capture: true, passive: true }); });
     } catch (e) {}
   }
 
