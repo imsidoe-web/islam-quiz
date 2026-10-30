@@ -2057,6 +2057,13 @@ body.dashfull { background: #0f2e22; color: #f4efe2; }
 .d-days small { color: #9fc4b0; font-weight: 700; font-size: .76rem; }
 .d-days b { color: #ffd54f; font-size: .85rem; white-space: nowrap; }
 .d-small { display: flex; gap: 10px; }
+/* v120: rustige banner voor Zeno Innovations, alleen op het dashboard (geen pop-up, geen advertenties van derden) */
+.d-zeno { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; padding: 12px 14px; border-radius: 14px; background: #070b1e; color: #fff; text-decoration: none; min-height: 44px; }
+.d-zeno small { display: block; font-size: .72rem; color: #9aa3c7; }
+.d-zeno b { font-size: 1.05rem; font-weight: 800; letter-spacing: .2px; }
+.d-zeno .zg { background: linear-gradient(90deg, #38bdf8, #6366f1, #a855f7); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.d-zeno .zb { flex: none; padding: 7px 14px; border-radius: 999px; font-size: .8rem; font-weight: 800; color: #fff; background: linear-gradient(90deg, #38bdf8, #6366f1, #a855f7); }
+.d-zeno:focus-visible { outline: 3px solid #ffb703; outline-offset: 3px; }
 .d-small button { appearance: none; font: inherit; cursor: pointer; flex: 1; text-align: center; padding: 12px; border-radius: 14px; border: 0; background: #133a2b; color: #f4efe2; font-weight: 800; font-size: .9rem; min-height: 44px; }
 .d-cities { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; max-height: 50vh; overflow: auto; margin: 10px 0 14px; padding: 2px; }
 .d-cities.one { grid-template-columns: 1fr; max-height: none; }
@@ -7221,6 +7228,7 @@ return exports;})();
       "</nav>";
     h += salHtml();
     h += '<nav class="d-small" aria-label="Meer"><button data-act="board">Score</button><button data-act="album">Album</button><button data-act="bazaar">Bazaar</button></nav>';
+    h += '<a class="d-zeno" href="https://zeno-innovations.com/" target="_blank" rel="noopener" aria-label="Meer apps van Zeno Innovations. Opent de website"><span><small>Meer apps van</small><b>Zeno <span class="zg">Innovations</span></b></span><span class="zb" aria-hidden="true">Bekijk</span></a>';
     return '<section class="dash">' + h + "</section>";
   }
   function afterDashRender() {
