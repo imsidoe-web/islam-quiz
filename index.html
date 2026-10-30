@@ -607,7 +607,7 @@ table.board thead th .avatar { display: grid; margin: 0 auto; }
    .pgate { background: #fbf6ea; border: 2px solid #e7c983; border-radius: 20px; padding: 22px 20px; max-width: 360px; width: calc(100% - 32px); text-align: center; box-shadow: 0 15px 30px rgba(0,0,0,.2); }
    .pgate h4 { margin: 0 0 6px; color: #1b4332; font-size: 19px; }
    .pgate p { margin: 0 0 12px; color: #37474f; font-size: 14px; line-height: 1.5; }
-   .pgate .pg-sum { font-size: 26px; font-weight: 900; color: #1b4332; margin: 4px 0 10px; }
+   .pgate .pg-sum { font-size: 22px; font-weight: 900; color: #1b4332; margin: 4px 0 10px; }
    .pgate input { width: 100%; font: inherit; font-size: 22px; font-weight: 800; text-align: center; padding: 10px; border-radius: 12px; border: 2px solid #cfe0d5; margin-bottom: 8px; }
    .pgate .pg-err { color: #9a3412; font-weight: 700; min-height: 1.2em; margin: 0 0 8px; font-size: 14px; }
    .pgate button { display: block; width: 100%; margin-top: 8px; border-radius: 14px; padding: 12px; font: inherit; font-weight: 900; font-size: 16px; cursor: pointer; border: 0; }
@@ -5689,13 +5689,16 @@ return exports;})();
   function parentGate(go) {
     if (!kidU13()) { go(); return; }
     if (document.getElementById("pgDlg")) return;
-    const a = 6 + Math.floor(Math.random() * 4), b = 6 + Math.floor(Math.random() * 4);
+    /* som in woorden, net iets moeilijker: (11-19) keer (3-9) */
+    const W = ["", "één", "twee", "drie", "vier", "vijf", "zes", "zeven", "acht", "negen", "tien", "elf", "twaalf", "dertien", "veertien", "vijftien", "zestien", "zeventien", "achttien", "negentien"];
+    const a = 11 + Math.floor(Math.random() * 9), b = 3 + Math.floor(Math.random() * 7);
+    const sumTxt = W[a].charAt(0).toUpperCase() + W[a].slice(1) + " keer " + W[b];
     const back = document.activeElement;
     const w = document.createElement("div"); w.className = "dialog-wrap"; w.id = "pgDlg";
     w.innerHTML = '<div class="pgate" role="dialog" aria-modal="true" aria-labelledby="pgT" aria-describedby="pgP"><h4 id="pgT">Even een ouder erbij</h4>' +
-      '<p id="pgP">Je gaat NurSpark uit (bijvoorbeeld naar WhatsApp). Vraag een ouder of verzorger om deze som op te lossen.</p>' +
-      '<div class="pg-sum" aria-hidden="true">' + a + " × " + b + " = ?</div>" +
-      '<label class="sr-only" for="pgIn">Hoeveel is ' + a + " keer " + b + "?</label>" +
+      '<p id="pgP">Je gaat NurSpark uit (bijvoorbeeld naar WhatsApp). Vraag een ouder of verzorger om deze som op te lossen (antwoord in cijfers).</p>' +
+      '<div class="pg-sum" aria-hidden="true">' + sumTxt + " = ?</div>" +
+      '<label class="sr-only" for="pgIn">Hoeveel is ' + W[a] + " keer " + W[b] + "? Typ het antwoord in cijfers.</label>" +
       '<input id="pgIn" type="text" inputmode="numeric" autocomplete="off" maxlength="3">' +
       '<p class="pg-err" id="pgErr" role="alert"></p><button type="button" class="pg-ok">Verder</button><button type="button" class="pg-no">Terug</button></div>';
     const inp = w.querySelector("#pgIn"), err = w.querySelector("#pgErr");
@@ -10487,9 +10490,10 @@ return exports;})();
       if (lv === "beginner" || kidU13()) h += '<p class="radn-note">' + (kidU13() ? "Onder de 13 speel je online alleen met bekenden" : "In Beginner speel je online alleen met bekenden") + ': via je groep, een studiocode of een link.</p>';
       else h += '<button class="btn gold block" data-act="radn-search">1 · Zoek iemand die nu online is</button>';
       if (radGrpSeen && radGrpSeen.room && radGrpSeen.mode === lv) h += '<div class="radn-inv"><p><b>' + esc(radGrpSeen.name) + "</b> heeft een studio geopend voor jullie groep.</p><button class=\"btn gold\" data-act=\"radn-join\" data-code=\"" + esc(radGrpSeen.room) + '">Meedoen</button></div>';
-      h += '<button class="btn ghost block" data-act="radn-open">2 · Open een studio' + (P.group ? " voor je groep" : "") + "</button>" +
+      const rn = lv === "beginner" || kidU13() ? 0 : 1;   /* zonder 'zoek iemand' beginnen de knoppen bij 1 */
+      h += '<button class="btn ghost block" data-act="radn-open">' + (1 + rn) + ' · Open een studio' + (P.group ? " voor je groep" : "") + "</button>" +
         '<div class="radn-code-row"><label class="sr-only" for="radnCode">Studiocode</label><input id="radnCode" class="quiz-input" placeholder="Studiocode" maxlength="8" autocapitalize="characters" autocomplete="off"><button class="btn ghost" data-act="radn-join">Meedoen</button></div>' +
-        '<button class="btn ghost block" data-act="radn-open" data-share="1">3 · Nodig uit via WhatsApp</button>' +
+        '<button class="btn ghost block" data-act="radn-open" data-share="1">' + (2 + rn) + ' · Nodig uit via WhatsApp</button>' +
         '<p class="radn-note">Online zie je van anderen alleen hun bijnaam en avatar. Er is geen chat.</p></div>';
       return h + "</section>";
     }
