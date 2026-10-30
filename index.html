@@ -12997,22 +12997,34 @@ return exports;})();
     if (P && P.mode) { screen = screen === "journey" ? "dash" : (lastRoot || "journey"); render(); return true; }
     return false;
   }
+  /* v118: Chrome op Android slaat geschiedenisstappen over die zonder aanraking zijn toegevoegd. Twee keer Terug achter elkaar
+     (bv. Testlab → Bayt al-‘Ilm → dashboard) sloot daardoor de app. Daarom houden we nu een buffer van meerdere guards aan,
+     die we alléén bijvullen bij een echte tik of toets (dan telt de stap wél mee). */
+  const BACK_DEPTH = 5;
+  function backDepth() { const s = history.state; return s && s.iq === "guard" ? (s.n || 1) : 0; }
+  function backFill() {
+    if (backNav.exiting) return;
+    try { let n = backDepth(); while (n < BACK_DEPTH) { n++; history.pushState({ iq: "guard", n: n }, ""); } } catch (e) {}
+  }
+  /* binnen de Terug-afhandeling zelf: alleen bijvullen als de buffer helemaal op is */
+  function backKeep() { if (!backDepth()) { try { history.pushState({ iq: "guard", n: 1 }, ""); } catch (e) {} } }
   function onBackPress() {
     if (backNav.exiting) return;
-    if (backCloseTop() || backScreen()) { backNav.armed = false; try { history.pushState({ iq: "guard" }, ""); } catch (e) {} return; }
+    if (backCloseTop() || backScreen()) { backNav.armed = false; backKeep(); return; }
     const disc = document.getElementById("disclaimerModal");
     const bsmM = document.getElementById("bismillahModal");
-    if ((disc && !disc.classList.contains("hidden")) || (bsmM && !bsmM.classList.contains("hidden"))) { try { history.pushState({ iq: "guard" }, ""); } catch (e) {} return; }
-    if (backNav.armed) { backNav.exiting = true; clearTimeout(backNav.timer); try { history.back(); } catch (e) {} return; }
+    if ((disc && !disc.classList.contains("hidden")) || (bsmM && !bsmM.classList.contains("hidden"))) { backKeep(); return; }
+    if (backNav.armed) { backNav.exiting = true; clearTimeout(backNav.timer); try { history.go(-(backDepth() + 1)); } catch (e) {} return; }
     backNav.armed = true; clearTimeout(backNav.timer); backNav.timer = setTimeout(function () { backNav.armed = false; }, 2000);
     backToast("Tik nogmaals op Terug om af te sluiten");
-    try { history.pushState({ iq: "guard" }, ""); } catch (e) {}
+    backKeep();
   }
   function initBackGuard() {
     try {
       const st = history.state && history.state.iq;
-      if (st !== "guard") { history.replaceState({ iq: "base" }, ""); history.pushState({ iq: "guard" }, ""); }
+      if (st !== "guard") { history.replaceState({ iq: "base" }, ""); history.pushState({ iq: "guard", n: 1 }, ""); }
       window.addEventListener("popstate", onBackPress);
+      ["click", "keydown", "touchend"].forEach(function (ev) { document.addEventListener(ev, backFill, { capture: true, passive: true }); });
     } catch (e) {}
   }
 
