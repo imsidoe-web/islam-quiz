@@ -604,6 +604,11 @@ table.board thead th .avatar { display: grid; margin: 0 auto; }
    #ageModal .age-p { text-align: center; background: #fff; border-left: 0; }
    .age-btns { display: grid; gap: 10px; }
    .age-btn { width: 100%; justify-content: center; font-size: 17px; min-height: 52px; }
+   .kos-offer { background: #fbf6ea; border: 2px solid #e7c983; border-radius: 20px; padding: 20px 18px; max-width: 360px; width: calc(100% - 32px); max-height: calc(100vh - 32px); overflow-y: auto; text-align: center; box-shadow: 0 15px 30px rgba(0,0,0,.25); }
+   .kos-offer h3 { margin: 4px 0 12px; color: #1b4332; font-size: 20px; }
+   .kos-offer .kos-prev { display: block; width: 100%; height: auto; border-radius: 14px; border: 2px solid #d9a05b; box-shadow: 0 6px 16px rgba(6,10,34,.35); margin: 0 0 12px; }
+   .kos-offer p { margin: 0 0 14px; color: #37474f; font-size: 14px; line-height: 1.5; }
+   .kos-offer .ko-small { margin: 10px 0 0; font-size: 12.5px; color: #5d6b63; }
    .pgate { background: #fbf6ea; border: 2px solid #e7c983; border-radius: 20px; padding: 22px 20px; max-width: 360px; width: calc(100% - 32px); text-align: center; box-shadow: 0 15px 30px rgba(0,0,0,.2); }
    .pgate h4 { margin: 0 0 6px; color: #1b4332; font-size: 19px; }
    .pgate p { margin: 0 0 12px; color: #37474f; font-size: 14px; line-height: 1.5; }
@@ -5671,10 +5676,69 @@ return exports;})();
     if (g === "u13") { (S.players || []).forEach(function (p) { p.sharePhoto = false; }); if (window.nsStats && window.nsStats.on()) window.nsStats.set(false); }
     saveState();
     const m = document.getElementById("ageModal"); if (m) m.classList.add("hidden");
-    if (ageAfter) { const f = ageAfter; ageAfter = null; f(); return; }
-    const bsm = document.getElementById("bismillahModal");
-    if (bsm) { bsm.classList.remove("hidden"); const b = bsm.querySelector(".btn"); if (b) setTimeout(function () { b.focus(); }, 50); }
+    const next = function () {
+      if (ageAfter) { const f = ageAfter; ageAfter = null; f(); return; }
+      const bsm = document.getElementById("bismillahModal");
+      if (bsm) { bsm.classList.remove("hidden"); const b = bsm.querySelector(".btn"); if (b) setTimeout(function () { b.focus(); }, 50); }
+    };
+    /* v122: tieners (13 tot 16) krijgen eenmalig een voorstel voor de Kosmos-look, met een klein voorbeeld */
+    if (g === "13-15" && S.look !== "kosmos" && !S.kosOffer) kosOfferDialog(next); else next();
   };
+  function kosPreviewSvg() {
+    const st = [[14,18],[40,62],[70,14],[96,40],[128,22],[150,70],[176,12],[204,46],[232,20],[262,58],[24,120],[58,138],[110,112],[188,132],[244,110],[270,140],[140,96],[82,90]];
+    let stars = "";
+    st.forEach(function (c, i) { stars += '<circle class="kos-tw" cx="' + c[0] + '" cy="' + c[1] + '" r="' + (i % 3 === 0 ? 1.6 : 1.1) + '" fill="' + (i % 4 === 1 ? "#bff8ff" : i % 5 === 2 ? "#e6b8ff" : "#fff") + '"/>'; });
+    const pts = [[34,128],[84,104],[66,64],[118,44],[168,30]];
+    let plat = "";
+    pts.forEach(function (c, i) {
+      const done = i < 3;
+      plat += '<circle cx="' + c[0] + '" cy="' + c[1] + '" r="11" fill="rgba(8,12,40,.9)" stroke="' + (done ? "#7dffd8" : "#d07dff") + '" stroke-width="2" filter="url(#kpGlow)"/>' +
+        '<text x="' + c[0] + '" y="' + (c[1] + 4) + '" text-anchor="middle" font-size="11" font-weight="800" fill="#fff" font-family="Nunito,sans-serif">' + (i + 1) + "</text>";
+    });
+    return '<svg class="kos-prev" viewBox="0 0 280 150" aria-hidden="true" focusable="false">' +
+      '<defs><radialGradient id="kpNeb1" cx="10%" cy="30%" r="60%"><stop offset="0" stop-color="#6b2a8f" stop-opacity=".7"/><stop offset="1" stop-color="#6b2a8f" stop-opacity="0"/></radialGradient>' +
+      '<radialGradient id="kpNeb2" cx="95%" cy="85%" r="55%"><stop offset="0" stop-color="#1fb5c9" stop-opacity=".45"/><stop offset="1" stop-color="#1fb5c9" stop-opacity="0"/></radialGradient>' +
+      '<radialGradient id="kpPlan" cx="35%" cy="35%" r="70%"><stop offset="0" stop-color="#ffe9a8"/><stop offset=".6" stop-color="#d9a05b"/><stop offset="1" stop-color="#7a4b16"/></radialGradient>' +
+      '<filter id="kpGlow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>' +
+      '<rect width="280" height="150" rx="14" fill="#060a22"/><rect width="280" height="150" rx="14" fill="url(#kpNeb1)"/><rect width="280" height="150" rx="14" fill="url(#kpNeb2)"/>' + stars +
+      /* gouden maansikkel */
+      '<path d="M44 14a14 14 0 1 0 12 22a11 11 0 1 1 -12 -22z" fill="#ffd54f" filter="url(#kpGlow)"/>' +
+      /* ringplaneet */
+      '<circle cx="236" cy="36" r="15" fill="url(#kpPlan)"/><ellipse cx="236" cy="38" rx="26" ry="6" fill="none" stroke="#ffe08a" stroke-width="2" opacity=".85" transform="rotate(-14 236 38)"/>' +
+      /* gloeiend pad */
+      '<path d="M34 128 Q60 122 84 104 Q100 86 66 64 Q88 46 118 44 Q144 40 168 30" fill="none" stroke="#3fe6d0" stroke-width="3" stroke-dasharray="2 6" stroke-linecap="round" filter="url(#kpGlow)"/>' + plat +
+      /* mini vraagkaart */
+      '<g transform="translate(192 70)"><rect width="76" height="68" rx="9" fill="rgba(255,255,255,.07)" stroke="#7dffd8" stroke-width="1.5" filter="url(#kpGlow)"/>' +
+      '<rect x="9" y="9" width="58" height="5" rx="2.5" fill="#eef4ff" opacity=".85"/><rect x="9" y="18" width="40" height="5" rx="2.5" fill="#eef4ff" opacity=".55"/>' +
+      '<rect x="8" y="31" width="60" height="13" rx="6" fill="rgba(125,255,216,.16)" stroke="#7dffd8" stroke-width="1.2"/><circle cx="16" cy="37.5" r="3" fill="#7dffd8"/>' +
+      '<rect x="8" y="48" width="60" height="13" rx="6" fill="none" stroke="rgba(150,170,255,.55)" stroke-width="1.2"/><circle cx="16" cy="54.5" r="3" fill="none" stroke="#7fe4ff" stroke-width="1.2"/></g>' +
+      "</svg>";
+  }
+  function kosOfferDialog(after) {
+    const old = document.getElementById("kosOffer"); if (old) old.remove();
+    const w = document.createElement("div"); w.className = "dialog-wrap"; w.id = "kosOffer";
+    w.innerHTML = '<div class="kos-offer" role="dialog" aria-modal="true" aria-labelledby="koT" aria-describedby="koP">' +
+      '<div class="modal-icon" aria-hidden="true">🌙</div><h3 id="koT">Probeer de Kosmos-look!</h3>' +
+      kosPreviewSvg() +
+      '<p id="koP">Speciaal voor tieners: een sterrenhemel met neon op de reiskaart, bij de vragen en bij de uitslag. Zoals in het voorbeeld hierboven.</p>' +
+      '<div class="age-btns"><button type="button" class="btn age-btn" data-k="yes">Ja, zet aan</button>' +
+      '<button type="button" class="btn ghost age-btn" data-k="no">Nee, dank je</button></div>' +
+      '<p class="ko-small">Je kunt dit altijd wijzigen in Instellingen.</p></div>';
+    let done = false;
+    const finish = function (yes) {
+      if (done) return; done = true;
+      S.kosOffer = true; if (yes) S.look = "kosmos";
+      saveState(); try { play("click"); } catch (e) {}
+      document.removeEventListener("keydown", onKey, true); w.remove();
+      if (yes) announce("Kosmos-look staat aan.");
+      after();
+    };
+    const onKey = function (e) { if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); finish(false); } };
+    w.addEventListener("click", function (e) { const b = e.target.closest("[data-k]"); if (b) finish(b.dataset.k === "yes"); });
+    document.addEventListener("keydown", onKey, true);
+    document.body.appendChild(w);
+    const y = w.querySelector('[data-k="yes"]'); if (y) setTimeout(function () { y.focus(); }, 50);
+  }
   function ageDialog() {
     const m = document.getElementById("ageModal"); if (!m) return;
     ageAfter = function () {
