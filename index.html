@@ -8170,7 +8170,7 @@ return exports;})();
   function artHtml(q) {
     const t = [q.question, q.explanation, correctText(q)].join(" ");
     const a = ART.find(function (x) { return x.re.test(t); });
-    return a ? '<figure class="q-art"><img src="' + a.f + '" alt="' + a.alt + '" loading="lazy" decoding="async"><figcaption>© Irshaad Creative Art</figcaption></figure>' : "";
+    return a ? '<figure class="q-art"><img src="' + a.f + '" alt="' + a.alt + '" loading="lazy" decoding="async"></figure>' : "";
   }
   function feedbackHtml(it) {
     const q = it.q, ok = it.correct, junior = quiz.level !== "expert";
