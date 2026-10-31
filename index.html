@@ -11944,7 +11944,7 @@ return exports;})();
       '<div class="pe-board"><button class="pe-x" data-d="x" aria-label="Sluiten">×</button>' +
       '<div class="pe-av' + (avById(pe.av) ? " av-art" : "") + '" style="--c:' + peerColor(pe) + '" aria-hidden="true">' + (avById(pe.av) ? avSvg(avById(pe.av)) : "<span>" + ini + "</span>") + (pe.photo && !avById(pe.av) ? '<img src="' + esc(pe.photo) + '" alt="" referrerpolicy="no-referrer" onerror="this.remove()">' : "") + "</div>" +
       '<h3 id="peT" class="pe-name">' + esc(pe.name) + (pe.me ? ' <em>(jij)</em>' : "") + "</h3>" +
-      '<p class="pe-where">' + esc(land.title) + " · level " + (pe.level + 1) + " · " + modeName(lv) + "</p>" +
+      '<p class="pe-where">' + esc(land.title) + " · level " + (jOff(lv, land.id) + pe.level + 1) + " · " + modeName(lv) + "</p>" +
       (badgeLine(pe.bm, pe.bg, lv) ? '<p class="pe-badges">' + badgeIconHtml(pe.bm, pe.bg, 26, lv) + "<span>" + badgeLine(pe.bm, pe.bg, lv) + "</span></p>" : "") +
       '<ul class="pe-stats">' + peerStat("🏅", pe.levels + "/" + tot, "levels") + peerStat("⭐", pe.xp + " XP", pe.stars + (pe.stars === 1 ? " ster" : " sterren")) +
       peerStat("🔥", pe.streak + (pe.streak === 1 ? " dag" : " dagen"), "speelreeks") + peerStat("🏆", '<span id="peRank">…</span>', pe.local ? "op dit apparaat" : "wereldwijd") + "</ul>" +
