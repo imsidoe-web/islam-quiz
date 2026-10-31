@@ -2461,6 +2461,10 @@ body.mk-typing .mk-res{gap:8px}
 .jbar .jb-row small { font-size: .7rem; font-weight: 900; color: #ffe9a8; white-space: nowrap; }
 .jbar .jb-pills { flex: none; display: flex; gap: 3px; align-items: center; zoom: .78; }
 @media (prefers-reduced-motion: reduce) { .jg-rays, .jg-go .jg-svg, .jg-walker { animation: none; } }
+
+.q-art { margin: 10px 0 2px; text-align: center; }
+.q-art img { display: block; width: 100%; max-width: 320px; max-height: 220px; object-fit: cover; object-position: center 40%; margin: 0 auto; border-radius: 14px; border: 3px solid #e8b84a; box-shadow: 0 4px 12px rgba(0,0,0,.18); background: #fbf3df; }
+.q-art figcaption { font-size: .68rem; font-weight: 700; opacity: .75; margin-top: 4px; }
 </style>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=3">
@@ -8045,12 +8049,12 @@ return exports;})();
     const it = quiz.items[quiz.idx], q = it.q, total = quiz.items.length;
     const cat = catById(q.category);
     const isDaily = quiz.kind === "daily", isDuel = quiz.kind === "duel";
-    const label = isDaily ? "Quiz van de Dag" : isDuel ? "Duel" : quiz.kind === "journey" ? cat.title + " · Level " + (quiz.jIdx + 1) : cat.title + (tiersFor(quiz.level, quiz.catId).length > 1 ? " · Niveau " + quiz.tier : "");
+    const label = isDaily ? "Quiz van de Dag" : isDuel ? "Duel" : quiz.kind === "journey" ? cat.title + " · Level " + (jOff(quiz.level, quiz.catId) + quiz.jIdx + 1) : cat.title + (tiersFor(quiz.level, quiz.catId).length > 1 ? " · Niveau " + quiz.tier : "");
     const pct = ((quiz.idx + (quiz.answered ? 1 : 0)) / total) * 100;
     document.body.className = quiz.level;
 
     let h = '<div class="quiz-top"><button class="icon-btn" data-act="leave" aria-label="Stoppen met de quiz">' + icon("left", 22) + "</button>" +
-      '<span class="cat-badge" style="--accent:' + cat.color + '">' + icon(CAT_ICON[cat.icon], 16) + (quiz.kind === "journey" && !isDaily && !isDuel ? '<span class="cb-t">' + esc(cat.title) + '</span><span class="cb-l">· Level ' + (quiz.jIdx + 1) + "</span>" : '<span class="cb-t">' + esc(isDaily || isDuel ? label + " · " + cat.title : label) + "</span>") + "</span>" +
+      '<span class="cat-badge" style="--accent:' + cat.color + '">' + icon(CAT_ICON[cat.icon], 16) + (quiz.kind === "journey" && !isDaily && !isDuel ? '<span class="cb-t">' + esc(cat.title) + '</span><span class="cb-l">· Level ' + (jOff(quiz.level, quiz.catId) + quiz.jIdx + 1) + "</span>" : '<span class="cb-t">' + esc(isDaily || isDuel ? label + " · " + cat.title : label) + "</span>") + "</span>" +
       '<span class="score-pill" id="scorePill">' + icon("star", 16, "fill") + '<span id="scoreVal">' + quiz.score + "/" + total + "</span></span></div>";
 
     h += '<div class="progress-row"><span>Vraag ' + (quiz.idx + 1) + " van " + total + "</span><span>" + Math.round(pct) + "%</span></div>" +
@@ -8156,6 +8160,17 @@ return exports;})();
     lockT = setTimeout(lockTick, Math.min(250, rem));
   }
 
+  /* v127: eigen schilderijen (© Irshaad Creative Art) bij vragen over dat onderwerp */
+  const ART = [
+    { f: "kunst/aqsa.jpg", alt: "Schilderij van de Rotskoepel bij Masjid al-Aqsa", re: /aqsa|isra['’]?\s*wa|mi['’]?raa?j|jeruzalem|al-quds|bayt al-maqdis|baitul maqdis/i },
+    { f: "kunst/madinah.jpg", alt: "Schilderij van Masjid an-Nabawi in Madinah", re: /madinah|medina|nabawi|hijrah|hidjra|yathrib/i },
+    { f: "kunst/kaaba.jpg", alt: "Schilderij van de Kaaba in Makkah", re: /ka['’]?bah?\b|kaaba|qiblah?\b|makkah|mekka|\bhajj|umrah|tawaf|masjid al-haram|zamzam|hajar al-aswad/i }
+  ];
+  function artHtml(q) {
+    const t = [q.question, q.explanation, correctText(q)].join(" ");
+    const a = ART.find(function (x) { return x.re.test(t); });
+    return a ? '<figure class="q-art"><img src="' + a.f + '" alt="' + a.alt + '" loading="lazy" decoding="async"><figcaption>© Irshaad Creative Art</figcaption></figure>' : "";
+  }
   function feedbackHtml(it) {
     const q = it.q, ok = it.correct, junior = quiz.level !== "expert";
     const last = quiz.idx === quiz.items.length - 1;
@@ -8165,7 +8180,7 @@ return exports;})();
     else head = junior ? lastTry : "Helaas, niet juist.";
     let h = '<div class="feedback ' + (ok ? "good" : "bad") + '" id="feedback"><div class="head">' + icon(ok ? "check" : "x", 26) + "<span>" + esc(head) + "</span></div>";
     if (!ok) h += '<div class="correct-is">Het juiste antwoord: ' + esc(correctText(q)) + "</div>";
-    h += '<p class="why">' + esc(q.explanation) + "</p>" + refHtml(q.arabic) + "</div>";
+    h += '<p class="why">' + esc(q.explanation) + "</p>" + refHtml(q.arabic) + artHtml(q) + "</div>";
     if (!it.lockUntil) it.lockUntil = Date.now() + lockMs(it, q.explanation);
     if (mhOn(it)) { h += mhHtml(it); if (!it.mhDone) return h; }
     const rem = Math.max(0, it.lockUntil - Date.now());
@@ -9201,7 +9216,7 @@ return exports;})();
   function shareScoreText(r) {
     const c = r.catId ? catById(r.catId) : null;
     if (r.kind === "journey") {
-      return "🌙 NurSpark (" + modeName(r.level) + "): level " + (r.jIdx + 1) + " van " + r.jCount + " gehaald bij " + c.title + "! " + starEmoji(r.stars) + " (" + r.score + "/" + r.total + " goed)" +
+      return "🌙 NurSpark (" + modeName(r.level) + "): level " + (jOff(r.level, r.catId) + r.jIdx + 1) + " gehaald bij " + c.title + "! " + starEmoji(r.stars) + " (" + r.score + "/" + r.total + " goed)" +
         (r.landDone ? "\n🚩 Land voltooid!" : r.chestReady ? "\n🎁 Schatkist verdiend!" : "") + "\nLukt het jou ook? " + SITE_URL;
     }
     if (r.kind === "daily") return "🌙 NurSpark (" + modeName(r.level) + ") – Quiz van de Dag: " + r.score + "/" + r.total + " goed " + starEmoji(r.stars) + "\nLukt het jou ook? " + SITE_URL;
@@ -9298,7 +9313,7 @@ return exports;})();
       '<path fill="#0a4a30" stroke="#f6d25a" stroke-width="2" stroke-linejoin="round" d="M298 20 L264 20 L264 56 L298 56 L286 38Z"><animate attributeName="d" dur="3s" begin="-1s" repeatCount="indefinite" values="M298 20 L264 20 L264 56 L298 56 L286 38Z;M298 24 L264 22 L264 58 L298 52 L286 38Z;M298 20 L264 20 L264 56 L298 56 L286 38Z"/></path>' +
       '<path fill="url(#bnRib)" stroke="#f6d25a" stroke-width="2.4" stroke-linejoin="round" d="M20 12 Q85 4 150 12 T280 12 L280 52 Q215 60 150 52 T20 52 Z"><animate attributeName="d" dur="2.8s" repeatCount="indefinite" values="M20 12 Q85 4 150 12 T280 12 L280 52 Q215 60 150 52 T20 52 Z;M20 12 Q85 20 150 12 T280 12 L280 52 Q215 44 150 52 T20 52 Z;M20 12 Q85 4 150 12 T280 12 L280 52 Q215 60 150 52 T20 52 Z"/></path>' +
       '<defs><linearGradient id="bnRib" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3fd08a"/><stop offset=".5" stop-color="#14935a"/><stop offset="1" stop-color="#0a5233"/></linearGradient></defs></svg></div>' +
-      '<div class="bm-rt" id="bmT">Level ' + (ji + 1) + '</div><p class="bm-sub top">' + esc(c.title) + " · " + modeName(lv) + '</p><h3 class="bm-h">Je kunt winnen</h3>';
+      '<div class="bm-rt" id="bmT">Level ' + (jOff(lv, c.id) + ji + 1) + '</div><p class="bm-sub top">' + esc(c.title) + " · " + modeName(lv) + '</p><h3 class="bm-h">Je kunt winnen</h3>';
     [1, 2].forEach(function (s) {
       h += '<div class="bm-row' + (s <= ps ? " done" : "") + '">' + stars(s) + (s <= ps ? '<span class="bm-rw ok">✓ al behaald</span>' : rw(s)) + "</div>";
     });
@@ -9317,7 +9332,7 @@ return exports;})();
       if (view === "box") return "Bonbondoos van " + c.title + ": " + bonStats(lv, o.catId).have + " van " + bonStats(lv, o.catId).n + " bonbons.";
       const ps = (jBest(lv, o.catId, o.ji) || {}).stars || 0, k = bonKind(lv, o.catId, o.ji), st = bonStats(lv, o.catId), t = [];
       [1, 2, 3].forEach(function (s) { const r = bonRewards(ps, s); t.push(s <= ps ? s + (s === 1 ? " ster: al behaald" : " sterren: al behaald") : s + (s === 1 ? " ster: " : " sterren: ") + (s === 3 ? k.name + "-bonbon, vakje " + (o.ji + 1) + " van " + st.n + ", " : "") + r.gems + " edelstenen en " + r.xp + " XP"); });
-      return "Level " + (o.ji + 1) + ", " + c.title + ". Je kunt winnen. " + t.join(". ") + ".";
+      return "Level " + (jOff(lv, o.catId) + o.ji + 1) + ", " + c.title + ". Je kunt winnen. " + t.join(". ") + ".";
     };
     const paint = function () {
       const inner = view === "box" ? bonBoxHtml(lv, o.catId, o.ji) : bonMenuHtml(lv, o.catId, o.ji);
@@ -9461,7 +9476,7 @@ return exports;})();
     for (let i = 1; i <= 3; i++) h += icon("star", i === 2 ? 84 : 68, "fill" + (i <= r.stars ? " on" : ""));
     h += "</div>";
     h += '<div class="big-score">' + r.score + "<small> / " + r.total + "</small></div>";
-    h += '<div class="tier-tag">' + esc(catById(r.catId).title) + " · Level " + (r.jIdx + 1) + " van " + r.jCount + "</div>";
+    h += '<div class="tier-tag">' + esc(catById(r.catId).title) + " · Level " + (jOff(r.level, r.catId) + r.jIdx + 1) + "</div>";
     h += ar(arabicTxt) + "<h1>" + esc(title) + '</h1><p class="msg">' + esc(msg) + "</p>";
     if (r.record) h += '<div class="badge-new">' + icon("trophy", 18) + "Nieuw record!</div>";
     h += rewardsHtml(r);
