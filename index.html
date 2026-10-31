@@ -2430,6 +2430,34 @@ body.mk-typing .mk-card>:not(.mk-soort):not(h3){display:none}
 body.mk-typing .mk-card{padding:10px 14px;cursor:pointer}
 body.mk-typing .mk-card h3{margin:4px 0 0;font-size:1rem}
 body.mk-typing .mk-res{gap:8px}
+
+/* v124: één doorlopende reis */
+.jmap-scroll.jreis { background: #12362a; }
+.jmap-scroll.jreis .journey-map { background: none; }
+.jl-land { position: relative; }
+.jl-land.jl-locked .jsvg { filter: saturate(.72) brightness(.95); }
+.jl-gate { position: relative; height: 270px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 6px; overflow: hidden; }
+.jg-road { position: absolute; left: 50%; top: 0; bottom: 0; width: 22px; margin-left: -11px; border-radius: 11px; background: #fff6dc; box-shadow: 0 0 0 4px rgba(255,255,255,.35); background-image: repeating-linear-gradient(180deg, transparent 0 10px, #e8b84a 10px 13px); background-size: 4px 100%; background-repeat: repeat-y; background-position: center; }
+.jg-sign { position: relative; z-index: 2; margin-bottom: -4px; padding: 5px 14px; border-radius: 12px; background: #fbf3df; color: #12362a; border: 3px solid #e8b84a; box-shadow: 0 4px 10px rgba(0,0,0,.25); text-align: center; max-width: 92%; }
+.jg-sign b { display: block; font-size: .85rem; font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.jg-sign small { display: block; font-size: .68rem; font-weight: 700; color: #7a5a1c; }
+.jg-svg { position: relative; z-index: 1; display: block; width: 210px; height: 190px; overflow: visible; }
+.jg-rays { transform-origin: 105px 80px; animation: jgSpin 18s linear infinite; }
+@keyframes jgSpin { to { transform: rotate(360deg); } }
+.jg-go .jg-svg { animation: jgPop 1s ease; }
+@keyframes jgPop { 40% { transform: scale(1.08); filter: brightness(1.25); } }
+.jg-walker { position: absolute; z-index: 3; left: 50%; bottom: 10px; margin-left: -22px; animation: jgWalk 1.5s ease-in forwards; }
+@keyframes jgWalk { to { transform: translateY(-230px) scale(.8); opacity: 0; } }
+.j-shield.jbar { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 999px; }
+.jbar .jb-nr { flex: none; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-weight: 900; background: linear-gradient(180deg, #ffe08a, #c9922e); color: #12362a; }
+.jbar .jb-t { flex: 1; min-width: 0; }
+.jbar .jb-t b { display: block; font-size: .88rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.jbar .jb-row { display: flex; align-items: center; gap: 6px; margin-top: 3px; }
+.jbar .jb-prog { flex: 1; height: 6px; border-radius: 6px; background: rgba(255,255,255,.2); overflow: hidden; }
+.jbar .jb-prog i { display: block; height: 100%; background: linear-gradient(90deg, #ffe08a, #e8b84a); }
+.jbar .jb-row small { font-size: .7rem; font-weight: 900; color: #ffe9a8; white-space: nowrap; }
+.jbar .jb-pills { flex: none; display: flex; gap: 3px; align-items: center; zoom: .78; }
+@media (prefers-reduced-motion: reduce) { .jg-rays, .jg-go .jg-svg, .jg-walker { animation: none; } }
 </style>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=3">
@@ -9053,8 +9081,10 @@ return exports;})();
     return ci > 0 ? "🔒 Rond eerst land " + ci + " (" + LS[ci - 1].title + ") helemaal af" : "";
   }
   function jLocked(level, catId, i) { if (!jLandOpen(level, catId)) return true; return i > 0 && !jPassed(level, catId, i - 1); }
+  /* v124: levelnummers lopen door over alle landen heen (alleen in beeld; intern blijft alles per land) */
+  function jOff(level, catId) { let o = 0; const LS = landsFor(level); for (let k = 0; k < LS.length && LS[k].id !== catId; k++) o += jCount(level, LS[k].id); return o; }
   function jLockText(level, catId, i, what) {
-    return !jLandOpen(level, catId) ? jLandLockMsg(level, catId) : "🔒 Haal eerst level " + (i + (what === "chest" ? 1 : 0)) + (what === "chest" ? " om deze schatkist te openen" : " om dit level te openen");
+    return !jLandOpen(level, catId) ? jLandLockMsg(level, catId) : "🔒 Haal eerst level " + (jOff(level, catId) + i + (what === "chest" ? 1 : 0)) + (what === "chest" ? " om deze schatkist te openen" : " om dit level te openen");
   }
   function jIsMile(i, n) { return (i + 1) % J_MILE === 0 || i === n - 1; }
   function jCurrent(level, catId) {
@@ -11593,11 +11623,13 @@ return exports;})();
     front: function (th) { return pondsAll(th) + groundFlowers() + palms(th) + commonProps(th) + lantern(100, 700, "#ffc95d", 1) + star8(60, 640, 10, "#ffd54f", 0.2) + star8(300, 700, 9, "#7de3ff", .7) + star8(190, 430, 8, "#ffdd9a", 1.2); },
   };
 
-  function journeyMap(c) {
+  function journeyMap(c, act) {
+    if (act === undefined) act = true;
+    const off = jOff(P.mode, c.id);
     const level = P.mode, L = LANDS[c.id] || LANDS.profeten, th = L.pal[level] || L.pal.junior, J = journeyStops(level, c), stops = J.stops, n = stops.length;
     curTh = th;
     const kos = kosmosOn();
-    const uid = "j" + level[0] + c.id.charAt(0);
+    const uid = "j" + level[0] + String(c.id).replace(/[^a-z0-9]/gi, "");
     let h = '<svg class="jsvg" viewBox="0 0 360 800" role="group" aria-label="Routekaart ' + esc(c.title) + ", " + n + ' levels" xmlns="http://www.w3.org/2000/svg"><defs>' +
       '<linearGradient id="' + uid + 'sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + th.sky[0] + '"/><stop offset=".35" stop-color="' + th.sky[1] + '"/><stop offset=".7" stop-color="' + th.sky[2] + '"/><stop offset="1" stop-color="' + th.sky[3] + '"/></linearGradient>' +
       (kos ? kosDefs(uid) : "") + '<radialGradient id="' + uid + 'done" cx=".35" cy=".3"><stop offset="0" stop-color="' + (kos ? "#fff2b8" : "#7ae6b4") + '"/><stop offset="1" stop-color="' + (kos ? "#e8a33a" : "#14935f") + '"/></radialGradient>' +
@@ -11633,7 +11665,7 @@ return exports;})();
     }
     // dagelijkse kist (Quiz van de Dag)
     const dDone = !!P.daily[level][todayStr()];
-    h += '<g class="j-stop j-daily" data-act="start-daily" role="button" tabindex="0" aria-label="Quiz van de Dag' + (dDone ? " (vandaag gespeeld, kom morgen terug voor een nieuwe beloning)" : ": speel vandaag voor een dagbeloning en een bonus op je reeks") + '" style="cursor:pointer">' + (dDone ? "" : '<circle cx="318" cy="748" r="34" fill="#ffe08a" opacity=".5"><animate attributeName="opacity" values=".2;.7;.2" dur="1.4s" repeatCount="indefinite"/></circle>') + (dDone ? "" : sparkle(286, 724, 5, 0.2) + sparkle(352, 730, 4, 0.9) + sparkle(300, 778, 3.5, 1.5)) + '<g class="' + (dDone ? "" : "daily-wiggle") + '">' + chest(318, 752, dDone ? "open" : "closed", 1.3, "daily") + "</g>" + (dDone ? "" : '<g transform="translate(336 716)"><circle r="10" fill="#e8590c" stroke="#fff" stroke-width="2"/><text y="4.5" text-anchor="middle" font-size="12" font-weight="900" fill="#fff">!</text></g>') + lbl(318, 786, dDone ? "Morgen weer" : "Dagbeloning", 10) + "</g>";
+    if (act) h += '<g class="j-stop j-daily" data-act="start-daily" role="button" tabindex="0" aria-label="Quiz van de Dag' + (dDone ? " (vandaag gespeeld, kom morgen terug voor een nieuwe beloning)" : ": speel vandaag voor een dagbeloning en een bonus op je reeks") + '" style="cursor:pointer">' + (dDone ? "" : '<circle cx="318" cy="748" r="34" fill="#ffe08a" opacity=".5"><animate attributeName="opacity" values=".2;.7;.2" dur="1.4s" repeatCount="indefinite"/></circle>') + (dDone ? "" : sparkle(286, 724, 5, 0.2) + sparkle(352, 730, 4, 0.9) + sparkle(300, 778, 3.5, 1.5)) + '<g class="' + (dDone ? "" : "daily-wiggle") + '">' + chest(318, 752, dDone ? "open" : "closed", 1.3, "daily") + "</g>" + (dDone ? "" : '<g transform="translate(336 716)"><circle r="10" fill="#e8590c" stroke="#fff" stroke-width="2"/><text y="4.5" text-anchor="middle" font-size="12" font-weight="900" fill="#fff">!</text></g>') + lbl(318, 786, dDone ? "Morgen weer" : "Dagbeloning", 10) + "</g>";
     // mijlpalen: schatkisten naast het pad (springen als ze klaarstaan; tik om te openen)
     stops.forEach(function (st) {
       if (!st.mile) return;
@@ -11648,7 +11680,7 @@ return exports;})();
       }
       else { cx = st.x + side * (R + 30); cy = st.y - 34; }
       const game = MG_NAME[chestGame(c.id, st.i)];
-      const label = "Schatkist na level " + (st.i + 1) + (ready ? ": klaar om te openen, met minigame " + game : state === "open" || state === "gold" ? ": geopend" : (jLandOpen(level, c.id) ? ": nog dicht, haal eerst level " + (st.i + 1) : ": vergrendeld, rond eerst het vorige land af"));
+      const label = "Schatkist na level " + (off + st.i + 1) + (ready ? ": klaar om te openen, met minigame " + game : state === "open" || state === "gold" ? ": geopend" : (jLandOpen(level, c.id) ? ": nog dicht, haal eerst level " + (st.i + 1) : ": vergrendeld, rond eerst het vorige land af"));
       h += '<g class="j-stop j-chest' + (ready ? " j-ready" : "") + '" data-act="journey-chest" data-cat="' + c.id + '" data-i="' + st.i + '" role="button" tabindex="0" aria-label="' + label + '">' +
         '<circle cx="' + cx + '" cy="' + cy + '" r="26" fill="#000" fill-opacity="0"/>';
       if (ready) h += '<circle cx="' + cx + '" cy="' + (cy - 4) + '" r="30" fill="#fff3a0" opacity=".5"><animate attributeName="opacity" values=".25;.8;.25" dur="1.1s" repeatCount="indefinite"/></circle>' +
@@ -11662,20 +11694,21 @@ return exports;})();
     stops.forEach(function (st) {
       const R = st.last ? 27 : st.mile ? 21 : 19, state = st.locked ? "locked" : st.passed ? "done" : "current";
       const fill = state === "locked" ? "lock" : state === "done" ? (st.stars === 3 ? "gold" : "done") : "cur";
-      const name = "Level " + (st.i + 1) + " van " + n + " in " + c.title + (jHourglass(level, st.i) && !S.hgOff ? ", zandloper-level met tijd per vraag" : "") + (st.mile ? ", mijlpaal met schatkist" : "") + (st.last ? ", laatste level" : "") + (st.locked ? " (vergrendeld)" : st.passed ? " (gehaald, " + st.stars + " van 3 sterren)" : " (volgende)");
-      h += '<g class="j-stop ' + state + (st.i === J.cur ? " j-current" : "") + '" data-act="journey-level" data-cat="' + c.id + '" data-i="' + st.i + '" role="button" tabindex="0"' + (st.locked ? ' aria-disabled="true"' : "") + ' aria-label="' + name + '" transform="translate(' + st.x + " " + st.y + ')">';
+      const name = "Level " + (off + st.i + 1) + " (level " + (st.i + 1) + " van " + n + " in " + c.title + ")" + (jHourglass(level, st.i) && !S.hgOff ? ", zandloper-level met tijd per vraag" : "") + (st.mile ? ", mijlpaal met schatkist" : "") + (st.last ? ", laatste level" : "") + (st.locked ? " (vergrendeld)" : st.passed ? " (gehaald, " + st.stars + " van 3 sterren)" : " (volgende)");
+      h += '<g class="j-stop ' + state + (act && st.i === J.cur ? " j-current" : "") + '" data-act="journey-level" data-cat="' + c.id + '" data-i="' + st.i + '" role="button" tabindex="0"' + (st.locked ? ' aria-disabled="true"' : "") + ' aria-label="' + name + '" transform="translate(' + st.x + " " + st.y + ')">';
       h += '<circle r="' + (R + 7) + '" fill="#000" fill-opacity="0"/>';
       if (state === "current") h += '<circle class="j-glow" r="' + (R + 12) + '" fill="' + (kos ? "#3fe6d0" : "#ffe08a") + '" opacity="' + (kos ? ".45" : ".55") + '"/>';
       if (kos) { const rc = state === "locked" ? "#5a6bd6" : state === "done" ? "#ffd54f" : "#7dffd8"; h += '<ellipse cy="' + Math.round(R * 0.62) + '" rx="' + (R + 10) + '" ry="' + Math.round(R * 0.5) + '" fill="#0c0f2e" stroke="' + rc + '" stroke-opacity=".75" stroke-width="2"/><circle r="' + (R + 3.5) + '" fill="' + rc + '"' + (state === "locked" ? "" : ' filter="url(#' + uid + 'ng)"') + '/><circle r="' + R + '" fill="url(#' + uid + fill + ')"/>'; }
       else h += '<circle r="' + (R + 4) + '" fill="' + (st.mile ? "#ffd54f" : "#fff") + '"/><circle r="' + R + '" fill="url(#' + uid + fill + ')"/>';
       if (st.mile) h += '<circle r="' + (R - 5) + '" fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="1.6" stroke-dasharray="3 4"/>';
       if (state === "locked") h += '<g transform="translate(-7 -9)" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><rect x="0" y="7" width="14" height="11" rx="2.5" fill="#fff" stroke="none"/><path d="M3 7 V4 a4 4 0 0 1 8 0 V7"/></g>';
-      else h += '<text y="' + (R > 22 ? 9 : 7) + '" text-anchor="middle" font-size="' + (R > 22 ? 25 : 20) + '" font-weight="900" fill="#fff" stroke="' + (kos ? (state === "done" ? "#7a4a00" : "#0a5b66") : state === "done" ? "#0b6b44" : "#c77d12") + '" stroke-width="1" paint-order="stroke">' + (st.i + 1) + "</text>";
+      else h += '<text y="' + (R > 22 ? 9 : 7) + '" text-anchor="middle" font-size="' + (R > 22 ? 25 : 20) + '" font-weight="900" fill="#fff" stroke="' + (kos ? (state === "done" ? "#7a4a00" : "#0a5b66") : state === "done" ? "#0b6b44" : "#c77d12") + '" stroke-width="1" paint-order="stroke">' + (off + st.i + 1) + "</text>";
       if (state === "done") for (let k = 0; k < 3; k++) h += (k < st.stars ? '<g transform="translate(' + ((k - 1) * 15) + " " + (R + (k === 1 ? 8 : 5)) + ') scale(.72)" style="filter:drop-shadow(0 1.5px 1px rgba(0,0,0,.4))">' + starInner() + "</g>" : '<polygon points="' + starPoly((k - 1) * 15, R + (k === 1 ? 8 : 5), 7.5) + '" fill="rgba(0,0,0,.35)" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/>');
       if (jHourglass(level, st.i) && !S.hgOff) h += '<g transform="translate(-8 ' + (-R - 19) + ')"><circle cx="8" cy="9" r="10" fill="#1b4332" stroke="#ffd54f" stroke-width="1.6"/><g transform="translate(2 -1) scale(.5)">' + hgSvg(.6, 24).replace(/<svg[^>]*>/, "").replace("</svg>", "") + "</g></g>";
       if (st.last) h += '<g transform="translate(0 ' + (-R - 3) + ')"><line y2="-38" stroke="#b07a1a" stroke-width="3" stroke-linecap="round"/><path d="M1 -38 L33 -38 L27 -28 L33 -18 L1 -18Z" fill="#1f9d55" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"><animate attributeName="d" values="M1 -38 L33 -38 L27 -28 L33 -18 L1 -18Z;M1 -38 Q17 -42 33 -38 L27 -28 L33 -18 Q17 -14 1 -18Z;M1 -38 L33 -38 L27 -28 L33 -18 L1 -18Z" dur="2.2s" repeatCount="indefinite"/></path><circle cx="13" cy="-28" r="5.2" fill="#fff"/><circle cx="15.4" cy="-29" r="4.4" fill="#1f9d55"/><polygon points="' + starPoly(23.5, -28, 3.6) + '" fill="#ffd23f"/></g>';
       h += "</g>";
     });
+    if (!act) return h + "</svg>";      /* andere landen op de doorlopende kaart: zonder jouw avatar en medespelers */
     // avatar-marker naast het huidige level
     const ini = esc((P.name || "?").trim().charAt(0).toUpperCase());
     h += '<g id="jSocial">' + socialSvg(c, stops) + "</g>";
@@ -11927,11 +11960,59 @@ return exports;})();
     return "🌙 Mijn Reis in NurSpark (" + modeName(lv) + "-modus): " + levels + " levels gehaald en " + stars + " ⭐ verzameld!" + lines + "\nKun jij mij inhalen? " + SITE_URL;
   }
   function waLink(text) { return "https://wa.me/?text=" + encodeURIComponent(text); }
+  function jBarInner(k) {
+    const lv = P.mode, LS = landsFor(lv), c = LS[k], st = jLandStats(lv, c.id), pct = st.n ? Math.round(st.passed / st.n * 100) : 0;
+    return '<span class="jb-nr" aria-hidden="true">' + (k + 1) + '</span><span class="jb-t"><b>Land ' + (k + 1) + ": " + esc(c.title) + (jLandOpen(lv, c.id) ? "" : " 🔒") + "</b>" +
+      '<span class="jb-row"><span class="jb-prog" aria-label="' + st.passed + " van " + st.n + ' levels gehaald"><i style="width:' + pct + '%"></i></span><small>' + st.passed + "/" + st.n + " ⭐" + st.stars + "</small>" +
+      '<span class="jb-pills">' + bonChipHtml(lv, c) + badgePillHtml(lv, c, st) + "</span></span></span>";
+  }
+  /* Poort van Jannah tussen land k-1 (onder) en land k (boven) */
+  function jGateHtml(lv, k) {
+    const LS = landsFor(lv), to = LS[k], from = LS[k - 1], open = jLandOpen(lv, to.id), u = "jg" + k;
+    const T = (LANDS[to.id] || LANDS.profeten), F = (LANDS[from.id] || LANDS.profeten);
+    const tth = T.pal[lv] || T.pal.junior, fth = F.pal[lv] || F.pal.junior;
+    const bars = function (x0, x1) { let b = ""; for (let x = x0 + 6; x < x1 - 3; x += 7) b += '<line x1="' + x + '" y1="88" x2="' + x + '" y2="168" stroke="url(#' + u + 'g)" stroke-width="2.4"/>'; return b; };
+    let rays = ""; for (let q = 0; q < 12; q++) { const a = q * Math.PI / 6; rays += '<path d="M105 80 L' + (105 + 140 * Math.cos(a - .07)).toFixed(1) + " " + (80 + 140 * Math.sin(a - .07)).toFixed(1) + " L" + (105 + 140 * Math.cos(a + .07)).toFixed(1) + " " + (80 + 140 * Math.sin(a + .07)).toFixed(1) + 'Z" fill="#fff6c8" opacity=".35"/>'; }
+    const door = function (L) {
+      const x0 = L ? 56 : 105, x1 = L ? 105 : 154, out = L ? 56 : 154, d = L ? "M56 172 L56 96 Q56 80 80 74 Q100 72 105 78 L105 172Z" : "M154 172 L154 96 Q154 80 130 74 Q110 72 105 78 L105 172Z";
+      if (open) return '<path d="M' + out + " 84 L" + (L ? 70 : 140) + " 92 L" + (L ? 70 : 140) + " 166 L" + out + ' 172Z" fill="url(#' + u + 'g)" stroke="#a8761c" stroke-width="1.5"/>';
+      return '<path d="' + d + '" fill="#fbe7a6" opacity=".75"/>' + bars(x0, x1) + '<path d="' + d + '" fill="none" stroke="url(#' + u + 'g)" stroke-width="4"/><rect x="' + x0 + '" y="124" width="49" height="5" fill="url(#' + u + 'g)"/>';
+    };
+    const pillar = function (x) { return '<rect x="' + x + '" y="58" width="30" height="114" rx="3" fill="url(#' + u + 'p)"/>' + [6, 12, 18, 24].map(function (d) { return '<line x1="' + (x + d) + '" y1="64" x2="' + (x + d) + '" y2="168" stroke="#d6d9df" stroke-width="1.4"/>'; }).join("") +
+      '<rect x="' + (x - 5) + '" y="48" width="40" height="12" rx="3" fill="url(#' + u + 'g)"/><rect x="' + (x - 2) + '" y="44" width="34" height="6" rx="2" fill="#f2f4f7"/><circle cx="' + (x + 15) + '" cy="36" r="9" fill="url(#' + u + 'g)"/><rect x="' + (x - 4) + '" y="168" width="38" height="8" rx="2" fill="url(#' + u + 'g)"/>'; };
+    const svg = '<svg class="jg-svg" viewBox="0 0 210 190" aria-hidden="true"><defs><linearGradient id="' + u + 'g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff0a8"/><stop offset=".5" stop-color="#e8b84a"/><stop offset="1" stop-color="#b5801f"/></linearGradient>' +
+      '<linearGradient id="' + u + 'p" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e9ecf1"/><stop offset=".45" stop-color="#fff"/><stop offset="1" stop-color="#c7ccd5"/></linearGradient>' +
+      '<radialGradient id="' + u + 'l"><stop offset="0" stop-color="#fffbe6"/><stop offset=".5" stop-color="#ffe9a0" stop-opacity=".7"/><stop offset="1" stop-color="#ffe9a0" stop-opacity="0"/></radialGradient></defs>' +
+      (open ? '<g class="jg-rays">' + rays + "</g>" : "") + '<circle cx="105" cy="100" r="' + (open ? 78 : 58) + '" fill="url(#' + u + 'l)"/>' +
+      '<path d="M40 50 Q105 2 170 50" fill="none" stroke="url(#' + u + 'g)" stroke-width="5"/><path d="M48 52 Q105 16 162 52" fill="none" stroke="#fff3c0" stroke-width="1.6"/><path d="M100 18 a7 7 0 1 0 9 -4 a5.5 5.5 0 1 1 -9 4Z" fill="url(#' + u + 'g)"/>' +
+      door(true) + door(false) + pillar(26) + pillar(154) +
+      (open ? "" : '<g transform="translate(105 112)"><path d="M-7 -4 v-6 a7 7 0 0 1 14 0 v6" fill="none" stroke="#8a5a12" stroke-width="3"/><rect x="-10" y="-4" width="20" height="16" rx="3" fill="url(#' + u + 'g)" stroke="#8a5a12" stroke-width="1.5"/></g>') +
+      '<g fill="#fff" opacity=".95"><ellipse cx="22" cy="180" rx="30" ry="10"/><ellipse cx="60" cy="184" rx="26" ry="8"/><ellipse cx="190" cy="180" rx="30" ry="10"/><ellipse cx="152" cy="184" rx="26" ry="8"/></g></svg>';
+    const bg = kosmosOn() ? "#060a22" : "linear-gradient(180deg," + tth.near + " 0%," + tth.near + " 18%," + fth.sky[0] + " 82%)";
+    return '<div class="jl-gate' + (open ? " open" : "") + '" data-to="' + k + '" style="background:' + bg + '" role="img" aria-label="Poort van Jannah naar Land ' + (k + 1) + ": " + esc(to.title) + (open ? ", open" : ", dicht. Haal eerst alle levels van " + esc(from.title)) + '">' +
+      '<span class="jg-road" aria-hidden="true"></span><span class="jg-sign"><b>Land ' + (k + 1) + ": " + esc(to.title) + "</b><small>" + (open ? "Open! Loop door de poort" : "Haal alle levels van Land " + k) + "</small></span>" + svg + "</div>";
+  }
+  /* welk land staat midden in beeld? dan past de balk zich aan */
+  let jBarShown = -1;
+  function jBarSync() {
+    const bar = document.getElementById("jBar"); if (!bar) return;
+    const mid = innerHeight / 2; let k = -1;
+    document.querySelectorAll(".jl-land").forEach(function (el) { const r = el.getBoundingClientRect(); if (r.top <= mid && r.bottom >= mid) k = +el.dataset.li; });
+    if (k < 0 || k === jBarShown) return;
+    jBarShown = k; bar.innerHTML = jBarInner(k); bar.style.setProperty("--accent", landsFor(P.mode)[k].color);
+  }
   function viewJourney() {
     const LS = landsFor(P.mode);
     if (journeyLand === null || journeyLand >= LS.length) journeyLand = defaultLand();
     const i = journeyLand, c = LS[i], level = P.mode, st = jLandStats(level, c.id);
-    const mapHtml = journeyMap(c), th = curTh;
+    let mapHtml = "", th = null;
+    for (let k = LS.length - 1; k >= 0; k--) {
+      const lk = LS[k], lock = !jLandOpen(level, lk.id);
+      mapHtml += '<section class="jl-land' + (lock ? " jl-locked" : "") + '" data-li="' + k + '" aria-label="Land ' + (k + 1) + ": " + esc(lk.title) + (lock ? " (vergrendeld)" : "") + '">' + journeyMap(lk, k === i) + "</section>";
+      if (k === i) th = curTh;
+      if (k > 0) mapHtml += jGateHtml(level, k);
+    }
+    if (th) curTh = th;
     const nm = esc(P.name), stars = starsAt(P, level), xp = xpAt(P, level), gems = gemsAt(P, level);
     let h = '<h1 class="sr-only" tabindex="-1">De Reis – Land ' + (i + 1) + ": " + esc(c.title) + "</h1>";
     /* zwevende topbalk */
@@ -11939,22 +12020,11 @@ return exports;})();
       '<button class="jh-modesub ' + level + '" data-act="switch-mode" aria-label="Modus wisselen. Nu: ' + modeName(level) + '. Tik om te kiezen">' + icon(MODE_ICON[level], 13) + "<span>" + modeName(level) + '</span><i aria-hidden="true">▾</i></button></div></div>' +
       '<div class="jh-stats" role="group" aria-label="Jouw punten in de ' + modeName(level) + '-modus"><span>' + icon("star", 15, "fill") + "<b>" + stars + '</b><i class="sr-only"> sterren</i></span>' + lifeBtnHtml() + '<button class="gem jh-gembtn" data-act="bazaar" aria-label="' + gems + ' edelstenen. Open de bazaar">' + gemSvg(15) + "<b>" + gems + '</b><i class="jh-plus" aria-hidden="true">+</i></button></div>' +
       '<button class="jh-gear" data-act="settings" aria-label="Instellingen">' + icon("gear", 20) + "</button></header>";
-    /* land-schild (v75): pijlen naast de titel; bolletjes + voortgang; bonbons en badge op een eigen regel */
-    const jsPrev = i > 0 ? '<button class="js-arrow" data-act="journey-land" data-i="' + (i - 1) + '" aria-label="Vorig land: ' + esc(LS[i - 1].title) + '">' + icon("left", 18) + "</button>" : '<button class="js-arrow" disabled aria-label="Geen vorig land">' + icon("left", 18) + "</button>";
-    const jsNext = i < LS.length - 1 ? '<button class="js-arrow" data-act="journey-land" data-i="' + (i + 1) + '" aria-label="Volgend land: ' + esc(LS[i + 1].title) + '">' + icon("right", 18) + "</button>" : '<button class="js-arrow" disabled aria-label="Geen volgend land">' + icon("right", 18) + "</button>";
-    h += '<div class="j-shield js3" style="--accent:' + c.color + '" role="group" aria-label="Land kiezen"><div class="js-mid">' +
-      '<div class="js-top">' + jsPrev + "<b>Land " + (i + 1) + ": " + esc(c.title) + "</b>" + jsNext + '</div><div class="js-row"><span class="land-strip" role="group" aria-label="Spring naar een land">';
-    LS.forEach(function (x, k) {
-      const done = landDone(level, x.id);
-      h += '<button class="land-chip' + (k === i ? " on" : "") + '" style="--accent:' + x.color + '" data-act="journey-land" data-i="' + k + '" aria-pressed="' + (k === i) + '" aria-label="Land ' + (k + 1) + ": " + esc(x.title) + (done ? " (voltooid)" : !jLandOpen(level, x.id) ? " (vergrendeld)" : "") + '"><span>' + (k + 1) + "</span>" + (done ? '<i class="lc-b">🚩</i>' : !jLandOpen(level, x.id) ? '<i class="lc-b lc-lock">🔒</i>' : "") + "</button>";
-    });
-    h += '</span><small class="js-prog" aria-label="' + st.passed + " van " + st.n + ' levels gehaald">' + (kosmosOn() ? moonSvg(st.n ? st.passed / st.n : 0, 15) : "") + st.passed + "/" + st.n + " ⭐" + st.stars + "</small></div>" +
-      '<div class="js-row2">' + bonChipHtml(level, c) + badgePillHtml(level, c, st) + "</div></div></div>";
+    /* v124: smalle land-balk; naam en voortgang wisselen mee met het land dat in beeld is */
+    h += '<div class="j-shield jbar" style="--accent:' + c.color + '" role="status" aria-live="polite" id="jBar">' + jBarInner(i) + "</div>";
     h += '<div id="jPresence" class="j-presence" role="status" hidden></div>';
-    /* fullscreen kaart */
-    const landLocked = !jLandOpen(level, c.id);
-    if (landLocked) { const pv = LS[i - 1], ps = jLandStats(level, pv.id); h += '<div class="j-lockbanner" role="status"><span aria-hidden="true">🔒</span><span>Land vergrendeld. Rond <b>' + esc(pv.title) + "</b> helemaal af (" + ps.passed + "/" + ps.n + " levels) om hier te spelen. Rondkijken mag!</span></div>"; }
-    h += '<div class="jmap-scroll' + (landLocked ? " landlocked" : "") + '" style="--sky:' + th.sky[0] + ";--near:" + th.near + '"><div class="journey-map">' + mapHtml + "</div></div>";
+    /* v124: één doorlopende reis: alle landen onder elkaar (Land 1 onderaan), met de Poort van Jannah ertussen */
+    h += '<div class="jmap-scroll jreis"><div class="journey-map">' + mapHtml + "</div></div>";
     /* onderste navigatiebalk */
     h += '<nav class="j-nav" aria-label="Hoofdmenu"><div class="jn-in">' +
       '<button class="jn-item" data-act="dash" aria-label="Startscherm"><span class="jn-ic" aria-hidden="true">🏠</span>Start</button>' +
@@ -11984,29 +12054,23 @@ return exports;})();
     let finished = false, fly = null, anim = null;
     const finish = function () { if (finished) return; finished = true; try { if (anim) anim.cancel(); } catch (e) {} if (fly) fly.remove(); shield.remove(); if (screen === "journey") switchNow(); };
     shield.addEventListener("click", finish);
-    announce("Land voltooid! Je vliegt door naar " + toLand.title + ".");
+    announce("Land voltooid! Je loopt door de Poort van Jannah naar " + toLand.title + ".");
+    /* v124: de kaart schuift naar de poort, de poort gaat open en je loopt door naar het nieuwe land */
+    (function () { const sc0 = document.querySelector(".jmap-scroll"), g0 = document.querySelector('.jl-gate[data-to="' + f.to + '"]'); if (sc0 && g0) sc0.scrollTop = Math.max(0, g0.offsetTop + g0.offsetHeight - innerHeight * 0.35); })();
     setTimeout(function () {
       if (finished || screen !== "journey") { finish(); return; }
-      window.scrollTo(0, 0);
-      const a = document.querySelector('.land-chip[data-i="' + f.from + '"]'), b = document.querySelector('.land-chip[data-i="' + f.to + '"]');
-      if (!a || !b || reducedMotion()) { setTimeout(finish, 600); return; }
-      try { b.scrollIntoView({ inline: "center", block: "nearest", behavior: "auto" }); } catch (e) {}
+      const sc = document.querySelector(".jmap-scroll"), g = document.querySelector('.jl-gate[data-to="' + f.to + '"]');
+      if (!sc || !g) { finish(); return; }
+      const top = g.offsetTop - (innerHeight - g.offsetHeight) / 2;
+      sc.scrollTo({ top: Math.max(0, top), behavior: reducedMotion() ? "auto" : "smooth" });
       setTimeout(function () {
         if (finished) return;
-        const ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
-        const sx = ra.left + ra.width / 2 - 24, sy = ra.top + ra.height / 2 - 24, ex = rb.left + rb.width / 2 - 24, ey = rb.top + rb.height / 2 - 24;
-        const mx = (sx + ex) / 2, my = Math.min(sy, ey) - 70;
-        fly = document.createElement("div"); fly.className = "land-fly"; fly.setAttribute("aria-hidden", "true");
-        fly.innerHTML = '<span class="lf-glow"></span>' + avatarHtml(P, 44) + '<span class="lf-star lf-s1">' + GOLD_STAR_SVG + '</span><span class="lf-star lf-s2">' + GOLD_STAR_SVG + "</span>";
-        document.body.appendChild(fly); play("swoosh");
-        anim = fly.animate([
-          { transform: "translate(" + sx + "px," + sy + "px) scale(1) rotate(0deg)", offset: 0 },
-          { transform: "translate(" + mx + "px," + my + "px) scale(1.55) rotate(-12deg)", offset: 0.5 },
-          { transform: "translate(" + ex + "px," + ey + "px) scale(1) rotate(0deg)", offset: 1 }
-        ], { duration: 1300, easing: "cubic-bezier(.45,.05,.3,1)", fill: "forwards" });
-        anim.onfinish = function () { b.classList.add("land-arrive"); play("win"); setTimeout(finish, 350); };
-      }, 380);
-    }, 800);
+        g.classList.add("open", "jg-go"); play("swoosh");
+        fly = document.createElement("div"); fly.className = "jg-walker"; fly.setAttribute("aria-hidden", "true"); fly.innerHTML = avatarHtml(P, 40);
+        g.appendChild(fly);
+        setTimeout(function () { play("win"); finish(); }, reducedMotion() ? 300 : 1600);
+      }, reducedMotion() ? 100 : 900);
+    }, 700);
   }
   function landEnterFx(land) {
     celebrate(false);
@@ -12076,8 +12140,10 @@ return exports;})();
       const to = m.dataset.to.split(",");
       if (m.dataset.from !== m.dataset.to) { play("swoosh"); requestAnimationFrame(function () { requestAnimationFrame(function () { m.style.transform = "translate(" + to[0] + "px," + to[1] + "px)"; }); }); }
     }
-    const cur = document.querySelector(".j-current");
-    if (cur && cur.scrollIntoView) setTimeout(function () { cur.scrollIntoView({ block: "center", behavior: "auto" }); }, 30);
+    const cur = document.querySelector(".j-current") || document.querySelector('.jl-land[data-li="' + journeyLand + '"]');
+    if (cur && cur.scrollIntoView) setTimeout(function () { cur.scrollIntoView({ block: "center", behavior: "auto" }); jBarShown = -1; jBarSync(); }, 30);
+    const jsc = document.querySelector(".jmap-scroll.jreis");
+    if (jsc && !jsc.dataset.bs) { jsc.dataset.bs = 1; jsc.addEventListener("scroll", function () { if (!jsc._raf) jsc._raf = requestAnimationFrame(function () { jsc._raf = 0; jBarSync(); }); }, { passive: true }); }
   }
 
   function viewBoard() {
