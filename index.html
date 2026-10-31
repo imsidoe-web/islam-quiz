@@ -11867,6 +11867,16 @@ return exports;})();
       t = "👥 Medespelers: " + where;
     }
     el.textContent = t; el.hidden = false;
+    jTopPad();
+  }
+  /* bovenkant kaart: genoeg ruimte zodat het hoogste level niet onder het schild / de medespelers-balk blijft hangen */
+  function jTopPad() {
+    const m = document.querySelector(".jmap-scroll .journey-map"), sc = document.querySelector(".jmap-scroll"); if (!m || !sc) return;
+    let y = 0; document.querySelectorAll(".j-head, .j-shield, .j-presence:not([hidden]), .j-lockbanner").forEach(function (e) { const r = e.getBoundingClientRect(); if (r.height) y = Math.max(y, r.bottom); });
+    const want = Math.max(144, Math.round(y + 24)), old = parseFloat(getComputedStyle(m).paddingTop) || 0;
+    if (Math.abs(want - old) < 2) return;
+    m.style.paddingTop = want + "px";
+    sc.scrollTop += want - old;   /* beeld blijft op dezelfde plek staan */
   }
   function peerStat(ic, val, lab) { return '<li><span class="pe-ic" aria-hidden="true">' + ic + '</span><b>' + val + "</b><small>" + lab + "</small></li>"; }
   function peerDialog(key) {
@@ -12039,6 +12049,7 @@ return exports;})();
     /* meldingen onder het land-schild altijd net eronder zetten (het schild kan per telefoon iets hoger zijn) */
     const jsh = document.querySelector(".j-shield");
     if (jsh) { const y = Math.round(jsh.getBoundingClientRect().bottom + 8); document.querySelectorAll(".j-presence, .j-lockbanner").forEach(function (e) { e.style.top = y + "px"; }); }
+    jTopPad();
     if (P && P.mode && !P.tourSeen) {
       P.tourSeen = true; S.tour = true;
       const fresh = !(P.played > 0);
