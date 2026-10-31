@@ -12044,7 +12044,8 @@ return exports;})();
     h += '<div id="jPresence" class="j-presence" role="status" hidden></div>';
     /* v124: één doorlopende reis: alle landen onder elkaar (Land 1 onderaan), met de Poort van Jannah ertussen */
     const topL = LANDS[LS[LS.length - 1].id] || LANDS.profeten, topTh = topL.pal[level] || topL.pal.junior;
-    h += '<div class="jmap-scroll jreis"><div class="journey-map" style="background:' + (kosmosOn() ? "#060a22" : topTh.sky[0]) + '">' + mapHtml + "</div></div>";
+    const botL = LANDS[LS[0].id] || LANDS.profeten, botTh = botL.pal[level] || botL.pal.junior;
+    h += '<div class="jmap-scroll jreis"><div class="journey-map" style="background:' + (kosmosOn() ? "#060a22" : "linear-gradient(180deg," + topTh.sky[0] + " 50%," + botTh.near + " 50%)") + '">' + mapHtml + "</div></div>";
     /* onderste navigatiebalk */
     h += '<nav class="j-nav" aria-label="Hoofdmenu"><div class="jn-in">' +
       '<button class="jn-item" data-act="dash" aria-label="Startscherm"><span class="jn-ic" aria-hidden="true">🏠</span>Start</button>' +
