@@ -25,6 +25,9 @@
    "offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},
    "publisher":{"@type":"Organization","name":"Zeno Innovations","url":"https://zeno-innovations.com/"}}
   </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebSite","name":"NurSpark","alternateName":"NurSpark – Islamitische quiz-app","url":"https://nurspark.app/","inLanguage":"nl"}
+  </script>
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://nurspark.app/og-image.jpg?v=3">
   <link rel="stylesheet" href="/fonts/fonts.css">
@@ -6959,7 +6962,10 @@ return exports;})();
   function a11yFocus(el) { if (!el) return; if (!el.hasAttribute("tabindex") && !/^(A|BUTTON|INPUT)$/.test(el.tagName)) el.setAttribute("tabindex", "-1"); try { el.focus({ preventScroll: true }); } catch (e) {} }
   function a11yAfter(prev) {
     syncInert();
-    document.title = (SCREEN_TITLE[screen] || "NurSpark") + " – NurSpark";
+    /* v135: startschermen (ook wat Google ziet) houden de echte paginatitel, niet "Inloggen" */
+    document.title = (screen === "login" || screen === "authwait" || screen === "welcome" || screen === "newplayer")
+      ? "NurSpark – Islamitische quiz-app: leer je Deen spelenderwijs"
+      : (SCREEN_TITLE[screen] || "NurSpark") + " – NurSpark";
     Array.prototype.forEach.call(app.querySelectorAll(".brand"), function (b) { b.setAttribute("role", "heading"); b.setAttribute("aria-level", "1"); });
     let target = null; const sameScreen = prev.screen === screen;
     if (screen === "quiz" && quiz) {
