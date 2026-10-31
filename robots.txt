@@ -1,4 +1,5 @@
 User-agent: *
+Disallow: /ontwerpen/
 Allow: /
 
 Sitemap: https://nurspark.app/sitemap.xml
