@@ -2433,10 +2433,13 @@ body.mk-typing .mk-res{gap:8px}
 
 /* v124: één doorlopende reis */
 .jmap-scroll.jreis { background: #12362a; }
-.jmap-scroll.jreis .journey-map { background: none; }
-.jl-land { position: relative; }
+.jl-land { position: relative; z-index: 2; }
+/* zachte overgang: de randen van de landen vervagen in de poort */
+.jl-land.ft .jsvg { -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 90px); mask-image: linear-gradient(180deg, transparent 0, #000 90px); }
+.jl-land.fb .jsvg { -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 90px), transparent 100%); mask-image: linear-gradient(180deg, #000 calc(100% - 90px), transparent 100%); }
+.jl-land.ft.fb .jsvg { -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 90px, #000 calc(100% - 90px), transparent 100%); mask-image: linear-gradient(180deg, transparent 0, #000 90px, #000 calc(100% - 90px), transparent 100%); }
 .jl-land.jl-locked .jsvg { filter: saturate(.72) brightness(.95); }
-.jl-gate { position: relative; height: 270px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 6px; overflow: hidden; }
+.jl-gate { position: relative; z-index: 1; height: 420px; margin: -80px 0; padding-bottom: 86px !important; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 6px; overflow: hidden; }
 .jg-road { position: absolute; left: 50%; top: 0; bottom: 0; width: 22px; margin-left: -11px; border-radius: 11px; background: #fff6dc; box-shadow: 0 0 0 4px rgba(255,255,255,.35); background-image: repeating-linear-gradient(180deg, transparent 0 10px, #e8b84a 10px 13px); background-size: 4px 100%; background-repeat: repeat-y; background-position: center; }
 .jg-sign { position: relative; z-index: 2; margin-bottom: -4px; padding: 5px 14px; border-radius: 12px; background: #fbf3df; color: #12362a; border: 3px solid #e8b84a; box-shadow: 0 4px 10px rgba(0,0,0,.25); text-align: center; max-width: 92%; }
 .jg-sign b { display: block; font-size: .85rem; font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -2446,7 +2449,7 @@ body.mk-typing .mk-res{gap:8px}
 @keyframes jgSpin { to { transform: rotate(360deg); } }
 .jg-go .jg-svg { animation: jgPop 1s ease; }
 @keyframes jgPop { 40% { transform: scale(1.08); filter: brightness(1.25); } }
-.jg-walker { position: absolute; z-index: 3; left: 50%; bottom: 10px; margin-left: -22px; animation: jgWalk 1.5s ease-in forwards; }
+.jg-walker { position: absolute; z-index: 3; left: 50%; bottom: 90px; margin-left: -22px; animation: jgWalk 1.5s ease-in forwards; }
 @keyframes jgWalk { to { transform: translateY(-230px) scale(.8); opacity: 0; } }
 .j-shield.jbar { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 999px; }
 .jbar .jb-nr { flex: none; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-weight: 900; background: linear-gradient(180deg, #ffe08a, #c9922e); color: #12362a; }
@@ -11988,7 +11991,7 @@ return exports;})();
       door(true) + door(false) + pillar(26) + pillar(154) +
       (open ? "" : '<g transform="translate(105 112)"><path d="M-7 -4 v-6 a7 7 0 0 1 14 0 v6" fill="none" stroke="#8a5a12" stroke-width="3"/><rect x="-10" y="-4" width="20" height="16" rx="3" fill="url(#' + u + 'g)" stroke="#8a5a12" stroke-width="1.5"/></g>') +
       '<g fill="#fff" opacity=".95"><ellipse cx="22" cy="180" rx="30" ry="10"/><ellipse cx="60" cy="184" rx="26" ry="8"/><ellipse cx="190" cy="180" rx="30" ry="10"/><ellipse cx="152" cy="184" rx="26" ry="8"/></g></svg>';
-    const bg = kosmosOn() ? "#060a22" : "linear-gradient(180deg," + tth.near + " 0%," + tth.near + " 18%," + fth.sky[0] + " 82%)";
+    const bg = kosmosOn() ? "#060a22" : "linear-gradient(180deg," + tth.near + " 0%," + tth.near + " 22%," + fth.sky[0] + " 78%," + fth.sky[0] + " 100%)";
     return '<div class="jl-gate' + (open ? " open" : "") + '" data-to="' + k + '" style="background:' + bg + '" role="img" aria-label="Poort van Jannah naar Land ' + (k + 1) + ": " + esc(to.title) + (open ? ", open" : ", dicht. Haal eerst alle levels van " + esc(from.title)) + '">' +
       '<span class="jg-road" aria-hidden="true"></span><span class="jg-sign"><b>Land ' + (k + 1) + ": " + esc(to.title) + "</b><small>" + (open ? "Open! Loop door de poort" : "Haal alle levels van Land " + k) + "</small></span>" + svg + "</div>";
   }
@@ -12008,7 +12011,7 @@ return exports;})();
     let mapHtml = "", th = null;
     for (let k = LS.length - 1; k >= 0; k--) {
       const lk = LS[k], lock = !jLandOpen(level, lk.id);
-      mapHtml += '<section class="jl-land' + (lock ? " jl-locked" : "") + '" data-li="' + k + '" aria-label="Land ' + (k + 1) + ": " + esc(lk.title) + (lock ? " (vergrendeld)" : "") + '">' + journeyMap(lk, k === i) + "</section>";
+      mapHtml += '<section class="jl-land' + (lock ? " jl-locked" : "") + (k < LS.length - 1 ? " ft" : "") + (k > 0 ? " fb" : "") + '" data-li="' + k + '" aria-label="Land ' + (k + 1) + ": " + esc(lk.title) + (lock ? " (vergrendeld)" : "") + '">' + journeyMap(lk, k === i) + "</section>";
       if (k === i) th = curTh;
       if (k > 0) mapHtml += jGateHtml(level, k);
     }
@@ -12024,7 +12027,8 @@ return exports;})();
     h += '<div class="j-shield jbar" style="--accent:' + c.color + '" role="status" aria-live="polite" id="jBar">' + jBarInner(i) + "</div>";
     h += '<div id="jPresence" class="j-presence" role="status" hidden></div>';
     /* v124: één doorlopende reis: alle landen onder elkaar (Land 1 onderaan), met de Poort van Jannah ertussen */
-    h += '<div class="jmap-scroll jreis"><div class="journey-map">' + mapHtml + "</div></div>";
+    const topL = LANDS[LS[LS.length - 1].id] || LANDS.profeten, topTh = topL.pal[level] || topL.pal.junior;
+    h += '<div class="jmap-scroll jreis"><div class="journey-map" style="background:' + (kosmosOn() ? "#060a22" : topTh.sky[0]) + '">' + mapHtml + "</div></div>";
     /* onderste navigatiebalk */
     h += '<nav class="j-nav" aria-label="Hoofdmenu"><div class="jn-in">' +
       '<button class="jn-item" data-act="dash" aria-label="Startscherm"><span class="jn-ic" aria-hidden="true">🏠</span>Start</button>' +
