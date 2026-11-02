@@ -225,12 +225,6 @@ body.ms-on { padding-bottom: 6px; }
 @media (max-width: 700px) {
   body.ms-on { font-size: 18px; } body.ms-on main#app { padding: 70px 60px 62px; } body.ms-on .ms-wrap main#app { margin: 0 4px; }
   body.ms-on .tile { padding: 8px 34px 8px 24px; } body.ms-on .tile em { right: 26px; top: 4px; font-size: 13px; }
-  /* v183: telefoon - de brief past op het scherm: boven- en onderrol blijven in beeld, de inhoud scrolt tussen de rollen */
-  body.ms-on { height: 100vh; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; padding-bottom: 0; }
-  body.ms-on header.top { flex: none; }
-  body.ms-on .ms-wrap { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; width: 100%; }
-  body.ms-on .ms-roll { flex: none; }
-  body.ms-on .ms-wrap main#app { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
   body.ms-on .qimg.qdoc { max-height: 20vh; margin: 4px auto 8px; }
   body.ms-on h1.qq { font-size: 25px; } body.ms-on h1.qq::first-letter { font-size: 1em; padding: 3px 7px 1px; margin: 3px 8px 0 0; }
   .ms-top .ms-zg { width: 84px; height: 84px; } .ms-top .basm { font-size: 31px; white-space: nowrap; } body.ms-on .tile { font-size: 23px; min-height: 58px; } body.ms-on .tiles { grid-template-columns: 1fr; }
@@ -244,6 +238,12 @@ body.ms-on { padding-bottom: 6px; }
 }
 @media (min-width: 900px) and (max-height: 1000px) { body.ms-on .qgrid > .qimg { max-height: 46vh; } }
 @media (min-width: 900px) and (max-height: 760px) { body.ms-on .qgrid > .qimg { max-height: 40vh; } }
+/* v184: op elk scherm past de brief op het scherm: boven- en onderrol blijven altijd in beeld, de inhoud scrolt tussen de rollen */
+body.ms-on { height: 100vh; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; padding-bottom: 0; }
+body.ms-on header.top { flex: none; padding: 5px 16px; } body.ms-on header.top svg.brand-wm { height: 22px; }
+body.ms-on .ms-wrap { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; width: 100%; }
+body.ms-on .ms-roll { flex: none; }
+body.ms-on .ms-wrap main#app { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
 /* v175: laptop en Chromebook - kop compacter, plaatje kleiner, hoofdknop blijft onderaan staan */
 @media (min-width: 701px) and (max-height: 1000px) {
   body.ms-on main#app { padding-top: 64px; padding-bottom: 56px; margin-top: 44px; margin-bottom: 44px; }
