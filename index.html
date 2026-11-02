@@ -7430,6 +7430,7 @@ return exports;})();
       '<button class="q-cont" data-act="quran"><small>AL-QUR’AN · INDOPAK</small><b>' + (ql ? "Verder lezen: " + Q_TR[ql[0] - 1] + " " + ql.join(":") : "De volledige Koran lezen") + '</b><span lang="ar" dir="rtl">القرآن الكريم</span></button>' +
       '<button class="hub-fout" data-act="fout">' + hIc("fout", "#ffb703") + '<span><b>Mijn foutjes</b><small>' + (nf ? nf + " vraag" + (nf === 1 ? "" : "en") + " om te herhalen (" + modeName(P.mode) + ")" : "Nog niets: vragen die je fout hebt komen hier") + "</small></span>" + (nf ? '<em>' + nf + "</em>" : "") + "</button>" +
       (labState().on ? '<button class="hub-tile lab-tile" data-act="lab">' + hIc("les", "#7ee8c8") + "<b>Testlab · Organisatiekamers</b><small>School, docent, imam of uitgeverij: maak een kamer en probeer het uit</small></button>" : "") +
+      '<button class="hub-tile lab-tile" data-act="klas">' + hIc("les", "#f6d25a") + "<b>Klasmodus · voor docenten</b><small>Maak je eigen quiz voor je klas (in ontwikkeling)</small></button>" +
       '<div class="hub-grid">' + soon("les", "Lessen per land", "Korte kaartjes vóór de levels") +
       '<button class="hub-tile" data-act="dua">' + hIc("dua") + "<b>Du’a-boekje</b><small>Leren en uit je hoofd</small></button>" +
       soon("stap", "Stap voor stap", "Wudhu, Salah, Hadj") + soon("woord", "Woordenboek", "Van Adhaan tot Zakat") + "</div>" +
@@ -12801,6 +12802,7 @@ return exports;})();
       case "home": play("click"); stopTimer(); landFly = null; journeyReturn = false; screen = lastRoot || "journey"; render(); break;
       case "dash": play("click"); stopTimer(); landFly = null; journeyReturn = false; screen = "dash"; render(); break;
       case "hub": play("click"); screen = "hub"; render(); break;
+      case "klas": play("click"); location.href = "/klas/"; break;
       case "maktabah": if (!mkOwner()) break; play("click"); screen = "maktabah"; render(); break;
       case "lab": case "lab-new": case "lab-open": case "lab-join": case "lab-role": case "lab-add-les": case "lab-add-q": case "lab-del": case "lab-del-room": case "lab-copy": case "lab-quiz": case "lab-ans": case "lab-next": case "lab-back": labAction(act, el); break;
       case "fout": play("click"); screen = "fout"; render(); break;
