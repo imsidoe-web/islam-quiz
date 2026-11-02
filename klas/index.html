@@ -46,6 +46,30 @@ textarea { min-height: 70px; resize: vertical; }
 .q-head { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; }
 .q-head b { flex: 1; }
 .hidden { display: none !important; }
+
+.center { text-align: center; } .ar { font-family: "Amiri", serif; font-size: 34px; color: var(--em-d); margin-top: 8px; }
+.wait { font-weight: 800; color: var(--em-d); } .rank { font-size: 19px; } .expl { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; text-align: left; }
+.good-h { color: var(--em); } .bad-h { color: var(--bad); }
+.bigcode { font-size: clamp(44px, 14vw, 84px); font-weight: 900; letter-spacing: .12em; color: var(--em-d); background: #fff; border: 3px solid var(--gold); border-radius: 20px; padding: 6px 12px; margin: 8px auto 14px; display: inline-block; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; } .chip { background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 4px 6px 4px 14px; font-weight: 800; }
+.chip button { border: 0; background: #f3dcdf; color: var(--bad); border-radius: 50%; width: 28px; height: 28px; margin-left: 6px; cursor: pointer; font-weight: 900; }
+.qtop { display: flex; justify-content: space-between; font-weight: 800; color: var(--em-d); margin-top: 6px; } .qtop b { font-size: 22px; }
+.bar { height: 12px; background: #e9e0c8; border-radius: 999px; overflow: hidden; margin: 6px 0 12px; } .bar div { height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-l)); width: 100%; transition: width .25s linear; }
+.qq { font-size: 24px; line-height: 1.3; margin: 10px 0 14px; } .qq.big { font-size: clamp(26px, 5vw, 40px); }
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 8px 0; }
+.tile { position: relative; display: flex; align-items: center; gap: 10px; min-height: 84px; padding: 12px 14px; border: 0; border-radius: 16px; color: #fff; font: inherit; font-weight: 800; font-size: 19px; text-align: left; cursor: pointer; box-shadow: 0 4px 0 rgba(0,0,0,.22); }
+div.tile { cursor: default; } .tile i { font-style: normal; background: rgba(255,255,255,.25); border-radius: 10px; min-width: 34px; height: 34px; display: grid; place-items: center; flex: none; }
+.tile em { position: absolute; right: 10px; top: 6px; font-style: normal; background: rgba(0,0,0,.28); border-radius: 999px; padding: 0 9px; font-size: 15px; }
+.tile.t0 { background: #2d6a4f; } .tile.t1 { background: #b07a1e; } .tile.t2 { background: #2f5d8a; } .tile.t3 { background: #7a2f3a; }
+.tile.mine { outline: 4px solid var(--gold-l); } .tile.dim { opacity: .38; } .tile.good { outline: 5px solid var(--gold-l); }
+.tile .chk { position: absolute; right: 10px; bottom: 6px; color: var(--gold-l); font-size: 24px; } .tile:disabled:not(.mine) { opacity: .55; }
+.podium { display: flex; justify-content: center; align-items: flex-end; gap: 8px; margin: 18px 0; }
+.pod { flex: 1; max-width: 150px; display: flex; flex-direction: column; align-items: center; } .pod b { word-break: break-word; } .pod span { font-size: 14px; color: var(--muted); }
+.pod .stars { color: var(--gold); font-size: 24px; letter-spacing: 2px; text-shadow: 0 1px 0 #fff; }
+.pod .step { width: 100%; border-radius: 12px 12px 0 0; background: linear-gradient(180deg, var(--gold-l), var(--gold)); color: #3b2a07; font-weight: 900; font-size: 26px; padding-top: 6px; margin-top: 6px; }
+.pod.p1 .step { height: 120px; } .pod.p2 .step { height: 84px; } .pod.p3 .step { height: 60px; }
+ol.lb { list-style: none; padding: 0; margin: 6px 0 14px; text-align: left; } ol.lb li { display: flex; justify-content: space-between; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 8px 12px; margin: 5px 0; font-weight: 800; } ol.lb li.me { border-color: var(--gold); background: #fff8e0; }
+@media (max-width: 420px) { .tile { font-size: 17px; min-height: 76px; } }
 </style>
 </head>
 <body>
@@ -71,8 +95,8 @@ textarea { min-height: 70px; resize: vertical; }
 
   try { sb = window.supabase.createClient(SB_URL, SB_KEY, { auth: { flowType: "pkce", persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } }); } catch (e) { sb = null; }
 
-  function start() {
-    if (!sb) { app.innerHTML = '<p class="msg err">De verbinding kon niet laden. Probeer het later opnieuw.</p>'; return; }
+  function initSb() {
+    if (!sb) { show(); return; }
     sb.auth.getSession().then(function (r) {
       var s = r && r.data && r.data.session;
       user = s && s.user && !s.user.is_anonymous ? s.user : null;
@@ -83,6 +107,11 @@ textarea { min-height: 70px; resize: vertical; }
       if (u && (!user || user.id !== u.id)) { user = u; loadQuizzes(); }
       if (!u && user) { user = null; show(); }
     });
+  }
+  function start() {
+    prefill = (new URLSearchParams(location.search).get("c") || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+    var saved = lsGet(LLN_KEY);
+    if (saved && (!prefill || prefill === saved.code)) resumeLeerling(saved).then(initSb); else initSb();
   }
 
   function loadQuizzes() {
@@ -95,19 +124,31 @@ textarea { min-height: 70px; resize: vertical; }
   /* ───── schermen ───── */
   function show() {
     who.innerHTML = user ? '<button type="button" id="out">Uitloggen</button>' : "";
-    if (user) document.getElementById("out").onclick = function () { sb.auth.signOut().then(function () { user = null; edit = null; show(); }); };
+    if (user) document.getElementById("out").onclick = function () { stopAll(); lsSet(HOST_KEY, null); sb.auth.signOut().then(function () { user = null; edit = null; show(); }); };
+    if (L) return renderL();
+    if (G) return renderG();
     if (!user) return showLogin();
     if (edit) return showEditor();
     showList();
   }
 
   function showLogin() {
-    app.innerHTML = '<h1>Maak je eigen quiz voor de klas</h1>' +
-      '<p>Bismillah. Hier maak je als docent een quiz met je eigen vragen en antwoorden. Later speel je die live met je klas of geef je hem als huiswerk.</p>' +
-      '<div class="card"><p><b>Inloggen met Google</b> (alleen voor docenten). Leerlingen hebben geen account nodig.</p>' +
-      '<button class="btn gold" id="g" type="button">Inloggen met Google</button><div id="msg" class="msg"></div></div>' +
+    app.innerHTML = '<h1>Welkom bij NurSpark Klas</h1>' +
+      '<div class="card"><h2 style="margin-top:0">Ik ben leerling</h2><label for="jc">Code van je docent</label>' +
+      '<input type="text" id="jc" maxlength="6" autocomplete="off" autocapitalize="characters" value="' + esc(prefill) + '" placeholder="Bijvoorbeeld K7M2QX">' +
+      '<label for="jn">Jouw bijnaam (max. 14 tekens)</label><input type="text" id="jn" maxlength="14" autocomplete="off" placeholder="Bijvoorbeeld Sterretje">' +
+      '<p class="muted">Kies een bijnaam, geen volledige naam. Je hebt geen account nodig.</p><div id="jmsg" class="msg"></div>' +
+      '<button class="btn gold" id="joinBtn" type="button">Meedoen</button></div>' +
+      '<div class="card"><h2 style="margin-top:0">Ik ben docent</h2><p>Maak je eigen quiz en speel hem live met je klas.</p>' +
+      '<button class="btn" id="g" type="button">Inloggen met Google</button><div id="msg" class="msg"></div></div>' +
       '<div class="disc">' + esc(DISC) + '</div>';
+    var jc = document.getElementById("jc"), jn = document.getElementById("jn");
+    var go = function () { joinGame(jc.value, jn.value); };
+    document.getElementById("joinBtn").onclick = go;
+    [jc, jn].forEach(function (el) { el.addEventListener("keydown", function (e) { if (e.key === "Enter") go(); }); });
+    if (prefill) jn.focus();
     document.getElementById("g").onclick = function () {
+      if (!sb) { say("Inloggen lukt nu niet. Probeer het later opnieuw.", true); return; }
       sb.auth.signInWithOAuth({ provider: "google", options: { redirectTo: location.origin + location.pathname } }).then(function (r) {
         if (r && r.error) say("Inloggen lukt nu niet. Probeer het later opnieuw.", true);
       });
@@ -117,16 +158,22 @@ textarea { min-height: 70px; resize: vertical; }
   function showList() {
     var h = '<h1>Mijn quizzen</h1><div class="row sp"><span class="muted">' + quizzes.length + ' quiz' + (quizzes.length === 1 ? "" : "zen") + '</span>' +
       '<button class="btn gold" id="new" type="button">+ Nieuwe quiz</button></div><div id="msg" class="msg"></div>';
+    var hs = lsGet(HOST_KEY);
+    if (hs) h += '<div class="card"><p><b>Je hebt een lopend spel</b> (code ' + esc(hs.code) + ').</p><div class="row"><button class="btn small gold" id="resume" type="button">Hervatten</button><button class="btn small bad" id="dropgame" type="button">Wissen</button></div></div>';
     if (!quizzes.length) h += '<div class="card"><p>Je hebt nog geen quiz. Tik op <b>+ Nieuwe quiz</b> om te beginnen.</p></div>';
     quizzes.forEach(function (q) {
       var n = (q.vragen || []).length;
       h += '<div class="card"><div class="q-head"><b>' + esc(q.titel) + '</b><span class="tag">' + n + ' vragen</span></div>' +
-        '<div class="row" style="margin-top:10px"><button class="btn small" data-a="edit" data-id="' + esc(q.id) + '" type="button">Bewerken</button>' +
+        '<div class="row" style="margin-top:10px"><button class="btn small gold" data-a="live" data-id="' + esc(q.id) + '" type="button">Live spelen</button><button class="btn small" data-a="edit" data-id="' + esc(q.id) + '" type="button">Bewerken</button>' +
         '<button class="btn small light" data-a="copy" data-id="' + esc(q.id) + '" type="button">Kopiëren</button>' +
         '<button class="btn small bad" data-a="del" data-id="' + esc(q.id) + '" type="button">Verwijderen</button></div></div>';
     });
     h += '<div class="disc">' + esc(DISC) + '</div>';
     app.innerHTML = h;
+    var rs = document.getElementById("resume");
+    if (rs) { rs.onclick = function () { rs.disabled = true; resumeHost().then(function (ok) { if (!ok) { say("Dit spel kon niet worden hervat.", true); rs.disabled = false; } }); }; }
+    var dg = document.getElementById("dropgame");
+    if (dg) dg.onclick = function () { lsSet(HOST_KEY, null); show(); };
     document.getElementById("new").onclick = function () { edit = { id: null, titel: "", vragen: [] }; show(); };
     app.querySelectorAll("[data-a]").forEach(function (b) {
       b.onclick = function () { listAction(b.getAttribute("data-a"), b.getAttribute("data-id")); };
@@ -137,6 +184,7 @@ textarea { min-height: 70px; resize: vertical; }
   function listAction(a, id) {
     var q = quizzes.filter(function (x) { return x.id === id; })[0];
     if (!q) return;
+    if (a === "live") { if (!(q.vragen || []).length) { say("Deze quiz heeft nog geen vragen.", true); return; } hostStart(q); return; }
     if (a === "edit") { edit = { id: q.id, titel: q.titel, vragen: JSON.parse(JSON.stringify(q.vragen || [])) }; show(); }
     if (a === "copy") {
       sb.from("klas_quizzen").insert({ titel: q.titel + " (kopie)", vragen: q.vragen }).then(function (r) {
@@ -246,6 +294,389 @@ textarea { min-height: 70px; resize: vertical; }
       if (r.error) { btn.disabled = false; say("Opslaan lukte niet. Probeer het opnieuw.", true); return; }
       edit = null; msg = "Opgeslagen. Barakallahu feek!"; msgErr = false; loadQuizzes();
     });
+  }
+
+  /* ───────────── Live spelen (Firebase, zoals Groep en Duel) ───────────── */
+  var FB = window.__FB_TEST || {
+    apiKey: "AIzaSyCnpxQWxTP540cnkKjU9xyB8ILkgBGs83I",
+    db: "https://islam-quiz-40597-default-rtdb.europe-west1.firebasedatabase.app",
+    signUpUrl: "https://identitytoolkit.googleapis.com/v1/accounts:signUp",
+    tokenUrl: "https://securetoken.googleapis.com/v1/token"
+  };
+  var AUTH_KEY = "islam-quiz-auth", HOST_KEY = "klas-host", LLN_KEY = "klas-leerling";
+  var CODE_CHARS = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+  var cloud = { auth: null, pending: null };
+  var G = null, L = null, prefill = "", tickT = null;
+
+  function lsGet(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
+  function lsSet(k, v) { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  function fetchT(url, opt, ms) {
+    var c = typeof AbortController === "function" ? new AbortController() : null;
+    var t = c ? setTimeout(function () { c.abort(); }, ms || 15000) : null;
+    return fetch(url, Object.assign({}, opt || {}, c ? { signal: c.signal } : {})).then(function (r) { clearTimeout(t); return r; }, function (e) { clearTimeout(t); throw e; });
+  }
+  function cloudAuth() {
+    if (!cloud.auth) cloud.auth = lsGet(AUTH_KEY);
+    var a = cloud.auth;
+    if (a && a.exp > Date.now() + 60000) return Promise.resolve(a);
+    if (cloud.pending) return cloud.pending;
+    cloud.pending = (async function () {
+      try {
+        if (a && a.refreshToken) {
+          var r = await fetchT(FB.tokenUrl + "?key=" + FB.apiKey, { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: "grant_type=refresh_token&refresh_token=" + encodeURIComponent(a.refreshToken) });
+          if (r.ok) {
+            var j = await r.json();
+            cloud.auth = { idToken: j.id_token, refreshToken: j.refresh_token, uid: j.user_id, exp: Date.now() + (parseInt(j.expires_in, 10) || 3600) * 1000 };
+            lsSet(AUTH_KEY, cloud.auth); return cloud.auth;
+          }
+        }
+        var r2 = await fetchT(FB.signUpUrl + "?key=" + FB.apiKey, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ returnSecureToken: true }) });
+        if (!r2.ok) { var e = new Error("auth"); e.status = r2.status; throw e; }
+        var j2 = await r2.json();
+        cloud.auth = { idToken: j2.idToken, refreshToken: j2.refreshToken, uid: j2.localId, exp: Date.now() + (parseInt(j2.expiresIn, 10) || 3600) * 1000 };
+        lsSet(AUTH_KEY, cloud.auth); return cloud.auth;
+      } finally { cloud.pending = null; }
+    })();
+    return cloud.pending;
+  }
+  async function dbReq(method, path, body) {
+    var auth = await cloudAuth();
+    var url = FB.db + "/" + path + ".json?auth=" + encodeURIComponent(auth.idToken);
+    var opt = { method: method };
+    if (body !== undefined) { opt.headers = { "Content-Type": "application/json" }; opt.body = JSON.stringify(body); }
+    var r = await fetchT(url, opt);
+    if (!r.ok) { var e = new Error("db " + r.status); e.status = r.status; throw e; }
+    return r.json();
+  }
+  /* live luisteren naar een pad; geeft {close()} terug */
+  function listen(path, onData) {
+    var es = null, cache = null, closed = false, timer = null;
+    function setAt(p, val) {
+      var parts = String(p).split("/").filter(Boolean);
+      if (!parts.length) { cache = val; return; }
+      if (cache === null || typeof cache !== "object") cache = {};
+      var node = cache;
+      for (var i = 0; i < parts.length - 1; i++) {
+        if (node[parts[i]] === null || typeof node[parts[i]] !== "object") node[parts[i]] = {};
+        node = node[parts[i]];
+      }
+      var last = parts[parts.length - 1];
+      if (val === null) delete node[last]; else node[last] = val;
+    }
+    async function open() {
+      if (closed) return;
+      try {
+        var auth = await cloudAuth();
+        if (closed) return;
+        es = new EventSource(FB.db + "/" + path + ".json?auth=" + encodeURIComponent(auth.idToken));
+        es.addEventListener("put", function (e) { var m = JSON.parse(e.data); setAt(m.path, m.data); onData(cache); });
+        es.addEventListener("patch", function (e) {
+          var m = JSON.parse(e.data);
+          Object.keys(m.data || {}).forEach(function (k) { setAt((m.path === "/" ? "" : m.path) + "/" + k, m.data[k]); });
+          onData(cache);
+        });
+        es.addEventListener("auth_revoked", function () { reopen(); });
+        es.addEventListener("cancel", function () { reopen(); });
+        es.onerror = function () { reopen(); };
+      } catch (err) { reopen(); }
+    }
+    function reopen() {
+      if (es) { es.close(); es = null; }
+      if (closed || timer) return;
+      timer = setTimeout(function () { timer = null; cache = null; open(); }, 3000);
+    }
+    open();
+    return { close: function () { closed = true; if (es) es.close(); if (timer) clearTimeout(timer); } };
+  }
+
+  var BAD_SHORT = ["kut", "lul", "pik", "hoer", "slet", "neuk", "sex", "seks", "anus", "dick", "cock", "cunt", "tiet", "porn", "nazi", "isis", "fag", "pedo", "shit", "sukkel"];
+  var BAD_LONG = ["kanker", "tering", "tyfus", "klootzak", "kutwijf", "kutkind", "lulhoofd", "hoerenzoon", "mongool", "debiel", "idioot", "eikel", "fuck", "bitch", "pussy", "penis", "vagina", "porno", "nigger", "nigga", "neger", "fascist", "hitler", "terrorist", "bastard", "asshole", "whore", "slut", "faggot", "verkracht", "godver", "flikker", "shithead"];
+  function nameFold(v) {
+    return String(v || "").toLowerCase().normalize("NFKD").replace(/[̀-ͯ]/g, "")
+      .replace(/0/g, "o").replace(/[1!|]/g, "i").replace(/3/g, "e").replace(/[4@]/g, "a").replace(/[5$]/g, "s").replace(/7/g, "t");
+  }
+  function nameError(v) {
+    v = String(v || "");
+    if (/@|https?:|www\./i.test(v) || /\.(com|nl|be|org|net)\b/i.test(v)) return "Een e-mailadres of link mag hier niet.";
+    var one = function (x) { return x.replace(/(.)\1+/g, "$1"); };
+    var f = nameFold(v), joined = f.replace(/[^a-z]/g, ""), collapsed = one(joined);
+    var toks = f.split(/[^a-z]+/).filter(Boolean).map(one);
+    var bad = toks.some(function (t) { return BAD_SHORT.some(function (w) { return one(w) === t; }); }) ||
+      BAD_LONG.some(function (w) { return joined.indexOf(w) !== -1 || collapsed.indexOf(one(w)) !== -1; });
+    return bad ? "Deze naam kan niet worden gebruikt. Kies een andere naam of bijnaam." : "";
+  }
+  
+
+  function stopTick() { if (tickT) { clearInterval(tickT); tickT = null; } }
+  function newCode() { var c = ""; for (var i = 0; i < 6; i++) c += CODE_CHARS[Math.floor(Math.random() * CODE_CHARS.length)]; return c; }
+  function ranking(sp) {
+    return Object.keys(sp || {}).filter(function (u) { return sp[u] && sp[u].name; }).map(function (u) { return { uid: u, name: sp[u].name, score: sp[u].score || 0 }; })
+      .sort(function (a, b) { return b.score - a.score || a.name.localeCompare(b.name); });
+  }
+  var LET = ["A", "B", "C", "D"];
+  function tilesHtml(q, o) {
+    /* o: { pick, ok, counts, click } */
+    var h = '<div class="tiles">';
+    q.o.forEach(function (t, k) {
+      var cls = "tile t" + (q.t === "tf" ? (k === 0 ? 0 : 3) : k);
+      if (o.ok != null) cls += k === o.ok ? " good" : " dim";
+      if (o.pick === k) cls += " mine";
+      h += '<' + (o.click ? 'button type="button" data-k="' + k + '"' : "div") + ' class="' + cls + '"' + (o.click && o.pick != null ? " disabled" : "") + '><i>' + LET[k] + '</i><span>' + esc(t) + '</span>' +
+        (o.counts ? '<em>' + (o.counts[k] || 0) + '</em>' : "") + (o.ok != null && k === o.ok ? '<b class="chk" aria-label="goed antwoord">✓</b>' : "") + '</' + (o.click ? "button" : "div") + '>';
+    });
+    return h + "</div>";
+  }
+  function podiumHtml(rk) {
+    var p = rk.slice(0, 3), order = [1, 0, 2], h = '<div class="podium" role="list">';
+    order.forEach(function (i) {
+      if (!p[i]) return;
+      h += '<div class="pod p' + (i + 1) + '" role="listitem"><div class="stars" aria-hidden="true">' + (i === 0 ? "★★★" : i === 1 ? "★★" : "★") + '</div><b>' + esc(p[i].name) + '</b><span>' + p[i].score + ' punten</span><div class="step">' + (i + 1) + '</div></div>';
+    });
+    return h + "</div>";
+  }
+  function listHtml(rk, max, me) {
+    var h = '<ol class="lb">';
+    rk.slice(0, max).forEach(function (r, i) { h += '<li' + (r.uid === me ? ' class="me"' : "") + '><span>' + (i + 1) + '. ' + esc(r.name) + '</span><b>' + r.score + '</b></li>'; });
+    return h + "</ol>";
+  }
+
+  /* ───── leerling ───── */
+  function stopAll() {
+    stopTick();
+    if (L) { L.ls.forEach(function (x) { x.close(); }); L = null; }
+    if (G) { G.ls.forEach(function (x) { x.close(); }); if (G.timer) clearInterval(G.timer); G = null; }
+  }
+  async function joinGame(code, name) {
+    code = String(code || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+    name = String(name || "").trim().replace(/\s+/g, " ");
+    var jm = document.getElementById("jmsg"), b = document.getElementById("joinBtn");
+    function bad(t) { if (jm) { jm.textContent = t; jm.className = "msg err"; } if (b) b.disabled = false; }
+    if (code.length < 4) return bad("Vul de code van je docent in.");
+    if (!name) return bad("Kies een bijnaam.");
+    if (name.length > 14) return bad("Je bijnaam mag maximaal 14 tekens zijn.");
+    var ne = nameError(name); if (ne) return bad(ne);
+    if (b) b.disabled = true; if (jm) { jm.textContent = "Even kijken…"; jm.className = "msg"; }
+    try {
+      var meta = await dbReq("GET", "klas/" + code + "/meta");
+      if (!meta) return bad("Deze code bestaat niet (meer). Vraag je docent om de code.");
+      if (meta.state === "einde") return bad("Dit spel is al afgelopen.");
+      var auth = await cloudAuth();
+      var sp = (await dbReq("GET", "klas/" + code + "/spelers")) || {};
+      var base = name, n = 2;
+      while (Object.keys(sp).some(function (u) { return u !== auth.uid && sp[u] && sp[u].name && sp[u].name.toLowerCase() === name.toLowerCase(); })) { var suf = " " + n++; name = base.slice(0, 14 - suf.length) + suf; }
+      await dbReq("PUT", "klas/" + code + "/spelers/" + auth.uid + "/name", name);
+      lsSet(LLN_KEY, { code: code });
+      startLeerling(code, auth.uid, name);
+    } catch (e) { bad("Meedoen lukt nu niet. Controleer je verbinding en probeer opnieuw."); }
+  }
+  function startLeerling(code, uid, name) {
+    stopAll();
+    L = { code: code, uid: uid, name: name, meta: null, gotMeta: false, vragen: null, spelers: null, seen: false, shown: -1, picked: null, end: 0, ls: [] };
+    L.ls.push(listen("klas/" + code + "/meta", function (d) { L.meta = d; L.gotMeta = true; renderL(); }));
+    L.ls.push(listen("klas/" + code + "/spelers", function (d) {
+      L.spelers = d; if (d && d[uid] && d[uid].name) L.seen = true;
+      var st = L.meta && L.meta.state;
+      if (st !== "vraag") renderL();
+    }));
+    show();
+  }
+  async function resumeLeerling(saved) {
+    try {
+      var meta = await dbReq("GET", "klas/" + saved.code + "/meta");
+      if (!meta) { lsSet(LLN_KEY, null); return false; }
+      var auth = await cloudAuth();
+      var nm = await dbReq("GET", "klas/" + saved.code + "/spelers/" + auth.uid + "/name");
+      if (!nm) { lsSet(LLN_KEY, null); return false; }
+      startLeerling(saved.code, auth.uid, nm);
+      return true;
+    } catch (e) { return false; }
+  }
+  function leaveLeerling() { lsSet(LLN_KEY, null); stopAll(); prefill = ""; try { history.replaceState(null, "", location.pathname); } catch (e) {} show(); }
+  async function loadVragen() { try { L.vragen = await dbReq("GET", "klas/" + L.code + "/vragen"); } catch (e) {} }
+
+  function renderL() {
+    if (!L) return;
+    stopTick();
+    var m = L.meta;
+    var back = '<button class="btn light" id="leave" type="button">Stoppen</button>';
+    function wire() { var lv = document.getElementById("leave"); if (lv) lv.onclick = leaveLeerling; }
+    if (L.gotMeta && !m) { app.innerHTML = '<h1>Het spel is afgesloten</h1><p>De docent heeft het spel gesloten. Jazakallahu khayran voor het meedoen!</p>' + back; wire(); return; }
+    if (L.seen && L.spelers && !L.spelers[L.uid]) { app.innerHTML = '<h1>Je doet niet meer mee</h1><p>De docent heeft je uit het spel gehaald.</p>' + back; wire(); return; }
+    if (!m) { app.innerHTML = '<p>Even laden…</p>'; return; }
+    var me = (L.spelers && L.spelers[L.uid]) || {}, rk = ranking(L.spelers);
+    if (m.state === "lobby") {
+      app.innerHTML = '<div class="center"><div class="ar" lang="ar" dir="rtl">بِسْمِ اللَّهِ</div><h1>Bismillah, ' + esc(L.name) + '!</h1><p>Je doet mee met <b>' + esc(m.titel || "de quiz") + '</b>.</p>' +
+        '<p class="wait">Wacht tot de docent het spel start…</p><p class="muted">' + rk.length + ' speler' + (rk.length === 1 ? "" : "s") + ' in de klas</p>' + back + '</div>'; wire(); return;
+    }
+    if (m.state === "vraag") {
+      var q = L.vragen && L.vragen[m.qi];
+      if (!q) { app.innerHTML = '<p>Even laden…</p>'; loadVragen().then(renderL); return; }
+      if (L.shown !== m.qi) { L.shown = m.qi; L.picked = null; L.end = Date.now() + q.time * 1000; }
+      app.innerHTML = '<div class="qtop"><span>Vraag ' + (m.qi + 1) + ' van ' + m.n + '</span><b id="sec"></b></div><div class="bar"><div id="barIn"></div></div>' +
+        '<h1 class="qq">' + esc(q.q) + '</h1>' + tilesHtml(q, { pick: L.picked, click: true }) +
+        (L.picked != null ? '<p class="msg" role="status">Antwoord verstuurd. Wacht op de anderen…</p>' : "");
+      app.querySelectorAll("[data-k]").forEach(function (b) { b.onclick = function () { pickAns(+b.getAttribute("data-k")); }; });
+      var tot = q.time * 1000;
+      var upd = function () {
+        var left = Math.max(0, L.end - Date.now()), s = document.getElementById("sec"), bi = document.getElementById("barIn");
+        if (s) s.textContent = Math.ceil(left / 1000) + " sec"; if (bi) bi.style.width = (100 * left / tot) + "%";
+      };
+      upd(); tickT = setInterval(upd, 200); return;
+    }
+    if (m.state === "uitslag") {
+      var q2 = L.vragen && L.vragen[m.qi], last = me.last && me.last.qi === m.qi ? me.last : null;
+      var my = rk.map(function (r) { return r.uid; }).indexOf(L.uid) + 1;
+      var head = last && last.ok ? '<h1 class="good-h">MashaAllah! +' + last.pts + '</h1>' : (last && last.k >= 0 ? '<h1 class="bad-h">Helaas, dat was niet goed</h1>' : '<h1 class="bad-h">Geen antwoord</h1>');
+      app.innerHTML = '<div class="center">' + head + (q2 ? '<p>Het goede antwoord: <b>' + esc(q2.o[m.a]) + '</b></p>' : "") + (m.e ? '<p class="expl">' + esc(m.e) + '</p>' : "") +
+        '<p class="rank">Jij staat op plek <b>' + (my || "–") + '</b> van ' + rk.length + ' · ' + (me.score || 0) + ' punten</p><p class="muted">Wacht op de volgende vraag…</p></div>';
+      return;
+    }
+    if (m.state === "einde") {
+      var my2 = rk.map(function (r) { return r.uid; }).indexOf(L.uid) + 1;
+      app.innerHTML = '<div class="center"><h1>Het spel is afgelopen</h1>' + podiumHtml(rk) + '<p class="rank">Jij werd <b>' + (my2 || "–") + 'e</b> met ' + (me.score || 0) + ' punten. MashaAllah!</p>' + back + '</div>'; wire();
+    }
+  }
+  function pickAns(k) {
+    if (!L || L.picked != null || !L.meta || L.meta.state !== "vraag") return;
+    L.picked = k; renderL();
+    dbReq("PUT", "klas/" + L.code + "/ant/" + L.meta.qi + "/" + L.uid, k).catch(function () { L.picked = null; renderL(); say("Je antwoord kwam niet aan. Tik opnieuw.", true); });
+  }
+
+  /* ───── docent: spel leiden ───── */
+  async function hostStart(quiz) {
+    var btns = app.querySelectorAll("button"); btns.forEach(function (b) { b.disabled = true; }); say("Spel wordt klaargezet…");
+    try {
+      var auth = await cloudAuth(), code = null;
+      for (var t = 0; t < 6 && !code; t++) { var c = newCode(); if (!(await dbReq("GET", "klas/" + c + "/meta"))) code = c; }
+      if (!code) throw new Error("code");
+      await dbReq("PUT", "klas/" + code + "/meta", { host: auth.uid, titel: quiz.titel, state: "lobby", qi: -1, n: quiz.vragen.length, created: Date.now() });
+      await dbReq("PUT", "klas/" + code + "/vragen", quiz.vragen.map(function (q) { return { t: q.t, q: q.q, o: q.o, time: q.time, pts: q.pts }; }));
+      lsSet(HOST_KEY, { code: code, quizId: quiz.id });
+      attachHost(code, quiz, "lobby", -1);
+      show();
+    } catch (e) { btns.forEach(function (b) { b.disabled = false; }); say("Het spel kon niet starten. Staan de Firebase-regels klaar? (zie de handleiding)", true); }
+  }
+  function attachHost(code, quiz, state, qi) {
+    stopAll();
+    G = { code: code, quiz: quiz, state: state, qi: qi, players: {}, arr: {}, counts: null, qStart: 0, timer: null, closed: false, ls: [] };
+    G.ls.push(listen("klas/" + code + "/spelers", function (d) { G.players = d || {}; if (G.state === "lobby" || G.state === "einde") renderG(); else updAns(); }));
+  }
+  async function resumeHost() {
+    var s = lsGet(HOST_KEY); if (!s) return false;
+    var quiz = quizzes.filter(function (x) { return x.id === s.quizId; })[0];
+    try {
+      var meta = await dbReq("GET", "klas/" + s.code + "/meta");
+      if (!meta || !quiz) { lsSet(HOST_KEY, null); return false; }
+      attachHost(s.code, quiz, meta.state, meta.qi);
+      if (meta.state === "vraag") { G.qStart = Date.now(); G.closed = false; await hostClose(); }
+      else if (meta.state === "uitslag") { await hostCounts(meta.qi); show(); }
+      else show();
+      return true;
+    } catch (e) { return false; }
+  }
+  async function hostCounts(qi) {
+    var ant = (await dbReq("GET", "klas/" + G.code + "/ant/" + qi)) || {}, q = G.quiz.vragen[qi], c = q.o.map(function () { return 0; });
+    Object.keys(ant).forEach(function (u) { if (G.players[u] && c[ant[u]] != null) c[ant[u]]++; });
+    G.counts = c;
+  }
+  async function hostAsk(i) {
+    G.qi = i; G.state = "vraag"; G.arr = {}; G.closed = false; G.counts = null;
+    var q = G.quiz.vragen[i];
+    try { await dbReq("PATCH", "klas/" + G.code + "/meta", { state: "vraag", qi: i, a: null, e: null }); } catch (e) { say("Dat lukte niet. Probeer opnieuw.", true); G.state = "uitslag"; return; }
+    G.qStart = Date.now();
+    if (G.ant) G.ant.close();
+    G.ant = listen("klas/" + G.code + "/ant/" + i, function (d) {
+      G.antData = d || {};
+      Object.keys(G.antData).forEach(function (u) { if (G.arr[u] == null) G.arr[u] = Date.now() - G.qStart; });
+      updAns();
+      var np = Object.keys(G.players).length;
+      if (np && Object.keys(G.antData).filter(function (u) { return G.players[u]; }).length >= np) setTimeout(hostClose, 400);
+    });
+    G.ls.push(G.ant);
+    if (G.timer) clearInterval(G.timer);
+    G.timer = setInterval(function () {
+      var left = Math.max(0, G.qStart + q.time * 1000 - Date.now()), s = document.getElementById("sec"), bi = document.getElementById("barIn");
+      if (s) s.textContent = Math.ceil(left / 1000); if (bi) bi.style.width = (100 * left / (q.time * 1000)) + "%";
+      if (left <= 0) hostClose();
+    }, 200);
+    renderG();
+  }
+  function updAns() {
+    var el = document.getElementById("ans"); if (!el || !G) return;
+    var np = Object.keys(G.players).filter(function (u) { return G.players[u] && G.players[u].name; }).length;
+    el.textContent = Object.keys(G.antData || {}).filter(function (u) { return G.players[u]; }).length + " van " + np + " hebben geantwoord";
+  }
+  async function hostClose() {
+    if (!G || G.closed || G.state !== "vraag") return;
+    G.closed = true; if (G.timer) { clearInterval(G.timer); G.timer = null; }
+    var qi = G.qi, q = G.quiz.vragen[qi], lim = q.time * 1000;
+    await new Promise(function (r) { setTimeout(r, 800); });
+    try {
+      var ant = (await dbReq("GET", "klas/" + G.code + "/ant/" + qi)) || {}, upd = {}, c = q.o.map(function () { return 0; });
+      Object.keys(G.players).forEach(function (u) {
+        var p = G.players[u]; if (!p || !p.name) return;
+        var k = ant[u], valid = typeof k === "number" && k >= 0 && k < q.o.length, ok = valid && k === q.a, pts = 0;
+        if (valid) c[k]++;
+        if (ok) { var t = G.arr[u] != null ? Math.min(G.arr[u], lim) : lim; pts = Math.round((500 + 500 * Math.max(0, 1 - t / lim)) * (q.pts == null ? 1 : q.pts)); }
+        upd[u + "/score"] = (p.score || 0) + pts; upd[u + "/last"] = { qi: qi, ok: !!ok, pts: pts, k: valid ? k : -1 };
+        p.score = (p.score || 0) + pts;
+      });
+      if (Object.keys(upd).length) await dbReq("PATCH", "klas/" + G.code + "/spelers", upd);
+      await dbReq("PATCH", "klas/" + G.code + "/meta", { state: "uitslag", a: q.a, e: q.e || null });
+      if (G.ant) G.ant.close();
+      G.counts = c; G.state = "uitslag"; renderG();
+    } catch (e) { G.closed = false; G.state = "uitslag"; G.counts = q.o.map(function () { return 0; }); renderG(); say("Opslaan van de scores lukte niet. Controleer de verbinding.", true); }
+  }
+  async function hostNext() {
+    var i = G.qi + 1;
+    if (i >= G.quiz.vragen.length) {
+      try { await dbReq("PATCH", "klas/" + G.code + "/meta", { state: "einde", qi: G.qi }); } catch (e) { say("Dat lukte niet. Probeer opnieuw.", true); return; }
+      G.state = "einde"; renderG(); return;
+    }
+    hostAsk(i);
+  }
+  async function hostStop() {
+    var code = G.code;
+    try {
+      await dbReq("PUT", "klas/" + code + "/ant", null); await dbReq("PUT", "klas/" + code + "/spelers", null);
+      await dbReq("PUT", "klas/" + code + "/vragen", null); await dbReq("PUT", "klas/" + code + "/meta", null);
+    } catch (e) { /* opruimen mislukt: het spel blijft staan maar doet niets */ }
+    lsSet(HOST_KEY, null); stopAll(); loadQuizzes();
+  }
+
+  function renderG() {
+    if (!G) return;
+    var q = G.quiz.vragen[G.qi], rk = ranking(G.players), np = rk.length, st = G.state;
+    var link = "https://nurspark.app/klas/?c=" + G.code;
+    if (st === "lobby") {
+      var h = '<div class="center"><div class="ar" lang="ar" dir="rtl">بِسْمِ اللَّهِ</div><h1>' + esc(G.quiz.titel) + '</h1>' +
+        '<p>Leerlingen: ga naar <b>nurspark.app/klas</b> en vul deze code in:</p><div class="bigcode" aria-label="Code ' + G.code.split("").join(" ") + '">' + G.code + '</div>' +
+        '<p><a class="btn small light" target="_blank" rel="noopener" href="https://wa.me/?text=' + encodeURIComponent("Doe mee met onze quiz op NurSpark: " + link) + '">Deel via WhatsApp</a></p>' +
+        '<h2>' + np + ' speler' + (np === 1 ? "" : "s") + '</h2><div class="chips">';
+      rk.forEach(function (r) { h += '<span class="chip">' + esc(r.name) + '<button type="button" data-kick="' + esc(r.uid) + '" aria-label="' + esc(r.name) + ' verwijderen">✕</button></span>'; });
+      h += '</div><div id="msg" class="msg"></div><div class="row" style="justify-content:center;margin-top:14px"><button class="btn gold" id="go" type="button"' + (np ? "" : " disabled") + '>Start het spel</button><button class="btn light" id="stop" type="button">Annuleren</button></div></div>';
+      app.innerHTML = h;
+      app.querySelectorAll("[data-kick]").forEach(function (b) { b.onclick = function () { dbReq("DELETE", "klas/" + G.code + "/spelers/" + b.getAttribute("data-kick")).catch(function () {}); }; });
+      document.getElementById("go").onclick = function () { this.disabled = true; hostAsk(0); };
+      document.getElementById("stop").onclick = function () { if (confirm("Het spel stoppen?")) hostStop(); };
+      return;
+    }
+    if (st === "vraag") {
+      app.innerHTML = '<div class="qtop"><span>Vraag ' + (G.qi + 1) + ' van ' + G.quiz.vragen.length + '</span><b><span id="sec">' + q.time + '</span> sec</b></div><div class="bar"><div id="barIn" style="width:100%"></div></div>' +
+        '<h1 class="qq big">' + esc(q.q) + '</h1>' + tilesHtml(q, {}) + '<p class="msg" id="ans" role="status"></p><div id="msg"></div><button class="btn light" id="end" type="button">Nu afsluiten</button>';
+      document.getElementById("end").onclick = hostClose; updAns(); return;
+    }
+    if (st === "uitslag") {
+      var last = G.qi + 1 >= G.quiz.vragen.length;
+      app.innerHTML = '<div class="qtop"><span>Uitslag vraag ' + (G.qi + 1) + '</span></div><h1 class="qq big">' + esc(q.q) + '</h1>' + tilesHtml(q, { ok: q.a, counts: G.counts }) +
+        (q.e ? '<p class="expl">' + esc(q.e) + '</p>' : "") + '<h2>Tussenstand</h2>' + listHtml(rk, 5) + '<div id="msg" class="msg"></div>' +
+        '<button class="btn gold" id="nx" type="button">' + (last ? "Naar het podium" : "Volgende vraag") + '</button>';
+      document.getElementById("nx").onclick = function () { this.disabled = true; hostNext(); }; return;
+    }
+    if (st === "einde") {
+      app.innerHTML = '<div class="center"><h1>MashaAllah! Het podium</h1>' + podiumHtml(rk) + '<h2>Alle spelers</h2>' + listHtml(rk, 50) + '<div class="row" style="justify-content:center;margin-top:14px"><button class="btn gold" id="fin" type="button">Spel afsluiten</button></div></div>';
+      document.getElementById("fin").onclick = function () { if (confirm("Het spel afsluiten? De scores worden gewist.")) hostStop(); };
+    }
   }
 
   start();
