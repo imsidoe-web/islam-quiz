@@ -79,6 +79,10 @@ input[type=range] { accent-color: var(--em); height: 36px; }
 .tblw { overflow-x: auto; } .tbl { border-collapse: collapse; width: 100%; background: #fff; border-radius: 12px; font-size: 15px; } .tbl th, .tbl td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; } .tbl td.c, .tbl th { text-align: center; } .tbl td.ok { color: var(--em); font-weight: 900; } .tbl td.no { color: var(--bad); font-weight: 900; } .tbl tr.foot td { background: #fff8e0; font-weight: 800; }
 .steps { padding-left: 22px; margin: 8px 0; } .steps li { margin: 6px 0; }
 details.help { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 10px 14px; margin: 10px 0; } details.help summary { font-weight: 800; color: var(--em-d); cursor: pointer; min-height: 32px; }
+.n3d { display: inline-block; font-weight: 900; background: linear-gradient(180deg, #fff6c8 0%, #f6d25a 38%, #c8902a 62%, #f3c64f 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
+  filter: drop-shadow(1px 0 0 #5a3d08) drop-shadow(-1px 0 0 #5a3d08) drop-shadow(0 1px 0 #5a3d08) drop-shadow(0 -1px 0 #5a3d08) drop-shadow(0 2px 0 #7a5414) drop-shadow(0 3px 0 #7a5414) drop-shadow(0 5px 4px rgba(0,0,0,.35)); }
+.coin { width: 1.15em; height: 1.15em; vertical-align: -0.2em; margin-right: .25em; filter: drop-shadow(0 2px 2px rgba(0,0,0,.35)); }
+.h1n { font-size: 1.15em; } .pot { background: linear-gradient(135deg, #fff8e0, #f3e3b0); border: 2px solid #e6cc82; border-radius: 16px; padding: 10px 14px; margin: 12px 0; }
 @media (max-width: 420px) { .tile { font-size: 17px; min-height: 76px; } }
 </style>
 </head>
@@ -87,6 +91,26 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
   <a class="wm" href="/" aria-label="NurSpark – naar de app" style="text-decoration:none;display:flex;align-items:center;gap:10px"><svg class="brand-wm" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"  viewBox="-6 2.0 459.1 110.0"><defs><linearGradient id="nsemer" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3f8a66"/><stop offset=".55" stop-color="#2d6a4f"/><stop offset="1" stop-color="#1b4332"/></linearGradient><linearGradient id="nsrim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff1b8"/><stop offset=".45" stop-color="#e6b94a"/><stop offset="1" stop-color="#a8741c"/></linearGradient><linearGradient id="nsgoldT" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffbe0"/><stop offset=".6" stop-color="#f6d25a"/><stop offset="1" stop-color="#d79a24"/></linearGradient><linearGradient id="nsgoldD" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3c94a"/><stop offset=".55" stop-color="#d99a22"/><stop offset="1" stop-color="#a86f14"/></linearGradient><linearGradient id="nsgloss" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".12"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient><radialGradient id="nsglow"><stop offset="0" stop-color="#fff3b0" stop-opacity=".85"/><stop offset="1" stop-color="#f6d25a" stop-opacity="0"/></radialGradient></defs><path d="M150 -9Q108 -9 86.0 13.0Q64 35 64 78V623Q64 667 86.0 690.5Q108 714 144 714Q176 714 194.0 702.0Q212 690 234 662L551 266H523V628Q523 670 544.5 692.0Q566 714 608 714Q650 714 671.5 692.0Q693 670 693 628V74Q693 36 673.0 13.5Q653 -9 619 -9Q585 -9 565.5 3.5Q546 16 524 43L207 440H235V78Q235 35 213.5 13.0Q192 -9 150 -9Z" transform="translate(0.00 82) scale(0.1 -0.1)" fill="#ffffff"/><g transform="translate(74.80 9.04) scale(0.76)"><path d="M10,56 A40,40 0 1,0 90,56 A40,40 0 0,0 85.8,38.1 A36,36 0 0,1 14.2,38.1 A40,40 0 0,0 10,56Z" fill="url(#nsgoldT)"/><path d="M0,-1 C0.1,-0.1 0.1,-0.1 1,0 C0.1,0.1 0.1,0.1 0,1 C-0.1,0.1 -0.1,0.1 -1,0 C-0.1,-0.1 -0.1,-0.1 0,-1Z" transform="translate(50 30) scale(15)" fill="#fffbe0"/></g><path d="M143 -9Q99 -9 75.5 14.0Q52 37 52 81V412Q52 455 74.5 478.0Q97 501 139 501Q181 501 203.0 478.0Q225 455 225 412V371H215Q225 431 266.5 466.0Q308 501 370 503Q399 504 413.5 488.5Q428 473 429 431Q429 395 414.0 374.0Q399 353 357 349L334 347Q281 342 257.0 317.5Q233 293 233 245V81Q233 37 210.0 14.0Q187 -9 143 -9Z" transform="translate(149.80 82) scale(0.1 -0.1)" fill="#ffffff"/><path d="M317 -9Q271 -9 227.0 -2.0Q183 5 144.0 19.5Q105 34 74 55Q59 66 53.5 80.0Q48 94 50.5 107.5Q53 121 62.0 131.0Q71 141 84.0 143.5Q97 146 113 135Q158 106 208.0 92.5Q258 79 317 79Q402 79 442.5 109.5Q483 140 483 189Q483 229 454.0 252.5Q425 276 357 290L250 312Q155 332 108.5 378.0Q62 424 62 502Q62 549 81.5 588.0Q101 627 136.0 655.5Q171 684 220.0 699.0Q269 714 327 714Q389 714 443.5 698.0Q498 682 541 649Q554 640 558.5 626.5Q563 613 560.5 600.0Q558 587 549.0 578.0Q540 569 526.0 567.5Q512 566 495 577Q456 603 415.5 614.5Q375 626 326 626Q277 626 240.5 611.0Q204 596 184.5 569.0Q165 542 165 505Q165 463 192.0 438.0Q219 413 282 400L388 378Q488 357 537.0 313.0Q586 269 586 196Q586 149 567.0 111.5Q548 74 513.0 47.0Q478 20 428.5 5.5Q379 -9 317 -9Z" transform="translate(191.20 82) scale(0.1 -0.1)" fill="#f6d25a"/><path d="M121 -187Q97 -187 84.0 -174.0Q71 -161 71 -136V444Q71 469 84.0 482.0Q97 495 120 495Q144 495 157.0 482.0Q170 469 170 444V357L159 378Q175 432 222.0 464.5Q269 497 333 497Q398 497 446.5 466.0Q495 435 521.5 379.0Q548 323 548 244Q548 167 521.5 109.5Q495 52 447.0 21.5Q399 -9 333 -9Q270 -9 223.0 23.0Q176 55 160 108H172V-136Q172 -161 158.5 -174.0Q145 -187 121 -187ZM308 69Q350 69 381.0 89.0Q412 109 429.0 148.0Q446 187 446 244Q446 330 408.5 374.0Q371 418 308 418Q267 418 235.5 398.5Q204 379 187.0 340.0Q170 301 170 244Q170 159 208.0 114.0Q246 69 308 69Z" transform="translate(251.40 82) scale(0.1 -0.1)" fill="#f6d25a"/><path d="M227 -9Q176 -9 135.5 11.0Q95 31 72.0 65.0Q49 99 49 142Q49 196 76.5 227.5Q104 259 167.5 272.5Q231 286 339 286H386V224H340Q268 224 226.0 217.0Q184 210 166.5 193.5Q149 177 149 148Q149 110 175.0 86.5Q201 63 247 63Q284 63 312.0 80.5Q340 98 356.5 128.0Q373 158 373 197V312Q373 369 349.0 394.0Q325 419 270 419Q238 419 203.5 411.0Q169 403 132 384Q115 376 103.0 379.0Q91 382 84.0 392.5Q77 403 76.5 415.5Q76 428 82.5 440.0Q89 452 105 458Q149 479 192.0 488.0Q235 497 273 497Q340 497 383.5 476.0Q427 455 448.0 412.0Q469 369 469 301V44Q469 20 457.0 6.5Q445 -7 422 -7Q400 -7 387.0 6.5Q374 20 374 44V109H383Q375 72 353.5 45.5Q332 19 300.0 5.0Q268 -9 227 -9Z" transform="translate(308.50 82) scale(0.1 -0.1)" fill="#f6d25a"/><path d="M122 -7Q97 -7 84.0 6.5Q71 20 71 44V444Q71 469 84.0 482.0Q97 495 120 495Q144 495 156.5 482.0Q169 469 169 444V371H159Q175 431 218.0 462.0Q261 493 328 498Q346 499 356.5 489.0Q367 479 368 458Q370 437 359.0 424.5Q348 412 325 410L306 408Q241 402 207.0 367.0Q173 332 173 271V44Q173 20 160.5 6.5Q148 -7 122 -7Z" transform="translate(360.20 82) scale(0.1 -0.1)" fill="#f6d25a"/><path d="M121 -7Q97 -7 84.0 6.5Q71 20 71 44V661Q71 686 84.0 699.0Q97 712 121 712Q145 712 158.5 699.0Q172 686 172 661V275H174L361 461Q377 477 390.0 486.0Q403 495 424 495Q445 495 456.0 484.0Q467 473 467.0 457.5Q467 442 452 426L254 230V277L470 62Q486 46 485.0 30.0Q484 14 472.0 3.5Q460 -7 442 -7Q419 -7 405.5 2.0Q392 11 374 29L174 223H172V44Q172 -7 121 -7Z" transform="translate(395.50 82) scale(0.1 -0.1)" fill="#f6d25a"/></svg><b style="font-size:18px">Klas</b></a>
   <span id="who"></span>
 </header>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<radialGradient id="nsCg" cx="35%" cy="28%" r="85%"><stop offset="0" stop-color="#fff3b0"/><stop offset=".35" stop-color="#f6d25a"/><stop offset=".75" stop-color="#cf9a2a"/><stop offset="1" stop-color="#8a5e17"/></radialGradient>
+<linearGradient id="nsCr" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff6c8"/><stop offset=".5" stop-color="#d9a33a"/><stop offset="1" stop-color="#7a5414"/></linearGradient>
+<linearGradient id="nsCe" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a5e17"/><stop offset="1" stop-color="#e8bd4a"/></linearGradient>
+<clipPath id="nsCs"><path d="M50 15 C61 26 67 37 66 48 C65 56 60 60 60 66 C60 73 64 77 70 84 L30 84 C36 77 40 73 40 66 C40 60 35 56 34 48 C33 37 39 26 50 15Z"/></clipPath>
+<pattern id="nsCp" width="10" height="10" patternUnits="userSpaceOnUse"><g fill="none" stroke="#fff3b0" stroke-width=".55" opacity=".95"><rect x="2.5" y="2.5" width="5" height="5"/><rect x="2.5" y="2.5" width="5" height="5" transform="rotate(45 5 5)"/></g></pattern>
+<symbol id="nsCoin" viewBox="0 0 100 100">
+<circle cx="50" cy="52" r="48" fill="url(#nsCe)"/>
+<circle cx="50" cy="50" r="48" fill="url(#nsCg)" stroke="#7a5414" stroke-width="1.5"/>
+<circle cx="50" cy="50" r="42" fill="none" stroke="url(#nsCr)" stroke-width="2.2"/>
+<circle cx="50" cy="50" r="38.5" fill="none" stroke="#fff3b0" stroke-opacity=".5" stroke-width=".8" stroke-dasharray="1.6 2.4"/>
+<g transform="translate(.9 1.1)"><path d="M50 15 C61 26 67 37 66 48 C65 56 60 60 60 66 C60 73 64 77 70 84 L30 84 C36 77 40 73 40 66 C40 60 35 56 34 48 C33 37 39 26 50 15Z" fill="#fff6c8" opacity=".75"/></g>
+<path d="M50 15 C61 26 67 37 66 48 C65 56 60 60 60 66 C60 73 64 77 70 84 L30 84 C36 77 40 73 40 66 C40 60 35 56 34 48 C33 37 39 26 50 15Z" fill="#8f6212"/>
+<g clip-path="url(#nsCs)"><rect x="30" y="14" width="40" height="72" fill="url(#nsCp)"/>
+<path d="M50.0,37.0 L52.4,44.3 L59.2,40.8 L55.7,47.6 L63.0,50.0 L55.7,52.4 L59.2,59.2 L52.4,55.7 L50.0,63.0 L47.6,55.7 L40.8,59.2 L44.3,52.4 L37.0,50.0 L44.3,47.6 L40.8,40.8 L47.6,44.3Z" fill="#c9922a" stroke="#fff3b0" stroke-width=".6"/>
+<path d="M50.0,25.5 L51.0,28.6 L53.9,27.1 L52.4,30.0 L55.5,31.0 L52.4,32.0 L53.9,34.9 L51.0,33.4 L50.0,36.5 L49.0,33.4 L46.1,34.9 L47.6,32.0 L44.5,31.0 L47.6,30.0 L46.1,27.1 L49.0,28.6Z" fill="#c9922a" stroke="#fff3b0" stroke-width=".5"/>
+<path d="M50.0,66.0 L51.1,69.4 L54.2,67.8 L52.6,70.9 L56.0,72.0 L52.6,73.1 L54.2,76.2 L51.1,74.6 L50.0,78.0 L48.9,74.6 L45.8,76.2 L47.4,73.1 L44.0,72.0 L47.4,70.9 L45.8,67.8 L48.9,69.4Z" fill="#c9922a" stroke="#fff3b0" stroke-width=".5"/></g>
+<path d="M50 15 C61 26 67 37 66 48 C65 56 60 60 60 66 C60 73 64 77 70 84 L30 84 C36 77 40 73 40 66 C40 60 35 56 34 48 C33 37 39 26 50 15Z" fill="none" stroke="#5a3d08" stroke-width="1"/>
+<path d="M18 30 A38 38 0 0 1 60 12" fill="none" stroke="#fffbe0" stroke-width="3" stroke-linecap="round" opacity=".55"/>
+</symbol></defs></svg>
 <main id="app" aria-live="polite"><p>Even laden…</p></main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -494,6 +518,16 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
   }
   
 
+  function vormNow() { return G ? G.vorm : (L && L.meta ? L.meta.vorm : "klassiek"); }
+  function eenheid() { return vormNow() === "sadaqa" ? "munten" : "punten"; }
+  /* getal met gouden 3D-look; bij Sadaqa met een gouden munt ervoor */
+  function ptsH(n, unit, plus) {
+    var coin = vormNow() === "sadaqa" ? '<svg class="coin" aria-hidden="true"><use href="#nsCoin"/></svg>' : "";
+    return coin + '<span class="n3d">' + (plus ? "+" : "") + n + '</span>' + (unit ? " " + eenheid() : "");
+  }
+  function potHtml(sc, sg) {
+    return sc ? '<div class="pot center"><b>Sadaqa-pot</b><p style="margin:4px 0">Samen gaven jullie <svg class="coin" aria-hidden="true"><use href="#nsCoin"/></svg><span class="n3d">' + sg + '</span> munten, in ' + sc + ' keer geven. Barakallahu feek!</p></div>' : "";
+  }
   function stopTick() { if (tickT) { clearInterval(tickT); tickT = null; } }
   function newCode() { var c = ""; for (var i = 0; i < 6; i++) c += CODE_CHARS[Math.floor(Math.random() * CODE_CHARS.length)]; return c; }
   function ranking(sp) {
@@ -593,7 +627,7 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
   var VORMEN = {
     klassiek: ["Klassiek", "Wie het snelst en het meest goed heeft, wint."],
     karavaan: ["Karavaan (samen)", "Jullie brengen samen de karavaan naar de oase. Elk goed antwoord telt mee."],
-    sadaqa: ["Sadaqa", "Wie een vraag goed heeft, kan punten weggeven aan een klasgenoot die achterloopt."]
+    sadaqa: ["Sadaqa", "Wie een vraag goed heeft, kan munten weggeven aan een klasgenoot die achterloopt."]
   };
   function carPct(p, n) { return Math.max(0, Math.min(100, Math.round(100 * p / Math.max(1, n)))); }
   function caravanHtml(p, n, from) {
@@ -611,13 +645,13 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
     var p = rk.slice(0, 3), order = [1, 0, 2], h = '<div class="podium" role="list">';
     order.forEach(function (i) {
       if (!p[i]) return;
-      h += '<div class="pod p' + (i + 1) + '" role="listitem"><div class="stars" aria-hidden="true">' + (i === 0 ? "★★★" : i === 1 ? "★★" : "★") + '</div><b>' + esc(p[i].name) + '</b><span>' + p[i].score + ' punten</span><div class="step">' + (i + 1) + '</div></div>';
+      h += '<div class="pod p' + (i + 1) + '" role="listitem"><div class="stars" aria-hidden="true">' + (i === 0 ? "★★★" : i === 1 ? "★★" : "★") + '</div><b>' + esc(p[i].name) + '</b><span>' + ptsH(p[i].score, true) + '</span><div class="step">' + (i + 1) + '</div></div>';
     });
     return h + "</div>";
   }
   function listHtml(rk, max, me) {
     var h = '<ol class="lb">';
-    rk.slice(0, max).forEach(function (r, i) { h += '<li' + (r.uid === me ? ' class="me"' : "") + '><span>' + (i + 1) + '. ' + esc(r.name) + '</span><b>' + r.score + '</b></li>'; });
+    rk.slice(0, max).forEach(function (r, i) { h += '<li' + (r.uid === me ? ' class="me"' : "") + '><span>' + (i + 1) + '. ' + esc(r.name) + '</span><b>' + ptsH(r.score) + '</b></li>'; });
     return h + "</ol>";
   }
 
@@ -702,18 +736,18 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
     if (m.state === "uitslag") {
       var q2 = L.vragen && L.vragen[m.qi], last = me.last && me.last.qi === m.qi ? me.last : null;
       var my = rk.map(function (r) { return r.uid; }).indexOf(L.uid) + 1;
-      var head = last && last.ok ? '<h1 class="good-h">MashaAllah! +' + last.pts + '</h1>' : (last && last.k >= 0 ? '<h1 class="bad-h">Helaas, dat was niet goed</h1>' : '<h1 class="bad-h">Geen antwoord</h1>');
+      var head = last && last.ok ? '<h1 class="good-h">MashaAllah! ' + ptsH(last.pts, false, true) + '</h1>' : (last && last.k >= 0 ? '<h1 class="bad-h">Helaas, dat was niet goed</h1>' : '<h1 class="bad-h">Geen antwoord</h1>');
       var goed = m.at != null ? m.at : (q2 && q2.o ? q2.o[m.a] : ""), opin = q2 && (q2.t === "poll" || q2.t === "cloud");
       if (opin) head = last && last.k >= 0 ? '<h1 class="good-h">Bedankt voor je antwoord!</h1>' : '<h1 class="bad-h">Geen antwoord</h1>';
       app.innerHTML = '<div class="center">' + head + (opin ? "" : '<p>Het goede antwoord: <b>' + esc(goed) + '</b></p>') + (m.e ? '<p class="expl">' + esc(m.e) + '</p>' : "") +
         (m.vorm === "karavaan" ? '<h2>De karavaan</h2>' + caravanHtml(m.p || 0, m.ne || m.n, carFrom(m)) + carMine(m, last, opin) + '<p class="muted">Samen onderweg…</p>' :
-          '<p class="rank">Jij staat op plek <b>' + (my || "–") + '</b> van ' + rk.length + ' · ' + (me.score || 0) + ' punten</p>' + giftHtml(m, rk, me, last) + '<p class="muted">Wacht op de volgende vraag…</p>') + '</div>';
+          '<p class="rank">Jij staat op plek <b>' + (my || "–") + '</b> van ' + rk.length + ' · ' + ptsH(me.score || 0, true) + '</p>' + giftHtml(m, rk, me, last) + '<p class="muted">Wacht op de volgende vraag…</p>') + '</div>';
       app.querySelectorAll("[data-gift]").forEach(function (b) { b.onclick = function () { giveGift(m.qi, b.getAttribute("data-gift")); }; });
       return;
     }
     if (m.state === "einde") {
       var my2 = rk.map(function (r) { return r.uid; }).indexOf(L.uid) + 1;
-      app.innerHTML = '<div class="center"><h1>Het spel is afgelopen</h1>' + (m.vorm === "karavaan" ? teamEndHtml(m.p || 0, m.ne || m.n) + carTotal() + '<p class="muted">Jullie hebben het samen gedaan. MashaAllah!</p>' : podiumHtml(rk) + '<p class="rank">Jij werd <b>' + (my2 || "–") + 'e</b> met ' + (me.score || 0) + ' punten. MashaAllah!</p>') + back + '</div>'; wire();
+      app.innerHTML = '<div class="center"><h1>Het spel is afgelopen</h1>' + (m.vorm === "karavaan" ? teamEndHtml(m.p || 0, m.ne || m.n) + carTotal() + '<p class="muted">Jullie hebben het samen gedaan. MashaAllah!</p>' : podiumHtml(rk) + '<p class="rank">Jij werd <b>' + (my2 || "–") + 'e</b> met ' + ptsH(me.score || 0, true) + '. MashaAllah!</p>' + potHtml(m.sc, m.sg)) + back + '</div>'; wire();
     }
   }
 
@@ -728,15 +762,15 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
     var h = L.h, n = m.n, closed = m.deadline && Date.now() > m.deadline;
     if (h.i >= n) {
       var okn = h.res.filter(function (r) { return r && r.ok; }).length;
-      app.innerHTML = '<div class="center"><div class="ar" lang="ar" dir="rtl">الحمد لله</div><h1>Klaar, MashaAllah!</h1><p class="rank">Je score: <b>' + h.score + '</b> punten<br>' + okn + ' vragen goed</p><p class="muted">Je docent ziet je resultaat.</p>' + back + '</div>'; wire(); return;
+      app.innerHTML = '<div class="center"><div class="ar" lang="ar" dir="rtl">الحمد لله</div><h1>Klaar, MashaAllah!</h1><p class="rank">Je score: ' + ptsH(h.score, true) + '<br>' + okn + ' vragen goed</p><p class="muted">Je docent ziet je resultaat.</p>' + back + '</div>'; wire(); return;
     }
     if (h.res[h.i]) fb = true;
     if (closed && !fb) { app.innerHTML = '<div class="center"><h1>Gesloten</h1><p>Deze huiswerkopdracht is gesloten.</p>' + back + '</div>'; wire(); return; }
     var q = L.vragen[h.i];
     if (fb) {
       var r = h.res[h.i] || {};
-      var head = r.opin ? '<h1 class="good-h">Bedankt voor je antwoord!</h1>' : r.ok ? '<h1 class="good-h">MashaAllah! +' + r.pts + '</h1>' : '<h1 class="bad-h">Helaas, dat was niet goed</h1>';
-      app.innerHTML = '<div class="qtop"><span>Vraag ' + (h.i + 1) + ' van ' + n + '</span><b>' + h.score + ' punten</b></div><div class="center">' + head +
+      var head = r.opin ? '<h1 class="good-h">Bedankt voor je antwoord!</h1>' : r.ok ? '<h1 class="good-h">MashaAllah! ' + ptsH(r.pts, false, true) + '</h1>' : '<h1 class="bad-h">Helaas, dat was niet goed</h1>';
+      app.innerHTML = '<div class="qtop"><span>Vraag ' + (h.i + 1) + ' van ' + n + '</span><b>' + ptsH(h.score, true) + '</b></div><div class="center">' + head +
         (r.opin ? "" : '<p>Het goede antwoord: <b>' + esc(r.text) + '</b></p>') + (q && q.e ? '<p class="expl">' + esc(q.e) + '</p>' : "") +
         '<div class="row" style="justify-content:center;margin-top:12px"><button class="btn gold" id="hnx" type="button">' + (h.i + 1 >= n ? "Klaar" : "Volgende vraag") + '</button></div></div>';
       document.getElementById("hnx").onclick = function () { h.i++; L.picked = null; hwSave(); renderHw(); };
@@ -772,12 +806,12 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
   }
   function giftHtml(m, rk, me, last) {
     if (m.vorm !== "sadaqa") return "";
-    if (!(last && last.ok)) return '<div class="card"><b>Sadaqa-ronde</b><p class="muted" style="margin:4px 0">Wie de vraag goed had, kan punten weggeven.</p></div>';
+    if (!(last && last.ok)) return '<div class="card"><b>Sadaqa-ronde</b><p class="muted" style="margin:4px 0">Wie de vraag goed had, kan ' + eenheid() + ' weggeven.</p></div>';
     if (L.gave === m.qi) return '<div class="card"><b>Barakallahu feek!</b> Je hebt sadaqa gegeven.</div>';
     var mine = me.score || 0;
     var cand = rk.filter(function (r) { return r.uid !== L.uid && r.score < mine; }).sort(function (a, b) { return a.score - b.score; }).slice(0, 5);
     if (mine < 250 || !cand.length) return '<div class="card"><b>Sadaqa-ronde</b><p class="muted" style="margin:4px 0">Er is niemand die achterloopt.</p></div>';
-    return '<div class="card"><b>Sadaqa-ronde</b><p style="margin:4px 0">Geef 250 punten aan een klasgenoot:</p><div class="row" style="justify-content:center">' +
+    return '<div class="card"><b>Sadaqa-ronde</b><p style="margin:4px 0">Geef 250 ' + eenheid() + ' aan een klasgenoot:</p><div class="row" style="justify-content:center">' +
       cand.map(function (r) { return '<button class="btn small gold" type="button" data-gift="' + esc(r.uid) + '">' + esc(r.name) + '</button>'; }).join("") + '</div></div>';
   }
   function giveGift(qi, uid2) {
@@ -804,7 +838,7 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
         body = '<div class="bigval"><output id="sv">' + mid + '</output></div><input type="range" id="sr" min="' + q.min + '" max="' + q.max + '" step="1" value="' + mid + '" style="width:100%" aria-label="Kies een getal tussen ' + q.min + ' en ' + q.max + '">' +
           '<div class="qtop"><span>' + q.min + '</span><span>' + q.max + '</span></div><p class="muted" id="sh" style="text-align:center">Schuif eerst naar je antwoord.</p><div style="margin-top:12px"><button class="btn gold" id="send" type="button" disabled>Verstuur</button></div>';
       }
-      app.innerHTML = (me.got && me.got.qi === m.qi - 1 ? '<div class="expl"><b>Sadaqa:</b> ' + esc(me.got.by.join(" en ")) + ' gaf jou ' + me.got.n + ' punten. Jazakallahu khayran!</div>' : "") + (hw ? '<div class="qtop"><span>Vraag ' + (m.qi + 1) + ' van ' + m.n + '</span><b>Huiswerk</b></div>' : '<div class="qtop"><span>Vraag ' + (m.qi + 1) + ' van ' + m.n + '</span><b id="sec"></b></div><div class="bar"><div id="barIn"></div></div>') +
+      app.innerHTML = (me.got && me.got.qi === m.qi - 1 ? '<div class="expl"><b>Sadaqa:</b> ' + esc(me.got.by.join(" en ")) + ' gaf jou ' + ptsH(me.got.n, true) + '. Jazakallahu khayran!</div>' : "") + (hw ? '<div class="qtop"><span>Vraag ' + (m.qi + 1) + ' van ' + m.n + '</span><b>Huiswerk</b></div>' : '<div class="qtop"><span>Vraag ' + (m.qi + 1) + ' van ' + m.n + '</span><b id="sec"></b></div><div class="bar"><div id="barIn"></div></div>') +
         '<h1 class="qq">' + esc(q.q) + '</h1>' + body + (sent ? '<p class="msg" role="status">Antwoord verstuurd. Wacht op de anderen…</p>' : '<div id="msg" class="msg"></div>');
       app.querySelectorAll("[data-k]").forEach(function (b) { b.onclick = function () { sendAns(+b.getAttribute("data-k")); }; });
       var sendB = document.getElementById("send");
@@ -1053,10 +1087,11 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
         gp.score -= 250; tp.score = (tp.score || 0) + 250;
         upd[giver + "/score"] = gp.score; upd[tgt + "/score"] = tp.score;
         recv[tgt] = recv[tgt] || { qi: qi, n: 0, by: [] }; recv[tgt].n += 250; recv[tgt].by.push(gp.name);
-        msgs.push(gp.name + " gaf " + tp.name + " 250 punten");
+        msgs.push(gp.name + " gaf " + tp.name + " 250 munten");
       });
       Object.keys(recv).forEach(function (u) { upd[u + "/got"] = recv[u]; });
       if (Object.keys(upd).length) await dbReq("PATCH", "klas/" + G.code + "/spelers", upd);
+      if (msgs.length) { G.giftN = (G.giftN || 0) + msgs.length; await dbReq("PATCH", "klas/" + G.code + "/meta", { sg: G.giftN * 250, sc: G.giftN }); }
       G.giftMsg = msgs;
     } catch (e) { /* geen sadaqa verwerkt */ }
     if (G.gl) { G.gl.close(); G.gl = null; }
@@ -1078,8 +1113,8 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
       if (Object.keys(upd).length) await dbReq("PATCH", "klas/" + G.code + "/spelers", upd);
       await dbReq("PUT", "klas/" + G.code + "/ant", null); await dbReq("PUT", "klas/" + G.code + "/gift", null);
       G.pub = G.quiz.vragen.map(pubQ); await dbReq("PUT", "klas/" + G.code + "/vragen", G.pub);
-      await dbReq("PATCH", "klas/" + G.code + "/meta", { state: "lobby", qi: -1, p: 0, a: null, at: null, e: null });
-      G.state = "lobby"; G.qi = -1; G.prog = 0; G.prevProg = 0; G.hist = []; G.per = {}; G.arr = {}; G.stat = null; G.giftMsg = null; G.closed = false;
+      await dbReq("PATCH", "klas/" + G.code + "/meta", { state: "lobby", qi: -1, p: 0, a: null, at: null, e: null, sg: null, sc: null });
+      G.state = "lobby"; G.qi = -1; G.prog = 0; G.prevProg = 0; G.giftN = 0; G.hist = []; G.per = {}; G.arr = {}; G.stat = null; G.giftMsg = null; G.closed = false;
       renderG();
     } catch (e) { if (b) b.disabled = false; say("Opnieuw starten lukte niet.", true); }
   }
@@ -1139,12 +1174,12 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
       app.innerHTML = '<div class="qtop"><span>Uitslag vraag ' + (G.qi + 1) + '</span></div><h1 class="qq big">' + esc(q.q) + '</h1>' + ub +
         (q.e ? '<p class="expl">' + esc(q.e) + '</p>' : "") +
         (G.vorm === "karavaan" ? '<h2>De karavaan</h2>' + caravanHtml(G.prog, G.ne, G.prevProg) : '<h2>Tussenstand</h2>' + listHtml(rk, 5)) +
-        (G.vorm === "sadaqa" ? '<div class="card center"><b>Sadaqa-ronde</b><p style="margin:4px 0">Wie het goed had, kan 250 punten weggeven aan een klasgenoot die achterloopt.</p><p class="msg" id="gc" role="status"></p></div>' : "") + '<div id="msg" class="msg"></div>' +
+        (G.vorm === "sadaqa" ? '<div class="card center"><b>Sadaqa-ronde</b><p style="margin:4px 0">Wie het goed had, kan 250 munten weggeven aan een klasgenoot die achterloopt.</p><p class="msg" id="gc" role="status"></p></div>' : "") + '<div id="msg" class="msg"></div>' +
         '<button class="btn gold" id="nx" type="button">' + (last ? "Naar het podium" : "Volgende vraag") + '</button>';
       document.getElementById("nx").onclick = function () { this.disabled = true; hostNext(); }; return;
     }
     if (st === "einde") {
-      app.innerHTML = '<div class="center"><h1>MashaAllah!</h1>' + (G.vorm === "karavaan" ? teamEndHtml(G.prog, G.ne) + '<h2>Jullie samen</h2><div class="chips">' + rk.map(function (r) { return '<span class="chip">' + esc(r.name) + '</span>'; }).join("") + '</div>' : podiumHtml(rk) + '<h2>Alle spelers</h2>' + listHtml(rk, 50)) + '<h2>Per vraag</h2><ol class="lb">' + (G.hist || []).map(function (x) { return '<li><span>' + (x.qi + 1) + '. ' + esc(x.q.length > 40 ? x.q.slice(0, 38) + "…" : x.q) + '</span><b>' + (x.opin ? "•" : x.total ? Math.round(100 * x.ok / x.total) + "%" : "–") + '</b></li>'; }).join("") + '</ol>' +
+      app.innerHTML = '<div class="center"><h1>MashaAllah!</h1>' + (G.vorm === "karavaan" ? teamEndHtml(G.prog, G.ne) + '<h2>Jullie samen</h2><div class="chips">' + rk.map(function (r) { return '<span class="chip">' + esc(r.name) + '</span>'; }).join("") + '</div>' : podiumHtml(rk) + '<h2>Alle spelers</h2>' + listHtml(rk, 50)) + (G.vorm === "sadaqa" ? potHtml(G.giftN, (G.giftN || 0) * 250) : "") + '<h2>Per vraag</h2><ol class="lb">' + (G.hist || []).map(function (x) { return '<li><span>' + (x.qi + 1) + '. ' + esc(x.q.length > 40 ? x.q.slice(0, 38) + "…" : x.q) + '</span><b>' + (x.opin ? "•" : x.total ? Math.round(100 * x.ok / x.total) + "%" : "–") + '</b></li>'; }).join("") + '</ol>' +
         '<div class="row" style="justify-content:center;margin-top:14px"><button class="btn gold" id="again" type="button">Nog een keer spelen</button><button class="btn light" id="dl" type="button">Download uitslag</button><button class="btn light" id="fin" type="button">Spel afsluiten</button></div></div>';
       document.getElementById("again").onclick = replay;
       document.getElementById("dl").onclick = function () {
