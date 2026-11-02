@@ -8169,14 +8169,28 @@ return exports;})();
 
   /* v127: eigen schilderijen (© Irshaad Creative Art) bij vragen over dat onderwerp */
   const ART = [
+    /* v140: zachte illustraties bij de Profetenverhalen (geen personen, geen gezichten) */
+    { f: "kunst/profeten/nuh-ark-berg.jpg", cat: "profeten", alt: "Illustratie van de ark op een berg, met een gouden boog en een duif met een takje", re: /\b(judi|djoedi|joedi)\b|berg.*\bark\b|\bark\b.*(rust|berg)/i },
+    { f: "kunst/profeten/ibrahim-vuur.jpg", cat: "profeten", alt: "Illustratie van een vuur waarin planten en bloemen groeien", re: /\bvuur\b/i },
+    { f: "kunst/profeten/ibrahim-afgoden.jpg", cat: "profeten", alt: "Illustratie van een lege tempel met gebroken stenen beelden", re: /afgod/i },
+    { f: "kunst/profeten/musa-staf.jpg", cat: "profeten", alt: "Illustratie van een houten staf en een gouden slang in het zand", re: /\bstaf\b/i },
+    { f: "kunst/profeten/zamzam.jpg", cat: "profeten", alt: "Illustratie van een waterbron in de woestijn met kleine planten", re: /hajar|zamzam|\bsafa\b|marwa/i },
+    { f: "kunst/profeten/yusuf-put.jpg", cat: "profeten", alt: "Illustratie van een stenen put met zon, maan en sterren in de lucht", re: /\byusuf\b|\bput\b|elf sterren|sterren zag/i },
+    { f: "kunst/profeten/yunus-walvis.jpg", cat: "profeten", alt: "Illustratie van een walvis in een rustige zee met een lichtstraal", re: /\byunus\b|\bvis\b|walvis|dhun-?nun/i },
+    { f: "kunst/profeten/sulayman-mier-hop.jpg", cat: "profeten", alt: "Illustratie van een mier op een blad, een hop en een gouden paleis", re: /sulayman|\bmier\b|\bhop\b|hoepoe|\bsaba\b|koningin van saba/i },
+    { f: "kunst/profeten/salih-kameel.jpg", cat: "profeten", alt: "Illustratie van een kameel voor hoge rotsen in de woestijn", re: /\bsalih\b|kameel|thamud/i },
+    { f: "kunst/profeten/isa-dadelpalm.jpg", cat: "profeten", alt: "Illustratie van een dadelpalm met een beekje in de woestijn", re: /dadelpalm|dadels|\bpalm\b/i },
+    { f: "kunst/profeten/muhammad-hira.jpg", alt: "Illustratie van de grot Hira op een berg met een lichtstraal naar de sterren", re: /\bhira\b|\biqra\b|eerste openbaring/i },
+    { f: "kunst/profeten/adam-tuin.jpg", cat: "profeten", alt: "Illustratie van een tuin met fruitbomen, bloemen en een beekje", re: /\badam\b|eerste mens/i },
+    { f: "kunst/profeten/nuh-ark.jpg", cat: "profeten", alt: "Illustratie van een houten ark op rustig water met een lichtstraal", re: /\bnuh\b|\bark\b|vloed/i },
     { f: "kunst/aqsa.jpg", alt: "Schilderij van de Rotskoepel bij Masjid al-Aqsa", re: /aqsa|isra['’]?\s*wa|mi['’]?raa?j|jeruzalem|al-quds|bayt al-maqdis|baitul maqdis/i },
     { f: "kunst/musa-zee.jpg", alt: "Schilderij van de zee die zich opent, met een pad van zand en een bron van licht", re: /\bmusa\b|mozes|fir['’]?a?wn|farao|rode zee|de zee (spleet|splijt|opende|gespleten)/i },
     { f: "kunst/madinah.jpg", alt: "Schilderij van Masjid an-Nabawi in Madinah", re: /madinah|medina|nabawi|hijrah|hidjra|yathrib/i },
     { f: "kunst/kaaba.jpg", alt: "Schilderij van de Kaaba in Makkah", re: /ka['’]?bah?\b|kaaba|qiblah?\b|makkah|mekka|\bhajj|umrah|tawaf|masjid al-haram|zamzam|hajar al-aswad/i }
   ];
   function artHtml(q) {
-    const t = [q.question, q.explanation, correctText(q)].join(" ");
-    const a = ART.find(function (x) { return x.re.test(t); });
+    const t = [q.question, q.explanation, correctText(q)].join(" "), t2 = [q.question, correctText(q)].join(" ");
+    const a = ART.find(function (x) { return x.cat ? (x.cat === q.category && x.re.test(t2)) : x.re.test(t); });
     return a ? '<figure class="q-art"><img src="' + a.f + '" alt="' + a.alt + '" loading="lazy" decoding="async"></figure>' : "";
   }
   function feedbackHtml(it) {
