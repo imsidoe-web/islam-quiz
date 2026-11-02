@@ -69,6 +69,8 @@ div.tile { cursor: default; } .tile i { font-style: normal; background: rgba(255
 .pod .step { width: 100%; border-radius: 12px 12px 0 0; background: linear-gradient(180deg, var(--gold-l), var(--gold)); color: #3b2a07; font-weight: 900; font-size: 26px; padding-top: 6px; margin-top: 6px; }
 .pod.p1 .step { height: 120px; } .pod.p2 .step { height: 84px; } .pod.p3 .step { height: 60px; }
 ol.lb { list-style: none; padding: 0; margin: 6px 0 14px; text-align: left; } ol.lb li { display: flex; justify-content: space-between; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 8px 12px; margin: 5px 0; font-weight: 800; } ol.lb li.me { border-color: var(--gold); background: #fff8e0; }
+.bigval { text-align: center; font-size: 56px; font-weight: 900; color: var(--em-d); } .big-note { font-size: 20px; text-align: center; }
+input[type=range] { accent-color: var(--em); height: 36px; }
 @media (max-width: 420px) { .tile { font-size: 17px; min-height: 76px; } }
 </style>
 </head>
@@ -202,34 +204,62 @@ ol.lb { list-style: none; padding: 0; margin: 6px 0 14px; text-align: left; } ol
   }
 
   /* ───── quiz-maker ───── */
+  var TYPES = { mc: "Meerkeuze", tf: "Waar / niet waar", type: "Typ het antwoord", order: "Juiste volgorde", slider: "Schuifbalk" };
   function newQ(type) {
-    return { id: uid(), t: type, q: "", o: type === "tf" ? ["Waar", "Niet waar"] : ["", "", "", ""], a: 0, time: 20, pts: 1, e: "" };
+    var q = { id: uid(), t: type, q: "", time: 20, pts: 1, e: "" };
+    if (type === "mc") { q.o = ["", "", "", ""]; q.a = 0; }
+    else if (type === "tf") { q.o = ["Waar", "Niet waar"]; q.a = 0; }
+    else if (type === "type") { q.o = ["", "", "", ""]; q.time = 30; }
+    else if (type === "order") { q.o = ["", "", "", "", ""]; q.time = 30; }
+    else if (type === "slider") { q.min = 0; q.max = 100; q.a = 50; q.tol = 0; }
+    return q;
   }
+  function numOr(v, d) { var n = parseFloat(String(v).replace(",", ".")); return isFinite(n) ? n : d; }
 
   function showEditor() {
     var h = '<div class="row sp"><h1 style="margin:0">' + (edit.id ? "Quiz bewerken" : "Nieuwe quiz") + '</h1></div>' +
       '<label for="titel">Naam van de quiz</label><input type="text" id="titel" maxlength="60" value="' + esc(edit.titel) + '" placeholder="Bijvoorbeeld: De vijf zuilen">' +
       '<h2>Vragen (' + edit.vragen.length + ')</h2>';
     edit.vragen.forEach(function (q, i) {
-      h += '<div class="card" data-i="' + i + '"><div class="q-head"><b>Vraag ' + (i + 1) + ' · ' + (q.t === "tf" ? "Waar / niet waar" : "Meerkeuze") + '</b>' +
+      h += '<div class="card" data-i="' + i + '"><div class="q-head"><b>Vraag ' + (i + 1) + ' · ' + esc(TYPES[q.t] || "") + '</b>' +
         '<span class="row"><button class="btn small light" data-m="up" data-i="' + i + '" type="button" aria-label="Omhoog"' + (i === 0 ? " disabled" : "") + '>↑</button>' +
         '<button class="btn small light" data-m="down" data-i="' + i + '" type="button" aria-label="Omlaag"' + (i === edit.vragen.length - 1 ? " disabled" : "") + '>↓</button>' +
         '<button class="btn small bad" data-m="rm" data-i="' + i + '" type="button" aria-label="Vraag verwijderen">✕</button></span></div>' +
-        '<label for="q' + i + '">Vraag</label><textarea id="q' + i + '" data-f="q" data-i="' + i + '" maxlength="240">' + esc(q.q) + '</textarea>' +
-        '<label>Antwoorden (tik de cirkel bij het goede antwoord)</label>';
-      q.o.forEach(function (o, k) {
-        h += '<div class="opt"><input type="radio" name="a' + i + '" data-f="a" data-i="' + i + '" data-k="' + k + '"' + (q.a === k ? " checked" : "") + ' aria-label="Goed antwoord ' + (k + 1) + '">' +
-          (q.t === "tf" ? '<span style="font-weight:800">' + esc(o) + '</span>' :
-            '<input type="text" data-f="o" data-i="' + i + '" data-k="' + k + '" maxlength="80" value="' + esc(o) + '" placeholder="Antwoord ' + (k + 1) + (k >= 2 ? " (mag leeg)" : "") + '" aria-label="Antwoord ' + (k + 1) + '">') + '</div>';
-      });
+        '<label for="q' + i + '">Vraag</label><textarea id="q' + i + '" data-f="q" data-i="' + i + '" maxlength="240">' + esc(q.q) + '</textarea>';
+      if (q.t === "mc" || q.t === "tf") {
+        h += '<label>Antwoorden (tik de cirkel bij het goede antwoord)</label>';
+        q.o.forEach(function (o, k) {
+          h += '<div class="opt"><input type="radio" name="a' + i + '" data-f="a" data-i="' + i + '" data-k="' + k + '"' + (q.a === k ? " checked" : "") + ' aria-label="Goed antwoord ' + (k + 1) + '">' +
+            (q.t === "tf" ? '<span style="font-weight:800">' + esc(o) + '</span>' :
+              '<input type="text" data-f="o" data-i="' + i + '" data-k="' + k + '" maxlength="80" value="' + esc(o) + '" placeholder="Antwoord ' + (k + 1) + (k >= 2 ? " (mag leeg)" : "") + '" aria-label="Antwoord ' + (k + 1) + '">') + '</div>';
+        });
+      } else if (q.t === "type") {
+        h += '<label>Goede antwoorden (zet elke goede spelling apart, bijvoorbeeld Wudhu en Woedoe)</label>';
+        q.o.forEach(function (o, k) {
+          h += '<div class="opt"><input type="text" data-f="o" data-i="' + i + '" data-k="' + k + '" maxlength="40" value="' + esc(o) + '" placeholder="' + (k === 0 ? "Goed antwoord" : "Ook goed (mag leeg)") + '" aria-label="Goed antwoord ' + (k + 1) + '"></div>';
+        });
+        h += '<p class="muted">Hoofdletters, spaties en leestekens maken niet uit.</p>';
+      } else if (q.t === "order") {
+        h += '<label>Zet de items in de goede volgorde, van boven naar beneden (2 tot 5)</label>';
+        q.o.forEach(function (o, k) {
+          h += '<div class="opt"><b style="width:24px;text-align:center">' + (k + 1) + '</b><input type="text" data-f="o" data-i="' + i + '" data-k="' + k + '" maxlength="60" value="' + esc(o) + '" placeholder="' + (k < 2 ? "Item " + (k + 1) : "Item " + (k + 1) + " (mag leeg)") + '" aria-label="Item ' + (k + 1) + '"></div>';
+        });
+        h += '<p class="muted">De leerlingen zien de items door elkaar.</p>';
+      } else if (q.t === "slider") {
+        h += '<div class="row"><div style="flex:1;min-width:110px"><label for="mn' + i + '">Laagste getal</label><input type="number" id="mn' + i + '" data-f="min" data-i="' + i + '" value="' + q.min + '"></div>' +
+          '<div style="flex:1;min-width:110px"><label for="mx' + i + '">Hoogste getal</label><input type="number" id="mx' + i + '" data-f="max" data-i="' + i + '" value="' + q.max + '"></div></div>' +
+          '<div class="row"><div style="flex:1;min-width:110px"><label for="sa' + i + '">Goed antwoord</label><input type="number" id="sa' + i + '" data-f="sa" data-i="' + i + '" value="' + q.a + '"></div>' +
+          '<div style="flex:1;min-width:110px"><label for="tl' + i + '">Marge (± mag ernaast)</label><input type="number" id="tl' + i + '" data-f="tol" data-i="' + i + '" min="0" value="' + q.tol + '"></div></div>';
+      }
       h += '<div class="row" style="margin-top:6px"><div style="flex:1;min-width:130px"><label for="t' + i + '">Tijd (5–120 sec)</label>' +
         '<input type="number" id="t' + i + '" data-f="time" data-i="' + i + '" min="5" max="120" value="' + q.time + '"></div>' +
         '<div style="flex:1;min-width:150px"><label for="p' + i + '">Punten</label><select id="p' + i + '" data-f="pts" data-i="' + i + '">' +
         '<option value="1"' + (q.pts === 1 ? " selected" : "") + '>Normaal</option><option value="2"' + (q.pts === 2 ? " selected" : "") + '>Dubbel</option><option value="0"' + (q.pts === 0 ? " selected" : "") + '>Zonder punten</option></select></div></div>' +
         '<label for="e' + i + '">Uitleg na de vraag (mag leeg)</label><textarea id="e' + i + '" data-f="e" data-i="' + i + '" maxlength="300">' + esc(q.e) + '</textarea></div>';
     });
-    h += '<div class="row"><button class="btn light" id="addmc" type="button">+ Meerkeuze</button><button class="btn light" id="addtf" type="button">+ Waar / niet waar</button></div>' +
-      '<div class="disc">' + esc(DISC) + '</div><div id="msg" class="msg"></div>' +
+    h += '<p class="muted" style="margin-bottom:4px">Vraag toevoegen:</p><div class="row">';
+    Object.keys(TYPES).forEach(function (t) { h += '<button class="btn light small" data-add="' + t + '" type="button">+ ' + esc(TYPES[t]) + '</button>'; });
+    h += '</div><div class="disc">' + esc(DISC) + '</div><div id="msg" class="msg"></div>' +
       '<div class="row"><button class="btn gold" id="save" type="button">Opslaan</button><button class="btn light" id="cancel" type="button">Terug</button></div>';
     app.innerHTML = h;
 
@@ -242,6 +272,10 @@ ol.lb { list-style: none; padding: 0; margin: 6px 0 14px; text-align: left; } ol
         else if (f === "a") q.a = k;
         else if (f === "time") q.time = Math.max(5, Math.min(120, parseInt(el.value, 10) || 20));
         else if (f === "pts") q.pts = parseInt(el.value, 10);
+        else if (f === "min") q.min = numOr(el.value, 0);
+        else if (f === "max") q.max = numOr(el.value, 100);
+        else if (f === "sa") q.a = numOr(el.value, 0);
+        else if (f === "tol") q.tol = Math.max(0, numOr(el.value, 0));
       };
       el.addEventListener(f === "a" || f === "pts" ? "change" : "input", h2);
     });
@@ -256,8 +290,9 @@ ol.lb { list-style: none; padding: 0; margin: 6px 0 14px; text-align: left; } ol
       };
     });
     document.getElementById("titel").addEventListener("input", function (e) { edit.titel = e.target.value; });
-    document.getElementById("addmc").onclick = function () { edit.titel = document.getElementById("titel").value; edit.vragen.push(newQ("mc")); show(); focusLast(); };
-    document.getElementById("addtf").onclick = function () { edit.titel = document.getElementById("titel").value; edit.vragen.push(newQ("tf")); show(); focusLast(); };
+    app.querySelectorAll("[data-add]").forEach(function (b) {
+      b.onclick = function () { edit.titel = document.getElementById("titel").value; edit.vragen.push(newQ(b.getAttribute("data-add"))); show(); focusLast(); };
+    });
     document.getElementById("cancel").onclick = function () { if (confirm("Terug zonder opslaan?")) { edit = null; show(); } };
     document.getElementById("save").onclick = save;
   }
@@ -275,17 +310,29 @@ ol.lb { list-style: none; padding: 0; margin: 6px 0 14px; text-align: left; } ol
     for (var i = 0; i < edit.vragen.length; i++) {
       var q = edit.vragen[i], n = i + 1;
       if (!q.q.trim()) { say("Vraag " + n + " heeft nog geen tekst.", true); return; }
-      var o = q.t === "tf" ? q.o.slice() : q.o.map(function (x) { return x.trim(); });
+      var c = { id: q.id, t: q.t, q: q.q.trim(), time: q.time, pts: q.pts, e: (q.e || "").trim() };
       if (q.t === "mc") {
+        var o = q.o.map(function (x) { return x.trim(); });
         if (!o[0] || !o[1]) { say("Vraag " + n + " heeft minstens 2 antwoorden nodig (antwoord 1 en 2).", true); return; }
-        /* lege antwoorden 3 en 4 weglaten; goed antwoord moet ingevuld zijn */
         var keep = [], map = {};
-        o.forEach(function (x, k) { if (x) { map[k] = keep.length; keep.push(x); } });
+        o.forEach(function (x, kk) { if (x) { map[kk] = keep.length; keep.push(x); } });
         if (map[q.a] === undefined) { say("Vraag " + n + ": het goede antwoord is leeg.", true); return; }
-        clean.push({ id: q.id, t: "mc", q: q.q.trim(), o: keep, a: map[q.a], time: q.time, pts: q.pts, e: (q.e || "").trim() });
-      } else {
-        clean.push({ id: q.id, t: "tf", q: q.q.trim(), o: ["Waar", "Niet waar"], a: q.a === 1 ? 1 : 0, time: q.time, pts: q.pts, e: (q.e || "").trim() });
+        c.o = keep; c.a = map[q.a];
+      } else if (q.t === "tf") {
+        c.o = ["Waar", "Niet waar"]; c.a = q.a === 1 ? 1 : 0;
+      } else if (q.t === "type") {
+        c.o = q.o.map(function (x) { return x.trim(); }).filter(Boolean);
+        if (!c.o.length) { say("Vraag " + n + " heeft nog geen goed antwoord.", true); return; }
+      } else if (q.t === "order") {
+        c.o = q.o.map(function (x) { return x.trim(); }).filter(Boolean);
+        if (c.o.length < 2) { say("Vraag " + n + " heeft minstens 2 items nodig.", true); return; }
+        if (c.o.filter(function (x, ix) { return c.o.indexOf(x) !== ix; }).length) { say("Vraag " + n + ": twee items zijn hetzelfde.", true); return; }
+      } else if (q.t === "slider") {
+        if (!(q.min < q.max)) { say("Vraag " + n + ": het laagste getal moet kleiner zijn dan het hoogste.", true); return; }
+        if (q.a < q.min || q.a > q.max) { say("Vraag " + n + ": het goede antwoord moet tussen laagste en hoogste getal liggen.", true); return; }
+        c.min = q.min; c.max = q.max; c.a = q.a; c.tol = q.tol || 0;
       }
+      clean.push(c);
     }
     var btn = document.getElementById("save"); btn.disabled = true; say("Bezig met opslaan…");
     var row = { titel: titel, vragen: clean, updated_at: new Date().toISOString() };
@@ -414,6 +461,48 @@ ol.lb { list-style: none; padding: 0; margin: 6px 0 14px; text-align: left; } ol
       .sort(function (a, b) { return b.score - a.score || a.name.localeCompare(b.name); });
   }
   var LET = ["A", "B", "C", "D"];
+  function norm(s) { return String(s == null ? "" : s).toLowerCase().normalize("NFKD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]/g, ""); }
+  function shuffled(a) {
+    var b = a.slice(), t = 0;
+    do { for (var i = b.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), x = b[i]; b[i] = b[j]; b[j] = x; } t++; }
+    while (t < 6 && b.length > 1 && b.every(function (v, i) { return v === a[i]; }));
+    return b;
+  }
+  function pubQ(q) {
+    var b = { t: q.t, q: q.q, time: q.time, pts: q.pts };
+    if (q.t === "mc" || q.t === "tf") b.o = q.o;
+    else if (q.t === "order") b.o = shuffled(q.o);
+    else if (q.t === "slider") { b.min = q.min; b.max = q.max; }
+    return b;
+  }
+  /* goed antwoord (key) en tekst om te tonen */
+  function keyOf(q, pub) {
+    if (q.t === "mc" || q.t === "tf") return { key: q.a, text: q.o[q.a] };
+    if (q.t === "type") return { key: q.o.map(norm), text: q.o[0] };
+    if (q.t === "order") {
+      var used = [], key = q.o.map(function (t) { for (var j = 0; j < pub.o.length; j++) if (pub.o[j] === t && used.indexOf(j) < 0) { used.push(j); return j; } return -1; }).join(",");
+      return { key: key, text: q.o.join(" → ") };
+    }
+    return { key: q.a, text: String(q.a) + (q.tol ? " (± " + q.tol + ")" : "") };
+  }
+  function isOk(q, key, a) {
+    if (q.t === "mc" || q.t === "tf") return a === key;
+    if (q.t === "type") { var n = norm(a); return n !== "" && key.indexOf(n) >= 0; }
+    if (q.t === "order") return a === key;
+    var v = Number(a); return isFinite(v) && Math.abs(v - q.a) <= (q.tol || 0);
+  }
+  function validAns(q, a) {
+    if (q.t === "mc" || q.t === "tf") return typeof a === "number" && a >= 0 && a < q.o.length;
+    return typeof a === "string" && a.length > 0;
+  }
+  function itemsHtml(q, picked) {
+    var h = '<div class="tiles">';
+    q.o.forEach(function (t, k) {
+      var pos = picked ? picked.indexOf(k) : -1;
+      h += '<div class="tile t' + (k % 4) + (pos >= 0 ? " mine" : "") + '"><i>' + (pos >= 0 ? pos + 1 : "•") + '</i><span>' + esc(t) + '</span></div>';
+    });
+    return h + "</div>";
+  }
   function tilesHtml(q, o) {
     /* o: { pick, ok, counts, click } */
     var h = '<div class="tiles">';
@@ -511,11 +600,42 @@ ol.lb { list-style: none; padding: 0; margin: 6px 0 14px; text-align: left; } ol
     if (m.state === "vraag") {
       var q = L.vragen && L.vragen[m.qi];
       if (!q) { app.innerHTML = '<p>Even laden…</p>'; loadVragen().then(renderL); return; }
-      if (L.shown !== m.qi) { L.shown = m.qi; L.picked = null; L.end = Date.now() + q.time * 1000; }
+      if (L.shown !== m.qi) { L.shown = m.qi; L.picked = null; L.seq = []; L.end = Date.now() + q.time * 1000; }
+      var body = "", sent = L.picked != null;
+      if (q.t === "mc" || q.t === "tf") body = tilesHtml(q, { pick: L.picked, click: true });
+      else if (sent) body = '<div class="card"><b>Je antwoord:</b> ' + esc(q.t === "order" ? String(L.picked).split(",").map(function (ix) { return q.o[+ix]; }).join(" → ") : L.picked) + '</div>';
+      else if (q.t === "type") body = '<label for="ta">Typ je antwoord</label><input type="text" id="ta" maxlength="40" autocomplete="off" autocapitalize="off"><div style="margin-top:12px"><button class="btn gold" id="send" type="button">Verstuur</button></div>';
+      else if (q.t === "order") {
+        body = '<p class="muted">Tik de items in de goede volgorde: eerst het eerste, dan het tweede, enzovoort.</p><div class="tiles">';
+        q.o.forEach(function (t, kx) {
+          var pos = L.seq.indexOf(kx);
+          body += '<button type="button" class="tile t' + (kx % 4) + (pos >= 0 ? " mine" : "") + '" data-ix="' + kx + '"' + (pos >= 0 ? " disabled" : "") + '><i>' + (pos >= 0 ? pos + 1 : "•") + '</i><span>' + esc(t) + '</span></button>';
+        });
+        body += '</div><div class="row" style="margin-top:12px"><button class="btn gold" id="send" type="button"' + (L.seq.length === q.o.length ? "" : " disabled") + '>Verstuur</button><button class="btn light" id="clr" type="button">Opnieuw</button></div>';
+      } else if (q.t === "slider") {
+        var mid = Math.round((q.min + q.max) / 2);
+        body = '<div class="bigval"><output id="sv">' + mid + '</output></div><input type="range" id="sr" min="' + q.min + '" max="' + q.max + '" step="1" value="' + mid + '" style="width:100%" aria-label="Kies een getal tussen ' + q.min + ' en ' + q.max + '">' +
+          '<div class="qtop"><span>' + q.min + '</span><span>' + q.max + '</span></div><div style="margin-top:12px"><button class="btn gold" id="send" type="button">Verstuur</button></div>';
+      }
       app.innerHTML = '<div class="qtop"><span>Vraag ' + (m.qi + 1) + ' van ' + m.n + '</span><b id="sec"></b></div><div class="bar"><div id="barIn"></div></div>' +
-        '<h1 class="qq">' + esc(q.q) + '</h1>' + tilesHtml(q, { pick: L.picked, click: true }) +
-        (L.picked != null ? '<p class="msg" role="status">Antwoord verstuurd. Wacht op de anderen…</p>' : "");
-      app.querySelectorAll("[data-k]").forEach(function (b) { b.onclick = function () { pickAns(+b.getAttribute("data-k")); }; });
+        '<h1 class="qq">' + esc(q.q) + '</h1>' + body + (sent ? '<p class="msg" role="status">Antwoord verstuurd. Wacht op de anderen…</p>' : '<div id="msg" class="msg"></div>');
+      app.querySelectorAll("[data-k]").forEach(function (b) { b.onclick = function () { sendAns(+b.getAttribute("data-k")); }; });
+      var sendB = document.getElementById("send");
+      if (sendB && !sent) {
+        if (q.t === "type") {
+          var ta = document.getElementById("ta");
+          var go = function () { var v = ta.value.trim(); if (!v) { say("Typ eerst je antwoord.", true); return; } sendAns(v); };
+          sendB.onclick = go; ta.addEventListener("keydown", function (e) { if (e.key === "Enter") go(); });
+        } else if (q.t === "order") {
+          app.querySelectorAll("[data-ix]").forEach(function (b) { b.onclick = function () { L.seq.push(+b.getAttribute("data-ix")); renderL(); }; });
+          document.getElementById("clr").onclick = function () { L.seq = []; renderL(); };
+          sendB.onclick = function () { sendAns(L.seq.join(",")); };
+        } else if (q.t === "slider") {
+          var sr = document.getElementById("sr"), sv = document.getElementById("sv");
+          sr.addEventListener("input", function () { sv.textContent = sr.value; });
+          sendB.onclick = function () { sendAns(String(sr.value)); };
+        }
+      }
       var tot = q.time * 1000;
       var upd = function () {
         var left = Math.max(0, L.end - Date.now()), s = document.getElementById("sec"), bi = document.getElementById("barIn");
@@ -527,7 +647,8 @@ ol.lb { list-style: none; padding: 0; margin: 6px 0 14px; text-align: left; } ol
       var q2 = L.vragen && L.vragen[m.qi], last = me.last && me.last.qi === m.qi ? me.last : null;
       var my = rk.map(function (r) { return r.uid; }).indexOf(L.uid) + 1;
       var head = last && last.ok ? '<h1 class="good-h">MashaAllah! +' + last.pts + '</h1>' : (last && last.k >= 0 ? '<h1 class="bad-h">Helaas, dat was niet goed</h1>' : '<h1 class="bad-h">Geen antwoord</h1>');
-      app.innerHTML = '<div class="center">' + head + (q2 ? '<p>Het goede antwoord: <b>' + esc(q2.o[m.a]) + '</b></p>' : "") + (m.e ? '<p class="expl">' + esc(m.e) + '</p>' : "") +
+      var goed = m.at != null ? m.at : (q2 && q2.o ? q2.o[m.a] : "");
+      app.innerHTML = '<div class="center">' + head + '<p>Het goede antwoord: <b>' + esc(goed) + '</b></p>' + (m.e ? '<p class="expl">' + esc(m.e) + '</p>' : "") +
         '<p class="rank">Jij staat op plek <b>' + (my || "–") + '</b> van ' + rk.length + ' · ' + (me.score || 0) + ' punten</p><p class="muted">Wacht op de volgende vraag…</p></div>';
       return;
     }
@@ -536,10 +657,10 @@ ol.lb { list-style: none; padding: 0; margin: 6px 0 14px; text-align: left; } ol
       app.innerHTML = '<div class="center"><h1>Het spel is afgelopen</h1>' + podiumHtml(rk) + '<p class="rank">Jij werd <b>' + (my2 || "–") + 'e</b> met ' + (me.score || 0) + ' punten. MashaAllah!</p>' + back + '</div>'; wire();
     }
   }
-  function pickAns(k) {
+  function sendAns(v) {
     if (!L || L.picked != null || !L.meta || L.meta.state !== "vraag") return;
-    L.picked = k; renderL();
-    dbReq("PUT", "klas/" + L.code + "/ant/" + L.meta.qi + "/" + L.uid, k).catch(function () { L.picked = null; renderL(); say("Je antwoord kwam niet aan. Tik opnieuw.", true); });
+    L.picked = v; renderL();
+    dbReq("PUT", "klas/" + L.code + "/ant/" + L.meta.qi + "/" + L.uid, v).catch(function () { L.picked = null; renderL(); say("Je antwoord kwam niet aan. Tik opnieuw.", true); });
   }
 
   /* ───── docent: spel leiden ───── */
@@ -549,16 +670,17 @@ ol.lb { list-style: none; padding: 0; margin: 6px 0 14px; text-align: left; } ol
       var auth = await cloudAuth(), code = null;
       for (var t = 0; t < 6 && !code; t++) { var c = newCode(); if (!(await dbReq("GET", "klas/" + c + "/meta"))) code = c; }
       if (!code) throw new Error("code");
+      var pub = quiz.vragen.map(pubQ);
       await dbReq("PUT", "klas/" + code + "/meta", { host: auth.uid, titel: quiz.titel, state: "lobby", qi: -1, n: quiz.vragen.length, created: Date.now() });
-      await dbReq("PUT", "klas/" + code + "/vragen", quiz.vragen.map(function (q) { return { t: q.t, q: q.q, o: q.o, time: q.time, pts: q.pts }; }));
+      await dbReq("PUT", "klas/" + code + "/vragen", pub);
       lsSet(HOST_KEY, { code: code, quizId: quiz.id });
-      attachHost(code, quiz, "lobby", -1);
+      attachHost(code, quiz, "lobby", -1, pub);
       show();
     } catch (e) { btns.forEach(function (b) { b.disabled = false; }); say("Het spel kon niet starten. Staan de Firebase-regels klaar? (zie de handleiding)", true); }
   }
-  function attachHost(code, quiz, state, qi) {
+  function attachHost(code, quiz, state, qi, pub) {
     stopAll();
-    G = { code: code, quiz: quiz, state: state, qi: qi, players: {}, arr: {}, counts: null, qStart: 0, timer: null, closed: false, ls: [] };
+    G = { code: code, quiz: quiz, pub: pub, state: state, qi: qi, players: {}, arr: {}, stat: null, qStart: 0, timer: null, closed: false, ls: [] };
     G.ls.push(listen("klas/" + code + "/spelers", function (d) { G.players = d || {}; if (G.state === "lobby" || G.state === "einde") renderG(); else updAns(); }));
   }
   async function resumeHost() {
@@ -566,21 +688,34 @@ ol.lb { list-style: none; padding: 0; margin: 6px 0 14px; text-align: left; } ol
     var quiz = quizzes.filter(function (x) { return x.id === s.quizId; })[0];
     try {
       var meta = await dbReq("GET", "klas/" + s.code + "/meta");
-      if (!meta || !quiz) { lsSet(HOST_KEY, null); return false; }
-      attachHost(s.code, quiz, meta.state, meta.qi);
+      var pub = await dbReq("GET", "klas/" + s.code + "/vragen");
+      if (!meta || !quiz || !pub) { lsSet(HOST_KEY, null); return false; }
+      attachHost(s.code, quiz, meta.state, meta.qi, Array.isArray(pub) ? pub : Object.keys(pub).map(function (x) { return pub[x]; }));
       if (meta.state === "vraag") { G.qStart = Date.now(); G.closed = false; await hostClose(); }
-      else if (meta.state === "uitslag") { await hostCounts(meta.qi); show(); }
-      else show();
+      else if (meta.state === "uitslag") {
+        var ant = (await dbReq("GET", "klas/" + G.code + "/ant/" + meta.qi)) || {};
+        await new Promise(function (r) { setTimeout(r, 600); });
+        G.stat = evalQ(meta.qi, ant).st; show();
+      } else show();
       return true;
     } catch (e) { return false; }
   }
-  async function hostCounts(qi) {
-    var ant = (await dbReq("GET", "klas/" + G.code + "/ant/" + qi)) || {}, q = G.quiz.vragen[qi], c = q.o.map(function () { return 0; });
-    Object.keys(ant).forEach(function (u) { if (G.players[u] && c[ant[u]] != null) c[ant[u]]++; });
-    G.counts = c;
+  /* beoordeel de antwoorden van één vraag */
+  function evalQ(qi, ant) {
+    var q = G.quiz.vragen[qi], kk = keyOf(q, G.pub[qi]), per = {};
+    var st = { counts: (q.t === "mc" || q.t === "tf") ? q.o.map(function () { return 0; }) : null, ok: 0, total: 0, texts: {}, text: kk.text };
+    Object.keys(G.players).forEach(function (u) {
+      var p = G.players[u]; if (!p || !p.name) return;
+      st.total++;
+      var a = ant[u], valid = validAns(q, a), ok = valid && isOk(q, kk.key, a);
+      if (valid) { if (st.counts) st.counts[a]++; else { var s2 = String(a); st.texts[s2] = (st.texts[s2] || 0) + 1; } }
+      if (ok) st.ok++;
+      per[u] = { valid: valid, ok: !!ok, k: valid ? (typeof a === "number" ? a : 0) : -1 };
+    });
+    return { per: per, st: st };
   }
   async function hostAsk(i) {
-    G.qi = i; G.state = "vraag"; G.arr = {}; G.closed = false; G.counts = null;
+    G.qi = i; G.state = "vraag"; G.arr = {}; G.closed = false; G.stat = null;
     var q = G.quiz.vragen[i];
     try { await dbReq("PATCH", "klas/" + G.code + "/meta", { state: "vraag", qi: i, a: null, e: null }); } catch (e) { say("Dat lukte niet. Probeer opnieuw.", true); G.state = "uitslag"; return; }
     G.qStart = Date.now();
@@ -612,20 +747,19 @@ ol.lb { list-style: none; padding: 0; margin: 6px 0 14px; text-align: left; } ol
     var qi = G.qi, q = G.quiz.vragen[qi], lim = q.time * 1000;
     await new Promise(function (r) { setTimeout(r, 800); });
     try {
-      var ant = (await dbReq("GET", "klas/" + G.code + "/ant/" + qi)) || {}, upd = {}, c = q.o.map(function () { return 0; });
-      Object.keys(G.players).forEach(function (u) {
-        var p = G.players[u]; if (!p || !p.name) return;
-        var k = ant[u], valid = typeof k === "number" && k >= 0 && k < q.o.length, ok = valid && k === q.a, pts = 0;
-        if (valid) c[k]++;
-        if (ok) { var t = G.arr[u] != null ? Math.min(G.arr[u], lim) : lim; pts = Math.round((500 + 500 * Math.max(0, 1 - t / lim)) * (q.pts == null ? 1 : q.pts)); }
-        upd[u + "/score"] = (p.score || 0) + pts; upd[u + "/last"] = { qi: qi, ok: !!ok, pts: pts, k: valid ? k : -1 };
+      var ant = (await dbReq("GET", "klas/" + G.code + "/ant/" + qi)) || {}, upd = {};
+      var ev = evalQ(qi, ant), kk = keyOf(q, G.pub[qi]);
+      Object.keys(ev.per).forEach(function (u) {
+        var r = ev.per[u], p = G.players[u], pts = 0;
+        if (r.ok) { var t = G.arr[u] != null ? Math.min(G.arr[u], lim) : lim; pts = Math.round((500 + 500 * Math.max(0, 1 - t / lim)) * (q.pts == null ? 1 : q.pts)); }
+        upd[u + "/score"] = (p.score || 0) + pts; upd[u + "/last"] = { qi: qi, ok: r.ok, pts: pts, k: r.k };
         p.score = (p.score || 0) + pts;
       });
       if (Object.keys(upd).length) await dbReq("PATCH", "klas/" + G.code + "/spelers", upd);
-      await dbReq("PATCH", "klas/" + G.code + "/meta", { state: "uitslag", a: q.a, e: q.e || null });
+      await dbReq("PATCH", "klas/" + G.code + "/meta", { state: "uitslag", a: (q.t === "mc" || q.t === "tf") ? q.a : null, at: kk.text, e: q.e || null });
       if (G.ant) G.ant.close();
-      G.counts = c; G.state = "uitslag"; renderG();
-    } catch (e) { G.closed = false; G.state = "uitslag"; G.counts = q.o.map(function () { return 0; }); renderG(); say("Opslaan van de scores lukte niet. Controleer de verbinding.", true); }
+      G.stat = ev.st; G.state = "uitslag"; renderG();
+    } catch (e) { G.closed = false; G.state = "uitslag"; G.stat = { counts: null, ok: 0, total: 0, texts: {}, text: "" }; renderG(); say("Opslaan van de scores lukte niet. Controleer de verbinding.", true); }
   }
   async function hostNext() {
     var i = G.qi + 1;
@@ -662,13 +796,26 @@ ol.lb { list-style: none; padding: 0; margin: 6px 0 14px; text-align: left; } ol
       return;
     }
     if (st === "vraag") {
+      var pq = G.pub[G.qi], vb = "";
+      if (q.t === "mc" || q.t === "tf") vb = tilesHtml(q, {});
+      else if (q.t === "order") vb = '<p class="muted">Leerlingen zetten deze items in de goede volgorde:</p>' + itemsHtml(pq, null);
+      else if (q.t === "type") vb = '<p class="expl big-note">Leerlingen typen het antwoord op hun telefoon.</p>';
+      else vb = '<p class="expl big-note">Leerlingen kiezen een getal tussen <b>' + q.min + '</b> en <b>' + q.max + '</b>.</p>';
       app.innerHTML = '<div class="qtop"><span>Vraag ' + (G.qi + 1) + ' van ' + G.quiz.vragen.length + '</span><b><span id="sec">' + q.time + '</span> sec</b></div><div class="bar"><div id="barIn" style="width:100%"></div></div>' +
-        '<h1 class="qq big">' + esc(q.q) + '</h1>' + tilesHtml(q, {}) + '<p class="msg" id="ans" role="status"></p><div id="msg"></div><button class="btn light" id="end" type="button">Nu afsluiten</button>';
+        '<h1 class="qq big">' + esc(q.q) + '</h1>' + vb + '<p class="msg" id="ans" role="status"></p><div id="msg"></div><button class="btn light" id="end" type="button">Nu afsluiten</button>';
       document.getElementById("end").onclick = hostClose; updAns(); return;
     }
     if (st === "uitslag") {
-      var last = G.qi + 1 >= G.quiz.vragen.length;
-      app.innerHTML = '<div class="qtop"><span>Uitslag vraag ' + (G.qi + 1) + '</span></div><h1 class="qq big">' + esc(q.q) + '</h1>' + tilesHtml(q, { ok: q.a, counts: G.counts }) +
+      var last = G.qi + 1 >= G.quiz.vragen.length, sx = G.stat || { counts: null, ok: 0, total: 0, texts: {}, text: "" }, ub = "";
+      if (q.t === "mc" || q.t === "tf") ub = tilesHtml(q, { ok: q.a, counts: sx.counts });
+      else {
+        ub = '<div class="card center"><p class="muted" style="margin:0">Het goede antwoord</p><h2 style="margin:4px 0">' + esc(sx.text) + '</h2><p style="margin:0"><b>' + sx.ok + '</b> van ' + sx.total + ' goed</p></div>';
+        if (q.t === "type" || q.t === "slider") {
+          var tx = Object.keys(sx.texts).sort(function (x, y) { return sx.texts[y] - sx.texts[x]; }).slice(0, 8);
+          if (tx.length) ub += '<p class="muted">Gegeven antwoorden:</p><div class="chips">' + tx.map(function (t2) { return '<span class="chip">' + esc(t2) + ' · ' + sx.texts[t2] + '×</span>'; }).join("") + '</div>';
+        }
+      }
+      app.innerHTML = '<div class="qtop"><span>Uitslag vraag ' + (G.qi + 1) + '</span></div><h1 class="qq big">' + esc(q.q) + '</h1>' + ub +
         (q.e ? '<p class="expl">' + esc(q.e) + '</p>' : "") + '<h2>Tussenstand</h2>' + listHtml(rk, 5) + '<div id="msg" class="msg"></div>' +
         '<button class="btn gold" id="nx" type="button">' + (last ? "Naar het podium" : "Volgende vraag") + '</button>';
       document.getElementById("nx").onclick = function () { this.disabled = true; hostNext(); }; return;
