@@ -1142,10 +1142,10 @@ main.wide { max-width: 1240px; }
       for (var t = 0; t < 6 && !code; t++) { var c = newCode(); if (!(await dbReq("GET", "klas/" + c + "/meta"))) code = c; }
       if (!code) throw new Error("code");
       var pub = quiz.vragen.map(pubQ);
-      await dbReq("PUT", "klas/" + code + "/meta", { host: auth.uid, titel: quiz.titel, state: "lobby", qi: -1, n: quiz.vragen.length, ne: Math.max(1, quiz.vragen.filter(function (x) { return x.t !== "poll" && x.t !== "cloud"; }).length), vorm: "klassiek", p: 0, sb: 0, created: Date.now() });
+      await dbReq("PUT", "klas/" + code + "/meta", { host: auth.uid, titel: quiz.titel, state: "lobby", qi: -1, n: quiz.vragen.length, ne: Math.max(1, quiz.vragen.filter(function (x) { return x.t !== "poll" && x.t !== "cloud"; }).length), vorm: "klassiek", p: 0, sb: 1, created: Date.now() });
       await dbReq("PUT", "klas/" + code + "/vragen", pub);
       lsSet(HOST_KEY, { code: code, quizId: quiz.id });
-      attachHost(code, quiz, "lobby", -1, pub);
+      attachHost(code, quiz, "lobby", -1, pub, "klassiek", 0, 1);
       show();
     } catch (e) { btns.forEach(function (b) { b.disabled = false; }); say("Het spel kon niet starten. Staan de Firebase-regels klaar? (zie de handleiding)", true); }
   }
