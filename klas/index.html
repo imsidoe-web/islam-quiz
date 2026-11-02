@@ -284,7 +284,7 @@ body.ms-on { padding-bottom: 6px; }
     if (L) return renderL();
     if (G) return renderG();
     if (HWV && user) return renderHwv();
-    if (!user) return showLogin();
+    if (!user || prefill) return showLogin();
     if (edit) return showEditor();
     showList();
   }
@@ -299,14 +299,16 @@ body.ms-on { padding-bottom: 6px; }
   }
 
   function showLogin() {
-    app.innerHTML = '<h1>Welkom bij NurSpark Klas</h1>' +
+    var ingelogd = !!user;   /* iemand met een account die een QR-code of link met een code opent, komt eerst bij het meedoen */
+    app.innerHTML = '<h1>' + (ingelogd ? "Doe mee met de quiz" : "Welkom bij NurSpark Klas") + '</h1>' +
       '<div class="card"><h2 style="margin-top:0">Ik ben leerling</h2><ol class="steps"><li>Vraag je docent om de code.</li><li>Kies een bijnaam. Geen echte naam.</li><li>Tik op Meedoen en wacht tot de docent start.</li></ol><label for="jc">Code van je docent</label>' +
       '<input type="text" id="jc" maxlength="6" autocomplete="off" autocapitalize="characters" value="' + esc(prefill) + '" placeholder="Bijvoorbeeld K7M2QX">' +
       '<label for="jn">Jouw bijnaam (max. 14 tekens)</label><input type="text" id="jn" maxlength="14" autocomplete="off" placeholder="Bijvoorbeeld Sterretje">' +
-      '<p class="muted jnote">Kies een bijnaam, geen volledige naam. Je hebt geen account nodig.</p><div id="jmsg" class="msg"></div>' +
+      '<p class="muted jnote">Kies een bijnaam, geen volledige naam.' + (ingelogd ? " Je naam en account blijven buiten beeld." : " Je hebt geen account nodig.") + '</p><div id="jmsg" class="msg"></div>' +
       '<button class="btn gold" id="joinBtn" type="button">Meedoen</button></div>' +
+      (ingelogd ? '<div class="card"><h2 style="margin-top:0">Ik ben docent</h2><p>Ga naar je eigen quizzen.</p><button class="btn" id="mq" type="button">Naar mijn quizzen</button></div>' :
       '<div class="card"><h2 style="margin-top:0">Ik ben docent</h2><p>Maak je eigen quiz en speel hem live met je klas.</p>' +
-      '<button class="btn" id="g" type="button">Inloggen met Google</button><div id="msg" class="msg"></div></div>' +
+      '<button class="btn" id="g" type="button">Inloggen met Google</button><div id="msg" class="msg"></div></div>') +
       '<div class="disc">' + esc(DISC) + '</div>';
     var jc = document.getElementById("jc"), jn = document.getElementById("jn");
     var go = function () { joinGame(jc.value, jn.value); };
@@ -314,7 +316,8 @@ body.ms-on { padding-bottom: 6px; }
     if (fine()) (jc.value ? jn : jc).focus();
     [jc, jn].forEach(function (el) { el.addEventListener("keydown", function (e) { if (e.key === "Enter") go(); }); });
     if (prefill) jn.focus();
-    document.getElementById("g").onclick = function () {
+    if (document.getElementById("mq")) document.getElementById("mq").onclick = function () { prefill = ""; try { history.replaceState(null, "", location.pathname); } catch (e) {} show(); };
+    if (document.getElementById("g")) document.getElementById("g").onclick = function () {
       if (!sb) { say("Inloggen lukt nu niet. Probeer het later opnieuw.", true); return; }
       sb.auth.signInWithOAuth({ provider: "google", options: { redirectTo: location.origin + location.pathname } }).then(function (r) {
         if (r && r.error) say("Inloggen lukt nu niet. Probeer het later opnieuw.", true);
