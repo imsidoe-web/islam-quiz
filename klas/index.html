@@ -168,6 +168,9 @@ body.ms-on .tile { --pig: #1f4e8c; background: var(--pig); color: var(--ink); bo
   clip-path: polygon(22px 0, calc(100% - 22px) 0, 100% 50%, calc(100% - 22px) 100%, 22px 100%, 0 50%); }
 body.ms-on .tile::before { content: ""; position: absolute; inset: 3px; clip-path: inherit; background: linear-gradient(170deg, #fbf3d8, #eddca3); z-index: 0; }
 body.ms-on .tile > * { position: relative; z-index: 1; }
+body.ms-on .tile > em, body.ms-on .tile > .chk { position: absolute; }
+body.ms-on .tile > span { flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; }
+body.ms-on .tile > .chk { right: 34px; bottom: 4px; }
 body.ms-on .tile.t1 { --pig: #b3362b; } body.ms-on .tile.t2 { --pig: #2f6b4f; } body.ms-on .tile.t3 { --pig: #a8741c; }
 body.ms-on .tile i { background: var(--pig); color: #fff6d8; border-radius: 50%; font-family: "Nunito", sans-serif; font-style: normal; font-size: 18px; text-shadow: 0 1px 1px rgba(0,0,0,.5); }
 body.ms-on .tile em { background: rgba(60,34,8,.8); color: #fff3c8; right: 30px; top: 8px; }
@@ -220,9 +223,14 @@ body.ms-on .ms-lite-btn { display: block; }
 body.ms-on { padding-bottom: 6px; }
 @media (prefers-reduced-motion: reduce) { body.ms-on.ms-anim main#app, body.ms-on.ms-anim .ms-roll.b, body.ms-on.ms-anim .tile, body.ms-on.ms-anim ol.lb li, body.ms-on.ms-anim .sb li, .coin-hero { animation: none !important; } }
 @media (max-width: 700px) {
-  body.ms-on { font-size: 18px; } body.ms-on main#app { padding: 70px 54px 62px; } body.ms-on .ms-wrap main#app { margin: 0 10px; }
+  body.ms-on { font-size: 18px; } body.ms-on main#app { padding: 70px 60px 62px; } body.ms-on .ms-wrap main#app { margin: 0 4px; }
+  body.ms-on .tile { padding: 8px 34px 8px 24px; } body.ms-on .tile em { right: 26px; top: 4px; font-size: 13px; }
+  body.ms-on h1.qq { font-size: 25px; } body.ms-on h1.qq::first-letter { font-size: 1em; padding: 3px 7px 1px; margin: 3px 8px 0 0; }
   .ms-top .ms-zg { width: 84px; height: 84px; } .ms-top .basm { font-size: 31px; white-space: nowrap; } body.ms-on .tile { font-size: 23px; min-height: 58px; } body.ms-on .tiles { grid-template-columns: 1fr; }
   body.ms-on h1 { font-size: 28px; } body.ms-on .btn { padding: 8px 28px; } body.ms-on .ms-roll { height: 48px; } .coin-hero { width: 120px; height: 120px; }
+}
+@media (max-width: 380px) {
+  body.ms-on main#app { padding: 66px 54px 58px; } body.ms-on { font-size: 17px; } body.ms-on .tile { font-size: 20px; } body.ms-on h1 { font-size: 24px; } body.ms-on h1.qq { font-size: 22px; } .ms-top .basm { font-size: 27px; } .ms-top .ms-zg { width: 72px; height: 72px; } body.ms-on .btn { padding: 8px 22px; font-size: 19px; }
 }
 @media (max-height: 760px) and (min-width: 700px) { body.ms-on main#app { padding-top: 70px; padding-bottom: 60px; margin-top: 50px; margin-bottom: 50px; } .ms-top .basm { font-size: 44px; } body.ms-on .tile { min-height: 58px; font-size: 23px; } }
 </style>
