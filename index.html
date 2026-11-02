@@ -7316,6 +7316,7 @@ return exports;})();
       '<button class="d-tile kids" disabled aria-label="KidsZone, komt binnenkort">' + dIc("star", "#ffd54f") + '<small class="d-k">KIDSZONE</small><b>[Naam volgt]</b><small>Binnenkort, insha’Allah</small></button>' +
       '<button class="d-tile" data-act="rad">' + dIc("wheel", "#ffd54f", 30) + '<b>Ajalat al-‘Ilm</b><small>Rad van Kennis</small></button>' +
       '<button class="d-tile" data-act="group">' + dIc("users", "#ffd54f", 30) + "<b>Groep & Duel</b><small>Samen leren</small></button>" +
+      '<button class="d-tile" data-act="klas">' + dIc("book", "#ffd54f", 30) + "<b>Klas</b><small>Quiz met je klas</small></button>" +
       /* v104: tegel voor geleerden, imams en gevorderde studenten (nog op slot, in ontwikkeling) — v104b: alleen zichtbaar voor de beheerder */
       (!mkOwner() ? "" : '<button class="d-tile maktabah" data-act="maktabah" aria-label="Al-Maktabah al-Mutaqaddimah, geavanceerde bibliotheek. In ontwikkeling, alleen voor jou zichtbaar. Openen">' +
         '<span class="mk-badge" aria-hidden="true"><i></i>In ontwikkeling</span>' +
@@ -7430,7 +7431,7 @@ return exports;})();
       '<button class="q-cont" data-act="quran"><small>AL-QUR’AN · INDOPAK</small><b>' + (ql ? "Verder lezen: " + Q_TR[ql[0] - 1] + " " + ql.join(":") : "De volledige Koran lezen") + '</b><span lang="ar" dir="rtl">القرآن الكريم</span></button>' +
       '<button class="hub-fout" data-act="fout">' + hIc("fout", "#ffb703") + '<span><b>Mijn foutjes</b><small>' + (nf ? nf + " vraag" + (nf === 1 ? "" : "en") + " om te herhalen (" + modeName(P.mode) + ")" : "Nog niets: vragen die je fout hebt komen hier") + "</small></span>" + (nf ? '<em>' + nf + "</em>" : "") + "</button>" +
       (labState().on ? '<button class="hub-tile lab-tile" data-act="lab">' + hIc("les", "#7ee8c8") + "<b>Testlab · Organisatiekamers</b><small>School, docent, imam of uitgeverij: maak een kamer en probeer het uit</small></button>" : "") +
-      '<button class="hub-tile lab-tile" data-act="klas">' + hIc("les", "#f6d25a") + "<b>Klasmodus · voor docenten</b><small>Maak je eigen quiz voor je klas (in ontwikkeling)</small></button>" +
+      '<button class="hub-tile lab-tile" data-act="klas">' + hIc("les", "#f6d25a") + "<b>Klasmodus</b><small>Doe mee met een code of maak een quiz voor je klas</small></button>" +
       '<div class="hub-grid">' + soon("les", "Lessen per land", "Korte kaartjes vóór de levels") +
       '<button class="hub-tile" data-act="dua">' + hIc("dua") + "<b>Du’a-boekje</b><small>Leren en uit je hoofd</small></button>" +
       soon("stap", "Stap voor stap", "Wudhu, Salah, Hadj") + soon("woord", "Woordenboek", "Van Adhaan tot Zakat") + "</div>" +
