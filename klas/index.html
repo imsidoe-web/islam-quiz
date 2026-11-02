@@ -226,7 +226,7 @@ body.ms-on { padding-bottom: 6px; }
   body.ms-on { font-size: 18px; } body.ms-on main#app { padding: 70px 60px 62px; } body.ms-on .ms-wrap main#app { margin: 0 4px; }
   body.ms-on .tile { padding: 8px 34px 8px 24px; } body.ms-on .tile em { right: 26px; top: 4px; font-size: 13px; }
   /* v174: de hoofdknop (Verstuur / Volgende vraag / Klaar) blijft op de telefoon onderaan het scherm staan */
-  body.ms-on .row:has(> #hnx), body.ms-on div:has(> #nx) { display: contents; }
+  body.ms-on .row:has(> #hnx) { display: contents; }
   body.ms-on #nx, body.ms-on #hnx { position: sticky; bottom: 12px; z-index: 6; margin-top: 12px; box-shadow: 0 0 0 5px rgba(239,226,184,.9), 0 8px 14px rgba(40,24,6,.35); }
   body.ms-on .qimg.qdoc { max-height: 27vh; margin: 4px auto 8px; }
   body.ms-on h1.qq { font-size: 25px; } body.ms-on h1.qq::first-letter { font-size: 1em; padding: 3px 7px 1px; margin: 3px 8px 0 0; }
@@ -234,7 +234,7 @@ body.ms-on { padding-bottom: 6px; }
   body.ms-on h1 { font-size: 28px; } body.ms-on .btn { padding: 8px 28px; } body.ms-on .ms-roll { height: 48px; } .coin-hero { width: 120px; height: 120px; }
 }
 /* v175: laptop en Chromebook - kop compacter, plaatje kleiner, hoofdknop blijft onderaan staan */
-body.ms-on .row:has(> #hnx), body.ms-on div:has(> #nx) { display: contents; }
+body.ms-on .row:has(> #hnx) { display: contents; }
 body.ms-on #nx, body.ms-on #hnx { position: sticky; bottom: 12px; z-index: 6; margin-top: 12px; box-shadow: 0 0 0 5px rgba(239,226,184,.9), 0 8px 14px rgba(40,24,6,.35); }
 @media (min-width: 701px) and (max-height: 1000px) {
   body.ms-on main#app { padding-top: 64px; padding-bottom: 56px; margin-top: 44px; margin-bottom: 44px; }
