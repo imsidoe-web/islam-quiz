@@ -592,7 +592,7 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
     });
   }
   function potHtml(sc, sg) {
-    return sc ? '<div class="pot center"><b>Sadaqa-pot</b><p style="margin:4px 0">Samen gaven jullie <svg class="coin" aria-hidden="true"><use href="#nsCoin"/></svg><span class="n3d">' + sg + '</span> munten, in ' + sc + ' keer geven. Barakallahu feek!</p></div>' : "";
+    return sc ? '<div class="pot center"><b>Sadaqa-pot</b><p style="margin:4px 0">Samen gaven jullie <svg class="coin" aria-hidden="true"><use href="#nsCoin"/></svg><span class="n3d">' + sg + '</span> munten (' + sc + (sc === 1 ? " keer" : " keer") + ' gegeven). Barakallahu feek!</p></div>' : "";
   }
   function stopTick() { if (tickT) { clearInterval(tickT); tickT = null; } }
   function newCode() { var c = ""; for (var i = 0; i < 6; i++) c += CODE_CHARS[Math.floor(Math.random() * CODE_CHARS.length)]; return c; }
