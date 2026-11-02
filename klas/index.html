@@ -243,7 +243,7 @@ body.ms-on { height: 100vh; height: 100dvh; display: flex; flex-direction: colum
 body.ms-on header.top { flex: none; padding: 5px 16px; } body.ms-on header.top svg.brand-wm { height: 22px; }
 body.ms-on .ms-wrap { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; width: 100%; }
 body.ms-on .ms-roll { flex: none; }
-body.ms-on .ms-wrap main#app { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; } body.ms-on .ms-wrap main#app { scrollbar-width: thin; scrollbar-color: rgba(122,84,20,.55) transparent; }
+body.ms-on .ms-wrap main#app { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; } body.ms-on .ms-wrap main#app { scrollbar-width: none; -ms-overflow-style: none; } body.ms-on .ms-wrap main#app::-webkit-scrollbar { display: none; width: 0; height: 0; }
 body.ms-on .ms-hint { display: none; }
 body.ms-on .ms-wrap.ms-more .ms-hint { display: block; position: absolute; left: 50%; bottom: 66px; transform: translateX(-50%); z-index: 8; pointer-events: none; background: rgba(43,29,14,.85); color: #f6d25a; font: 700 17px/1 var(--boek); padding: 8px 18px; border-radius: 999px; box-shadow: 0 2px 8px rgba(0,0,0,.4); white-space: nowrap; animation: msHintBob 1.6s ease-in-out infinite; }
 @keyframes msHintBob { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(5px); } }
