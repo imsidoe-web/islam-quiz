@@ -615,7 +615,7 @@ input[type=range] { accent-color: var(--em); height: 36px; }
       } else if (q.t === "slider") {
         var mid = Math.round((q.min + q.max) / 2);
         body = '<div class="bigval"><output id="sv">' + mid + '</output></div><input type="range" id="sr" min="' + q.min + '" max="' + q.max + '" step="1" value="' + mid + '" style="width:100%" aria-label="Kies een getal tussen ' + q.min + ' en ' + q.max + '">' +
-          '<div class="qtop"><span>' + q.min + '</span><span>' + q.max + '</span></div><div style="margin-top:12px"><button class="btn gold" id="send" type="button">Verstuur</button></div>';
+          '<div class="qtop"><span>' + q.min + '</span><span>' + q.max + '</span></div><p class="muted" id="sh" style="text-align:center">Schuif eerst naar je antwoord.</p><div style="margin-top:12px"><button class="btn gold" id="send" type="button" disabled>Verstuur</button></div>';
       }
       app.innerHTML = '<div class="qtop"><span>Vraag ' + (m.qi + 1) + ' van ' + m.n + '</span><b id="sec"></b></div><div class="bar"><div id="barIn"></div></div>' +
         '<h1 class="qq">' + esc(q.q) + '</h1>' + body + (sent ? '<p class="msg" role="status">Antwoord verstuurd. Wacht op de anderen…</p>' : '<div id="msg" class="msg"></div>');
@@ -632,7 +632,7 @@ input[type=range] { accent-color: var(--em); height: 36px; }
           sendB.onclick = function () { sendAns(L.seq.join(",")); };
         } else if (q.t === "slider") {
           var sr = document.getElementById("sr"), sv = document.getElementById("sv");
-          sr.addEventListener("input", function () { sv.textContent = sr.value; });
+          sr.addEventListener("input", function () { sv.textContent = sr.value; sendB.disabled = false; var sh = document.getElementById("sh"); if (sh) sh.style.display = "none"; });
           sendB.onclick = function () { sendAns(String(sr.value)); };
         }
       }
