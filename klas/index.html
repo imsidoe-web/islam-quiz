@@ -115,6 +115,7 @@ main.wide { max-width: 1240px; }
   .qq { font-size: 22px; margin: 6px 0 8px; } .qq.big { font-size: clamp(24px, 3.2vw, 34px); }
   .tile { min-height: 62px; padding: 8px 12px; font-size: 18px; } .tiles { gap: 8px; margin: 6px 0; }
   .qimg { max-height: 26vh; margin: 4px auto 8px; } .bar { margin: 4px 0 8px; } .bigcode { margin: 4px auto 8px; }
+  .steps { margin: 4px 0; font-size: 15px; } .steps li { margin: 2px 0; } .jnote { display: none; } label { margin: 8px 0 3px; } .card { padding: 10px 14px; margin: 6px 0; } input[type=text] { padding: 8px 12px; } .msg { min-height: 16px; } .ar { font-size: 28px; margin-top: 2px; }
 }
 </style>
 </head>
@@ -212,7 +213,7 @@ main.wide { max-width: 1240px; }
       '<div class="card"><h2 style="margin-top:0">Ik ben leerling</h2><ol class="steps"><li>Vraag je docent om de code.</li><li>Kies een bijnaam. Geen echte naam.</li><li>Tik op Meedoen en wacht tot de docent start.</li></ol><label for="jc">Code van je docent</label>' +
       '<input type="text" id="jc" maxlength="6" autocomplete="off" autocapitalize="characters" value="' + esc(prefill) + '" placeholder="Bijvoorbeeld K7M2QX">' +
       '<label for="jn">Jouw bijnaam (max. 14 tekens)</label><input type="text" id="jn" maxlength="14" autocomplete="off" placeholder="Bijvoorbeeld Sterretje">' +
-      '<p class="muted">Kies een bijnaam, geen volledige naam. Je hebt geen account nodig.</p><div id="jmsg" class="msg"></div>' +
+      '<p class="muted jnote">Kies een bijnaam, geen volledige naam. Je hebt geen account nodig.</p><div id="jmsg" class="msg"></div>' +
       '<button class="btn gold" id="joinBtn" type="button">Meedoen</button></div>' +
       '<div class="card"><h2 style="margin-top:0">Ik ben docent</h2><p>Maak je eigen quiz en speel hem live met je klas.</p>' +
       '<button class="btn" id="g" type="button">Inloggen met Google</button><div id="msg" class="msg"></div></div>' +
