@@ -862,10 +862,15 @@ main.wide { max-width: 1240px; }
     stopAll();
     SHOWN = {};
     L = { code: code, uid: uid, name: name, meta: null, gotMeta: false, vragen: null, spelers: null, seen: false, shown: -1, picked: null, end: 0, ls: [] };
+    var prevSig = null;
     L.ls.push(listen("klas/" + code + "/meta", function (d) {
-      var o = L.meta; L.meta = d; L.gotMeta = true;
-      /* alleen de scorebord-schakelaar veranderd tijdens een vraag: niet opnieuw tekenen (anders raakt een half getypt antwoord kwijt) */
-      if (o && d && o.state === "vraag" && d.state === "vraag" && o.qi === d.qi) { var a = Object.assign({}, o, { sb: 0 }), b = Object.assign({}, d, { sb: 0 }); if (JSON.stringify(a) === JSON.stringify(b)) return; }
+      L.meta = d; L.gotMeta = true;
+      /* alleen de scorebord-schakelaar veranderd tijdens een vraag: niet opnieuw tekenen (anders raakt een half getypt antwoord kwijt).
+         Let op: listen() geeft steeds hetzelfde object terug, dus vergelijk met een bewaarde kopie (tekst) van de vorige stand. */
+      var sig = d ? JSON.stringify(Object.assign({}, d, { sb: 0 })) : "";
+      var same = prevSig !== null && sig === prevSig && d && d.state === "vraag";
+      prevSig = sig;
+      if (same) return;
       renderL();
     }));
     L.ls.push(listen("klas/" + code + "/spelers", function (d) {
