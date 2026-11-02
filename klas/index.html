@@ -76,6 +76,7 @@ input[type=range] { accent-color: var(--em); height: 36px; }
 .caravan { margin: 12px 0; } .car-track { position: relative; height: 16px; background: #e9e0c8; border-radius: 999px; margin: 30px 10px 6px; } .car-track i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--gold), var(--gold-l)); transition: width .6s; }
 .car-m { position: absolute; top: -26px; transform: translateX(-50%); transition: left .6s; line-height: 0; } .car-lbl { display: flex; justify-content: space-between; font-weight: 800; color: var(--em-d); font-size: 14px; }
 .stars.big { text-align: center; color: var(--gold); font-size: 40px; letter-spacing: 6px; }
+.tblw { overflow-x: auto; } .tbl { border-collapse: collapse; width: 100%; background: #fff; border-radius: 12px; font-size: 15px; } .tbl th, .tbl td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; } .tbl td.c, .tbl th { text-align: center; } .tbl td.ok { color: var(--em); font-weight: 900; } .tbl td.no { color: var(--bad); font-weight: 900; } .tbl tr.foot td { background: #fff8e0; font-weight: 800; }
 @media (max-width: 420px) { .tile { font-size: 17px; min-height: 76px; } }
 </style>
 </head>
@@ -134,6 +135,7 @@ input[type=range] { accent-color: var(--em); height: 36px; }
     if (user) document.getElementById("out").onclick = function () { stopAll(); lsSet(HOST_KEY, null); sb.auth.signOut().then(function () { user = null; edit = null; show(); }); };
     if (L) return renderL();
     if (G) return renderG();
+    if (HWV && user) return renderHwv();
     if (!user) return showLogin();
     if (edit) return showEditor();
     showList();
@@ -171,12 +173,18 @@ input[type=range] { accent-color: var(--em); height: 36px; }
     quizzes.forEach(function (q) {
       var n = (q.vragen || []).length;
       h += '<div class="card"><div class="q-head"><b>' + esc(q.titel) + '</b><span class="tag">' + n + ' vragen</span></div>' +
-        '<div class="row" style="margin-top:10px"><button class="btn small gold" data-a="live" data-id="' + esc(q.id) + '" type="button">Live spelen</button><button class="btn small" data-a="edit" data-id="' + esc(q.id) + '" type="button">Bewerken</button>' +
+        '<div class="row" style="margin-top:10px"><button class="btn small gold" data-a="live" data-id="' + esc(q.id) + '" type="button">Live spelen</button><button class="btn small" data-a="hw" data-id="' + esc(q.id) + '" type="button">Huiswerk</button><button class="btn small" data-a="edit" data-id="' + esc(q.id) + '" type="button">Bewerken</button>' +
         '<button class="btn small light" data-a="copy" data-id="' + esc(q.id) + '" type="button">Kopiëren</button>' +
         '<button class="btn small bad" data-a="del" data-id="' + esc(q.id) + '" type="button">Verwijderen</button></div></div>';
     });
+    var hl = hwList();
+    if (hl.length) {
+      h += '<h2>Huiswerk</h2>';
+      hl.forEach(function (x) { h += '<div class="card"><div class="q-head"><b>' + esc(x.titel) + '</b><span class="tag">' + esc(x.code) + '</span></div><p class="muted" style="margin:4px 0">Tot ' + esc(fmtDeadline(x.deadline)) + (x.deadline < Date.now() ? " (gesloten)" : "") + '</p><button class="btn small" data-hwv="' + esc(x.code) + '" type="button">Uitslag bekijken</button></div>'; });
+    }
     h += '<div class="disc">' + esc(DISC) + '</div>';
     app.innerHTML = h;
+    app.querySelectorAll("[data-hwv]").forEach(function (b) { b.onclick = function () { openHwv(hwList().filter(function (x) { return x.code === b.getAttribute("data-hwv"); })[0]); }; });
     var rs = document.getElementById("resume");
     if (rs) { rs.onclick = function () { rs.disabled = true; resumeHost().then(function (ok) { if (!ok) { say("Dit spel kon niet worden hervat.", true); rs.disabled = false; } }); }; }
     var dg = document.getElementById("dropgame");
@@ -191,6 +199,7 @@ input[type=range] { accent-color: var(--em); height: 36px; }
   function listAction(a, id) {
     var q = quizzes.filter(function (x) { return x.id === id; })[0];
     if (!q) return;
+    if (a === "hw") { if (!(q.vragen || []).length) { say("Deze quiz heeft nog geen vragen.", true); return; } hwForm(q); return; }
     if (a === "live") { if (!(q.vragen || []).length) { say("Deze quiz heeft nog geen vragen.", true); return; } hostStart(q); return; }
     if (a === "edit") { edit = { id: q.id, titel: q.titel, vragen: JSON.parse(JSON.stringify(q.vragen || [])) }; show(); }
     if (a === "copy") {
@@ -548,6 +557,27 @@ input[type=range] { accent-color: var(--em); height: 36px; }
     });
     return h + '</div>' + (hidden ? '<p class="muted">' + hidden + ' ongepast woord' + (hidden === 1 ? "" : "en") + ' verborgen.</p>' : "");
   }
+  function encKey(o) { try { return btoa(unescape(encodeURIComponent(JSON.stringify(o)))); } catch (e) { return ""; } }
+  function decKey(s) { try { return JSON.parse(decodeURIComponent(escape(atob(s)))); } catch (e) { return null; } }
+  function hwPubQ(q) {
+    var b = pubQ(q); b.e = q.e || "";
+    if (q.t === "poll" || q.t === "cloud") return b;
+    var kk = keyOf(q, b);
+    b.k = encKey({ key: q.t === "slider" ? { a: q.a, tol: q.tol || 0 } : kk.key, text: kk.text });
+    return b;
+  }
+  function isOkPub(q, key, a) {
+    if (q.t === "mc" || q.t === "tf" || q.t === "order") return a === key;
+    if (q.t === "type") { var n = norm(a); return n !== "" && key.indexOf(n) >= 0; }
+    var v = Number(a); return isFinite(v) && Math.abs(v - key.a) <= (key.tol || 0);
+  }
+  function dlCsv(rows, name) {
+    var s = rows.map(function (r) { return r.map(function (c) { c = String(c == null ? "" : c); return /[";\n]/.test(c) ? '"' + c.replace(/"/g, '""') + '"' : c; }).join(";"); }).join("\r\n");
+    var b = new Blob(["﻿" + s], { type: "text/csv;charset=utf-8" }), a = document.createElement("a");
+    a.href = URL.createObjectURL(b); a.download = name; document.body.appendChild(a); a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 800);
+  }
+  function fmtDeadline(t) { try { return new Date(t).toLocaleString("nl-NL", { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }); } catch (e) { return ""; } }
   var VORMEN = {
     klassiek: ["Klassiek", "Wie het snelst en het meest goed heeft, wint."],
     karavaan: ["Karavaan (samen)", "Jullie brengen samen de karavaan naar de oase. Elk goed antwoord telt mee."],
@@ -597,6 +627,7 @@ input[type=range] { accent-color: var(--em); height: 36px; }
     try {
       var meta = await dbReq("GET", "klas/" + code + "/meta");
       if (!meta) return bad("Deze code bestaat niet (meer). Vraag je docent om de code.");
+      if (meta.type === "hw" && meta.deadline && Date.now() > meta.deadline) return bad("Deze huiswerkopdracht is gesloten.");
       if (meta.state === "einde") return bad("Dit spel is al afgelopen.");
       var auth = await cloudAuth();
       var sp = (await dbReq("GET", "klas/" + code + "/spelers")) || {};
@@ -614,6 +645,7 @@ input[type=range] { accent-color: var(--em); height: 36px; }
     L.ls.push(listen("klas/" + code + "/spelers", function (d) {
       L.spelers = d; if (d && d[uid] && d[uid].name) L.seen = true;
       var st = L.meta && L.meta.state, mine = d && d[uid] && d[uid].got ? d[uid].got.qi : -1;
+      if (L.meta && L.meta.type === "hw") return;
       if (st !== "vraag") renderL();
       else if (L.bk !== mine) { L.bk = mine; if (L.picked == null && !(L.seq && L.seq.length)) renderL(); }
     }));
@@ -643,55 +675,16 @@ input[type=range] { accent-color: var(--em); height: 36px; }
     if (L.seen && L.spelers && !L.spelers[L.uid]) { app.innerHTML = '<h1>Je doet niet meer mee</h1><p>De docent heeft je uit het spel gehaald.</p>' + back; wire(); return; }
     if (!m) { app.innerHTML = '<p>Even laden…</p>'; return; }
     var me = (L.spelers && L.spelers[L.uid]) || {}, rk = ranking(L.spelers);
+    if (m.type === "hw") return renderHw();
     if (m.state === "lobby") {
+      L.vragen = null; L.shown = -1; L.picked = null; L.gave = null;
       app.innerHTML = '<div class="center"><div class="ar" lang="ar" dir="rtl">بِسْمِ اللَّهِ</div><h1>Bismillah, ' + esc(L.name) + '!</h1><p>Je doet mee met <b>' + esc(m.titel || "de quiz") + '</b>.</p>' +
         '<p class="muted"><b>Spelvorm: ' + esc((VORMEN[m.vorm] || VORMEN.klassiek)[0]) + '.</b> ' + esc((VORMEN[m.vorm] || VORMEN.klassiek)[1]) + '</p><p class="wait">Wacht tot de docent het spel start…</p><p class="muted">' + rk.length + ' speler' + (rk.length === 1 ? "" : "s") + ' in de klas</p>' + back + '</div>'; wire(); return;
     }
     if (m.state === "vraag") {
       var q = L.vragen && L.vragen[m.qi];
       if (!q) { app.innerHTML = '<p>Even laden…</p>'; loadVragen().then(renderL); return; }
-      if (L.shown !== m.qi) { L.shown = m.qi; L.picked = null; L.seq = []; L.end = Date.now() + q.time * 1000; }
-      var body = "", sent = L.picked != null;
-      if (q.t === "mc" || q.t === "tf" || q.t === "poll") body = tilesHtml(q, { pick: L.picked, click: true });
-      else if (sent) body = '<div class="card"><b>Je antwoord:</b> ' + esc(q.t === "order" ? String(L.picked).split(",").map(function (ix) { return q.o[+ix]; }).join(" → ") : L.picked) + '</div>';
-      else if (q.t === "type" || q.t === "cloud") body = '<label for="ta">' + (q.t === "cloud" ? "Typ één woord of een korte zin" : "Typ je antwoord") + '</label><input type="text" id="ta" maxlength="' + (q.t === "cloud" ? 20 : 40) + '" autocomplete="off" autocapitalize="off"><div style="margin-top:12px"><button class="btn gold" id="send" type="button">Verstuur</button></div>';
-      else if (q.t === "order") {
-        body = '<p class="muted">Tik de items in de goede volgorde: eerst het eerste, dan het tweede, enzovoort.</p><div class="tiles">';
-        q.o.forEach(function (t, kx) {
-          var pos = L.seq.indexOf(kx);
-          body += '<button type="button" class="tile t' + (kx % 4) + (pos >= 0 ? " mine" : "") + '" data-ix="' + kx + '"' + (pos >= 0 ? " disabled" : "") + '><i>' + (pos >= 0 ? pos + 1 : "•") + '</i><span>' + esc(t) + '</span></button>';
-        });
-        body += '</div><div class="row" style="margin-top:12px"><button class="btn gold" id="send" type="button"' + (L.seq.length === q.o.length ? "" : " disabled") + '>Verstuur</button><button class="btn light" id="clr" type="button">Opnieuw</button></div>';
-      } else if (q.t === "slider") {
-        var mid = Math.round((q.min + q.max) / 2);
-        body = '<div class="bigval"><output id="sv">' + mid + '</output></div><input type="range" id="sr" min="' + q.min + '" max="' + q.max + '" step="1" value="' + mid + '" style="width:100%" aria-label="Kies een getal tussen ' + q.min + ' en ' + q.max + '">' +
-          '<div class="qtop"><span>' + q.min + '</span><span>' + q.max + '</span></div><p class="muted" id="sh" style="text-align:center">Schuif eerst naar je antwoord.</p><div style="margin-top:12px"><button class="btn gold" id="send" type="button" disabled>Verstuur</button></div>';
-      }
-      app.innerHTML = (me.got && me.got.qi === m.qi - 1 ? '<div class="expl"><b>Sadaqa:</b> ' + esc(me.got.by.join(" en ")) + ' gaf jou ' + me.got.n + ' punten. Jazakallahu khayran!</div>' : "") + '<div class="qtop"><span>Vraag ' + (m.qi + 1) + ' van ' + m.n + '</span><b id="sec"></b></div><div class="bar"><div id="barIn"></div></div>' +
-        '<h1 class="qq">' + esc(q.q) + '</h1>' + body + (sent ? '<p class="msg" role="status">Antwoord verstuurd. Wacht op de anderen…</p>' : '<div id="msg" class="msg"></div>');
-      app.querySelectorAll("[data-k]").forEach(function (b) { b.onclick = function () { sendAns(+b.getAttribute("data-k")); }; });
-      var sendB = document.getElementById("send");
-      if (sendB && !sent) {
-        if (q.t === "type" || q.t === "cloud") {
-          var ta = document.getElementById("ta");
-          var go = function () { var v = ta.value.trim(); if (!v) { say("Typ eerst je antwoord.", true); return; } sendAns(v); };
-          sendB.onclick = go; ta.addEventListener("keydown", function (e) { if (e.key === "Enter") go(); });
-        } else if (q.t === "order") {
-          app.querySelectorAll("[data-ix]").forEach(function (b) { b.onclick = function () { L.seq.push(+b.getAttribute("data-ix")); renderL(); }; });
-          document.getElementById("clr").onclick = function () { L.seq = []; renderL(); };
-          sendB.onclick = function () { sendAns(L.seq.join(",")); };
-        } else if (q.t === "slider") {
-          var sr = document.getElementById("sr"), sv = document.getElementById("sv");
-          sr.addEventListener("input", function () { sv.textContent = sr.value; sendB.disabled = false; var sh = document.getElementById("sh"); if (sh) sh.style.display = "none"; });
-          sendB.onclick = function () { sendAns(String(sr.value)); };
-        }
-      }
-      var tot = q.time * 1000;
-      var upd = function () {
-        var left = Math.max(0, L.end - Date.now()), s = document.getElementById("sec"), bi = document.getElementById("barIn");
-        if (s) s.textContent = Math.ceil(left / 1000) + " sec"; if (bi) bi.style.width = (100 * left / tot) + "%";
-      };
-      upd(); tickT = setInterval(upd, 200); return;
+      return drawQ(m, q, me);
     }
     if (m.state === "uitslag") {
       var q2 = L.vragen && L.vragen[m.qi], last = me.last && me.last.qi === m.qi ? me.last : null;
@@ -710,6 +703,44 @@ input[type=range] { accent-color: var(--em); height: 36px; }
       app.innerHTML = '<div class="center"><h1>Het spel is afgelopen</h1>' + (m.vorm === "karavaan" ? teamEndHtml(m.p || 0, m.ne || m.n) + '<p class="muted">Jullie hebben het samen gedaan. MashaAllah!</p>' : podiumHtml(rk) + '<p class="rank">Jij werd <b>' + (my2 || "–") + 'e</b> met ' + (me.score || 0) + ' punten. MashaAllah!</p>') + back + '</div>'; wire();
     }
   }
+
+  /* ───── leerling: huiswerk (in eigen tempo) ───── */
+  function hwSave() { lsSet("klas-hw-" + L.code + "-" + L.uid, L.h); }
+  function renderHw(fb) {
+    stopTick();
+    var m = L.meta, back = '<button class="btn light" id="leave" type="button">Stoppen</button>';
+    function wire() { var lv = document.getElementById("leave"); if (lv) lv.onclick = leaveLeerling; }
+    if (!L.vragen) { app.innerHTML = '<p>Even laden…</p>'; loadVragen().then(function () { renderHw(); }); return; }
+    if (!L.h) L.h = lsGet("klas-hw-" + L.code + "-" + L.uid) || { i: 0, score: 0, res: [] };
+    var h = L.h, n = m.n, closed = m.deadline && Date.now() > m.deadline;
+    if (h.i >= n) {
+      var okn = h.res.filter(function (r) { return r && r.ok; }).length;
+      app.innerHTML = '<div class="center"><div class="ar" lang="ar" dir="rtl">الحمد لله</div><h1>Klaar, MashaAllah!</h1><p class="rank">Je score: <b>' + h.score + '</b> punten<br>' + okn + ' vragen goed</p><p class="muted">Je docent ziet je resultaat.</p>' + back + '</div>'; wire(); return;
+    }
+    if (h.res[h.i]) fb = true;
+    if (closed && !fb) { app.innerHTML = '<div class="center"><h1>Gesloten</h1><p>Deze huiswerkopdracht is gesloten.</p>' + back + '</div>'; wire(); return; }
+    var q = L.vragen[h.i];
+    if (fb) {
+      var r = h.res[h.i] || {};
+      var head = r.opin ? '<h1 class="good-h">Bedankt voor je antwoord!</h1>' : r.ok ? '<h1 class="good-h">MashaAllah! +' + r.pts + '</h1>' : '<h1 class="bad-h">Helaas, dat was niet goed</h1>';
+      app.innerHTML = '<div class="qtop"><span>Vraag ' + (h.i + 1) + ' van ' + n + '</span><b>' + h.score + ' punten</b></div><div class="center">' + head +
+        (r.opin ? "" : '<p>Het goede antwoord: <b>' + esc(r.text) + '</b></p>') + (q && q.e ? '<p class="expl">' + esc(q.e) + '</p>' : "") +
+        '<div class="row" style="justify-content:center;margin-top:12px"><button class="btn gold" id="hnx" type="button">' + (h.i + 1 >= n ? "Klaar" : "Volgende vraag") + '</button></div></div>';
+      document.getElementById("hnx").onclick = function () { h.i++; L.picked = null; hwSave(); renderHw(); };
+      return;
+    }
+    drawQ({ type: "hw", qi: h.i, n: n, state: "vraag" }, q, {});
+  }
+  function hwAnswer(v) {
+    var h = L.h, i = h.i, q = L.vragen[i];
+    if (!h || L.picked != null || h.res[i]) return;
+    L.picked = v;
+    var kk = q.k ? decKey(q.k) : null, ok = false, pts = 0;
+    if (kk) { ok = isOkPub(q, kk.key, v); if (ok) pts = Math.round(500 * (q.pts == null ? 1 : q.pts)); }
+    h.score += pts; h.res[i] = { ok: ok, pts: pts, opin: !kk, text: kk ? kk.text : "" }; hwSave();
+    dbReq("PUT", "klas/" + L.code + "/ant/" + i + "/" + L.uid, v).catch(function () { /* de docent ziet dit antwoord dan niet */ });
+    renderHw(true);
+  }
   function giftHtml(m, rk, me, last) {
     if (m.vorm !== "sadaqa") return "";
     if (!(last && last.ok)) return '<div class="card"><b>Sadaqa-ronde</b><p class="muted" style="margin:4px 0">Wie de vraag goed had, kan punten weggeven.</p></div>';
@@ -725,10 +756,149 @@ input[type=range] { accent-color: var(--em); height: 36px; }
     L.gave = qi; renderL();
     dbReq("PUT", "klas/" + L.code + "/gift/" + qi + "/" + L.uid, uid2).catch(function () { L.gave = null; renderL(); say("Dat lukte niet. Probeer opnieuw.", true); });
   }
+  function drawQ(m, q, me) {
+      var hw = m.type === "hw";
+      if (L.shown !== m.qi) { L.shown = m.qi; L.picked = null; L.seq = []; L.end = Date.now() + q.time * 1000; }
+      var body = "", sent = L.picked != null;
+      if (q.t === "mc" || q.t === "tf" || q.t === "poll") body = tilesHtml(q, { pick: L.picked, click: true });
+      else if (sent) body = '<div class="card"><b>Je antwoord:</b> ' + esc(q.t === "order" ? String(L.picked).split(",").map(function (ix) { return q.o[+ix]; }).join(" → ") : L.picked) + '</div>';
+      else if (q.t === "type" || q.t === "cloud") body = '<label for="ta">' + (q.t === "cloud" ? "Typ één woord of een korte zin" : "Typ je antwoord") + '</label><input type="text" id="ta" maxlength="' + (q.t === "cloud" ? 20 : 40) + '" autocomplete="off" autocapitalize="off"><div style="margin-top:12px"><button class="btn gold" id="send" type="button">Verstuur</button></div>';
+      else if (q.t === "order") {
+        body = '<p class="muted">Tik de items in de goede volgorde: eerst het eerste, dan het tweede, enzovoort.</p><div class="tiles">';
+        q.o.forEach(function (t, kx) {
+          var pos = L.seq.indexOf(kx);
+          body += '<button type="button" class="tile t' + (kx % 4) + (pos >= 0 ? " mine" : "") + '" data-ix="' + kx + '"' + (pos >= 0 ? " disabled" : "") + '><i>' + (pos >= 0 ? pos + 1 : "•") + '</i><span>' + esc(t) + '</span></button>';
+        });
+        body += '</div><div class="row" style="margin-top:12px"><button class="btn gold" id="send" type="button"' + (L.seq.length === q.o.length ? "" : " disabled") + '>Verstuur</button><button class="btn light" id="clr" type="button">Opnieuw</button></div>';
+      } else if (q.t === "slider") {
+        var mid = Math.round((q.min + q.max) / 2);
+        body = '<div class="bigval"><output id="sv">' + mid + '</output></div><input type="range" id="sr" min="' + q.min + '" max="' + q.max + '" step="1" value="' + mid + '" style="width:100%" aria-label="Kies een getal tussen ' + q.min + ' en ' + q.max + '">' +
+          '<div class="qtop"><span>' + q.min + '</span><span>' + q.max + '</span></div><p class="muted" id="sh" style="text-align:center">Schuif eerst naar je antwoord.</p><div style="margin-top:12px"><button class="btn gold" id="send" type="button" disabled>Verstuur</button></div>';
+      }
+      app.innerHTML = (me.got && me.got.qi === m.qi - 1 ? '<div class="expl"><b>Sadaqa:</b> ' + esc(me.got.by.join(" en ")) + ' gaf jou ' + me.got.n + ' punten. Jazakallahu khayran!</div>' : "") + (hw ? '<div class="qtop"><span>Vraag ' + (m.qi + 1) + ' van ' + m.n + '</span><b>Huiswerk</b></div>' : '<div class="qtop"><span>Vraag ' + (m.qi + 1) + ' van ' + m.n + '</span><b id="sec"></b></div><div class="bar"><div id="barIn"></div></div>') +
+        '<h1 class="qq">' + esc(q.q) + '</h1>' + body + (sent ? '<p class="msg" role="status">Antwoord verstuurd. Wacht op de anderen…</p>' : '<div id="msg" class="msg"></div>');
+      app.querySelectorAll("[data-k]").forEach(function (b) { b.onclick = function () { sendAns(+b.getAttribute("data-k")); }; });
+      var sendB = document.getElementById("send");
+      if (sendB && !sent) {
+        if (q.t === "type" || q.t === "cloud") {
+          var ta = document.getElementById("ta");
+          var go = function () { var v = ta.value.trim(); if (!v) { say("Typ eerst je antwoord.", true); return; } sendAns(v); };
+          sendB.onclick = go; ta.addEventListener("keydown", function (e) { if (e.key === "Enter") go(); });
+        } else if (q.t === "order") {
+          app.querySelectorAll("[data-ix]").forEach(function (b) { b.onclick = function () { L.seq.push(+b.getAttribute("data-ix")); renderL(); }; });
+          document.getElementById("clr").onclick = function () { L.seq = []; renderL(); };
+          sendB.onclick = function () { sendAns(L.seq.join(",")); };
+        } else if (q.t === "slider") {
+          var sr = document.getElementById("sr"), sv = document.getElementById("sv");
+          sr.addEventListener("input", function () { sv.textContent = sr.value; sendB.disabled = false; var sh = document.getElementById("sh"); if (sh) sh.style.display = "none"; });
+          sendB.onclick = function () { sendAns(String(sr.value)); };
+        }
+      }
+      if (hw) return;
+      var tot = q.time * 1000;
+      var upd = function () {
+        var left = Math.max(0, L.end - Date.now()), s = document.getElementById("sec"), bi = document.getElementById("barIn");
+        if (s) s.textContent = Math.ceil(left / 1000) + " sec"; if (bi) bi.style.width = (100 * left / tot) + "%";
+      };
+      upd(); tickT = setInterval(upd, 200);
+  }
   function sendAns(v) {
+    if (L && L.meta && L.meta.type === "hw") return hwAnswer(v);
     if (!L || L.picked != null || !L.meta || L.meta.state !== "vraag") return;
     L.picked = v; renderL();
     dbReq("PUT", "klas/" + L.code + "/ant/" + L.meta.qi + "/" + L.uid, v).catch(function () { L.picked = null; renderL(); say("Je antwoord kwam niet aan. Tik opnieuw.", true); });
+  }
+
+
+  /* ───── docent: huiswerk ───── */
+  var HW_KEY = "klas-hw", HWV = null;
+  function hwList() { return lsGet(HW_KEY) || []; }
+  function hwForm(q) {
+    var d = new Date(Date.now() + 7 * 864e5), iso = d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2);
+    app.innerHTML = '<h1>Huiswerk geven</h1><p>Quiz: <b>' + esc(q.titel) + '</b></p><p>Leerlingen spelen in hun eigen tempo, zonder tijdsdruk. Jij ziet daarna wie wat goed had.</p>' +
+      '<label for="hd">Tot en met welke dag mag het gemaakt worden?</label><input type="date" id="hd" value="' + iso + '"><div id="msg" class="msg"></div>' +
+      '<div class="row" style="margin-top:12px"><button class="btn gold" id="hgo" type="button">Huiswerk maken</button><button class="btn light" id="hno" type="button">Terug</button></div>';
+    document.getElementById("hno").onclick = function () { show(); };
+    document.getElementById("hgo").onclick = function () {
+      var v = document.getElementById("hd").value; if (!v) { say("Kies een dag.", true); return; }
+      var dl = new Date(v + "T23:59:59").getTime(); if (!(dl > Date.now())) { say("Kies een dag in de toekomst.", true); return; }
+      this.disabled = true; say("Bezig…"); hwCreate(q, dl);
+    };
+  }
+  async function hwCreate(quiz, deadline) {
+    try {
+      var auth = await cloudAuth(), code = null;
+      for (var t = 0; t < 6 && !code; t++) { var c = newCode(); if (!(await dbReq("GET", "klas/" + c + "/meta"))) code = c; }
+      if (!code) throw new Error("code");
+      var pub = quiz.vragen.map(hwPubQ);
+      await dbReq("PUT", "klas/" + code + "/meta", { host: auth.uid, titel: quiz.titel, state: "hw", type: "hw", deadline: deadline, n: quiz.vragen.length, created: Date.now() });
+      await dbReq("PUT", "klas/" + code + "/vragen", pub);
+      var l = hwList(); l.unshift({ code: code, quizId: quiz.id, titel: quiz.titel, deadline: deadline }); lsSet(HW_KEY, l);
+      HWV = { entry: l[0], fresh: true, data: null }; show();
+    } catch (e) { var b = document.getElementById("hgo"); if (b) b.disabled = false; say("Het huiswerk kon niet worden gemaakt. Staan de Firebase-regels klaar?", true); }
+  }
+  async function openHwv(entry) {
+    HWV = { entry: entry, fresh: false, data: null }; show();
+    try {
+      var code = entry.code, quiz = quizzes.filter(function (x) { return x.id === entry.quizId; })[0];
+      var meta = await dbReq("GET", "klas/" + code + "/meta"), pub = await dbReq("GET", "klas/" + code + "/vragen");
+      var sp = (await dbReq("GET", "klas/" + code + "/spelers")) || {}, ant = (await dbReq("GET", "klas/" + code + "/ant")) || {};
+      if (!meta || !pub) { HWV.err = "Dit huiswerk bestaat niet meer."; show(); return; }
+      if (!quiz) { HWV.err = "De quiz van dit huiswerk is niet meer in je lijst."; show(); return; }
+      pub = Array.isArray(pub) ? pub : Object.keys(pub).map(function (x) { return pub[x]; });
+      var rows = [], qs = quiz.vragen, per = qs.map(function () { return { ok: 0, n: 0 }; });
+      Object.keys(sp).forEach(function (u) {
+        if (!sp[u] || !sp[u].name) return;
+        var r = { name: sp[u].name, score: 0, cells: [] };
+        qs.forEach(function (q, qi) {
+          var a = ant[qi] ? ant[qi][u] : undefined, opin = q.t === "poll" || q.t === "cloud";
+          if (a === undefined || a === null) { r.cells.push("–"); return; }
+          if (opin) { r.cells.push("•"); return; }
+          var ok = validAns(q, a) && isOk(q, keyOf(q, pub[qi]).key, a);
+          per[qi].n++; if (ok) { per[qi].ok++; r.score += Math.round(500 * (q.pts == null ? 1 : q.pts)); }
+          r.cells.push(ok ? "✓" : "✗");
+        });
+        rows.push(r);
+      });
+      rows.sort(function (a, b) { return b.score - a.score || a.name.localeCompare(b.name); });
+      HWV.data = { rows: rows, per: per, quiz: quiz, meta: meta }; show();
+    } catch (e) { HWV.err = "De uitslag kon niet worden geladen."; show(); }
+  }
+  function renderHwv() {
+    var v = HWV, e = v.entry, d = v.data, link = "https://nurspark.app/klas/?c=" + e.code;
+    var h = '<h1>Huiswerk: ' + esc(e.titel) + '</h1><div class="card center"><p class="muted" style="margin:0">Code voor de leerlingen</p><div class="bigcode" style="font-size:44px">' + esc(e.code) + '</div>' +
+      '<p style="margin:4px 0">Tot ' + esc(fmtDeadline(e.deadline)) + ' · <a target="_blank" rel="noopener" href="https://wa.me/?text=' + encodeURIComponent("Huiswerk op NurSpark. Doe mee met code " + e.code + ": " + link) + '">Deel via WhatsApp</a></p></div>';
+    if (v.err) h += '<p class="msg err">' + esc(v.err) + '</p>';
+    else if (!d) h += '<p>Uitslag laden…</p>';
+    else {
+      h += '<h2>Uitslag (' + d.rows.length + ' leerling' + (d.rows.length === 1 ? "" : "en") + ')</h2>';
+      if (!d.rows.length) h += '<p class="muted">Nog niemand heeft meegedaan.</p>';
+      else {
+        h += '<div class="tblw"><table class="tbl"><thead><tr><th>Leerling</th><th>Punten</th>' + d.quiz.vragen.map(function (q, i) { return '<th title="' + esc(q.q) + '">' + (i + 1) + '</th>'; }).join("") + '</tr></thead><tbody>';
+        d.rows.forEach(function (r) { h += '<tr><td>' + esc(r.name) + '</td><td><b>' + r.score + '</b></td>' + r.cells.map(function (c) { return '<td class="c' + (c === "✓" ? " ok" : c === "✗" ? " no" : "") + '">' + c + '</td>'; }).join("") + '</tr>'; });
+        h += '<tr class="foot"><td>% goed</td><td></td>' + d.per.map(function (x, i) { var q = d.quiz.vragen[i]; return '<td class="c">' + ((q.t === "poll" || q.t === "cloud") ? "•" : x.n ? Math.round(100 * x.ok / x.n) + "%" : "–") + '</td>'; }).join("") + '</tr></tbody></table></div>';
+        h += '<p class="muted">✓ goed · ✗ fout · – niet gemaakt · • peiling of woordwolk (geen punten)</p>';
+      }
+      h += '<div class="row"><button class="btn small" id="hrf" type="button">Vernieuwen</button>' + (d.rows.length ? '<button class="btn small light" id="hcsv" type="button">Download uitslag</button>' : "") + '</div>';
+    }
+    h += '<div id="msg" class="msg"></div><div class="row" style="margin-top:12px"><button class="btn small light" id="hcl" type="button">Sluiten voor leerlingen</button><button class="btn small bad" id="hdel" type="button">Verwijderen</button><button class="btn small light" id="hbk" type="button">Terug</button></div>';
+    app.innerHTML = h;
+    var $ = function (id) { return document.getElementById(id); };
+    $("hbk").onclick = function () { HWV = null; show(); };
+    if ($("hrf")) $("hrf").onclick = function () { openHwv(e); };
+    if ($("hcsv")) $("hcsv").onclick = function () {
+      var rows = [["Leerling", "Punten"].concat(d.quiz.vragen.map(function (q, i) { return "Vraag " + (i + 1); }))];
+      d.rows.forEach(function (r) { rows.push([r.name, r.score].concat(r.cells.map(function (c) { return c === "✓" ? "goed" : c === "✗" ? "fout" : c === "•" ? "antwoord" : ""; }))); });
+      dlCsv(rows, "huiswerk-" + e.code + ".csv");
+    };
+    $("hcl").onclick = function () {
+      dbReq("PATCH", "klas/" + e.code + "/meta", { deadline: Date.now() - 1000 }).then(function () { e.deadline = Date.now() - 1000; var l = hwList().map(function (x) { return x.code === e.code ? e : x; }); lsSet(HW_KEY, l); say("Gesloten. Leerlingen kunnen niet meer meedoen."); }).catch(function () { say("Dat lukte niet.", true); });
+    };
+    $("hdel").onclick = async function () {
+      if (!confirm("Dit huiswerk en alle resultaten verwijderen?")) return;
+      try { for (var nd of ["ant", "spelers", "vragen", "meta"]) await dbReq("PUT", "klas/" + e.code + "/" + nd, null); } catch (x) {}
+      lsSet(HW_KEY, hwList().filter(function (y) { return y.code !== e.code; })); HWV = null; show();
+    };
   }
 
   /* ───── docent: spel leiden ───── */
@@ -821,6 +991,9 @@ input[type=range] { accent-color: var(--em); height: 36px; }
     try {
       var ant = (await dbReq("GET", "klas/" + G.code + "/ant/" + qi)) || {}, upd = {};
       var ev = evalQ(qi, ant), kk = keyOf(q, G.pub[qi]);
+      G.hist = G.hist || []; G.per = G.per || {};
+      G.hist.push({ qi: qi, q: q.q, ok: ev.st.ok, total: ev.st.total, opin: q.t === "poll" || q.t === "cloud" });
+      Object.keys(ev.per).forEach(function (u) { G.per[u] = G.per[u] || {}; G.per[u][qi] = ev.per[u].ok ? 1 : 0; });
       if (G.vorm === "karavaan" && q.t !== "poll" && q.t !== "cloud") G.prog += ev.st.total ? ev.st.ok / ev.st.total : 0;
       Object.keys(ev.per).forEach(function (u) {
         var r = ev.per[u], p = G.players[u], pts = 0;
@@ -866,6 +1039,19 @@ input[type=range] { accent-color: var(--em); height: 36px; }
       G.state = "einde"; renderG(); return;
     }
     hostAsk(i);
+  }
+  async function replay() {
+    var b = document.getElementById("again"); if (b) b.disabled = true;
+    try {
+      var upd = {};
+      Object.keys(G.players).forEach(function (u) { if (G.players[u] && G.players[u].name) { upd[u + "/score"] = 0; upd[u + "/last"] = null; upd[u + "/got"] = null; G.players[u].score = 0; } });
+      if (Object.keys(upd).length) await dbReq("PATCH", "klas/" + G.code + "/spelers", upd);
+      await dbReq("PUT", "klas/" + G.code + "/ant", null); await dbReq("PUT", "klas/" + G.code + "/gift", null);
+      G.pub = G.quiz.vragen.map(pubQ); await dbReq("PUT", "klas/" + G.code + "/vragen", G.pub);
+      await dbReq("PATCH", "klas/" + G.code + "/meta", { state: "lobby", qi: -1, p: 0, a: null, at: null, e: null });
+      G.state = "lobby"; G.qi = -1; G.prog = 0; G.hist = []; G.per = {}; G.arr = {}; G.stat = null; G.giftMsg = null; G.closed = false;
+      renderG();
+    } catch (e) { if (b) b.disabled = false; say("Opnieuw starten lukte niet.", true); }
   }
   async function hostStop() {
     var code = G.code;
@@ -928,7 +1114,14 @@ input[type=range] { accent-color: var(--em); height: 36px; }
       document.getElementById("nx").onclick = function () { this.disabled = true; hostNext(); }; return;
     }
     if (st === "einde") {
-      app.innerHTML = '<div class="center"><h1>MashaAllah!</h1>' + (G.vorm === "karavaan" ? teamEndHtml(G.prog, G.ne) + '<h2>Jullie samen</h2><div class="chips">' + rk.map(function (r) { return '<span class="chip">' + esc(r.name) + '</span>'; }).join("") + '</div>' : podiumHtml(rk) + '<h2>Alle spelers</h2>' + listHtml(rk, 50)) + '<div class="row" style="justify-content:center;margin-top:14px"><button class="btn gold" id="fin" type="button">Spel afsluiten</button></div></div>';
+      app.innerHTML = '<div class="center"><h1>MashaAllah!</h1>' + (G.vorm === "karavaan" ? teamEndHtml(G.prog, G.ne) + '<h2>Jullie samen</h2><div class="chips">' + rk.map(function (r) { return '<span class="chip">' + esc(r.name) + '</span>'; }).join("") + '</div>' : podiumHtml(rk) + '<h2>Alle spelers</h2>' + listHtml(rk, 50)) + '<h2>Per vraag</h2><ol class="lb">' + (G.hist || []).map(function (x) { return '<li><span>' + (x.qi + 1) + '. ' + esc(x.q.length > 40 ? x.q.slice(0, 38) + "…" : x.q) + '</span><b>' + (x.opin ? "•" : x.total ? Math.round(100 * x.ok / x.total) + "%" : "–") + '</b></li>'; }).join("") + '</ol>' +
+        '<div class="row" style="justify-content:center;margin-top:14px"><button class="btn gold" id="again" type="button">Nog een keer spelen</button><button class="btn light" id="dl" type="button">Download uitslag</button><button class="btn light" id="fin" type="button">Spel afsluiten</button></div></div>';
+      document.getElementById("again").onclick = replay;
+      document.getElementById("dl").onclick = function () {
+        var rows = [["Leerling", "Punten"].concat(G.quiz.vragen.map(function (x, i) { return "Vraag " + (i + 1); }))];
+        rk.forEach(function (r) { rows.push([r.name, r.score].concat(G.quiz.vragen.map(function (x, i) { var v = G.per && G.per[r.uid] ? G.per[r.uid][i] : null; return v == null ? "" : v ? "goed" : "fout"; }))); });
+        dlCsv(rows, "uitslag-" + G.code + ".csv");
+      };
       document.getElementById("fin").onclick = function () { if (confirm("Het spel afsluiten? De scores worden gewist.")) hostStop(); };
     }
   }
