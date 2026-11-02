@@ -17,6 +17,9 @@ body { margin: 0; font-family: "Nunito", "Segoe UI", system-ui, -apple-system, R
 header.top { background: var(--em-d); color: #f4efe2; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 header.top b { font-weight: 900; color: var(--gold-l); }
 header.top svg.brand-wm { height: 30px; width: auto; display: block; }
+#who { display: flex; align-items: center; gap: 12px; white-space: nowrap; }
+@media (max-width: 420px) { header.top { padding: 12px 10px; gap: 6px; } header.top svg.brand-wm { height: 22px; } @media (max-width: 340px) { header.top .wm b { display: none; } }
+header.top a, header.top button { font-size: 13px; } #who { gap: 7px; } header.top .wm b { font-size: 15px !important; } }
 header.top a, header.top button { color: #f4efe2; font: inherit; font-weight: 700; font-size: 15px; background: none; border: 0; text-decoration: underline; cursor: pointer; }
 main { max-width: 720px; margin: 0 auto; padding: 18px 16px 60px; }
 h1 { font-size: 26px; margin: 8px 0 6px; color: var(--em-d); }
@@ -163,18 +166,22 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
 
   /* ───── schermen ───── */
   function show() {
-    who.innerHTML = '<a href="/" id="home" aria-label="Terug naar de app">‹ App</a>' + (user ? ' <button type="button" id="out">Uitloggen</button>' : "");
-    ["home"].forEach(function () {});
-    var goHome = function () { try { sessionStorage.setItem("iq-from-klas", "1"); } catch (e) {} };
-    document.getElementById("home").onclick = goHome;
-    var wm = document.querySelector("a.wm"); if (wm) wm.onclick = goHome;
-    if (user) document.getElementById("out").onclick = function () { stopAll(); lsSet(HOST_KEY, null); sb.auth.signOut().then(function () { user = null; edit = null; show(); }); };
+    drawWho();
     if (L) return renderL();
     if (G) return renderG();
     if (HWV && user) return renderHwv();
     if (!user) return showLogin();
     if (edit) return showEditor();
     showList();
+  }
+  function drawWho() {
+    var on = soundOn();
+    who.innerHTML = '<button type="button" id="snd" aria-label="Geluid ' + (on ? "aan, tik om uit te zetten" : "uit, tik om aan te zetten") + '" aria-pressed="' + on + '" style="text-decoration:none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/>' + (on ? '<path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/>' : '<path d="M17 9l5 6M22 9l-5 6"/>') + '</svg></button> <a href="/" id="home" aria-label="Terug naar de app">‹ App</a>' + (user ? ' <button type="button" id="out">Uitloggen</button>' : "");
+    document.getElementById("snd").onclick = function () { lsSet(SND_KEY, soundOn() ? 0 : 1); if (soundOn()) { actx(); clink(0.02, 0.07); } drawWho(); };
+    var goHome = function () { try { sessionStorage.setItem("iq-from-klas", "1"); } catch (e) {} };
+    document.getElementById("home").onclick = goHome;
+    var wm = document.querySelector("a.wm"); if (wm) wm.onclick = goHome;
+    if (user) document.getElementById("out").onclick = function () { stopAll(); lsSet(HOST_KEY, null); sb.auth.signOut().then(function () { user = null; edit = null; show(); }); };
   }
 
   function showLogin() {
@@ -527,7 +534,28 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
   function vormNow() { return G ? G.vorm : (L && L.meta ? L.meta.vorm : "klassiek"); }
   function eenheid() { return vormNow() === "sadaqa" ? "munten" : "punten"; }
   /* getal met gouden 3D-look; bij Sadaqa met een gouden munt ervoor */
-  var SHOWN = {};
+  var SHOWN = {}, AC = null, SND_KEY = "klas-geluid";
+  function soundOn() { return lsGet(SND_KEY) !== 0; }
+  function actx() {
+    try {
+      if (!AC) { var C = window.AudioContext || window.webkitAudioContext; if (C) AC = new C(); }
+      if (AC && AC.state === "suspended") AC.resume();
+    } catch (e) { /* geen geluid */ }
+    return AC;
+  }
+  ["pointerdown", "keydown", "touchstart"].forEach(function (ev) { document.addEventListener(ev, function () { actx(); }, { passive: true }); });
+  /* zacht muntgeluid (geen muziek): twee heldere tikjes die snel wegsterven */
+  function clink(delay, vol) {
+    if (!soundOn()) return;
+    var c = actx(); if (!c || c.state !== "running") return;
+    var t = c.currentTime + delay, base = 1760 * (0.94 + Math.random() * 0.12);
+    [[1, 1], [1.5, 0.55], [2.01, 0.28]].forEach(function (pr) {
+      var o = c.createOscillator(), g = c.createGain();
+      o.type = "sine"; o.frequency.setValueAtTime(base * pr[0], t);
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol * pr[1], t + 0.006); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.28);
+      o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + 0.3);
+    });
+  }
   function ptsH(n, unit, plus, key) {
     var coin = vormNow() === "sadaqa" ? '<svg class="coin" aria-hidden="true"><use href="#nsCoin"/></svg>' : "";
     return coin + '<span class="n3d" data-to="' + n + '"' + (key ? ' data-k="' + esc(key) + '"' : "") + (plus ? ' data-p="1"' : "") + '>' + (plus ? "+" : "") + n + '</span>' + (unit ? " " + eenheid() : "");
@@ -543,6 +571,8 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
         box.insertAdjacentHTML("beforeend", '<svg class="cj" style="--dx:' + dx + 'px;--up:' + up + 'px;--r:' + rot + 'deg;animation-delay:' + dl + 's"><use href="#nsCoin"/></svg>');
       }
       document.body.appendChild(box); setTimeout(function () { box.remove(); }, 2000);
+      clink(0.02, 0.07); clink(0.1, 0.05);
+      for (var j = 0; j < 9; j++) clink(1.0 + j * 0.07, 0.05 - j * 0.003);
     } catch (e) { /* geen animatie */ }
   }
   /* getallen tellen op van het vorige aantal naar het nieuwe */
