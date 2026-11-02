@@ -2041,8 +2041,13 @@ body.dashfull { background: #0f2e22; color: #f4efe2; }
 .d-tile b { font-size: 1.05rem; font-weight: 900; }
 .d-tile small { color: #b9d6c6; font-size: .78rem; font-weight: 700; }
 .d-tile small.d-k { font-weight: 900; letter-spacing: .05em; color: #ffd54f; }
-.d-tile.hub { background: #fff8e6; color: #2a1d08; border: 3px solid #f2c94c; min-height: 150px; }
-.d-tile.hub small { color: #6b5a3a; } .d-tile.hub small.d-k { color: #8a5a12; }
+.d-tile.hub { grid-column: 1 / -1; flex-direction: row; align-items: center; gap: 14px; min-height: 0; padding: 16px 18px; position: relative; overflow: hidden; color: #2a1d08; border: 2px solid #f2c94c;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='%237a5a14' stroke-opacity='.16' stroke-width='1.2'%3E%3Crect x='14' y='14' width='28' height='28'/%3E%3Crect x='14' y='14' width='28' height='28' transform='rotate(45 28 28)'/%3E%3C/g%3E%3C/svg%3E"), linear-gradient(135deg, #f3e3b0 0%, #e6cc82 55%, #cfa94f 100%); box-shadow: 0 6px 16px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.55); }
+.d-tile.hub .hb-ic { flex: none; display: grid; place-items: center; }
+.d-tile.hub .hb-t { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.d-tile.hub .hb-t .d-k.ar { color: #2a1d08; font-size: 2rem; line-height: 1.25; letter-spacing: 0; }
+.d-tile.hub .hb-t b { font-size: 1.4rem; color: #1b4332; }
+.d-tile.hub small { color: #5a4a22; } .d-tile.hub .hb-ch { flex: none; font-size: 2rem; font-weight: 900; color: #5a4a22; line-height: 1; }
 .d-tile.kids { border: 2px dashed #6f9f86; min-height: 150px; cursor: default; }
 .d-card { background: #1b4332; border: 2px solid #2d6a4f; border-radius: 20px; padding: 14px 16px; color: #f4efe2; }
 .d-card h2 { margin: 0; font-size: 1.05rem; font-weight: 900; color: #fff; }
@@ -2363,7 +2368,7 @@ body.kosmos .rad-inv-ban { background: rgba(8,12,40,.95); border-color: #3fe6d0;
 .d-tile,.d-card,.d-rihla{position:relative;overflow:hidden;border:2.5px solid transparent!important;
  background:linear-gradient(160deg,#2c6b4d 0%,#1d4a36 38%,#143126 72%,#235a40 100%) padding-box,var(--metal-gold) border-box!important;
  box-shadow:inset 0 1.5px 0 rgba(255,255,255,.22),inset 0 -3px 8px rgba(0,0,0,.35),0 8px 18px rgba(0,0,0,.35)!important;}
-.d-tile.hub{border-width:3px!important;background:linear-gradient(160deg,#fffdf4 0%,#fbf0d2 45%,#f1dfb0 80%,#fff7df 100%) padding-box,var(--metal-gold) border-box!important;}
+.d-tile.hub{border-width:3px!important;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='%237a5a14' stroke-opacity='.17' stroke-width='1.2'%3E%3Crect x='14' y='14' width='28' height='28'/%3E%3Crect x='14' y='14' width='28' height='28' transform='rotate(45 28 28)'/%3E%3C/g%3E%3C/svg%3E") padding-box,linear-gradient(135deg,#f6e8b8 0%,#e8cf86 52%,#cfa94f 100%) padding-box,var(--metal-gold) border-box!important;}
 .d-tile.kids{border:2px dashed #c9a447!important;background:linear-gradient(160deg,#245a40,#163829) padding-box!important;}
 .d-rihla{background:linear-gradient(160deg,#16223f 0%,#0e1830 60%,#1a2a4a 100%) padding-box,var(--metal-gold) border-box!important;}
 .d-tile::after,.d-card::after,.d-rihla::after{content:"";position:absolute;top:-20%;bottom:-20%;left:-60%;width:40%;pointer-events:none;
@@ -7312,7 +7317,7 @@ return exports;})();
       '<span class="d-rb"><span class="d-rt"><small>SPELWERELD</small><b>Rihlat al-‘Ilm <span lang="ar" dir="rtl">رحلة العلم</span></b><span class="d-rl">Land ' + (li + 1) + ": " + esc(c.title) + '</span><span class="d-rx"><b>Lvl ' + cur + '</b><span class="d-bar"><i style="width:' + pct + '%"></i></span></span></span><span class="d-go">Verder</span></span></button>' +
       '<div class="d-rov"><button class="d-mode" data-act="switch-mode" aria-label="Modus wisselen. Nu: ' + modeName(P.mode) + '. Tik om te kiezen">' + icon(MODE_ICON[P.mode], 13) + " " + modeName(P.mode) + ' <i aria-hidden="true">▾</i></button>' + lifeBtnHtml() + "</div></div>";
     h += '<nav class="d-grid" aria-label="Onderdelen">' +
-      '<button class="d-tile hub" data-act="hub">' + dIc("book", "#1b4332") + '<span class="d-k ar" lang="ar" dir="rtl">بيت العلم</span><b>Bayt al-‘Ilm</b><small>' + (nf ? "Mijn foutjes: " + nf + " · du’a-boekje" : "Foutjes en du’a-boekje") + "</small></button>" +
+      '<button class="d-tile hub" data-act="hub"><span class="hb-ic">' + dIc("book", "#1b4332", 40) + '</span><span class="hb-t"><span class="d-k ar" lang="ar" dir="rtl">بيت العلم</span><b>Bayt al-‘Ilm</b><small>' + (nf ? "Mijn foutjes: " + nf + " · du’a-boekje" : "Foutjes en du’a-boekje") + '</small></span><span class="hb-ch" aria-hidden="true">›</span></button>' +
       '<button class="d-tile kids" disabled aria-label="KidsZone, komt binnenkort">' + dIc("star", "#ffd54f") + '<small class="d-k">KIDSZONE</small><b>[Naam volgt]</b><small>Binnenkort, insha’Allah</small></button>' +
       '<button class="d-tile" data-act="rad">' + dIc("wheel", "#ffd54f", 30) + '<b>Ajalat al-‘Ilm</b><small>Rad van Kennis</small></button>' +
       '<button class="d-tile" data-act="group">' + dIc("users", "#ffd54f", 30) + "<b>Groep & Duel</b><small>Samen leren</small></button>" +
