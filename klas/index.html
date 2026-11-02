@@ -230,6 +230,14 @@ body.ms-on { padding-bottom: 6px; }
   .ms-top .ms-zg { width: 84px; height: 84px; } .ms-top .basm { font-size: 31px; white-space: nowrap; } body.ms-on .tile { font-size: 23px; min-height: 58px; } body.ms-on .tiles { grid-template-columns: 1fr; }
   body.ms-on h1 { font-size: 28px; } body.ms-on .btn { padding: 8px 28px; } body.ms-on .ms-roll { height: 48px; } .coin-hero { width: 120px; height: 120px; }
 }
+/* v182: laptop - plaatje links, antwoord (balk, invoerveld, keuzes) en Verstuur rechts ernaast */
+@media (min-width: 900px) {
+  body.ms-on .qgrid:has(> .qimg) { display: grid; grid-template-columns: minmax(200px, 40%) minmax(0, 1fr); gap: 4px 30px; align-items: start; }
+  body.ms-on .qgrid > .qimg { width: 100%; max-height: 52vh; margin: 4px 0; object-fit: contain; }
+  body.ms-on .qgrid > .qbody { min-width: 0; }
+}
+@media (min-width: 900px) and (max-height: 1000px) { body.ms-on .qgrid > .qimg { max-height: 46vh; } }
+@media (min-width: 900px) and (max-height: 760px) { body.ms-on .qgrid > .qimg { max-height: 40vh; } }
 /* v175: laptop en Chromebook - kop compacter, plaatje kleiner, hoofdknop blijft onderaan staan */
 @media (min-width: 701px) and (max-height: 1000px) {
   body.ms-on main#app { padding-top: 64px; padding-bottom: 56px; margin-top: 44px; margin-bottom: 44px; }
@@ -1165,7 +1173,7 @@ body.ms-on { padding-bottom: 6px; }
           '<div class="qtop"><span>' + q.min + '</span><span>' + q.max + '</span></div><p class="muted" id="sh" style="text-align:center' + (sl.t ? ';display:none' : '') + '">Tik of schuif naar je antwoord.</p><div style="margin-top:12px"><button class="btn gold" id="send" type="button"' + (sl.t ? "" : " disabled") + '>Verstuur</button></div>';
       }
       app.innerHTML = (me.got && me.got.qi === m.qi - 1 ? '<div class="expl"><b>Sadaqa:</b> ' + esc(me.got.by.join(" en ")) + ' gaf jou ' + ptsH(me.got.n, true) + '. Jazakallahu khayran!</div>' : "") + (hw ? '<div class="qtop"><span>Vraag ' + (m.qi + 1) + ' van ' + m.n + '</span><b>Huiswerk</b></div>' : '<div class="qtop"><span>Vraag ' + (m.qi + 1) + ' van ' + m.n + '</span><b id="sec"></b></div><div class="bar"><div id="barIn"></div></div>') +
-        '<h1 class="qq">' + esc(q.q) + '</h1>' + imgHtml(q) + body + (sent ? '<p class="msg" role="status">Antwoord verstuurd. Wacht op de anderen…</p>' : '<div id="msg" class="msg"></div>');
+        '<h1 class="qq">' + esc(q.q) + '</h1>' + '<div class="qgrid">' + imgHtml(q) + '<div class="qbody">' + body + (sent ? '<p class="msg" role="status">Antwoord verstuurd. Wacht op de anderen…</p>' : '<div id="msg" class="msg"></div>') + '</div></div>';
       app.querySelectorAll("[data-k]").forEach(function (b) { b.onclick = function () { sendAns(+b.getAttribute("data-k")); }; });
       var sendB = document.getElementById("send");
       if (sendB && !sent) {
