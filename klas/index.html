@@ -706,14 +706,14 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
       var goed = m.at != null ? m.at : (q2 && q2.o ? q2.o[m.a] : ""), opin = q2 && (q2.t === "poll" || q2.t === "cloud");
       if (opin) head = last && last.k >= 0 ? '<h1 class="good-h">Bedankt voor je antwoord!</h1>' : '<h1 class="bad-h">Geen antwoord</h1>';
       app.innerHTML = '<div class="center">' + head + (opin ? "" : '<p>Het goede antwoord: <b>' + esc(goed) + '</b></p>') + (m.e ? '<p class="expl">' + esc(m.e) + '</p>' : "") +
-        (m.vorm === "karavaan" ? '<h2>De karavaan</h2>' + caravanHtml(m.p || 0, m.ne || m.n, carFrom(m)) + '<p class="muted">Samen onderweg…</p>' :
+        (m.vorm === "karavaan" ? '<h2>De karavaan</h2>' + caravanHtml(m.p || 0, m.ne || m.n, carFrom(m)) + carMine(m, last, opin) + '<p class="muted">Samen onderweg…</p>' :
           '<p class="rank">Jij staat op plek <b>' + (my || "–") + '</b> van ' + rk.length + ' · ' + (me.score || 0) + ' punten</p>' + giftHtml(m, rk, me, last) + '<p class="muted">Wacht op de volgende vraag…</p>') + '</div>';
       app.querySelectorAll("[data-gift]").forEach(function (b) { b.onclick = function () { giveGift(m.qi, b.getAttribute("data-gift")); }; });
       return;
     }
     if (m.state === "einde") {
       var my2 = rk.map(function (r) { return r.uid; }).indexOf(L.uid) + 1;
-      app.innerHTML = '<div class="center"><h1>Het spel is afgelopen</h1>' + (m.vorm === "karavaan" ? teamEndHtml(m.p || 0, m.ne || m.n) + '<p class="muted">Jullie hebben het samen gedaan. MashaAllah!</p>' : podiumHtml(rk) + '<p class="rank">Jij werd <b>' + (my2 || "–") + 'e</b> met ' + (me.score || 0) + ' punten. MashaAllah!</p>') + back + '</div>'; wire();
+      app.innerHTML = '<div class="center"><h1>Het spel is afgelopen</h1>' + (m.vorm === "karavaan" ? teamEndHtml(m.p || 0, m.ne || m.n) + carTotal() + '<p class="muted">Jullie hebben het samen gedaan. MashaAllah!</p>' : podiumHtml(rk) + '<p class="rank">Jij werd <b>' + (my2 || "–") + 'e</b> met ' + (me.score || 0) + ' punten. MashaAllah!</p>') + back + '</div>'; wire();
     }
   }
 
@@ -753,6 +753,18 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
     h.score += pts; h.res[i] = { ok: ok, pts: pts, opin: !kk, text: kk ? kk.text : "" }; hwSave();
     dbReq("PUT", "klas/" + L.code + "/ant/" + i + "/" + L.uid, v).catch(function () { /* de docent ziet dit antwoord dan niet */ });
     renderHw(true);
+  }
+  function carMine(m, last, opin) {
+    if (opin) return "";
+    L.cnt = L.cnt || {}; if (last) L.cnt[m.qi] = last.ok ? 1 : 0;
+    var h = m.tot != null ? '<p class="rank"><b>' + m.ok + ' van ' + m.tot + '</b> leerlingen hadden het goed.</p>' : "";
+    if (last && last.ok) h += '<p class="rank">Jij hebt de karavaan <b>verder gebracht</b>. Barakallahu feek!</p>';
+    else if (last && last.k >= 0) h += '<p class="rank">Jij had het niet goed, maar de karavaan gaat <b>samen</b> verder.</p>';
+    return h;
+  }
+  function carTotal() {
+    var c = L.cnt || {}, ks = Object.keys(c), ok = ks.filter(function (x) { return c[x]; }).length;
+    return ks.length ? '<p class="rank">Jij droeg <b>' + ok + ' van ' + ks.length + '</b> goede antwoorden bij.</p>' : "";
   }
   function carFrom(m) {
     if (L.cq !== m.qi) { L.cq = m.qi; L.cfrom = L.cp || 0; }
@@ -1020,7 +1032,7 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
         p.score = (p.score || 0) + pts;
       });
       if (Object.keys(upd).length) await dbReq("PATCH", "klas/" + G.code + "/spelers", upd);
-      await dbReq("PATCH", "klas/" + G.code + "/meta", { state: "uitslag", p: Math.round(G.prog * 100) / 100, a: (q.t === "mc" || q.t === "tf") ? q.a : null, at: (q.t === "poll" || q.t === "cloud") ? null : kk.text, e: q.e || null });
+      await dbReq("PATCH", "klas/" + G.code + "/meta", { state: "uitslag", ok: ev.st.ok, tot: ev.st.total, p: Math.round(G.prog * 100) / 100, a: (q.t === "mc" || q.t === "tf") ? q.a : null, at: (q.t === "poll" || q.t === "cloud") ? null : kk.text, e: q.e || null });
       if (G.ant) G.ant.close();
       G.stat = ev.st; G.state = "uitslag"; G.giftMsg = null;
       if (G.vorm === "sadaqa") {
