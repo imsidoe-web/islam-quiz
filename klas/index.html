@@ -71,6 +71,7 @@ div.tile { cursor: default; } .tile i { font-style: normal; background: rgba(255
 ol.lb { list-style: none; padding: 0; margin: 6px 0 14px; text-align: left; } ol.lb li { display: flex; justify-content: space-between; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 8px 12px; margin: 5px 0; font-weight: 800; } ol.lb li.me { border-color: var(--gold); background: #fff8e0; }
 .bigval { text-align: center; font-size: 56px; font-weight: 900; color: var(--em-d); } .big-note { font-size: 20px; text-align: center; }
 input[type=range] { accent-color: var(--em); height: 36px; }
+.cloud { display: flex; flex-wrap: wrap; gap: 6px 18px; justify-content: center; align-items: center; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 18px 12px; margin: 10px 0; font-weight: 900; line-height: 1.15; } .cloud sup { font-size: 13px; color: var(--muted); }
 @media (max-width: 420px) { .tile { font-size: 17px; min-height: 76px; } }
 </style>
 </head>
@@ -204,7 +205,7 @@ input[type=range] { accent-color: var(--em); height: 36px; }
   }
 
   /* ───── quiz-maker ───── */
-  var TYPES = { mc: "Meerkeuze", tf: "Waar / niet waar", type: "Typ het antwoord", order: "Juiste volgorde", slider: "Schuifbalk" };
+  var TYPES = { mc: "Meerkeuze", tf: "Waar / niet waar", type: "Typ het antwoord", order: "Juiste volgorde", slider: "Schuifbalk", poll: "Peiling", cloud: "Woordwolk" };
   function newQ(type) {
     var q = { id: uid(), t: type, q: "", time: 20, pts: 1, e: "" };
     if (type === "mc") { q.o = ["", "", "", ""]; q.a = 0; }
@@ -212,6 +213,8 @@ input[type=range] { accent-color: var(--em); height: 36px; }
     else if (type === "type") { q.o = ["", "", "", ""]; q.time = 30; }
     else if (type === "order") { q.o = ["", "", "", "", ""]; q.time = 30; }
     else if (type === "slider") { q.min = 0; q.max = 100; q.a = 50; q.tol = 0; }
+    else if (type === "poll") { q.o = ["", "", "", ""]; q.pts = 0; }
+    else if (type === "cloud") { q.pts = 0; q.time = 30; }
     return q;
   }
   function numOr(v, d) { var n = parseFloat(String(v).replace(",", ".")); return isFinite(n) ? n : d; }
@@ -251,9 +254,18 @@ input[type=range] { accent-color: var(--em); height: 36px; }
           '<div class="row"><div style="flex:1;min-width:110px"><label for="sa' + i + '">Goed antwoord</label><input type="number" id="sa' + i + '" data-f="sa" data-i="' + i + '" value="' + q.a + '"></div>' +
           '<div style="flex:1;min-width:110px"><label for="tl' + i + '">Marge (± mag ernaast)</label><input type="number" id="tl' + i + '" data-f="tol" data-i="' + i + '" min="0" value="' + q.tol + '"></div></div>';
       }
+      if (q.t === "poll") {
+        h += '<label>Antwoorden (2 tot 4, er is geen goed of fout)</label>';
+        q.o.forEach(function (o, k) {
+          h += '<div class="opt"><input type="text" data-f="o" data-i="' + i + '" data-k="' + k + '" maxlength="80" value="' + esc(o) + '" placeholder="Antwoord ' + (k + 1) + (k >= 2 ? " (mag leeg)" : "") + '" aria-label="Antwoord ' + (k + 1) + '"></div>';
+        });
+        h += '<p class="muted">Dit geeft geen punten. Je ziet hoeveel leerlingen elk antwoord kozen.</p>';
+      } else if (q.t === "cloud") {
+        h += '<p class="muted">Leerlingen typen één woord of een korte zin (max. 20 tekens). Jij ziet een woordwolk. Dit geeft geen punten. Ongepaste woorden worden verborgen.</p>';
+      }
       h += '<div class="row" style="margin-top:6px"><div style="flex:1;min-width:130px"><label for="t' + i + '">Tijd (5–120 sec)</label>' +
         '<input type="number" id="t' + i + '" data-f="time" data-i="' + i + '" min="5" max="120" value="' + q.time + '"></div>' +
-        '<div style="flex:1;min-width:150px"><label for="p' + i + '">Punten</label><select id="p' + i + '" data-f="pts" data-i="' + i + '">' +
+        '<div style="flex:1;min-width:150px' + ((q.t === "poll" || q.t === "cloud") ? ";display:none" : "") + '"><label for="p' + i + '">Punten</label><select id="p' + i + '" data-f="pts" data-i="' + i + '">' +
         '<option value="1"' + (q.pts === 1 ? " selected" : "") + '>Normaal</option><option value="2"' + (q.pts === 2 ? " selected" : "") + '>Dubbel</option><option value="0"' + (q.pts === 0 ? " selected" : "") + '>Zonder punten</option></select></div></div>' +
         '<label for="e' + i + '">Uitleg na de vraag (mag leeg)</label><textarea id="e' + i + '" data-f="e" data-i="' + i + '" maxlength="300">' + esc(q.e) + '</textarea></div>';
     });
@@ -331,7 +343,10 @@ input[type=range] { accent-color: var(--em); height: 36px; }
         if (!(q.min < q.max)) { say("Vraag " + n + ": het laagste getal moet kleiner zijn dan het hoogste.", true); return; }
         if (q.a < q.min || q.a > q.max) { say("Vraag " + n + ": het goede antwoord moet tussen laagste en hoogste getal liggen.", true); return; }
         c.min = q.min; c.max = q.max; c.a = q.a; c.tol = q.tol || 0;
-      }
+      } else if (q.t === "poll") {
+        c.o = q.o.map(function (x) { return x.trim(); }).filter(Boolean); c.pts = 0;
+        if (c.o.length < 2) { say("Vraag " + n + " heeft minstens 2 antwoorden nodig.", true); return; }
+      } else if (q.t === "cloud") { c.pts = 0; }
       clean.push(c);
     }
     var btn = document.getElementById("save"); btn.disabled = true; say("Bezig met opslaan…");
@@ -470,13 +485,14 @@ input[type=range] { accent-color: var(--em); height: 36px; }
   }
   function pubQ(q) {
     var b = { t: q.t, q: q.q, time: q.time, pts: q.pts };
-    if (q.t === "mc" || q.t === "tf") b.o = q.o;
+    if (q.t === "mc" || q.t === "tf" || q.t === "poll") b.o = q.o;
     else if (q.t === "order") b.o = shuffled(q.o);
     else if (q.t === "slider") { b.min = q.min; b.max = q.max; }
     return b;
   }
   /* goed antwoord (key) en tekst om te tonen */
   function keyOf(q, pub) {
+    if (q.t === "poll" || q.t === "cloud") return { key: null, text: "" };
     if (q.t === "mc" || q.t === "tf") return { key: q.a, text: q.o[q.a] };
     if (q.t === "type") return { key: q.o.map(norm), text: q.o[0] };
     if (q.t === "order") {
@@ -486,13 +502,14 @@ input[type=range] { accent-color: var(--em); height: 36px; }
     return { key: q.a, text: String(q.a) + (q.tol ? " (± " + q.tol + ")" : "") };
   }
   function isOk(q, key, a) {
+    if (q.t === "poll" || q.t === "cloud") return false;
     if (q.t === "mc" || q.t === "tf") return a === key;
     if (q.t === "type") { var n = norm(a); return n !== "" && key.indexOf(n) >= 0; }
     if (q.t === "order") return a === key;
     var v = Number(a); return isFinite(v) && Math.abs(v - q.a) <= (q.tol || 0);
   }
   function validAns(q, a) {
-    if (q.t === "mc" || q.t === "tf") return typeof a === "number" && a >= 0 && a < q.o.length;
+    if (q.t === "mc" || q.t === "tf" || q.t === "poll") return typeof a === "number" && a >= 0 && a < q.o.length;
     return typeof a === "string" && a.length > 0;
   }
   function itemsHtml(q, picked) {
@@ -514,6 +531,18 @@ input[type=range] { accent-color: var(--em); height: 36px; }
         (o.counts ? '<em>' + (o.counts[k] || 0) + '</em>' : "") + (o.ok != null && k === o.ok ? '<b class="chk" aria-label="goed antwoord">✓</b>' : "") + '</' + (o.click ? "button" : "div") + '>';
     });
     return h + "</div>";
+  }
+  function cloudHtml(texts) {
+    var keys = Object.keys(texts || {}), hidden = 0, shown = [];
+    keys.forEach(function (w) { if (nameError(w)) hidden += texts[w]; else shown.push(w); });
+    if (!shown.length) return '<p class="muted">Nog geen woorden' + (hidden ? " (ongepaste woorden zijn verborgen)" : "") + '.</p>';
+    shown.sort(function (a, b) { return texts[b] - texts[a] || a.localeCompare(b); });
+    var max = texts[shown[0]], cols = ["#2d6a4f", "#b07a1e", "#2f5d8a", "#7a2f3a", "#1b4332"], h = '<div class="cloud" role="list">';
+    shown.slice(0, 40).forEach(function (w, i) {
+      var sz = 18 + (max > 1 ? Math.round(46 * (texts[w] - 1) / (max - 1)) : 20);
+      h += '<span role="listitem" style="font-size:' + sz + 'px;color:' + cols[i % cols.length] + '">' + esc(w) + (texts[w] > 1 ? '<sup>' + texts[w] + '</sup>' : "") + '</span>';
+    });
+    return h + '</div>' + (hidden ? '<p class="muted">' + hidden + ' ongepast woord' + (hidden === 1 ? "" : "en") + ' verborgen.</p>' : "");
   }
   function podiumHtml(rk) {
     var p = rk.slice(0, 3), order = [1, 0, 2], h = '<div class="podium" role="list">';
@@ -602,9 +631,9 @@ input[type=range] { accent-color: var(--em); height: 36px; }
       if (!q) { app.innerHTML = '<p>Even laden…</p>'; loadVragen().then(renderL); return; }
       if (L.shown !== m.qi) { L.shown = m.qi; L.picked = null; L.seq = []; L.end = Date.now() + q.time * 1000; }
       var body = "", sent = L.picked != null;
-      if (q.t === "mc" || q.t === "tf") body = tilesHtml(q, { pick: L.picked, click: true });
+      if (q.t === "mc" || q.t === "tf" || q.t === "poll") body = tilesHtml(q, { pick: L.picked, click: true });
       else if (sent) body = '<div class="card"><b>Je antwoord:</b> ' + esc(q.t === "order" ? String(L.picked).split(",").map(function (ix) { return q.o[+ix]; }).join(" → ") : L.picked) + '</div>';
-      else if (q.t === "type") body = '<label for="ta">Typ je antwoord</label><input type="text" id="ta" maxlength="40" autocomplete="off" autocapitalize="off"><div style="margin-top:12px"><button class="btn gold" id="send" type="button">Verstuur</button></div>';
+      else if (q.t === "type" || q.t === "cloud") body = '<label for="ta">' + (q.t === "cloud" ? "Typ één woord of een korte zin" : "Typ je antwoord") + '</label><input type="text" id="ta" maxlength="' + (q.t === "cloud" ? 20 : 40) + '" autocomplete="off" autocapitalize="off"><div style="margin-top:12px"><button class="btn gold" id="send" type="button">Verstuur</button></div>';
       else if (q.t === "order") {
         body = '<p class="muted">Tik de items in de goede volgorde: eerst het eerste, dan het tweede, enzovoort.</p><div class="tiles">';
         q.o.forEach(function (t, kx) {
@@ -622,7 +651,7 @@ input[type=range] { accent-color: var(--em); height: 36px; }
       app.querySelectorAll("[data-k]").forEach(function (b) { b.onclick = function () { sendAns(+b.getAttribute("data-k")); }; });
       var sendB = document.getElementById("send");
       if (sendB && !sent) {
-        if (q.t === "type") {
+        if (q.t === "type" || q.t === "cloud") {
           var ta = document.getElementById("ta");
           var go = function () { var v = ta.value.trim(); if (!v) { say("Typ eerst je antwoord.", true); return; } sendAns(v); };
           sendB.onclick = go; ta.addEventListener("keydown", function (e) { if (e.key === "Enter") go(); });
@@ -647,8 +676,9 @@ input[type=range] { accent-color: var(--em); height: 36px; }
       var q2 = L.vragen && L.vragen[m.qi], last = me.last && me.last.qi === m.qi ? me.last : null;
       var my = rk.map(function (r) { return r.uid; }).indexOf(L.uid) + 1;
       var head = last && last.ok ? '<h1 class="good-h">MashaAllah! +' + last.pts + '</h1>' : (last && last.k >= 0 ? '<h1 class="bad-h">Helaas, dat was niet goed</h1>' : '<h1 class="bad-h">Geen antwoord</h1>');
-      var goed = m.at != null ? m.at : (q2 && q2.o ? q2.o[m.a] : "");
-      app.innerHTML = '<div class="center">' + head + '<p>Het goede antwoord: <b>' + esc(goed) + '</b></p>' + (m.e ? '<p class="expl">' + esc(m.e) + '</p>' : "") +
+      var goed = m.at != null ? m.at : (q2 && q2.o ? q2.o[m.a] : ""), opin = q2 && (q2.t === "poll" || q2.t === "cloud");
+      if (opin) head = last && last.k >= 0 ? '<h1 class="good-h">Bedankt voor je antwoord!</h1>' : '<h1 class="bad-h">Geen antwoord</h1>';
+      app.innerHTML = '<div class="center">' + head + (opin ? "" : '<p>Het goede antwoord: <b>' + esc(goed) + '</b></p>') + (m.e ? '<p class="expl">' + esc(m.e) + '</p>' : "") +
         '<p class="rank">Jij staat op plek <b>' + (my || "–") + '</b> van ' + rk.length + ' · ' + (me.score || 0) + ' punten</p><p class="muted">Wacht op de volgende vraag…</p></div>';
       return;
     }
@@ -703,12 +733,16 @@ input[type=range] { accent-color: var(--em); height: 36px; }
   /* beoordeel de antwoorden van één vraag */
   function evalQ(qi, ant) {
     var q = G.quiz.vragen[qi], kk = keyOf(q, G.pub[qi]), per = {};
-    var st = { counts: (q.t === "mc" || q.t === "tf") ? q.o.map(function () { return 0; }) : null, ok: 0, total: 0, texts: {}, text: kk.text };
+    var st = { counts: (q.t === "mc" || q.t === "tf" || q.t === "poll") ? q.o.map(function () { return 0; }) : null, ok: 0, total: 0, texts: {}, text: kk.text };
     Object.keys(G.players).forEach(function (u) {
       var p = G.players[u]; if (!p || !p.name) return;
       st.total++;
       var a = ant[u], valid = validAns(q, a), ok = valid && isOk(q, kk.key, a);
-      if (valid) { if (st.counts) st.counts[a]++; else { var s2 = String(a); st.texts[s2] = (st.texts[s2] || 0) + 1; } }
+      if (valid) { if (st.counts) st.counts[a]++; else {
+        var s2 = q.t === "cloud" ? String(a).trim().toLowerCase().slice(0, 20) : String(a);
+        if (q.t === "cloud") { var nk = norm(s2) || s2; st._n = st._n || {}; if (!st._n[nk]) st._n[nk] = s2; s2 = st._n[nk]; }
+        st.texts[s2] = (st.texts[s2] || 0) + 1;
+      } }
       if (ok) st.ok++;
       per[u] = { valid: valid, ok: !!ok, k: valid ? (typeof a === "number" ? a : 0) : -1 };
     });
@@ -756,7 +790,7 @@ input[type=range] { accent-color: var(--em); height: 36px; }
         p.score = (p.score || 0) + pts;
       });
       if (Object.keys(upd).length) await dbReq("PATCH", "klas/" + G.code + "/spelers", upd);
-      await dbReq("PATCH", "klas/" + G.code + "/meta", { state: "uitslag", a: (q.t === "mc" || q.t === "tf") ? q.a : null, at: kk.text, e: q.e || null });
+      await dbReq("PATCH", "klas/" + G.code + "/meta", { state: "uitslag", a: (q.t === "mc" || q.t === "tf") ? q.a : null, at: (q.t === "poll" || q.t === "cloud") ? null : kk.text, e: q.e || null });
       if (G.ant) G.ant.close();
       G.stat = ev.st; G.state = "uitslag"; renderG();
     } catch (e) { G.closed = false; G.state = "uitslag"; G.stat = { counts: null, ok: 0, total: 0, texts: {}, text: "" }; renderG(); say("Opslaan van de scores lukte niet. Controleer de verbinding.", true); }
@@ -797,8 +831,9 @@ input[type=range] { accent-color: var(--em); height: 36px; }
     }
     if (st === "vraag") {
       var pq = G.pub[G.qi], vb = "";
-      if (q.t === "mc" || q.t === "tf") vb = tilesHtml(q, {});
+      if (q.t === "mc" || q.t === "tf" || q.t === "poll") vb = tilesHtml(q, {});
       else if (q.t === "order") vb = '<p class="muted">Leerlingen zetten deze items in de goede volgorde:</p>' + itemsHtml(pq, null);
+      else if (q.t === "cloud") vb = '<p class="expl big-note">Leerlingen typen één woord of een korte zin op hun telefoon.</p>';
       else if (q.t === "type") vb = '<p class="expl big-note">Leerlingen typen het antwoord op hun telefoon.</p>';
       else vb = '<p class="expl big-note">Leerlingen kiezen een getal tussen <b>' + q.min + '</b> en <b>' + q.max + '</b>.</p>';
       app.innerHTML = '<div class="qtop"><span>Vraag ' + (G.qi + 1) + ' van ' + G.quiz.vragen.length + '</span><b><span id="sec">' + q.time + '</span> sec</b></div><div class="bar"><div id="barIn" style="width:100%"></div></div>' +
@@ -808,6 +843,8 @@ input[type=range] { accent-color: var(--em); height: 36px; }
     if (st === "uitslag") {
       var last = G.qi + 1 >= G.quiz.vragen.length, sx = G.stat || { counts: null, ok: 0, total: 0, texts: {}, text: "" }, ub = "";
       if (q.t === "mc" || q.t === "tf") ub = tilesHtml(q, { ok: q.a, counts: sx.counts });
+      else if (q.t === "poll") ub = tilesHtml(q, { counts: sx.counts });
+      else if (q.t === "cloud") ub = cloudHtml(sx.texts);
       else {
         ub = '<div class="card center"><p class="muted" style="margin:0">Het goede antwoord</p><h2 style="margin:4px 0">' + esc(sx.text) + '</h2><p style="margin:0"><b>' + sx.ok + '</b> van ' + sx.total + ' goed</p></div>';
         if (q.t === "type" || q.t === "slider") {
