@@ -92,6 +92,8 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
 @media (prefers-reduced-motion: reduce) { .cj, .coin { animation: none !important; } }
 .coin { animation: coinPop .6s ease-out, coinDance 1.8s ease-in-out .8s infinite; transform-origin: 50% 85%; width: 1.15em; height: 1.15em; vertical-align: -0.2em; margin-right: .25em; filter: drop-shadow(0 2px 2px rgba(0,0,0,.35)); }
 .h1n { font-size: 1.15em; } .pot { background: linear-gradient(135deg, #fff8e0, #f3e3b0); border: 2px solid #e6cc82; border-radius: 16px; padding: 10px 14px; margin: 12px 0; }
+.qimg { display: block; max-width: 100%; max-height: 42vh; margin: 8px auto 12px; border-radius: 14px; border: 1px solid var(--line); object-fit: contain; background: #fff; } .qimg.thumb { max-height: 120px; margin: 6px 0; }
+.imgbox { margin: 8px 0; } label.imgbtn { display: inline-block; margin: 6px 0; cursor: pointer; }
 @media (max-width: 420px) { .tile { font-size: 17px; min-height: 76px; } }
 </style>
 </head>
@@ -267,6 +269,31 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
   }
 
   /* ───── quiz-maker ───── */
+  var IMG_BASE = SB_URL + "/storage/v1/object/public/klas-plaatjes/";
+  function imgHtml(q) { return q && q.img && String(q.img).indexOf(IMG_BASE) === 0 ? '<img class="qimg" src="' + esc(q.img) + '" alt="Plaatje bij de vraag">' : ""; }
+  function shrinkImg(file, max, cb) {
+    var url = URL.createObjectURL(file), im = new Image();
+    im.onload = function () {
+      var w = im.naturalWidth, h = im.naturalHeight, s = Math.min(1, max / Math.max(w, h)), c = document.createElement("canvas");
+      c.width = Math.max(1, Math.round(w * s)); c.height = Math.max(1, Math.round(h * s));
+      var x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, c.width, c.height); x.drawImage(im, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url); c.toBlob(function (b) { cb(b); }, "image/jpeg", 0.82);
+    };
+    im.onerror = function () { URL.revokeObjectURL(url); cb(null); };
+    im.src = url;
+  }
+  function uploadImg(i, file) {
+    edit.titel = (document.getElementById("titel") || {}).value || edit.titel;
+    say("Plaatje wordt klaargemaakt…");
+    shrinkImg(file, 800, function (blob) {
+      if (!blob) { say("Dit plaatje kan ik niet openen. Kies een JPG of PNG.", true); return; }
+      var path = user.id + "/" + uid() + ".jpg";
+      sb.storage.from("klas-plaatjes").upload(path, blob, { contentType: "image/jpeg", upsert: false }).then(function (r) {
+        if (r.error) { say("Plaatje uploaden lukte niet. Is de database klaargezet?", true); return; }
+        edit.vragen[i].img = sb.storage.from("klas-plaatjes").getPublicUrl(path).data.publicUrl; show();
+      }, function () { say("Plaatje uploaden lukte niet.", true); });
+    });
+  }
   var TYPES = { mc: "Meerkeuze", tf: "Waar / niet waar", type: "Typ het antwoord", order: "Juiste volgorde", slider: "Schuifbalk", poll: "Peiling", cloud: "Woordwolk" };
   function newQ(type) {
     var q = { id: uid(), t: type, q: "", time: 20, pts: 1, e: "" };
@@ -290,7 +317,9 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
         '<span class="row"><button class="btn small light" data-m="up" data-i="' + i + '" type="button" aria-label="Omhoog"' + (i === 0 ? " disabled" : "") + '>↑</button>' +
         '<button class="btn small light" data-m="down" data-i="' + i + '" type="button" aria-label="Omlaag"' + (i === edit.vragen.length - 1 ? " disabled" : "") + '>↓</button>' +
         '<button class="btn small bad" data-m="rm" data-i="' + i + '" type="button" aria-label="Vraag verwijderen">✕</button></span></div>' +
-        '<label for="q' + i + '">Vraag</label><textarea id="q' + i + '" data-f="q" data-i="' + i + '" maxlength="240">' + esc(q.q) + '</textarea>';
+        '<label for="q' + i + '">Vraag</label><textarea id="q' + i + '" data-f="q" data-i="' + i + '" maxlength="240">' + esc(q.q) + '</textarea>' +
+        '<div class="imgbox">' + (q.img ? '<img class="qimg thumb" src="' + esc(q.img) + '" alt="Gekozen plaatje"><button class="btn small bad" type="button" data-imgdel="' + i + '">Plaatje weghalen</button>' :
+          '<label class="btn small light imgbtn">+ Plaatje toevoegen<input type="file" accept="image/*" data-imgup="' + i + '" hidden></label><span class="muted"> Geen plaatjes van profeten of gezichten.</span>') + '</div>';
       if (q.t === "mc" || q.t === "tf") {
         h += '<label>Antwoorden (tik de cirkel bij het goede antwoord)</label>';
         q.o.forEach(function (o, k) {
@@ -353,6 +382,12 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
       };
       el.addEventListener(f === "a" || f === "pts" ? "change" : "input", h2);
     });
+    app.querySelectorAll("[data-imgup]").forEach(function (inp) {
+      inp.onchange = function () { if (inp.files && inp.files[0]) uploadImg(+inp.getAttribute("data-imgup"), inp.files[0]); };
+    });
+    app.querySelectorAll("[data-imgdel]").forEach(function (b) {
+      b.onclick = function () { edit.titel = document.getElementById("titel").value; delete edit.vragen[+b.getAttribute("data-imgdel")].img; show(); };
+    });
     app.querySelectorAll("[data-m]").forEach(function (b) {
       b.onclick = function () {
         var i = +b.getAttribute("data-i"), m = b.getAttribute("data-m"), v = edit.vragen;
@@ -385,6 +420,7 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
       var q = edit.vragen[i], n = i + 1;
       if (!q.q.trim()) { say("Vraag " + n + " heeft nog geen tekst.", true); return; }
       var c = { id: q.id, t: q.t, q: q.q.trim(), time: q.time, pts: q.pts, e: (q.e || "").trim() };
+      if (q.img) c.img = q.img;
       if (q.t === "mc") {
         var o = q.o.map(function (x) { return x.trim(); });
         if (!o[0] || !o[1]) { say("Vraag " + n + " heeft minstens 2 antwoorden nodig (antwoord 1 en 2).", true); return; }
@@ -610,6 +646,7 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
   }
   function pubQ(q) {
     var b = { t: q.t, q: q.q, time: q.time, pts: q.pts };
+    if (q.img) b.img = q.img;
     if (q.t === "mc" || q.t === "tf" || q.t === "poll") b.o = q.o;
     else if (q.t === "order") b.o = shuffled(q.o);
     else if (q.t === "slider") { b.min = q.min; b.max = q.max; }
@@ -906,7 +943,7 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
           '<div class="qtop"><span>' + q.min + '</span><span>' + q.max + '</span></div><p class="muted" id="sh" style="text-align:center">Schuif eerst naar je antwoord.</p><div style="margin-top:12px"><button class="btn gold" id="send" type="button" disabled>Verstuur</button></div>';
       }
       app.innerHTML = (me.got && me.got.qi === m.qi - 1 ? '<div class="expl"><b>Sadaqa:</b> ' + esc(me.got.by.join(" en ")) + ' gaf jou ' + ptsH(me.got.n, true) + '. Jazakallahu khayran!</div>' : "") + (hw ? '<div class="qtop"><span>Vraag ' + (m.qi + 1) + ' van ' + m.n + '</span><b>Huiswerk</b></div>' : '<div class="qtop"><span>Vraag ' + (m.qi + 1) + ' van ' + m.n + '</span><b id="sec"></b></div><div class="bar"><div id="barIn"></div></div>') +
-        '<h1 class="qq">' + esc(q.q) + '</h1>' + body + (sent ? '<p class="msg" role="status">Antwoord verstuurd. Wacht op de anderen…</p>' : '<div id="msg" class="msg"></div>');
+        '<h1 class="qq">' + esc(q.q) + '</h1>' + imgHtml(q) + body + (sent ? '<p class="msg" role="status">Antwoord verstuurd. Wacht op de anderen…</p>' : '<div id="msg" class="msg"></div>');
       app.querySelectorAll("[data-k]").forEach(function (b) { b.onclick = function () { sendAns(+b.getAttribute("data-k")); }; });
       var sendB = document.getElementById("send");
       if (sendB && !sent) {
@@ -1223,7 +1260,7 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
       else if (q.t === "type") vb = '<p class="expl big-note">Leerlingen typen het antwoord op hun telefoon.</p>';
       else vb = '<p class="expl big-note">Leerlingen kiezen een getal tussen <b>' + q.min + '</b> en <b>' + q.max + '</b>.</p>';
       app.innerHTML = (G.giftMsg && G.giftMsg.length ? '<div class="expl"><b>Sadaqa:</b> ' + G.giftMsg.map(esc).join(" · ") + '</div>' : "") + '<div class="qtop"><span>Vraag ' + (G.qi + 1) + ' van ' + G.quiz.vragen.length + '</span><b><span id="sec">' + q.time + '</span> sec</b></div><div class="bar"><div id="barIn" style="width:100%"></div></div>' +
-        '<h1 class="qq big">' + esc(q.q) + '</h1>' + vb + '<p class="msg" id="ans" role="status"></p><div id="msg"></div><button class="btn light" id="end" type="button">Nu afsluiten</button>';
+        '<h1 class="qq big">' + esc(q.q) + '</h1>' + imgHtml(q) + vb + '<p class="msg" id="ans" role="status"></p><div id="msg"></div><button class="btn light" id="end" type="button">Nu afsluiten</button>';
       document.getElementById("end").onclick = hostClose; updAns(); return;
     }
     if (st === "uitslag") {
@@ -1238,7 +1275,7 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
           if (tx.length) ub += '<p class="muted">Gegeven antwoorden:</p><div class="chips">' + tx.map(function (t2) { return '<span class="chip">' + esc(t2) + ' · ' + sx.texts[t2] + '×</span>'; }).join("") + '</div>';
         }
       }
-      app.innerHTML = '<div class="qtop"><span>Uitslag vraag ' + (G.qi + 1) + '</span></div><h1 class="qq big">' + esc(q.q) + '</h1>' + ub +
+      app.innerHTML = '<div class="qtop"><span>Uitslag vraag ' + (G.qi + 1) + '</span></div><h1 class="qq big">' + esc(q.q) + '</h1>' + imgHtml(q) + ub +
         (q.e ? '<p class="expl">' + esc(q.e) + '</p>' : "") +
         (G.vorm === "karavaan" ? '<h2>De karavaan</h2>' + caravanHtml(G.prog, G.ne, G.prevProg) : '<h2>Tussenstand</h2>' + listHtml(rk, 5)) +
         (G.vorm === "sadaqa" ? '<div class="card center"><b>Sadaqa-ronde</b><p style="margin:4px 0">Wie het goed had, kan 250 munten weggeven aan een klasgenoot die achterloopt.</p><p class="msg" id="gc" role="status"></p></div>' : "") + '<div id="msg" class="msg"></div>' +
