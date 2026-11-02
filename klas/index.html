@@ -73,8 +73,8 @@ ol.lb { list-style: none; padding: 0; margin: 6px 0 14px; text-align: left; } ol
 input[type=range] { accent-color: var(--em); height: 36px; }
 .cloud { display: flex; flex-wrap: wrap; gap: 6px 18px; justify-content: center; align-items: center; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 18px 12px; margin: 10px 0; font-weight: 900; line-height: 1.15; } .cloud sup { font-size: 13px; color: var(--muted); }
 .btn.on { background: var(--em); color: #fff; } .vorm-note { min-height: 44px; }
-.caravan { margin: 12px 0; } .car-track { position: relative; height: 16px; background: #e9e0c8; border-radius: 999px; margin: 30px 10px 6px; } .car-track i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--gold), var(--gold-l)); transition: width .6s; }
-.car-m { position: absolute; top: -26px; transform: translateX(-50%); transition: left .6s; line-height: 0; } .car-lbl { display: flex; justify-content: space-between; font-weight: 800; color: var(--em-d); font-size: 14px; }
+.caravan { margin: 12px 0; } .car-track { position: relative; height: 16px; background: #e9e0c8; border-radius: 999px; margin: 30px 10px 6px; } .car-track i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--gold), var(--gold-l)); transition: width 1.6s ease-in-out; }
+.car-m { position: absolute; top: -26px; transform: translateX(-50%); transition: left 1.6s ease-in-out; line-height: 0; } .car-m svg { animation: carBob 1.4s ease-in-out infinite; } @keyframes carBob { 50% { transform: translateY(-4px) rotate(-8deg); } } @media (prefers-reduced-motion: reduce) { .car-m svg { animation: none; } .car-track i, .car-m { transition: none; } } .car-lbl { display: flex; justify-content: space-between; font-weight: 800; color: var(--em-d); font-size: 14px; }
 .stars.big { text-align: center; color: var(--gold); font-size: 40px; letter-spacing: 6px; }
 .tblw { overflow-x: auto; } .tbl { border-collapse: collapse; width: 100%; background: #fff; border-radius: 12px; font-size: 15px; } .tbl th, .tbl td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; } .tbl td.c, .tbl th { text-align: center; } .tbl td.ok { color: var(--em); font-weight: 900; } .tbl td.no { color: var(--bad); font-weight: 900; } .tbl tr.foot td { background: #fff8e0; font-weight: 800; }
 .steps { padding-left: 22px; margin: 8px 0; } .steps li { margin: 6px 0; }
@@ -595,10 +595,11 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
     karavaan: ["Karavaan (samen)", "Jullie brengen samen de karavaan naar de oase. Elk goed antwoord telt mee."],
     sadaqa: ["Sadaqa", "Wie een vraag goed heeft, kan punten weggeven aan een klasgenoot die achterloopt."]
   };
-  function caravanHtml(p, n) {
-    var pct = Math.max(0, Math.min(100, Math.round(100 * p / Math.max(1, n))));
-    return '<div class="caravan" role="img" aria-label="De karavaan is voor ' + pct + ' procent onderweg"><div class="car-track"><i style="width:' + pct + '%"></i>' +
-      '<span class="car-m" style="left:' + pct + '%"><svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z" fill="#d9a05b" stroke="#8a5a12" stroke-width=".8"/></svg></span></div>' +
+  function carPct(p, n) { return Math.max(0, Math.min(100, Math.round(100 * p / Math.max(1, n)))); }
+  function caravanHtml(p, n, from) {
+    var pct = carPct(p, n), f0 = from == null ? pct : carPct(from, n), mv = f0 !== pct;
+    return '<div class="caravan" role="img" aria-label="De karavaan is voor ' + pct + ' procent onderweg"><div class="car-track"><i style="width:' + f0 + '%"' + (mv ? ' data-to="' + pct + '"' : "") + '></i>' +
+      '<span class="car-m" style="left:' + f0 + '%"' + (mv ? ' data-to="' + pct + '"' : "") + '><svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z" fill="#d9a05b" stroke="#8a5a12" stroke-width=".8"/></svg></span></div>' +
       '<div class="car-lbl"><span>Start</span><span>' + pct + '%</span><span>Oase</span></div></div>';
   }
   function teamEndHtml(p, n) {
@@ -705,7 +706,7 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
       var goed = m.at != null ? m.at : (q2 && q2.o ? q2.o[m.a] : ""), opin = q2 && (q2.t === "poll" || q2.t === "cloud");
       if (opin) head = last && last.k >= 0 ? '<h1 class="good-h">Bedankt voor je antwoord!</h1>' : '<h1 class="bad-h">Geen antwoord</h1>';
       app.innerHTML = '<div class="center">' + head + (opin ? "" : '<p>Het goede antwoord: <b>' + esc(goed) + '</b></p>') + (m.e ? '<p class="expl">' + esc(m.e) + '</p>' : "") +
-        (m.vorm === "karavaan" ? '<h2>De karavaan</h2>' + caravanHtml(m.p || 0, m.ne || m.n) + '<p class="muted">Samen onderweg…</p>' :
+        (m.vorm === "karavaan" ? '<h2>De karavaan</h2>' + caravanHtml(m.p || 0, m.ne || m.n, carFrom(m)) + '<p class="muted">Samen onderweg…</p>' :
           '<p class="rank">Jij staat op plek <b>' + (my || "–") + '</b> van ' + rk.length + ' · ' + (me.score || 0) + ' punten</p>' + giftHtml(m, rk, me, last) + '<p class="muted">Wacht op de volgende vraag…</p>') + '</div>';
       app.querySelectorAll("[data-gift]").forEach(function (b) { b.onclick = function () { giveGift(m.qi, b.getAttribute("data-gift")); }; });
       return;
@@ -752,6 +753,10 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
     h.score += pts; h.res[i] = { ok: ok, pts: pts, opin: !kk, text: kk ? kk.text : "" }; hwSave();
     dbReq("PUT", "klas/" + L.code + "/ant/" + i + "/" + L.uid, v).catch(function () { /* de docent ziet dit antwoord dan niet */ });
     renderHw(true);
+  }
+  function carFrom(m) {
+    if (L.cq !== m.qi) { L.cq = m.qi; L.cfrom = L.cp || 0; }
+    L.cp = m.p || 0; return L.cfrom;
   }
   function giftHtml(m, rk, me, last) {
     if (m.vorm !== "sadaqa") return "";
@@ -1006,6 +1011,7 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
       G.hist = G.hist || []; G.per = G.per || {};
       G.hist.push({ qi: qi, q: q.q, ok: ev.st.ok, total: ev.st.total, opin: q.t === "poll" || q.t === "cloud" });
       Object.keys(ev.per).forEach(function (u) { G.per[u] = G.per[u] || {}; G.per[u][qi] = ev.per[u].ok ? 1 : 0; });
+      G.prevProg = G.prog;
       if (G.vorm === "karavaan" && q.t !== "poll" && q.t !== "cloud") G.prog += ev.st.total ? ev.st.ok / ev.st.total : 0;
       Object.keys(ev.per).forEach(function (u) {
         var r = ev.per[u], p = G.players[u], pts = 0;
@@ -1061,7 +1067,7 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
       await dbReq("PUT", "klas/" + G.code + "/ant", null); await dbReq("PUT", "klas/" + G.code + "/gift", null);
       G.pub = G.quiz.vragen.map(pubQ); await dbReq("PUT", "klas/" + G.code + "/vragen", G.pub);
       await dbReq("PATCH", "klas/" + G.code + "/meta", { state: "lobby", qi: -1, p: 0, a: null, at: null, e: null });
-      G.state = "lobby"; G.qi = -1; G.prog = 0; G.hist = []; G.per = {}; G.arr = {}; G.stat = null; G.giftMsg = null; G.closed = false;
+      G.state = "lobby"; G.qi = -1; G.prog = 0; G.prevProg = 0; G.hist = []; G.per = {}; G.arr = {}; G.stat = null; G.giftMsg = null; G.closed = false;
       renderG();
     } catch (e) { if (b) b.disabled = false; say("Opnieuw starten lukte niet.", true); }
   }
@@ -1120,7 +1126,7 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
       }
       app.innerHTML = '<div class="qtop"><span>Uitslag vraag ' + (G.qi + 1) + '</span></div><h1 class="qq big">' + esc(q.q) + '</h1>' + ub +
         (q.e ? '<p class="expl">' + esc(q.e) + '</p>' : "") +
-        (G.vorm === "karavaan" ? '<h2>De karavaan</h2>' + caravanHtml(G.prog, G.ne) : '<h2>Tussenstand</h2>' + listHtml(rk, 5)) +
+        (G.vorm === "karavaan" ? '<h2>De karavaan</h2>' + caravanHtml(G.prog, G.ne, G.prevProg) : '<h2>Tussenstand</h2>' + listHtml(rk, 5)) +
         (G.vorm === "sadaqa" ? '<div class="card center"><b>Sadaqa-ronde</b><p style="margin:4px 0">Wie het goed had, kan 250 punten weggeven aan een klasgenoot die achterloopt.</p><p class="msg" id="gc" role="status"></p></div>' : "") + '<div id="msg" class="msg"></div>' +
         '<button class="btn gold" id="nx" type="button">' + (last ? "Naar het podium" : "Volgende vraag") + '</button>';
       document.getElementById("nx").onclick = function () { this.disabled = true; hostNext(); }; return;
@@ -1138,6 +1144,15 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
     }
   }
 
+  /* de karavaan schuift van de vorige plek naar de nieuwe */
+  new MutationObserver(function () {
+    setTimeout(function () {
+      document.querySelectorAll(".caravan [data-to]").forEach(function (e) {
+        var t = e.getAttribute("data-to"); e.removeAttribute("data-to");
+        if (e.classList.contains("car-m")) e.style.left = t + "%"; else e.style.width = t + "%";
+      });
+    }, 120);
+  }).observe(app, { childList: true, subtree: true });
   start();
 })();
 </script>
