@@ -5709,6 +5709,8 @@ return exports;})();
     if (window.supabase && window.supabase.createClient) sb = window.supabase.createClient(SB_URL, SB_KEY, { auth: { flowType: "pkce", persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
   } catch (e) { sb = null; }
   const oauthReturn = /[?&#](code|access_token|error_description)=/.test(location.search + location.hash);
+  /* v151: terug uit de Klasmodus (of de terugknop): geen intro, direct het startscherm */
+  let FROM_KLAS = false; try { FROM_KLAS = sessionStorage.getItem("iq-from-klas") === "1"; sessionStorage.removeItem("iq-from-klas"); } catch (e) {}
   const GOOGLE_PHOTO = /^https:\/\/[a-z0-9.-]+\.googleusercontent\.com\//i;
   const gb = { beginner: null, junior: null, expert: null };        /* geladen klassement per modus */
 
@@ -12838,7 +12840,7 @@ return exports;})();
       case "home": play("click"); stopTimer(); landFly = null; journeyReturn = false; screen = lastRoot || "journey"; render(); break;
       case "dash": play("click"); stopTimer(); landFly = null; journeyReturn = false; screen = "dash"; render(); break;
       case "hub": play("click"); screen = "hub"; render(); break;
-      case "klas": play("click"); location.href = "/klas/"; break;
+      case "klas": play("click"); try { sessionStorage.setItem("iq-from-klas", "1"); } catch (e) {} location.href = "/klas/"; break;
       case "maktabah": if (!mkOwner()) break; play("click"); screen = "maktabah"; render(); break;
       case "lab": case "lab-new": case "lab-open": case "lab-join": case "lab-role": case "lab-add-les": case "lab-add-q": case "lab-del": case "lab-del-room": case "lab-copy": case "lab-quiz": case "lab-ans": case "lab-next": case "lab-back": labAction(act, el); break;
       case "fout": play("click"); screen = "fout"; render(); break;
@@ -13105,7 +13107,7 @@ return exports;})();
   function startSplash(done, retry) {
     const el = document.getElementById("splash");
     if (!el) { done(); return; }
-    if (oauthReturn) { el.remove(); done(); return; }          /* terug van Google/Facebook: niet nog eens laten wachten */
+    if (oauthReturn || FROM_KLAS) { el.remove(); done(); return; }          /* terug van Google/Facebook: niet nog eens laten wachten */
     const rm = reducedMotion(), text = "NurSpark", timers = [];
     const gen = (el._gen = (el._gen || 0) + 1);
     /* Op telefoons blokkeert de browser geluid tot de eerste aanraking: dan wachten we met de intro op één tik ("Tik om te starten"). */

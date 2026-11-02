@@ -133,7 +133,11 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
 
   /* ───── schermen ───── */
   function show() {
-    who.innerHTML = user ? '<button type="button" id="out">Uitloggen</button>' : "";
+    who.innerHTML = '<a href="/" id="home" aria-label="Terug naar de app">‹ App</a>' + (user ? ' <button type="button" id="out">Uitloggen</button>' : "");
+    ["home"].forEach(function () {});
+    var goHome = function () { try { sessionStorage.setItem("iq-from-klas", "1"); } catch (e) {} };
+    document.getElementById("home").onclick = goHome;
+    var wm = document.querySelector("a.wm"); if (wm) wm.onclick = goHome;
     if (user) document.getElementById("out").onclick = function () { stopAll(); lsSet(HOST_KEY, null); sb.auth.signOut().then(function () { user = null; edit = null; show(); }); };
     if (L) return renderL();
     if (G) return renderG();
