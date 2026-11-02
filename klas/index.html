@@ -94,6 +94,20 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
 .h1n { font-size: 1.15em; } .pot { background: linear-gradient(135deg, #fff8e0, #f3e3b0); border: 2px solid #e6cc82; border-radius: 16px; padding: 10px 14px; margin: 12px 0; }
 .qimg { display: block; max-width: 100%; max-height: 42vh; margin: 8px auto 12px; border-radius: 14px; border: 1px solid var(--line); object-fit: contain; background: #fff; } .qimg.thumb { max-height: 120px; margin: 6px 0; }
 .imgbox { margin: 8px 0; } label.imgbtn { display: inline-block; margin: 6px 0; cursor: pointer; }
+main.wide { max-width: 1240px; }
+.sbwrap { display: grid; gap: 16px; }
+@media (min-width: 900px) { .sbwrap { grid-template-columns: minmax(0, 1fr) 380px; align-items: start; } .sb { position: sticky; top: 10px; } }
+.sb { background: #fff; border: 2px solid var(--gold); border-radius: 18px; padding: 12px 14px; }
+.sb-h { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; } .sb-h h2 { margin: 0; }
+.sb ol { list-style: none; margin: 8px 0 0; padding: 0; }
+.sb li { display: flex; align-items: center; gap: 10px; padding: 8px 10px; margin: 6px 0; border-radius: 14px; background: var(--cream); border: 1px solid var(--line); font-weight: 800; font-size: clamp(17px, 1.5vw, 24px); }
+.sb .rk { flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: #efe6cf; color: var(--em-d); font-size: .8em; }
+.sb li:nth-child(1) .rk { background: linear-gradient(180deg, var(--gold-l), var(--gold)); color: #3b2a07; }
+.sb .nm { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.sb .sc { flex: none; text-align: right; line-height: 1.1; } .sb .sc small { display: block; font-size: .62em; color: var(--em); }
+.sb .mv { font-size: .7em; } .sb .mv.up { color: var(--em); } .sb .mv.dn { color: var(--bad); }
+.sb .done { color: var(--em); font-size: 1.1em; } .sb .wt { color: var(--muted); font-size: .8em; font-weight: 700; }
+.sb li.sb-more { background: none; border: 0; justify-content: center; color: var(--muted); font-size: 15px; font-weight: 700; }
 @media (max-width: 420px) { .tile { font-size: 17px; min-height: 76px; } }
 </style>
 </head>
@@ -214,7 +228,7 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
       '<button class="btn gold" id="new" type="button">+ Nieuwe quiz</button></div><div id="msg" class="msg"></div>';
     h += '<details class="help"' + (quizzes.length ? "" : " open") + '><summary>Hoe werkt het? (uitleg voor docenten)</summary>' +
       '<ol class="steps"><li><b>Maak een quiz.</b> Tik op + Nieuwe quiz en voeg vragen toe: meerkeuze, waar/niet waar, typ het antwoord, juiste volgorde, schuifbalk, peiling of woordwolk. Stel per vraag de tijd en de punten in.</li>' +
-      '<li><b>Live in de klas.</b> Tik bij je quiz op Live spelen en zet dit scherm op het digibord. Leerlingen gaan op hun telefoon naar nurspark.app/klas, vullen de code en een bijnaam in en tikken op Meedoen. Kies een spelvorm: Klassiek (snelste wint), Karavaan (de klas werkt samen) of Sadaqa (punten weggeven aan een klasgenoot). Tik op Start het spel.</li>' +
+      '<li><b>Live in de klas.</b> Tik bij je quiz op Live spelen en zet dit scherm op het digibord. Leerlingen gaan op hun telefoon naar nurspark.app/klas, vullen de code en een bijnaam in en tikken op Meedoen. Kies een spelvorm: Klassiek (snelste wint), Karavaan (de klas werkt samen) of Sadaqa (punten weggeven aan een klasgenoot). Het scorebord staat altijd op het digibord. Met de knop Alleen digibord / Digibord + telefoons kies je of leerlingen het ook op hun telefoon zien (ook tijdens het spel te wisselen). Tik op Start het spel.</li>' +
       '<li><b>Huiswerk.</b> Tik bij je quiz op Huiswerk en kies een einddatum. Deel de code met WhatsApp. Leerlingen spelen in hun eigen tempo. Onder Huiswerk zie je de uitslag per leerling en per vraag.</li>' +
       '<li><b>Daarna.</b> Download de uitslag voor Excel, of tik op Nog een keer spelen. Sluit het spel af als je klaar bent.</li></ol>' +
       '<p class="muted">Leerlingen hebben geen account nodig en gebruiken een bijnaam. Jouw naam is niet zichtbaar. Let op: je huiswerk staat in de browser waarmee je het gemaakt hebt. Jij bent zelf verantwoordelijk voor de inhoud van je vragen.</p></details>';
@@ -752,6 +766,52 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
     });
     return h + "</div>";
   }
+  /* live scorebord voor het digibord (docent) */
+  function sbLabel() { return G && G.sb ? "Digibord + telefoons" : "Alleen digibord"; }
+  function boardRows(rk, st, max) {
+    var h = "";
+    rk.slice(0, max).forEach(function (r, i) {
+      var extra = "", gain = "";
+      if (st === "vraag") extra = (G.antData && G.antData[r.uid] != null) ? '<span class="done" aria-label="heeft geantwoord">✓</span>' : '<span class="wt" aria-hidden="true">…</span>';
+      else if (st === "uitslag") {
+        if (G.rb && G.rb[r.uid] != null) { var d = G.rb[r.uid] - i; extra = d > 0 ? '<span class="mv up" aria-label="gestegen">▲</span>' : d < 0 ? '<span class="mv dn" aria-label="gezakt">▼</span>' : ""; }
+        if (G.gain && G.gain[r.uid]) gain = '<small>+' + G.gain[r.uid] + '</small>';
+      }
+      h += '<li><span class="rk">' + (i + 1) + '</span><span class="nm">' + esc(r.name) + '</span>' + extra + '<span class="sc"><span class="n3d" data-to="' + r.score + '" data-k="sb-' + esc(r.uid) + '">' + r.score + '</span>' + gain + '</span></li>';
+    });
+    if (rk.length > max) h += '<li class="sb-more">en nog ' + (rk.length - max) + ' ' + (rk.length - max === 1 ? "speler" : "spelers") + '</li>';
+    return h;
+  }
+  function boardHtml(rk, st) {
+    return '<aside class="sb" aria-label="Scorebord"><div class="sb-h"><h2>Scorebord</h2><button class="btn small light" id="sbt" type="button" aria-pressed="' + (G.sb ? "true" : "false") + '">' + sbLabel() + '</button></div>' +
+      (rk.length ? '<ol id="sbl">' + boardRows(rk, st, 10) + '</ol>' : '<p class="muted">Nog geen spelers.</p>') + '</aside>';
+  }
+  function withBoard(mainH, board) {
+    app.classList.toggle("wide", !!board);
+    return board ? '<div class="sbwrap"><div>' + mainH + '</div>' + board + '</div>' : mainH;
+  }
+  function updBoard() {
+    var el = document.getElementById("sbl");
+    if (el && G && G.state === "vraag") el.innerHTML = boardRows(ranking(G.players), "vraag", 10);
+  }
+  function wireSb() {
+    var b = document.getElementById("sbt"); if (!b) return;
+    function paint() { b.textContent = sbLabel(); b.setAttribute("aria-pressed", G.sb ? "true" : "false"); }
+    b.onclick = function () {
+      G.sb = !G.sb; paint();
+      dbReq("PATCH", "klas/" + G.code + "/meta", { sb: G.sb ? 1 : 0 }).catch(function () { G.sb = !G.sb; paint(); say("Dat lukte niet. Probeer opnieuw.", true); });
+    };
+  }
+  /* scorebord op de telefoon van de leerling (alleen als de docent het aanzet) */
+  function phoneBoardHtml(rk) {
+    if (!rk.length) return "";
+    var myi = rk.map(function (r) { return r.uid; }).indexOf(L.uid);
+    function row(r, i) { return '<li' + (r.uid === L.uid ? ' class="me"' : "") + '><span>' + (i + 1) + '. ' + esc(r.name) + '</span><b><span class="n3d" data-to="' + r.score + '" data-k="pb-' + esc(r.uid) + '">' + r.score + '</span></b></li>'; }
+    var h = '<h2>Scorebord</h2><ol class="lb">';
+    rk.slice(0, 5).forEach(function (r, i) { h += row(r, i); });
+    if (myi >= 5) h += '<li aria-hidden="true" style="justify-content:center;background:none;border:0;padding:0">⋮</li>' + row(rk[myi], myi);
+    return h + '</ol>';
+  }
   function listHtml(rk, max, me) {
     var h = '<ol class="lb">';
     rk.slice(0, max).forEach(function (r, i) { h += '<li' + (r.uid === me ? ' class="me"' : "") + '><span>' + (i + 1) + '. ' + esc(r.name) + '</span><b>' + ptsH(r.score, false, false, "lb-" + r.uid) + '</b></li>'; });
@@ -763,6 +823,7 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
     stopTick();
     if (L) { L.ls.forEach(function (x) { x.close(); }); L = null; }
     if (G) { G.ls.forEach(function (x) { x.close(); }); if (G.timer) clearInterval(G.timer); G = null; }
+    app.classList.remove("wide");
   }
   async function joinGame(code, name) {
     code = String(code || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
@@ -792,7 +853,12 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
     stopAll();
     SHOWN = {};
     L = { code: code, uid: uid, name: name, meta: null, gotMeta: false, vragen: null, spelers: null, seen: false, shown: -1, picked: null, end: 0, ls: [] };
-    L.ls.push(listen("klas/" + code + "/meta", function (d) { L.meta = d; L.gotMeta = true; renderL(); }));
+    L.ls.push(listen("klas/" + code + "/meta", function (d) {
+      var o = L.meta; L.meta = d; L.gotMeta = true;
+      /* alleen de scorebord-schakelaar veranderd tijdens een vraag: niet opnieuw tekenen (anders raakt een half getypt antwoord kwijt) */
+      if (o && d && o.state === "vraag" && d.state === "vraag" && o.qi === d.qi) { var a = Object.assign({}, o, { sb: 0 }), b = Object.assign({}, d, { sb: 0 }); if (JSON.stringify(a) === JSON.stringify(b)) return; }
+      renderL();
+    }));
     L.ls.push(listen("klas/" + code + "/spelers", function (d) {
       L.spelers = d; if (d && d[uid] && d[uid].name) L.seen = true;
       var st = L.meta && L.meta.state, mine = d && d[uid] && d[uid].got ? d[uid].got.qi : -1;
@@ -845,7 +911,7 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
       if (opin) head = last && last.k >= 0 ? '<h1 class="good-h">Bedankt voor je antwoord!</h1>' : '<h1 class="bad-h">Geen antwoord</h1>';
       app.innerHTML = '<div class="center">' + head + (opin ? "" : '<p>Het goede antwoord: <b>' + esc(goed) + '</b></p>') + (m.e ? '<p class="expl">' + esc(m.e) + '</p>' : "") +
         (m.vorm === "karavaan" ? '<h2>De karavaan</h2>' + caravanHtml(m.p || 0, m.ne || m.n, carFrom(m)) + carMine(m, last, opin) + '<p class="muted">Samen onderweg…</p>' :
-          '<p class="rank">Jij staat op plek <b>' + (my || "–") + '</b> van ' + rk.length + ' · ' + ptsH(me.score || 0, true, false, "me") + '</p>' + giftHtml(m, rk, me, last) + '<p class="muted">Wacht op de volgende vraag…</p>') + '</div>';
+          '<p class="rank">Jij staat op plek <b>' + (my || "–") + '</b> van ' + rk.length + ' · ' + ptsH(me.score || 0, true, false, "me") + '</p>' + giftHtml(m, rk, me, last) + (m.sb ? phoneBoardHtml(rk) : "") + '<p class="muted">Wacht op de volgende vraag…</p>') + '</div>';
       app.querySelectorAll("[data-gift]").forEach(function (b) { b.onclick = function () { giveGift(m.qi, b.getAttribute("data-gift")); }; });
       return;
     }
@@ -1076,16 +1142,16 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
       for (var t = 0; t < 6 && !code; t++) { var c = newCode(); if (!(await dbReq("GET", "klas/" + c + "/meta"))) code = c; }
       if (!code) throw new Error("code");
       var pub = quiz.vragen.map(pubQ);
-      await dbReq("PUT", "klas/" + code + "/meta", { host: auth.uid, titel: quiz.titel, state: "lobby", qi: -1, n: quiz.vragen.length, ne: Math.max(1, quiz.vragen.filter(function (x) { return x.t !== "poll" && x.t !== "cloud"; }).length), vorm: "klassiek", p: 0, created: Date.now() });
+      await dbReq("PUT", "klas/" + code + "/meta", { host: auth.uid, titel: quiz.titel, state: "lobby", qi: -1, n: quiz.vragen.length, ne: Math.max(1, quiz.vragen.filter(function (x) { return x.t !== "poll" && x.t !== "cloud"; }).length), vorm: "klassiek", p: 0, sb: 0, created: Date.now() });
       await dbReq("PUT", "klas/" + code + "/vragen", pub);
       lsSet(HOST_KEY, { code: code, quizId: quiz.id });
       attachHost(code, quiz, "lobby", -1, pub);
       show();
     } catch (e) { btns.forEach(function (b) { b.disabled = false; }); say("Het spel kon niet starten. Staan de Firebase-regels klaar? (zie de handleiding)", true); }
   }
-  function attachHost(code, quiz, state, qi, pub, vorm, prog) {
+  function attachHost(code, quiz, state, qi, pub, vorm, prog, sbOn) {
     stopAll();
-    G = { vorm: vorm || "klassiek", prog: prog || 0, ne: Math.max(1, quiz.vragen.filter(function (x) { return x.t !== "poll" && x.t !== "cloud"; }).length), code: code, quiz: quiz, pub: pub, state: state, qi: qi, players: {}, arr: {}, stat: null, qStart: 0, timer: null, closed: false, ls: [] };
+    G = { vorm: vorm || "klassiek", sb: !!sbOn, prog: prog || 0, ne: Math.max(1, quiz.vragen.filter(function (x) { return x.t !== "poll" && x.t !== "cloud"; }).length), code: code, quiz: quiz, pub: pub, state: state, qi: qi, players: {}, arr: {}, stat: null, qStart: 0, timer: null, closed: false, ls: [] };
     G.ls.push(listen("klas/" + code + "/spelers", function (d) { G.players = d || {}; if (G.state === "lobby" || G.state === "einde") renderG(); else updAns(); }));
   }
   async function resumeHost() {
@@ -1095,7 +1161,7 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
       var meta = await dbReq("GET", "klas/" + s.code + "/meta");
       var pub = await dbReq("GET", "klas/" + s.code + "/vragen");
       if (!meta || !quiz || !pub) { lsSet(HOST_KEY, null); return false; }
-      attachHost(s.code, quiz, meta.state, meta.qi, Array.isArray(pub) ? pub : Object.keys(pub).map(function (x) { return pub[x]; }), meta.vorm, meta.p);
+      attachHost(s.code, quiz, meta.state, meta.qi, Array.isArray(pub) ? pub : Object.keys(pub).map(function (x) { return pub[x]; }), meta.vorm, meta.p, meta.sb);
       if (meta.state === "vraag") { G.qStart = Date.now(); G.closed = false; await hostClose(); }
       else if (meta.state === "uitslag") {
         var ant = (await dbReq("GET", "klas/" + G.code + "/ant/" + meta.qi)) || {};
@@ -1127,7 +1193,7 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
     G.qi = i; G.state = "vraag"; G.arr = {}; G.closed = false; G.stat = null;
     var q = G.quiz.vragen[i];
     try { await dbReq("PATCH", "klas/" + G.code + "/meta", { state: "vraag", qi: i, a: null, e: null }); } catch (e) { say("Dat lukte niet. Probeer opnieuw.", true); G.state = "uitslag"; return; }
-    G.qStart = Date.now();
+    G.qStart = Date.now(); G.antData = {};
     if (G.ant) G.ant.close();
     G.ant = listen("klas/" + G.code + "/ant/" + i, function (d) {
       G.antData = d || {};
@@ -1147,6 +1213,7 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
   }
   function updAns() {
     var el = document.getElementById("ans"); if (!el || !G) return;
+    updBoard();
     var np = Object.keys(G.players).filter(function (u) { return G.players[u] && G.players[u].name; }).length;
     el.textContent = Object.keys(G.antData || {}).filter(function (u) { return G.players[u]; }).length + " van " + np + " hebben geantwoord";
   }
@@ -1162,12 +1229,13 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
       G.hist.push({ qi: qi, q: q.q, ok: ev.st.ok, total: ev.st.total, opin: q.t === "poll" || q.t === "cloud" });
       Object.keys(ev.per).forEach(function (u) { G.per[u] = G.per[u] || {}; G.per[u][qi] = ev.per[u].ok ? 1 : 0; });
       G.prevProg = G.prog;
+      G.rb = {}; ranking(G.players).forEach(function (r, i) { G.rb[r.uid] = i; }); G.gain = {};
       if (G.vorm === "karavaan" && q.t !== "poll" && q.t !== "cloud") G.prog += ev.st.total ? ev.st.ok / ev.st.total : 0;
       Object.keys(ev.per).forEach(function (u) {
         var r = ev.per[u], p = G.players[u], pts = 0;
         if (r.ok) { var t = G.arr[u] != null ? Math.min(G.arr[u], lim) : lim; pts = Math.round((500 + 500 * Math.max(0, 1 - t / lim)) * (q.pts == null ? 1 : q.pts)); }
         upd[u + "/score"] = (p.score || 0) + pts; upd[u + "/last"] = { qi: qi, ok: r.ok, pts: pts, k: r.k };
-        p.score = (p.score || 0) + pts;
+        p.score = (p.score || 0) + pts; G.gain[u] = pts;
       });
       if (Object.keys(upd).length) await dbReq("PATCH", "klas/" + G.code + "/spelers", upd);
       await dbReq("PATCH", "klas/" + G.code + "/meta", { state: "uitslag", ok: ev.st.ok, tot: ev.st.total, p: Math.round(G.prog * 100) / 100, a: (q.t === "mc" || q.t === "tf") ? q.a : null, at: (q.t === "poll" || q.t === "cloud") ? null : kk.text, e: q.e || null });
@@ -1218,7 +1286,7 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
       await dbReq("PUT", "klas/" + G.code + "/ant", null); await dbReq("PUT", "klas/" + G.code + "/gift", null);
       G.pub = G.quiz.vragen.map(pubQ); await dbReq("PUT", "klas/" + G.code + "/vragen", G.pub);
       await dbReq("PATCH", "klas/" + G.code + "/meta", { state: "lobby", qi: -1, p: 0, a: null, at: null, e: null, sg: null, sc: null });
-      SHOWN = {}; G.state = "lobby"; G.qi = -1; G.prog = 0; G.prevProg = 0; G.giftN = 0; G.hist = []; G.per = {}; G.arr = {}; G.stat = null; G.giftMsg = null; G.closed = false;
+      SHOWN = {}; G.state = "lobby"; G.qi = -1; G.prog = 0; G.prevProg = 0; G.rb = null; G.gain = null; G.giftN = 0; G.hist = []; G.per = {}; G.arr = {}; G.stat = null; G.giftMsg = null; G.closed = false;
       renderG();
     } catch (e) { if (b) b.disabled = false; say("Opnieuw starten lukte niet.", true); }
   }
@@ -1240,10 +1308,11 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
         '<p>Leerlingen: ga naar <b>nurspark.app/klas</b> en vul deze code in:</p><div class="bigcode" aria-label="Code ' + G.code.split("").join(" ") + '">' + G.code + '</div>' +
         '<p><a class="btn small light" target="_blank" rel="noopener" href="https://wa.me/?text=' + encodeURIComponent("Doe mee met onze quiz op NurSpark: " + link) + '">Deel via WhatsApp</a></p>' +
         '<h2>Spelvorm</h2><div class="row" style="justify-content:center">' + Object.keys(VORMEN).map(function (v) { return '<button class="btn small light' + (G.vorm === v ? " on" : "") + '" data-vorm="' + v + '" type="button" aria-pressed="' + (G.vorm === v) + '">' + esc(VORMEN[v][0]) + '</button>'; }).join("") + '</div><p class="muted vorm-note">' + esc(VORMEN[G.vorm][1]) + '</p>' +
+        (G.vorm !== "karavaan" ? '<h2>Scorebord</h2><p class="muted">Het scorebord staat altijd op het digibord. Moeten leerlingen het ook op hun telefoon zien?</p><button class="btn small light" id="sbt" type="button" aria-pressed="' + (G.sb ? "true" : "false") + '">' + sbLabel() + '</button>' : "") +
         '<h2>' + np + ' speler' + (np === 1 ? "" : "s") + '</h2><div class="chips">';
       rk.forEach(function (r) { h += '<span class="chip">' + esc(r.name) + '<button type="button" data-kick="' + esc(r.uid) + '" aria-label="' + esc(r.name) + ' verwijderen">✕</button></span>'; });
       h += '</div><div id="msg" class="msg"></div><div class="row" style="justify-content:center;margin-top:14px"><button class="btn gold" id="go" type="button"' + (np ? "" : " disabled") + '>Start het spel</button><button class="btn light" id="stop" type="button">Annuleren</button></div></div>';
-      app.innerHTML = h;
+      app.innerHTML = withBoard(h, ""); wireSb();
       app.querySelectorAll("[data-kick]").forEach(function (b) { b.onclick = function () { dbReq("DELETE", "klas/" + G.code + "/spelers/" + b.getAttribute("data-kick")).catch(function () {}); }; });
       app.querySelectorAll("[data-vorm]").forEach(function (b) {
         b.onclick = function () { G.vorm = b.getAttribute("data-vorm"); dbReq("PATCH", "klas/" + G.code + "/meta", { vorm: G.vorm }).catch(function () {}); renderG(); };
@@ -1259,8 +1328,9 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
       else if (q.t === "cloud") vb = '<p class="expl big-note">Leerlingen typen één woord of een korte zin op hun telefoon.</p>';
       else if (q.t === "type") vb = '<p class="expl big-note">Leerlingen typen het antwoord op hun telefoon.</p>';
       else vb = '<p class="expl big-note">Leerlingen kiezen een getal tussen <b>' + q.min + '</b> en <b>' + q.max + '</b>.</p>';
-      app.innerHTML = (G.giftMsg && G.giftMsg.length ? '<div class="expl"><b>Sadaqa:</b> ' + G.giftMsg.map(esc).join(" · ") + '</div>' : "") + '<div class="qtop"><span>Vraag ' + (G.qi + 1) + ' van ' + G.quiz.vragen.length + '</span><b><span id="sec">' + q.time + '</span> sec</b></div><div class="bar"><div id="barIn" style="width:100%"></div></div>' +
+      var mainV = (G.giftMsg && G.giftMsg.length ? '<div class="expl"><b>Sadaqa:</b> ' + G.giftMsg.map(esc).join(" · ") + '</div>' : "") + '<div class="qtop"><span>Vraag ' + (G.qi + 1) + ' van ' + G.quiz.vragen.length + '</span><b><span id="sec">' + q.time + '</span> sec</b></div><div class="bar"><div id="barIn" style="width:100%"></div></div>' +
         '<h1 class="qq big">' + esc(q.q) + '</h1>' + imgHtml(q) + vb + '<p class="msg" id="ans" role="status"></p><div id="msg"></div><button class="btn light" id="end" type="button">Nu afsluiten</button>';
+      app.innerHTML = withBoard(mainV, G.vorm === "karavaan" ? "" : boardHtml(rk, "vraag")); wireSb();
       document.getElementById("end").onclick = hostClose; updAns(); return;
     }
     if (st === "uitslag") {
@@ -1275,14 +1345,16 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
           if (tx.length) ub += '<p class="muted">Gegeven antwoorden:</p><div class="chips">' + tx.map(function (t2) { return '<span class="chip">' + esc(t2) + ' · ' + sx.texts[t2] + '×</span>'; }).join("") + '</div>';
         }
       }
-      app.innerHTML = '<div class="qtop"><span>Uitslag vraag ' + (G.qi + 1) + '</span></div><h1 class="qq big">' + esc(q.q) + '</h1>' + imgHtml(q) + ub +
+      var mainU = '<div class="qtop"><span>Uitslag vraag ' + (G.qi + 1) + '</span></div><h1 class="qq big">' + esc(q.q) + '</h1>' + imgHtml(q) + ub +
         (q.e ? '<p class="expl">' + esc(q.e) + '</p>' : "") +
-        (G.vorm === "karavaan" ? '<h2>De karavaan</h2>' + caravanHtml(G.prog, G.ne, G.prevProg) : '<h2>Tussenstand</h2>' + listHtml(rk, 5)) +
+        (G.vorm === "karavaan" ? '<h2>De karavaan</h2>' + caravanHtml(G.prog, G.ne, G.prevProg) : "") +
         (G.vorm === "sadaqa" ? '<div class="card center"><b>Sadaqa-ronde</b><p style="margin:4px 0">Wie het goed had, kan 250 munten weggeven aan een klasgenoot die achterloopt.</p><p class="msg" id="gc" role="status"></p></div>' : "") + '<div id="msg" class="msg"></div>' +
         '<button class="btn gold" id="nx" type="button">' + (last ? "Naar het podium" : "Volgende vraag") + '</button>';
+      app.innerHTML = withBoard(mainU, G.vorm === "karavaan" ? "" : boardHtml(rk, "uitslag")); wireSb();
       document.getElementById("nx").onclick = function () { this.disabled = true; hostNext(); }; return;
     }
     if (st === "einde") {
+      app.classList.remove("wide");
       app.innerHTML = '<div class="center"><h1>MashaAllah!</h1>' + (G.vorm === "karavaan" ? teamEndHtml(G.prog, G.ne) + '<h2>Jullie samen</h2><div class="chips">' + rk.map(function (r) { return '<span class="chip">' + esc(r.name) + '</span>'; }).join("") + '</div>' : podiumHtml(rk) + '<h2>Alle spelers</h2>' + listHtml(rk, 50)) + (G.vorm === "sadaqa" ? potHtml(G.giftN, (G.giftN || 0) * 250) : "") + '<h2>Per vraag</h2><ol class="lb">' + (G.hist || []).map(function (x) { return '<li><span>' + (x.qi + 1) + '. ' + esc(x.q.length > 40 ? x.q.slice(0, 38) + "…" : x.q) + '</span><b>' + (x.opin ? "•" : x.total ? Math.round(100 * x.ok / x.total) + "%" : "–") + '</b></li>'; }).join("") + '</ol>' +
         '<div class="row" style="justify-content:center;margin-top:14px"><button class="btn gold" id="again" type="button">Nog een keer spelen</button><button class="btn light" id="dl" type="button">Download uitslag</button><button class="btn light" id="fin" type="button">Spel afsluiten</button></div></div>';
       document.getElementById("again").onclick = replay;
