@@ -228,7 +228,7 @@ body.ms-on { padding-bottom: 6px; }
   /* v174: de hoofdknop (Verstuur / Volgende vraag / Klaar) blijft op de telefoon onderaan het scherm staan */
   body.ms-on .row:has(> #hnx), body.ms-on div:has(> #nx) { display: contents; }
   body.ms-on #nx, body.ms-on #hnx { position: sticky; bottom: 12px; z-index: 6; margin-top: 12px; box-shadow: 0 0 0 5px rgba(239,226,184,.9), 0 8px 14px rgba(40,24,6,.35); }
-  body.ms-on .qimg { max-height: 27vh; margin: 4px auto 8px; }
+  body.ms-on .qimg.qdoc { max-height: 27vh; margin: 4px auto 8px; }
   body.ms-on h1.qq { font-size: 25px; } body.ms-on h1.qq::first-letter { font-size: 1em; padding: 3px 7px 1px; margin: 3px 8px 0 0; }
   .ms-top .ms-zg { width: 84px; height: 84px; } .ms-top .basm { font-size: 31px; white-space: nowrap; } body.ms-on .tile { font-size: 23px; min-height: 58px; } body.ms-on .tiles { grid-template-columns: 1fr; }
   body.ms-on h1 { font-size: 28px; } body.ms-on .btn { padding: 8px 28px; } body.ms-on .ms-roll { height: 48px; } .coin-hero { width: 120px; height: 120px; }
@@ -414,7 +414,7 @@ body.ms-on #nx, body.ms-on #hnx { position: sticky; bottom: 12px; z-index: 6; ma
 
   /* ───── quiz-maker ───── */
   var IMG_BASE = SB_URL + "/storage/v1/object/public/klas-plaatjes/";
-  function imgHtml(q) { return q && q.img && String(q.img).indexOf(IMG_BASE) === 0 ? '<img class="qimg" src="' + esc(q.img) + '" alt="Plaatje bij de vraag">' : ""; }
+  function imgHtml(q, extra) { return q && q.img && String(q.img).indexOf(IMG_BASE) === 0 ? '<img class="qimg' + (extra || "") + '" src="' + esc(q.img) + '" alt="Plaatje bij de vraag">' : ""; }
   function shrinkImg(file, max, cb) {
     var url = URL.createObjectURL(file), im = new Image();
     im.onload = function () {
@@ -1506,7 +1506,7 @@ body.ms-on #nx, body.ms-on #hnx { position: sticky; bottom: 12px; z-index: 6; ma
       else if (q.t === "type") vb = '<p class="expl big-note">Leerlingen typen het antwoord op hun scherm.</p>';
       else vb = '<p class="expl big-note">Leerlingen kiezen een getal tussen <b>' + q.min + '</b> en <b>' + q.max + '</b>.</p>';
       var mainV = (G.giftMsg && G.giftMsg.length ? '<div class="expl"><b>Sadaqa:</b> ' + G.giftMsg.map(esc).join(" · ") + '</div>' : "") + '<div class="qtop"><span>Vraag ' + (G.qi + 1) + ' van ' + G.quiz.vragen.length + '</span><b><span id="sec">' + q.time + '</span> sec</b></div><div class="bar"><div id="barIn" style="width:100%"></div></div>' +
-        '<h1 class="qq big">' + esc(q.q) + '</h1>' + imgHtml(q) + vb + '<p class="msg" id="ans" role="status"></p><div id="msg"></div><button class="btn light" id="end" type="button">Nu afsluiten</button>';
+        '<h1 class="qq big">' + esc(q.q) + '</h1>' + imgHtml(q, " qdoc") + vb + '<p class="msg" id="ans" role="status"></p><div id="msg"></div><button class="btn light" id="end" type="button">Nu afsluiten</button>';
       app.innerHTML = withBoard(mainV, G.vorm === "karavaan" ? "" : boardHtml(rk, "vraag")); wireSb();
       document.getElementById("end").onclick = hostClose; updAns(); return;
     }
@@ -1522,7 +1522,7 @@ body.ms-on #nx, body.ms-on #hnx { position: sticky; bottom: 12px; z-index: 6; ma
           if (tx.length) ub += '<p class="muted">Gegeven antwoorden:</p><div class="chips">' + tx.map(function (t2) { return '<span class="chip">' + esc(t2) + ' · ' + sx.texts[t2] + '×</span>'; }).join("") + '</div>';
         }
       }
-      var mainU = '<div class="qtop"><span>Uitslag vraag ' + (G.qi + 1) + '</span></div><h1 class="qq big">' + esc(q.q) + '</h1>' + imgHtml(q) + ub +
+      var mainU = '<div class="qtop"><span>Uitslag vraag ' + (G.qi + 1) + '</span></div><h1 class="qq big">' + esc(q.q) + '</h1>' + imgHtml(q, " qdoc") + ub +
         (q.e ? '<p class="expl">' + esc(q.e) + '</p>' : "") +
         (G.vorm === "karavaan" ? '<h2>De karavaan</h2>' + caravanHtml(G.prog, G.ne, G.prevProg) : "") +
         (G.vorm === "sadaqa" ? '<div class="card center"><svg class="coin-hero klein" aria-hidden="true"><use href="#nsCoin"/></svg><b>Sadaqa-ronde</b><p style="margin:4px 0">Wie het goed had, kan 250 munten weggeven aan een klasgenoot die achterloopt.</p><p class="msg" id="gc" role="status"></p></div>' : "") + '<div id="msg" class="msg"></div>' +
