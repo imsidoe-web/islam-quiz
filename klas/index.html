@@ -219,12 +219,18 @@ body.ms-lite.ms-on .ms-wrap, body.ms-lite .ms-top .ms-zg, body.ms-lite .coin-her
 body.ms-lite.ms-on main#app { clip-path: none; box-shadow: none; animation: none !important; } body.ms-lite .ms-roll.b, body.ms-lite .tile, body.ms-lite .sb li, body.ms-lite ol.lb li { animation: none !important; }
 body.ms-lite.ms-on .tile, body.ms-lite.ms-on .btn { clip-path: none; } body.ms-lite.ms-on .tile::before, body.ms-lite.ms-on .btn::before { inset: 3px; }
 .ms-lite-btn { display: none; position: relative; margin: 0 auto 22px; z-index: 50; font: 700 14px "Nunito", sans-serif; padding: 6px 12px; border: 2px solid #8a6a3a; background: #f6e8bd; color: #3b2a07; cursor: pointer; }
-body.ms-on .ms-lite-btn { display: block; }
+body.ms-on .ms-lite-btn { display: none; }
 body.ms-on { padding-bottom: 6px; }
 @media (prefers-reduced-motion: reduce) { body.ms-on.ms-anim main#app, body.ms-on.ms-anim .ms-roll.b, body.ms-on.ms-anim .tile, body.ms-on.ms-anim ol.lb li, body.ms-on.ms-anim .sb li, .coin-hero { animation: none !important; } }
 @media (max-width: 700px) {
   body.ms-on { font-size: 18px; } body.ms-on main#app { padding: 70px 60px 62px; } body.ms-on .ms-wrap main#app { margin: 0 4px; }
   body.ms-on .tile { padding: 8px 34px 8px 24px; } body.ms-on .tile em { right: 26px; top: 4px; font-size: 13px; }
+  /* v183: telefoon - de brief past op het scherm: boven- en onderrol blijven in beeld, de inhoud scrolt tussen de rollen */
+  body.ms-on { height: 100vh; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; padding-bottom: 0; }
+  body.ms-on header.top { flex: none; }
+  body.ms-on .ms-wrap { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; width: 100%; }
+  body.ms-on .ms-roll { flex: none; }
+  body.ms-on .ms-wrap main#app { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
   body.ms-on .qimg.qdoc { max-height: 20vh; margin: 4px auto 8px; }
   body.ms-on h1.qq { font-size: 25px; } body.ms-on h1.qq::first-letter { font-size: 1em; padding: 3px 7px 1px; margin: 3px 8px 0 0; }
   .ms-top .ms-zg { width: 84px; height: 84px; } .ms-top .basm { font-size: 31px; white-space: nowrap; } body.ms-on .tile { font-size: 23px; min-height: 58px; } body.ms-on .tiles { grid-template-columns: 1fr; }
