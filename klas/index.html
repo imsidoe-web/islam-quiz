@@ -79,9 +79,15 @@ input[type=range] { accent-color: var(--em); height: 36px; }
 .tblw { overflow-x: auto; } .tbl { border-collapse: collapse; width: 100%; background: #fff; border-radius: 12px; font-size: 15px; } .tbl th, .tbl td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; } .tbl td.c, .tbl th { text-align: center; } .tbl td.ok { color: var(--em); font-weight: 900; } .tbl td.no { color: var(--bad); font-weight: 900; } .tbl tr.foot td { background: #fff8e0; font-weight: 800; }
 .steps { padding-left: 22px; margin: 8px 0; } .steps li { margin: 6px 0; }
 details.help { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 10px 14px; margin: 10px 0; } details.help summary { font-weight: 800; color: var(--em-d); cursor: pointer; min-height: 32px; }
-.n3d { display: inline-block; font-weight: 900; background: linear-gradient(180deg, #fff6c8 0%, #f6d25a 38%, #c8902a 62%, #f3c64f 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
+.n3d { display: inline-block; font-weight: 900; font-variant-numeric: tabular-nums; background: linear-gradient(180deg, #fff6c8 0%, #f6d25a 38%, #c8902a 62%, #f3c64f 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
   filter: drop-shadow(1px 0 0 #5a3d08) drop-shadow(-1px 0 0 #5a3d08) drop-shadow(0 1px 0 #5a3d08) drop-shadow(0 -1px 0 #5a3d08) drop-shadow(0 2px 0 #7a5414) drop-shadow(0 3px 0 #7a5414) drop-shadow(0 5px 4px rgba(0,0,0,.35)); }
-.coin { width: 1.15em; height: 1.15em; vertical-align: -0.2em; margin-right: .25em; filter: drop-shadow(0 2px 2px rgba(0,0,0,.35)); }
+@keyframes coinPop { 0% { transform: scale(.2) rotate(-40deg); opacity: 0; } 60% { transform: scale(1.25) rotate(8deg); opacity: 1; } 100% { transform: scale(1) rotate(0); } }
+.cburst { position: fixed; width: 0; height: 0; z-index: 60; pointer-events: none; }
+.cj { position: absolute; left: -13px; top: -13px; width: 26px; height: 26px; opacity: 0; animation: coinJump 1.5s cubic-bezier(.3,.7,.4,1) forwards; filter: drop-shadow(0 2px 2px rgba(0,0,0,.35)); }
+@keyframes coinJump { 0% { transform: translate(0,0) scale(.3) rotate(0); opacity: 0; } 12% { opacity: 1; } 45% { transform: translate(calc(var(--dx) * .7), calc(var(--up) * -1)) scale(1.1) rotate(var(--r)); opacity: 1; } 75% { transform: translate(var(--dx), -6px) scale(1) rotate(calc(var(--r) * 1.6)); opacity: 1; } 100% { transform: translate(calc(var(--dx) * 1.1), 14px) scale(.8) rotate(calc(var(--r) * 2)); opacity: 0; } }
+@keyframes coinDance { 0%, 100% { transform: translateY(0) rotate(0); } 20% { transform: translateY(-.3em) rotate(-12deg); } 40% { transform: translateY(0) rotate(0); } 60% { transform: translateY(-.2em) rotate(12deg); } 80% { transform: translateY(0) rotate(0); } }
+@media (prefers-reduced-motion: reduce) { .cj, .coin { animation: none !important; } }
+.coin { animation: coinPop .6s ease-out, coinDance 1.8s ease-in-out .8s infinite; transform-origin: 50% 85%; width: 1.15em; height: 1.15em; vertical-align: -0.2em; margin-right: .25em; filter: drop-shadow(0 2px 2px rgba(0,0,0,.35)); }
 .h1n { font-size: 1.15em; } .pot { background: linear-gradient(135deg, #fff8e0, #f3e3b0); border: 2px solid #e6cc82; border-radius: 16px; padding: 10px 14px; margin: 12px 0; }
 @media (max-width: 420px) { .tile { font-size: 17px; min-height: 76px; } }
 </style>
@@ -521,9 +527,39 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
   function vormNow() { return G ? G.vorm : (L && L.meta ? L.meta.vorm : "klassiek"); }
   function eenheid() { return vormNow() === "sadaqa" ? "munten" : "punten"; }
   /* getal met gouden 3D-look; bij Sadaqa met een gouden munt ervoor */
-  function ptsH(n, unit, plus) {
+  var SHOWN = {};
+  function ptsH(n, unit, plus, key) {
     var coin = vormNow() === "sadaqa" ? '<svg class="coin" aria-hidden="true"><use href="#nsCoin"/></svg>' : "";
-    return coin + '<span class="n3d">' + (plus ? "+" : "") + n + '</span>' + (unit ? " " + eenheid() : "");
+    return coin + '<span class="n3d" data-to="' + n + '"' + (key ? ' data-k="' + esc(key) + '"' : "") + (plus ? ' data-p="1"' : "") + '>' + (plus ? "+" : "") + n + '</span>' + (unit ? " " + eenheid() : "");
+  }
+  /* springende en dansende munten bij nieuwe munten */
+  function coinBurst(el) {
+    try {
+      var r = el.getBoundingClientRect(), box = document.createElement("div");
+      box.className = "cburst"; box.setAttribute("aria-hidden", "true");
+      box.style.left = (r.left + r.width / 2) + "px"; box.style.top = (r.top + r.height / 2) + "px";
+      for (var i = 0; i < 9; i++) {
+        var dx = Math.round((i - 4) * 22 + (Math.random() * 14 - 7)), up = 70 + Math.round(Math.random() * 60), rot = Math.round(Math.random() * 360 - 180), dl = (i * 0.07).toFixed(2);
+        box.insertAdjacentHTML("beforeend", '<svg class="cj" style="--dx:' + dx + 'px;--up:' + up + 'px;--r:' + rot + 'deg;animation-delay:' + dl + 's"><use href="#nsCoin"/></svg>');
+      }
+      document.body.appendChild(box); setTimeout(function () { box.remove(); }, 2000);
+    } catch (e) { /* geen animatie */ }
+  }
+  /* getallen tellen op van het vorige aantal naar het nieuwe */
+  function runCounts() {
+    var rm = false; try { rm = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+    document.querySelectorAll(".n3d[data-to]").forEach(function (e) {
+      var to = +e.getAttribute("data-to"), key = e.getAttribute("data-k"), from = key ? (SHOWN[key] || 0) : 0, pl = e.getAttribute("data-p") ? "+" : "";
+      e.removeAttribute("data-to"); if (key) SHOWN[key] = to;
+      if (rm || from === to || !isFinite(to)) { e.textContent = pl + to; return; }
+      if (to > from && vormNow() === "sadaqa" && (key === "me" || pl)) coinBurst(e);
+      var t0 = performance.now(), dur = Math.min(1700, 600 + Math.abs(to - from) * 0.7);
+      e.textContent = pl + from;
+      (function step(t) {
+        var f = Math.min(1, (t - t0) / dur), v = Math.round(from + (to - from) * (1 - Math.pow(1 - f, 3)));
+        e.textContent = pl + v; if (f < 1) requestAnimationFrame(step);
+      })(t0);
+    });
   }
   function potHtml(sc, sg) {
     return sc ? '<div class="pot center"><b>Sadaqa-pot</b><p style="margin:4px 0">Samen gaven jullie <svg class="coin" aria-hidden="true"><use href="#nsCoin"/></svg><span class="n3d">' + sg + '</span> munten, in ' + sc + ' keer geven. Barakallahu feek!</p></div>' : "";
@@ -645,13 +681,13 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
     var p = rk.slice(0, 3), order = [1, 0, 2], h = '<div class="podium" role="list">';
     order.forEach(function (i) {
       if (!p[i]) return;
-      h += '<div class="pod p' + (i + 1) + '" role="listitem"><div class="stars" aria-hidden="true">' + (i === 0 ? "★★★" : i === 1 ? "★★" : "★") + '</div><b>' + esc(p[i].name) + '</b><span>' + ptsH(p[i].score, true) + '</span><div class="step">' + (i + 1) + '</div></div>';
+      h += '<div class="pod p' + (i + 1) + '" role="listitem"><div class="stars" aria-hidden="true">' + (i === 0 ? "★★★" : i === 1 ? "★★" : "★") + '</div><b>' + esc(p[i].name) + '</b><span>' + ptsH(p[i].score, true, false, "pod-" + p[i].uid) + '</span><div class="step">' + (i + 1) + '</div></div>';
     });
     return h + "</div>";
   }
   function listHtml(rk, max, me) {
     var h = '<ol class="lb">';
-    rk.slice(0, max).forEach(function (r, i) { h += '<li' + (r.uid === me ? ' class="me"' : "") + '><span>' + (i + 1) + '. ' + esc(r.name) + '</span><b>' + ptsH(r.score) + '</b></li>'; });
+    rk.slice(0, max).forEach(function (r, i) { h += '<li' + (r.uid === me ? ' class="me"' : "") + '><span>' + (i + 1) + '. ' + esc(r.name) + '</span><b>' + ptsH(r.score, false, false, "lb-" + r.uid) + '</b></li>'; });
     return h + "</ol>";
   }
 
@@ -687,6 +723,7 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
   }
   function startLeerling(code, uid, name) {
     stopAll();
+    SHOWN = {};
     L = { code: code, uid: uid, name: name, meta: null, gotMeta: false, vragen: null, spelers: null, seen: false, shown: -1, picked: null, end: 0, ls: [] };
     L.ls.push(listen("klas/" + code + "/meta", function (d) { L.meta = d; L.gotMeta = true; renderL(); }));
     L.ls.push(listen("klas/" + code + "/spelers", function (d) {
@@ -741,13 +778,13 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
       if (opin) head = last && last.k >= 0 ? '<h1 class="good-h">Bedankt voor je antwoord!</h1>' : '<h1 class="bad-h">Geen antwoord</h1>';
       app.innerHTML = '<div class="center">' + head + (opin ? "" : '<p>Het goede antwoord: <b>' + esc(goed) + '</b></p>') + (m.e ? '<p class="expl">' + esc(m.e) + '</p>' : "") +
         (m.vorm === "karavaan" ? '<h2>De karavaan</h2>' + caravanHtml(m.p || 0, m.ne || m.n, carFrom(m)) + carMine(m, last, opin) + '<p class="muted">Samen onderweg…</p>' :
-          '<p class="rank">Jij staat op plek <b>' + (my || "–") + '</b> van ' + rk.length + ' · ' + ptsH(me.score || 0, true) + '</p>' + giftHtml(m, rk, me, last) + '<p class="muted">Wacht op de volgende vraag…</p>') + '</div>';
+          '<p class="rank">Jij staat op plek <b>' + (my || "–") + '</b> van ' + rk.length + ' · ' + ptsH(me.score || 0, true, false, "me") + '</p>' + giftHtml(m, rk, me, last) + '<p class="muted">Wacht op de volgende vraag…</p>') + '</div>';
       app.querySelectorAll("[data-gift]").forEach(function (b) { b.onclick = function () { giveGift(m.qi, b.getAttribute("data-gift")); }; });
       return;
     }
     if (m.state === "einde") {
       var my2 = rk.map(function (r) { return r.uid; }).indexOf(L.uid) + 1;
-      app.innerHTML = '<div class="center"><h1>Het spel is afgelopen</h1>' + (m.vorm === "karavaan" ? teamEndHtml(m.p || 0, m.ne || m.n) + carTotal() + '<p class="muted">Jullie hebben het samen gedaan. MashaAllah!</p>' : podiumHtml(rk) + '<p class="rank">Jij werd <b>' + (my2 || "–") + 'e</b> met ' + ptsH(me.score || 0, true) + '. MashaAllah!</p>' + potHtml(m.sc, m.sg)) + back + '</div>'; wire();
+      app.innerHTML = '<div class="center"><h1>Het spel is afgelopen</h1>' + (m.vorm === "karavaan" ? teamEndHtml(m.p || 0, m.ne || m.n) + carTotal() + '<p class="muted">Jullie hebben het samen gedaan. MashaAllah!</p>' : podiumHtml(rk) + '<p class="rank">Jij werd <b>' + (my2 || "–") + 'e</b> met ' + ptsH(me.score || 0, true, false, "me") + '. MashaAllah!</p>' + potHtml(m.sc, m.sg)) + back + '</div>'; wire();
     }
   }
 
@@ -762,7 +799,7 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
     var h = L.h, n = m.n, closed = m.deadline && Date.now() > m.deadline;
     if (h.i >= n) {
       var okn = h.res.filter(function (r) { return r && r.ok; }).length;
-      app.innerHTML = '<div class="center"><div class="ar" lang="ar" dir="rtl">الحمد لله</div><h1>Klaar, MashaAllah!</h1><p class="rank">Je score: ' + ptsH(h.score, true) + '<br>' + okn + ' vragen goed</p><p class="muted">Je docent ziet je resultaat.</p>' + back + '</div>'; wire(); return;
+      app.innerHTML = '<div class="center"><div class="ar" lang="ar" dir="rtl">الحمد لله</div><h1>Klaar, MashaAllah!</h1><p class="rank">Je score: ' + ptsH(h.score, true, false, "me") + '<br>' + okn + ' vragen goed</p><p class="muted">Je docent ziet je resultaat.</p>' + back + '</div>'; wire(); return;
     }
     if (h.res[h.i]) fb = true;
     if (closed && !fb) { app.innerHTML = '<div class="center"><h1>Gesloten</h1><p>Deze huiswerkopdracht is gesloten.</p>' + back + '</div>'; wire(); return; }
@@ -770,7 +807,7 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
     if (fb) {
       var r = h.res[h.i] || {};
       var head = r.opin ? '<h1 class="good-h">Bedankt voor je antwoord!</h1>' : r.ok ? '<h1 class="good-h">MashaAllah! ' + ptsH(r.pts, false, true) + '</h1>' : '<h1 class="bad-h">Helaas, dat was niet goed</h1>';
-      app.innerHTML = '<div class="qtop"><span>Vraag ' + (h.i + 1) + ' van ' + n + '</span><b>' + ptsH(h.score, true) + '</b></div><div class="center">' + head +
+      app.innerHTML = '<div class="qtop"><span>Vraag ' + (h.i + 1) + ' van ' + n + '</span><b>' + ptsH(h.score, true, false, "me") + '</b></div><div class="center">' + head +
         (r.opin ? "" : '<p>Het goede antwoord: <b>' + esc(r.text) + '</b></p>') + (q && q.e ? '<p class="expl">' + esc(q.e) + '</p>' : "") +
         '<div class="row" style="justify-content:center;margin-top:12px"><button class="btn gold" id="hnx" type="button">' + (h.i + 1 >= n ? "Klaar" : "Volgende vraag") + '</button></div></div>';
       document.getElementById("hnx").onclick = function () { h.i++; L.picked = null; hwSave(); renderHw(); };
@@ -1114,7 +1151,7 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
       await dbReq("PUT", "klas/" + G.code + "/ant", null); await dbReq("PUT", "klas/" + G.code + "/gift", null);
       G.pub = G.quiz.vragen.map(pubQ); await dbReq("PUT", "klas/" + G.code + "/vragen", G.pub);
       await dbReq("PATCH", "klas/" + G.code + "/meta", { state: "lobby", qi: -1, p: 0, a: null, at: null, e: null, sg: null, sc: null });
-      G.state = "lobby"; G.qi = -1; G.prog = 0; G.prevProg = 0; G.giftN = 0; G.hist = []; G.per = {}; G.arr = {}; G.stat = null; G.giftMsg = null; G.closed = false;
+      SHOWN = {}; G.state = "lobby"; G.qi = -1; G.prog = 0; G.prevProg = 0; G.giftN = 0; G.hist = []; G.per = {}; G.arr = {}; G.stat = null; G.giftMsg = null; G.closed = false;
       renderG();
     } catch (e) { if (b) b.disabled = false; say("Opnieuw starten lukte niet.", true); }
   }
@@ -1193,6 +1230,7 @@ details.help { background: #fff; border: 1px solid var(--line); border-radius: 1
 
   /* de karavaan schuift van de vorige plek naar de nieuwe */
   new MutationObserver(function () {
+    runCounts();
     setTimeout(function () {
       document.querySelectorAll(".caravan [data-to]").forEach(function (e) {
         var t = e.getAttribute("data-to"); e.removeAttribute("data-to");
