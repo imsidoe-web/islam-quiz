@@ -21,7 +21,7 @@ header.top svg.brand-wm { height: 30px; width: auto; display: block; }
 @media (max-width: 420px) { header.top { padding: 12px 10px; gap: 6px; } header.top svg.brand-wm { height: 22px; } @media (max-width: 340px) { header.top .wm b { display: none; } }
 header.top a, header.top button { font-size: 13px; } #who { gap: 7px; } header.top .wm b { font-size: 15px !important; } }
 header.top a, header.top button { color: #f4efe2; font: inherit; font-weight: 700; font-size: 15px; background: none; border: 0; text-decoration: underline; cursor: pointer; }
-main { max-width: 720px; margin: 0 auto; padding: 18px 16px 60px; }
+main { max-width: 900px; margin: 0 auto; padding: 18px 16px 60px; }
 h1 { font-size: 26px; margin: 8px 0 6px; color: var(--em-d); }
 h2 { font-size: 20px; margin: 22px 0 8px; color: var(--em-d); }
 p { margin: 6px 0 12px; }
@@ -109,6 +109,13 @@ main.wide { max-width: 1240px; }
 .sb .done { color: var(--em); font-size: 1.1em; } .sb .wt { color: var(--muted); font-size: .8em; font-weight: 700; }
 .sb li.sb-more { background: none; border: 0; justify-content: center; color: var(--muted); font-size: 15px; font-weight: 700; }
 @media (max-width: 420px) { .tile { font-size: 17px; min-height: 76px; } }
+.kb { display: none; margin: 4px 0 0; } @media (pointer: fine) { .kb { display: block; } }
+@media (max-height: 760px) and (min-width: 700px) {
+  header.top { padding: 8px 16px; } main { padding: 8px 16px 40px; } h1 { font-size: 24px; margin: 4px 0; } h2 { margin: 14px 0 6px; }
+  .qq { font-size: 22px; margin: 6px 0 8px; } .qq.big { font-size: clamp(24px, 3.2vw, 34px); }
+  .tile { min-height: 62px; padding: 8px 12px; font-size: 18px; } .tiles { gap: 8px; margin: 6px 0; }
+  .qimg { max-height: 26vh; margin: 4px auto 8px; } .bar { margin: 4px 0 8px; } .bigcode { margin: 4px auto 8px; }
+}
 </style>
 </head>
 <body>
@@ -213,6 +220,7 @@ main.wide { max-width: 1240px; }
     var jc = document.getElementById("jc"), jn = document.getElementById("jn");
     var go = function () { joinGame(jc.value, jn.value); };
     document.getElementById("joinBtn").onclick = go;
+    if (fine()) (jc.value ? jn : jc).focus();
     [jc, jn].forEach(function (el) { el.addEventListener("keydown", function (e) { if (e.key === "Enter") go(); }); });
     if (prefill) jn.focus();
     document.getElementById("g").onclick = function () {
@@ -228,7 +236,7 @@ main.wide { max-width: 1240px; }
       '<button class="btn gold" id="new" type="button">+ Nieuwe quiz</button></div><div id="msg" class="msg"></div>';
     h += '<details class="help"' + (quizzes.length ? "" : " open") + '><summary>Hoe werkt het? (uitleg voor docenten)</summary>' +
       '<ol class="steps"><li><b>Maak een quiz.</b> Tik op + Nieuwe quiz en voeg vragen toe: meerkeuze, waar/niet waar, typ het antwoord, juiste volgorde, schuifbalk, peiling of woordwolk. Stel per vraag de tijd en de punten in.</li>' +
-      '<li><b>Live in de klas.</b> Tik bij je quiz op Live spelen en zet dit scherm op het digibord. Leerlingen gaan op hun telefoon naar nurspark.app/klas, vullen de code en een bijnaam in en tikken op Meedoen. Kies een spelvorm: Klassiek (snelste wint), Karavaan (de klas werkt samen) of Sadaqa (punten weggeven aan een klasgenoot). Het scorebord staat altijd op het digibord. Met de knop Alleen digibord / Digibord + telefoons kies je of leerlingen het ook op hun telefoon zien (ook tijdens het spel te wisselen). Tik op Start het spel.</li>' +
+      '<li><b>Live in de klas.</b> Tik bij je quiz op Live spelen en zet dit scherm op het digibord. Leerlingen gaan op hun telefoon of Chromebook naar nurspark.app/klas, vullen de code en een bijnaam in en tikken op Meedoen. Kies een spelvorm: Klassiek (snelste wint), Karavaan (de klas werkt samen) of Sadaqa (punten weggeven aan een klasgenoot). Het scorebord staat altijd op het digibord. Met de knop Alleen digibord / Digibord + leerlingen kies je of leerlingen het ook op hun eigen scherm zien (ook tijdens het spel te wisselen). Tik op Start het spel.</li>' +
       '<li><b>Huiswerk.</b> Tik bij je quiz op Huiswerk en kies een einddatum. Deel de code met WhatsApp. Leerlingen spelen in hun eigen tempo. Onder Huiswerk zie je de uitslag per leerling en per vraag.</li>' +
       '<li><b>Daarna.</b> Download de uitslag voor Excel, of tik op Nog een keer spelen. Sluit het spel af als je klaar bent.</li></ol>' +
       '<p class="muted">Leerlingen hebben geen account nodig en gebruiken een bijnaam. Jouw naam is niet zichtbaar. Let op: je huiswerk staat in de browser waarmee je het gemaakt hebt. Jij bent zelf verantwoordelijk voor de inhoud van je vragen.</p></details>';
@@ -767,7 +775,7 @@ main.wide { max-width: 1240px; }
     return h + "</div>";
   }
   /* live scorebord voor het digibord (docent) */
-  function sbLabel() { return G && G.sb ? "Digibord + telefoons" : "Alleen digibord"; }
+  function sbLabel() { return G && G.sb ? "Digibord + leerlingen" : "Alleen digibord"; }
   function boardRows(rk, st, max) {
     var h = "";
     rk.slice(0, max).forEach(function (r, i) {
@@ -993,11 +1001,11 @@ main.wide { max-width: 1240px; }
       var hw = m.type === "hw";
       if (L.shown !== m.qi) { L.shown = m.qi; L.picked = null; L.seq = []; L.end = Date.now() + q.time * 1000; }
       var body = "", sent = L.picked != null;
-      if (q.t === "mc" || q.t === "tf" || q.t === "poll") body = tilesHtml(q, { pick: L.picked, click: true });
+      if (q.t === "mc" || q.t === "tf" || q.t === "poll") body = tilesHtml(q, { pick: L.picked, click: true }) + (sent ? "" : '<p class="muted kb">Op een laptop: druk op ' + (q.t === "tf" ? "A of B" : "A, B, C of D") + '.</p>');
       else if (sent) body = '<div class="card"><b>Je antwoord:</b> ' + esc(q.t === "order" ? String(L.picked).split(",").map(function (ix) { return q.o[+ix]; }).join(" → ") : L.picked) + '</div>';
       else if (q.t === "type" || q.t === "cloud") body = '<label for="ta">' + (q.t === "cloud" ? "Typ één woord of een korte zin" : "Typ je antwoord") + '</label><input type="text" id="ta" maxlength="' + (q.t === "cloud" ? 20 : 40) + '" autocomplete="off" autocapitalize="off"><div style="margin-top:12px"><button class="btn gold" id="send" type="button">Verstuur</button></div>';
       else if (q.t === "order") {
-        body = '<p class="muted">Tik de items in de goede volgorde: eerst het eerste, dan het tweede, enzovoort.</p><div class="tiles">';
+        body = '<p class="muted">Klik of tik de items in de goede volgorde: eerst het eerste, dan het tweede, enzovoort.</p><div class="tiles">';
         q.o.forEach(function (t, kx) {
           var pos = L.seq.indexOf(kx);
           body += '<button type="button" class="tile t' + (kx % 4) + (pos >= 0 ? " mine" : "") + '" data-ix="' + kx + '"' + (pos >= 0 ? " disabled" : "") + '><i>' + (pos >= 0 ? pos + 1 : "•") + '</i><span>' + esc(t) + '</span></button>';
@@ -1014,7 +1022,7 @@ main.wide { max-width: 1240px; }
       var sendB = document.getElementById("send");
       if (sendB && !sent) {
         if (q.t === "type" || q.t === "cloud") {
-          var ta = document.getElementById("ta");
+          var ta = document.getElementById("ta"); if (fine()) ta.focus();
           var go = function () { var v = ta.value.trim(); if (!v) { say("Typ eerst je antwoord.", true); return; } sendAns(v); };
           sendB.onclick = go; ta.addEventListener("keydown", function (e) { if (e.key === "Enter") go(); });
         } else if (q.t === "order") {
@@ -1035,6 +1043,16 @@ main.wide { max-width: 1240px; }
       };
       upd(); tickT = setInterval(upd, 200);
   }
+  /* toetsenbord (Chromebook): A, B, C, D of 1, 2, 3, 4 kiest een antwoord */
+  document.addEventListener("keydown", function (e) {
+    if (!L || e.ctrlKey || e.metaKey || e.altKey || !e.key || e.key.length !== 1) return;
+    var t = e.target; if (t && /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) return;
+    var k = e.key.toUpperCase(), ix = "ABCD".indexOf(k); if (ix < 0) ix = "1234".indexOf(k);
+    if (ix < 0) return;
+    var b = app.querySelector('button[data-k="' + ix + '"]:not([disabled])');
+    if (b) { e.preventDefault(); b.click(); }
+  });
+  function fine() { try { return window.matchMedia("(pointer: fine)").matches; } catch (e) { return false; } }
   function sendAns(v) {
     if (L && L.meta && L.meta.type === "hw") return hwAnswer(v);
     if (!L || L.picked != null || !L.meta || L.meta.state !== "vraag") return;
@@ -1308,7 +1326,7 @@ main.wide { max-width: 1240px; }
         '<p>Leerlingen: ga naar <b>nurspark.app/klas</b> en vul deze code in:</p><div class="bigcode" aria-label="Code ' + G.code.split("").join(" ") + '">' + G.code + '</div>' +
         '<p><a class="btn small light" target="_blank" rel="noopener" href="https://wa.me/?text=' + encodeURIComponent("Doe mee met onze quiz op NurSpark: " + link) + '">Deel via WhatsApp</a></p>' +
         '<h2>Spelvorm</h2><div class="row" style="justify-content:center">' + Object.keys(VORMEN).map(function (v) { return '<button class="btn small light' + (G.vorm === v ? " on" : "") + '" data-vorm="' + v + '" type="button" aria-pressed="' + (G.vorm === v) + '">' + esc(VORMEN[v][0]) + '</button>'; }).join("") + '</div><p class="muted vorm-note">' + esc(VORMEN[G.vorm][1]) + '</p>' +
-        (G.vorm !== "karavaan" ? '<h2>Scorebord</h2><p class="muted">Het scorebord staat altijd op het digibord. Moeten leerlingen het ook op hun telefoon zien?</p><button class="btn small light" id="sbt" type="button" aria-pressed="' + (G.sb ? "true" : "false") + '">' + sbLabel() + '</button>' : "") +
+        (G.vorm !== "karavaan" ? '<h2>Scorebord</h2><p class="muted">Het scorebord staat altijd op het digibord. Moeten leerlingen het ook op hun eigen scherm zien (telefoon of Chromebook)?</p><button class="btn small light" id="sbt" type="button" aria-pressed="' + (G.sb ? "true" : "false") + '">' + sbLabel() + '</button>' : "") +
         '<h2>' + np + ' speler' + (np === 1 ? "" : "s") + '</h2><div class="chips">';
       rk.forEach(function (r) { h += '<span class="chip">' + esc(r.name) + '<button type="button" data-kick="' + esc(r.uid) + '" aria-label="' + esc(r.name) + ' verwijderen">✕</button></span>'; });
       h += '</div><div id="msg" class="msg"></div><div class="row" style="justify-content:center;margin-top:14px"><button class="btn gold" id="go" type="button"' + (np ? "" : " disabled") + '>Start het spel</button><button class="btn light" id="stop" type="button">Annuleren</button></div></div>';
@@ -1325,8 +1343,8 @@ main.wide { max-width: 1240px; }
       var pq = G.pub[G.qi], vb = "";
       if (q.t === "mc" || q.t === "tf" || q.t === "poll") vb = tilesHtml(q, {});
       else if (q.t === "order") vb = '<p class="muted">Leerlingen zetten deze items in de goede volgorde:</p>' + itemsHtml(pq, null);
-      else if (q.t === "cloud") vb = '<p class="expl big-note">Leerlingen typen één woord of een korte zin op hun telefoon.</p>';
-      else if (q.t === "type") vb = '<p class="expl big-note">Leerlingen typen het antwoord op hun telefoon.</p>';
+      else if (q.t === "cloud") vb = '<p class="expl big-note">Leerlingen typen één woord of een korte zin op hun scherm.</p>';
+      else if (q.t === "type") vb = '<p class="expl big-note">Leerlingen typen het antwoord op hun scherm.</p>';
       else vb = '<p class="expl big-note">Leerlingen kiezen een getal tussen <b>' + q.min + '</b> en <b>' + q.max + '</b>.</p>';
       var mainV = (G.giftMsg && G.giftMsg.length ? '<div class="expl"><b>Sadaqa:</b> ' + G.giftMsg.map(esc).join(" · ") + '</div>' : "") + '<div class="qtop"><span>Vraag ' + (G.qi + 1) + ' van ' + G.quiz.vragen.length + '</span><b><span id="sec">' + q.time + '</span> sec</b></div><div class="bar"><div id="barIn" style="width:100%"></div></div>' +
         '<h1 class="qq big">' + esc(q.q) + '</h1>' + imgHtml(q) + vb + '<p class="msg" id="ans" role="status"></p><div id="msg"></div><button class="btn light" id="end" type="button">Nu afsluiten</button>';
