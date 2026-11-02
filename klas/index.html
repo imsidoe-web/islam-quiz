@@ -77,6 +77,8 @@ input[type=range] { accent-color: var(--em); height: 36px; }
 .car-m { position: absolute; top: -26px; transform: translateX(-50%); transition: left .6s; line-height: 0; } .car-lbl { display: flex; justify-content: space-between; font-weight: 800; color: var(--em-d); font-size: 14px; }
 .stars.big { text-align: center; color: var(--gold); font-size: 40px; letter-spacing: 6px; }
 .tblw { overflow-x: auto; } .tbl { border-collapse: collapse; width: 100%; background: #fff; border-radius: 12px; font-size: 15px; } .tbl th, .tbl td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; } .tbl td.c, .tbl th { text-align: center; } .tbl td.ok { color: var(--em); font-weight: 900; } .tbl td.no { color: var(--bad); font-weight: 900; } .tbl tr.foot td { background: #fff8e0; font-weight: 800; }
+.steps { padding-left: 22px; margin: 8px 0; } .steps li { margin: 6px 0; }
+details.help { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 10px 14px; margin: 10px 0; } details.help summary { font-weight: 800; color: var(--em-d); cursor: pointer; min-height: 32px; }
 @media (max-width: 420px) { .tile { font-size: 17px; min-height: 76px; } }
 </style>
 </head>
@@ -143,7 +145,7 @@ input[type=range] { accent-color: var(--em); height: 36px; }
 
   function showLogin() {
     app.innerHTML = '<h1>Welkom bij NurSpark Klas</h1>' +
-      '<div class="card"><h2 style="margin-top:0">Ik ben leerling</h2><label for="jc">Code van je docent</label>' +
+      '<div class="card"><h2 style="margin-top:0">Ik ben leerling</h2><ol class="steps"><li>Vraag je docent om de code.</li><li>Kies een bijnaam. Geen echte naam.</li><li>Tik op Meedoen en wacht tot de docent start.</li></ol><label for="jc">Code van je docent</label>' +
       '<input type="text" id="jc" maxlength="6" autocomplete="off" autocapitalize="characters" value="' + esc(prefill) + '" placeholder="Bijvoorbeeld K7M2QX">' +
       '<label for="jn">Jouw bijnaam (max. 14 tekens)</label><input type="text" id="jn" maxlength="14" autocomplete="off" placeholder="Bijvoorbeeld Sterretje">' +
       '<p class="muted">Kies een bijnaam, geen volledige naam. Je hebt geen account nodig.</p><div id="jmsg" class="msg"></div>' +
@@ -167,6 +169,12 @@ input[type=range] { accent-color: var(--em); height: 36px; }
   function showList() {
     var h = '<h1>Mijn quizzen</h1><div class="row sp"><span class="muted">' + quizzes.length + ' quiz' + (quizzes.length === 1 ? "" : "zen") + '</span>' +
       '<button class="btn gold" id="new" type="button">+ Nieuwe quiz</button></div><div id="msg" class="msg"></div>';
+    h += '<details class="help"' + (quizzes.length ? "" : " open") + '><summary>Hoe werkt het? (uitleg voor docenten)</summary>' +
+      '<ol class="steps"><li><b>Maak een quiz.</b> Tik op + Nieuwe quiz en voeg vragen toe: meerkeuze, waar/niet waar, typ het antwoord, juiste volgorde, schuifbalk, peiling of woordwolk. Stel per vraag de tijd en de punten in.</li>' +
+      '<li><b>Live in de klas.</b> Tik bij je quiz op Live spelen en zet dit scherm op het digibord. Leerlingen gaan op hun telefoon naar nurspark.app/klas, vullen de code en een bijnaam in en tikken op Meedoen. Kies een spelvorm: Klassiek (snelste wint), Karavaan (de klas werkt samen) of Sadaqa (punten weggeven aan een klasgenoot). Tik op Start het spel.</li>' +
+      '<li><b>Huiswerk.</b> Tik bij je quiz op Huiswerk en kies een einddatum. Deel de code met WhatsApp. Leerlingen spelen in hun eigen tempo. Onder Huiswerk zie je de uitslag per leerling en per vraag.</li>' +
+      '<li><b>Daarna.</b> Download de uitslag voor Excel, of tik op Nog een keer spelen. Sluit het spel af als je klaar bent.</li></ol>' +
+      '<p class="muted">Leerlingen hebben geen account nodig en gebruiken een bijnaam. Jouw naam is niet zichtbaar. Let op: je huiswerk staat in de browser waarmee je het gemaakt hebt. Jij bent zelf verantwoordelijk voor de inhoud van je vragen.</p></details>';
     var hs = lsGet(HOST_KEY);
     if (hs) h += '<div class="card"><p><b>Je hebt een lopend spel</b> (code ' + esc(hs.code) + ').</p><div class="row"><button class="btn small gold" id="resume" type="button">Hervatten</button><button class="btn small bad" id="dropgame" type="button">Wissen</button></div></div>';
     if (!quizzes.length) h += '<div class="card"><p>Je hebt nog geen quiz. Tik op <b>+ Nieuwe quiz</b> om te beginnen.</p></div>';
