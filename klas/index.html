@@ -72,6 +72,10 @@ ol.lb { list-style: none; padding: 0; margin: 6px 0 14px; text-align: left; } ol
 .bigval { text-align: center; font-size: 56px; font-weight: 900; color: var(--em-d); } .big-note { font-size: 20px; text-align: center; }
 input[type=range] { accent-color: var(--em); height: 36px; }
 .cloud { display: flex; flex-wrap: wrap; gap: 6px 18px; justify-content: center; align-items: center; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 18px 12px; margin: 10px 0; font-weight: 900; line-height: 1.15; } .cloud sup { font-size: 13px; color: var(--muted); }
+.btn.on { background: var(--em); color: #fff; } .vorm-note { min-height: 44px; }
+.caravan { margin: 12px 0; } .car-track { position: relative; height: 16px; background: #e9e0c8; border-radius: 999px; margin: 30px 10px 6px; } .car-track i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--gold), var(--gold-l)); transition: width .6s; }
+.car-m { position: absolute; top: -26px; transform: translateX(-50%); transition: left .6s; line-height: 0; } .car-lbl { display: flex; justify-content: space-between; font-weight: 800; color: var(--em-d); font-size: 14px; }
+.stars.big { text-align: center; color: var(--gold); font-size: 40px; letter-spacing: 6px; }
 @media (max-width: 420px) { .tile { font-size: 17px; min-height: 76px; } }
 </style>
 </head>
@@ -544,6 +548,22 @@ input[type=range] { accent-color: var(--em); height: 36px; }
     });
     return h + '</div>' + (hidden ? '<p class="muted">' + hidden + ' ongepast woord' + (hidden === 1 ? "" : "en") + ' verborgen.</p>' : "");
   }
+  var VORMEN = {
+    klassiek: ["Klassiek", "Wie het snelst en het meest goed heeft, wint."],
+    karavaan: ["Karavaan (samen)", "Jullie brengen samen de karavaan naar de oase. Elk goed antwoord telt mee."],
+    sadaqa: ["Sadaqa", "Wie een vraag goed heeft, kan punten weggeven aan een klasgenoot die achterloopt."]
+  };
+  function caravanHtml(p, n) {
+    var pct = Math.max(0, Math.min(100, Math.round(100 * p / Math.max(1, n))));
+    return '<div class="caravan" role="img" aria-label="De karavaan is voor ' + pct + ' procent onderweg"><div class="car-track"><i style="width:' + pct + '%"></i>' +
+      '<span class="car-m" style="left:' + pct + '%"><svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z" fill="#d9a05b" stroke="#8a5a12" stroke-width=".8"/></svg></span></div>' +
+      '<div class="car-lbl"><span>Start</span><span>' + pct + '%</span><span>Oase</span></div></div>';
+  }
+  function teamEndHtml(p, n) {
+    var f = p / Math.max(1, n), st = f >= 0.8 ? 3 : f >= 0.5 ? 2 : 1;
+    var txt = st === 3 ? "De karavaan bereikt de oase! MashaAllah!" : st === 2 ? "De karavaan is bijna bij de oase. Goed gedaan!" : "De karavaan rust even uit. Samen komen jullie er de volgende keer.";
+    return caravanHtml(p, n) + '<div class="stars big" aria-hidden="true">' + "★".repeat(st) + "☆".repeat(3 - st) + '</div><p class="rank"><b>' + txt + '</b></p>';
+  }
   function podiumHtml(rk) {
     var p = rk.slice(0, 3), order = [1, 0, 2], h = '<div class="podium" role="list">';
     order.forEach(function (i) {
@@ -593,8 +613,9 @@ input[type=range] { accent-color: var(--em); height: 36px; }
     L.ls.push(listen("klas/" + code + "/meta", function (d) { L.meta = d; L.gotMeta = true; renderL(); }));
     L.ls.push(listen("klas/" + code + "/spelers", function (d) {
       L.spelers = d; if (d && d[uid] && d[uid].name) L.seen = true;
-      var st = L.meta && L.meta.state;
+      var st = L.meta && L.meta.state, mine = d && d[uid] && d[uid].got ? d[uid].got.qi : -1;
       if (st !== "vraag") renderL();
+      else if (L.bk !== mine) { L.bk = mine; if (L.picked == null && !(L.seq && L.seq.length)) renderL(); }
     }));
     show();
   }
@@ -624,7 +645,7 @@ input[type=range] { accent-color: var(--em); height: 36px; }
     var me = (L.spelers && L.spelers[L.uid]) || {}, rk = ranking(L.spelers);
     if (m.state === "lobby") {
       app.innerHTML = '<div class="center"><div class="ar" lang="ar" dir="rtl">بِسْمِ اللَّهِ</div><h1>Bismillah, ' + esc(L.name) + '!</h1><p>Je doet mee met <b>' + esc(m.titel || "de quiz") + '</b>.</p>' +
-        '<p class="wait">Wacht tot de docent het spel start…</p><p class="muted">' + rk.length + ' speler' + (rk.length === 1 ? "" : "s") + ' in de klas</p>' + back + '</div>'; wire(); return;
+        '<p class="muted"><b>Spelvorm: ' + esc((VORMEN[m.vorm] || VORMEN.klassiek)[0]) + '.</b> ' + esc((VORMEN[m.vorm] || VORMEN.klassiek)[1]) + '</p><p class="wait">Wacht tot de docent het spel start…</p><p class="muted">' + rk.length + ' speler' + (rk.length === 1 ? "" : "s") + ' in de klas</p>' + back + '</div>'; wire(); return;
     }
     if (m.state === "vraag") {
       var q = L.vragen && L.vragen[m.qi];
@@ -646,7 +667,7 @@ input[type=range] { accent-color: var(--em); height: 36px; }
         body = '<div class="bigval"><output id="sv">' + mid + '</output></div><input type="range" id="sr" min="' + q.min + '" max="' + q.max + '" step="1" value="' + mid + '" style="width:100%" aria-label="Kies een getal tussen ' + q.min + ' en ' + q.max + '">' +
           '<div class="qtop"><span>' + q.min + '</span><span>' + q.max + '</span></div><p class="muted" id="sh" style="text-align:center">Schuif eerst naar je antwoord.</p><div style="margin-top:12px"><button class="btn gold" id="send" type="button" disabled>Verstuur</button></div>';
       }
-      app.innerHTML = '<div class="qtop"><span>Vraag ' + (m.qi + 1) + ' van ' + m.n + '</span><b id="sec"></b></div><div class="bar"><div id="barIn"></div></div>' +
+      app.innerHTML = (me.got && me.got.qi === m.qi - 1 ? '<div class="expl"><b>Sadaqa:</b> ' + esc(me.got.by.join(" en ")) + ' gaf jou ' + me.got.n + ' punten. Jazakallahu khayran!</div>' : "") + '<div class="qtop"><span>Vraag ' + (m.qi + 1) + ' van ' + m.n + '</span><b id="sec"></b></div><div class="bar"><div id="barIn"></div></div>' +
         '<h1 class="qq">' + esc(q.q) + '</h1>' + body + (sent ? '<p class="msg" role="status">Antwoord verstuurd. Wacht op de anderen…</p>' : '<div id="msg" class="msg"></div>');
       app.querySelectorAll("[data-k]").forEach(function (b) { b.onclick = function () { sendAns(+b.getAttribute("data-k")); }; });
       var sendB = document.getElementById("send");
@@ -679,13 +700,30 @@ input[type=range] { accent-color: var(--em); height: 36px; }
       var goed = m.at != null ? m.at : (q2 && q2.o ? q2.o[m.a] : ""), opin = q2 && (q2.t === "poll" || q2.t === "cloud");
       if (opin) head = last && last.k >= 0 ? '<h1 class="good-h">Bedankt voor je antwoord!</h1>' : '<h1 class="bad-h">Geen antwoord</h1>';
       app.innerHTML = '<div class="center">' + head + (opin ? "" : '<p>Het goede antwoord: <b>' + esc(goed) + '</b></p>') + (m.e ? '<p class="expl">' + esc(m.e) + '</p>' : "") +
-        '<p class="rank">Jij staat op plek <b>' + (my || "–") + '</b> van ' + rk.length + ' · ' + (me.score || 0) + ' punten</p><p class="muted">Wacht op de volgende vraag…</p></div>';
+        (m.vorm === "karavaan" ? '<h2>De karavaan</h2>' + caravanHtml(m.p || 0, m.ne || m.n) + '<p class="muted">Samen onderweg…</p>' :
+          '<p class="rank">Jij staat op plek <b>' + (my || "–") + '</b> van ' + rk.length + ' · ' + (me.score || 0) + ' punten</p>' + giftHtml(m, rk, me, last) + '<p class="muted">Wacht op de volgende vraag…</p>') + '</div>';
+      app.querySelectorAll("[data-gift]").forEach(function (b) { b.onclick = function () { giveGift(m.qi, b.getAttribute("data-gift")); }; });
       return;
     }
     if (m.state === "einde") {
       var my2 = rk.map(function (r) { return r.uid; }).indexOf(L.uid) + 1;
-      app.innerHTML = '<div class="center"><h1>Het spel is afgelopen</h1>' + podiumHtml(rk) + '<p class="rank">Jij werd <b>' + (my2 || "–") + 'e</b> met ' + (me.score || 0) + ' punten. MashaAllah!</p>' + back + '</div>'; wire();
+      app.innerHTML = '<div class="center"><h1>Het spel is afgelopen</h1>' + (m.vorm === "karavaan" ? teamEndHtml(m.p || 0, m.ne || m.n) + '<p class="muted">Jullie hebben het samen gedaan. MashaAllah!</p>' : podiumHtml(rk) + '<p class="rank">Jij werd <b>' + (my2 || "–") + 'e</b> met ' + (me.score || 0) + ' punten. MashaAllah!</p>') + back + '</div>'; wire();
     }
+  }
+  function giftHtml(m, rk, me, last) {
+    if (m.vorm !== "sadaqa") return "";
+    if (!(last && last.ok)) return '<div class="card"><b>Sadaqa-ronde</b><p class="muted" style="margin:4px 0">Wie de vraag goed had, kan punten weggeven.</p></div>';
+    if (L.gave === m.qi) return '<div class="card"><b>Barakallahu feek!</b> Je hebt sadaqa gegeven.</div>';
+    var mine = me.score || 0;
+    var cand = rk.filter(function (r) { return r.uid !== L.uid && r.score < mine; }).sort(function (a, b) { return a.score - b.score; }).slice(0, 5);
+    if (mine < 250 || !cand.length) return '<div class="card"><b>Sadaqa-ronde</b><p class="muted" style="margin:4px 0">Er is niemand die achterloopt.</p></div>';
+    return '<div class="card"><b>Sadaqa-ronde</b><p style="margin:4px 0">Geef 250 punten aan een klasgenoot:</p><div class="row" style="justify-content:center">' +
+      cand.map(function (r) { return '<button class="btn small gold" type="button" data-gift="' + esc(r.uid) + '">' + esc(r.name) + '</button>'; }).join("") + '</div></div>';
+  }
+  function giveGift(qi, uid2) {
+    if (!L || L.gave === qi) return;
+    L.gave = qi; renderL();
+    dbReq("PUT", "klas/" + L.code + "/gift/" + qi + "/" + L.uid, uid2).catch(function () { L.gave = null; renderL(); say("Dat lukte niet. Probeer opnieuw.", true); });
   }
   function sendAns(v) {
     if (!L || L.picked != null || !L.meta || L.meta.state !== "vraag") return;
@@ -701,16 +739,16 @@ input[type=range] { accent-color: var(--em); height: 36px; }
       for (var t = 0; t < 6 && !code; t++) { var c = newCode(); if (!(await dbReq("GET", "klas/" + c + "/meta"))) code = c; }
       if (!code) throw new Error("code");
       var pub = quiz.vragen.map(pubQ);
-      await dbReq("PUT", "klas/" + code + "/meta", { host: auth.uid, titel: quiz.titel, state: "lobby", qi: -1, n: quiz.vragen.length, created: Date.now() });
+      await dbReq("PUT", "klas/" + code + "/meta", { host: auth.uid, titel: quiz.titel, state: "lobby", qi: -1, n: quiz.vragen.length, ne: Math.max(1, quiz.vragen.filter(function (x) { return x.t !== "poll" && x.t !== "cloud"; }).length), vorm: "klassiek", p: 0, created: Date.now() });
       await dbReq("PUT", "klas/" + code + "/vragen", pub);
       lsSet(HOST_KEY, { code: code, quizId: quiz.id });
       attachHost(code, quiz, "lobby", -1, pub);
       show();
     } catch (e) { btns.forEach(function (b) { b.disabled = false; }); say("Het spel kon niet starten. Staan de Firebase-regels klaar? (zie de handleiding)", true); }
   }
-  function attachHost(code, quiz, state, qi, pub) {
+  function attachHost(code, quiz, state, qi, pub, vorm, prog) {
     stopAll();
-    G = { code: code, quiz: quiz, pub: pub, state: state, qi: qi, players: {}, arr: {}, stat: null, qStart: 0, timer: null, closed: false, ls: [] };
+    G = { vorm: vorm || "klassiek", prog: prog || 0, ne: Math.max(1, quiz.vragen.filter(function (x) { return x.t !== "poll" && x.t !== "cloud"; }).length), code: code, quiz: quiz, pub: pub, state: state, qi: qi, players: {}, arr: {}, stat: null, qStart: 0, timer: null, closed: false, ls: [] };
     G.ls.push(listen("klas/" + code + "/spelers", function (d) { G.players = d || {}; if (G.state === "lobby" || G.state === "einde") renderG(); else updAns(); }));
   }
   async function resumeHost() {
@@ -720,7 +758,7 @@ input[type=range] { accent-color: var(--em); height: 36px; }
       var meta = await dbReq("GET", "klas/" + s.code + "/meta");
       var pub = await dbReq("GET", "klas/" + s.code + "/vragen");
       if (!meta || !quiz || !pub) { lsSet(HOST_KEY, null); return false; }
-      attachHost(s.code, quiz, meta.state, meta.qi, Array.isArray(pub) ? pub : Object.keys(pub).map(function (x) { return pub[x]; }));
+      attachHost(s.code, quiz, meta.state, meta.qi, Array.isArray(pub) ? pub : Object.keys(pub).map(function (x) { return pub[x]; }), meta.vorm, meta.p);
       if (meta.state === "vraag") { G.qStart = Date.now(); G.closed = false; await hostClose(); }
       else if (meta.state === "uitslag") {
         var ant = (await dbReq("GET", "klas/" + G.code + "/ant/" + meta.qi)) || {};
@@ -783,6 +821,7 @@ input[type=range] { accent-color: var(--em); height: 36px; }
     try {
       var ant = (await dbReq("GET", "klas/" + G.code + "/ant/" + qi)) || {}, upd = {};
       var ev = evalQ(qi, ant), kk = keyOf(q, G.pub[qi]);
+      if (G.vorm === "karavaan" && q.t !== "poll" && q.t !== "cloud") G.prog += ev.st.total ? ev.st.ok / ev.st.total : 0;
       Object.keys(ev.per).forEach(function (u) {
         var r = ev.per[u], p = G.players[u], pts = 0;
         if (r.ok) { var t = G.arr[u] != null ? Math.min(G.arr[u], lim) : lim; pts = Math.round((500 + 500 * Math.max(0, 1 - t / lim)) * (q.pts == null ? 1 : q.pts)); }
@@ -790,12 +829,37 @@ input[type=range] { accent-color: var(--em); height: 36px; }
         p.score = (p.score || 0) + pts;
       });
       if (Object.keys(upd).length) await dbReq("PATCH", "klas/" + G.code + "/spelers", upd);
-      await dbReq("PATCH", "klas/" + G.code + "/meta", { state: "uitslag", a: (q.t === "mc" || q.t === "tf") ? q.a : null, at: (q.t === "poll" || q.t === "cloud") ? null : kk.text, e: q.e || null });
+      await dbReq("PATCH", "klas/" + G.code + "/meta", { state: "uitslag", p: Math.round(G.prog * 100) / 100, a: (q.t === "mc" || q.t === "tf") ? q.a : null, at: (q.t === "poll" || q.t === "cloud") ? null : kk.text, e: q.e || null });
       if (G.ant) G.ant.close();
-      G.stat = ev.st; G.state = "uitslag"; renderG();
+      G.stat = ev.st; G.state = "uitslag"; G.giftMsg = null;
+      if (G.vorm === "sadaqa") {
+        if (G.gl) G.gl.close();
+        G.gl = listen("klas/" + G.code + "/gift/" + qi, function (d) { var n = Object.keys(d || {}).length, e = document.getElementById("gc"); if (e) e.textContent = n + " keer sadaqa gegeven"; });
+        G.ls.push(G.gl);
+      }
+      renderG();
     } catch (e) { G.closed = false; G.state = "uitslag"; G.stat = { counts: null, ok: 0, total: 0, texts: {}, text: "" }; renderG(); say("Opslaan van de scores lukte niet. Controleer de verbinding.", true); }
   }
+  async function applyGifts(qi) {
+    try {
+      var g = (await dbReq("GET", "klas/" + G.code + "/gift/" + qi)) || {}, upd = {}, msgs = [], recv = {};
+      Object.keys(g).forEach(function (giver) {
+        var tgt = g[giver], gp = G.players[giver], tp = G.players[tgt];
+        if (!gp || !tp || giver === tgt || !gp.name || !tp.name) return;
+        if (!(gp.last && gp.last.qi === qi && gp.last.ok) || (gp.score || 0) < 250) return;
+        gp.score -= 250; tp.score = (tp.score || 0) + 250;
+        upd[giver + "/score"] = gp.score; upd[tgt + "/score"] = tp.score;
+        recv[tgt] = recv[tgt] || { qi: qi, n: 0, by: [] }; recv[tgt].n += 250; recv[tgt].by.push(gp.name);
+        msgs.push(gp.name + " gaf " + tp.name + " 250 punten");
+      });
+      Object.keys(recv).forEach(function (u) { upd[u + "/got"] = recv[u]; });
+      if (Object.keys(upd).length) await dbReq("PATCH", "klas/" + G.code + "/spelers", upd);
+      G.giftMsg = msgs;
+    } catch (e) { /* geen sadaqa verwerkt */ }
+    if (G.gl) { G.gl.close(); G.gl = null; }
+  }
   async function hostNext() {
+    if (G.vorm === "sadaqa" && G.state === "uitslag") await applyGifts(G.qi);
     var i = G.qi + 1;
     if (i >= G.quiz.vragen.length) {
       try { await dbReq("PATCH", "klas/" + G.code + "/meta", { state: "einde", qi: G.qi }); } catch (e) { say("Dat lukte niet. Probeer opnieuw.", true); return; }
@@ -806,7 +870,7 @@ input[type=range] { accent-color: var(--em); height: 36px; }
   async function hostStop() {
     var code = G.code;
     try {
-      await dbReq("PUT", "klas/" + code + "/ant", null); await dbReq("PUT", "klas/" + code + "/spelers", null);
+      await dbReq("PUT", "klas/" + code + "/ant", null); await dbReq("PUT", "klas/" + code + "/gift", null); await dbReq("PUT", "klas/" + code + "/spelers", null);
       await dbReq("PUT", "klas/" + code + "/vragen", null); await dbReq("PUT", "klas/" + code + "/meta", null);
     } catch (e) { /* opruimen mislukt: het spel blijft staan maar doet niets */ }
     lsSet(HOST_KEY, null); stopAll(); loadQuizzes();
@@ -820,11 +884,15 @@ input[type=range] { accent-color: var(--em); height: 36px; }
       var h = '<div class="center"><div class="ar" lang="ar" dir="rtl">بِسْمِ اللَّهِ</div><h1>' + esc(G.quiz.titel) + '</h1>' +
         '<p>Leerlingen: ga naar <b>nurspark.app/klas</b> en vul deze code in:</p><div class="bigcode" aria-label="Code ' + G.code.split("").join(" ") + '">' + G.code + '</div>' +
         '<p><a class="btn small light" target="_blank" rel="noopener" href="https://wa.me/?text=' + encodeURIComponent("Doe mee met onze quiz op NurSpark: " + link) + '">Deel via WhatsApp</a></p>' +
+        '<h2>Spelvorm</h2><div class="row" style="justify-content:center">' + Object.keys(VORMEN).map(function (v) { return '<button class="btn small light' + (G.vorm === v ? " on" : "") + '" data-vorm="' + v + '" type="button" aria-pressed="' + (G.vorm === v) + '">' + esc(VORMEN[v][0]) + '</button>'; }).join("") + '</div><p class="muted vorm-note">' + esc(VORMEN[G.vorm][1]) + '</p>' +
         '<h2>' + np + ' speler' + (np === 1 ? "" : "s") + '</h2><div class="chips">';
       rk.forEach(function (r) { h += '<span class="chip">' + esc(r.name) + '<button type="button" data-kick="' + esc(r.uid) + '" aria-label="' + esc(r.name) + ' verwijderen">✕</button></span>'; });
       h += '</div><div id="msg" class="msg"></div><div class="row" style="justify-content:center;margin-top:14px"><button class="btn gold" id="go" type="button"' + (np ? "" : " disabled") + '>Start het spel</button><button class="btn light" id="stop" type="button">Annuleren</button></div></div>';
       app.innerHTML = h;
       app.querySelectorAll("[data-kick]").forEach(function (b) { b.onclick = function () { dbReq("DELETE", "klas/" + G.code + "/spelers/" + b.getAttribute("data-kick")).catch(function () {}); }; });
+      app.querySelectorAll("[data-vorm]").forEach(function (b) {
+        b.onclick = function () { G.vorm = b.getAttribute("data-vorm"); dbReq("PATCH", "klas/" + G.code + "/meta", { vorm: G.vorm }).catch(function () {}); renderG(); };
+      });
       document.getElementById("go").onclick = function () { this.disabled = true; hostAsk(0); };
       document.getElementById("stop").onclick = function () { if (confirm("Het spel stoppen?")) hostStop(); };
       return;
@@ -836,7 +904,7 @@ input[type=range] { accent-color: var(--em); height: 36px; }
       else if (q.t === "cloud") vb = '<p class="expl big-note">Leerlingen typen één woord of een korte zin op hun telefoon.</p>';
       else if (q.t === "type") vb = '<p class="expl big-note">Leerlingen typen het antwoord op hun telefoon.</p>';
       else vb = '<p class="expl big-note">Leerlingen kiezen een getal tussen <b>' + q.min + '</b> en <b>' + q.max + '</b>.</p>';
-      app.innerHTML = '<div class="qtop"><span>Vraag ' + (G.qi + 1) + ' van ' + G.quiz.vragen.length + '</span><b><span id="sec">' + q.time + '</span> sec</b></div><div class="bar"><div id="barIn" style="width:100%"></div></div>' +
+      app.innerHTML = (G.giftMsg && G.giftMsg.length ? '<div class="expl"><b>Sadaqa:</b> ' + G.giftMsg.map(esc).join(" · ") + '</div>' : "") + '<div class="qtop"><span>Vraag ' + (G.qi + 1) + ' van ' + G.quiz.vragen.length + '</span><b><span id="sec">' + q.time + '</span> sec</b></div><div class="bar"><div id="barIn" style="width:100%"></div></div>' +
         '<h1 class="qq big">' + esc(q.q) + '</h1>' + vb + '<p class="msg" id="ans" role="status"></p><div id="msg"></div><button class="btn light" id="end" type="button">Nu afsluiten</button>';
       document.getElementById("end").onclick = hostClose; updAns(); return;
     }
@@ -853,12 +921,14 @@ input[type=range] { accent-color: var(--em); height: 36px; }
         }
       }
       app.innerHTML = '<div class="qtop"><span>Uitslag vraag ' + (G.qi + 1) + '</span></div><h1 class="qq big">' + esc(q.q) + '</h1>' + ub +
-        (q.e ? '<p class="expl">' + esc(q.e) + '</p>' : "") + '<h2>Tussenstand</h2>' + listHtml(rk, 5) + '<div id="msg" class="msg"></div>' +
+        (q.e ? '<p class="expl">' + esc(q.e) + '</p>' : "") +
+        (G.vorm === "karavaan" ? '<h2>De karavaan</h2>' + caravanHtml(G.prog, G.ne) : '<h2>Tussenstand</h2>' + listHtml(rk, 5)) +
+        (G.vorm === "sadaqa" ? '<div class="card center"><b>Sadaqa-ronde</b><p style="margin:4px 0">Wie het goed had, kan 250 punten weggeven aan een klasgenoot die achterloopt.</p><p class="msg" id="gc" role="status"></p></div>' : "") + '<div id="msg" class="msg"></div>' +
         '<button class="btn gold" id="nx" type="button">' + (last ? "Naar het podium" : "Volgende vraag") + '</button>';
       document.getElementById("nx").onclick = function () { this.disabled = true; hostNext(); }; return;
     }
     if (st === "einde") {
-      app.innerHTML = '<div class="center"><h1>MashaAllah! Het podium</h1>' + podiumHtml(rk) + '<h2>Alle spelers</h2>' + listHtml(rk, 50) + '<div class="row" style="justify-content:center;margin-top:14px"><button class="btn gold" id="fin" type="button">Spel afsluiten</button></div></div>';
+      app.innerHTML = '<div class="center"><h1>MashaAllah!</h1>' + (G.vorm === "karavaan" ? teamEndHtml(G.prog, G.ne) + '<h2>Jullie samen</h2><div class="chips">' + rk.map(function (r) { return '<span class="chip">' + esc(r.name) + '</span>'; }).join("") + '</div>' : podiumHtml(rk) + '<h2>Alle spelers</h2>' + listHtml(rk, 50)) + '<div class="row" style="justify-content:center;margin-top:14px"><button class="btn gold" id="fin" type="button">Spel afsluiten</button></div></div>';
       document.getElementById("fin").onclick = function () { if (confirm("Het spel afsluiten? De scores worden gewist.")) hostStop(); };
     }
   }
