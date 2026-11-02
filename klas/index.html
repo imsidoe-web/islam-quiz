@@ -244,6 +244,11 @@ body.ms-on header.top { flex: none; padding: 5px 16px; } body.ms-on header.top s
 body.ms-on .ms-wrap { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; width: 100%; }
 body.ms-on .ms-roll { flex: none; }
 body.ms-on .ms-wrap main#app { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; } body.ms-on .ms-wrap main#app { scrollbar-width: thin; scrollbar-color: rgba(122,84,20,.55) transparent; }
+body.ms-on .ms-hint { display: none; }
+body.ms-on .ms-wrap.ms-more .ms-hint { display: block; position: absolute; left: 50%; bottom: 66px; transform: translateX(-50%); z-index: 8; pointer-events: none; background: rgba(43,29,14,.85); color: #f6d25a; font: 700 17px/1 var(--boek); padding: 8px 18px; border-radius: 999px; box-shadow: 0 2px 8px rgba(0,0,0,.4); white-space: nowrap; animation: msHintBob 1.6s ease-in-out infinite; }
+@keyframes msHintBob { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(5px); } }
+@media (prefers-reduced-motion: reduce) { body.ms-on .ms-wrap.ms-more .ms-hint { animation: none; } }
+body.ms-lite.ms-on .ms-wrap.ms-more .ms-hint { animation: none; }
 /* v175: laptop en Chromebook - kop compacter, plaatje kleiner, hoofdknop blijft onderaan staan */
 @media (min-width: 701px) and (max-height: 1000px) {
   body.ms-on main#app { padding-top: 64px; padding-bottom: 56px; margin-top: 44px; margin-bottom: 44px; }
@@ -1633,7 +1638,19 @@ body.ms-on .ms-wrap main#app { flex: 1 1 auto; min-height: 0; overflow-y: auto; 
       setTimeout(function () { document.body.classList.remove("ms-anim"); }, 2600);
     }
     app.querySelectorAll(".tile, ol.lb li, .sb li").forEach(function (e, i) { e.style.setProperty("--ix", i % 8); });
+    var mw = app.parentNode;
+    if (mw && mw.classList.contains("ms-wrap")) {
+      if (!mw.querySelector(".ms-hint")) mw.insertAdjacentHTML("beforeend", '<div class="ms-hint" aria-hidden="true">▾ Scroll voor meer</div>');
+      msHint(); setTimeout(msHint, 450);
+    }
   }
+  /* aanwijzing "Scroll voor meer" zolang er onder in de brief nog inhoud is */
+  function msHint() {
+    var mw = app.parentNode;
+    if (!mw || !mw.classList.contains("ms-wrap")) return;
+    mw.classList.toggle("ms-more", app.scrollHeight - app.scrollTop - app.clientHeight > 14);
+  }
+  app.addEventListener("scroll", msHint, { passive: true }); window.addEventListener("resize", msHint);
 
   /* de karavaan schuift van de vorige plek naar de nieuwe */
   new MutationObserver(function () {
