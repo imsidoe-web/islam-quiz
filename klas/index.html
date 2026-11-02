@@ -324,7 +324,7 @@ main.wide { max-width: 1240px; }
     else if (type === "tf") { q.o = ["Waar", "Niet waar"]; q.a = 0; }
     else if (type === "type") { q.o = ["", "", "", ""]; q.time = 30; }
     else if (type === "order") { q.o = ["", "", "", "", ""]; q.time = 30; }
-    else if (type === "slider") { q.min = 0; q.max = 100; q.a = 50; q.tol = 0; }
+    else if (type === "slider") { q.min = 0; q.max = 100; q.a = 50; q.tol = 0; q.time = 30; }
     else if (type === "poll") { q.o = ["", "", "", ""]; q.pts = 0; }
     else if (type === "cloud") { q.pts = 0; q.time = 30; }
     return q;
@@ -1042,9 +1042,11 @@ main.wide { max-width: 1240px; }
         });
         body += '</div><div class="row" style="margin-top:12px"><button class="btn gold" id="send" type="button"' + (L.seq.length === q.o.length ? "" : " disabled") + '>Verstuur</button><button class="btn light" id="clr" type="button">Opnieuw</button></div>';
       } else if (q.t === "slider") {
-        var mid = Math.round((q.min + q.max) / 2);
-        body = '<div class="bigval"><output id="sv">' + mid + '</output></div><input type="range" id="sr" min="' + q.min + '" max="' + q.max + '" step="1" value="' + mid + '" style="width:100%" aria-label="Kies een getal tussen ' + q.min + ' en ' + q.max + '">' +
-          '<div class="qtop"><span>' + q.min + '</span><span>' + q.max + '</span></div><p class="muted" id="sh" style="text-align:center">Schuif eerst naar je antwoord.</p><div style="margin-top:12px"><button class="btn gold" id="send" type="button" disabled>Verstuur</button></div>';
+        /* de balk begint op een willekeurige plek (niet in het midden), en het getal blijft verborgen tot de leerling de balk aanraakt */
+        if (!L.sl || L.sl.qi !== m.qi) L.sl = { qi: m.qi, v: q.min + Math.floor(Math.random() * (q.max - q.min + 1)), t: false };
+        var sl = L.sl;
+        body = '<div class="bigval"><output id="sv">' + (sl.t ? sl.v : "?") + '</output></div><input type="range" id="sr" min="' + q.min + '" max="' + q.max + '" step="1" value="' + sl.v + '" style="width:100%" aria-label="Kies een getal tussen ' + q.min + ' en ' + q.max + '">' +
+          '<div class="qtop"><span>' + q.min + '</span><span>' + q.max + '</span></div><p class="muted" id="sh" style="text-align:center' + (sl.t ? ';display:none' : '') + '">Tik of schuif naar je antwoord.</p><div style="margin-top:12px"><button class="btn gold" id="send" type="button"' + (sl.t ? "" : " disabled") + '>Verstuur</button></div>';
       }
       app.innerHTML = (me.got && me.got.qi === m.qi - 1 ? '<div class="expl"><b>Sadaqa:</b> ' + esc(me.got.by.join(" en ")) + ' gaf jou ' + ptsH(me.got.n, true) + '. Jazakallahu khayran!</div>' : "") + (hw ? '<div class="qtop"><span>Vraag ' + (m.qi + 1) + ' van ' + m.n + '</span><b>Huiswerk</b></div>' : '<div class="qtop"><span>Vraag ' + (m.qi + 1) + ' van ' + m.n + '</span><b id="sec"></b></div><div class="bar"><div id="barIn"></div></div>') +
         '<h1 class="qq">' + esc(q.q) + '</h1>' + imgHtml(q) + body + (sent ? '<p class="msg" role="status">Antwoord verstuurd. Wacht op de anderen…</p>' : '<div id="msg" class="msg"></div>');
@@ -1061,7 +1063,12 @@ main.wide { max-width: 1240px; }
           sendB.onclick = function () { sendAns(L.seq.join(",")); };
         } else if (q.t === "slider") {
           var sr = document.getElementById("sr"), sv = document.getElementById("sv");
-          sr.addEventListener("input", function () { sv.textContent = sr.value; sendB.disabled = false; var sh = document.getElementById("sh"); if (sh) sh.style.display = "none"; });
+          var touch = function () {
+            if (!L.sl.t) { L.sl.t = true; sv.textContent = sr.value; sendB.disabled = false; var sh = document.getElementById("sh"); if (sh) sh.style.display = "none"; }
+            L.sl.v = +sr.value;
+          };
+          ["pointerdown", "touchstart", "keydown"].forEach(function (ev) { sr.addEventListener(ev, touch, { passive: true }); });
+          sr.addEventListener("input", function () { sv.textContent = sr.value; touch(); });
           sendB.onclick = function () { sendAns(String(sr.value)); };
         }
       }
