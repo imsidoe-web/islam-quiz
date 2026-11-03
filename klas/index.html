@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>NurSpark Klas – maak je eigen quiz</title>
+<title>Halaqa Spark – leer samen met je klas</title>
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#1b4332">
 <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png?v=3">
@@ -342,7 +342,7 @@ body.ms-lite.ms-on .ms-wrap.ms-more .ms-hint { animation: none; }
 
   function showLogin() {
     var ingelogd = !!user;   /* iemand met een account die een QR-code of link met een code opent, komt eerst bij het meedoen */
-    app.innerHTML = '<h1>' + (ingelogd ? "Doe mee met de quiz" : "Welkom bij NurSpark Klas") + '</h1>' +
+    app.innerHTML = '<h1>' + (ingelogd ? "Doe mee met de quiz" : "Welkom bij Halaqa Spark") + '</h1>' +
       '<div class="card"><h2 style="margin-top:0">Ik ben leerling</h2><ol class="steps"><li>Vraag je docent om de code.</li><li>Kies een bijnaam. Geen echte naam.</li><li>Tik op Meedoen en wacht tot de docent start.</li></ol><label for="jc">Code van je docent</label>' +
       '<input type="text" id="jc" maxlength="6" autocomplete="off" autocapitalize="characters" value="' + esc(prefill) + '" placeholder="Bijvoorbeeld K7M2QX">' +
       '<label for="jn">Jouw bijnaam (max. 14 tekens)</label><input type="text" id="jn" maxlength="14" autocomplete="off" placeholder="Bijvoorbeeld Sterretje">' +
