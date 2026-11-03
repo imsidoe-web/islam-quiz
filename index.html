@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="nl" class="boot">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#0F2E22">
+  <style>html.boot{background:linear-gradient(160deg,#0b6b47,#03281c) fixed!important}html.boot body{background:transparent!important}</style>
+  <script>setTimeout(function(){document.documentElement.classList.remove("boot")},15000)</script>
   <title>NurSpark – Islamitische quiz-app: leer je Deen spelenderwijs</title>
   <meta name="description" content="NurSpark is een gratis Islamitische quiz-app in het Nederlands voor kinderen, tieners en volwassenen. Leer spelenderwijs over de profeten, de vijf zuilen, de Koran, de Seerah en meer.">
   <link rel="canonical" href="https://nurspark.app/">
@@ -13107,7 +13109,7 @@ return exports;})();
   function startSplash(done, retry) {
     const el = document.getElementById("splash");
     if (!el) { done(); return; }
-    if (oauthReturn || FROM_KLAS) { el.remove(); done(); return; }          /* terug van Google/Facebook: niet nog eens laten wachten */
+    if (oauthReturn || FROM_KLAS) { document.documentElement.classList.remove("boot"); el.remove(); done(); return; }          /* terug van Google/Facebook: niet nog eens laten wachten */
     const rm = reducedMotion(), text = "NurSpark", timers = [];
     const gen = (el._gen = (el._gen || 0) + 1);
     /* Op telefoons blokkeert de browser geluid tot de eerste aanraking: dan wachten we met de intro op één tik ("Tik om te starten"). */
@@ -13122,7 +13124,7 @@ return exports;})();
       text.split("").map(function (ch, i) { return i === 1 ? '<span class="mu">' + "<svg class=\"sp-moon\" viewBox=\"0 0 100 100\" aria-hidden=\"true\"><defs><linearGradient id=\"nsmoon\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0\" stop-color=\"#fffbe0\"/><stop offset=\".6\" stop-color=\"#f6d25a\"/><stop offset=\"1\" stop-color=\"#d79a24\"/></linearGradient></defs><path d=\"M10,56 A40,40 0 1,0 90,56 A40,40 0 0,0 85.8,38.1 A36,36 0 0,1 14.2,38.1 A40,40 0 0,0 10,56Z\" fill=\"url(#nsmoon)\"/><path d=\"M0,-1 C0.1,-0.1 0.1,-0.1 1,0 C0.1,0.1 0.1,0.1 0,1 C-0.1,0.1 -0.1,0.1 -1,0 C-0.1,-0.1 -0.1,-0.1 0,-1Z\" transform=\"translate(50 30) scale(15)\" fill=\"#fffbe0\"/></svg>" + "</span>" : '<span class="' + (i < 3 ? "w" : "g") + '">' + ch + "</span>"; }).join("") + "</p></div>" +
       '<button class="sp-skip" type="button">Overslaan</button>' +
       (needTap ? '<p class="sp-hint" aria-hidden="true">' + (window.matchMedia && matchMedia("(pointer: coarse)").matches ? "Tik om te starten" : "Klik of druk op een toets om te starten") + "</p>" : "") + '<h1 class="sr-only">NurSpark</h1>';
-    el.classList.add("ready"); if (rm) el.classList.add("rm");
+    el.classList.add("ready"); document.documentElement.classList.remove("boot"); if (rm) el.classList.add("rm");
     const logo = el.querySelector(".sp-logo"), letters = el.querySelectorAll(".sp-title span"), skipBtn = el.querySelector(".sp-skip");
     try { ctx(); } catch (e) {}
     const hop = function (k) {
