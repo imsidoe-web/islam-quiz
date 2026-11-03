@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
+<script>try { if (sessionStorage.getItem("iq-from-klas") === "1") document.documentElement.classList.add("from-klas"); } catch (e) {}</script>
+<style>.from-klas #disclaimerModal, .from-klas #ageModal, .from-klas #bismillahModal, .from-klas #splash { display: none !important; }</style>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#0F2E22">
@@ -5712,7 +5714,7 @@ return exports;})();
   /* v151: terug uit de Klasmodus (of de terugknop): geen intro, direct het startscherm */
   let FROM_KLAS = false; try { FROM_KLAS = sessionStorage.getItem("iq-from-klas") === "1"; sessionStorage.removeItem("iq-from-klas"); } catch (e) {}
   /* v192: terug uit Halaqa Spark: ook geen mededeling, leeftijdsvraag of intentie meer, direct het dashboard */
-  if (FROM_KLAS) ["disclaimerModal", "ageModal", "bismillahModal"].forEach(function (id) { const m = document.getElementById(id); if (m) m.classList.add("hidden"); });
+  if (FROM_KLAS) ["disclaimerModal", "ageModal", "bismillahModal"].forEach(function (id) { const m = document.getElementById(id); if (m) m.classList.add("hidden"); });  document.documentElement.classList.remove("from-klas");
   const GOOGLE_PHOTO = /^https:\/\/[a-z0-9.-]+\.googleusercontent\.com\//i;
   const gb = { beginner: null, junior: null, expert: null };        /* geladen klassement per modus */
 
