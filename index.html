@@ -1329,6 +1329,10 @@ body.jfull .reward-flyer { top: 160px; }
 .sp-center { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 14px; pointer-events: none; z-index: 5; transition: opacity .35s, transform .5s; }
 .sp-logo { width: min(46vw, 190px); will-change: transform; animation: spBob 2.2s ease-in-out infinite; filter: drop-shadow(0 12px 14px rgba(0, 30, 20, .55)) drop-shadow(0 0 22px rgba(255, 214, 90, .35)); transform-origin: 50% 100%; }
 .sp-logo svg { width: 100%; height: auto; display: block; }
+/* v203: het logo in het intro begint op dezelfde plek en in dezelfde grootte als het icoon op het Android-opstartscherm (midden, groot, recht), zodat de overgang geen sprong is */
+.sp-logo { width: min(68vw, 270px); }
+.sp-logo .logo { width: 100%; height: auto; aspect-ratio: 1 / 1; margin: 0; transform: none; animation: none; }
+.sp-title { position: absolute; left: 0; right: 0; top: calc(50% + min(34vw, 135px) + 10px); }
 .sp-logo.hop { animation: spHop .3s cubic-bezier(.3, .7, .4, 1) both; }
 .sp-logo.final { animation: spFinal .75s cubic-bezier(.3, .6, .3, 1) both; }
 @keyframes spBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
