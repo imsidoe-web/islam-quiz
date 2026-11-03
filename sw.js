@@ -1,6 +1,6 @@
 /* Islam Quiz – service worker (netwerk eerst, cache als terugval)
    Verhoog CACHE_VERSION bij elke release. Zo zien bezoekers altijd meteen de nieuwste versie. */
-const CACHE_VERSION = "islam-quiz-v200";
+const CACHE_VERSION = "islam-quiz-v201";
 const QURAN_CACHE = "iq-quran-1";   // Koran-tekst en -lettertype: blijven bewaard tussen versies (offline lezen)
 const PRECACHE = [];
 
@@ -52,6 +52,23 @@ self.addEventListener("fetch", (event) => {
       if (hit) return hit;
       try { const res = await fetch(req); if (res.ok) cache.put(req, res.clone()); return res; }
       catch (e) { return new Response("Geen verbinding.", { status: 503, headers: { "Content-Type": "text/plain; charset=utf-8" } }); }
+    })());
+    return;
+  }
+
+  /* v201: de app-pagina zelf: eerst de bewaarde kopie tonen (snel opstarten) en op de achtergrond de nieuwste ophalen.
+     Een nieuwe versie zie je dus bij de tweede keer openen. Terugdraaien: dit blok weghalen. */
+  if (req.mode === "navigate" && (url.pathname === "/" || url.pathname === "/index.html")) {
+    event.respondWith((async () => {
+      const cache = await caches.open(CACHE_VERSION);
+      const hit = await cache.match("/", { ignoreSearch: true });
+      const fresh = fetch(req, { cache: "no-cache" }).then(async (res) => {
+        if (res.ok && res.type === "basic") await cache.put("/", res.clone());
+        return res;
+      }).catch(() => null);
+      if (hit) { event.waitUntil(fresh); return hit; }
+      const res = await fresh;
+      return res || new Response("Geen verbinding. Probeer het later opnieuw.", { status: 503, headers: { "Content-Type": "text/plain; charset=utf-8" } });
     })());
     return;
   }
