@@ -1044,6 +1044,10 @@ body.bonus-on { overflow: hidden; }
 .rewards { display: flex; gap: 10px; justify-content: center; margin: 10px 0 0; flex-wrap: wrap; }
 .rw { display: inline-flex; align-items: center; gap: 6px; font-weight: 900; border-radius: 999px; padding: 6px 14px; animation: pop .5s ease .6s both; }
 .rw.xp { background: #e4f2ff; color: #246aa8; } .rw.gem { background: #def6ff; color: #0b6a94; }
+.rw.coin { background: #fff3c4; color: #7a4d08; }
+.ns-coin { display: inline-block; vertical-align: middle; object-fit: contain; flex: none; }
+.coin-note { text-align: center; margin: 8px 0 0; }
+.jh-gembtn.jh-coin b { color: #ffe08a; }
 .rank-xp { display: block; font-size: .7rem; font-weight: 800; color: var(--muted); }
 .stat.xp b { color: #2f7ec4; } .stat.gems { color: #0b6a94; }
 .hint-btn { position: absolute; top: 10px; right: 12px; width: 44px; height: 44px; border-radius: 50%; border: 0; background: #fff8d6; font-size: 1.5rem; cursor: pointer; box-shadow: 0 3px 0 rgba(160,110,0,.3); opacity: .85; }
@@ -1668,7 +1672,7 @@ body.radgame { overflow: hidden; } body.radgame #app { max-width: 560px; padding
 .jh-modesub.junior { color: #ffd98a; } .jh-modesub.beginner { color: #bff0e0; } .jh-modesub i { font-style: normal; font-size: .62rem; opacity: .85; }
 .jh-modesub:focus-visible { outline: 3px solid #ffb703; outline-offset: 2px; border-radius: 6px; }
 .j-head .jh-stats { justify-content: flex-end; gap: 6px; } .j-head .jh-stats > span, .j-head .jh-stats > .jh-gembtn { padding: 4px 10px; font-size: .9rem; }
-@media (max-width: 400px) { .jh-who .jh-player span { max-width: 96px; } .j-head .jh-stats > span, .j-head .jh-stats > .jh-gembtn { padding: 3px 7px; font-size: .82rem; } }
+@media (max-width: 400px) { .j-head .jh-stats > .jh-coin { padding: 3px 5px; gap: 2px; } .jh-who .jh-player span { max-width: 96px; } .j-head .jh-stats > span, .j-head .jh-stats > .jh-gembtn { padding: 3px 7px; font-size: .82rem; } }
 
 /* ── land-schild in drie rustige regels (v75) ── */
 .j-shield.js3 { display: block; padding-top: 8px; padding-bottom: 8px; }
@@ -5482,6 +5486,7 @@ return exports;})();
       album: { beginner: {}, junior: {}, expert: {} },    // Kwartet-album per modus: album[level][kaartId] = aantal
       xp: { beginner: 0, junior: 0, expert: 0 },         // Kennis-XP per modus
       gems: { beginner: 0, junior: 0, expert: 0 },       // edelstenen per modus
+      coins: 0,                                          // NurSpark-munten (alleen voor sadaka, niets te koop)
       jum: { last: null, count: 0, max: 0 },             // Jummah Mubarak: laatste vrijdag en reeks
     };
   }
@@ -6013,6 +6018,7 @@ return exports;})();
     dst.badges = Object.assign({}, src.badges || {}, dst.badges || {});
     dst.streak = mergeStreak(dst.streak, src.streak);
     dst.played = (dst.played || 0) + (src.played || 0);
+    dst.coins = (dst.coins || 0) + (src.coins || 0);
     dst.age14 = !!(dst.age14 || src.age14);
     if (!dst.mode) dst.mode = src.mode;
   }
@@ -6037,6 +6043,7 @@ return exports;})();
     const st0 = { count: 0, last: null, max: 0, days: [] };
     base.streak = mergeStreak(base.streak || st0, other.streak || st0);
     base.played = Math.max(base.played || 0, other.played || 0);
+    base.coins = Math.max(base.coins || 0, other.coins || 0);
     if (!base.mode) base.mode = other.mode;
     Object.keys(other).forEach(function (k) { if (base[k] === undefined) base[k] = other[k]; });
     return normalizePlayer(Object.assign(base, keep));
@@ -6059,6 +6066,7 @@ return exports;})();
             m.gems[lv] = ((d.data.gems || {})[lv] || 0) + ((cur.gems || {})[lv] || 0);
             m.xp[lv] = ((d.data.xp || {})[lv] || 0) + ((cur.xp || {})[lv] || 0);
           });
+          if (fromGuest) m.coins = ((d.data.coins) || 0) + ((cur.coins) || 0);
           m.cT = Math.max(ct, cur.cT || 0);
           S.players[S.players.indexOf(cur)] = m;
           if (P === cur) P = m;
@@ -8457,6 +8465,15 @@ return exports;})();
     }
     if (!Array.isArray(P.streak.days)) P.streak.days = [];
     if (P.streak.days.indexOf(t) === -1) { P.streak.days.push(t); P.streak.days.sort(); if (P.streak.days.length > 28) P.streak.days = P.streak.days.slice(-28); }
+    /* NurSpark-munten (alleen voor sadaka): 1 bij het eerst halen van een level, 2 extra bij het eerst drie sterren, 1 per dag bij een dagreeks.
+       Opnieuw spelen geeft geen munten, zodat het niet te farmen is. */
+    let coinGain = 0, coinStreak = false, coinFirst = false;
+    if (jr && jr.passed) {
+      if (jr.firstPass) coinGain += 1;
+      if (stars === 3 && (jr.prevStars || 0) < 3) coinGain += 2;
+      if (P.coinDay !== t && (P.streak.count || 0) >= 2) { coinGain += 1; coinStreak = true; P.coinDay = t; }
+      if (coinGain) { coinFirst = !P.coinInfo; P.coinInfo = true; P.coins = (P.coins || 0) + coinGain; }
+    }
     saveState();
     pushMember();
     if (sbUser && P.sbId === sbUser.id) { sbSyncSoon(quiz.level); sbSyncStreak(); } else if (!P.sbId) guestSyncSoon(P, quiz.level);
@@ -8466,6 +8483,7 @@ return exports;})();
     result.xpGain = xpGain; result.gemGain = gemGain; flyerPending = true;
     result.streakUp = streakUp; result.streakCount = P.streak.count;
     result.dailyFirst = dailyFirst; result.dailyDs = dailyDs; result.weekBonus = weekBonus;
+    result.coinGain = coinGain; result.coinStreak = coinStreak; result.coinFirst = coinFirst;
     screen = "result";
     if (jr) {
       play(jr.passed ? "fanfare" : "lose");
@@ -8661,6 +8679,8 @@ return exports;})();
   const GEMS_CHEST = 25;                        /* edelstenen voor een uitgespeelde schatkist */
   function xpAt(p, lv) { return (p.xp && p.xp[lv]) || 0; }
   function gemsAt(p, lv) { return (p.gems && p.gems[lv]) || 0; }
+  function coinsAt(p) { return (p && p.coins) || 0; }
+  function coinImg(sz) { return '<img class="ns-coin" src="/kunst/munt/nurspark-munt-128.png" width="' + sz + '" height="' + sz + '" alt="" aria-hidden="true" decoding="async">'; }
   function addReward(lv, xp, gems) { if (!P.xp) P.xp = { beginner: 0, junior: 0, expert: 0 }; if (!P.gems) P.gems = { beginner: 0, junior: 0, expert: 0 }; P.xp[lv] = (P.xp[lv] || 0) + (xp || 0); P.gems[lv] = (P.gems[lv] || 0) + (gems || 0); }
   function gemSvg(size) { return svg3(size, "gem-ic", "0 0 24 24", gemInner("#35d0ff")); }
   function allStars(p) { return MODES.reduce(function (a, m) { return a + starsAt(p, m); }, 0); }
@@ -9518,6 +9538,7 @@ return exports;})();
   function rewardsHtml(r) {
     if (!r.xpGain && !r.gemGain && !r.streakUp && r.kind !== "daily") return "";
     return '<div class="rewards" role="status">' + (r.kind === "daily" ? (r.dailyFirst ? '<span class="rw daily">🌟 Dagbeloning! ' + r.dailyDs + (r.dailyDs === 1 ? " dag" : " dagen") + " op rij" + (r.weekBonus ? " · 🎉 weekbonus +15" : "") + "</span>" : '<span class="rw">Oefenrondje: de dagbeloning krijg je 1× per dag</span>') : "") + (r.xpGain ? '<span class="rw xp">+' + r.xpGain + " Kennis-XP</span>" : "") + (r.gemGain ? '<span class="rw gem">+' + r.gemGain + " " + gemSvg(20) + '<span class="sr-only">edelstenen</span></span>' : "") +
+      (r.coinGain ? '<span class="rw coin">+' + r.coinGain + " " + coinImg(22) + '<span class="sr-only">NurSpark-munten</span></span>' : "") +
       (r.streakUp ? '<span class="rw streak">🔥 ' + r.streakCount + (r.streakCount === 1 ? " dag" : " dagen") + " op rij!</span>" : "") + "</div>";
   }
   function viewJourneyResult(r) {
@@ -9536,6 +9557,8 @@ return exports;})();
     h += ar(arabicTxt) + "<h1>" + esc(title) + '</h1><p class="msg">' + esc(msg) + "</p>";
     if (r.record) h += '<div class="badge-new">' + icon("trophy", 18) + "Nieuw record!</div>";
     h += rewardsHtml(r);
+    if (r.coinStreak) h += '<p class="fine coin-note">+1 munt voor je dagreeks 🔥</p>';
+    if (r.coinFirst) h += '<p class="fine coin-note">Dit is een NurSpark-munt. Je verdient ze met je levels. Je kunt er niets mee kopen: ze zijn bedoeld voor sadaka, insha’Allah binnenkort samen met anderen.</p>';
     if (r.lifeLost) h += '<div class="life-lost" role="status">' + heartSvg(22, false) + "<span>−1 leven · nog <b>" + r.livesLeft + "</b> van " + LIFE_MAX + (r.livesLeft ? "" : ". Tijd voor een pauze 🌙") + "</span></div>";
     if (r.chestReady) h += '<div class="chest-win ready"><svg viewBox="-34 -36 68 62" width="84" height="76" aria-hidden="true"><g class="chest-bounce">' + chest(0, 4, "closed", 1.3, "stop") + "</g></svg>" +
       "<span><b>Een schatkist wacht op je!</b>Tik op de springende kist op de kaart om hem te openen.</span></div>";
@@ -12092,7 +12115,7 @@ return exports;})();
     /* zwevende topbalk */
     h += '<header class="j-head"><div class="jh-pw"><button class="jh-player jh-av" data-act="avatar-pick" data-id="' + P.id + '" aria-label="Kies je avatar">' + avatarHtml(P, 30) + '</button><div class="jh-who"><button class="jh-player" data-act="players" aria-label="Speler: ' + nm + '. Wissel van speler"><span>' + nm + "</span></button>" +
       '<button class="jh-modesub ' + level + '" data-act="switch-mode" aria-label="Modus wisselen. Nu: ' + modeName(level) + '. Tik om te kiezen">' + icon(MODE_ICON[level], 13) + "<span>" + modeName(level) + '</span><i aria-hidden="true">▾</i></button></div></div>' +
-      '<div class="jh-stats" role="group" aria-label="Jouw punten in de ' + modeName(level) + '-modus"><span>' + icon("star", 15, "fill") + "<b>" + stars + '</b><i class="sr-only"> sterren</i></span>' + lifeBtnHtml() + '<button class="gem jh-gembtn" data-act="bazaar" aria-label="' + gems + ' edelstenen. Open de bazaar">' + gemSvg(15) + "<b>" + gems + '</b><i class="jh-plus" aria-hidden="true">+</i></button></div>' +
+      '<div class="jh-stats" role="group" aria-label="Jouw punten in de ' + modeName(level) + '-modus"><span>' + icon("star", 15, "fill") + "<b>" + stars + '</b><i class="sr-only"> sterren</i></span>' + lifeBtnHtml() + '<button class="gem jh-gembtn" data-act="bazaar" aria-label="' + gems + ' edelstenen. Open de bazaar">' + gemSvg(15) + "<b>" + gems + '</b><i class="jh-plus" aria-hidden="true">+</i></button><button class="jh-gembtn jh-coin" data-act="coin-info" aria-label="' + coinsAt(P) + ' NurSpark-munten. Tik voor uitleg">' + coinImg(18) + "<b>" + coinsAt(P) + '</b></button></div>' +
       '<button class="jh-gear" data-act="settings" aria-label="Instellingen">' + icon("gear", 20) + "</button></header>";
     /* v124: smalle land-balk; naam en voortgang wisselen mee met het land dat in beeld is */
     h += '<div class="j-shield jbar" style="--accent:' + c.color + '" role="status" aria-live="polite" id="jBar">' + jBarInner(i) + "</div>";
@@ -12908,6 +12931,7 @@ return exports;})();
       case "rad-inv-later": { radAlQueue = radAlNow; radAlertHide(); play("click"); break; }
       case "rad-inv-join": { const a = radAlNow; radAlertHide(); if (!a) break; if (a.kind === "lobby") { play("click"); radNetSearch(); break; } radAlSeen[a.room] = 1; play("click"); if (a.kind === "inv" && a.from) cloudAuth().then(function (auth) { dbReq("DELETE", "rad/inv/" + auth.uid + "/" + a.from).catch(function () {}); }).catch(function () {}); radNetJoin(a.room); break; }
       case "rad-inv-x": { const a = radAlNow; radAlertHide(); if (a && a.room) radAlSeen[a.room] = 1; play("click"); break; }
+      case "coin-info": play("click"); jToast("NurSpark-munten verdien je met levels: 1 voor een gehaald level, 2 extra voor drie sterren en 1 per dag met een dagreeks. Ze zijn voor sadaka, niet om te kopen."); break;
       case "bazaar": play("click"); bzMsg = ""; screen = "bazaar"; render(); break;
       case "lives": play("click"); lifeDialog(); break;
       case "hulp-give": hulpGive(el.dataset.mid); break;
