@@ -5711,6 +5711,8 @@ return exports;})();
   const oauthReturn = /[?&#](code|access_token|error_description)=/.test(location.search + location.hash);
   /* v151: terug uit de Klasmodus (of de terugknop): geen intro, direct het startscherm */
   let FROM_KLAS = false; try { FROM_KLAS = sessionStorage.getItem("iq-from-klas") === "1"; sessionStorage.removeItem("iq-from-klas"); } catch (e) {}
+  /* v192: terug uit Halaqa Spark: ook geen mededeling, leeftijdsvraag of intentie meer, direct het dashboard */
+  if (FROM_KLAS) ["disclaimerModal", "ageModal", "bismillahModal"].forEach(function (id) { const m = document.getElementById(id); if (m) m.classList.add("hidden"); });
   const GOOGLE_PHOTO = /^https:\/\/[a-z0-9.-]+\.googleusercontent\.com\//i;
   const gb = { beginner: null, junior: null, expert: null };        /* geladen klassement per modus */
 
