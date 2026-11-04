@@ -7938,7 +7938,7 @@ return exports;})();
     } else {
       h += "<p>" + (qjErr ? "Uitleg en reflectie konden niet geladen worden." : "Uitleg en reflectie voor dit vers volgen nog.") + "</p>";
     }
-    h += '<img class="qs-img qs-img-w" src="journaal/schrijver.webp" alt="Rustige illustratie van iemand die in een journal schrijft" width="1024" height="572" loading="lazy" onerror="this.remove()">';
+    h += '<img class="qs-img qs-img-w" src="journaal/schrijver' + (a % 2 ? "" : "2") + '.webp" alt="Rustige illustratie van iemand die in een journal schrijft" width="1024" height="572" loading="lazy" onerror="this.remove()">';
     h += '<div class="qj-card"><h2>Mijn journal</h2>';
     if (c && c.v && c.v.length) h += c.v.map(function (q, i) { return '<p class="qj-q">' + (i + 1) + ". " + esc(q) + "</p>"; }).join("");
     h += '<textarea class="qj-ta" id="qjText" aria-label="Schrijf hier je gedachten" placeholder="Schrijf hier je gedachten…">' + esc(qjGet(qjKey)) + '</textarea>' +
