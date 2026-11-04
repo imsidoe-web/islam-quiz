@@ -8759,8 +8759,9 @@ return exports;})();
     const ANIMALS = THINGS_ALL.concat([duif, bij]).filter((a) => a.id in ANEED).map((a) => Object.assign({}, a, { need: ANEED[a.id] })).sort((a, b) => a.need - b.need);
     const NEED = { maan: 0, lantaarn: 0, ster: 5, kaaba: 12, moskee: 25, dadel: 40, rehal: 55, olijf: 70 };
     const THINGS = THINGS_ALL.filter((a) => a.id in NEED).map((a) => Object.assign({}, a, { need: NEED[a.id] }));
-    const ALL = ANIMALS.concat(PEOPLE, THINGS);
-    return { ANIMALS: ANIMALS, PEOPLE: PEOPLE, THINGS: THINGS, ALL: ALL };
+    const FAMILY = [["fam-man", "Man"], ["fam-vrouw", "Vrouw"], ["fam-jongen", "Jongen"], ["fam-meisje", "Meisje"], ["fam-tjongen", "Tiener jongen"], ["fam-tmeisje", "Tiener meisje"]].map((x) => ({ id: x[0], n: x[1], bg: ["#f2ead7", "#e6dcc0"], need: 0, art: "", img: "avatars/" + x[0] + ".webp" }));   /* tekenfiguren zonder gezicht; vanaf het begin te kiezen */
+    const ALL = ANIMALS.concat(PEOPLE, THINGS, FAMILY);
+    return { ANIMALS: ANIMALS, PEOPLE: PEOPLE, THINGS: THINGS, FAMILY: FAMILY, ALL: ALL };
   })();
   let avUid = 0;
   function errTxt(e) { try { return e ? [e.message, e.details, e.hint, e.code].join(" ") : ""; } catch (x) { return ""; } }
@@ -8769,6 +8770,7 @@ return exports;})();
   function avUnlocked(p, a) { return !!a && levelsDone(p) >= a.need; }
   function avOf(p) { const a = p && avById(p.avatar); return a && avUnlocked(p, a) ? a : null; }
   function avInner(a, flat) {
+    if (a.img) return '<rect width="100" height="100" fill="#f2ead7"/><image href="' + a.img + '" x="0" y="0" width="100" height="100" preserveAspectRatio="xMidYMid slice"/><rect x=".5" y=".5" width="99" height="99" fill="none" stroke="#000" stroke-opacity=".25" stroke-width="1"/>';
     const u = ++avUid;   /* flat: zonder schaduwfilter (voor de kleine tegels op de kaart, die op sommige telefoons met een filter leeg bleven) */
     return '<defs><linearGradient id="avb' + u + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="' + a.bg[0] + '"/><stop offset="1" stop-color="' + a.bg[1] + '"/></linearGradient>' +
       '<linearGradient id="avg' + u + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff7bf"/><stop offset=".4" stop-color="#ffd23a"/><stop offset=".8" stop-color="#e79a00"/><stop offset="1" stop-color="#9a5a00"/></linearGradient>' +
@@ -11505,9 +11507,9 @@ return exports;})();
     const fresh = {}, seen = p.avSeen || {};
     AVATARS.ALL.forEach(function (a) { if (a.need > 0 && avUnlocked(p, a) && !seen[a.id]) fresh[a.id] = true; });
     const w = document.createElement("div"); w.className = "dialog-wrap"; w.id = "avDlg";
-    const TABS = [["animals", "Dieren"], ["people", "Mensen"], ["things", "Dingen"]];
+    const TABS = [["animals", "Dieren"], ["people", "Mensen"], ["things", "Dingen"], ["family", "Figuren"]];
     function paint() {
-      const list = avTab === "animals" ? AVATARS.ANIMALS : avTab === "people" ? AVATARS.PEOPLE : AVATARS.THINGS, done = levelsDone(p), cur = avOf(p);
+      const list = avTab === "animals" ? AVATARS.ANIMALS : avTab === "people" ? AVATARS.PEOPLE : avTab === "family" ? AVATARS.FAMILY : AVATARS.THINGS, done = levelsDone(p), cur = avOf(p);
       const open = list.filter(function (a) { return avUnlocked(p, a); }).length, hasPh = !!(p.photo && /^https:\/\//i.test(p.photo));
       let h = '<div class="dialog av-dlg" role="dialog" aria-modal="true" aria-labelledby="avT"><div class="avd-top"><span class="avd-big">' + (cur ? avSvg(cur) : '<span class="avd-ini" style="--c:' + p.color + '">' + esc((p.name || "?").trim().charAt(0).toUpperCase()) + (hasPh ? '<img src="' + esc(p.photo) + '" alt="" referrerpolicy="no-referrer" onerror="this.remove()">' : "") + "</span>") + "</span>" +
         '<div class="avd-name"><h3 id="avT">Kies je avatar</h3><span>' + esc(p.name) + '</span><b class="avd-pill">' + open + " van " + list.length + " ontgrendeld</b></div></div>" +
@@ -11537,6 +11539,17 @@ return exports;})();
       p.avatar = a.id; saveState(); play("click"); sbSyncSoonAll(); if (!p.sbId) guestSyncAll(p); paint();
       const b = w.querySelector('[data-av="' + a.id + '"]'); if (b) b.focus(); announce(a.n + " gekozen.");
     });
+    let sx = 0, sy = 0, st = 0, sw = false;   /* swipen: naar links = volgend tabblad, naar rechts = vorig tabblad */
+    w.addEventListener("touchstart", function (e) { sw = e.touches.length === 1; if (!sw) return; sx = e.touches[0].clientX; sy = e.touches[0].clientY; st = Date.now(); }, { passive: true });
+    w.addEventListener("touchend", function (e) {
+      if (!sw) return; sw = false;
+      const t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Date.now() - st > 800 || Math.abs(dx) < 60 || Math.abs(dy) > Math.abs(dx) * 0.6) return;
+      const i = TABS.findIndex(function (x) { return x[0] === avTab; }), n = i + (dx < 0 ? 1 : -1);
+      if (n < 0 || n >= TABS.length) return;
+      avTab = TABS[n][0]; paint(); play("click"); announce(TABS[n][1]);
+      const g = w.querySelector(".avd-grid"); if (g) g.scrollTop = 0;
+    }, { passive: true });
     w.addEventListener("keydown", function (e) { if (e.key === "Escape") { e.stopPropagation(); close(); } });
     document.body.appendChild(w); const b = w.querySelector(".avd-cell.sel") || w.querySelector(".avd-cell"); if (b) b.focus();
   }
