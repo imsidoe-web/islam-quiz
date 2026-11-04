@@ -7868,6 +7868,9 @@ return exports;})();
   }
   /* ── Koran-dagboek (voorlopig alleen beheerder): uitleg, reflectie en journalvragen per vers. Eigen notities blijven alleen op dit toestel. ── */
   let QJ = null, qjLoading = false, qjErr = false, qjKey = "", qjFrom = "reader";
+  /* Koran-dagboek: plaatjes. Boven: thema van het vers (veld "i"), anders afwisselend uit deze lijst. Onder (bij Mijn journal): schrijf-plaatjes */
+  const QJ_BOVEN = ["lezer", "schrijver6", "samen", "schrijver7", "schrijver8"];
+  const QJ_ONDER = ["schrijver5", "schrijver", "schrijver4", "schrijver2", "schrijver3"];
   /* Koran-dagboek: swipen naar het vorige of volgende vers */
   (function () {
     let sx = 0, sy = 0, st = 0, ok = false;
@@ -7929,7 +7932,7 @@ return exports;})();
     h += '<section class="hub"><div class="qs"><div class="qs-top">' +
       (nav ? '<span class="qs-bar" role="progressbar" aria-valuemin="0" aria-valuemax="' + n + '" aria-valuenow="' + a + '"><i style="width:' + Math.round(a / n * 100) + '%"></i></span><small>Vers ' + a + " van " + n + "</small>" : '<span class="qs-bar"></span>') +
       '<button class="qs-fav" data-act="qj-fav" aria-label="Favoriet">' + (fav ? "★" : "☆") + "</button></div>" +
-      '<img class="qs-img" src="journaal/' + ((c && /^[a-z0-9-]+$/.test(c.i || "")) ? c.i : "lezer") + '.webp" alt="Rustige illustratie bij dit vers" width="1024" height="572" onerror="if(!this.dataset.f){this.dataset.f=1;this.src=\'journaal/lezer.webp\'}">' +
+      '<img class="qs-img" src="journaal/' + ((c && /^[a-z0-9-]+$/.test(c.i || "")) ? c.i : QJ_BOVEN[(a + s) % QJ_BOVEN.length]) + '.webp" alt="Rustige illustratie bij dit vers" width="1024" height="572" onerror="if(!this.dataset.f){this.dataset.f=1;this.src=\'journaal/lezer.webp\'}">' +
       '<div class="qs-ar"><div class="q-text q-s' + (S.qSize || 3) + '" lang="ar" dir="rtl">' + ar + "</div></div>";
     if (c) {
       h += "<h2>Uitleg</h2><p>" + esc(c.u || "") + "</p>";
@@ -7938,7 +7941,7 @@ return exports;})();
     } else {
       h += "<p>" + (qjErr ? "Uitleg en reflectie konden niet geladen worden." : "Uitleg en reflectie voor dit vers volgen nog.") + "</p>";
     }
-    h += '<img class="qs-img qs-img-w" src="journaal/schrijver' + ["4", "", "2", "3"][a % 4] + '.webp" alt="Rustige illustratie van iemand die in een journal schrijft" width="1024" height="572" loading="lazy" onerror="this.remove()">';
+    h += '<img class="qs-img qs-img-w" src="journaal/' + QJ_ONDER[(a + s) % QJ_ONDER.length] + '.webp" alt="Rustige illustratie van iemand die in een journal schrijft" width="1024" height="572" loading="lazy" onerror="this.remove()">';
     h += '<div class="qj-card"><h2>Mijn journal</h2>';
     if (c && c.v && c.v.length) h += c.v.map(function (q, i) { return '<p class="qj-q">' + (i + 1) + ". " + esc(q) + "</p>"; }).join("");
     h += '<textarea class="qj-ta" id="qjText" aria-label="Schrijf hier je gedachten" placeholder="Schrijf hier je gedachten…">' + esc(qjGet(qjKey)) + '</textarea>' +
