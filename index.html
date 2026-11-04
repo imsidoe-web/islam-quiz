@@ -2195,17 +2195,17 @@ body.dashfull { background: #0f2e22; color: #f4efe2; }
 .qj-row { display: flex; gap: 8px; align-items: center; justify-content: space-between; margin-top: 10px; flex-wrap: wrap; }
 .qj-note { font-size: .8rem; color: #6b6a55; }
 .d-tile.kd { grid-column: 1 / -1; padding: 0; gap: 0; min-height: 0; overflow: hidden; position: relative; background: #f6f1e6; color: #1e2b24; border: 2px solid #f2c94c; }   /* Koran-dagboek-tegel (alleen beheerder) */
-.d-tile.beheer { grid-column: 1 / -1; flex-direction: row; align-items: center; gap: 12px; min-height: 0; padding: 12px 14px; background: #f6f1e6; color: #1e2b24; border: 2px solid #f2c94c; text-align: left; }   /* v233: Beheer-tegel (alleen beheerder) */
-.d-tile.beheer .bh-ic { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; background: #e9dfc6; flex: none; }
-.d-tile.beheer .bh-tx { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
-.d-tile.beheer .bh-tx b { font-size: 17px; }
-.d-tile.beheer .bh-tx small { font-size: 12.5px; color: #4a5a50; }
-.d-tile.beheer .hb-ch { font-size: 26px; color: #1b4332; }
 /* v235: beheerpagina in donkere analytics-stijl (los van de NurSpark-look, alle namen beginnen met bd-) */
 .bd { --bg0: #06060d; --bg1: #0d0b1f; --bg2: #171236; --tx: #e9e8f6; --mut: #8f8eb0; --line: rgba(160,150,255,.16); --blue: #6ea8ff; --indigo: #8b8cff; --violet: #b48cff; --pink: #f07ab8; --teal: #46d3c0; --green: #4fd98f; --amber: #f2b95a;
-  position: fixed; inset: 0; z-index: 5000; overflow-y: auto; -webkit-overflow-scrolling: touch; color: var(--tx); background: linear-gradient(180deg, var(--bg0) 0%, var(--bg1) 38%, var(--bg2) 100%); font-family: "Google Sans", Inter, Roboto, "Segoe UI", Arial, sans-serif; }
+  position: absolute; inset: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; color: var(--tx); background: linear-gradient(180deg, var(--bg0) 0%, var(--bg1) 38%, var(--bg2) 100%); font-family: "Google Sans", Inter, Roboto, "Segoe UI", Arial, sans-serif; }
 .bd *, .bd *::before, .bd *::after { box-sizing: border-box; }
-.bd::after { content: ""; position: fixed; left: 0; right: 0; bottom: 0; height: 70px; background: linear-gradient(180deg, rgba(23,18,54,0), #171236 85%); pointer-events: none; }
+.bd-wrap { position: fixed; inset: 0; z-index: 5000; background: #06060d; animation: bdin .42s cubic-bezier(.22,.8,.2,1) both; }
+.bd-wrap.out { animation: bdout .34s cubic-bezier(.4,0,.8,.4) both; pointer-events: none; }
+@keyframes bdin { from { transform: translateX(34%); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes bdout { from { transform: none; opacity: 1; } to { transform: translateX(34%); opacity: 0; } }
+.bd-m { animation: bdfade .3s ease both; }
+@keyframes bdfade { from { opacity: 0; } to { opacity: 1; } }
+.bd-wrap::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 70px; background: linear-gradient(180deg, rgba(23,18,54,0), #171236 85%); pointer-events: none; }
 .bd-top { position: sticky; top: 0; z-index: 3; display: flex; align-items: center; padding: calc(10px + env(safe-area-inset-top)) 8px 10px; background: linear-gradient(180deg, #06060d 60%, rgba(6,6,13,0)); }
 .bd-ib { width: 44px; height: 44px; display: grid; place-items: center; border: 0; background: transparent; color: var(--tx); border-radius: 50%; cursor: pointer; }
 .bd-ib:hover, .bd-ib:focus-visible { background: rgba(255,255,255,.07); outline: none; }
@@ -2241,7 +2241,7 @@ body.dashfull { background: #0f2e22; color: #f4efe2; }
 @keyframes bdpulse { 0% { box-shadow: 0 0 0 0 rgba(79,217,143,.5); } 100% { box-shadow: 0 0 0 9px rgba(79,217,143,0); } }
 .bd-ft { margin: 30px 0 0; text-align: center; font-size: 12px; color: #5f5e80; }
 @media (min-width: 640px) { .bd-kg { grid-template-columns: repeat(4, 1fr); } }
-@media (prefers-reduced-motion: reduce) { .bd-live.on { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .bd-live.on { animation: none; } .bd-wrap, .bd-wrap.out { animation-duration: .01s; } .bd-m { animation: none; } }
 .d-tile.kd img { display: block; width: 100%; height: auto; aspect-ratio: 1024 / 572; object-fit: cover; }
 .d-tile.kd .kd-tx { display: flex; flex-direction: column; gap: 2px; padding: 12px 16px 14px; }
 .d-tile.kd { background: #1b4332; color: #f4efe2; }
@@ -7475,7 +7475,6 @@ return exports;})();
       '<div class="d-rov"><button class="d-mode" data-act="switch-mode" aria-label="Modus wisselen. Nu: ' + modeName(P.mode) + '. Tik om te kiezen">' + icon(MODE_ICON[P.mode], 13) + " " + modeName(P.mode) + ' <i aria-hidden="true">▾</i></button>' + lifeBtnHtml() + "</div></div>";
     h += '<nav class="d-grid" aria-label="Onderdelen">' +
       '<button class="d-tile hub" data-act="hub"><span class="hb-ic">' + dIc("book", "#1b4332", 40) + '</span><span class="hb-t"><span class="d-k ar" lang="ar" dir="rtl">بيت العلم</span><b>Bayt al-‘Ilm</b><small>' + (nf ? "Mijn foutjes: " + nf + " · du’a-boekje" : "Foutjes en du’a-boekje") + '</small></span><span class="hb-ch" aria-hidden="true">›</span></button>' +
-      (!mkOwner() ? "" : '<button class="d-tile beheer" data-act="beheer" aria-label="Beheer. Cijfers over spelers. Alleen voor jou zichtbaar. Openen"><span class="bh-ic" aria-hidden="true">' + dIc("users", "#1b4332", 26) + '</span><span class="bh-tx"><b>Beheer</b><small>Spelers, gasten en testers · alleen voor jou</small></span><span class="hb-ch" aria-hidden="true">›</span></button>') +
       (!mkOwner() ? "" : '<button class="d-tile kd" data-act="kd" aria-label="Koran-dagboek. Vers voor vers lezen en reflecteren. Alleen voor jou zichtbaar. Openen"><img src="journaal/lezer.webp" alt="" width="1024" height="572" loading="lazy"><span class="kd-badge" aria-hidden="true">In ontwikkeling</span><span class="kd-tx"><b>Koran-dagboek</b><small>Vers voor vers lezen en reflecteren</small></span></button>') +
       '<button class="d-tile" data-act="klas">' + "<span class=\"d-top\">" + dIc("book", "#ffd54f", 30) + "<span class=\"d-k ar\" lang=\"ar\" dir=\"rtl\">حلقة سبارك</span></span><b>Halaqa Spark</b><small>Leer samen met je klas</small></button>" +
       '<button class="d-tile" data-act="rad">' + '<span class="d-top">' + dIc("wheel", "#ffd54f", 30) + '<span class="d-k ar" lang="ar" dir="rtl">عجلة العلم</span></span><b>Ajalat al-‘Ilm</b><small>Rad van Kennis</small></button>' +
@@ -8008,8 +8007,8 @@ return exports;})();
         bhBusy = false;
         if (r && r.error) { bhErr = /beheer_cijfers|function|PGRST202/i.test(String(r.error.message)) ? "De cijfers zijn nog niet klaar: het SQL-bestand moet nog één keer in Supabase worden uitgevoerd." : "Dat is niet gelukt: " + r.error.message; BH = null; }
         else { BH = r.data || null; bhAt = new Date(); }
-        if (screen === "beheer") render();
-      }).catch(function () { bhBusy = false; bhErr = "Geen verbinding. Probeer het opnieuw."; if (screen === "beheer") render(); });
+        bdDraw();
+      }).catch(function () { bhBusy = false; bhErr = "Geen verbinding. Probeer het opnieuw."; bdDraw(); });
     } catch (e) { bhBusy = false; bhErr = "Dat is niet gelukt."; }
   }
   function viewBeheer() {
@@ -8043,6 +8042,43 @@ return exports;})();
     h += '<p class="bd-ft">NurSpark Beheer · alleen zichtbaar voor de beheerder</p></main></div>';
     return h;
   }
+  /* v236: de beheerpagina ligt als een omgeslagen bladzijde rechts van het dashboard: veeg naar links om hem te openen, naar rechts om te sluiten */
+  function bdDraw() {
+    const w = document.getElementById("bdWrap"); if (!w) return;
+    const o = w.querySelector(".bd"), y = o ? o.scrollTop : 0;
+    w.innerHTML = viewBeheer();
+    const nw = w.querySelector(".bd"); if (nw) nw.scrollTop = y;
+  }
+  function bdOpen() {
+    if (!mkOwner() || document.getElementById("bdWrap")) return;
+    const w = document.createElement("div"); w.id = "bdWrap"; w.className = "bd-wrap";
+    w.setAttribute("role", "dialog"); w.setAttribute("aria-modal", "true"); w.setAttribute("aria-label", "Beheer");
+    document.body.appendChild(w); BH = null; bhErr = ""; bdDraw();
+    const b = w.querySelector(".bd-ib"); if (b) try { b.focus({ preventScroll: true }); } catch (e) {}
+  }
+  function bdClose() {
+    const w = document.getElementById("bdWrap"); if (!w || w.classList.contains("out")) return;
+    w.classList.add("out"); setTimeout(function () { if (w.parentNode) w.remove(); }, 340);
+  }
+  (function () {
+    let sx = 0, sy = 0, st = 0, mode = 0;
+    function hScroll(el) { while (el && el.nodeType === 1 && el !== document.body) { const c = getComputedStyle(el); if ((c.overflowX === "auto" || c.overflowX === "scroll") && el.scrollWidth > el.clientWidth + 2) return true; el = el.parentElement; } return false; }
+    document.addEventListener("touchstart", function (e) {
+      mode = 0; if (e.touches.length !== 1) return;
+      if (document.getElementById("bdWrap")) mode = 2;
+      else { if (screen !== "dash" || !mkOwner() || document.querySelector(".dialog-wrap")) return; mode = 1; }
+      if (e.target.closest && e.target.closest("textarea, input")) { mode = 0; return; }
+      if (mode === 1 && hScroll(e.target)) { mode = 0; return; }
+      sx = e.touches[0].clientX; sy = e.touches[0].clientY; st = Date.now();
+    }, { passive: true });
+    document.addEventListener("touchend", function (e) {
+      if (!mode) return; const m = mode; mode = 0;
+      const t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Date.now() - st > 900 || Math.abs(dx) < 70 || Math.abs(dy) > Math.abs(dx) * 0.6) return;
+      if (m === 1 && dx < 0) bdOpen(); else if (m === 2 && dx > 0) bdClose();
+    }, { passive: true });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") bdClose(); });
+  })();
   function viewKd() {
     let h = hubTop("Koran-dagboek", "kd-back", "", "Lees en reflecteer vers voor vers");
     if (!mkOwner()) return h + '<section class="hub"><p class="hub-intro">Dit onderdeel is er nog niet voor iedereen.</p></section>';
@@ -8280,13 +8316,12 @@ return exports;})();
     else if (screen === "qread") { app.innerHTML = viewQread(); afterQreadRender(); }
     else if (screen === "qj") { app.innerHTML = viewQj(); }
     else if (screen === "kd") { app.innerHTML = viewKd(); }
-    else if (screen === "beheer") { app.innerHTML = viewBeheer(); }
     const bw = document.getElementById("badgesBtnWrap");
     if (bw) bw.style.display = (screen === "board" || screen === "scores") ? "" : "none";
     window.scrollTo({ top: 0 });
     if (screen === "journey") document.body.classList.add("jfull");
     if (screen === "rad" || screen === "bazaar") document.body.classList.add("radfull");
-    if (screen === "dash" || screen === "hub" || screen === "lab" || screen === "labroom" || screen === "labquiz" || screen === "fout" || screen === "dua" || screen === "today" || screen === "prog" || screen === "quran" || screen === "qread" || screen === "qj" || screen === "kd" || screen === "beheer") document.body.classList.add("dashfull");
+    if (screen === "dash" || screen === "hub" || screen === "lab" || screen === "labroom" || screen === "labquiz" || screen === "fout" || screen === "dua" || screen === "today" || screen === "prog" || screen === "quran" || screen === "qread" || screen === "qj" || screen === "kd") document.body.classList.add("dashfull");
     if (screen === "rad" && rad && rad.phase !== "intro" && rad.phase !== "end") document.body.classList.add("radgame");
     if (kosmosOn() && KOS_SCREENS.indexOf(screen) !== -1) document.body.classList.add("kosmos");
     if (screen === "journey") afterJourneyRender();
@@ -13206,9 +13241,8 @@ return exports;})();
       case "qj-back": { qjAuto(); play("click"); if (qjFrom === "list") { screen = "kd"; render(); window.scrollTo({ top: 0 }); break; } const jp = String(qjKey).split(":"); qSurah = parseInt(jp[0], 10) || 1; qJump = parseInt(jp[1], 10) || 1; screen = "qread"; render(); break; }
       case "kd": if (!mkOwner()) break; play("click"); screen = "kd"; render(); window.scrollTo({ top: 0 }); break;
       case "kd-back": play("click"); screen = "dash"; render(); break;
-      case "beheer": if (!mkOwner()) break; play("click"); BH = null; bhErr = ""; screen = "beheer"; render(); window.scrollTo({ top: 0 }); break;
-      case "beheer-back": play("click"); screen = "dash"; render(); break;
-      case "beheer-refresh": if (!mkOwner()) break; play("click"); BH = null; bhErr = ""; render(); break;
+      case "beheer-back": play("click"); bdClose(); break;
+      case "beheer-refresh": if (!mkOwner()) break; play("click"); BH = null; bhErr = ""; bdDraw(); break;
       case "kd-open": { if (!mkOwner()) break; const ks = parseInt(el.dataset.s, 10) || 1, ka = parseInt(el.dataset.a, 10) || 1; play("click"); qjKey = ks + ":" + ka; qjFrom = "list"; kdSeen(ks, ka); screen = "qj"; render(); window.scrollTo({ top: 0 }); break; }
       case "qj-nav": { qjAuto(); const np = String(qjKey).split(":"), ns = parseInt(np[0], 10) || 1, na = (parseInt(np[1], 10) || 1) + (parseInt(el.dataset.d, 10) || 0), nn = Q_N[ns - 1]; play("click"); if (na > nn) { kdSeen(ns, nn); screen = "kd"; render(); window.scrollTo({ top: 0 }); break; } if (na < 1) break; qjKey = ns + ":" + na; kdSeen(ns, na); render(); window.scrollTo({ top: 0 }); break; }
       case "qj-save": { const jt = document.getElementById("qjText"); if (!jt) break; qjSet(qjKey, jt.value); play("correct"); const jm = document.getElementById("qjMsg"); if (jm) jm.textContent = "Bewaard op dit toestel"; announce("Bewaard"); break; }
