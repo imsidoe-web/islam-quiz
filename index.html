@@ -7641,7 +7641,7 @@ return exports;})();
   }
   /* v237: NurPlay, losse spellen (elk spel een kaart met voorbeeldplaatje) */
   const PLAY_GAMES = [{ id: "darb", name: "Darb an-Nur", ar: "دَرْب النُّور", src: "spel/darb-an-nur.html", sub: "Leid de gelovige door het licht-doolhof, weg van de duisternis.", tags: ["Doolhof", "Groot in beeld", "Geen muziek"], prev: "playPreview" },
-    { id: "tayyibat", name: "Tayyibat", ar: "طَيِّبَات", src: "spel/tayyibat.html", sub: "Tik op het halal eten en laat het bedorven eten liggen.", tags: ["Tikspel", "Edelstenen", "Geen muziek"], prev: "playPreviewFood" }];
+    { id: "tayyibat", name: "Tayyibat", ar: "طَيِّبَات", src: "spel/tayyibat.html", sub: "Tik op het halal eten en laat haram liggen. Ook een burger kan haram zijn: check het keurmerk!", tags: ["Tikspel", "Halal of haram", "Edelstenen"], prev: "playPreviewFood" }];
   function playPreview() {
     return '<svg viewBox="0 0 340 170" role="img" aria-label="Voorbeeld van het doolhof: de gelovige, gouden lichtjes en de rook van de shaytan"><rect width="340" height="170" fill="#16222e"/>' +
       '<g fill="none" stroke="#c9a46a" stroke-width="5" stroke-linecap="round"><rect x="14" y="12" width="312" height="146" rx="10"/><path d="M60 12V74M60 106V158M110 42H200M110 42V126M110 126H170M230 12V84M230 116V158M270 62H326M150 84H190"/></g>' +
@@ -7651,9 +7651,9 @@ return exports;})();
       '<g fill="#6a6e7a" opacity=".9"><ellipse cx="275" cy="92" rx="17" ry="13"/><ellipse cx="262" cy="101" rx="12" ry="9"/><ellipse cx="289" cy="102" rx="11" ry="9"/></g></svg>';
   }
   function playPreviewFood() {
-    const it = [["🍔", 62, 62], ["🍟", 170, 112], ["🍎", 270, 58], ["🍕", 108, 44], ["🥙", 232, 128]];
-    return '<svg viewBox="0 0 340 170" role="img" aria-label="Voorbeeld van het tikspel: vallend halal eten op borden"><rect width="340" height="170" fill="#14573f"/><g fill="#f0c94a" opacity=".25"><circle cx="30" cy="140" r="4"/><circle cx="310" cy="30" r="5"/><circle cx="200" cy="20" r="3"/><circle cx="20" cy="30" r="3"/></g>' +
-      it.map(function (x, i) { return '<circle cx="' + x[1] + '" cy="' + x[2] + '" r="30" fill="' + (i === 2 ? "#f6d25a" : "#f6ecd6") + '" stroke="#c9a24a" stroke-width="3"/><text x="' + x[1] + '" y="' + (x[2] + 11) + '" font-size="32" text-anchor="middle">' + x[0] + "</text>"; }).join("") + "</svg>";
+    const it = [["🍔", 70, 62, "halal"], ["🍔", 170, 112, "haram"], ["🍎", 270, 58, ""], ["🍕", 112, 128, "halal"], ["🥛", 250, 130, ""]];
+    return '<svg viewBox="0 0 340 170" role="img" aria-label="Voorbeeld van het tikspel: een burger met halal-label en een burger met haram-label"><rect width="340" height="170" fill="#14573f"/><g fill="#f0c94a" opacity=".25"><circle cx="30" cy="140" r="4"/><circle cx="310" cy="30" r="5"/><circle cx="200" cy="20" r="3"/><circle cx="20" cy="30" r="3"/></g>' +
+      it.map(function (x) { return '<circle cx="' + x[1] + '" cy="' + x[2] + '" r="30" fill="#f6ecd6" stroke="' + (x[3] === "haram" ? "#b5473b" : "#c9a24a") + '" stroke-width="3"/><text x="' + x[1] + '" y="' + (x[2] + (x[3] ? 2 : 11)) + '" font-size="30" text-anchor="middle">' + x[0] + "</text>" + (x[3] ? '<rect x="' + (x[1] - 21) + '" y="' + (x[2] + 10) + '" width="42" height="14" rx="7" fill="' + (x[3] === "halal" ? "#1f8a57" : "#c0392b") + '" stroke="#fff"/><text x="' + x[1] + '" y="' + (x[2] + 20.5) + '" font-size="8.5" font-weight="800" fill="#fff" text-anchor="middle">' + (x[3] === "halal" ? "HALAL" : "HARAM") + "</text>" : ""); }).join("") + "</svg>";
   }
   function viewPlay() {
     return hubTop("NurPlay", "dash", "", "Losse spellen voor tussendoor") + '<section class="pl-list">' + PLAY_GAMES.map(function (g) {

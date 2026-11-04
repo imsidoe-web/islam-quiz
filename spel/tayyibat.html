@@ -14,7 +14,7 @@ html, body { margin: 0; height: 100%; background: #0b2a1f; color: var(--tx); fon
 .pill { flex: 1; padding: 8px 12px; border-radius: 14px; background: rgba(255,255,255,.09); border: 1px solid rgba(255,255,255,.12); font-size: 13px; color: var(--mut); line-height: 1.2; }
 .pill b { display: block; font-size: 26px; color: var(--tx); font-weight: 800; font-variant-numeric: tabular-nums; }
 .hearts { display: flex; gap: 6px; margin-top: 4px; height: 32px; align-items: center; font-size: 24px; }
-.hearts i { font-style: normal; } .hearts i.off { opacity: .22; filter: grayscale(1); }
+.hearts i { font-style: normal; color: #ff6b6b; } .hearts i.off { opacity: .22; filter: grayscale(1); }
 #pauseBtn { flex: none; width: 64px; border-radius: 14px; border: 1px solid rgba(255,255,255,.16); background: rgba(255,255,255,.09); color: var(--tx); font-size: 26px; cursor: pointer; }
 #bar { height: 8px; margin: 0 12px; border-radius: 99px; background: rgba(255,255,255,.12); overflow: hidden; }
 #bar i { display: block; height: 100%; width: 100%; background: linear-gradient(90deg, #ffe27a, #e0a915); }
@@ -54,9 +54,9 @@ button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
 (function () {
   "use strict";
   var TOTAL = 60, MAXGEMS = 10;
-  /* halal eten (emoji, zonder gezichten) en bedorven eten om te laten liggen */
-  var GOOD = [["🍔", "hamburger"], ["🍟", "friet"], ["🍕", "pizza"], ["🍗", "kip"], ["🥙", "durum"], ["🍎", "appel"], ["🍌", "banaan"], ["🍇", "druiven"], ["🥛", "melk"], ["🥖", "brood"], ["🍉", "meloen"], ["🍪", "koekje"], ["🌯", "wrap"], ["🥗", "salade"]];
-  var BAD = [["🍎", "bedorven appel"], ["🍌", "bedorven banaan"], ["🥖", "beschimmeld brood"], ["🍇", "bedorven druiven"]];
+  /* PLAIN: altijd halal, geen label. PROC: bewerkt eten (burger, pizza, ...) kan halal of haram zijn; het label laat het zien. Geen gezichten en geen varkensplaatjes. */
+  var PLAIN = [["🍟", "friet"], ["🍎", "appel"], ["🍌", "banaan"], ["🍇", "druiven"], ["🥛", "melk"], ["🥖", "brood"], ["🍉", "meloen"], ["🍪", "koekje"], ["🥗", "salade"]];
+  var PROC = [["🍔", "hamburger"], ["🍕", "pizza"], ["🍗", "kip"], ["🌭", "worstje"], ["🥙", "durum"], ["🍬", "snoepjes"]];
   var cv = document.getElementById("cv"), ctx = cv.getContext("2d");
   var $ = function (id) { return document.getElementById(id); };
   var opt = { tempo: "normaal", sound: true };
@@ -77,7 +77,7 @@ button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
   }
   var sfx = { pop: function (c) { tone(520 + Math.min(c, 10) * 40, .14, .12); }, gold: function () { tone(880, .18, .14); setTimeout(function () { tone(1175, .22, .12); }, 90); }, bad: function () { tone(150, .3, .2); }, end: function () { tone(660, .2, .12); setTimeout(function () { tone(880, .3, .12); }, 160); } };
 
-  var W = 0, H = 0, dpr = 1, R = 40, state = "menu", items = [], parts = [], floats = [], score = 0, lives = 3, left = TOTAL, combo = 0, goodN = 0, spawnT = 0, last = 0, clock = 0;
+  var tip = null, W = 0, H = 0, dpr = 1, R = 40, state = "menu", items = [], parts = [], floats = [], score = 0, lives = 3, left = TOTAL, combo = 0, goodN = 0, spawnT = 0, last = 0, clock = 0;
 
   function resize() {
     var st = $("stage"); W = st.clientWidth; H = st.clientHeight; dpr = Math.min(window.devicePixelRatio || 1, 3);
@@ -86,11 +86,12 @@ button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
   }
   function mult() { return Math.min(3, 1 + Math.floor(combo / 5)); }
   function spawn() {
-    var bad = Math.random() < .22 + (TOTAL - left) / TOTAL * .1, src, gold = false;
-    if (bad) src = BAD[Math.floor(Math.random() * BAD.length)];
-    else { src = GOOD[Math.floor(Math.random() * GOOD.length)]; gold = (goodN + 1) % 8 === 0; }
+    var bad = Math.random() < .3 + (TOTAL - left) / TOTAL * .1, src, gold = false, tag = "";
+    if (bad) { src = PROC[Math.floor(Math.random() * PROC.length)]; tag = "haram"; }
+    else if (Math.random() < .5) { src = PROC[Math.floor(Math.random() * PROC.length)]; tag = "halal"; gold = (goodN + 1) % 8 === 0; }
+    else { src = PLAIN[Math.floor(Math.random() * PLAIN.length)]; gold = (goodN + 1) % 8 === 0; }
     var base = opt.tempo === "langzaam" ? 120 : 165, ramp = 1 + (TOTAL - left) / TOTAL * .7;
-    items.push({ x: R + Math.random() * (W - 2 * R), y: -R, vy: (base + Math.random() * 50) * ramp * (H / 700 > 1 ? 1 : Math.max(.8, H / 700)), e: src[0], n: src[1], bad: bad, gold: gold, rot: (Math.random() - .5) * .6, ph: Math.random() * 6 });
+    items.push({ x: R + Math.random() * (W - 2 * R), y: -R, vy: (base + Math.random() * 50) * ramp * (H / 700 > 1 ? 1 : Math.max(.8, H / 700)), e: src[0], n: src[1] + (tag === "halal" ? " met halal-keurmerk" : tag === "haram" ? ", haram" : ""), tag: tag, bad: bad, gold: gold, rot: (Math.random() - .5) * .6, ph: Math.random() * 6 });
     if (!bad) goodN++;
   }
   function pop(it, col) {
@@ -103,7 +104,7 @@ button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
     if (best === null) return;
     var it2 = items.splice(best, 1)[0];
     if (it2.bad) {
-      lives--; combo = 0; sfx.bad(); buzz(80); pop(it2, "120,160,90"); floats.push({ x: it2.x, y: it2.y, life: 1, txt: "Bedorven!", col: "255,150,130" }); say(it2.n + ". Je hebt nog " + lives + " kansen.");
+      lives--; combo = 0; sfx.bad(); buzz(80); pop(it2, "230,110,100"); floats.push({ x: it2.x, y: it2.y, life: 1, txt: "Haram!", col: "255,150,130" }); tip = { t: "Check altijd het halal-keurmerk", l: 2.2 }; say("Haram. Check altijd het halal-keurmerk. Je hebt nog " + lives + " kansen.");
       if (lives <= 0) { finish(); return; }
     } else {
       combo++; var pts = (it2.gold ? 30 : 10) * mult(); score += pts; goodN += 0; it2.gold ? sfx.gold() : sfx.pop(combo); buzz(15); pop(it2, it2.gold ? "255,226,122" : "255,244,200");
@@ -133,15 +134,16 @@ button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
     ctx.save(); ctx.translate(x, y); ctx.rotate(it.rot * Math.sin(it.ph * 2) * .5);
     if (it.gold) { ctx.shadowColor = "rgba(255,226,122,.95)"; ctx.shadowBlur = R * .6; }
     var g = ctx.createRadialGradient(-r * .3, -r * .35, 0, 0, 0, r);
-    if (it.bad) { g.addColorStop(0, "#d7cfb8"); g.addColorStop(1, "#8d8a6b"); } else { g.addColorStop(0, "#fffaf0"); g.addColorStop(1, it.gold ? "#f6d25a" : "#eadfc3"); }
+    g.addColorStop(0, "#fffaf0"); g.addColorStop(1, it.gold ? "#f6d25a" : "#eadfc3");
     ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, r, 0, 7); ctx.fill(); ctx.shadowBlur = 0;
-    ctx.strokeStyle = it.gold ? "#d9a227" : it.bad ? "#6b6a4a" : "#c9a24a"; ctx.lineWidth = Math.max(2, r * .07); ctx.stroke();
+    ctx.strokeStyle = it.gold ? "#d9a227" : it.bad ? "#b5473b" : "#c9a24a"; ctx.lineWidth = Math.max(2, r * .07); ctx.stroke();
     ctx.font = Math.round(r * 1.05) + 'px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif'; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    if (it.bad) { try { ctx.filter = "grayscale(.75) sepia(.7) brightness(.6)"; } catch (e) {} }
-    ctx.fillText(it.e, 0, r * .06);
-    try { ctx.filter = "none"; } catch (e) {}
-    if (it.bad) {
-      ctx.fillStyle = "rgba(96,130,60,.8)"; [[-.28, -.1, .13], [.2, .15, .1], [.05, -.3, .08], [-.1, .28, .09]].forEach(function (s) { ctx.beginPath(); ctx.arc(s[0] * r, s[1] * r, s[2] * r, 0, 7); ctx.fill(); });
+    ctx.fillText(it.e, 0, -r * .08);
+    if (it.tag) {
+      var bw = r * 1.25, bh = r * .4, by = r * .52, ok = it.tag === "halal";
+      ctx.fillStyle = ok ? "#1f8a57" : "#c0392b"; ctx.strokeStyle = "#fff"; ctx.lineWidth = Math.max(1.5, r * .04);
+      ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-bw / 2, by - bh / 2, bw, bh, bh / 2) : ctx.rect(-bw / 2, by - bh / 2, bw, bh); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = "#fff"; ctx.font = "800 " + Math.round(r * .27) + "px sans-serif"; ctx.textBaseline = "middle"; ctx.fillText(ok ? "HALAL" : "HARAM", 0, by + r * .01);
     }
     ctx.restore();
   }
@@ -153,6 +155,7 @@ button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
     for (var i = 0; i < items.length; i++) plate(items[i].x, items[i].y, items[i]);
     var j; for (j = parts.length - 1; j >= 0; j--) { var a = parts[j]; a.x += a.vx * dt; a.y += a.vy * dt; a.vy += 220 * dt; a.life -= dt; if (a.life <= 0) { parts.splice(j, 1); continue; } ctx.fillStyle = "rgba(" + a.col + "," + Math.min(1, a.life * 1.6) + ")"; ctx.beginPath(); ctx.arc(a.x, a.y, 3.5, 0, 7); ctx.fill(); }
     for (j = floats.length - 1; j >= 0; j--) { var f = floats[j]; f.life -= dt; f.y -= dt * 50; if (f.life <= 0) { floats.splice(j, 1); continue; } ctx.fillStyle = "rgba(" + f.col + "," + Math.min(1, f.life * 1.5) + ")"; ctx.font = "800 " + Math.round(R * .5) + "px sans-serif"; ctx.textAlign = "center"; ctx.fillText(f.txt, f.x, f.y - R); }
+    if (tip) { tip.l -= dt; if (tip.l <= 0) tip = null; else { ctx.fillStyle = "rgba(192,57,43," + Math.min(.92, tip.l * 1.5) + ")"; var tw = Math.min(W - 24, 300), th = R * .8; ctx.fillRect ? 0 : 0; ctx.beginPath(); ctx.roundRect ? ctx.roundRect((W - tw) / 2, H - th - 16, tw, th, th / 2) : ctx.rect((W - tw) / 2, H - th - 16, tw, th); ctx.fill(); ctx.fillStyle = "#fff"; ctx.font = "800 " + Math.round(R * .34) + "px sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(tip.t, W / 2, H - th / 2 - 16); } }
     if (state === "play" && mult() > 1) { ctx.fillStyle = "rgba(255,226,122,.9)"; ctx.font = "800 " + Math.round(R * .6) + "px sans-serif"; ctx.textAlign = "right"; ctx.fillText("x" + mult(), W - 12, R * .7); }
   }
   function loop(ts) {
@@ -171,20 +174,20 @@ button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
   function showOv(kind, gems) {
     var p = $("panel"), h = "";
     if (kind === "menu") {
-      h = '<div class="ar" lang="ar" dir="rtl">طَيِّبَات</div><h1 id="ovT">Tayyibat</h1><p><i>Het goede eten</i></p><p>Tik op het <b>halal eten</b> dat naar beneden valt. Laat het <b>bedorven eten</b> liggen. Elke 5 goede tikken achter elkaar geven meer punten.</p>' +
+      h = '<div class="ar" lang="ar" dir="rtl">طَيِّبَات</div><h1 id="ovT">Tayyibat</h1><p><i>Het goede eten</i></p><p>Tik op het eten met het groene <b>HALAL</b>-label en op fruit, brood en melk. Laat eten met het rode <b>HARAM</b>-label liggen. Ook een burger kan haram zijn: let op het keurmerk! Elke 5 goede tikken achter elkaar geven meer punten.</p>' +
         '<div class="opt">Tempo</div>' + segBtns("tempo", [["langzaam", "Langzaam"], ["normaal", "Normaal"]]) +
         '<div class="opt">Geluid</div>' + segBtns("sound", [["true", "Aan"], ["false", "Uit"]]) +
         '<button class="go" data-a="start">Start</button><button class="go ghost" data-a="exit">Terug naar NurPlay</button>';
     } else if (kind === "pause") {
       h = '<h1 id="ovT">Pauze</h1><button class="go" data-a="resume">Verder spelen</button><button class="go ghost" data-a="menu">Instellingen</button><button class="go ghost" data-a="exit">Terug naar NurPlay</button>';
     } else {
-      h = '<div class="ar" lang="ar" dir="rtl">ما شاء الله</div><h1 id="ovT">' + (lives > 0 ? "Mooi gedaan!" : "Goed geprobeerd!") + '</h1><p>Punten: <b>' + score + '</b></p><p>' + (gems ? "Je krijgt tot " + gems + " edelstenen (maximaal 20 per dag uit NurPlay)." : "Nog geen edelstenen. Probeer het nog eens, je kunt het.") + '</p><button class="go" data-a="start">Nog een keer</button><button class="go ghost" data-a="exit">Terug naar NurPlay</button>';
+      h = '<div class="ar" lang="ar" dir="rtl">ما شاء الله</div><h1 id="ovT">' + (lives > 0 ? "Mooi gedaan!" : "Goed geprobeerd!") + '</h1><p>Punten: <b>' + score + '</b></p><p>' + (gems ? "Je krijgt tot " + gems + " edelstenen (maximaal 20 per dag uit NurPlay)." : "Nog geen edelstenen. Probeer het nog eens, je kunt het.") + '</p><p><small>Tip: een burger kan halal én haram zijn. Check altijd het halal-keurmerk.</small></p><button class="go" data-a="start">Nog een keer</button><button class="go ghost" data-a="exit">Terug naar NurPlay</button>';
     }
     p.innerHTML = h; $("ov").hidden = false;
     var b = p.querySelector(".go"); if (b) b.focus();
   }
   function hideOv() { $("ov").hidden = true; }
-  function startGame() { items = []; parts = []; floats = []; score = 0; lives = 3; left = TOTAL; combo = 0; goodN = 0; spawnT = .3; resize(); updHud(); hideOv(); state = "play"; ac(); say("Het spel begint. Tik op het halal eten."); }
+  function startGame() { items = []; parts = []; floats = []; tip = null; score = 0; lives = 3; left = TOTAL; combo = 0; goodN = 0; spawnT = .3; resize(); updHud(); hideOv(); state = "play"; ac(); say("Het spel begint. Tik op het halal eten en laat haram liggen."); }
   function pause() { if (state !== "play") return; state = "pause"; showOv("pause"); }
 
   $("panel").addEventListener("click", function (e) {
