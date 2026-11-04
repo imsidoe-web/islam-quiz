@@ -8793,6 +8793,8 @@ return exports;})();
     const FAMILY = [["fam-man", "Man"], ["fam-vrouw", "Vrouw"], ["fam-jongen", "Jongen"], ["fam-meisje", "Meisje"], ["fam-tjongen", "Tiener jongen"], ["fam-tmeisje", "Tiener meisje"]].map((x) => ({ id: x[0], n: x[1], bg: ["#f2ead7", "#e6dcc0"], need: 0, art: "", img: "avatars/" + x[0] + ".webp" }));   /* tekenfiguren zonder gezicht; vanaf het begin te kiezen */
     /* v224: dieren en voorwerpen staan voor de groene boog; de man is het eigen plaatje (boog zit erin) */
     ANIMALS.concat(THINGS).forEach((a) => { a.arch = true; });
+    const FNEED = { "fam-man": 8, "fam-vrouw": 14, "fam-jongen": 22, "fam-meisje": 35, "fam-tjongen": 45, "fam-tmeisje": 60 };
+    FAMILY.forEach((a) => { a.need = FNEED[a.id]; });
     FAMILY.forEach((a) => { a.arch = true; a.img = "avatars/" + a.id + "-boog.webp"; });
     PEOPLE.forEach((a) => { a.arch = true; a.clip = true; });
     const ALL = ANIMALS.concat(PEOPLE, THINGS, FAMILY);
