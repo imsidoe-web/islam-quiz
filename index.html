@@ -12268,7 +12268,7 @@ return exports;})();
     h += '<header class="j-head"><div class="jh-pw"><button class="jh-player jh-av" data-act="avatar-pick" data-id="' + P.id + '" aria-label="Kies je avatar">' + avatarHtml(P, 30) + '</button><div class="jh-who"><button class="jh-player" data-act="players" aria-label="Speler: ' + nm + '. Wissel van speler"><span>' + nm + "</span></button>" +
       '<button class="jh-modesub ' + level + '" data-act="switch-mode" aria-label="Modus wisselen. Nu: ' + modeName(level) + '. Tik om te kiezen">' + icon(MODE_ICON[level], 13) + "<span>" + modeName(level) + '</span><i aria-hidden="true">▾</i></button></div></div>' +
       '<div class="jh-stats" role="group" aria-label="Jouw punten in de ' + modeName(level) + '-modus">' + lifeBtnHtml() + '<button class="gem jh-gembtn" data-act="bazaar" aria-label="' + gems + ' edelstenen. Open de bazaar">' + gemSvg(26) + "<b>" + gems + '</b><i class="jh-plus" aria-hidden="true">+</i></button><button class="jh-gembtn jh-coin" data-act="coin-info" aria-label="' + coinsAt(P) + ' NurSpark-munten. Tik voor uitleg">' + coinImg(30) + "<b>" + coinsAt(P) + '</b></button></div>' +
-      '<button class="jh-gear" data-act="settings" aria-label="Instellingen">' + icon("gear", 20) + "</button></header>";
+      "</header>";
     /* v124: smalle land-balk; naam en voortgang wisselen mee met het land dat in beeld is */
     h += '<div class="j-shield jbar" style="--accent:' + c.color + '" role="status" aria-live="polite" id="jBar">' + jBarInner(i) + "</div>";
     h += '<div id="jPresence" class="j-presence" role="status" hidden></div>';
@@ -12282,7 +12282,7 @@ return exports;})();
       '<button class="jn-item" data-act="board"><span class="jn-ic" aria-hidden="true">🏆</span>Score</button>' +
       '<button class="jn-item" data-act="album" aria-label="' + (albumTotal(level) ? "Kwartet-album, " + albumOwned(level) + " van " + albumTotal(level) + " kaarten" : "Kwartet-album, komt later in Beginner") + '"><span class="jn-ic" aria-hidden="true">🎴</span>Album' + albumCountHtml(level) + "</button>" +
       '<button class="jn-item" data-act="group"><span class="jn-ic" aria-hidden="true">👥</span>Groep</button>' +
-      '<a class="jn-item wa" href="' + waLink(shareJourneyText()) + '" target="_blank" rel="noopener" aria-label="Deel mijn Reis via WhatsApp"><span class="jn-ic" aria-hidden="true">💬</span>Delen</a>' +
+      '<button class="jn-item" data-act="settings" aria-label="Instellingen"><span class="jn-ic" aria-hidden="true">⚙️</span>Instellingen</button>' +
       "</div></nav>";
     h += streakPillHtml() + radJourneyBtn() + bazaarMapBtn();
     h += '<div class="j-toast" id="jToast" role="status"></div>';
