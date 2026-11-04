@@ -11547,11 +11547,11 @@ return exports;})();
   function avatarDialog(pid) {
     const p = S.players.find(function (x) { return x.id === pid; }) || P; if (!p) return;
     const old = document.getElementById("avDlg"); if (old) old.remove();
-    avTab = p.mode === "expert" ? "people" : "animals";   /* Beginner en Gevorderd starten bij de dieren */
+    avTab = "people";   /* de avatar-kiezer start altijd bij Mensen */
     const fresh = {}, seen = p.avSeen || {};
     AVATARS.ALL.forEach(function (a) { if (a.need > 0 && avUnlocked(p, a) && !seen[a.id]) fresh[a.id] = true; });
     const w = document.createElement("div"); w.className = "dialog-wrap"; w.id = "avDlg";
-    const TABS = [["animals", "Dieren"], ["people", "Mensen"], ["things", "Dingen"]];
+    const TABS = [["people", "Mensen"], ["animals", "Dieren"], ["things", "Dingen"]];
     function paint() {
       const list = avTab === "animals" ? AVATARS.ANIMALS : avTab === "people" ? AVATARS.FAMILY.concat(AVATARS.PEOPLE) : AVATARS.THINGS, done = levelsDone(p), cur = avOf(p);
       const open = list.filter(function (a) { return avUnlocked(p, a); }).length, hasPh = !!(p.photo && /^https:\/\//i.test(p.photo));
