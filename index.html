@@ -2545,6 +2545,13 @@ body.mk-typing .mk-res{gap:8px}
 @media (prefers-reduced-motion: reduce) { .j-head .jh-coin .ns-coin { animation: none; } }
 @media (max-width: 400px) { .j-head .jh-stats > .jh-lifebtn, .j-head .jh-stats > .jh-gembtn { padding: 3px 6px 3px 3px; } .j-head .jh-stats { gap: 4px; } }
 
+/* v221: knop Mijn plek */
+.j-here { position: fixed; z-index: 29; right: 12px; bottom: calc(98px + env(safe-area-inset-bottom, 0px)); display: inline-flex; align-items: center; gap: 6px; padding: 9px 14px; border-radius: 999px; border: 2px solid #E3B94F; cursor: pointer; font: inherit; font-weight: 900; font-size: .88rem; color: #3A2A05; background: linear-gradient(#FFE79A, #D9A21F); box-shadow: inset 0 2px 0 rgba(255,255,255,.6), 0 3px 0 #8A6A1C, 0 6px 10px rgba(0,0,0,.35); }
+.j-here[hidden] { display: none; }
+.j-here b { font-size: 1.1rem; line-height: 1; }
+.j-here:active { transform: scale(.94); }
+.j-here:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+@media (min-width: 700px) { .j-here { right: calc(50vw - 280px + 12px); } }
 </style>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=3">
@@ -12250,6 +12257,14 @@ return exports;})();
     if (k < 0 || k === jBarShown) return;
     jBarShown = k; bar.innerHTML = jBarInner(k); bar.style.setProperty("--accent", landsFor(P.mode)[k].color);
   }
+  /* v221: knop "Mijn plek": verschijnt zodra je level uit beeld is en brengt je er in één tik terug */
+  function jHereSync() {
+    const b = document.getElementById("jHere"); if (!b) return;
+    const cur = document.querySelector(".j-current"); if (!cur) { b.hidden = true; return; }
+    const r = cur.getBoundingClientRect(), up = r.bottom < 150, down = r.top > innerHeight - 110;
+    b.hidden = !(up || down);
+    const a = b.firstChild; if (a) a.textContent = up ? "↑" : "↓";
+  }
   function viewJourney() {
     const LS = landsFor(P.mode);
     if (journeyLand === null || journeyLand >= LS.length) journeyLand = defaultLand();
@@ -12285,6 +12300,7 @@ return exports;})();
       '<button class="jn-item" data-act="settings" aria-label="Instellingen"><span class="jn-ic" aria-hidden="true">⚙️</span>Instellingen</button>' +
       "</div></nav>";
     h += streakPillHtml() + radJourneyBtn() + bazaarMapBtn();
+    h += '<button class="j-here" id="jHere" data-act="journey-here" hidden aria-label="Terug naar waar je was gebleven"><b aria-hidden="true">↑</b><span>Mijn plek</span></button>';
     h += '<div class="j-toast" id="jToast" role="status"></div>';
     return h;
   }
@@ -12392,9 +12408,9 @@ return exports;})();
       if (m.dataset.from !== m.dataset.to) { play("swoosh"); requestAnimationFrame(function () { requestAnimationFrame(function () { m.style.transform = "translate(" + to[0] + "px," + to[1] + "px)"; }); }); }
     }
     const cur = document.querySelector(".j-current") || document.querySelector('.jl-land[data-li="' + journeyLand + '"]');
-    if (cur && cur.scrollIntoView) setTimeout(function () { cur.scrollIntoView({ block: "center", behavior: "auto" }); jBarShown = -1; jBarSync(); }, 30);
+    if (cur && cur.scrollIntoView) setTimeout(function () { cur.scrollIntoView({ block: "center", behavior: "auto" }); jBarShown = -1; jBarSync(); jHereSync(); }, 60);
     const jsc = document.querySelector(".jmap-scroll.jreis");
-    if (jsc && !jsc.dataset.bs) { jsc.dataset.bs = 1; jsc.addEventListener("scroll", function () { if (!jsc._raf) jsc._raf = requestAnimationFrame(function () { jsc._raf = 0; jBarSync(); }); }, { passive: true }); }
+    if (jsc && !jsc.dataset.bs) { jsc.dataset.bs = 1; jsc.addEventListener("scroll", function () { if (!jsc._raf) jsc._raf = requestAnimationFrame(function () { jsc._raf = 0; jBarSync(); jHereSync(); }); }, { passive: true }); }
   }
 
   function viewBoard() {
@@ -13079,6 +13095,7 @@ return exports;})();
       case "read-aloud": if (quiz) { const it = quiz.items[quiz.idx]; speak(quiz.answered ? feedbackSpeech(it) : questionSpeech(it)); } break;
       case "duff-toggle": duffToggle(); break;
       case "settings": case "a11y": play("click"); settingsDialog(); break;
+      case "journey-here": { play("click"); const hc = document.querySelector(".j-current"); if (hc && hc.scrollIntoView) hc.scrollIntoView({ block: "center", behavior: reducedMotion() ? "auto" : "smooth" }); break; }
       case "profile-menu": play("click"); profileMenu(); break;
       case "move-out": play("click"); moveDialog(); break;
       case "colofon": play("click"); colofonDialog(); break;
