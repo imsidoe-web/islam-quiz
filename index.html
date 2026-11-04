@@ -2197,13 +2197,15 @@ body.dashfull { background: #0f2e22; color: #f4efe2; }
 .d-tile.kd { grid-column: 1 / -1; padding: 0; gap: 0; min-height: 0; overflow: hidden; position: relative; background: #f6f1e6; color: #1e2b24; border: 2px solid #f2c94c; }   /* Koran-dagboek-tegel (alleen beheerder) */
 .d-tile.kd img { display: block; width: 100%; height: auto; aspect-ratio: 1024 / 572; object-fit: cover; }
 .d-tile.kd .kd-tx { display: flex; flex-direction: column; gap: 2px; padding: 12px 16px 14px; }
-.d-tile.kd b { color: #1b4332; font-size: 1.2rem; } .d-tile.kd small { color: #5c5c48; }
+.d-tile.kd { background: #1b4332; color: #f4efe2; }
+.d-tile.kd b { background: none; -webkit-background-clip: border-box; background-clip: border-box; color: #f6ecd0; font-size: 1.2rem; } .d-tile.kd small { color: #dfe9e1; font-size: .85rem; }
 .d-tile.kd .kd-badge { position: absolute; top: 10px; right: 10px; background: rgba(15,46,34,.88); color: #ffd54f; font-size: .72rem; font-weight: 800; padding: 4px 10px; border-radius: 999px; }
 .qs { background: #f6f1e6; color: #1e2b24; border-radius: 24px; padding: 16px 16px 18px; margin: 8px 7px; }
 .qs-top { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
 .qs-bar { flex: 1; height: 4px; background: #e4dcc8; border-radius: 4px; overflow: hidden; } .qs-bar i { display: block; height: 100%; background: #a8893f; }
 .qs-top small { font-weight: 800; color: #6e7468; font-size: .78rem; }
 .qs-fav { appearance: none; border: 0; background: none; font-size: 1.5rem; line-height: 1; color: #a8893f; cursor: pointer; min-width: 44px; min-height: 44px; }
+.qs-img-w { margin: 18px 0 0; }
 .qs-img { display: block; width: 100%; height: auto; aspect-ratio: 1024 / 572; object-fit: cover; border-radius: 16px; margin: 0 0 14px; }
 .qs-ar { text-align: center; padding: 4px 0 8px; }
 .qs h2 { font-size: 1.05rem; font-weight: 800; color: #1f4d3a; margin: 16px 0 4px; }
@@ -7866,6 +7868,23 @@ return exports;})();
   }
   /* ── Koran-dagboek (voorlopig alleen beheerder): uitleg, reflectie en journalvragen per vers. Eigen notities blijven alleen op dit toestel. ── */
   let QJ = null, qjLoading = false, qjErr = false, qjKey = "", qjFrom = "reader";
+  /* Koran-dagboek: swipen naar het vorige of volgende vers */
+  (function () {
+    let sx = 0, sy = 0, st = 0, ok = false;
+    document.addEventListener("touchstart", function (e) {
+      ok = false;
+      if (screen !== "qj" || e.touches.length !== 1) return;
+      if (e.target.closest && e.target.closest("textarea, input, button, a")) return;
+      sx = e.touches[0].clientX; sy = e.touches[0].clientY; st = Date.now(); ok = true;
+    }, { passive: true });
+    document.addEventListener("touchend", function (e) {
+      if (!ok) return; ok = false;
+      const t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Date.now() - st > 800 || Math.abs(dx) < 60 || Math.abs(dy) > Math.abs(dx) * 0.6) return;
+      const b = document.querySelector('[data-act="qj-nav"][data-d="' + (dx < 0 ? "1" : "-1") + '"]');
+      if (b) b.click();
+    }, { passive: true });
+  })();
   function qjLoad() {
     if (QJ || qjLoading) return;
     qjLoading = true; qjErr = false;
@@ -7910,7 +7929,7 @@ return exports;})();
     h += '<section class="hub"><div class="qs"><div class="qs-top">' +
       (nav ? '<span class="qs-bar" role="progressbar" aria-valuemin="0" aria-valuemax="' + n + '" aria-valuenow="' + a + '"><i style="width:' + Math.round(a / n * 100) + '%"></i></span><small>Vers ' + a + " van " + n + "</small>" : '<span class="qs-bar"></span>') +
       '<button class="qs-fav" data-act="qj-fav" aria-label="Favoriet">' + (fav ? "★" : "☆") + "</button></div>" +
-      '<img class="qs-img" src="journaal/lezer.webp" alt="Rustige illustratie van iemand die de Koran leest bij een raam" width="1024" height="572">' +
+      '<img class="qs-img" src="journaal/' + ((c && /^[a-z0-9-]+$/.test(c.i || "")) ? c.i : "lezer") + '.webp" alt="Rustige illustratie bij dit vers" width="1024" height="572" onerror="if(!this.dataset.f){this.dataset.f=1;this.src=\'journaal/lezer.webp\'}">' +
       '<div class="qs-ar"><div class="q-text q-s' + (S.qSize || 3) + '" lang="ar" dir="rtl">' + ar + "</div></div>";
     if (c) {
       h += "<h2>Uitleg</h2><p>" + esc(c.u || "") + "</p>";
@@ -7919,6 +7938,7 @@ return exports;})();
     } else {
       h += "<p>" + (qjErr ? "Uitleg en reflectie konden niet geladen worden." : "Uitleg en reflectie voor dit vers volgen nog.") + "</p>";
     }
+    h += '<img class="qs-img qs-img-w" src="journaal/schrijver.webp" alt="Rustige illustratie van iemand die in een journal schrijft" width="1024" height="572" loading="lazy" onerror="this.remove()">';
     h += '<div class="qj-card"><h2>Mijn journal</h2>';
     if (c && c.v && c.v.length) h += c.v.map(function (q, i) { return '<p class="qj-q">' + (i + 1) + ". " + esc(q) + "</p>"; }).join("");
     h += '<textarea class="qj-ta" id="qjText" aria-label="Schrijf hier je gedachten" placeholder="Schrijf hier je gedachten…">' + esc(qjGet(qjKey)) + '</textarea>' +
