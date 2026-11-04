@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="robots" content="noindex">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<title>Nachtdoolhof – spelproef</title>
+<title>Darb an-Nur</title>
 <style>
 :root { --tx: #f3efe0; --mut: #b9b4c8; --gold: #f2c94c; }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -71,6 +71,7 @@ button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
   var $ = function (id) { return document.getElementById(id); };
   var opt = { size: "normaal", tempo: "normaal", ctrl: "vegen", sound: true };
   try { var sv = JSON.parse(localStorage.getItem("nd_opt") || "{}"); for (var k in sv) if (k in opt) opt[k] = sv[k]; } catch (e) {}
+  try { if (new URLSearchParams(location.search).get("snd") === "0") opt.sound = false; } catch (e) {}
   function saveOpt() { try { localStorage.setItem("nd_opt", JSON.stringify(opt)); } catch (e) {} }
 
   /* ───── geluid: alleen zachte effecten, geen muziek ───── */
@@ -271,7 +272,7 @@ button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
     var i, g, q;
     for (i = 0; i < G.gh.length; i++) { g = G.gh[i]; if (g.state === "gone") continue; q = pos(g); drawGhost((q.x + .5) * tile, (q.y + .5) * tile, g, clock + i); }
     var p = G.pac, pp = pos(p), blink = G.inv > 0 && Math.floor(clock * 10) % 2 === 0;
-    drawHero((pp.x + .5) * tile, (pp.y + .5) * tile, tile * 1.6, G.face, !!(p.dx || p.dy), clock, blink ? .35 : 1);
+    drawHero((pp.x + .5) * tile, (pp.y + .5) * tile, tile * 1.9, G.face, !!(p.dx || p.dy), clock, blink ? .35 : 1);
     for (i = parts.length - 1; i >= 0; i--) { var a = parts[i]; a.x += a.vx * dt; a.y += a.vy * dt; a.life -= dt; if (a.life <= 0) { parts.splice(i, 1); continue; } ctx.fillStyle = "rgba(" + a.col + "," + Math.min(1, a.life * 1.6) + ")"; ctx.beginPath(); ctx.arc(a.x * tile, a.y * tile, tile * .07, 0, 7); ctx.fill(); }
     for (i = floats.length - 1; i >= 0; i--) { var f = floats[i]; f.life -= dt; f.y -= dt * .8; if (f.life <= 0) { floats.splice(i, 1); continue; } ctx.fillStyle = "rgba(255,226,122," + f.life + ")"; ctx.font = "600 " + Math.round(tile * .5) + "px sans-serif"; ctx.textAlign = "center"; ctx.fillText(f.txt, f.x * tile, f.y * tile); }
   }
@@ -293,18 +294,18 @@ button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
   function showOv(kind) {
     var p = $("panel"), h = "";
     if (kind === "menu") {
-      h = '<div class="ar" lang="ar" dir="rtl">بسم الله</div><h1 id="ovT">Nachtdoolhof</h1><p>Verzamel alle gouden lichtjes. Pak het <b>Adhaan-licht</b> en de shayatin verdwijnen in rook.</p><p>Veeg over het scherm om te lopen.</p>' +
+      h = '<div class="ar" lang="ar" dir="rtl">دَرْب النُّور</div><h1 id="ovT">Darb an-Nur</h1><p><i>Pad van het Licht</i></p><p>Verzamel alle gouden lichtjes. Pak het <b>Adhaan-licht</b> en de shayatin verdwijnen in rook.</p><p>Veeg over het scherm om te lopen.</p>' +
         '<div class="opt">Grootte</div>' + segBtns("size", [["normaal", "Normaal"], ["groot", "Extra groot"]]) +
         '<div class="opt">Tempo</div>' + segBtns("tempo", [["langzaam", "Langzaam"], ["normaal", "Normaal"]]) +
         '<div class="opt">Besturing</div>' + segBtns("ctrl", [["vegen", "Vegen"], ["knoppen", "Knoppen"]]) +
         '<div class="opt">Geluid</div>' + segBtns("sound", [["true", "Aan"], ["false", "Uit"]]) +
-        '<button class="go" data-a="start">Start</button>';
+        '<button class="go" data-a="start">Start</button><button class="go ghost" data-a="exit">Terug naar NurPlay</button>';
     } else if (kind === "pause") {
-      h = '<h1 id="ovT">Pauze</h1><button class="go" data-a="resume">Verder spelen</button><button class="go ghost" data-a="menu">Instellingen</button>';
+      h = '<h1 id="ovT">Pauze</h1><button class="go" data-a="resume">Verder spelen</button><button class="go ghost" data-a="menu">Instellingen</button><button class="go ghost" data-a="exit">Terug naar NurPlay</button>';
     } else if (kind === "end-win") {
-      h = '<div class="ar" lang="ar" dir="rtl">ما شاء الله</div><h1 id="ovT">Alle lichtjes verzameld</h1><p>Punten: <b>' + G.score + '</b></p><button class="go" data-a="start">Nog een keer</button><button class="go ghost" data-a="menu">Instellingen</button>';
+      h = '<div class="ar" lang="ar" dir="rtl">ما شاء الله</div><h1 id="ovT">Alle lichtjes verzameld</h1><p>Punten: <b>' + G.score + '</b></p><button class="go" data-a="start">Nog een keer</button><button class="go ghost" data-a="exit">Terug naar NurPlay</button>';
     } else {
-      h = '<h1 id="ovT">Geen levens meer</h1><p>Je hebt <b>' + G.score + '</b> punten. Probeer het nog eens, je kunt het.</p><button class="go" data-a="start">Opnieuw</button><button class="go ghost" data-a="menu">Instellingen</button>';
+      h = '<h1 id="ovT">Geen levens meer</h1><p>Je hebt <b>' + G.score + '</b> punten. Probeer het nog eens, je kunt het.</p><button class="go" data-a="start">Opnieuw</button><button class="go ghost" data-a="exit">Terug naar NurPlay</button>';
     }
     p.innerHTML = h; $("ov").hidden = false;
     var b = p.querySelector(".go"); if (b) b.focus();
@@ -324,6 +325,7 @@ button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
     if (a === "start") startGame();
     else if (a === "resume") { hideOv(); state = "play"; }
     else if (a === "menu") { state = "menu"; showOv("menu"); }
+    else if (a === "exit") { try { if (window.parent !== window) parent.postMessage({ nurspark: 1, type: "close" }, location.origin); else history.back(); } catch (e) {} }
   });
   $("pauseBtn").addEventListener("click", pause);
   document.addEventListener("visibilitychange", function () { if (document.hidden) pause(); });
