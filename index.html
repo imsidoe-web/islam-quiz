@@ -7520,7 +7520,7 @@ return exports;})();
     return '<section class="dash">' + h + "</section>";
   }
   function afterDashRender() {
-    maybeNurPlayNews();
+    maybeNurPlayNews(0);
     clearInterval(dashTick);
     calTickStart();
     dashTick = setInterval(function () {
@@ -7615,11 +7615,11 @@ return exports;})();
   }
 
   /* v238: eenmalig per speler: attentie voor het nieuwe spel in NurPlay, met knop om meteen te proberen */
-  function maybeNurPlayNews() {
+  function maybeNurPlayNews(tries) {
     if (!P || !P.mode || P.npSeen || screen !== "dash") return;
     setTimeout(function () {
       if (!P || P.npSeen || screen !== "dash") return;
-      if (document.querySelector(".bm-wrap, .dialog-wrap, .bonus-ov, .tour, [role=dialog]")) return;
+      if (document.querySelector(".bm-wrap, .dialog-wrap, .bonus-ov, .modal-overlay:not(.hidden), .badges-modal.active")) { if ((tries || 0) < 6) maybeNurPlayNews((tries || 0) + 1); return; }
       P.npSeen = 1; saveState();
       const prevFocus = document.activeElement;
       const w = document.createElement("div"); w.className = "bm-wrap"; w.id = "npWrap";
