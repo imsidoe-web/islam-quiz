@@ -2558,6 +2558,12 @@ body.mk-typing .mk-res{gap:8px}
 .j-here:active { transform: translate(-50%, -50%) scale(.92); }
 .j-here:focus-visible { outline: 3px solid #ffd54f; outline-offset: 4px; }
 @media (prefers-reduced-motion: reduce) { .j-here { transition: none; } }
+/* v224: avatars met boog: geen vierkant, rand of achtergrond, alleen de boog */
+.av-art:has(> svg.av-arch), .avd-big:has(> svg.av-arch), .avd-tile:has(> svg.av-arch) { background: none !important; box-shadow: none !important; }
+.avatar.av-art:has(> svg.av-arch), .gb-av.av-art:has(> svg.av-arch), .pe-av.av-art:has(> svg.av-arch), .avd-big:has(> svg.av-arch) { border: 0 !important; border-radius: 0 !important; overflow: visible; }
+.avd-tile:has(> svg.av-arch) { border-color: transparent; overflow: visible; }
+.av-art > svg.av-arch, .avd-big > svg.av-arch, .avd-tile > svg.av-arch { border-radius: 0 !important; overflow: visible; filter: drop-shadow(0 2px 3px rgba(0,0,0,.35)); }
+.avd-cell.lock .avd-tile > svg.av-arch { filter: grayscale(1) brightness(.5); }
 </style>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=3">
@@ -8785,6 +8791,9 @@ return exports;})();
     const NEED = { maan: 0, lantaarn: 0, ster: 5, kaaba: 12, moskee: 25, dadel: 40, rehal: 55, olijf: 70 };
     const THINGS = THINGS_ALL.filter((a) => a.id in NEED).map((a) => Object.assign({}, a, { need: NEED[a.id] }));
     const FAMILY = [["fam-man", "Man"], ["fam-vrouw", "Vrouw"], ["fam-jongen", "Jongen"], ["fam-meisje", "Meisje"], ["fam-tjongen", "Tiener jongen"], ["fam-tmeisje", "Tiener meisje"]].map((x) => ({ id: x[0], n: x[1], bg: ["#f2ead7", "#e6dcc0"], need: 0, art: "", img: "avatars/" + x[0] + ".webp" }));   /* tekenfiguren zonder gezicht; vanaf het begin te kiezen */
+    /* v224: dieren en voorwerpen staan voor de groene boog; de man is het eigen plaatje (boog zit erin) */
+    ANIMALS.concat(THINGS).forEach((a) => { a.arch = true; });
+    FAMILY.forEach((a) => { if (a.id === "fam-man") { a.arch = true; a.img = "avatars/fam-man-boog.webp"; } });
     const ALL = ANIMALS.concat(PEOPLE, THINGS, FAMILY);
     return { ANIMALS: ANIMALS, PEOPLE: PEOPLE, THINGS: THINGS, FAMILY: FAMILY, ALL: ALL };
   })();
@@ -8795,6 +8804,12 @@ return exports;})();
   function avUnlocked(p, a) { return !!a && levelsDone(p) >= a.need; }
   function avOf(p) { const a = p && avById(p.avatar); return a && avUnlocked(p, a) ? a : null; }
   function avInner(a, flat) {
+    if (a.arch) {
+      if (a.img) return '<image href="' + a.img + '" x="0" y="0" width="100" height="100" preserveAspectRatio="xMidYMid meet"/>';
+      const u = ++avUid;
+      return '<defs><linearGradient id="avg' + u + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff7bf"/><stop offset=".4" stop-color="#ffd23a"/><stop offset=".8" stop-color="#e79a00"/><stop offset="1" stop-color="#9a5a00"/></linearGradient></defs>' +
+        '<image href="avatars/boog.webp" x="0" y="0" width="100" height="100" preserveAspectRatio="xMidYMid meet"/><g transform="translate(16 28) scale(.675)">' + a.art.split("url(#G)").join("url(#avg" + u + ")") + "</g>";
+    }
     if (a.img) return '<rect width="100" height="100" fill="#f2ead7"/><image href="' + a.img + '" x="0" y="0" width="100" height="100" preserveAspectRatio="xMidYMid slice"/><rect x=".5" y=".5" width="99" height="99" fill="none" stroke="#000" stroke-opacity=".25" stroke-width="1"/>';
     const u = ++avUid;   /* flat: zonder schaduwfilter (voor de kleine tegels op de kaart, die op sommige telefoons met een filter leeg bleven) */
     return '<defs><linearGradient id="avb' + u + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="' + a.bg[0] + '"/><stop offset="1" stop-color="' + a.bg[1] + '"/></linearGradient>' +
@@ -8808,7 +8823,7 @@ return exports;})();
       '<path d="M0 0H100V30C75 40 25 40 0 30Z" fill="#fff" opacity=".13"/>' +
       '<rect x="1.5" y="1.5" width="97" height="97" rx="2" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="3"/><rect x=".5" y=".5" width="99" height="99" fill="none" stroke="#000" stroke-opacity=".25" stroke-width="1"/>';
   }
-  function avSvg(a) { return '<svg viewBox="0 0 100 100" width="100%" height="100%" aria-hidden="true" focusable="false">' + avInner(a) + "</svg>"; }
+  function avSvg(a) { return '<svg' + (a.arch ? ' class="av-arch"' : "") + ' viewBox="0 0 100 100" width="100%" height="100%" aria-hidden="true" focusable="false">' + avInner(a) + "</svg>"; }
   function avNewCount(p) {
     if (!p) return 0;
     const seen = p.avSeen || {};
