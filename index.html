@@ -969,6 +969,13 @@ a.btn.block { display: flex; margin-top: 14px; }
 .pl-go { appearance: none; font: inherit; cursor: pointer; width: 100%; min-height: 54px; border: 0; border-radius: 14px; background: #1f5d46; color: #f6ecd6; font-size: 1.15rem; font-weight: 900; }
 .pl-go:active { transform: scale(.98); }
 
+.np-in { padding-top: 22px; text-align: center; }
+.np-new { display: inline-block; font-weight: 900; font-size: .78rem; letter-spacing: .08em; color: #4a2f00; background: linear-gradient(180deg, #fff3b8, #f6d25a); border-radius: 999px; padding: 4px 14px; }
+.np-in h2 { margin: 10px 0 2px; font-size: 1.7rem; font-weight: 900; color: #f6ecd0; }
+.np-in .np-sub { margin: 0 0 12px; font-weight: 700; color: #dfe9e1; font-size: .98rem; line-height: 1.4; }
+.np-pic { border-radius: 16px; overflow: hidden; border: 2px solid #f2c94c; margin: 0 0 12px; }
+.np-pic svg { display: block; width: 100%; height: auto; }
+.np-where { font-size: .88rem; font-weight: 700; color: #cfe3d6; margin: 0 0 14px; line-height: 1.4; }
 .bonus-ov { position: fixed; inset: 0; z-index: 9000; background: #0b1a24; }
 .bonus-ov iframe { display: block; width: 100%; height: 100%; border: 0; }
 body.bonus-on { overflow: hidden; }
@@ -7513,6 +7520,7 @@ return exports;})();
     return '<section class="dash">' + h + "</section>";
   }
   function afterDashRender() {
+    maybeNurPlayNews();
     clearInterval(dashTick);
     calTickStart();
     dashTick = setInterval(function () {
@@ -7606,6 +7614,31 @@ return exports;})();
     mkFilter();
   }
 
+  /* v238: eenmalig per speler: attentie voor het nieuwe spel in NurPlay, met knop om meteen te proberen */
+  function maybeNurPlayNews() {
+    if (!P || !P.mode || P.npSeen || screen !== "dash") return;
+    setTimeout(function () {
+      if (!P || P.npSeen || screen !== "dash") return;
+      if (document.querySelector(".bm-wrap, .dialog-wrap, .bonus-ov, .tour, [role=dialog]")) return;
+      P.npSeen = 1; saveState();
+      const prevFocus = document.activeElement;
+      const w = document.createElement("div"); w.className = "bm-wrap"; w.id = "npWrap";
+      w.innerHTML = '<div class="bm-dlg" role="dialog" aria-modal="true" aria-label="Nieuw in NurSpark: NurPlay met het spel Darb an-Nur. Je vindt het op het startscherm onder NurPlay."><div class="bm-in np-in"><span class="np-new">NIEUW</span><h2>NurPlay</h2><p class="np-sub">Een nieuw spel: <b>Darb an-Nur</b>. Leid de gelovige door het licht-doolhof, weg van de duisternis.</p><div class="np-pic">' + playPreview() + '</div><p class="np-where">Je vindt het altijd op het startscherm, onder de tegel <b>NurPlay</b>.</p><div class="bm-btns"><button class="bm-btn go" data-np="try">Probeer nu</button></div><button class="jm-later" data-np="x">Later</button></div></div>';
+      const close = function () { document.removeEventListener("keydown", onKey, true); w.remove(); if (prevFocus && prevFocus.focus && document.contains(prevFocus)) { try { prevFocus.focus({ preventScroll: true }); } catch (e) {} } };
+      const onKey = function (e) {
+        if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); close(); return; }
+        if (e.key === "Tab") { const f = [].slice.call(w.querySelectorAll("button")); if (!f.length) return; const i = f.indexOf(document.activeElement); e.preventDefault(); f[(i + (e.shiftKey ? f.length - 1 : 1)) % f.length].focus(); }
+      };
+      w.addEventListener("click", function (e) {
+        const b = e.target.closest("[data-np]");
+        if (e.target === w || (b && b.dataset.np === "x")) { play("click"); close(); return; }
+        if (b && b.dataset.np === "try") { close(); openPlayGame("darb"); }
+      });
+      document.addEventListener("keydown", onKey, true);
+      document.body.appendChild(w);
+      const g = w.querySelector(".bm-btn"); if (g) g.focus();
+    }, 1100);
+  }
   /* v237: NurPlay, losse spellen (elk spel een kaart met voorbeeldplaatje) */
   const PLAY_GAMES = [{ id: "darb", name: "Darb an-Nur", ar: "دَرْب النُّور", src: "spel/darb-an-nur.html", sub: "Leid de gelovige door het licht-doolhof, weg van de duisternis.", tags: ["Doolhof", "Groot in beeld", "Geen muziek"] }];
   function playPreview() {
