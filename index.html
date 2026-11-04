@@ -2195,6 +2195,20 @@ body.dashfull { background: #0f2e22; color: #f4efe2; }
 .qj-row { display: flex; gap: 8px; align-items: center; justify-content: space-between; margin-top: 10px; flex-wrap: wrap; }
 .qj-note { font-size: .8rem; color: #6b6a55; }
 .d-tile.kd { grid-column: 1 / -1; padding: 0; gap: 0; min-height: 0; overflow: hidden; position: relative; background: #f6f1e6; color: #1e2b24; border: 2px solid #f2c94c; }   /* Koran-dagboek-tegel (alleen beheerder) */
+.d-tile.beheer { grid-column: 1 / -1; flex-direction: row; align-items: center; gap: 12px; min-height: 0; padding: 12px 14px; background: #f6f1e6; color: #1e2b24; border: 2px solid #f2c94c; text-align: left; }   /* v233: Beheer-tegel (alleen beheerder) */
+.d-tile.beheer .bh-ic { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; background: #e9dfc6; flex: none; }
+.d-tile.beheer .bh-tx { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.d-tile.beheer .bh-tx b { font-size: 17px; }
+.d-tile.beheer .bh-tx small { font-size: 12.5px; color: #4a5a50; }
+.d-tile.beheer .hb-ch { font-size: 26px; color: #1b4332; }
+.bh .bh-h { font-size: 15px; margin: 18px 0 8px; color: #1b4332; }
+.bh .bh-n { font-size: 12.5px; margin: -4px 0 8px; opacity: .8; }
+.bh-g { display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 8px; }
+.bh-t { background: #f6f1e6; color: #1e2b24; border: 2px solid #e2cf8c; border-radius: 14px; padding: 12px 10px; text-align: center; }
+.bh-t b { display: block; font-size: 28px; line-height: 1.1; color: #1b4332; }
+.bh-t span { display: block; font-size: 12.5px; margin-top: 4px; }
+.bh-t.big { border-color: #f2c94c; }
+.bh-t.big b { font-size: 34px; }
 .d-tile.kd img { display: block; width: 100%; height: auto; aspect-ratio: 1024 / 572; object-fit: cover; }
 .d-tile.kd .kd-tx { display: flex; flex-direction: column; gap: 2px; padding: 12px 16px 14px; }
 .d-tile.kd { background: #1b4332; color: #f4efe2; }
@@ -6261,12 +6275,13 @@ return exports;})();
     const av = avOf(p);
     const go = function () {
       /* avatar_id ontbreekt nog (supabase-avatars.sql niet uitgevoerd)? Dan syncen we zonder dat veld */
-      const ex = Object.assign({}, soc.noAv ? {} : { avatar_id: av ? av.id : null }, soc.noBd ? {} : badgeFields(p, lv));
+      const ex = Object.assign({}, soc.noAv ? {} : { avatar_id: av ? av.id : null }, soc.noBd ? {} : badgeFields(p, lv), soc.noVia ? {} : { via_play: viaPlay() });
       return send(Object.assign({}, soc.noCols ? row : full, ex)).then(function (r) {
         const msg = r && r.error ? errTxt(r.error) : "";
         /* de server weigert de modus Beginner (nog niet toegestaan in de tabel)? Dan blijft Beginner lokaal, zonder foutmelding */
         if (msg && lv === "beginner" && /leaderboard_mode_check|check constraint[^"]*"[^"]*mode/i.test(msg)) { soc.noBeg = true; return r; }
         /* badge-kolommen ontbreken nog (supabase-badges.sql niet uitgevoerd)? Dan syncen we zonder die velden */
+        if (msg && !soc.noVia && /via_play/i.test(msg)) { soc.noVia = true; return go(); }
         if (msg && !soc.noBd && /master_mask|grand_mask/i.test(msg)) { soc.noBd = true; return go(); }
         if (msg && !soc.noAv && /avatar_id|42703|pgrst204/i.test(msg)) { soc.noAv = true; return go(); }
         if (msg && !soc.noCols && /column|schema|pgrst204/i.test(msg)) { soc.noCols = true; return go(); }
@@ -7397,6 +7412,15 @@ return exports;})();
   };
   function dIc(k, c, sz) { return '<svg width="' + (sz || 32) + '" height="' + (sz || 32) + '" viewBox="0 0 24 24" fill="none" stroke="' + c + '" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + DI[k] + "</svg>"; }
   /* v104b: Al-Maktabah is voorlopig alleen te zien voor de beheerder (ingelogd met Google, eigen profiel actief). Alleen een korte code, geen e-mailadres in de broncode. */
+  /* v233: herkent of de app via de Play Store-app (TWA) is geopend; onthoudt dat op dit toestel */
+  function viaPlay() {
+    try {
+      if (localStorage.getItem("nspark_via_play") === "1") return true;
+      if (/^android-app:\/\/app\.nurspark/.test(document.referrer || "")) { localStorage.setItem("nspark_via_play", "1"); return true; }
+    } catch (e) {}
+    return false;
+  }
+  viaPlay();
   const MK_OWNERS = [782862580, 3603728214];
   function mkOwner() {
     if (!sbUser || !sbUser.email || !P || P.sbId !== sbUser.id) return false;
@@ -7418,6 +7442,7 @@ return exports;})();
       '<div class="d-rov"><button class="d-mode" data-act="switch-mode" aria-label="Modus wisselen. Nu: ' + modeName(P.mode) + '. Tik om te kiezen">' + icon(MODE_ICON[P.mode], 13) + " " + modeName(P.mode) + ' <i aria-hidden="true">▾</i></button>' + lifeBtnHtml() + "</div></div>";
     h += '<nav class="d-grid" aria-label="Onderdelen">' +
       '<button class="d-tile hub" data-act="hub"><span class="hb-ic">' + dIc("book", "#1b4332", 40) + '</span><span class="hb-t"><span class="d-k ar" lang="ar" dir="rtl">بيت العلم</span><b>Bayt al-‘Ilm</b><small>' + (nf ? "Mijn foutjes: " + nf + " · du’a-boekje" : "Foutjes en du’a-boekje") + '</small></span><span class="hb-ch" aria-hidden="true">›</span></button>' +
+      (!mkOwner() ? "" : '<button class="d-tile beheer" data-act="beheer" aria-label="Beheer. Cijfers over spelers. Alleen voor jou zichtbaar. Openen"><span class="bh-ic" aria-hidden="true">' + dIc("users", "#1b4332", 26) + '</span><span class="bh-tx"><b>Beheer</b><small>Spelers, gasten en testers · alleen voor jou</small></span><span class="hb-ch" aria-hidden="true">›</span></button>') +
       (!mkOwner() ? "" : '<button class="d-tile kd" data-act="kd" aria-label="Koran-dagboek. Vers voor vers lezen en reflecteren. Alleen voor jou zichtbaar. Openen"><img src="journaal/lezer.webp" alt="" width="1024" height="572" loading="lazy"><span class="kd-badge" aria-hidden="true">In ontwikkeling</span><span class="kd-tx"><b>Koran-dagboek</b><small>Vers voor vers lezen en reflecteren</small></span></button>') +
       '<button class="d-tile" data-act="klas">' + "<span class=\"d-top\">" + dIc("book", "#ffd54f", 30) + "<span class=\"d-k ar\" lang=\"ar\" dir=\"rtl\">حلقة سبارك</span></span><b>Halaqa Spark</b><small>Leer samen met je klas</small></button>" +
       '<button class="d-tile" data-act="rad">' + '<span class="d-top">' + dIc("wheel", "#ffd54f", 30) + '<span class="d-k ar" lang="ar" dir="rtl">عجلة العلم</span></span><b>Ajalat al-‘Ilm</b><small>Rad van Kennis</small></button>' +
@@ -7941,6 +7966,37 @@ return exports;})();
   function kdComplete(s) { if (!QJ) return false; const n = Q_N[s - 1]; if (!n) return false; for (let a = 1; a <= n; a++) if (!QJ[s + ":" + a]) return false; return true; }
   function kdSoeras() { const out = []; if (!QJ) return out; for (let s = 1; s <= 114; s++) if (kdComplete(s)) out.push(s); return out; }
   function qjAuto() { const t = document.getElementById("qjText"); if (t && qjKey) qjSet(qjKey, t.value); }
+  /* v233: beheerpagina (alleen beheerder): cijfers komen uit de Supabase-functie beheer_cijfers() */
+  let BH = null, bhBusy = false, bhErr = "";
+  function bhLoad() {
+    if (bhBusy || !sb) return; bhBusy = true; bhErr = "";
+    try {
+      sb.rpc("beheer_cijfers").then(function (r) {
+        bhBusy = false;
+        if (r && r.error) { bhErr = /beheer_cijfers|function|PGRST202/i.test(String(r.error.message)) ? "De cijfers zijn nog niet klaar: het SQL-bestand moet nog één keer in Supabase worden uitgevoerd." : "Dat is niet gelukt: " + r.error.message; BH = null; }
+        else BH = r.data || null;
+        if (screen === "beheer") render();
+      }).catch(function () { bhBusy = false; bhErr = "Geen verbinding. Probeer het opnieuw."; if (screen === "beheer") render(); });
+    } catch (e) { bhBusy = false; bhErr = "Dat is niet gelukt."; }
+  }
+  function viewBeheer() {
+    let h = hubTop("Beheer", "beheer-back", "", "Alleen voor jou zichtbaar");
+    if (!mkOwner()) return h + '<section class="hub"><p class="hub-intro">Dit onderdeel is er nog niet voor iedereen.</p></section>';
+    if (!BH && !bhErr) { bhLoad(); return h + '<section class="hub"><p class="hub-intro" role="status">De cijfers worden geladen…</p></section>'; }
+    if (bhErr) return h + '<section class="hub"><p class="hub-intro" role="alert">' + esc(bhErr) + '</p><button class="btn block" data-act="beheer-refresh">Opnieuw proberen</button></section>';
+    const n = function (k) { return Number(BH[k]) || 0; };
+    const tile = function (v, l, cls) { return '<div class="bh-t' + (cls ? " " + cls : "") + '"><b>' + v + "</b><span>" + l + "</span></div>"; };
+    h += '<section class="hub bh">';
+    h += '<h2 class="bh-h">Accounts</h2><div class="bh-g">' + tile(n("accounts_totaal"), "Totaal", "big") + tile(n("accounts_echt"), "Echt account") + tile(n("accounts_gast"), "Gasten") + "</div>";
+    h += '<h2 class="bh-h">Hoe ze inloggen</h2><div class="bh-g">' + tile(n("prov_google"), "Google") + tile(n("prov_facebook"), "Facebook") + tile(n("prov_email"), "E-mail") + "</div>";
+    h += '<h2 class="bh-h">Nieuw erbij</h2><div class="bh-g">' + tile(n("nieuw_vandaag"), "Vandaag") + tile(n("nieuw_7d"), "Laatste 7 dagen") + "</div>";
+    h += '<h2 class="bh-h">Op het scorebord</h2><div class="bh-g">' + tile(n("spelers_echt"), "Echt account") + tile(n("spelers_gast"), "Gasten") + "</div>";
+    h += '<div class="bh-g">' + tile(n("modus_beginner"), "Beginner") + tile(n("modus_junior"), "Gevorderd") + tile(n("modus_expert"), "Ervaren") + "</div>";
+    h += '<h2 class="bh-h">Nu actief</h2><p class="bh-n">Gebaseerd op het laatst doorgegeven score.</p><div class="bh-g">' + tile(n("actief_5m"), "Laatste 5 min", "big") + tile(n("actief_1u"), "Laatste uur") + tile(n("actief_24u"), "Laatste 24 uur") + tile(n("actief_7d"), "Laatste 7 dagen") + "</div>";
+    h += '<h2 class="bh-h">Via de Play Store-app</h2><p class="bh-n">Alleen spelers die de app na deze update hebben geopend en gespeeld. De officiële lijst van testers staat in de Play Console.</p><div class="bh-g">' + tile(n("play_spelers"), "Spelers", "big") + tile(n("play_actief_24u"), "Actief laatste 24 uur") + "</div>";
+    h += '<button class="btn block" data-act="beheer-refresh">Vernieuwen</button></section>';
+    return h;
+  }
   function viewKd() {
     let h = hubTop("Koran-dagboek", "kd-back", "", "Lees en reflecteer vers voor vers");
     if (!mkOwner()) return h + '<section class="hub"><p class="hub-intro">Dit onderdeel is er nog niet voor iedereen.</p></section>';
@@ -8178,12 +8234,13 @@ return exports;})();
     else if (screen === "qread") { app.innerHTML = viewQread(); afterQreadRender(); }
     else if (screen === "qj") { app.innerHTML = viewQj(); }
     else if (screen === "kd") { app.innerHTML = viewKd(); }
+    else if (screen === "beheer") { app.innerHTML = viewBeheer(); }
     const bw = document.getElementById("badgesBtnWrap");
     if (bw) bw.style.display = (screen === "board" || screen === "scores") ? "" : "none";
     window.scrollTo({ top: 0 });
     if (screen === "journey") document.body.classList.add("jfull");
     if (screen === "rad" || screen === "bazaar") document.body.classList.add("radfull");
-    if (screen === "dash" || screen === "hub" || screen === "lab" || screen === "labroom" || screen === "labquiz" || screen === "fout" || screen === "dua" || screen === "today" || screen === "prog" || screen === "quran" || screen === "qread" || screen === "qj" || screen === "kd") document.body.classList.add("dashfull");
+    if (screen === "dash" || screen === "hub" || screen === "lab" || screen === "labroom" || screen === "labquiz" || screen === "fout" || screen === "dua" || screen === "today" || screen === "prog" || screen === "quran" || screen === "qread" || screen === "qj" || screen === "kd" || screen === "beheer") document.body.classList.add("dashfull");
     if (screen === "rad" && rad && rad.phase !== "intro" && rad.phase !== "end") document.body.classList.add("radgame");
     if (kosmosOn() && KOS_SCREENS.indexOf(screen) !== -1) document.body.classList.add("kosmos");
     if (screen === "journey") afterJourneyRender();
@@ -13103,6 +13160,9 @@ return exports;})();
       case "qj-back": { qjAuto(); play("click"); if (qjFrom === "list") { screen = "kd"; render(); window.scrollTo({ top: 0 }); break; } const jp = String(qjKey).split(":"); qSurah = parseInt(jp[0], 10) || 1; qJump = parseInt(jp[1], 10) || 1; screen = "qread"; render(); break; }
       case "kd": if (!mkOwner()) break; play("click"); screen = "kd"; render(); window.scrollTo({ top: 0 }); break;
       case "kd-back": play("click"); screen = "dash"; render(); break;
+      case "beheer": if (!mkOwner()) break; play("click"); BH = null; bhErr = ""; screen = "beheer"; render(); window.scrollTo({ top: 0 }); break;
+      case "beheer-back": play("click"); screen = "dash"; render(); break;
+      case "beheer-refresh": if (!mkOwner()) break; play("click"); BH = null; bhErr = ""; render(); break;
       case "kd-open": { if (!mkOwner()) break; const ks = parseInt(el.dataset.s, 10) || 1, ka = parseInt(el.dataset.a, 10) || 1; play("click"); qjKey = ks + ":" + ka; qjFrom = "list"; kdSeen(ks, ka); screen = "qj"; render(); window.scrollTo({ top: 0 }); break; }
       case "qj-nav": { qjAuto(); const np = String(qjKey).split(":"), ns = parseInt(np[0], 10) || 1, na = (parseInt(np[1], 10) || 1) + (parseInt(el.dataset.d, 10) || 0), nn = Q_N[ns - 1]; play("click"); if (na > nn) { kdSeen(ns, nn); screen = "kd"; render(); window.scrollTo({ top: 0 }); break; } if (na < 1) break; qjKey = ns + ":" + na; kdSeen(ns, na); render(); window.scrollTo({ top: 0 }); break; }
       case "qj-save": { const jt = document.getElementById("qjText"); if (!jt) break; qjSet(qjKey, jt.value); play("correct"); const jm = document.getElementById("qjMsg"); if (jm) jm.textContent = "Bewaard op dit toestel"; announce("Bewaard"); break; }
