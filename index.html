@@ -11551,9 +11551,9 @@ return exports;})();
     const fresh = {}, seen = p.avSeen || {};
     AVATARS.ALL.forEach(function (a) { if (a.need > 0 && avUnlocked(p, a) && !seen[a.id]) fresh[a.id] = true; });
     const w = document.createElement("div"); w.className = "dialog-wrap"; w.id = "avDlg";
-    const TABS = [["animals", "Dieren"], ["people", "Mensen"], ["things", "Dingen"], ["family", "Figuren"]];
+    const TABS = [["animals", "Dieren"], ["people", "Mensen"], ["things", "Dingen"]];
     function paint() {
-      const list = avTab === "animals" ? AVATARS.ANIMALS : avTab === "people" ? AVATARS.PEOPLE : avTab === "family" ? AVATARS.FAMILY : AVATARS.THINGS, done = levelsDone(p), cur = avOf(p);
+      const list = avTab === "animals" ? AVATARS.ANIMALS : avTab === "people" ? AVATARS.FAMILY.concat(AVATARS.PEOPLE) : AVATARS.THINGS, done = levelsDone(p), cur = avOf(p);
       const open = list.filter(function (a) { return avUnlocked(p, a); }).length, hasPh = !!(p.photo && /^https:\/\//i.test(p.photo));
       let h = '<div class="dialog av-dlg" role="dialog" aria-modal="true" aria-labelledby="avT"><div class="avd-top"><span class="avd-big">' + (cur ? avSvg(cur) : '<span class="avd-ini" style="--c:' + p.color + '">' + esc((p.name || "?").trim().charAt(0).toUpperCase()) + (hasPh ? '<img src="' + esc(p.photo) + '" alt="" referrerpolicy="no-referrer" onerror="this.remove()">' : "") + "</span>") + "</span>" +
         '<div class="avd-name"><h3 id="avT">Kies je avatar</h3><span>' + esc(p.name) + '</span><b class="avd-pill">' + open + " van " + list.length + " ontgrendeld</b></div></div>" +
