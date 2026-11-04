@@ -7640,7 +7640,8 @@ return exports;})();
     }, 1100);
   }
   /* v237: NurPlay, losse spellen (elk spel een kaart met voorbeeldplaatje) */
-  const PLAY_GAMES = [{ id: "darb", name: "Darb an-Nur", ar: "دَرْب النُّور", src: "spel/darb-an-nur.html", sub: "Leid de gelovige door het licht-doolhof, weg van de duisternis.", tags: ["Doolhof", "Groot in beeld", "Geen muziek"] }];
+  const PLAY_GAMES = [{ id: "darb", name: "Darb an-Nur", ar: "دَرْب النُّور", src: "spel/darb-an-nur.html", sub: "Leid de gelovige door het licht-doolhof, weg van de duisternis.", tags: ["Doolhof", "Groot in beeld", "Geen muziek"], prev: "playPreview" },
+    { id: "tayyibat", name: "Tayyibat", ar: "طَيِّبَات", src: "spel/tayyibat.html", sub: "Tik op het halal eten en laat het bedorven eten liggen.", tags: ["Tikspel", "Edelstenen", "Geen muziek"], prev: "playPreviewFood" }];
   function playPreview() {
     return '<svg viewBox="0 0 340 170" role="img" aria-label="Voorbeeld van het doolhof: de gelovige, gouden lichtjes en de rook van de shaytan"><rect width="340" height="170" fill="#16222e"/>' +
       '<g fill="none" stroke="#c9a46a" stroke-width="5" stroke-linecap="round"><rect x="14" y="12" width="312" height="146" rx="10"/><path d="M60 12V74M60 106V158M110 42H200M110 42V126M110 126H170M230 12V84M230 116V158M270 62H326M150 84H190"/></g>' +
@@ -7649,9 +7650,14 @@ return exports;})();
       '<path d="M72 126 L100 126 L106 154 L66 154 Z" fill="#d6a63a"/><rect x="66" y="150" width="40" height="4" fill="#7a2a22"/><circle cx="86" cy="118" r="12" fill="#f5efe0"/>' +
       '<g fill="#6a6e7a" opacity=".9"><ellipse cx="275" cy="92" rx="17" ry="13"/><ellipse cx="262" cy="101" rx="12" ry="9"/><ellipse cx="289" cy="102" rx="11" ry="9"/></g></svg>';
   }
+  function playPreviewFood() {
+    const it = [["🍔", 62, 62], ["🍟", 170, 112], ["🍎", 270, 58], ["🍕", 108, 44], ["🥙", 232, 128]];
+    return '<svg viewBox="0 0 340 170" role="img" aria-label="Voorbeeld van het tikspel: vallend halal eten op borden"><rect width="340" height="170" fill="#14573f"/><g fill="#f0c94a" opacity=".25"><circle cx="30" cy="140" r="4"/><circle cx="310" cy="30" r="5"/><circle cx="200" cy="20" r="3"/><circle cx="20" cy="30" r="3"/></g>' +
+      it.map(function (x, i) { return '<circle cx="' + x[1] + '" cy="' + x[2] + '" r="30" fill="' + (i === 2 ? "#f6d25a" : "#f6ecd6") + '" stroke="#c9a24a" stroke-width="3"/><text x="' + x[1] + '" y="' + (x[2] + 11) + '" font-size="32" text-anchor="middle">' + x[0] + "</text>"; }).join("") + "</svg>";
+  }
   function viewPlay() {
     return hubTop("NurPlay", "dash", "", "Losse spellen voor tussendoor") + '<section class="pl-list">' + PLAY_GAMES.map(function (g) {
-      return '<article class="pl-card">' + playPreview() + '<div class="pl-body"><div class="pl-ar" lang="ar" dir="rtl">' + g.ar + "</div><h2>" + esc(g.name) + "</h2><p>" + esc(g.sub) + '</p><div class="pl-tags">' + g.tags.map(function (t) { return "<span>" + esc(t) + "</span>"; }).join("") + '</div><button class="pl-go" data-act="play-game" data-id="' + g.id + '" aria-label="Speel ' + esc(g.name) + '">Speel</button></div></article>';
+      return '<article class="pl-card">' + (g.prev === "playPreviewFood" ? playPreviewFood() : playPreview()) + '<div class="pl-body"><div class="pl-ar" lang="ar" dir="rtl">' + g.ar + "</div><h2>" + esc(g.name) + "</h2><p>" + esc(g.sub) + '</p><div class="pl-tags">' + g.tags.map(function (t) { return "<span>" + esc(t) + "</span>"; }).join("") + '</div><button class="pl-go" data-act="play-game" data-id="' + g.id + '" aria-label="Speel ' + esc(g.name) + '">Speel</button></div></article>';
     }).join("") + "</section>";
   }
   function viewHub() {
@@ -12255,6 +12261,15 @@ return exports;})();
     bonusCur = { lv: lv, catId: catId, b: b, ov: ov, frame: ov.firstChild, msg: "" };
     setTimeout(function () { try { bonusCur && bonusCur.frame.focus(); } catch (e) {} }, 300);
   }
+  const PLAY_DAY_CAP = 20;
+  function playResult(d) {
+    if (!d || !d.ok || !bonusCur) return;
+    const key = todayStr(); if (!P.playRw || P.playRw.d !== key) P.playRw = { d: key, g: 0 };
+    const room = Math.max(0, PLAY_DAY_CAP - P.playRw.g), g = Math.min(room, Math.max(0, Math.min(10, d.gems | 0)));
+    if (g) { addReward(P.mode, 0, g); P.playRw.g += g; bonusCur.msg = "💎 +" + g + " edelstenen uit NurPlay!"; }
+    else if (!room && (d.gems | 0) > 0) bonusCur.msg = "Vandaag heb je het maximum aan edelstenen uit NurPlay al, morgen weer.";
+    saveState();
+  }
   function openPlayGame(id) {
     const g = PLAY_GAMES.filter(function (x) { return x.id === id; })[0]; if (!g || bonusCur) return;
     play("click"); stopTimer();
@@ -12287,7 +12302,7 @@ return exports;})();
   window.addEventListener("message", function (e) {
     if (!bonusCur || e.origin !== location.origin || e.source !== bonusCur.frame.contentWindow) return;
     const d = e.data || {}; if (!d.nurspark) return;
-    if (d.type === "close") closeBonus(); else if (d.type === "result" && bonusCur.catId) bonusResult(d);
+    if (d.type === "close") closeBonus(); else if (d.type === "result") { if (bonusCur.catId) bonusResult(d); else playResult(d); }
   });
   document.addEventListener("keydown", function (e) { if (bonusCur && e.key === "Escape") closeBonus(); });
 

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Tayyibat</title>
+<style>
+:root { --tx: #f6ecd0; --mut: #cfe3d6; --gold: #f2c94c; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; height: 100%; background: #0b2a1f; color: var(--tx); font-family: "Google Sans", Nunito, Roboto, "Segoe UI", Arial, sans-serif; overflow: hidden; touch-action: none; overscroll-behavior: none; }
+#game { position: fixed; inset: 0; display: flex; flex-direction: column; background: radial-gradient(120% 80% at 50% 0%, #1f6a4f 0%, #10402f 55%, #082116 100%); }
+#hud { display: flex; align-items: stretch; gap: 8px; padding: calc(8px + env(safe-area-inset-top)) 12px 6px; }
+.pill { flex: 1; padding: 8px 12px; border-radius: 14px; background: rgba(255,255,255,.09); border: 1px solid rgba(255,255,255,.12); font-size: 13px; color: var(--mut); line-height: 1.2; }
+.pill b { display: block; font-size: 26px; color: var(--tx); font-weight: 800; font-variant-numeric: tabular-nums; }
+.hearts { display: flex; gap: 6px; margin-top: 4px; height: 32px; align-items: center; font-size: 24px; }
+.hearts i { font-style: normal; } .hearts i.off { opacity: .22; filter: grayscale(1); }
+#pauseBtn { flex: none; width: 64px; border-radius: 14px; border: 1px solid rgba(255,255,255,.16); background: rgba(255,255,255,.09); color: var(--tx); font-size: 26px; cursor: pointer; }
+#bar { height: 8px; margin: 0 12px; border-radius: 99px; background: rgba(255,255,255,.12); overflow: hidden; }
+#bar i { display: block; height: 100%; width: 100%; background: linear-gradient(90deg, #ffe27a, #e0a915); }
+#stage { flex: 1; position: relative; min-height: 0; }
+canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+#ov { position: fixed; inset: 0; display: grid; place-items: center; padding: 16px; background: rgba(4,20,14,.82); z-index: 10; }
+#ov[hidden] { display: none; }
+.panel { width: min(100%, 420px); max-height: 100%; overflow-y: auto; padding: 22px 20px 20px; border-radius: 22px; background: linear-gradient(180deg, #17583f, #0d3526); border: 2px solid rgba(242,201,76,.55); text-align: center; }
+.panel h1 { margin: 0 0 4px; font-size: 26px; font-weight: 800; }
+.panel .ar { font-size: 26px; color: var(--gold); margin-bottom: 2px; }
+.panel p { margin: 8px 0; font-size: 16px; line-height: 1.5; color: #e4efe8; }
+.opt { margin: 14px 0 4px; font-size: 13px; letter-spacing: .04em; color: #ffd98a; text-align: left; }
+.seg { display: flex; gap: 8px; }
+.seg button { flex: 1; min-height: 50px; border-radius: 14px; border: 1px solid rgba(255,255,255,.2); background: rgba(255,255,255,.07); color: var(--tx); font-size: 16px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: rgba(242,201,76,.2); border-color: var(--gold); color: #ffe9a8; }
+.go { width: 100%; min-height: 56px; margin-top: 18px; border: 0; border-radius: 16px; background: linear-gradient(#ffe27a, #e0a915); color: #2a1c00; font-size: 18px; font-weight: 800; cursor: pointer; }
+.go.ghost { margin-top: 10px; background: rgba(255,255,255,.09); color: var(--tx); border: 1px solid rgba(255,255,255,.18); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="hud">
+    <div class="pill">Punten<b id="sc">0</b></div>
+    <div class="pill">Tijd<b id="tm">60</b></div>
+    <div class="pill">Kansen<div class="hearts" id="hearts" aria-hidden="true"></div></div>
+    <button id="pauseBtn" aria-label="Pauze">&#10074;&#10074;</button>
+  </div>
+  <div id="bar"><i id="barI"></i></div>
+  <div id="stage"><canvas id="cv" aria-label="Speelveld met vallend eten. Tik op het halal eten."></canvas></div>
+</div>
+<div id="ov"><div class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="ovT"></div></div>
+<div class="sr" id="live" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  "use strict";
+  var TOTAL = 60, MAXGEMS = 10;
+  /* halal eten (emoji, zonder gezichten) en bedorven eten om te laten liggen */
+  var GOOD = [["🍔", "hamburger"], ["🍟", "friet"], ["🍕", "pizza"], ["🍗", "kip"], ["🥙", "durum"], ["🍎", "appel"], ["🍌", "banaan"], ["🍇", "druiven"], ["🥛", "melk"], ["🥖", "brood"], ["🍉", "meloen"], ["🍪", "koekje"], ["🌯", "wrap"], ["🥗", "salade"]];
+  var BAD = [["🍎", "bedorven appel"], ["🍌", "bedorven banaan"], ["🥖", "beschimmeld brood"], ["🍇", "bedorven druiven"]];
+  var cv = document.getElementById("cv"), ctx = cv.getContext("2d");
+  var $ = function (id) { return document.getElementById(id); };
+  var opt = { tempo: "normaal", sound: true };
+  try { var sv = JSON.parse(localStorage.getItem("ty_opt") || "{}"); for (var k in sv) if (k in opt) opt[k] = sv[k]; } catch (e) {}
+  try { if (new URLSearchParams(location.search).get("snd") === "0") opt.sound = false; } catch (e) {}
+  function saveOpt() { try { localStorage.setItem("ty_opt", JSON.stringify(opt)); } catch (e) {} }
+  function say(t) { $("live").textContent = t; }
+  function buzz(ms) { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) {} }
+
+  /* geluid: alleen zachte effecten, geen muziek */
+  var AC = null;
+  function ac() { if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} } if (AC && AC.state === "suspended") AC.resume(); return AC; }
+  function tone(f, d, v) {
+    if (!opt.sound) return; var a = ac(); if (!a) return;
+    var o = a.createOscillator(), g = a.createGain(); o.type = "sine"; o.frequency.value = f;
+    g.gain.setValueAtTime(v, a.currentTime); g.gain.exponentialRampToValueAtTime(.001, a.currentTime + d);
+    o.connect(g); g.connect(a.destination); o.start(); o.stop(a.currentTime + d);
+  }
+  var sfx = { pop: function (c) { tone(520 + Math.min(c, 10) * 40, .14, .12); }, gold: function () { tone(880, .18, .14); setTimeout(function () { tone(1175, .22, .12); }, 90); }, bad: function () { tone(150, .3, .2); }, end: function () { tone(660, .2, .12); setTimeout(function () { tone(880, .3, .12); }, 160); } };
+
+  var W = 0, H = 0, dpr = 1, R = 40, state = "menu", items = [], parts = [], floats = [], score = 0, lives = 3, left = TOTAL, combo = 0, goodN = 0, spawnT = 0, last = 0, clock = 0;
+
+  function resize() {
+    var st = $("stage"); W = st.clientWidth; H = st.clientHeight; dpr = Math.min(window.devicePixelRatio || 1, 3);
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    R = Math.max(36, Math.min(60, Math.round(W * .105)));
+  }
+  function mult() { return Math.min(3, 1 + Math.floor(combo / 5)); }
+  function spawn() {
+    var bad = Math.random() < .22 + (TOTAL - left) / TOTAL * .1, src, gold = false;
+    if (bad) src = BAD[Math.floor(Math.random() * BAD.length)];
+    else { src = GOOD[Math.floor(Math.random() * GOOD.length)]; gold = (goodN + 1) % 8 === 0; }
+    var base = opt.tempo === "langzaam" ? 120 : 165, ramp = 1 + (TOTAL - left) / TOTAL * .7;
+    items.push({ x: R + Math.random() * (W - 2 * R), y: -R, vy: (base + Math.random() * 50) * ramp * (H / 700 > 1 ? 1 : Math.max(.8, H / 700)), e: src[0], n: src[1], bad: bad, gold: gold, rot: (Math.random() - .5) * .6, ph: Math.random() * 6 });
+    if (!bad) goodN++;
+  }
+  function pop(it, col) {
+    for (var i = 0; i < 12; i++) { var a = Math.random() * 6.283, v = 60 + Math.random() * 140; parts.push({ x: it.x, y: it.y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 40, life: .6 + Math.random() * .3, col: col }); }
+  }
+  function hit(x, y) {
+    if (state !== "play") return;
+    var best = null, bd = 1e9;
+    for (var i = 0; i < items.length; i++) { var it = items[i], d = Math.hypot(it.x - x, it.y - y); if (d < R * 1.25 && d < bd) { bd = d; best = i; } }
+    if (best === null) return;
+    var it2 = items.splice(best, 1)[0];
+    if (it2.bad) {
+      lives--; combo = 0; sfx.bad(); buzz(80); pop(it2, "120,160,90"); floats.push({ x: it2.x, y: it2.y, life: 1, txt: "Bedorven!", col: "255,150,130" }); say(it2.n + ". Je hebt nog " + lives + " kansen.");
+      if (lives <= 0) { finish(); return; }
+    } else {
+      combo++; var pts = (it2.gold ? 30 : 10) * mult(); score += pts; goodN += 0; it2.gold ? sfx.gold() : sfx.pop(combo); buzz(15); pop(it2, it2.gold ? "255,226,122" : "255,244,200");
+      floats.push({ x: it2.x, y: it2.y, life: 1, txt: it2.gold ? "Bismillah! +" + pts : "+" + pts, col: "255,226,122" });
+      if (combo > 0 && combo % 5 === 0) say("Combo, punten maal " + mult() + ".");
+    }
+    updHud();
+  }
+  function update(dt) {
+    left -= dt; spawnT -= dt;
+    var gap = (opt.tempo === "langzaam" ? .95 : .72) - (TOTAL - left) / TOTAL * .25;
+    if (spawnT <= 0) { spawn(); spawnT = gap * (.7 + Math.random() * .6); }
+    for (var i = items.length - 1; i >= 0; i--) { var it = items[i]; it.y += it.vy * dt; it.ph += dt; if (it.y > H + R) items.splice(i, 1); }
+    if (left <= 0) { left = 0; finish(); }
+    updHud();
+  }
+  function finish() {
+    if (state !== "play") return; state = "end"; sfx.end();
+    var gems = Math.max(0, Math.min(MAXGEMS, Math.round(score / 60)));
+    say("Klaar. Je hebt " + score + " punten.");
+    try { if (window.parent !== window) parent.postMessage({ nurspark: 1, type: "result", ok: true, score: score, gems: gems }, location.origin); } catch (e) {}
+    setTimeout(function () { showOv("end", gems); }, 450);
+  }
+
+  function plate(x, y, it) {
+    var r = R * (it.gold ? 1.08 : 1);
+    ctx.save(); ctx.translate(x, y); ctx.rotate(it.rot * Math.sin(it.ph * 2) * .5);
+    if (it.gold) { ctx.shadowColor = "rgba(255,226,122,.95)"; ctx.shadowBlur = R * .6; }
+    var g = ctx.createRadialGradient(-r * .3, -r * .35, 0, 0, 0, r);
+    if (it.bad) { g.addColorStop(0, "#d7cfb8"); g.addColorStop(1, "#8d8a6b"); } else { g.addColorStop(0, "#fffaf0"); g.addColorStop(1, it.gold ? "#f6d25a" : "#eadfc3"); }
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, r, 0, 7); ctx.fill(); ctx.shadowBlur = 0;
+    ctx.strokeStyle = it.gold ? "#d9a227" : it.bad ? "#6b6a4a" : "#c9a24a"; ctx.lineWidth = Math.max(2, r * .07); ctx.stroke();
+    ctx.font = Math.round(r * 1.05) + 'px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif'; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    if (it.bad) { try { ctx.filter = "grayscale(.75) sepia(.7) brightness(.6)"; } catch (e) {} }
+    ctx.fillText(it.e, 0, r * .06);
+    try { ctx.filter = "none"; } catch (e) {}
+    if (it.bad) {
+      ctx.fillStyle = "rgba(96,130,60,.8)"; [[-.28, -.1, .13], [.2, .15, .1], [.05, -.3, .08], [-.1, .28, .09]].forEach(function (s) { ctx.beginPath(); ctx.arc(s[0] * r, s[1] * r, s[2] * r, 0, 7); ctx.fill(); });
+    }
+    ctx.restore();
+  }
+  function draw(dt) {
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+    /* zachte sterretjes op de achtergrond */
+    ctx.fillStyle = "rgba(255,226,140,.10)";
+    for (var s = 0; s < 14; s++) { var sx = (s * 97 % 100) / 100 * W, sy = ((s * 53 + clock * 8) % 100) / 100 * H; ctx.beginPath(); ctx.arc(sx, sy, 2 + (s % 3), 0, 7); ctx.fill(); }
+    for (var i = 0; i < items.length; i++) plate(items[i].x, items[i].y, items[i]);
+    var j; for (j = parts.length - 1; j >= 0; j--) { var a = parts[j]; a.x += a.vx * dt; a.y += a.vy * dt; a.vy += 220 * dt; a.life -= dt; if (a.life <= 0) { parts.splice(j, 1); continue; } ctx.fillStyle = "rgba(" + a.col + "," + Math.min(1, a.life * 1.6) + ")"; ctx.beginPath(); ctx.arc(a.x, a.y, 3.5, 0, 7); ctx.fill(); }
+    for (j = floats.length - 1; j >= 0; j--) { var f = floats[j]; f.life -= dt; f.y -= dt * 50; if (f.life <= 0) { floats.splice(j, 1); continue; } ctx.fillStyle = "rgba(" + f.col + "," + Math.min(1, f.life * 1.5) + ")"; ctx.font = "800 " + Math.round(R * .5) + "px sans-serif"; ctx.textAlign = "center"; ctx.fillText(f.txt, f.x, f.y - R); }
+    if (state === "play" && mult() > 1) { ctx.fillStyle = "rgba(255,226,122,.9)"; ctx.font = "800 " + Math.round(R * .6) + "px sans-serif"; ctx.textAlign = "right"; ctx.fillText("x" + mult(), W - 12, R * .7); }
+  }
+  function loop(ts) {
+    var dt = Math.min(.05, (ts - last) / 1000 || 0); last = ts;
+    if (state === "play") { clock += dt; update(dt); } else if (state === "end") { clock += dt; }
+    draw(dt); requestAnimationFrame(loop);
+  }
+  function updHud() {
+    $("sc").textContent = score; $("tm").textContent = Math.ceil(left);
+    $("barI").style.width = (left / TOTAL * 100) + "%";
+    var h = ""; for (var i = 0; i < 3; i++) h += '<i class="' + (i < lives ? "" : "off") + '">❤</i>'; $("hearts").innerHTML = h;
+  }
+  function segBtns(key, items2) {
+    return '<div class="seg" role="group">' + items2.map(function (it) { return '<button data-k="' + key + '" data-v="' + it[0] + '" aria-pressed="' + (String(opt[key]) === String(it[0])) + '">' + it[1] + "</button>"; }).join("") + "</div>";
+  }
+  function showOv(kind, gems) {
+    var p = $("panel"), h = "";
+    if (kind === "menu") {
+      h = '<div class="ar" lang="ar" dir="rtl">طَيِّبَات</div><h1 id="ovT">Tayyibat</h1><p><i>Het goede eten</i></p><p>Tik op het <b>halal eten</b> dat naar beneden valt. Laat het <b>bedorven eten</b> liggen. Elke 5 goede tikken achter elkaar geven meer punten.</p>' +
+        '<div class="opt">Tempo</div>' + segBtns("tempo", [["langzaam", "Langzaam"], ["normaal", "Normaal"]]) +
+        '<div class="opt">Geluid</div>' + segBtns("sound", [["true", "Aan"], ["false", "Uit"]]) +
+        '<button class="go" data-a="start">Start</button><button class="go ghost" data-a="exit">Terug naar NurPlay</button>';
+    } else if (kind === "pause") {
+      h = '<h1 id="ovT">Pauze</h1><button class="go" data-a="resume">Verder spelen</button><button class="go ghost" data-a="menu">Instellingen</button><button class="go ghost" data-a="exit">Terug naar NurPlay</button>';
+    } else {
+      h = '<div class="ar" lang="ar" dir="rtl">ما شاء الله</div><h1 id="ovT">' + (lives > 0 ? "Mooi gedaan!" : "Goed geprobeerd!") + '</h1><p>Punten: <b>' + score + '</b></p><p>' + (gems ? "Je krijgt tot " + gems + " edelstenen (maximaal 20 per dag uit NurPlay)." : "Nog geen edelstenen. Probeer het nog eens, je kunt het.") + '</p><button class="go" data-a="start">Nog een keer</button><button class="go ghost" data-a="exit">Terug naar NurPlay</button>';
+    }
+    p.innerHTML = h; $("ov").hidden = false;
+    var b = p.querySelector(".go"); if (b) b.focus();
+  }
+  function hideOv() { $("ov").hidden = true; }
+  function startGame() { items = []; parts = []; floats = []; score = 0; lives = 3; left = TOTAL; combo = 0; goodN = 0; spawnT = .3; resize(); updHud(); hideOv(); state = "play"; ac(); say("Het spel begint. Tik op het halal eten."); }
+  function pause() { if (state !== "play") return; state = "pause"; showOv("pause"); }
+
+  $("panel").addEventListener("click", function (e) {
+    var b = e.target.closest("button"); if (!b) return;
+    if (b.dataset.k) {
+      var k = b.dataset.k, v = b.dataset.v; opt[k] = (k === "sound") ? v === "true" : v; saveOpt();
+      Array.prototype.forEach.call(b.parentNode.children, function (x) { x.setAttribute("aria-pressed", String(x === b)); }); return;
+    }
+    var a = b.dataset.a;
+    if (a === "start") startGame();
+    else if (a === "resume") { hideOv(); state = "play"; }
+    else if (a === "menu") { state = "menu"; showOv("menu"); }
+    else if (a === "exit") { try { if (window.parent !== window) parent.postMessage({ nurspark: 1, type: "close" }, location.origin); else history.back(); } catch (er) {} }
+  });
+  $("pauseBtn").addEventListener("click", pause);
+  document.addEventListener("visibilitychange", function () { if (document.hidden) pause(); });
+  window.addEventListener("resize", resize);
+  window.addEventListener("orientationchange", function () { setTimeout(resize, 200); });
+  cv.addEventListener("pointerdown", function (e) { var r = cv.getBoundingClientRect(); hit(e.clientX - r.left, e.clientY - r.top); });
+  document.addEventListener("keydown", function (e) { if ((e.key === " " || e.key === "p") && state === "play") { e.preventDefault(); pause(); } });
+
+  resize(); updHud(); showOv("menu"); requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
