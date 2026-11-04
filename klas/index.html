@@ -294,6 +294,8 @@ body.ms-lite.ms-on .ms-wrap.ms-more .ms-hint { animation: none; }
 
   try { sb = window.supabase.createClient(SB_URL, SB_KEY, { auth: { flowType: "pkce", persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } }); } catch (e) { sb = null; }
 
+  /* anonieme teller: alleen een getal per dag, niet gekoppeld aan een persoon */
+  try { if (sb) sb.rpc("tel_gebruik", { p_onderdeel: "halaqa_spark" }).then(function () {}, function () {}); } catch (e) {}
   function initSb() {
     if (!sb) { show(); return; }
     sb.auth.getSession().then(function (r) {

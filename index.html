@@ -2260,6 +2260,7 @@ body.dashfull { background: #0f2e22; color: #f4efe2; }
 .bd-rb { flex: 1; height: 7px; border-radius: 99px; background: rgba(255,255,255,.07); overflow: hidden; }
 .bd-rb i { display: block; height: 100%; border-radius: 99px; background: var(--c); background: linear-gradient(90deg, var(--c), color-mix(in srgb, var(--c) 35%, transparent)); }
 .bd-r > b { min-width: 34px; text-align: right; font-size: 18px; font-weight: 500; font-variant-numeric: tabular-nums; color: var(--c); }
+.bd-sub { display: block; margin-top: 2px; font-size: 12px; color: var(--mut); }
 .bd-note { margin: 12px 0 2px; font-size: 12.5px; line-height: 1.5; color: var(--mut); }
 .bd-live { width: 9px; height: 9px; border-radius: 50%; background: #4b4a66; flex: none; }
 .bd-live.on { background: var(--green); animation: bdpulse 2s ease-out infinite; }
@@ -8103,6 +8104,16 @@ return exports;})();
     h += '<div class="bd-kg">' + kpi("Accounts", tot, ec + " echt · " + gs + " gast", "var(--blue)") + kpi("Actief 24 uur", n("actief_24u"), n("actief_5m") + " in de laatste 5 min", "var(--green)") + kpi("Nieuw, 7 dagen", n("nieuw_7d"), n("nieuw_vandaag") + " vandaag", "var(--violet)") + kpi("Via Play Store", n("play_spelers"), n("play_actief_24u") + " actief in 24 uur", "var(--amber)") + "</div>";
     h += sec("Echt account of gast") + '<div class="bd-card"><div class="bd-dn"><svg viewBox="0 0 36 36" width="140" height="140" role="img" aria-label="' + pe + ' procent echte accounts"><defs><linearGradient id="bdg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6ea8ff"/><stop offset="1" stop-color="#b48cff"/></linearGradient></defs><circle cx="18" cy="18" r="15.9155" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="3.4"/><circle cx="18" cy="18" r="15.9155" fill="none" stroke="url(#bdg)" stroke-width="3.4" stroke-linecap="round" stroke-dasharray="' + Math.max(pe - 2, 0) + " " + (102 - pe) + '" transform="rotate(-90 18 18)"/><text x="18" y="18.6" text-anchor="middle" font-size="7.4" font-weight="500" fill="#e9e8f6">' + pe + '%</text><text x="18" y="23.4" text-anchor="middle" font-size="2.6" fill="#8f8eb0">echt account</text></svg>' +
       '<div class="bd-lg"><div><u style="background:#8b9cff"></u><span>Echt account</span><b>' + ec + '</b></div><div><u style="background:rgba(255,255,255,.25)"></u><span>Gast</span><b>' + gs + "</b></div><p>Met score op het scorebord: " + n("spelers_echt") + " echt, " + n("spelers_gast") + " gast.</p></div></div></div>";
+    const NM = { spelwereld: "Spelwereld (reiskaart)", bayt_al_ilm: "Bayt al-‘Ilm (Learning Hub)", halaqa_spark: "Halaqa Spark (klas)", nurplay: "NurPlay (spellentegel)", spel_darb: "Spel: Darb an-Nur", spel_tayyibat: "Spel: Tayyibat", spel_thawr: "Spel: Het web van Thawr", rad_van_kennis: "Rad van Kennis", musabaqah: "Musabaqah (groep, duel)", koran: "Koran lezen", koran_dagboek: "Koran-dagboek", maktabah: "Al-Maktabah", bazaar: "Bazaar", duaboekje: "Du’a-boekje", mijn_foutjes: "Mijn foutjes", quiz_van_de_dag: "Quiz van de dag", album: "Album", scorebord: "Scorebord", quiz_level: "Levels gespeeld" };
+    const cl = ["var(--blue)", "var(--violet)", "var(--teal)", "var(--pink)", "var(--amber)", "var(--indigo)", "var(--green)"];
+    const gb = Array.isArray(BH.gebruik) ? BH.gebruik : [], gmax = Math.max(1, gb.reduce(function (m, x) { return Math.max(m, Number(x.w) || 0); }, 0));
+    h += sec("Meest gebruikt");
+    if (!gb.length) h += '<div class="bd-card"><p class="bd-note">Nog geen gegevens. De tellers starten pas na de update en nadat het SQL-bestand is uitgevoerd.</p></div>';
+    else h += '<div class="bd-card">' + gb.map(function (x, i) {
+      const w = Number(x.w) || 0, v = Number(x.v) || 0;
+      return '<div class="bd-r" style="--c:' + cl[i % cl.length] + '"><span class="bd-rl"><span>' + esc(NM[x.o] || x.o) + '<small class="bd-sub">vandaag ' + v + "</small></span></span>" +
+        '<span class="bd-rb" aria-hidden="true"><i style="width:' + Math.max(w > 0 ? 4 : 0, Math.round(w / gmax * 100)) + '%"></i></span><b>' + w + "</b></div>";
+    }).join("") + '</div><p class="bd-note">Aantal keer geopend in de laatste 7 dagen. Alleen tellers, geen personen.</p>';
     const a = Math.max(n("actief_7d"), 1);
     h += sec("Actieve gebruikers") + '<div class="bd-card">' + row("Laatste 5 minuten", n("actief_5m"), a, "var(--green)", true) + row("Laatste uur", n("actief_1u"), a, "var(--teal)") + row("Laatste 24 uur", n("actief_24u"), a, "var(--blue)") + row("Laatste 7 dagen", n("actief_7d"), a, "var(--indigo)") + '</div><p class="bd-note">Gebaseerd op de laatst doorgegeven score.</p>';
     const pm = Math.max(n("prov_google"), n("prov_facebook"), n("prov_email"), 1);
@@ -8330,7 +8341,17 @@ return exports;})();
     return '<svg class="kos-moon" width="' + s + '" height="' + s + '" viewBox="-10 -10 20 20" aria-hidden="true"><circle r="9" fill="#2a2f66"/>' + (f >= 1 ? '<circle r="9" fill="#fff3c4"/>' : '<clipPath id="km' + Math.round(f * 100) + '"><circle r="9"/></clipPath><g clip-path="url(#km' + Math.round(f * 100) + ')"><circle r="9" fill="#fff3c4"/><circle cx="' + (-off).toFixed(1) + '" r="9.5" fill="#2a2f66"/></g>') + '<circle r="9" fill="none" stroke="#ffd54f" stroke-width="1.2"/></svg>';
   }
 
+  /* v243: anonieme gebruikstellers (alleen een getal per onderdeel per dag; niet gekoppeld aan een persoon, account of toestel) */
+  const TRK = { journey: "spelwereld", hub: "bayt_al_ilm", play: "nurplay", rad: "rad_van_kennis", group: "musabaqah", quran: "koran", qread: "koran", kd: "koran_dagboek", qj: "koran_dagboek", maktabah: "maktabah", bazaar: "bazaar", dua: "duaboekje", fout: "mijn_foutjes", today: "quiz_van_de_dag", album: "album", board: "scorebord", scores: "scorebord", quiz: "quiz_level" };
+  let trkLast = "", trkT = {};
+  function track(n) {
+    try {
+      const t = Date.now(); if (!n || !sb || (trkT[n] && t - trkT[n] < 20000)) return; trkT[n] = t;
+      sb.rpc("tel_gebruik", { p_onderdeel: n }).then(function () {}, function () {});
+    } catch (e) {}
+  }
   function render() {
+    { const tn = TRK[screen]; if (tn && tn !== TRK[trkLast]) track(tn); trkLast = screen; }
     bonEnsureDefs();
     if (screen === "home") screen = lastRoot || "journey";
     clearInterval(dashTick); clearInterval(calTick); clearInterval(qTick); if (qObs) { qObs.disconnect(); qObs = null; }
@@ -12255,6 +12276,7 @@ return exports;})();
     play("click"); stopTimer();
     const ov = document.createElement("div");
     ov.className = "bonus-ov"; ov.setAttribute("role", "dialog"); ov.setAttribute("aria-modal", "true"); ov.setAttribute("aria-label", "Bonuslevel " + b.name);
+    track("spel_" + b.id);
     ov.innerHTML = '<iframe src="' + b.src + "?lv=" + lv + "&snd=" + (S.sound ? 1 : 0) + '" title="Bonuslevel ' + esc(b.name) + '" allow="autoplay"></iframe>';
     document.body.appendChild(ov); document.body.classList.add("bonus-on");
     const app = document.getElementById("app"); if (app) app.setAttribute("aria-hidden", "true");
@@ -12275,6 +12297,7 @@ return exports;})();
     play("click"); stopTimer();
     const ov = document.createElement("div");
     ov.className = "bonus-ov"; ov.setAttribute("role", "dialog"); ov.setAttribute("aria-modal", "true"); ov.setAttribute("aria-label", g.name);
+    track("spel_" + g.id);
     ov.innerHTML = '<iframe src="' + g.src + "?snd=" + (S.sound ? 1 : 0) + '" title="' + esc(g.name) + '" allow="autoplay"></iframe>';
     document.body.appendChild(ov); document.body.classList.add("bonus-on");
     const app = document.getElementById("app"); if (app) app.setAttribute("aria-hidden", "true");
