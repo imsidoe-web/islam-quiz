@@ -2194,6 +2194,35 @@ body.dashfull { background: #0f2e22; color: #f4efe2; }
 .qj-ta { width: 100%; box-sizing: border-box; min-height: 130px; border: 1px solid #d9a05b; border-radius: 10px; background: #fff; color: #2a2a1f; font: inherit; padding: 10px; margin-top: 8px; resize: vertical; }
 .qj-row { display: flex; gap: 8px; align-items: center; justify-content: space-between; margin-top: 10px; flex-wrap: wrap; }
 .qj-note { font-size: .8rem; color: #6b6a55; }
+.d-tile.kd { grid-column: 1 / -1; padding: 0; gap: 0; min-height: 0; overflow: hidden; position: relative; background: #f6f1e6; color: #1e2b24; border: 2px solid #f2c94c; }   /* Koran-dagboek-tegel (alleen beheerder) */
+.d-tile.kd img { display: block; width: 100%; height: auto; aspect-ratio: 1024 / 572; object-fit: cover; }
+.d-tile.kd .kd-tx { display: flex; flex-direction: column; gap: 2px; padding: 12px 16px 14px; }
+.d-tile.kd b { color: #1b4332; font-size: 1.2rem; } .d-tile.kd small { color: #5c5c48; }
+.d-tile.kd .kd-badge { position: absolute; top: 10px; right: 10px; background: rgba(15,46,34,.88); color: #ffd54f; font-size: .72rem; font-weight: 800; padding: 4px 10px; border-radius: 999px; }
+.qs { background: #f6f1e6; color: #1e2b24; border-radius: 24px; padding: 16px 16px 18px; margin: 8px 7px; }
+.qs-top { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.qs-bar { flex: 1; height: 4px; background: #e4dcc8; border-radius: 4px; overflow: hidden; } .qs-bar i { display: block; height: 100%; background: #a8893f; }
+.qs-top small { font-weight: 800; color: #6e7468; font-size: .78rem; }
+.qs-fav { appearance: none; border: 0; background: none; font-size: 1.5rem; line-height: 1; color: #a8893f; cursor: pointer; min-width: 44px; min-height: 44px; }
+.qs-img { display: block; width: 100%; height: auto; aspect-ratio: 1024 / 572; object-fit: cover; border-radius: 16px; margin: 0 0 14px; }
+.qs-ar { text-align: center; padding: 4px 0 8px; }
+.qs h2 { font-size: 1.05rem; font-weight: 800; color: #1f4d3a; margin: 16px 0 4px; }
+.qs p { margin: 0; line-height: 1.65; color: #3a463f; } .qs p.qs-b { margin: 3px 0; }
+.qs-soon { margin-top: 10px !important; color: #6e7468 !important; font-size: .85rem; }
+.qs-quote { position: relative; margin: 34px 4px 8px; }
+.qs-qm { position: absolute; left: 14px; top: -22px; }
+.qs-qb { background: #e9e2cf; border-radius: 6px 6px 0 0; padding: 30px 18px 14px; } .qs-qb p { font-size: 1rem; line-height: 1.7; color: #1e2b24; }
+.qs-qb small { display: block; margin-top: 10px; font-weight: 800; letter-spacing: .06em; color: #7b7a66; font-size: .75rem; }
+.qs-qe { height: 8px; background: #dad2ba; border-radius: 0 0 6px 6px; }
+.qs .qj-card { margin: 18px 0 0; background: #fff; }
+.qs-nav { display: flex; gap: 10px; margin-top: 16px; }
+.qs-prev, .qs-next { appearance: none; font: inherit; font-weight: 800; cursor: pointer; min-height: 48px; border-radius: 14px; padding: 0 18px; }
+.qs-prev { background: none; color: #1f4d3a; border: 1px solid #c9be9f; } .qs-next { flex: 1; background: #1f4d3a; color: #f6f1e6; border: 0; }
+.kd-row { appearance: none; font: inherit; width: 100%; display: flex; align-items: center; gap: 12px; text-align: left; background: #fff; color: #1e2b24; border: 1px solid #e4dcc8; border-radius: 18px; padding: 12px 14px; margin: 0 0 10px; cursor: pointer; }
+.kd-no { flex: none; width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid #a8893f; color: #a8893f; display: grid; place-items: center; font-weight: 800; font-size: .85rem; }
+.kd-nm { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; } .kd-nm b { font-size: 1.05rem; } .kd-nm small { color: #6e7468; font-weight: 700; }
+.kd-bar { display: block; height: 4px; background: #ede5d1; border-radius: 4px; overflow: hidden; margin-top: 4px; } .kd-bar i { display: block; height: 100%; background: #a8893f; }
+.kd-ch { color: #a8893f; font-size: 1.6rem; line-height: 1; }
 /* ── v89: Kosmos-look (tieners) ── */
 body.kosmos { color: #eef4ff; background:
   radial-gradient(1.2px 1.2px at 12% 18%, #fff, transparent), radial-gradient(1px 1px at 78% 12%, #fff, transparent), radial-gradient(1.4px 1.4px at 44% 36%, #bff8ff, transparent), radial-gradient(1px 1px at 88% 44%, #fff, transparent), radial-gradient(1.2px 1.2px at 22% 62%, #fff, transparent), radial-gradient(1px 1px at 64% 70%, #e6b8ff, transparent), radial-gradient(1.3px 1.3px at 8% 86%, #fff, transparent), radial-gradient(1px 1px at 92% 90%, #fff, transparent), radial-gradient(1px 1px at 52% 94%, #bff8ff, transparent), radial-gradient(1.2px 1.2px at 34% 8%, #fff, transparent),
@@ -7354,6 +7383,7 @@ return exports;})();
       '<div class="d-rov"><button class="d-mode" data-act="switch-mode" aria-label="Modus wisselen. Nu: ' + modeName(P.mode) + '. Tik om te kiezen">' + icon(MODE_ICON[P.mode], 13) + " " + modeName(P.mode) + ' <i aria-hidden="true">▾</i></button>' + lifeBtnHtml() + "</div></div>";
     h += '<nav class="d-grid" aria-label="Onderdelen">' +
       '<button class="d-tile hub" data-act="hub"><span class="hb-ic">' + dIc("book", "#1b4332", 40) + '</span><span class="hb-t"><span class="d-k ar" lang="ar" dir="rtl">بيت العلم</span><b>Bayt al-‘Ilm</b><small>' + (nf ? "Mijn foutjes: " + nf + " · du’a-boekje" : "Foutjes en du’a-boekje") + '</small></span><span class="hb-ch" aria-hidden="true">›</span></button>' +
+      (!mkOwner() ? "" : '<button class="d-tile kd" data-act="kd" aria-label="Koran-dagboek. Vers voor vers lezen en reflecteren. Alleen voor jou zichtbaar. Openen"><img src="journaal/lezer.webp" alt="" width="1024" height="572" loading="lazy"><span class="kd-badge" aria-hidden="true">In ontwikkeling</span><span class="kd-tx"><b>Koran-dagboek</b><small>Vers voor vers lezen en reflecteren</small></span></button>') +
       '<button class="d-tile" data-act="klas">' + "<span class=\"d-top\">" + dIc("book", "#ffd54f", 30) + "<span class=\"d-k ar\" lang=\"ar\" dir=\"rtl\">حلقة سبارك</span></span><b>Halaqa Spark</b><small>Leer samen met je klas</small></button>" +
       '<button class="d-tile" data-act="rad">' + '<span class="d-top">' + dIc("wheel", "#ffd54f", 30) + '<span class="d-k ar" lang="ar" dir="rtl">عجلة العلم</span></span><b>Ajalat al-‘Ilm</b><small>Rad van Kennis</small></button>' +
       '<button class="d-tile" data-act="group">' + "<span class=\"d-top\">" + dIc("users", "#ffd54f", 30) + "<span class=\"d-k ar\" lang=\"ar\" dir=\"rtl\">مسابقة</span></span><b>Musabaqah</b><small>Groep / Duel</small></button>" +
@@ -7835,13 +7865,13 @@ return exports;})();
     return h;
   }
   /* ── Koran-dagboek (voorlopig alleen beheerder): uitleg, reflectie en journalvragen per vers. Eigen notities blijven alleen op dit toestel. ── */
-  let QJ = null, qjLoading = false, qjErr = false, qjKey = "";
+  let QJ = null, qjLoading = false, qjErr = false, qjKey = "", qjFrom = "reader";
   function qjLoad() {
     if (QJ || qjLoading) return;
     qjLoading = true; qjErr = false;
     fetch("journaal/journal.json", { cache: "no-cache" }).then(function (r) { if (!r.ok) throw 0; return r.json(); })
-      .then(function (d) { QJ = d; qjLoading = false; if (screen === "qj") render(); })
-      .catch(function () { qjLoading = false; qjErr = true; QJ = {}; if (screen === "qj") render(); });
+      .then(function (d) { QJ = d; qjLoading = false; if (screen === "qj" || screen === "kd") render(); })
+      .catch(function () { qjLoading = false; qjErr = true; QJ = {}; if (screen === "qj" || screen === "kd") render(); });
   }
   function qjGet(k) { try { const o = JSON.parse(localStorage.getItem("nspark_journal_v1") || "{}"); return (o[k] && o[k].t) || ""; } catch (e) { return ""; } }
   function qjSet(k, t) {
@@ -7851,28 +7881,50 @@ return exports;})();
       localStorage.setItem("nspark_journal_v1", JSON.stringify(o));
     } catch (e) {}
   }
+  function kdGet() { try { return JSON.parse(localStorage.getItem("nspark_kd_v1") || "{}"); } catch (e) { return {}; } }
+  function kdSeen(s, a) { try { const o = kdGet(); o[s] = Math.max(o[s] || 0, a); localStorage.setItem("nspark_kd_v1", JSON.stringify(o)); } catch (e) {} }
+  function kdComplete(s) { if (!QJ) return false; const n = Q_N[s - 1]; if (!n) return false; for (let a = 1; a <= n; a++) if (!QJ[s + ":" + a]) return false; return true; }
+  function kdSoeras() { const out = []; if (!QJ) return out; for (let s = 1; s <= 114; s++) if (kdComplete(s)) out.push(s); return out; }
+  function qjAuto() { const t = document.getElementById("qjText"); if (t && qjKey) qjSet(qjKey, t.value); }
+  function viewKd() {
+    let h = hubTop("Koran-dagboek", "kd-back", "", "Lees en reflecteer vers voor vers");
+    if (!mkOwner()) return h + '<section class="hub"><p class="hub-intro">Dit onderdeel is er nog niet voor iedereen.</p></section>';
+    if (!QJ) { qjLoad(); return h + '<section class="hub"><p class="hub-intro">Het dagboek wordt geladen…</p></section>'; }
+    const list = kdSoeras(), seen = kdGet();
+    h += '<section class="hub"><div class="qs"><img class="qs-img" src="journaal/lezer.webp" alt="" width="1024" height="572"><h2>Kies een soera</h2>';
+    if (!list.length) h += "<p>Er zijn nog geen soera’s klaar.</p>";
+    list.forEach(function (s) {
+      const n = Q_N[s - 1], l = seen[s] || 0, done = l >= n, at = (l > 0 && !done) ? l : 1;
+      h += '<button class="kd-row" data-act="kd-open" data-s="' + s + '" data-a="' + at + '"><span class="kd-no">' + s + '</span><span class="kd-nm"><b>' + esc(Q_TR[s - 1]) + "</b><small>" + (done ? "Afgerond" : l > 0 ? "Verder bij vers " + l + " van " + n : n + " verzen") + '</small><span class="kd-bar"><i style="width:' + Math.round(Math.min(l, n) / n * 100) + '%"></i></span></span><span class="kd-ch" aria-hidden="true">›</span></button>';
+    });
+    h += '<p class="qs-soon">Meer soera’s volgen, insha’Allah.</p></div></section>';
+    return h;
+  }
   function viewQj() {
-    const p = String(qjKey).split(":"), s = parseInt(p[0], 10) || 1, a = parseInt(p[1], 10) || 1;
-    let h = hubTop("Mijn Koran-dagboek", "qj-back", "", Q_TR[s - 1] + " · vers " + a);
+    const p = String(qjKey).split(":"), s = parseInt(p[0], 10) || 1, a = parseInt(p[1], 10) || 1, n = Q_N[s - 1];
+    let h = hubTop("Koran-dagboek", "qj-back", "", Q_TR[s - 1] + " · vers " + a);
     if (!mkOwner()) return h + '<section class="hub"><p class="hub-intro">Dit onderdeel is er nog niet voor iedereen.</p></section>';
     if (!QDATA) { qLoad(); return h + '<section class="hub"><p class="hub-intro">De Koran wordt geladen…</p></section>'; }
     if (!QJ) { qjLoad(); return h + '<section class="hub"><p class="hub-intro">Het dagboek wordt geladen…</p></section>'; }
-    const c = QJ[qjKey], fav = qState().marks.indexOf(qjKey) !== -1, ar = (QDATA[s - 1] && QDATA[s - 1][a - 1]) || "";
-    h += '<section class="hub">' +
-      '<div class="qj-card qj-ar"><div class="q-text q-s' + (S.qSize || 3) + '" lang="ar" dir="rtl">' + ar + '</div>' +
-      '<div class="qj-row"><button class="t-btn" data-act="qj-fav" aria-label="Favoriet">' + (fav ? "★ Favoriet" : "☆ Favoriet") + '</button></div></div>';
+    const c = QJ[qjKey], fav = qState().marks.indexOf(qjKey) !== -1, ar = (QDATA[s - 1] && QDATA[s - 1][a - 1]) || "", nav = kdComplete(s);
+    h += '<section class="hub"><div class="qs"><div class="qs-top">' +
+      (nav ? '<span class="qs-bar" role="progressbar" aria-valuemin="0" aria-valuemax="' + n + '" aria-valuenow="' + a + '"><i style="width:' + Math.round(a / n * 100) + '%"></i></span><small>Vers ' + a + " van " + n + "</small>" : '<span class="qs-bar"></span>') +
+      '<button class="qs-fav" data-act="qj-fav" aria-label="Favoriet">' + (fav ? "★" : "☆") + "</button></div>" +
+      '<img class="qs-img" src="journaal/lezer.webp" alt="Rustige illustratie van iemand die de Koran leest bij een raam" width="1024" height="572">' +
+      '<div class="qs-ar"><div class="q-text q-s' + (S.qSize || 3) + '" lang="ar" dir="rtl">' + ar + "</div></div>";
     if (c) {
-      h += '<div class="qj-card"><h2>Uitleg</h2><p>' + esc(c.u || "") + '</p></div>' +
-        '<div class="qj-card"><h2>Reflectie</h2><p>' + esc(c.r || "") + '</p></div>';
+      h += "<h2>Uitleg</h2><p>" + esc(c.u || "") + "</p>";
+      if (c.b && c.b.length) h += "<h2>Begrippen</h2>" + c.b.map(function (x) { return '<p class="qs-b"><b>' + esc(x[0]) + "</b> " + esc(x[1]) + "</p>"; }).join("");
+      h += '<div class="qs-quote"><svg class="qs-qm" width="46" height="38" viewBox="0 0 46 38" aria-hidden="true"><path d="M2 22 C2 10 9 3 19 2 L19 8 C13 9 10 13 10 17 L19 17 L19 36 L2 36 Z" fill="#b8a06a"/><path d="M26 22 C26 10 33 3 43 2 L43 8 C37 9 34 13 34 17 L43 17 L43 36 L26 36 Z" fill="#b8a06a"/></svg><div class="qs-qb"><p>' + esc(c.r || "") + '</p><small>Reflectie</small></div><div class="qs-qe"></div></div>';
     } else {
-      h += '<div class="qj-card"><p>' + (qjErr ? "Uitleg en reflectie konden niet geladen worden." : "Uitleg en reflectie voor dit vers volgen nog.") + '</p></div>';
+      h += "<p>" + (qjErr ? "Uitleg en reflectie konden niet geladen worden." : "Uitleg en reflectie voor dit vers volgen nog.") + "</p>";
     }
-    h += '<div class="qj-card"><h2>Mijn Journal</h2>';
+    h += '<div class="qj-card"><h2>Mijn journal</h2>';
     if (c && c.v && c.v.length) h += c.v.map(function (q, i) { return '<p class="qj-q">' + (i + 1) + ". " + esc(q) + "</p>"; }).join("");
     h += '<textarea class="qj-ta" id="qjText" aria-label="Schrijf hier je gedachten" placeholder="Schrijf hier je gedachten…">' + esc(qjGet(qjKey)) + '</textarea>' +
-      '<div class="qj-row"><span class="qj-note" id="qjMsg">Alleen voor jou, op dit toestel</span><button class="btn" data-act="qj-save">Bewaar</button></div></div>' +
-      '</section>';
-    return h;
+      '<div class="qj-row"><span class="qj-note" id="qjMsg">Alleen voor jou, op dit toestel</span><button class="btn" data-act="qj-save">Bewaar</button></div></div>';
+    if (nav) h += '<div class="qs-nav">' + (a > 1 ? '<button class="qs-prev" data-act="qj-nav" data-d="-1">Vorig</button>' : "") + '<button class="qs-next" data-act="qj-nav" data-d="1">' + (a < n ? "Volgend vers" : "Soera afronden") + "</button></div>";
+    return h + "</div></section>";
   }
 
   function afterQreadRender() {
@@ -8069,12 +8121,13 @@ return exports;})();
     else if (screen === "quran") app.innerHTML = viewQuran();
     else if (screen === "qread") { app.innerHTML = viewQread(); afterQreadRender(); }
     else if (screen === "qj") { app.innerHTML = viewQj(); }
+    else if (screen === "kd") { app.innerHTML = viewKd(); }
     const bw = document.getElementById("badgesBtnWrap");
     if (bw) bw.style.display = (screen === "board" || screen === "scores") ? "" : "none";
     window.scrollTo({ top: 0 });
     if (screen === "journey") document.body.classList.add("jfull");
     if (screen === "rad" || screen === "bazaar") document.body.classList.add("radfull");
-    if (screen === "dash" || screen === "hub" || screen === "lab" || screen === "labroom" || screen === "labquiz" || screen === "fout" || screen === "dua" || screen === "today" || screen === "prog" || screen === "quran" || screen === "qread" || screen === "qj") document.body.classList.add("dashfull");
+    if (screen === "dash" || screen === "hub" || screen === "lab" || screen === "labroom" || screen === "labquiz" || screen === "fout" || screen === "dua" || screen === "today" || screen === "prog" || screen === "quran" || screen === "qread" || screen === "qj" || screen === "kd") document.body.classList.add("dashfull");
     if (screen === "rad" && rad && rad.phase !== "intro" && rad.phase !== "end") document.body.classList.add("radgame");
     if (kosmosOn() && KOS_SCREENS.indexOf(screen) !== -1) document.body.classList.add("kosmos");
     if (screen === "journey") afterJourneyRender();
@@ -12948,10 +13001,14 @@ return exports;})();
         bar.hidden = true; announce(qi === -1 ? "Bladwijzer gezet bij " + qk : "Bladwijzer verwijderd");
         break;
       }
-      case "q-journal": { const jb = document.getElementById("qSel"), jk = jb && jb.dataset.k; if (!jk || !mkOwner()) break; play("click"); qjKey = jk; screen = "qj"; render(); window.scrollTo({ top: 0 }); break; }
-      case "qj-back": { play("click"); const jp = String(qjKey).split(":"); qSurah = parseInt(jp[0], 10) || 1; qJump = parseInt(jp[1], 10) || 1; screen = "qread"; render(); break; }
+      case "q-journal": { const jb = document.getElementById("qSel"), jk = jb && jb.dataset.k; if (!jk || !mkOwner()) break; play("click"); qjKey = jk; qjFrom = "reader"; screen = "qj"; render(); window.scrollTo({ top: 0 }); break; }
+      case "qj-back": { qjAuto(); play("click"); if (qjFrom === "list") { screen = "kd"; render(); window.scrollTo({ top: 0 }); break; } const jp = String(qjKey).split(":"); qSurah = parseInt(jp[0], 10) || 1; qJump = parseInt(jp[1], 10) || 1; screen = "qread"; render(); break; }
+      case "kd": if (!mkOwner()) break; play("click"); screen = "kd"; render(); window.scrollTo({ top: 0 }); break;
+      case "kd-back": play("click"); screen = "dash"; render(); break;
+      case "kd-open": { if (!mkOwner()) break; const ks = parseInt(el.dataset.s, 10) || 1, ka = parseInt(el.dataset.a, 10) || 1; play("click"); qjKey = ks + ":" + ka; qjFrom = "list"; kdSeen(ks, ka); screen = "qj"; render(); window.scrollTo({ top: 0 }); break; }
+      case "qj-nav": { qjAuto(); const np = String(qjKey).split(":"), ns = parseInt(np[0], 10) || 1, na = (parseInt(np[1], 10) || 1) + (parseInt(el.dataset.d, 10) || 0), nn = Q_N[ns - 1]; play("click"); if (na > nn) { kdSeen(ns, nn); screen = "kd"; render(); window.scrollTo({ top: 0 }); break; } if (na < 1) break; qjKey = ns + ":" + na; kdSeen(ns, na); render(); window.scrollTo({ top: 0 }); break; }
       case "qj-save": { const jt = document.getElementById("qjText"); if (!jt) break; qjSet(qjKey, jt.value); play("correct"); const jm = document.getElementById("qjMsg"); if (jm) jm.textContent = "Bewaard op dit toestel"; announce("Bewaard"); break; }
-      case "qj-fav": { const jm2 = qState().marks, ji = jm2.indexOf(qjKey); if (ji === -1) { jm2.unshift(qjKey); jm2.splice(50); } else jm2.splice(ji, 1); saveState(); el.textContent = ji === -1 ? "★ Favoriet" : "☆ Favoriet"; announce(ji === -1 ? "Favoriet gezet" : "Favoriet verwijderd"); break; }
+      case "qj-fav": { const jm2 = qState().marks, ji = jm2.indexOf(qjKey); if (ji === -1) { jm2.unshift(qjKey); jm2.splice(50); } else jm2.splice(ji, 1); saveState(); el.textContent = ji === -1 ? "★" : "☆"; announce(ji === -1 ? "Favoriet gezet" : "Favoriet verwijderd"); break; }
       case "q-size": { S.qSize = Math.max(1, Math.min(5, (S.qSize || 3) + (parseInt(el.dataset.d, 10) || 0))); saveState(); const qt = document.querySelector(".q-text"); if (qt) qt.className = "q-text q-s" + S.qSize; break; }
       case "prog": play("click"); screen = "prog"; render(); break;
       case "goal-tog": { const gk = el.dataset.g, gd = goalsDay(); if (gd.done[gk]) delete gd.done[gk]; else { gd.done[gk] = 1; play("correct"); } goalSync(); saveState(); render(); break; }
