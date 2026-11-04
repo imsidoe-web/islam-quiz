@@ -2545,14 +2545,18 @@ body.mk-typing .mk-res{gap:8px}
 @media (prefers-reduced-motion: reduce) { .j-head .jh-coin .ns-coin { animation: none; } }
 @media (max-width: 400px) { .j-head .jh-stats > .jh-lifebtn, .j-head .jh-stats > .jh-gembtn { padding: 3px 6px 3px 3px; } .j-head .jh-stats { gap: 4px; } }
 
-/* v222: jouw avatar reist mee langs de route en brengt je terug naar je plek */
-.j-here { position: fixed; z-index: 29; left: 50%; top: 150px; transform: translate(-50%, -50%); width: 58px; height: 58px; padding: 0; border-radius: 50%; border: 3px solid #fff; background: #E3B94F; cursor: pointer; display: grid; place-items: center; box-shadow: 0 3px 0 #8A6A1C, 0 6px 12px rgba(0,0,0,.45); transition: left .12s linear, top .12s linear; }
+/* v223: jouw avatar als wijzer (zoals een kaartpin) die meereist langs de route en je terugbrengt */
+.j-here { position: fixed; z-index: 29; left: 50%; top: 150px; transform: translate(-50%, -50%); width: 60px; height: 60px; padding: 0; border-radius: 16px; border: 3px solid #fff; background: #fff; cursor: pointer; display: block; box-shadow: 0 4px 0 rgba(0,0,0,.28), 0 7px 12px rgba(0,0,0,.4); transition: left .12s linear, top .12s linear; }
 .j-here[hidden] { display: none; }
-.j-here > :first-child { pointer-events: none; }
-.jhe-ar { position: absolute; left: 50%; bottom: -12px; transform: translateX(-50%); min-width: 24px; height: 20px; padding: 0 6px; border-radius: 999px; background: linear-gradient(#FFE79A, #D9A21F); border: 2px solid #8A6A1C; color: #3A2A05; font-size: .85rem; font-weight: 900; line-height: 16px; text-align: center; }
-.j-here.up .jhe-ar { bottom: auto; top: -12px; }
+.j-here > .avatar { width: 100% !important; height: 100% !important; border-radius: 12px !important; display: block; overflow: hidden; pointer-events: none; }
+.j-here::after { content: ""; position: absolute; left: 50%; bottom: -13px; width: 22px; height: 22px; background: #fff; transform: translateX(-50%) rotate(45deg); border-radius: 0 0 6px 0; z-index: -1; box-shadow: 3px 3px 0 rgba(0,0,0,.2); }
+.j-here.up::after { bottom: auto; top: -13px; border-radius: 6px 0 0 0; box-shadow: -3px -3px 0 rgba(0,0,0,.2); }
+.jhe-ar { position: absolute; left: 50%; bottom: -10px; width: 14px; height: 14px; transform: translateX(-50%); font-size: 0; }
+.jhe-ar::before { content: ""; position: absolute; left: 50%; top: 2px; width: 8px; height: 8px; border-right: 3px solid #d6336c; border-bottom: 3px solid #d6336c; transform: translateX(-50%) rotate(45deg); }
+.j-here.up .jhe-ar { bottom: auto; top: -10px; }
+.j-here.up .jhe-ar::before { top: 5px; transform: translateX(-50%) rotate(-135deg); }
 .j-here:active { transform: translate(-50%, -50%) scale(.92); }
-.j-here:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.j-here:focus-visible { outline: 3px solid #ffd54f; outline-offset: 4px; }
 @media (prefers-reduced-motion: reduce) { .j-here { transition: none; } }
 </style>
   <link rel="manifest" href="manifest.webmanifest">
@@ -12269,8 +12273,7 @@ return exports;})();
     b.hidden = false;
     const x = Math.max(36, Math.min(innerWidth - 36, r.left + r.width / 2));
     b.style.left = x + "px"; b.style.top = (up ? topEdge : botEdge) + "px";
-    const ar = b.querySelector(".jhe-ar"); if (ar) ar.textContent = up ? "↑" : "↓";
-    b.classList.toggle("up", up);
+        b.classList.toggle("up", up);
   }
   function viewJourney() {
     const LS = landsFor(P.mode);
@@ -12307,7 +12310,7 @@ return exports;})();
       '<button class="jn-item" data-act="settings" aria-label="Instellingen"><span class="jn-ic" aria-hidden="true">⚙️</span>Instellingen</button>' +
       "</div></nav>";
     h += streakPillHtml() + radJourneyBtn() + bazaarMapBtn();
-    h += '<button class="j-here" id="jHere" data-act="journey-here" hidden aria-label="Terug naar waar je was gebleven">' + avatarHtml(P, 46) + '<b class="jhe-ar" aria-hidden="true">↑</b></button>';
+    h += '<button class="j-here" id="jHere" data-act="journey-here" hidden aria-label="Terug naar waar je was gebleven">' + avatarHtml(P, 46) + '<b class="jhe-ar" aria-hidden="true"></b></button>';
     h += '<div class="j-toast" id="jToast" role="status"></div>';
     return h;
   }
