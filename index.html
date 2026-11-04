@@ -8793,7 +8793,8 @@ return exports;})();
     const FAMILY = [["fam-man", "Man"], ["fam-vrouw", "Vrouw"], ["fam-jongen", "Jongen"], ["fam-meisje", "Meisje"], ["fam-tjongen", "Tiener jongen"], ["fam-tmeisje", "Tiener meisje"]].map((x) => ({ id: x[0], n: x[1], bg: ["#f2ead7", "#e6dcc0"], need: 0, art: "", img: "avatars/" + x[0] + ".webp" }));   /* tekenfiguren zonder gezicht; vanaf het begin te kiezen */
     /* v224: dieren en voorwerpen staan voor de groene boog; de man is het eigen plaatje (boog zit erin) */
     ANIMALS.concat(THINGS).forEach((a) => { a.arch = true; });
-    FAMILY.forEach((a) => { if (a.id === "fam-man") { a.arch = true; a.img = "avatars/fam-man-boog.webp"; } });
+    FAMILY.forEach((a) => { a.arch = true; a.img = "avatars/" + a.id + "-boog.webp"; });
+    PEOPLE.forEach((a) => { a.arch = true; a.clip = true; });
     const ALL = ANIMALS.concat(PEOPLE, THINGS, FAMILY);
     return { ANIMALS: ANIMALS, PEOPLE: PEOPLE, THINGS: THINGS, FAMILY: FAMILY, ALL: ALL };
   })();
@@ -8810,7 +8811,7 @@ return exports;})();
       if (a.img) return '<image href="' + a.img + '" x="0" y="0" width="100" height="100" preserveAspectRatio="xMidYMid meet"/>';
       const u = ++avUid;
       return '<defs><linearGradient id="avg' + u + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff7bf"/><stop offset=".4" stop-color="#ffd23a"/><stop offset=".8" stop-color="#e79a00"/><stop offset="1" stop-color="#9a5a00"/></linearGradient></defs>' +
-        '<image href="avatars/boog.webp" x="0" y="0" width="100" height="100" preserveAspectRatio="xMidYMid meet"/><g transform="translate(' + (ARCH_T[a.id] ? ARCH_T[a.id][0] + " " + ARCH_T[a.id][1] + ") scale(" + ARCH_T[a.id][2] : "16 28) scale(.675") + ')">' + a.art.split("url(#G)").join("url(#avg" + u + ")") + "</g>";
+        '<clipPath id="avc' + u + '"><rect x="0" y="0" width="100" height="84.5"/></clipPath><image href="avatars/boog.webp" x="0" y="0" width="100" height="100" preserveAspectRatio="xMidYMid meet"/><g' + (a.clip ? ' clip-path="url(#avc' + u + ')"' : "") + '><g transform="translate(' + (ARCH_T[a.id] ? ARCH_T[a.id][0] + " " + ARCH_T[a.id][1] + ") scale(" + ARCH_T[a.id][2] : a.clip ? "14 12) scale(.72" : "16 28) scale(.675") + ')">' + a.art.split("url(#G)").join("url(#avg" + u + ")") + "</g></g>";
     }
     if (a.img) return '<rect width="100" height="100" fill="#f2ead7"/><image href="' + a.img + '" x="0" y="0" width="100" height="100" preserveAspectRatio="xMidYMid slice"/><rect x=".5" y=".5" width="99" height="99" fill="none" stroke="#000" stroke-opacity=".25" stroke-width="1"/>';
     const u = ++avUid;   /* flat: zonder schaduwfilter (voor de kleine tegels op de kaart, die op sommige telefoons met een filter leeg bleven) */
