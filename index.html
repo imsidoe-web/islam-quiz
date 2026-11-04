@@ -2186,6 +2186,14 @@ body.dashfull { background: #0f2e22; color: #f4efe2; }
 .qa:focus-visible { outline: 3px solid #ffb703; outline-offset: 2px; }
 .q-selbar { position: fixed; z-index: 40; left: 10px; right: 10px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); max-width: 700px; margin: 0 auto; display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 16px; background: #0f2e22; border: 2px solid #d9a05b; color: #f4efe2; font-weight: 800; box-shadow: 0 8px 24px rgba(0,0,0,.4); }
 .q-selbar[hidden] { display: none; } .q-selbar span { flex: 1; }
+.qj-card { background: #fbf6ea; color: #2a2a1f; border: 1.5px solid #d9a05b; border-radius: 14px; padding: 14px 16px; margin: 10px 7px; }   /* Koran-dagboek */
+.qj-card h2 { margin: 0 0 6px; font-size: 1rem; color: #1b4332; }
+.qj-card p { margin: 0; line-height: 1.6; }
+.qj-ar { text-align: center; }
+.qj-q { margin: 6px 0; font-weight: 700; line-height: 1.5; }
+.qj-ta { width: 100%; box-sizing: border-box; min-height: 130px; border: 1px solid #d9a05b; border-radius: 10px; background: #fff; color: #2a2a1f; font: inherit; padding: 10px; margin-top: 8px; resize: vertical; }
+.qj-row { display: flex; gap: 8px; align-items: center; justify-content: space-between; margin-top: 10px; flex-wrap: wrap; }
+.qj-note { font-size: .8rem; color: #6b6a55; }
 /* ── v89: Kosmos-look (tieners) ── */
 body.kosmos { color: #eef4ff; background:
   radial-gradient(1.2px 1.2px at 12% 18%, #fff, transparent), radial-gradient(1px 1px at 78% 12%, #fff, transparent), radial-gradient(1.4px 1.4px at 44% 36%, #bff8ff, transparent), radial-gradient(1px 1px at 88% 44%, #fff, transparent), radial-gradient(1.2px 1.2px at 22% 62%, #fff, transparent), radial-gradient(1px 1px at 64% 70%, #e6b8ff, transparent), radial-gradient(1.3px 1.3px at 8% 86%, #fff, transparent), radial-gradient(1px 1px at 92% 90%, #fff, transparent), radial-gradient(1px 1px at 52% 94%, #bff8ff, transparent), radial-gradient(1.2px 1.2px at 34% 8%, #fff, transparent),
@@ -7787,8 +7795,8 @@ return exports;})();
     if (QDATA || qLoading) return;
     qLoading = true; qErr = false;
     fetch("quran/indopak.json").then(function (r) { if (!r.ok) throw new Error("http"); return r.json(); })
-      .then(function (d) { QDATA = d; qLoading = false; if (screen === "quran" || screen === "qread") render(); })
-      .catch(function () { qLoading = false; qErr = true; if (screen === "quran" || screen === "qread") render(); });
+      .then(function (d) { QDATA = d; qLoading = false; if (screen === "quran" || screen === "qread" || screen === "qj") render(); })
+      .catch(function () { qLoading = false; qErr = true; if (screen === "quran" || screen === "qread" || screen === "qj") render(); });
   }
   function qMinToday() { return Math.floor((qState().sec[todayStr()] || 0) / 60); }
   function qGoalTxt() { const m = Math.min(qMinToday(), Q_GOAL_MIN); return "Leesdoel: " + m + "/" + Q_GOAL_MIN + " min" + (m >= Q_GOAL_MIN ? " ✓" : ""); }
@@ -7823,9 +7831,50 @@ return exports;})();
     t += "</div></div>";
     h += '<section class="hub">' + t + '<div class="q-nav">' + (s < 114 ? '<button class="btn" data-act="q-open" data-s="' + (s + 1) + '" data-a="1">Volgende: ' + Q_TR[s] + "</button>" : "") + (s > 1 ? '<button class="btn ghost" data-act="q-open" data-s="' + (s - 1) + '" data-a="1">Vorige: ' + Q_TR[s - 2] + "</button>" : "") + "</div>" +
       '<p class="q-src">Tekst en lettertype: Ayman Siddiqui / Quranic Universal Library by Tarteel. Tik op een ayah voor een bladwijzer. De ayah-nummers staan in de rondjes, zoals in een IndoPak-mushaf.</p></section>' +
-      '<div class="q-selbar" id="qSel" hidden><span id="qSelT"></span><button class="t-btn" data-act="q-mark" id="qSelB">🔖 Bladwijzer</button><button class="t-btn" data-act="q-unsel" aria-label="Sluiten">✕</button></div>';
+      '<div class="q-selbar" id="qSel" hidden><span id="qSelT"></span><button class="t-btn" data-act="q-mark" id="qSelB">🔖 Bladwijzer</button>' + (mkOwner() ? '<button class="t-btn" data-act="q-journal">📓 Journal</button>' : "") + '<button class="t-btn" data-act="q-unsel" aria-label="Sluiten">✕</button></div>';
     return h;
   }
+  /* ── Koran-dagboek (voorlopig alleen beheerder): uitleg, reflectie en journalvragen per vers. Eigen notities blijven alleen op dit toestel. ── */
+  let QJ = null, qjLoading = false, qjErr = false, qjKey = "";
+  function qjLoad() {
+    if (QJ || qjLoading) return;
+    qjLoading = true; qjErr = false;
+    fetch("journaal/journal.json", { cache: "no-cache" }).then(function (r) { if (!r.ok) throw 0; return r.json(); })
+      .then(function (d) { QJ = d; qjLoading = false; if (screen === "qj") render(); })
+      .catch(function () { qjLoading = false; qjErr = true; QJ = {}; if (screen === "qj") render(); });
+  }
+  function qjGet(k) { try { const o = JSON.parse(localStorage.getItem("nspark_journal_v1") || "{}"); return (o[k] && o[k].t) || ""; } catch (e) { return ""; } }
+  function qjSet(k, t) {
+    try {
+      const o = JSON.parse(localStorage.getItem("nspark_journal_v1") || "{}");
+      if (String(t).trim()) o[k] = { t: String(t), d: todayStr() }; else delete o[k];
+      localStorage.setItem("nspark_journal_v1", JSON.stringify(o));
+    } catch (e) {}
+  }
+  function viewQj() {
+    const p = String(qjKey).split(":"), s = parseInt(p[0], 10) || 1, a = parseInt(p[1], 10) || 1;
+    let h = hubTop("Mijn Koran-dagboek", "qj-back", "", Q_TR[s - 1] + " · vers " + a);
+    if (!mkOwner()) return h + '<section class="hub"><p class="hub-intro">Dit onderdeel is er nog niet voor iedereen.</p></section>';
+    if (!QDATA) { qLoad(); return h + '<section class="hub"><p class="hub-intro">De Koran wordt geladen…</p></section>'; }
+    if (!QJ) { qjLoad(); return h + '<section class="hub"><p class="hub-intro">Het dagboek wordt geladen…</p></section>'; }
+    const c = QJ[qjKey], fav = qState().marks.indexOf(qjKey) !== -1, ar = (QDATA[s - 1] && QDATA[s - 1][a - 1]) || "";
+    h += '<section class="hub">' +
+      '<div class="qj-card qj-ar"><div class="q-text q-s' + (S.qSize || 3) + '" lang="ar" dir="rtl">' + ar + '</div>' +
+      '<div class="qj-row"><button class="t-btn" data-act="qj-fav" aria-label="Favoriet">' + (fav ? "★ Favoriet" : "☆ Favoriet") + '</button></div></div>';
+    if (c) {
+      h += '<div class="qj-card"><h2>Uitleg</h2><p>' + esc(c.u || "") + '</p></div>' +
+        '<div class="qj-card"><h2>Reflectie</h2><p>' + esc(c.r || "") + '</p></div>';
+    } else {
+      h += '<div class="qj-card"><p>' + (qjErr ? "Uitleg en reflectie konden niet geladen worden." : "Uitleg en reflectie voor dit vers volgen nog.") + '</p></div>';
+    }
+    h += '<div class="qj-card"><h2>Mijn Journal</h2>';
+    if (c && c.v && c.v.length) h += c.v.map(function (q, i) { return '<p class="qj-q">' + (i + 1) + ". " + esc(q) + "</p>"; }).join("");
+    h += '<textarea class="qj-ta" id="qjText" aria-label="Schrijf hier je gedachten" placeholder="Schrijf hier je gedachten…">' + esc(qjGet(qjKey)) + '</textarea>' +
+      '<div class="qj-row"><span class="qj-note" id="qjMsg">Alleen voor jou, op dit toestel</span><button class="btn" data-act="qj-save">Bewaar</button></div></div>' +
+      '</section>';
+    return h;
+  }
+
   function afterQreadRender() {
     clearInterval(qTick); if (qObs) { qObs.disconnect(); qObs = null; }
     if (!QDATA) return;
@@ -8019,12 +8068,13 @@ return exports;})();
     else if (screen === "prog") app.innerHTML = viewProg();
     else if (screen === "quran") app.innerHTML = viewQuran();
     else if (screen === "qread") { app.innerHTML = viewQread(); afterQreadRender(); }
+    else if (screen === "qj") { app.innerHTML = viewQj(); }
     const bw = document.getElementById("badgesBtnWrap");
     if (bw) bw.style.display = (screen === "board" || screen === "scores") ? "" : "none";
     window.scrollTo({ top: 0 });
     if (screen === "journey") document.body.classList.add("jfull");
     if (screen === "rad" || screen === "bazaar") document.body.classList.add("radfull");
-    if (screen === "dash" || screen === "hub" || screen === "lab" || screen === "labroom" || screen === "labquiz" || screen === "fout" || screen === "dua" || screen === "today" || screen === "prog" || screen === "quran" || screen === "qread") document.body.classList.add("dashfull");
+    if (screen === "dash" || screen === "hub" || screen === "lab" || screen === "labroom" || screen === "labquiz" || screen === "fout" || screen === "dua" || screen === "today" || screen === "prog" || screen === "quran" || screen === "qread" || screen === "qj") document.body.classList.add("dashfull");
     if (screen === "rad" && rad && rad.phase !== "intro" && rad.phase !== "end") document.body.classList.add("radgame");
     if (kosmosOn() && KOS_SCREENS.indexOf(screen) !== -1) document.body.classList.add("kosmos");
     if (screen === "journey") afterJourneyRender();
@@ -12898,6 +12948,10 @@ return exports;})();
         bar.hidden = true; announce(qi === -1 ? "Bladwijzer gezet bij " + qk : "Bladwijzer verwijderd");
         break;
       }
+      case "q-journal": { const jb = document.getElementById("qSel"), jk = jb && jb.dataset.k; if (!jk || !mkOwner()) break; play("click"); qjKey = jk; screen = "qj"; render(); window.scrollTo({ top: 0 }); break; }
+      case "qj-back": { play("click"); const jp = String(qjKey).split(":"); qSurah = parseInt(jp[0], 10) || 1; qJump = parseInt(jp[1], 10) || 1; screen = "qread"; render(); break; }
+      case "qj-save": { const jt = document.getElementById("qjText"); if (!jt) break; qjSet(qjKey, jt.value); play("correct"); const jm = document.getElementById("qjMsg"); if (jm) jm.textContent = "Bewaard op dit toestel"; announce("Bewaard"); break; }
+      case "qj-fav": { const jm2 = qState().marks, ji = jm2.indexOf(qjKey); if (ji === -1) { jm2.unshift(qjKey); jm2.splice(50); } else jm2.splice(ji, 1); saveState(); el.textContent = ji === -1 ? "★ Favoriet" : "☆ Favoriet"; announce(ji === -1 ? "Favoriet gezet" : "Favoriet verwijderd"); break; }
       case "q-size": { S.qSize = Math.max(1, Math.min(5, (S.qSize || 3) + (parseInt(el.dataset.d, 10) || 0))); saveState(); const qt = document.querySelector(".q-text"); if (qt) qt.className = "q-text q-s" + S.qSize; break; }
       case "prog": play("click"); screen = "prog"; render(); break;
       case "goal-tog": { const gk = el.dataset.g, gd = goalsDay(); if (gd.done[gk]) delete gd.done[gk]; else { gd.done[gk] = 1; play("correct"); } goalSync(); saveState(); render(); break; }
