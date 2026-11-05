@@ -2008,6 +2008,29 @@ body:has(#avDlg) .back-toast { top: 92px !important; bottom: auto !important; z-
 .bon-win b { display: block; color: #f6d25a; font-size: 1.05rem; } .bon-win small { display: block; opacity: .9; font-weight: 600; margin-top: 2px; }
 .bon-win .bw-btn { margin-top: 6px; border: 1.5px solid #f6d25a99; background: #ffffff14; color: #fff6c2; border-radius: 999px; padding: 6px 12px; font: inherit; font-weight: 800; font-size: .85rem; cursor: pointer; min-height: 36px; }
 @media (prefers-reduced-motion: reduce) { .bm-dlg, .bm-dlg *, .bn-bob, .bn-spk, .bon-win * { animation: none !important; } .bm-rib animate { display: none; } .bn-spk { opacity: 1; transform: none; } }
+/* ───── v246: Jummah in gegolfde boog met Nalain ───── */
+.jm2 { position: relative; width: min(360px, 92vw); margin: 20px auto; container-type: inline-size; filter: drop-shadow(0 12px 18px rgba(0,0,0,.6)); animation: pop .3s ease both; }
+.jm2-bg { display: block; width: 100%; height: auto; user-select: none; -webkit-user-drag: none; }
+.jm2-c { position: absolute; left: 22%; right: 20%; top: 21%; bottom: 17%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #1d4b33; font-weight: 700; }
+.jm2-nl { width: 7.6cqw; height: auto; margin-bottom: .8cqw; }
+.jm2-t { white-space: nowrap; font-family: "Kaushan Script", "Brush Script MT", cursive; font-size: 6.4cqw; line-height: 1.15; color: #1d4b33; margin-bottom: 1.6cqw; }
+.jm2-t span { display: inline-block; text-shadow: 0 1px 0 #fff9, 0 0 6px #e8b83a99; animation: jmdance 1.9s ease-in-out infinite; animation-delay: calc(var(--i) * -.13s); transform-origin: 50% 80%; }
+.jm2-ri { display: flex; align-items: center; gap: 1.6cqw; font-size: 3.2cqw; line-height: 1.2; text-align: left; margin: .8cqw 0 0; color: #2d4a3a; }
+.jm2-ri svg { flex: none; width: 5.4cqw; height: 5.4cqw; } .jm2-ri small { display: block; font-size: 2.9cqw; opacity: .75; font-weight: 600; }
+.jm2-rw { display: flex; gap: 6cqw; justify-content: center; margin: 1.4cqw 0 .2cqw; font-size: 4.2cqw; font-weight: 900; color: #1d4b33; }
+.jm2-rw span { display: flex; align-items: center; gap: 1.2cqw; }
+.jm2-st { font-size: 3.2cqw; line-height: 1.2; margin: .6cqw 0 0; color: #3d5a48; } .jm2-st b { color: #8a5a08; font-size: 3.6cqw; }
+.jm2-dots { display: flex; gap: 2cqw; justify-content: center; margin-top: 1cqw; }
+.jm2-dot { width: 5.6cqw; height: 5.6cqw; border-radius: 50%; display: grid; place-items: center; border: .5cqw solid #c9a23a; background: #fff8; color: #b88a1e; font-size: 3.2cqw; }
+.jm2-dot.on { background: linear-gradient(#fff3b8, #e8b83a); color: #4a2f00; font-weight: 900; border-color: #b8861f; }
+.jm2-dot.now { color: #1d4b33; border-color: #1d4b33; animation: bmpulse2 1.8s ease-in-out infinite; }
+.jm2-btn { position: relative; border: 0; background: none; padding: 0; cursor: pointer; width: 26cqw; margin-top: 1cqw; font: inherit; }
+.jm2-btn img { display: block; width: 100%; height: auto; }
+.jm2-btn span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 3.5cqw; letter-spacing: .06em; color: #1d4b33; text-transform: uppercase; }
+.jm2-btn:active { transform: scale(.97); }
+.jm2-later { background: none; border: 0; font: inherit; font-weight: 700; font-size: 3.2cqw; color: #3d5a48; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 0 3cqw; min-height: 32px; margin-top: -.5cqw; }
+.jm2-btn:focus-visible, .jm2-later:focus-visible { outline: 3px solid #1d4b33; outline-offset: 2px; border-radius: 10px; }
+@media (prefers-reduced-motion: reduce) { .jm2, .jm2 * { animation: none !important; } }
 /* ───── Jummah Mubarak ───── */
 .jm-rt { position: absolute; left: 0; right: 0; top: 6px; text-align: center; font-family: "Kaushan Script", "Brush Script MT", cursive; font-weight: 400; font-size: 31px; line-height: 1.2; z-index: 3; filter: drop-shadow(0 2px 0 #0a4a30) drop-shadow(0 0 8px #f6d25a77); pointer-events: none; }
 .jm-rt span { display: inline-block; background: linear-gradient(180deg, #fffbe0, #f6d25a 65%, #e0a92a); -webkit-background-clip: text; background-clip: text; color: transparent; animation: jmdance 1.9s ease-in-out infinite; animation-delay: calc(var(--i) * -.13s); transform-origin: 50% 80%; }
@@ -9973,7 +9996,7 @@ return exports;})();
     const old = document.getElementById("jmWrap"); if (old) old.remove();
     const prevFocus = document.activeElement, n = jumNext(), cur = (n - 1) % 4, extra = n % 4 === 0, gems = JUM_GEMS + (extra ? JUM_EXTRA_GEMS : 0);
     const streakT = n === 1 ? "Je eerste vrijdag" : n + " vrijdagen op rij";
-    const streakS = extra ? "Extra cadeau: +" + JUM_EXTRA_GEMS + " edelstenen!" : "Bij " + (n + 4 - (n % 4)) + " vrijdagen op rij wacht een extra cadeau";
+    const streakS = extra ? "Extra cadeau: +" + JUM_EXTRA_GEMS + " edelstenen!" : "Bij " + (n + 4 - (n % 4)) + " op rij: extra cadeau";
     let dots = "";
     for (let i = 0; i < 4; i++) dots += '<span class="jm-dot' + (i < cur ? " on" : i === cur ? " now" : "") + '" aria-hidden="true">' + (i < cur ? "✓" : i === cur ? (i === 3 ? "🎁" : "★") : i === 3 ? "🎁" : "·") + "</span>";
     const letters = "Jummah Mubarak".split("").map(function (c, i) { return '<span style="--i:' + i + '">' + (c === " " ? "&nbsp;" : c) + "</span>"; }).join("");
@@ -9985,12 +10008,12 @@ return exports;})();
       '<defs><linearGradient id="bnRib" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3fd08a"/><stop offset=".5" stop-color="#14935a"/><stop offset="1" stop-color="#0a5233"/></linearGradient></defs></svg></div>';
     const label = "Jummah Mubarak. Vergeet je niet Surah al-Kahf te reciteren? Heb je de salawat verricht? Je cadeau: " + gems + " edelstenen en " + JUM_XP + " XP. " + streakT + ". " + streakS + ".";
     const w = document.createElement("div"); w.className = "bm-wrap"; w.id = "jmWrap";
-    w.innerHTML = '<div class="bm-dlg jm-dlg" role="dialog" aria-modal="true" aria-label="' + esc(label) + '"><div class="bm-in">' + rib + '<div class="jm-rt" aria-hidden="true">' + letters + "</div>" +
-      '<div class="jm-rem"><div class="jm-ri">' + book + "<span>Vergeet je niet Surah al-Kahf te reciteren?</span></div>" +
-      '<div class="jm-ri">' + star + "<span>Heb je de salawat verricht?<small>(Salat ʿalan-Nabi ﷺ)</small></span></div></div>" + jmScene() +
-      '<div class="bm-row jm-reward"><span class="bm-rw">' + gemSvg(26) + "<b>+" + gems + "</b></span>" + '<span class="bm-rw">' + xpSvg(24) + "<b>+" + JUM_XP + "</b></span></div>" +
-      '<div class="jm-streak"><b>' + streakT + "</b><br>" + streakS + '<div class="jm-dots">' + dots + "</div></div>" +
-      '<div class="bm-btns jm-btns"><button class="bm-btn go" data-jm="claim">Ontvang</button></div><button class="jm-later" data-jm="x">Later</button></div></div>';
+    w.innerHTML = '<div class="jm2" role="dialog" aria-modal="true" aria-label="' + esc(label) + '"><img class="jm2-bg" src="melding/boog.webp" alt="" aria-hidden="true"><div class="jm2-c"><img class="jm2-nl" src="melding/nalain.webp" alt="" aria-hidden="true"><div class="jm2-t" aria-hidden="true">' + letters + "</div>" +
+      '<div class="jm2-ri">' + book + "<span>Vergeet je niet Surah al-Kahf te reciteren?</span></div>" +
+      '<div class="jm2-ri">' + star + "<span>Heb je de salawat verricht?<small>(Salat ʿalan-Nabi ﷺ)</small></span></div>" +
+      '<div class="jm2-rw"><span>' + gemSvg(22) + "<b>+" + gems + "</b></span><span>" + xpSvg(20) + "<b>+" + JUM_XP + "</b></span></div>" +
+      '<div class="jm2-st"><b>' + streakT + "</b><br>" + streakS + '<div class="jm2-dots">' + dots + "</div></div>" +
+      '<button class="jm2-btn" data-jm="claim"><img src="melding/knop.webp" alt=""><span>Ontvang</span></button><button class="jm2-later" data-jm="x">Later</button></div></div>';
     const close = function () { document.removeEventListener("keydown", onKey, true); w.remove(); if (prevFocus && prevFocus.focus && document.contains(prevFocus)) { try { prevFocus.focus({ preventScroll: true }); } catch (e) {} } };
     const onKey = function (e) {
       if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); close(); return; }
@@ -10012,7 +10035,7 @@ return exports;})();
     });
     document.addEventListener("keydown", onKey, true);
     document.body.appendChild(w); play("click");
-    const f = w.querySelector(".bm-btn.go"); if (f) f.focus({ preventScroll: true });
+    const f = w.querySelector(".jm2-btn"); if (f) f.focus({ preventScroll: true });
   }
 
 
