@@ -2295,6 +2295,16 @@ body.dashfull { background: #0f2e22; color: #f4efe2; }
 .bd-live.on { background: var(--green); animation: bdpulse 2s ease-out infinite; }
 @keyframes bdpulse { 0% { box-shadow: 0 0 0 0 rgba(79,217,143,.5); } 100% { box-shadow: 0 0 0 9px rgba(79,217,143,0); } }
 .bd-idbtn { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 4px 0 4px; padding: 14px 16px; border-radius: 16px; border: 1px solid rgba(180,140,255,.28); background: linear-gradient(160deg, rgba(180,140,255,.16), rgba(110,168,255,.07)); color: var(--tx); font: inherit; text-align: left; cursor: pointer; }
+.bd-wp { margin: 8px 0 18px; padding: 14px 12px 10px; border-radius: 22px; border: 1px solid rgba(180,140,255,.35); background: linear-gradient(180deg, rgba(180,140,255,.07), rgba(110,168,255,.02)); box-shadow: inset 0 1px 0 rgba(255,255,255,.04); }
+.bd-wph { padding: 0 6px 8px; }
+.bd-wph b { display: block; font-size: 17px; font-weight: 600; letter-spacing: .01em; color: var(--tx); }
+.bd-wph small { display: block; margin-top: 2px; font-size: 12.5px; color: var(--mut); }
+.bd-wi { flex: 0 0 42px; height: 42px; border-radius: 13px; display: inline-flex; align-items: center; justify-content: center; color: var(--wc, var(--violet)); background: color-mix(in srgb, var(--wc, var(--violet)) 16%, transparent); border: 1px solid color-mix(in srgb, var(--wc, var(--violet)) 38%, transparent); }
+.bd-wp .bd-idbtn { justify-content: flex-start; }
+.bd-wp .bd-idbtn > span { flex: 1; min-width: 0; }
+.bd-wp .bd-idbtn > b { margin-left: auto; }
+.bd-dot { margin-left: auto; min-width: 28px; height: 28px; padding: 0 8px; border-radius: 14px; display: inline-flex; align-items: center; justify-content: center; font-style: normal; font-size: 15px; font-weight: 700; color: #1a0b14; background: var(--pink); box-shadow: 0 0 0 4px rgba(240,122,184,.16); }
+.bd-dot.ok { background: var(--green); box-shadow: 0 0 0 4px rgba(79,217,143,.14); }
 .bd-idbtn:hover, .bd-idbtn:focus-visible { border-color: var(--violet); outline: none; }
 .bd-idbtn span { font-size: 16px; font-weight: 600; }
 .bd-ck { justify-content: flex-start; text-align: left; }
@@ -8312,9 +8322,13 @@ return exports;})();
     const kpi = function (l, v, cap, c) { return '<div class="bd-k" style="--c:' + c + '"><span>' + l + "</span><b>" + v + "</b><small>" + cap + "</small></div>"; };
     const tot = n("accounts_totaal"), ec = n("accounts_echt"), gs = n("accounts_gast"), pe = tot ? Math.round(ec / tot * 100) : 0;
     let h = '<div class="bd">' + top("") + '<main class="bd-m">';
-    h += '<button class="bd-idbtn" data-act="bd-controle"><span>Te controleren<small>Dingen die jouw aandacht nodig hebben</small></span><b>' + ctlOpen() + "</b></button>";
-    h += '<button class="bd-idbtn" data-act="bd-tests"><span>Meldingen testen<small>Bekijk elke melding direct, zonder te wachten</small></span><b>6</b></button>';
-    h += '<button class="bd-idbtn" data-act="bd-ideas"><span>Mijn ideeën<small>Schrijf en bewaar je plannen</small></span><b>' + (IDS ? IDS.length : idLocal().length) + "</b></button>";
+    const hr = new Date().getHours(), gr = hr < 6 ? "Goedenacht" : hr < 12 ? "Goedemorgen" : hr < 18 ? "Goedemiddag" : "Goedenavond";
+    const co = ctlOpen();
+    h += '<p class="bd-greet">' + gr + '<b>' + (co ? (co === 1 ? "1 ding vraagt je aandacht" : co + " dingen vragen je aandacht") : "Alles is gecontroleerd") + "</b></p>";
+    h += '<section class="bd-wp" aria-labelledby="bd-wp-t"><div class="bd-wph"><b id="bd-wp-t">Mijn studio</b><small>Jouw taken als maker van NurSpark</small></div>';
+    h += '<button class="bd-idbtn" data-act="bd-controle" style="--wc:var(--amber)"><i class="bd-wi" aria-hidden="true">' + ic('<path d="M9 11l3 3 8-8"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/>') + '</i><span>Te controleren<small>Dingen die jouw aandacht nodig hebben</small></span>' + (co ? '<em class="bd-dot" aria-label="' + co + ' open">' + co + "</em>" : '<em class="bd-dot ok" aria-label="Alles gecontroleerd">✓</em>') + "</button>";
+    h += '<button class="bd-idbtn" data-act="bd-tests" style="--wc:var(--teal)"><i class="bd-wi" aria-hidden="true">' + ic('<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/>') + '</i><span>Meldingen testen<small>Bekijk elke melding direct, zonder te wachten</small></span><b>6</b></button>';
+    h += '<button class="bd-idbtn" data-act="bd-ideas" style="--wc:var(--violet)"><i class="bd-wi" aria-hidden="true">' + ic('<path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/>') + '</i><span>Mijn ideeën<small>Schrijf en bewaar je plannen</small></span><b>' + (IDS ? IDS.length : idLocal().length) + "</b></button></section>";
     h += '<div class="bd-kg">' + kpi("Accounts", tot, ec + " echt · " + gs + " gast", "var(--blue)") + kpi("Actief 24 uur", n("actief_24u"), n("actief_5m") + " in de laatste 5 min", "var(--green)") + kpi("Nieuw, 7 dagen", n("nieuw_7d"), n("nieuw_vandaag") + " vandaag", "var(--violet)") + kpi("Via Play Store", n("play_spelers"), n("play_actief_24u") + " actief in 24 uur", "var(--amber)") + "</div>";
     h += sec("Echt account of gast") + '<div class="bd-card"><div class="bd-dn"><svg viewBox="0 0 36 36" width="140" height="140" role="img" aria-label="' + pe + ' procent echte accounts"><defs><linearGradient id="bdg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6ea8ff"/><stop offset="1" stop-color="#b48cff"/></linearGradient></defs><circle cx="18" cy="18" r="15.9155" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="3.4"/><circle cx="18" cy="18" r="15.9155" fill="none" stroke="url(#bdg)" stroke-width="3.4" stroke-linecap="round" stroke-dasharray="' + Math.max(pe - 2, 0) + " " + (102 - pe) + '" transform="rotate(-90 18 18)"/><text x="18" y="18.6" text-anchor="middle" font-size="7.4" font-weight="500" fill="#e9e8f6">' + pe + '%</text><text x="18" y="23.4" text-anchor="middle" font-size="2.6" fill="#8f8eb0">echt account</text></svg>' +
       '<div class="bd-lg"><div><u style="background:#8b9cff"></u><span>Echt account</span><b>' + ec + '</b></div><div><u style="background:rgba(255,255,255,.25)"></u><span>Gast</span><b>' + gs + "</b></div><p>Met score op het scorebord: " + n("spelers_echt") + " echt, " + n("spelers_gast") + " gast.</p></div></div></div>";
