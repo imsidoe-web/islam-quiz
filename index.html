@@ -2300,6 +2300,7 @@ body.dashfull { background: #0f2e22; color: #f4efe2; }
 .bd-ck { justify-content: flex-start; text-align: left; }
 .bd-ckb { flex: 0 0 26px; height: 26px; border-radius: 8px; border: 2px solid rgba(180,140,255,.6); display: inline-flex; align-items: center; justify-content: center; font-style: normal; font-weight: 700; color: #0f0f1a; }
 .bd-ck.on .bd-ckb { background: var(--green); border-color: var(--green); }
+.bd-ck small b { color: var(--tx); font-weight: 600; }
 .bd-ck.on span { opacity: .6; text-decoration: line-through; }
 .bd-idbtn small { display: block; margin-top: 2px; font-size: 12.5px; font-weight: 400; color: var(--mut); }
 .bd-idbtn b { min-width: 34px; text-align: right; font-size: 24px; font-weight: 500; color: var(--violet); font-variant-numeric: tabular-nums; }
@@ -8227,9 +8228,18 @@ return exports;})();
   }
   /* ── Te controleren (v252): lijst voor de beheerder; vinkje wordt op dit toestel bewaard ── */
   const CONTROLE = [
-    { id: "aq-1", t: "Quizvraag n-ih-j-28 (Ihsan, junior)", d: "‘onder de schaduw van Allah’ → ‘onder Zijn bescherming op de Dag des Oordeels’. Reden: Aqida, geen lichamelijk beeld." },
-    { id: "aq-2", t: "Quizvraag n-ih-j-18 (57:4)", d: "Uitleg ‘met Zijn kennis overal bij ons’ → ‘Niets is voor Allah verborgen, waar je ook bent.’ Reden: ‘overal’ kan als plaats gelezen worden." },
-    { id: "aq-3", t: "Quizvraag b-ge-9 (sujood)", d: "‘het dichtst nabij’ → ‘nabij in genade’. Reden: geen afstand." }
+    { id: "aq-1", t: "Quizvraag n-ih-j-28 (Ihsan, junior)",
+      v: "‘Bij de zeven onder de schaduw van Allah: iemand gedenkt Allah alleen, en ...’",
+      n: "‘Bij de zeven die op de Dag des Oordeels onder Zijn bescherming staan: iemand gedenkt Allah alleen, en ...’",
+      c: "‘Schaduw van Allah’ kan een lichamelijk beeld oproepen. ‘Zijn bescherming’ zegt hetzelfde zonder dat beeld (Aqida)." },
+    { id: "aq-2", t: "Quizvraag n-ih-j-18 (57:4, uitleg)",
+      v: "‘Allah is met Zijn kennis overal bij ons.’",
+      n: "‘Niets is voor Allah verborgen, waar je ook bent.’",
+      c: "‘Overal’ kan als een plaats gelezen worden. Deze zin gaat over Allahs kennis, niet over waar Hij is." },
+    { id: "aq-3", t: "Quizvraag b-ge-9 (Sujud, uitleg)",
+      v: "‘De Profeet ﷺ zei dat een dienaar Allah het dichtst nabij is als hij in Sujud is.’",
+      n: "‘De Profeet ﷺ zei dat een dienaar nabij is in Allahs genade als hij in Sujud is.’",
+      c: "‘Het dichtst nabij’ kan als afstand gelezen worden. ‘Nabij in genade’ houdt het bij Allahs barmhartigheid." }
   ];
   let CTL = null, ctlRemote = false, ctlBusy = false, ctlLoading = false, ctlErr = "";
   function ctlLocal() { try { return JSON.parse(localStorage.getItem("nspark_controle_v1") || "{}") || {}; } catch (e) { return {}; } }
@@ -8271,7 +8281,7 @@ return exports;})();
     let h = '<div class="bd"><header class="bd-top"><button class="bd-ib" data-act="bd-ideas-back" aria-label="Terug naar beheer">' + ic('<path d="M15 18l-6-6 6-6"/>') + '</button><div class="bd-tt"><b>Te controleren</b><small>' + (open ? open + " nog te doen" : "Alles gecontroleerd") + '</small></div><span style="width:44px"></span></header><main class="bd-m">';
     CONTROLE.forEach(function (x) {
       const on = !!done[x.id];
-      h += '<button class="bd-idbtn bd-ck' + (on ? " on" : "") + '" role="checkbox" aria-checked="' + on + '" data-act="bd-ctl" data-id="' + esc(x.id) + '"><i class="bd-ckb" aria-hidden="true">' + (on ? "✓" : "") + "</i><span>" + esc(x.t) + "<small>" + esc(x.d) + "</small></span></button>";
+      h += '<button class="bd-idbtn bd-ck' + (on ? " on" : "") + '" role="checkbox" aria-checked="' + on + '" data-act="bd-ctl" data-id="' + esc(x.id) + '"><i class="bd-ckb" aria-hidden="true">' + (on ? "✓" : "") + "</i><span>" + esc(x.t) + "<small><b>1. Eerst:</b> " + esc(x.v) + "</small><small><b>2. In de app nu:</b> " + esc(x.n) + "</small><small><b>3. Mijn commentaar:</b> " + esc(x.c) + "</small></span></button>";
     });
     h += '<p class="bd-note">' + (ctlRemote ? "Vink af als je het hebt gecontroleerd. Je vinkjes staan veilig in Supabase en zijn op al je toestellen te zien." : esc(ctlErr || "Vink af als je het hebt gecontroleerd. Het vinkje blijft nu alleen op dit toestel bewaard.")) + '</p><p class="bd-ft">NurSpark Beheer · alleen zichtbaar voor de beheerder</p></main></div>';
     return h;
