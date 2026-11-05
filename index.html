@@ -7294,6 +7294,7 @@ return exports;})();
       row('id="optAuto"' + (autoOn() ? " checked" : ""), "Automatisch doorgaan", "Na een level vanzelf verder") +
       row('id="optLvMenu"' + (S.lvmenu !== false ? " checked" : ""), "Levelmenu met beloningen", "Toont vooraf wat je kunt winnen (Gevorderd en Ervaren)") +
       row('id="optJummah"' + (S.jummah !== false ? " checked" : ""), "Jummah-cadeau op vrijdag", "Een groet met cadeau en herinnering, elke vrijdag") +
+      row('id="optSalRem"' + (S.salRem !== false ? " checked" : ""), "Gebedstijd-herinnering", "Een melding als het gebedstijd is, zolang de app open staat (kies eerst je stad bij Gebedstijden)") +
       (window.nsStats && !kidU13() ? row('id="optStats"' + (window.nsStats.on() ? " checked" : ""), "Bezoekersstatistieken", "Help ons met anonieme tellingen via Google Analytics (geen advertenties)") : "") +
       row('id="optLab"' + (labState().on ? " checked" : ""), "Testlab (in ontwikkeling)", "Organisatiekamers in Bayt al-‘Ilm uitproberen: school, docent, imam of uitgeverij. Alleen op dit toestel.") +
       (OLD_HOST ? '<button class="btn gold block" data-act="move-out" style="margin:10px 0">Verhuis naar nurspark.app</button>' : "") +
@@ -7320,6 +7321,7 @@ return exports;})();
       if (e.target.id === "optAuto") S.autoNext = e.target.checked;
       if (e.target.id === "optLvMenu") S.lvmenu = e.target.checked;
       if (e.target.id === "optJummah") S.jummah = e.target.checked;
+      if (e.target.id === "optSalRem") S.salRem = e.target.checked;
       if (e.target.id === "optStats" && window.nsStats) window.nsStats.set(e.target.checked);
       if (e.target.id === "optLab") labState().on = e.target.checked;
       if (e.target.id === "optRemind") {
@@ -9944,6 +9946,49 @@ return exports;})();
   function jumLast() { return (P && P.jum && P.jum.last) || null; }
   function jumNext() { return jumLast() === weekAgoStr() ? ((P.jum && P.jum.count) || 0) + 1 : 1; }
   function jumDue() { return !!(P && P.mode) && S.jummah !== false && new Date().getDay() === 5 && jumLast() !== todayStr(); }
+  /* v248: welkomstgroet op de reiskaart (eerste keer per dag, en een warm welkom na 3 dagen of langer) + gebedstijd-herinnering zolang de app open staat */
+  const WEL_DAILY = [["Assalamu alaikum!", "Fijn dat je er weer bent, {naam}. Zullen we beginnen?"], ["Bismillah!", "Een nieuwe dag, een nieuwe kans om iets te leren, {naam}."], ["Welkom terug!", "Je reis wacht op je, {naam}."], ["Assalamu alaikum!", "Klaar voor een paar levels, {naam}?"]];
+  const WEL_LONG = [["Wat fijn dat je er weer bent!", "We hebben je gemist, {naam}. Je reis staat nog klaar waar je gebleven was."], ["Assalamu alaikum!", "Alhamdulillah, je bent er weer, {naam}. Rustig aan, we pakken de draad weer op."]];
+  const OPEN_DLG = ".bm-wrap, .dialog-wrap, .bonus-ov, .modal-overlay:not(.hidden), .badges-modal.active";
+  function daysApart(a, b) { const x = String(a).split("-"), y = String(b).split("-"); return Math.round((new Date(+y[0], y[1] - 1, +y[2]) - new Date(+x[0], x[1] - 1, +x[2])) / 86400000); }
+  function maybeWelcome(tries) {
+    if (!P || !P.mode) return false;
+    const t = todayStr();
+    if (!P.welLast) { P.welLast = t; saveState(); return false; }       /* eerste keer: nog geen groet, we onthouden alleen de dag */
+    if (P.welLast === t || jumDue()) return false;                      /* vandaag al gegroet; op vrijdag groet Jummah Mubarak */
+    setTimeout(function () {
+      if (!P || P.welLast === t || screen !== "journey") return;
+      if (document.querySelector(OPEN_DLG)) { if ((tries || 0) < 6) maybeWelcome((tries || 0) + 1); return; }
+      const gap = daysApart(P.welLast, t), list = gap >= 3 ? WEL_LONG : WEL_DAILY;
+      const d = new Date(), idx = (Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 86400000) + (P.name || "").length) % list.length, m = list[idx];
+      P.welLast = t; saveState();
+      meldingDialog({ id: "welWrap", title: m[0], text: esc(m[1].replace("{naam}", P.name || "vriend")), go: { label: "Op reis!", fn: function () {} } });
+      play("click");
+    }, 1300);
+    return true;
+  }
+  function salRemCheck() {
+    try {
+      if (!P || !P.mode || S.salRem === false || document.hidden || screen === "quiz" || screen === "login" || screen === "authwait") return;
+      const t = salToday(); if (!t) return;                              /* zonder gekozen stad geen gebedstijden */
+      const now = new Date(), cur = now.getHours() * 60 + now.getMinutes(), day = todayStr();
+      if (!S.salRemSeen || S.salRemSeen.day !== day) S.salRemSeen = { day: day, k: {} };
+      const order = ["fajr", "dhuhr", "asr", "maghrib", "isha"];
+      for (let i = 0; i < order.length; i++) {
+        const k = order[i], v = t[k];
+        if (cur >= v && cur < v + 10 && !S.salRemSeen.k[k]) {
+          if (document.querySelector(OPEN_DLG)) return;                  /* even wachten: volgende controle probeert het opnieuw */
+          S.salRemSeen.k[k] = 1; saveState();
+          const c = salCity(), lab = salLabel(k);
+          meldingDialog({ id: "salRemWrap", title: "Tijd voor " + lab, text: "Het is nu " + hm(v) + (c ? " in " + esc(c[0]) : "") + ". Neem even een moment voor je Salah.", go: { label: "Dank je", fn: function () {} }, later: "Straks" });
+          announce("Tijd voor " + lab + ". Neem even een moment voor je Salah.");
+          return;
+        }
+      }
+    } catch (e) {}
+  }
+  setInterval(salRemCheck, 30000);
+  document.addEventListener("visibilitychange", function () { setTimeout(salRemCheck, 600); });
   function maybeJummah() {
     if (jumAsked || !jumDue() || document.getElementById("bmWrap") || document.getElementById("jmWrap")) return false;
     jumAsked = true;
@@ -12810,6 +12855,7 @@ return exports;})();
     }
     if (landFly) { runLandFlight(); return; }
     if (maybeJummah()) return;
+    maybeWelcome();
     if (flyerPending) { flyerPending = false; setTimeout(showFlyer, 700); }
     socialFetch();
     setTimeout(remindCheck, 1500);
