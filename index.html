@@ -2260,7 +2260,7 @@ body.dashfull { background: #0f2e22; color: #f4efe2; }
 .bd-m { animation: bdfade .3s ease both; }
 @keyframes bdfade { from { opacity: 0; } to { opacity: 1; } }
 .bd-wrap::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 70px; background: linear-gradient(180deg, rgba(23,18,54,0), #171236 85%); pointer-events: none; }
-.bd-top { position: sticky; top: 0; z-index: 3; display: flex; align-items: center; padding: calc(10px + env(safe-area-inset-top)) 8px 10px; background: linear-gradient(180deg, #06060d 60%, rgba(6,6,13,0)); }
+.bd-top { position: sticky; top: 0; z-index: 3; display: flex; align-items: center; padding: calc(10px + env(safe-area-inset-top)) 8px 10px; background: linear-gradient(180deg, #06060d 88%, rgba(6,6,13,0)); }
 .bd-ib { width: 44px; height: 44px; display: grid; place-items: center; border: 0; background: transparent; color: var(--tx); border-radius: 50%; cursor: pointer; }
 .bd-ib:hover, .bd-ib:focus-visible { background: rgba(255,255,255,.07); outline: none; }
 .bd-tt { flex: 1; text-align: center; }
@@ -8126,21 +8126,64 @@ return exports;})();
   function qjAuto() { const t = document.getElementById("qjText"); if (t && qjKey) qjSet(qjKey, t.value); }
   /* v233: beheerpagina (alleen beheerder): cijfers komen uit de Supabase-functie beheer_cijfers() */
   let BH = null, bhBusy = false, bhErr = "", bhAt = null;
-  /* v244: ideeënblok op de beheerpagina (alleen beheerder). Bewaard op dit toestel; geen AI-antwoord, alleen schrijven */
+  /* v251: ideeënblok op de beheerpagina (alleen beheerder). De ideeën staan in Supabase (tabel beheer_ideeen) en dus op al je toestellen. Is de tabel er nog niet, dan werkt het blok op dit toestel. */
   let bdMode = "main", bdFilter = "alle", bdEdit = null, bdDel = null, bdDraft = "", bdIdeaErr = "";
-  function idGet() { try { const a = JSON.parse(localStorage.getItem("nspark_ideeen_v1") || "[]"); return Array.isArray(a) ? a : []; } catch (e) { return []; } }
-  function idSet(a) { try { localStorage.setItem("nspark_ideeen_v1", JSON.stringify(a)); bdIdeaErr = ""; return true; } catch (e) { bdIdeaErr = "Opslaan is niet gelukt op dit toestel."; return false; } }
+  let IDS = null, idLoading = false, idRemote = false, idNote = "", idBusy = false;
+  function idLocal() { try { const a = JSON.parse(localStorage.getItem("nspark_ideeen_v1") || "[]"); return Array.isArray(a) ? a : []; } catch (e) { return []; } }
+  function idLocalSet(a) { try { localStorage.setItem("nspark_ideeen_v1", JSON.stringify(a)); return true; } catch (e) { return false; } }
   function idFmt(iso) {
     try { return new Date(iso).toLocaleString("nl-NL", { weekday: "short", day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }); } catch (e) { return String(iso || ""); }
   }
-  function idMut(id, fn) { const a = idGet(); for (let i = 0; i < a.length; i++) if (a[i].id === id) { fn(a, i); break; } return idSet(a); }
+  function idRow(x) { return { id: x.id, tekst: x.t, status: x.s, gemaakt: x.c, bewerkt: x.u || null, afgehandeld: x.k || null }; }
+  function idItem(r) { const o = { id: r.id, t: r.tekst, c: r.gemaakt, s: r.status }; if (r.bewerkt) o.u = r.bewerkt; if (r.afgehandeld) o.k = r.afgehandeld; return o; }
+  function idLoad() {
+    if (idLoading || IDS) return;
+    if (!sb) { IDS = idLocal(); idNote = "Je ideeën staan nu alleen op dit toestel."; return; }
+    idLoading = true;
+    const lokaal = function (msg) { idLoading = false; idRemote = false; IDS = idLocal(); idNote = msg; bdDraw(); };
+    try {
+      sb.from("beheer_ideeen").select("*").then(function (r) {
+        if (r.error) { lokaal(/beheer_ideeen|PGRST205|42P01|relation/i.test(String(r.error.message) + " " + String(r.error.code)) ? "Je ideeën staan nu alleen op dit toestel. Om ze op al je toestellen te zien, moet het bestand supabase-ideeen.sql één keer in Supabase worden uitgevoerd." : "Verbinden is niet gelukt. Je ideeën staan nu alleen op dit toestel."); return; }
+        idLoading = false; idRemote = true; idNote = "";
+        const rem = (r.data || []).map(idItem), have = {}, up = [];
+        rem.forEach(function (x) { have[x.id] = 1; });
+        if (!localStorage.getItem("nspark_ideeen_sync")) idLocal().forEach(function (x) { if (!have[x.id]) { rem.push(x); up.push(idRow(x)); } });
+        const fin = function () { try { localStorage.setItem("nspark_ideeen_sync", "1"); } catch (e) {} IDS = rem; idLocalSet(rem); bdDraw(); };
+        if (up.length) sb.from("beheer_ideeen").upsert(up).then(function (u) { if (u.error) { bdIdeaErr = "Je eerdere ideeën uploaden is niet gelukt."; IDS = rem; bdDraw(); } else fin(); }).catch(function () { IDS = rem; bdDraw(); });
+        else fin();
+      }).catch(function () { lokaal("Geen verbinding. Je ideeën staan nu alleen op dit toestel."); });
+    } catch (e) { lokaal("Je ideeën staan nu alleen op dit toestel."); }
+  }
+  /* next = de nieuwe lijst; reqFn = het verzoek naar Supabase; done(ok) loopt vóór het opnieuw tekenen */
+  function idCommit(next, reqFn, done) {
+    if (!idRemote) {
+      try { localStorage.removeItem("nspark_ideeen_sync"); } catch (e) {}
+      const ok = idLocalSet(next); if (ok) { IDS = next; bdIdeaErr = ""; } else bdIdeaErr = "Opslaan is niet gelukt op dit toestel.";
+      if (done) done(ok); bdDraw(); return;
+    }
+    idBusy = true;
+    const fail = function (m) { idBusy = false; bdIdeaErr = m; if (done) done(false); bdDraw(); };
+    try {
+      reqFn().then(function (r) {
+        if (r && r.error) { fail("Opslaan lukt nu niet. Controleer je verbinding en probeer het opnieuw."); return; }
+        idBusy = false; IDS = next; idLocalSet(next); bdIdeaErr = ""; if (done) done(true); bdDraw();
+      }).catch(function () { fail("Geen verbinding. Probeer het opnieuw."); });
+    } catch (e) { fail("Opslaan is niet gelukt."); }
+  }
+  function idChange(id, fn, done) {
+    if (idBusy || !IDS) return; let it = null;
+    const next = IDS.map(function (x) { if (x.id === id) { it = Object.assign({}, x); fn(it); return it; } return x; });
+    if (it) idCommit(next, function () { return sb.from("beheer_ideeen").upsert(idRow(it)); }, done);
+  }
   function viewIdeas() {
     const ic = function (d) { return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + "</svg>"; };
-    const all = idGet().slice().sort(function (x, y) { return String(y.c).localeCompare(String(x.c)); });
+    const head = '<div class="bd"><header class="bd-top"><button class="bd-ib" data-act="bd-ideas-back" aria-label="Terug naar beheer">' + ic('<path d="M15 18l-6-6 6-6"/>') + '</button><div class="bd-tt"><b>Mijn ideeën</b><small>Schrijven zonder antwoord</small></div><span style="width:44px"></span></header><main class="bd-m">';
+    if (!IDS) { idLoad(); if (!IDS) return head + '<p class="bd-note" role="status">Je ideeën worden geladen…</p></main></div>'; }
+    const all = IDS.slice().sort(function (x, y) { return String(y.c).localeCompare(String(x.c)); });
     const cnt = { alle: all.length, open: 0, bezig: 0, klaar: 0 };
     all.forEach(function (x) { if (cnt[x.s] !== undefined) cnt[x.s]++; });
     const list = bdFilter === "alle" ? all : all.filter(function (x) { return x.s === bdFilter; });
-    let h = '<div class="bd"><header class="bd-top"><button class="bd-ib" data-act="bd-ideas-back" aria-label="Terug naar beheer">' + ic('<path d="M15 18l-6-6 6-6"/>') + '</button><div class="bd-tt"><b>Mijn ideeën</b><small>Schrijven zonder antwoord</small></div><span style="width:44px"></span></header><main class="bd-m">';
+    let h = head;
     h += '<p class="bd-greet">Assalamu alaikum, Irshaad!<b>Welk idee heb je vandaag?</b></p>';
     h += '<div class="bd-card bd-id-new"><label class="bd-id-lb" for="bdIdeaNew">Nieuw idee <small>(' + esc(idFmt(new Date().toISOString())) + ")</small></label>" +
       '<textarea id="bdIdeaNew" class="bd-id-ta" rows="4" placeholder="Schrijf hier je idee, klein of groot…">' + esc(bdDraft) + "</textarea>" +
@@ -8163,7 +8206,7 @@ return exports;})();
       }
       h += "</article>";
     });
-    h += '<p class="bd-note">Je ideeën staan alleen op dit toestel. Wis je de browsergegevens, dan zijn ze weg.</p><p class="bd-ft">NurSpark Beheer · alleen zichtbaar voor de beheerder</p></main></div>';
+    h += '<p class="bd-note">' + (idRemote ? "Je ideeën staan veilig in Supabase en zijn op al je toestellen te zien." : esc(idNote)) + '</p><p class="bd-ft">NurSpark Beheer · alleen zichtbaar voor de beheerder</p></main></div>';
     return h;
   }
   document.addEventListener("input", function (e) { if (e.target && e.target.id === "bdIdeaNew") bdDraft = e.target.value; });
@@ -8204,7 +8247,7 @@ return exports;})();
     const tot = n("accounts_totaal"), ec = n("accounts_echt"), gs = n("accounts_gast"), pe = tot ? Math.round(ec / tot * 100) : 0;
     let h = '<div class="bd">' + top("") + '<main class="bd-m">';
     h += '<button class="bd-idbtn" data-act="bd-tests"><span>Meldingen testen<small>Bekijk elke melding direct, zonder te wachten</small></span><b>6</b></button>';
-    h += '<button class="bd-idbtn" data-act="bd-ideas"><span>Mijn ideeën<small>Schrijf en bewaar je plannen</small></span><b>' + idGet().length + "</b></button>";
+    h += '<button class="bd-idbtn" data-act="bd-ideas"><span>Mijn ideeën<small>Schrijf en bewaar je plannen</small></span><b>' + (IDS ? IDS.length : idLocal().length) + "</b></button>";
     h += '<div class="bd-kg">' + kpi("Accounts", tot, ec + " echt · " + gs + " gast", "var(--blue)") + kpi("Actief 24 uur", n("actief_24u"), n("actief_5m") + " in de laatste 5 min", "var(--green)") + kpi("Nieuw, 7 dagen", n("nieuw_7d"), n("nieuw_vandaag") + " vandaag", "var(--violet)") + kpi("Via Play Store", n("play_spelers"), n("play_actief_24u") + " actief in 24 uur", "var(--amber)") + "</div>";
     h += sec("Echt account of gast") + '<div class="bd-card"><div class="bd-dn"><svg viewBox="0 0 36 36" width="140" height="140" role="img" aria-label="' + pe + ' procent echte accounts"><defs><linearGradient id="bdg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6ea8ff"/><stop offset="1" stop-color="#b48cff"/></linearGradient></defs><circle cx="18" cy="18" r="15.9155" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="3.4"/><circle cx="18" cy="18" r="15.9155" fill="none" stroke="url(#bdg)" stroke-width="3.4" stroke-linecap="round" stroke-dasharray="' + Math.max(pe - 2, 0) + " " + (102 - pe) + '" transform="rotate(-90 18 18)"/><text x="18" y="18.6" text-anchor="middle" font-size="7.4" font-weight="500" fill="#e9e8f6">' + pe + '%</text><text x="18" y="23.4" text-anchor="middle" font-size="2.6" fill="#8f8eb0">echt account</text></svg>' +
       '<div class="bd-lg"><div><u style="background:#8b9cff"></u><span>Echt account</span><b>' + ec + '</b></div><div><u style="background:rgba(255,255,255,.25)"></u><span>Gast</span><b>' + gs + "</b></div><p>Met score op het scorebord: " + n("spelers_echt") + " echt, " + n("spelers_gast") + " gast.</p></div></div></div>";
@@ -8242,7 +8285,7 @@ return exports;})();
     if (!mkOwner() || document.getElementById("bdWrap")) return;
     const w = document.createElement("div"); w.id = "bdWrap"; w.className = "bd-wrap";
     w.setAttribute("role", "dialog"); w.setAttribute("aria-modal", "true"); w.setAttribute("aria-label", "Beheer");
-    document.body.appendChild(w); BH = null; bhErr = ""; bdMode = "main"; bdEdit = null; bdDel = null; bdDraw();
+    document.body.appendChild(w); BH = null; bhErr = ""; bdMode = "main"; bdEdit = null; bdDel = null; IDS = null; bdDraw(); idLoad();
     const b = w.querySelector(".bd-ib"); if (b) try { b.focus({ preventScroll: true }); } catch (e) {}
   }
   function bdClose() {
@@ -13567,26 +13610,29 @@ return exports;})();
       case "bd-ideas": case "bd-ideas-back": { if (!mkOwner()) break; play("click"); bdMode = act === "bd-ideas" ? "ideas" : "main"; bdEdit = null; bdDel = null; bdDraw(); const bs = document.querySelector("#bdWrap .bd"); if (bs) bs.scrollTop = 0; break; }
       case "bd-idea-filter": if (!mkOwner()) break; play("click"); bdFilter = el.dataset.f || "alle"; bdDel = null; bdDraw(); break;
       case "bd-idea-save": {
-        if (!mkOwner()) break; const ta = document.getElementById("bdIdeaNew"), t = ta ? ta.value.trim() : "";
+        if (!mkOwner() || idBusy || !IDS) break; const ta = document.getElementById("bdIdeaNew"), t = ta ? ta.value.trim() : "";
         if (!t) { if (ta) ta.focus(); break; }
-        const a = idGet(); a.push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), t: t, c: new Date().toISOString(), s: "open" });
-        if (idSet(a)) { bdDraft = ""; play("click"); announce("Idee opgeslagen"); } else bdDraft = t;
-        bdDel = null; bdDraw(); break;
+        const it = { id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), t: t, c: new Date().toISOString(), s: "open" };
+        bdDraft = ""; bdDel = null;
+        idCommit(IDS.concat([it]), function () { return sb.from("beheer_ideeen").upsert(idRow(it)); }, function (ok) { if (ok) { play("click"); announce("Idee opgeslagen"); } else bdDraft = t; });
+        break;
       }
       case "bd-idea-edit": if (!mkOwner()) break; play("click"); bdEdit = el.dataset.id; bdDel = null; bdDraw(); { const te = document.getElementById("bdIdeaEdit"); if (te) { te.focus(); te.setSelectionRange(te.value.length, te.value.length); } } break;
       case "bd-idea-cancel": play("click"); bdEdit = null; bdDraw(); break;
       case "bd-idea-update": {
         if (!mkOwner()) break; const te = document.getElementById("bdIdeaEdit"), t = te ? te.value.trim() : "";
         if (!t) { if (te) te.focus(); break; }
-        if (idMut(el.dataset.id, function (a, i) { if (a[i].t !== t) { a[i].t = t; a[i].u = new Date().toISOString(); } })) { bdEdit = null; announce("Idee bijgewerkt"); }
-        bdDraw(); break;
+        idChange(el.dataset.id, function (it) { if (it.t !== t) { it.t = t; it.u = new Date().toISOString(); } }, function (ok) { if (ok) { bdEdit = null; announce("Idee bijgewerkt"); } });
+        break;
       }
-      case "bd-idea-bezig": if (!mkOwner()) break; play("click"); idMut(el.dataset.id, function (a, i) { a[i].s = a[i].s === "bezig" ? "open" : "bezig"; delete a[i].k; }); bdDel = null; bdDraw(); break;
-      case "bd-idea-klaar": if (!mkOwner()) break; play("click"); idMut(el.dataset.id, function (a, i) { if (a[i].s === "klaar") { a[i].s = "open"; delete a[i].k; } else { a[i].s = "klaar"; a[i].k = new Date().toISOString(); } }); bdDel = null; bdDraw(); break;
+      case "bd-idea-bezig": if (!mkOwner()) break; play("click"); bdDel = null; idChange(el.dataset.id, function (it) { it.s = it.s === "bezig" ? "open" : "bezig"; delete it.k; }); break;
+      case "bd-idea-klaar": if (!mkOwner()) break; play("click"); bdDel = null; idChange(el.dataset.id, function (it) { if (it.s === "klaar") { it.s = "open"; delete it.k; } else { it.s = "klaar"; it.k = new Date().toISOString(); } }); break;
       case "bd-idea-del": {
-        if (!mkOwner()) break;
-        if (bdDel !== el.dataset.id) { bdDel = el.dataset.id; bdDraw(); break; }
-        idMut(el.dataset.id, function (a, i) { a.splice(i, 1); }); bdDel = null; announce("Idee verwijderd"); bdDraw(); break;
+        if (!mkOwner() || idBusy || !IDS) break;
+        const did = el.dataset.id;
+        if (bdDel !== did) { bdDel = did; bdDraw(); break; }
+        bdDel = null; idCommit(IDS.filter(function (x) { return x.id !== did; }), function () { return sb.from("beheer_ideeen").delete().eq("id", did); }, function (ok) { if (ok) announce("Idee verwijderd"); });
+        break;
       }
       case "kd-open": { if (!mkOwner()) break; const ks = parseInt(el.dataset.s, 10) || 1, ka = parseInt(el.dataset.a, 10) || 1; play("click"); qjKey = ks + ":" + ka; qjFrom = "list"; kdSeen(ks, ka); screen = "qj"; render(); window.scrollTo({ top: 0 }); break; }
       case "qj-nav": { qjAuto(); const np = String(qjKey).split(":"), ns = parseInt(np[0], 10) || 1, na = (parseInt(np[1], 10) || 1) + (parseInt(el.dataset.d, 10) || 0), nn = Q_N[ns - 1]; play("click"); if (na > nn) { kdSeen(ns, nn); screen = "kd"; render(); window.scrollTo({ top: 0 }); break; } if (na < 1) break; qjKey = ns + ":" + na; kdSeen(ns, na); render(); window.scrollTo({ top: 0 }); break; }
