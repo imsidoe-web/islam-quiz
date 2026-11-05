@@ -12307,6 +12307,7 @@ return exports;})();
     const cs = stops[J.cur], key = level + ":" + c.id, prev = journeyPos[key] !== undefined ? Math.min(journeyPos[key], n - 1) : J.cur, ps = stops[prev];
     h += '<g id="jMarker" class="j-marker j-me" data-act="peer" data-key="me" role="button" tabindex="0" aria-label="Jouw profiel" data-from="' + mpos(ps) + '" data-to="' + mpos(cs) + '" style="transform:translate(' + mpos(ps).split(",")[0] + "px," + mpos(ps).split(",")[1] + 'px)"><g class="j-bob"><g transform="scale(1.4)">' +
       (avOf(P) && avOf(P).arch ? '<ellipse cx="0" cy="19" rx="11" ry="2.6" fill="#000" fill-opacity=".28"/><svg x="-21" y="-23" width="42" height="42" viewBox="0 0 100 100">' + avInner(avOf(P), true) + "</svg>" :
+      !avOf(P) && !(P.photo && /^https:\/\//i.test(P.photo)) ? '<ellipse cx="0" cy="19" rx="11" ry="2.6" fill="#000" fill-opacity=".28"/><svg x="-21" y="-23" width="42" height="42" viewBox="0 0 100 100"><image href="avatars/boog.webp" x="0" y="0" width="100" height="100" preserveAspectRatio="xMidYMid meet"/><text x="50" y="62" text-anchor="middle" font-size="34" font-weight="900" fill="#f4d675" stroke="#123b2b" stroke-width="2" paint-order="stroke">' + ini + "</text></svg>" :
       '<circle r="17" fill="' + (bzFrameColor(P) || "#fff") + '"/><circle r="14" fill="' + P.color + '"/>' + (avOf(P) ? '<clipPath id="jmc"><circle r="14"/></clipPath><g clip-path="url(#jmc)"><svg x="-14" y="-14" width="28" height="28" viewBox="0 0 100 100">' + avInner(avOf(P), true) + "</svg></g>" : '<text y="5.5" text-anchor="middle" font-size="15" font-weight="900" fill="#fff">' + ini + "</text>" + (P.photo && /^https:\/\//i.test(P.photo) ? '<clipPath id="jmc"><circle r="14"/></clipPath><image href="' + esc(P.photo) + '" x="-14" y="-14" width="28" height="28" preserveAspectRatio="xMidYMid slice" clip-path="url(#jmc)" referrerpolicy="no-referrer"/>' : ""))) + "</g>" + "</g></g>";
     journeyPos[key] = J.cur;
     return h + "</svg>";
@@ -12743,6 +12744,9 @@ return exports;})();
     const jsh = document.querySelector(".j-shield");
     if (jsh) { const y = Math.round(jsh.getBoundingClientRect().bottom + 8); document.querySelectorAll(".j-presence, .j-lockbanner").forEach(function (e) { e.style.top = y + "px"; }); }
     jTopPad();
+    /* v245: eerst naar het eigen level scrollen, ook voor een nieuwe speler (anders bleef de kaart bovenaan bij het laatste land staan) */
+    const cur0 = document.querySelector(".j-current") || document.querySelector('.jl-land[data-li="' + journeyLand + '"]');
+    if (cur0 && cur0.scrollIntoView) setTimeout(function () { cur0.scrollIntoView({ block: "center", behavior: "auto" }); jBarShown = -1; jBarSync(); jHereSync(); }, 60);
     if (P && P.mode && !P.tourSeen) {
       P.tourSeen = true; S.tour = true;
       const fresh = !(P.played > 0);
@@ -12829,7 +12833,7 @@ return exports;})();
 
   function selectPlayer(id) {
     closeGroupSub(); startedDuelId = null;
-    S.current = id; P = currentPlayer(); saveState();
+    S.current = id; P = currentPlayer(); journeyLand = null; saveState();
     screen = P.mode ? (pendingCode ? "group" : "home") : "welcome"; render();
   }
 
