@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300" role="img" aria-label="Illustratie van de Kaaba in zacht licht">
+<defs>
+<linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7ecc8"/><stop offset="1" stop-color="#fff8e6"/></linearGradient>
+<radialGradient id="g" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffe9a0" stop-opacity=".95"/><stop offset="1" stop-color="#ffe9a0" stop-opacity="0"/></radialGradient>
+<linearGradient id="au" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f6d675"/><stop offset=".5" stop-color="#d9a736"/><stop offset="1" stop-color="#b57d16"/></linearGradient>
+<linearGradient id="sd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eadbb0"/><stop offset="1" stop-color="#d6bf86"/></linearGradient>
+</defs>
+<rect width="400" height="300" fill="url(#s)"/>
+<circle cx="200" cy="150" r="150" fill="url(#g)"/>
+<g stroke="#e8c867" stroke-width="2" opacity=".35"><path d="M200 150 L40 20M200 150 L360 20M200 150 L10 120M200 150 L390 120M200 150 L120 0M200 150 L280 0"/></g>
+<rect y="232" width="400" height="68" fill="url(#sd)"/>
+<ellipse cx="205" cy="236" rx="130" ry="10" fill="#8d7a4a" opacity=".25"/>
+<path d="M128 116 L190 94 L292 94 L232 116Z" fill="#33333d"/>
+<path d="M128 116 H232 V234 H128Z" fill="#1f1f27"/>
+<path d="M232 116 L292 94 V212 L232 234Z" fill="#14141a"/>
+<path d="M128 138 H232 V156 H128Z" fill="url(#au)"/>
+<path d="M232 138 L292 118 V135 L232 156Z" fill="url(#au)" opacity=".9"/>
+<g fill="none" stroke="#f6d675" stroke-width="1.4" opacity=".7"><path d="M140 168 q10 -8 20 0 q10 8 20 0 q10 -8 20 0"/><path d="M140 180 q10 -8 20 0 q10 8 20 0 q10 -8 20 0"/></g>
+<rect x="186" y="176" width="26" height="58" rx="3" fill="url(#au)" stroke="#8a5a0a" stroke-width="1.5"/>
+<path d="M199 180 V232" stroke="#8a5a0a" stroke-width="1"/>
+<g fill="#d9a736"><circle cx="64" cy="64" r="3"/><circle cx="338" cy="52" r="3"/><circle cx="352" cy="150" r="2.4"/><circle cx="50" cy="150" r="2.4"/></g>
+</svg>

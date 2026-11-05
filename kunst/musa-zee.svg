@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300" role="img" aria-label="Illustratie van een zee die zich opent met een zandpad naar een stralend licht">
+<defs>
+<linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bfd9ee"/><stop offset="1" stop-color="#fff3d2"/></linearGradient>
+<radialGradient id="g" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff2b8" stop-opacity="1"/><stop offset="1" stop-color="#fff2b8" stop-opacity="0"/></radialGradient>
+<linearGradient id="w" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5fb0d6"/><stop offset="1" stop-color="#1d6b94"/></linearGradient>
+<linearGradient id="p" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3e3b5"/><stop offset="1" stop-color="#d2b676"/></linearGradient>
+</defs>
+<rect width="400" height="300" fill="url(#s)"/>
+<circle cx="200" cy="132" r="110" fill="url(#g)"/>
+<g stroke="#ffe9a0" stroke-width="2" opacity=".5"><path d="M200 132 L60 20M200 132 L340 20M200 132 L20 100M200 132 L380 100M200 132 L200 0"/></g>
+<path d="M0 132 H400 V300 H0Z" fill="#a9d0e6" opacity=".5"/>
+<path d="M0 100 Q30 78 60 98 Q92 70 124 96 Q150 80 176 118 L184 300 H0Z" fill="url(#w)"/>
+<path d="M400 100 Q370 78 340 98 Q308 70 276 96 Q250 80 224 118 L216 300 H400Z" fill="url(#w)"/>
+<g fill="none" stroke="#e6f6ff" stroke-width="2" opacity=".6"><path d="M16 120 q20 -14 40 0"/><path d="M70 150 q22 -14 44 0"/><path d="M24 190 q24 -14 48 0"/><path d="M384 120 q-20 -14 -40 0"/><path d="M330 150 q-22 -14 -44 0"/><path d="M376 190 q-24 -14 -48 0"/></g>
+<path d="M176 118 H224 L330 300 H70Z" fill="url(#p)"/>
+<g fill="#b99a54" opacity=".35"><circle cx="200" cy="170" r="2"/><circle cx="188" cy="214" r="2.6"/><circle cx="214" cy="244" r="3"/><circle cx="170" cy="270" r="2.6"/></g>
+<circle cx="200" cy="124" r="14" fill="#fffbe0"/>
+</svg>
