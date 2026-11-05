@@ -2305,6 +2305,14 @@ body.dashfull { background: #0f2e22; color: #f4efe2; }
 .bd-wp .bd-idbtn > b { margin-left: auto; }
 .bd-dot { margin-left: auto; min-width: 28px; height: 28px; padding: 0 8px; border-radius: 14px; display: inline-flex; align-items: center; justify-content: center; font-style: normal; font-size: 15px; font-weight: 700; color: #1a0b14; background: var(--pink); box-shadow: 0 0 0 4px rgba(240,122,184,.16); }
 .bd-dot.ok { background: var(--green); box-shadow: 0 0 0 4px rgba(79,217,143,.14); }
+.bd-ckb { transition: background .25s ease, border-color .25s ease; }
+.bd-ck { transition: opacity .3s ease; }
+.bd-ckb.pop { animation: bdpop .38s ease-out; }
+@keyframes bdpop { 0% { transform: scale(.55); } 60% { transform: scale(1.2); } 100% { transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) { .bd-ckb.pop { animation: none; } }
+.bd-lv { cursor: default; justify-content: flex-start; align-items: flex-start; }
+.bd-lvv { flex: 0 0 auto; margin-top: 1px; padding: 3px 9px; border-radius: 10px; font-style: normal; font-size: 13px; font-weight: 600; color: var(--green); background: rgba(79,217,143,.12); border: 1px solid rgba(79,217,143,.3); }
+.bd-lv span { font-size: 14.5px; font-weight: 400; line-height: 1.4; }
 .bd-idbtn:hover, .bd-idbtn:focus-visible { border-color: var(--violet); outline: none; }
 .bd-idbtn span { font-size: 16px; font-weight: 600; }
 .bd-ck { justify-content: flex-start; text-align: left; }
@@ -8272,7 +8280,7 @@ return exports;})();
     } catch (e) { ctlLoading = false; }
   }
   function ctlToggle(k) {
-    if (ctlBusy) return; const d = Object.assign({}, ctlGet()), aan = !d[k];
+    if (ctlBusy) return; const d = Object.assign({}, ctlGet()), aan = !d[k]; ctlJust = aan ? k : null; setTimeout(function () { ctlJust = null; }, 700);
     if (aan) d[k] = 1; else delete d[k];
     const klaar = function () { ctlBusy = false; CTL = d; ctlLocalSet(d); bdDraw(); };
     if (!ctlRemote) { CTL = ctlRemote ? CTL : null; ctlLocalSet(d); bdDraw(); return; }
@@ -8289,11 +8297,49 @@ return exports;})();
     const ic = function (d) { return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + "</svg>"; };
     const done = ctlGet(), open = ctlOpen();
     let h = '<div class="bd"><header class="bd-top"><button class="bd-ib" data-act="bd-ideas-back" aria-label="Terug naar beheer">' + ic('<path d="M15 18l-6-6 6-6"/>') + '</button><div class="bd-tt"><b>Te controleren</b><small>' + (open ? open + " nog te doen" : "Alles gecontroleerd") + '</small></div><span style="width:44px"></span></header><main class="bd-m">';
-    CONTROLE.forEach(function (x) {
+    CONTROLE.slice().sort(function (a, b) { return (done[a.id] ? 1 : 0) - (done[b.id] ? 1 : 0); }).forEach(function (x) {
       const on = !!done[x.id];
-      h += '<button class="bd-idbtn bd-ck' + (on ? " on" : "") + '" role="checkbox" aria-checked="' + on + '" data-act="bd-ctl" data-id="' + esc(x.id) + '"><i class="bd-ckb" aria-hidden="true">' + (on ? "✓" : "") + "</i><span>" + esc(x.t) + "<small><b>1. Eerst:</b> " + esc(x.v) + "</small><small><b>2. In de app nu:</b> " + esc(x.n) + "</small><small><b>3. Mijn commentaar:</b> " + esc(x.c) + "</small></span></button>";
+      h += '<button class="bd-idbtn bd-ck' + (on ? " on" : "") + '" role="checkbox" aria-checked="' + on + '" data-act="bd-ctl" data-id="' + esc(x.id) + '"><i class="bd-ckb' + (ctlJust === x.id ? " pop" : "") + '" aria-hidden="true">' + (on ? "✓" : "") + "</i><span>" + esc(x.t) + "<small><b>1. Eerst:</b> " + esc(x.v) + "</small><small><b>2. In de app nu:</b> " + esc(x.n) + "</small><small><b>3. Mijn commentaar:</b> " + esc(x.c) + "</small></span></button>";
     });
     h += '<p class="bd-note">' + (ctlRemote ? "Vink af als je het hebt gecontroleerd. Je vinkjes staan veilig in Supabase en zijn op al je toestellen te zien." : esc(ctlErr || "Vink af als je het hebt gecontroleerd. Het vinkje blijft nu alleen op dit toestel bewaard.")) + '</p><p class="bd-ft">NurSpark Beheer · alleen zichtbaar voor de beheerder</p></main></div>';
+    return h;
+  }
+  /* ── Wachten op (v256) en Laatst live gezet: lijsten voor de beheerder; vinkjes synchroniseren via dezelfde Supabase-tabel ── */
+  const WACHTEN = [
+    { id: "wo-kennishuys", t: "Kennishuys", v: "Antwoord op het cursusvoorstel (Wudu-proefhoofdstuk).", d: "22 okt" },
+    { id: "wo-isn", t: "ISN (info@diyanet.nl)", v: "Wie de rechten heeft op de Siregar-vertaling.", d: "4 nov" },
+    { id: "wo-siregar", t: "Zus van Siregars zoon (LinkedIn)", v: "Antwoord op je uitnodiging, voor toestemming voor de vertaling.", d: "4 nov" },
+    { id: "wo-yusuf", t: "Shaykh Yusuf Geylani", v: "Controle van de vragen.", d: "22 okt" },
+    { id: "wo-yaseen", t: "Shaykh Yaseen Khan", v: "Controle van de vragen.", d: "22 okt" },
+    { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
+  ];
+  const LIVE = [
+    { v: "v256", t: "Studio: open taken bovenaan, afvink-animatie, Wachten op en deze lijst." },
+    { v: "v255", t: "Mijn studio: kader met icoontjes en een stip bij Te controleren." },
+    { v: "v253", t: "Te controleren laat per punt eerst, nu en mijn commentaar zien." },
+    { v: "v252", t: "Te controleren-lijst met vinkjes die op al je toestellen staan." },
+    { v: "v248", t: "Begroeting op de reiskaart en de melding ‘Tijd voor Salah’." },
+    { v: "v247", t: "Nieuw meldingsvenster in boogvorm (NurPlay-nieuws, streak)." }
+  ];
+  let ctlJust = null;
+  function woOpen() { const d = ctlGet(); return WACHTEN.filter(function (x) { return !d[x.id]; }).length; }
+  function bdHead(ic, t, sm) { return '<div class="bd"><header class="bd-top"><button class="bd-ib" data-act="bd-ideas-back" aria-label="Terug naar beheer">' + ic('<path d="M15 18l-6-6 6-6"/>') + '</button><div class="bd-tt"><b>' + t + "</b><small>" + sm + '</small></div><span style="width:44px"></span></header><main class="bd-m">'; }
+  function viewWachten() {
+    const ic = function (d) { return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + "</svg>"; };
+    const done = ctlGet(), open = woOpen();
+    let h = bdHead(ic, "Wachten op", open ? open + " antwoord" + (open === 1 ? "" : "en") + " verwacht" : "Alles beantwoord");
+    WACHTEN.slice().sort(function (a, b) { return (done[a.id] ? 1 : 0) - (done[b.id] ? 1 : 0); }).forEach(function (x) {
+      const on = !!done[x.id];
+      h += '<button class="bd-idbtn bd-ck' + (on ? " on" : "") + '" role="checkbox" aria-checked="' + on + '" data-act="bd-ctl" data-id="' + esc(x.id) + '"><i class="bd-ckb' + (ctlJust === x.id ? " pop" : "") + '" aria-hidden="true">' + (on ? "✓" : "") + "</i><span>" + esc(x.t) + "<small>" + esc(x.v) + "</small><small>Gevraagd op " + esc(x.d) + "</small></span></button>";
+    });
+    h += '<p class="bd-note">Vink af als je antwoord hebt. Je vinkjes staan op al je toestellen.</p><p class="bd-ft">NurSpark Beheer · alleen zichtbaar voor de beheerder</p></main></div>';
+    return h;
+  }
+  function viewLive() {
+    const ic = function (d) { return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + "</svg>"; };
+    let h = bdHead(ic, "Laatst live gezet", "Recent nieuw in de app");
+    LIVE.forEach(function (x) { h += '<div class="bd-idbtn bd-lv"><i class="bd-lvv">' + esc(x.v) + "</i><span>" + esc(x.t) + "</span></div>"; });
+    h += '<p class="bd-note">Alleen wat al live staat, de nieuwste bovenaan.</p><p class="bd-ft">NurSpark Beheer · alleen zichtbaar voor de beheerder</p></main></div>';
     return h;
   }
   function viewTests() {
@@ -8314,6 +8360,8 @@ return exports;})();
     if (bdMode === "ideas") return viewIdeas();
     if (bdMode === "tests") return viewTests();
     if (bdMode === "controle") return viewControle();
+    if (bdMode === "wachten") return viewWachten();
+    if (bdMode === "live") return viewLive();
     if (!BH && !bhErr) { bhLoad(); return '<div class="bd">' + top("Laden…") + '<main class="bd-m"><p class="bd-note" role="status">De cijfers worden geladen…</p></main></div>'; }
     if (bhErr) return '<div class="bd">' + top("") + '<main class="bd-m"><p class="bd-note" role="alert">' + esc(bhErr) + "</p></main></div>";
     const n = function (k) { return Number(BH[k]) || 0; };
@@ -8322,13 +8370,19 @@ return exports;})();
     const kpi = function (l, v, cap, c) { return '<div class="bd-k" style="--c:' + c + '"><span>' + l + "</span><b>" + v + "</b><small>" + cap + "</small></div>"; };
     const tot = n("accounts_totaal"), ec = n("accounts_echt"), gs = n("accounts_gast"), pe = tot ? Math.round(ec / tot * 100) : 0;
     let h = '<div class="bd">' + top("") + '<main class="bd-m">';
-    const hr = new Date().getHours(), gr = hr < 6 ? "Goedenacht" : hr < 12 ? "Goedemorgen" : hr < 18 ? "Goedemiddag" : "Goedenavond";
-    const co = ctlOpen();
-    h += '<p class="bd-greet">' + gr + '<b>' + (co ? (co === 1 ? "1 ding vraagt je aandacht" : co + " dingen vragen je aandacht") : "Alles is gecontroleerd") + "</b></p>";
+    const co = ctlOpen(), wo = woOpen();
+    const blk = function (act, col, icon, t, sm, right) { return '<button class="bd-idbtn" data-act="' + act + '" style="--wc:var(' + col + ')"><i class="bd-wi" aria-hidden="true">' + ic(icon) + "</i><span>" + t + "<small>" + sm + "</small></span>" + right + "</button>"; };
+    const dot = function (c) { return c ? '<em class="bd-dot" aria-label="' + c + ' open">' + c + "</em>" : '<em class="bd-dot ok" aria-label="Alles klaar">✓</em>'; };
+    const blocks = [
+      { urgent: co > 0, h: blk("bd-controle", "--amber", '<path d="M9 11l3 3 8-8"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/>', "Te controleren", "Dingen die jouw aandacht nodig hebben", dot(co)) },
+      { urgent: wo > 0, h: blk("bd-wachten", "--blue", '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>', "Wachten op", "Antwoorden die je nog verwacht", dot(wo)) },
+      { urgent: false, h: blk("bd-tests", "--teal", '<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/>', "Meldingen testen", "Bekijk elke melding direct, zonder te wachten", "<b>6</b>") },
+      { urgent: false, h: blk("bd-ideas", "--violet", '<path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/>', "Mijn ideeën", "Schrijf en bewaar je plannen", "<b>" + (IDS ? IDS.length : idLocal().length) + "</b>") },
+      { urgent: false, h: blk("bd-live", "--green", '<path d="M12 19V5"/><path d="M5 12l7-7 7 7"/>', "Laatst live gezet", "Wat er recent nieuw in de app kwam", "") }
+    ];
     h += '<section class="bd-wp" aria-labelledby="bd-wp-t"><div class="bd-wph"><b id="bd-wp-t">Mijn studio</b><small>Jouw taken als maker van NurSpark</small></div>';
-    h += '<button class="bd-idbtn" data-act="bd-controle" style="--wc:var(--amber)"><i class="bd-wi" aria-hidden="true">' + ic('<path d="M9 11l3 3 8-8"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/>') + '</i><span>Te controleren<small>Dingen die jouw aandacht nodig hebben</small></span>' + (co ? '<em class="bd-dot" aria-label="' + co + ' open">' + co + "</em>" : '<em class="bd-dot ok" aria-label="Alles gecontroleerd">✓</em>') + "</button>";
-    h += '<button class="bd-idbtn" data-act="bd-tests" style="--wc:var(--teal)"><i class="bd-wi" aria-hidden="true">' + ic('<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/>') + '</i><span>Meldingen testen<small>Bekijk elke melding direct, zonder te wachten</small></span><b>6</b></button>';
-    h += '<button class="bd-idbtn" data-act="bd-ideas" style="--wc:var(--violet)"><i class="bd-wi" aria-hidden="true">' + ic('<path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/>') + '</i><span>Mijn ideeën<small>Schrijf en bewaar je plannen</small></span><b>' + (IDS ? IDS.length : idLocal().length) + "</b></button></section>";
+    blocks.filter(function (x) { return x.urgent; }).concat(blocks.filter(function (x) { return !x.urgent; })).forEach(function (x) { h += x.h; });
+    h += "</section>";
     h += '<div class="bd-kg">' + kpi("Accounts", tot, ec + " echt · " + gs + " gast", "var(--blue)") + kpi("Actief 24 uur", n("actief_24u"), n("actief_5m") + " in de laatste 5 min", "var(--green)") + kpi("Nieuw, 7 dagen", n("nieuw_7d"), n("nieuw_vandaag") + " vandaag", "var(--violet)") + kpi("Via Play Store", n("play_spelers"), n("play_actief_24u") + " actief in 24 uur", "var(--amber)") + "</div>";
     h += sec("Echt account of gast") + '<div class="bd-card"><div class="bd-dn"><svg viewBox="0 0 36 36" width="140" height="140" role="img" aria-label="' + pe + ' procent echte accounts"><defs><linearGradient id="bdg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6ea8ff"/><stop offset="1" stop-color="#b48cff"/></linearGradient></defs><circle cx="18" cy="18" r="15.9155" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="3.4"/><circle cx="18" cy="18" r="15.9155" fill="none" stroke="url(#bdg)" stroke-width="3.4" stroke-linecap="round" stroke-dasharray="' + Math.max(pe - 2, 0) + " " + (102 - pe) + '" transform="rotate(-90 18 18)"/><text x="18" y="18.6" text-anchor="middle" font-size="7.4" font-weight="500" fill="#e9e8f6">' + pe + '%</text><text x="18" y="23.4" text-anchor="middle" font-size="2.6" fill="#8f8eb0">echt account</text></svg>' +
       '<div class="bd-lg"><div><u style="background:#8b9cff"></u><span>Echt account</span><b>' + ec + '</b></div><div><u style="background:rgba(255,255,255,.25)"></u><span>Gast</span><b>' + gs + "</b></div><p>Met score op het scorebord: " + n("spelers_echt") + " echt, " + n("spelers_gast") + " gast.</p></div></div></div>";
@@ -13677,6 +13731,8 @@ return exports;})();
       case "beheer-back": play("click"); bdClose(); break;
       case "beheer-refresh": if (!mkOwner()) break; play("click"); BH = null; bhErr = ""; bdDraw(); break;
       case "bd-controle": { if (!mkOwner()) break; play("click"); bdMode = "controle"; bdDraw(); const bc = document.querySelector("#bdWrap .bd"); if (bc) bc.scrollTop = 0; break; }
+      case "bd-wachten": { if (!mkOwner()) break; play("click"); bdMode = "wachten"; bdDraw(); const bw = document.querySelector("#bdWrap .bd"); if (bw) bw.scrollTop = 0; break; }
+      case "bd-live": { if (!mkOwner()) break; play("click"); bdMode = "live"; bdDraw(); const bl = document.querySelector("#bdWrap .bd"); if (bl) bl.scrollTop = 0; break; }
       case "bd-ctl": { if (!mkOwner()) break; play("click"); ctlToggle(el.dataset.id); break; }
       case "bd-tests": { if (!mkOwner()) break; play("click"); bdMode = "tests"; bdDraw(); const bs = document.querySelector("#bdWrap .bd"); if (bs) bs.scrollTop = 0; break; }
       case "bd-test": {
