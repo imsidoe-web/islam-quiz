@@ -2316,6 +2316,11 @@ body.dashfull { background: #0f2e22; color: #f4efe2; }
 .bd-ckb.pop { animation: bdpop .38s ease-out; }
 @keyframes bdpop { 0% { transform: scale(.55); } 60% { transform: scale(1.2); } 100% { transform: scale(1); } }
 @media (prefers-reduced-motion: reduce) { .bd-ckb.pop { animation: none; } }
+.bd-fc { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.bd-fc img { width: 100%; max-width: 320px; align-self: center; border-radius: 12px; display: block; border: 1px solid rgba(255,255,255,.12); }
+.bd-fc b { font-size: 16px; font-weight: 600; }
+.bd-fc small { color: var(--mut); }
+a.bd-idbtn { text-decoration: none; justify-content: center; font-weight: 600; }
 .bd-lv { cursor: default; justify-content: flex-start; align-items: flex-start; }
 .bd-lvv { flex: 0 0 auto; margin-top: 1px; padding: 3px 9px; border-radius: 10px; font-style: normal; font-size: 13px; font-weight: 600; color: var(--green); background: rgba(79,217,143,.12); border: 1px solid rgba(79,217,143,.3); }
 .bd-lv span { font-size: 14.5px; font-weight: 400; line-height: 1.4; }
@@ -8257,6 +8262,10 @@ return exports;})();
   }
   /* ── Te controleren (v252): lijst voor de beheerder; vinkje wordt op dit toestel bewaard ── */
   const CONTROLE = [
+    { id: "fl-1", t: "Tester-flyers met QR (Studio › Flyers)",
+      v: "De flyer noemde ‘quiz-app’, had geen QR-code en bestond alleen als A4 en 4:5.",
+      n: "Flyers in A5 (drukken) en 4:5 (social media), met QR naar nurspark.app/tester en ‘educatieve game-app’.",
+      c: "Bekijk de A5 goed voor je laat drukken, vooral de randen en het lettertype van de kop: in deze PNG is dat een nauwkeurige benadering. De exacte versie staat in de Claude-studio ‘NurSpark testers flyer met QR’. Scan de QR ook met een andere telefoon." },
     { id: "aq-1", t: "Quizvraag n-ih-j-28 (Ihsan, junior)",
       v: "‘Bij de zeven onder de schaduw van Allah: iemand gedenkt Allah alleen, en ...’",
       n: "‘Bij de zeven die op de Dag des Oordeels onder Zijn bescherming staan: iemand gedenkt Allah alleen, en ...’",
@@ -8325,6 +8334,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v259", t: "Studio: nieuwe regel Flyers met de tester-flyers (A5 om te drukken en 4:5 voor social media) om te downloaden; tester-pagina nurspark.app/tester." },
     { v: "v258", t: "Beheer: bij ‘Echt account of gast’ staat nu hoeveel nieuwe echte en gast-spelers erbij kwamen." },
     { v: "v256", t: "Studio: open taken bovenaan, afvink-animatie, Wachten op en deze lijst." },
     { v: "v255", t: "Mijn studio: kader met icoontjes en een stip bij Te controleren." },
@@ -8345,6 +8355,19 @@ return exports;})();
       h += '<button class="bd-idbtn bd-ck' + (on ? " on" : "") + '" role="checkbox" aria-checked="' + on + '" data-act="bd-ctl" data-id="' + esc(x.id) + '"><i class="bd-ckb' + (ctlJust === x.id ? " pop" : "") + '" aria-hidden="true">' + (on ? "✓" : "") + "</i><span>" + esc(x.t) + "<small>" + esc(x.v) + "</small><small>Gevraagd op " + esc(x.d) + "</small></span></button>";
     });
     h += '<p class="bd-note">Vink af als je antwoord hebt. Je vinkjes staan op al je toestellen.</p><p class="bd-ft">NurSpark Beheer · alleen zichtbaar voor de beheerder</p></main></div>';
+    return h;
+  }
+  function viewFlyers() {
+    const ic = function (d) { return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + "</svg>"; };
+    const FL = [
+      { f: "nurspark-flyer-a5.png", t: "Flyer A5, om te drukken", s: "Staand, 1748 × 2483 px (300 dpi)", n: "NurSpark-flyer-A5.png" },
+      { f: "nurspark-flyer-4x5.png", t: "Flyer 4:5, voor LinkedIn, Facebook en Instagram", s: "2160 × 2700 px", n: "NurSpark-flyer-4x5.png" }
+    ];
+    let h = bdHead(ic, "Flyers", "Testers zoeken, met QR");
+    FL.forEach(function (x) {
+      h += '<div class="bd-card bd-fc"><img src="/promo/' + x.f + '" alt="' + esc(x.t) + '" loading="lazy"><b>' + esc(x.t) + "</b><small>" + esc(x.s) + '</small><a class="bd-idbtn" href="/promo/' + x.f + '" download="' + x.n + '">Download PNG</a></div>';
+    });
+    h += '<p class="bd-note">De QR-code opent nurspark.app/tester. Zet voor WhatsApp en LinkedIn de link voluit in je bericht.</p><p class="bd-ft">NurSpark Beheer · alleen zichtbaar voor de beheerder</p></main></div>';
     return h;
   }
   function viewLive() {
@@ -8382,6 +8405,7 @@ return exports;})();
     if (bdMode === "controle") return viewControle();
     if (bdMode === "wachten") return viewWachten();
     if (bdMode === "live") return viewLive();
+    if (bdMode === "flyers") return viewFlyers();
     if (!BH && !bhErr) { bhLoad(); return '<div class="bd">' + top("Laden…") + '<main class="bd-m"><p class="bd-note" role="status">De cijfers worden geladen…</p></main></div>'; }
     if (bhErr) return '<div class="bd">' + top("") + '<main class="bd-m"><p class="bd-note" role="alert">' + esc(bhErr) + "</p></main></div>";
     const n = function (k) { return Number(BH[k]) || 0; };
@@ -8398,7 +8422,8 @@ return exports;})();
       { urgent: wo > 0, h: blk("bd-wachten", "--blue", '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>', "Wachten op", "Antwoorden die je nog verwacht", dot(wo)) },
       { urgent: false, h: blk("bd-tests", "--teal", '<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/>', "Meldingen testen", "Bekijk elke melding direct, zonder te wachten", "<b>6</b>") },
       { urgent: false, h: blk("bd-ideas", "--violet", '<path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/>', "Mijn ideeën", "Schrijf en bewaar je plannen", "<b>" + (IDS ? IDS.length : idLocal().length) + "</b>") },
-      { urgent: false, h: blk("bd-live", "--green", '<path d="M12 19V5"/><path d="M5 12l7-7 7 7"/>', "Laatst live gezet", "Wat er recent nieuw in de app kwam", "") }
+      { urgent: false, h: blk("bd-live", "--green", '<path d="M12 19V5"/><path d="M5 12l7-7 7 7"/>', "Laatst live gezet", "Wat er recent nieuw in de app kwam", "") },
+      { urgent: false, h: blk("bd-flyers", "--pink", '<path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/>', "Flyers", "Testers zoeken: flyers met QR om te downloaden", "") }
     ];
     h += '<section class="bd-wp" aria-labelledby="bd-wp-t"><div class="bd-wph"><b id="bd-wp-t">Mijn studio</b><small>Jouw taken als maker van NurSpark</small></div>';
     blocks.filter(function (x) { return x.urgent; }).concat(blocks.filter(function (x) { return !x.urgent; })).forEach(function (x) { h += x.h; });
@@ -13753,6 +13778,7 @@ return exports;})();
       case "beheer-refresh": if (!mkOwner()) break; play("click"); BH = null; bhErr = ""; bdDraw(); break;
       case "bd-controle": { if (!mkOwner()) break; play("click"); bdMode = "controle"; bdDraw(); const bc = document.querySelector("#bdWrap .bd"); if (bc) bc.scrollTop = 0; break; }
       case "bd-wachten": { if (!mkOwner()) break; play("click"); bdMode = "wachten"; bdDraw(); const bw = document.querySelector("#bdWrap .bd"); if (bw) bw.scrollTop = 0; break; }
+      case "bd-flyers": { if (!mkOwner()) break; play("click"); bdMode = "flyers"; bdDraw(); const bf = document.querySelector("#bdWrap .bd"); if (bf) bf.scrollTop = 0; break; }
       case "bd-live": { if (!mkOwner()) break; play("click"); bdMode = "live"; bdDraw(); const bl = document.querySelector("#bdWrap .bd"); if (bl) bl.scrollTop = 0; break; }
       case "bd-ctl": { if (!mkOwner()) break; play("click"); ctlToggle(el.dataset.id); break; }
       case "bd-tests": { if (!mkOwner()) break; play("click"); bdMode = "tests"; bdDraw(); const bs = document.querySelector("#bdWrap .bd"); if (bs) bs.scrollTop = 0; break; }
