@@ -2030,7 +2030,7 @@ body:has(#avDlg) .back-toast { top: 92px !important; bottom: auto !important; z-
 .jm2-btn:active { transform: scale(.97); }
 .jm2-later { background: none; border: 0; font: inherit; font-weight: 700; font-size: 3.2cqw; color: #3d5a48; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 0 3cqw; min-height: 32px; margin-top: -.5cqw; }
 .jm2-btn:focus-visible, .jm2-later:focus-visible { outline: 3px solid #1d4b33; outline-offset: 2px; border-radius: 10px; }
-.jm2-fl { width: 11cqw; height: auto; margin-bottom: 1cqw; }
+.jm2-fl { width: 15cqw; height: auto; margin-bottom: 1cqw; }
 .jm2-badge { font-size: 2.8cqw; font-weight: 900; letter-spacing: .14em; color: #8a5a08; background: #fff8; border: .4cqw solid #c9a23a; border-radius: 99px; padding: .3cqw 2.4cqw; margin-bottom: 1cqw; }
 .jm2-t2 { font-weight: 900; font-size: 4.8cqw; line-height: 1.15; margin-bottom: 1.6cqw; }
 .jm2-tx { font-size: 3.4cqw; line-height: 1.3; color: #2d4a3a; margin-bottom: 1.6cqw; } .jm2-tx b { color: #1d4b33; }
@@ -9985,14 +9985,14 @@ return exports;})();
       '<g transform="translate(34 -22) scale(.38)">' + bonInner("pist", "bn-bob", false) + "</g></g></svg>";
   }
   /* v247: algemeen berichtvenster in de gegolfde boog (met bloemetje of Nalain) voor meldingen en mededelingen.
-     opties: id, badge, title, text (html), icon ("bloem.svg" of "nalain.webp"), go: {label, fn}, extra: {label, fn}, later: "Later" */
+     opties: id, badge, title, text (html), icon ("bloem.webp" of "nalain.webp"), go: {label, fn}, extra: {label, fn}, later: "Later" */
   function meldingDialog(o) {
     const id = o.id || "mdWrap", old = document.getElementById(id); if (old) old.remove();
     const prevFocus = document.activeElement;
     const w = document.createElement("div"); w.className = "bm-wrap"; w.id = id;
     const label = o.label || (o.title + ". " + String(o.text || "").replace(/<[^>]+>/g, ""));
     w.innerHTML = '<div class="jm2" role="dialog" aria-modal="true" aria-label="' + esc(label) + '"><img class="jm2-bg" src="melding/boog.webp" alt="" aria-hidden="true"><div class="jm2-c">' +
-      '<img class="jm2-fl" src="melding/' + (o.icon || "bloem.svg") + '" alt="" aria-hidden="true">' + (o.badge ? '<span class="jm2-badge">' + esc(o.badge) + "</span>" : "") +
+      '<img class="jm2-fl" src="melding/' + (o.icon || "bloem.webp") + '" alt="" aria-hidden="true">' + (o.badge ? '<span class="jm2-badge">' + esc(o.badge) + "</span>" : "") +
       '<div class="jm2-t2">' + esc(o.title) + '</div><div class="jm2-tx">' + (o.text || "") + "</div>" +
       (o.go ? '<button class="jm2-btn" data-md="go"><img src="melding/knop.webp" alt=""><span>' + esc(o.go.label) + "</span></button>" : "") +
       (o.extra ? '<button class="jm2-link" data-md="ex">' + esc(o.extra.label) + "</button>" : "") +
