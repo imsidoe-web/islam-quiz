@@ -2024,12 +2024,18 @@ body:has(#avDlg) .back-toast { top: 92px !important; bottom: auto !important; z-
 .jm2-dot { width: 5.6cqw; height: 5.6cqw; border-radius: 50%; display: grid; place-items: center; border: .5cqw solid #c9a23a; background: #fff8; color: #b88a1e; font-size: 3.2cqw; }
 .jm2-dot.on { background: linear-gradient(#fff3b8, #e8b83a); color: #4a2f00; font-weight: 900; border-color: #b8861f; }
 .jm2-dot.now { color: #1d4b33; border-color: #1d4b33; animation: bmpulse2 1.8s ease-in-out infinite; }
-.jm2-btn { position: relative; border: 0; background: none; padding: 0; cursor: pointer; width: 26cqw; margin-top: 1cqw; font: inherit; }
+.jm2-btn { position: relative; border: 0; background: none; padding: 0; cursor: pointer; width: 32cqw; margin-top: 1cqw; font: inherit; }
 .jm2-btn img { display: block; width: 100%; height: auto; }
-.jm2-btn span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 3.5cqw; letter-spacing: .06em; color: #1d4b33; text-transform: uppercase; }
+.jm2-btn span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 3.2cqw; letter-spacing: .05em; color: #1d4b33; text-transform: uppercase; }
 .jm2-btn:active { transform: scale(.97); }
 .jm2-later { background: none; border: 0; font: inherit; font-weight: 700; font-size: 3.2cqw; color: #3d5a48; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 0 3cqw; min-height: 32px; margin-top: -.5cqw; }
 .jm2-btn:focus-visible, .jm2-later:focus-visible { outline: 3px solid #1d4b33; outline-offset: 2px; border-radius: 10px; }
+.jm2-fl { width: 11cqw; height: auto; margin-bottom: 1cqw; }
+.jm2-badge { font-size: 2.8cqw; font-weight: 900; letter-spacing: .14em; color: #8a5a08; background: #fff8; border: .4cqw solid #c9a23a; border-radius: 99px; padding: .3cqw 2.4cqw; margin-bottom: 1cqw; }
+.jm2-t2 { font-weight: 900; font-size: 4.8cqw; line-height: 1.15; margin-bottom: 1.6cqw; }
+.jm2-tx { font-size: 3.4cqw; line-height: 1.3; color: #2d4a3a; margin-bottom: 1.6cqw; } .jm2-tx b { color: #1d4b33; }
+.jm2-link { background: none; border: 0; font: inherit; font-weight: 800; font-size: 3.1cqw; color: #1d4b33; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: .6cqw 2cqw; min-height: 32px; }
+.jm2-link:focus-visible { outline: 3px solid #1d4b33; outline-offset: 2px; border-radius: 10px; }
 @media (prefers-reduced-motion: reduce) { .jm2, .jm2 * { animation: none !important; } }
 /* ───── Jummah Mubarak ───── */
 .jm-rt { position: absolute; left: 0; right: 0; top: 6px; text-align: center; font-family: "Kaushan Script", "Brush Script MT", cursive; font-weight: 400; font-size: 31px; line-height: 1.2; z-index: 3; filter: drop-shadow(0 2px 0 #0a4a30) drop-shadow(0 0 8px #f6d25a77); pointer-events: none; }
@@ -7675,22 +7681,9 @@ return exports;})();
       if (!P || P.npSeen || screen !== "dash") return;
       if (document.querySelector(".bm-wrap, .dialog-wrap, .bonus-ov, .modal-overlay:not(.hidden), .badges-modal.active")) { if ((tries || 0) < 6) maybeNurPlayNews((tries || 0) + 1); return; }
       P.npSeen = 1; saveState();
-      const prevFocus = document.activeElement;
-      const w = document.createElement("div"); w.className = "bm-wrap"; w.id = "npWrap";
-      w.innerHTML = '<div class="bm-dlg" role="dialog" aria-modal="true" aria-label="Nieuw in NurSpark: NurPlay met het spel Darb an-Nur. Je vindt het op het startscherm onder NurPlay."><div class="bm-in np-in"><span class="np-new">NIEUW</span><h2>NurPlay</h2><p class="np-sub">Een nieuw spel: <b>Darb an-Nur</b>. Leid de gelovige door het licht-doolhof, weg van de duisternis.</p><div class="np-pic">' + playPreview() + '</div><p class="np-where">Je vindt het altijd op het startscherm, onder de tegel <b>NurPlay</b>.</p><div class="bm-btns"><button class="bm-btn go" data-np="try">Probeer nu</button></div><button class="jm-later" data-np="x">Later</button></div></div>';
-      const close = function () { document.removeEventListener("keydown", onKey, true); w.remove(); if (prevFocus && prevFocus.focus && document.contains(prevFocus)) { try { prevFocus.focus({ preventScroll: true }); } catch (e) {} } };
-      const onKey = function (e) {
-        if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); close(); return; }
-        if (e.key === "Tab") { const f = [].slice.call(w.querySelectorAll("button")); if (!f.length) return; const i = f.indexOf(document.activeElement); e.preventDefault(); f[(i + (e.shiftKey ? f.length - 1 : 1)) % f.length].focus(); }
-      };
-      w.addEventListener("click", function (e) {
-        const b = e.target.closest("[data-np]");
-        if (e.target === w || (b && b.dataset.np === "x")) { play("click"); close(); return; }
-        if (b && b.dataset.np === "try") { close(); openPlayGame("darb"); }
-      });
-      document.addEventListener("keydown", onKey, true);
-      document.body.appendChild(w);
-      const g = w.querySelector(".bm-btn"); if (g) g.focus();
+      meldingDialog({ id: "npWrap", badge: "NIEUW", title: "NurPlay", label: "Nieuw in NurSpark: NurPlay met het spel Darb an-Nur. Je vindt het op het startscherm onder NurPlay.",
+        text: "Een nieuw spel: <b>Darb an-Nur</b>. Leid de gelovige door het licht-doolhof, weg van de duisternis.<br>Je vindt het op het startscherm onder <b>NurPlay</b>.",
+        go: { label: "Probeer nu", fn: function () { openPlayGame("darb"); } }, later: "Later" });
     }, 1100);
   }
   /* v237: NurPlay, losse spellen (elk spel een kaart met voorbeeldplaatje) */
@@ -9260,11 +9253,10 @@ return exports;})();
   function remindBanner() {
     if (document.getElementById("remindBn")) return;
     const t = remindText(), canAsk = pushSupported() && !S.remind && Notification.permission !== "denied";
-    const d = document.createElement("div"); d.id = "remindBn"; d.className = "remind-bn"; d.setAttribute("role", "status");
-    d.innerHTML = '<span class="rb-ic" aria-hidden="true">🔥</span><div class="rb-t"><b>' + t.title.replace("🔥 ", "") + "</b><small>" + esc(t.body) + "</small>" +
-      (canAsk ? '<button class="rb-bell" type="button" data-act="remind-on">🔔 Herinner mij met een melding</button>' : "") + '</div><button class="rb-x" type="button" data-act="remind-x" aria-label="Sluiten">×</button>';
-    document.body.appendChild(d); announce(t.title.replace("🔥 ", "") + " " + t.body);
-    setTimeout(function () { const b = document.getElementById("remindBn"); if (b === d) d.classList.add("out"); setTimeout(function () { if (d.isConnected) d.remove(); }, 500); }, 14000);
+    announce(t.title.replace("🔥 ", "") + " " + t.body);
+    meldingDialog({ id: "remindBn", title: "Je reeks is in gevaar!", label: t.title.replace("🔥 ", "") + " " + t.body, text: esc(t.body),
+      go: { label: "Speel nu", fn: function () {} },
+      extra: canAsk ? { label: "🔔 Herinner mij met een melding", fn: function () { remindEnable().then(function (r) { backToast(r.msg); }); } } : null, later: "Later" });
   }
   /* controleren of de herinnering nu moet: vanaf REMIND_HOUR, reeks in gevaar, nog niet getoond vandaag */
   function remindCheck() {
@@ -9279,6 +9271,7 @@ return exports;})();
         }
         return;
       }
+      if (document.querySelector(".bm-wrap, .dialog-wrap, .bonus-ov, .modal-overlay:not(.hidden), .badges-modal.active")) return;
       S.remindDay = todayStr(); saveState(); remindBanner();
     } catch (e) {}
   }
@@ -9990,6 +9983,35 @@ return exports;})();
       '<g class="jm-bob jm-bob2"><ellipse cx="12" cy="-4" rx="12" ry="7.5" fill="url(#jmDate)" transform="rotate(12 12 -4)"/><ellipse cx="9" cy="-7" rx="4.5" ry="2" fill="#fff" opacity=".5"/></g>' +
       '<g class="jm-bob jm-bob3"><ellipse cx="-1" cy="-12" rx="12" ry="7.5" fill="url(#jmDate)" transform="rotate(-6 -1 -12)"/><ellipse cx="-4" cy="-15" rx="4.5" ry="2" fill="#fff" opacity=".5"/></g>' +
       '<g transform="translate(34 -22) scale(.38)">' + bonInner("pist", "bn-bob", false) + "</g></g></svg>";
+  }
+  /* v247: algemeen berichtvenster in de gegolfde boog (met bloemetje of Nalain) voor meldingen en mededelingen.
+     opties: id, badge, title, text (html), icon ("bloem.svg" of "nalain.webp"), go: {label, fn}, extra: {label, fn}, later: "Later" */
+  function meldingDialog(o) {
+    const id = o.id || "mdWrap", old = document.getElementById(id); if (old) old.remove();
+    const prevFocus = document.activeElement;
+    const w = document.createElement("div"); w.className = "bm-wrap"; w.id = id;
+    const label = o.label || (o.title + ". " + String(o.text || "").replace(/<[^>]+>/g, ""));
+    w.innerHTML = '<div class="jm2" role="dialog" aria-modal="true" aria-label="' + esc(label) + '"><img class="jm2-bg" src="melding/boog.webp" alt="" aria-hidden="true"><div class="jm2-c">' +
+      '<img class="jm2-fl" src="melding/' + (o.icon || "bloem.svg") + '" alt="" aria-hidden="true">' + (o.badge ? '<span class="jm2-badge">' + esc(o.badge) + "</span>" : "") +
+      '<div class="jm2-t2">' + esc(o.title) + '</div><div class="jm2-tx">' + (o.text || "") + "</div>" +
+      (o.go ? '<button class="jm2-btn" data-md="go"><img src="melding/knop.webp" alt=""><span>' + esc(o.go.label) + "</span></button>" : "") +
+      (o.extra ? '<button class="jm2-link" data-md="ex">' + esc(o.extra.label) + "</button>" : "") +
+      (o.later ? '<button class="jm2-later" data-md="x">' + esc(o.later) + "</button>" : "") + "</div></div>";
+    const close = function () { document.removeEventListener("keydown", onKey, true); w.remove(); if (prevFocus && prevFocus.focus && document.contains(prevFocus)) { try { prevFocus.focus({ preventScroll: true }); } catch (e) {} } };
+    const onKey = function (e) {
+      if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); close(); return; }
+      if (e.key === "Tab") { const f = [].slice.call(w.querySelectorAll("button")); if (!f.length) return; const i = f.indexOf(document.activeElement); e.preventDefault(); f[(i + (e.shiftKey ? f.length - 1 : 1)) % f.length].focus(); }
+    };
+    w.addEventListener("click", function (e) {
+      const b = e.target.closest("[data-md]");
+      if (e.target === w || (b && b.dataset.md === "x")) { play("click"); close(); return; }
+      if (b && b.dataset.md === "go") { close(); if (o.go.fn) o.go.fn(); }
+      if (b && b.dataset.md === "ex") { close(); if (o.extra.fn) o.extra.fn(); }
+    });
+    document.addEventListener("keydown", onKey, true);
+    document.body.appendChild(w);
+    const g = w.querySelector(".jm2-btn, .jm2-link, .jm2-later"); if (g) g.focus({ preventScroll: true });
+    return close;
   }
   function jummahDialog() {
     bonEnsureDefs();
