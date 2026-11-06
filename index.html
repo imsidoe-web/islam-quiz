@@ -2676,6 +2676,10 @@ body.mk-typing .mk-res{gap:8px}
 .jl-land.ft.fb .jsvg { -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 74px, #000 calc(100% - 74px), transparent 100%); mask-image: linear-gradient(180deg, transparent 0, #000 74px, #000 calc(100% - 74px), transparent 100%); }
 .jl-land.jl-locked .jsvg { filter: saturate(.72) brightness(.95); }
 .jl-gate { position: relative; z-index: 1; height: 420px; margin: -80px 0; padding-bottom: 86px !important; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 6px; overflow: hidden; }
+.jl-gate.tap { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.jl-gate.tap .jg-sign { animation: jgHint 1.6s ease-in-out infinite; }
+@keyframes jgHint { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@media (prefers-reduced-motion: reduce) { .jl-gate.tap .jg-sign { animation: none; } }
 .jg-road { position: absolute; left: 50%; top: 0; bottom: 0; width: 22px; margin-left: -11px; border-radius: 11px; background: #fff6dc; box-shadow: 0 0 0 4px rgba(255,255,255,.35); background-image: repeating-linear-gradient(180deg, transparent 0 10px, #e8b84a 10px 13px); background-size: 4px 100%; background-repeat: repeat-y; background-position: center; }
 .jg-sign { position: relative; z-index: 2; margin-bottom: -4px; padding: 5px 14px; border-radius: 12px; background: #fbf3df; color: #12362a; border: 3px solid #e8b84a; box-shadow: 0 4px 10px rgba(0,0,0,.25); text-align: center; max-width: 92%; }
 .jg-sign b { display: block; font-size: .85rem; font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -8334,6 +8338,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v260", t: "Reis: stond je avatar nog voor een open poort, dan loopt hij nu vanzelf door; ook kun je op de open poort tikken om naar het volgende land te lopen." },
     { v: "v259", t: "Studio: nieuwe regel Flyers met de tester-flyers (A5 om te drukken en 4:5 voor social media) om te downloaden; tester-pagina nurspark.app/tester." },
     { v: "v258", t: "Beheer: bij ‘Echt account of gast’ staat nu hoeveel nieuwe echte en gast-spelers erbij kwamen." },
     { v: "v256", t: "Studio: open taken bovenaan, afvink-animatie, Wachten op en deze lijst." },
@@ -8717,6 +8722,7 @@ return exports;})();
     else if (screen === "duelresult") app.innerHTML = viewDuelResult();
     else if (screen === "journey") {
       if (!landFly && landFlyAfter) { const LS = landsFor(P.mode), fc = LS[landFlyAfter.from]; if (!fc || chestsReady(P.mode, fc.id) === 0) { landFly = landFlyAfter; landFlyAfter = null; } else journeyLand = landFlyAfter.from; }
+      if (!landFly && !landFlyAfter && journeyLand !== null && P && P.mode) { const LS2 = landsFor(P.mode), dl = defaultLand(); if (dl > journeyLand && dl < LS2.length && jLandOpen(P.mode, LS2[dl].id) && chestsReady(P.mode, LS2[journeyLand].id) === 0) landFly = { from: journeyLand, to: dl }; }   /* v260: avatar bleef achter een open poort staan */
       if (landFly) journeyLand = landFly.from; app.innerHTML = viewJourney();
     }
     else if (screen === "chestopen") { app.innerHTML = viewChestOpen(); afterChestOpenRender(); }
@@ -12939,8 +12945,10 @@ return exports;})();
       (open ? "" : '<g transform="translate(105 112)"><path d="M-7 -4 v-6 a7 7 0 0 1 14 0 v6" fill="none" stroke="#8a5a12" stroke-width="3"/><rect x="-10" y="-4" width="20" height="16" rx="3" fill="url(#' + u + 'g)" stroke="#8a5a12" stroke-width="1.5"/></g>') +
       '<g fill="#fff" opacity=".95"><ellipse cx="22" cy="180" rx="30" ry="10"/><ellipse cx="60" cy="184" rx="26" ry="8"/><ellipse cx="190" cy="180" rx="30" ry="10"/><ellipse cx="152" cy="184" rx="26" ry="8"/></g></svg>';
     const bg = kosmosOn() ? "#060a22" : "linear-gradient(180deg," + tth.near + " 0%," + tth.near + " 22%," + fth.sky[0] + " 78%," + fth.sky[0] + " 100%)";
-    return '<div class="jl-gate' + (open ? " open" : "") + '" data-to="' + k + '" style="background:' + bg + '" role="img" aria-label="Poort van Jannah naar Land ' + (k + 1) + ": " + esc(to.title) + (open ? ", open" : ", dicht. Haal eerst alle levels van " + esc(from.title)) + '">' +
-      '<span class="jg-road" aria-hidden="true"></span><span class="jg-sign"><b>Land ' + (k + 1) + ": " + esc(to.title) + "</b><small>" + (open ? "Open! Loop door de poort" : "Haal alle levels van Land " + k) + "</small></span>" + svg + "</div>";
+    /* v260: staat je avatar nog onder een open poort? Dan kun je op de poort tikken en loop je er zelf doorheen */
+    const tap = open && journeyLand !== null && journeyLand < k;
+    return '<div class="jl-gate' + (open ? " open" : "") + (tap ? " tap" : "") + '" data-to="' + k + '" style="background:' + bg + '" ' + (tap ? 'data-act="gate-go" role="button" tabindex="0"' : 'role="img"') + ' aria-label="Poort van Jannah naar Land ' + (k + 1) + ": " + esc(to.title) + (tap ? ", open. Tik om door de poort te lopen" : open ? ", open" : ", dicht. Haal eerst alle levels van " + esc(from.title)) + '">' +
+      '<span class="jg-road" aria-hidden="true"></span><span class="jg-sign"><b>Land ' + (k + 1) + ": " + esc(to.title) + "</b><small>" + (tap ? "Open! Tik op de poort" : open ? "Open! Loop door de poort" : "Haal alle levels van Land " + k) + "</small></span>" + svg + "</div>";
   }
   /* welk land staat midden in beeld? dan past de balk zich aan */
   let jBarShown = -1;
@@ -13845,6 +13853,7 @@ return exports;})();
       case "read-aloud": if (quiz) { const it = quiz.items[quiz.idx]; speak(quiz.answered ? feedbackSpeech(it) : questionSpeech(it)); } break;
       case "duff-toggle": duffToggle(); break;
       case "settings": case "a11y": play("click"); settingsDialog(); break;
+      case "gate-go": { const gk = parseInt(el.dataset.to, 10); if (landFly || isNaN(gk) || screen !== "journey") break; play("click"); landFlyAfter = null; landFly = { from: Math.max(0, Math.min(journeyLand === null ? gk - 1 : journeyLand, gk - 1)), to: gk }; runLandFlight(); break; }
       case "journey-here": { play("click"); const hc = document.querySelector(".j-current"); if (hc && hc.scrollIntoView) hc.scrollIntoView({ block: "center", behavior: reducedMotion() ? "auto" : "smooth" }); break; }
       case "profile-menu": play("click"); profileMenu(); break;
       case "move-out": play("click"); moveDialog(); break;
