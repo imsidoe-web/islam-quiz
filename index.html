@@ -8338,7 +8338,8 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
-    { v: "v260", t: "Reis: stond je avatar nog voor een open poort, dan loopt hij nu vanzelf door; ook kun je op de open poort tikken om naar het volgende land te lopen." },
+    { v: "v261", t: "Reis: je avatar staat nu altijd in het eerste land dat nog niet af is, ook als er nog schatkisten dicht zijn of je een level opnieuw speelde." },
+    { v: "v260", t: "Reis: je kunt op een open poort tikken om naar het volgende land te lopen." },
     { v: "v259", t: "Studio: nieuwe regel Flyers met de tester-flyers (A5 om te drukken en 4:5 voor social media) om te downloaden; tester-pagina nurspark.app/tester." },
     { v: "v258", t: "Beheer: bij ‘Echt account of gast’ staat nu hoeveel nieuwe echte en gast-spelers erbij kwamen." },
     { v: "v256", t: "Studio: open taken bovenaan, afvink-animatie, Wachten op en deze lijst." },
@@ -8722,7 +8723,7 @@ return exports;})();
     else if (screen === "duelresult") app.innerHTML = viewDuelResult();
     else if (screen === "journey") {
       if (!landFly && landFlyAfter) { const LS = landsFor(P.mode), fc = LS[landFlyAfter.from]; if (!fc || chestsReady(P.mode, fc.id) === 0) { landFly = landFlyAfter; landFlyAfter = null; } else journeyLand = landFlyAfter.from; }
-      if (!landFly && !landFlyAfter && journeyLand !== null && P && P.mode) { const LS2 = landsFor(P.mode), dl = defaultLand(); if (dl > journeyLand && dl < LS2.length && jLandOpen(P.mode, LS2[dl].id) && chestsReady(P.mode, LS2[journeyLand].id) === 0) landFly = { from: journeyLand, to: dl }; }   /* v260: avatar bleef achter een open poort staan */
+      if (!landFly && !landFlyAfter && journeyLand !== null && P && P.mode) { const LS2 = landsFor(P.mode), dl = defaultLand(); if (dl > journeyLand && dl < LS2.length && jLandOpen(P.mode, LS2[dl].id)) journeyLand = dl; }   /* v261: land af (ook als er nog kisten dicht zijn of je een level opnieuw speelde) en volgend land open: je avatar staat altijd in het eerste onafgeronde land */
       if (landFly) journeyLand = landFly.from; app.innerHTML = viewJourney();
     }
     else if (screen === "chestopen") { app.innerHTML = viewChestOpen(); afterChestOpenRender(); }
