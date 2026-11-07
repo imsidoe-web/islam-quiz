@@ -8339,6 +8339,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v263", t: "Beginner: als je steeds drie sterren haalt, krijg je af en toe een tip dat je gerust naar Gevorderd of Ervaren mag." },
     { v: "v262", t: "Reis: de schatkisten op de kaart zijn nu alleen versiering, zodat je avatar nooit in de weg staat. Na een gehaald level met schatkist komt er een feestelijke pop-up om hem te openen." },
     { v: "v261", t: "Reis: je avatar staat nu altijd in het eerste land dat nog niet af is, ook als er nog schatkisten dicht zijn of je een level opnieuw speelde." },
     { v: "v260", t: "Reis: je kunt op een open poort tikken om naar het volgende land te lopen." },
@@ -9205,6 +9206,8 @@ return exports;})();
       if (P.coinDay !== t && (P.streak.count || 0) >= 2) { coinGain += 1; coinStreak = true; P.coinDay = t; }
       if (coinGain) { coinFirst = !P.coinInfo; P.coinInfo = true; P.coins = (P.coins || 0) + coinGain; }
     }
+    /* v263: Beginners die steeds alles goed hebben krijgen af en toe een vriendelijke tip om door te gaan naar Gevorderd of Ervaren */
+    if (jr && quiz.level === "beginner") P.easyRun = jr.passed && stars === 3 ? (P.easyRun || 0) + 1 : 0;
     saveState();
     pushMember();
     if (sbUser && P.sbId === sbUser.id) { sbSyncSoon(quiz.level); sbSyncStreak(); } else if (!P.sbId) guestSyncSoon(P, quiz.level);
@@ -9228,6 +9231,26 @@ return exports;})();
     render();
     if (newBadges.length) setTimeout(function () { celebrateBadges(newBadges); }, result.kind === "journey" ? 1500 : 750);
     if (jr && jr.starChest) starChestPending = quiz.catId;
+    if (jr && quiz.level === "beginner") setTimeout(easyHintCheck, 2800);
+  }
+  /* v263: tip voor Beginners: te makkelijk? ga gerust naar Gevorderd of Ervaren. Pas na 3 keer 3 sterren op rij, hooguit eens per 3 dagen en 5 keer in totaal. */
+  function easyHintCheck() {
+    if (screen !== "result" || P.mode !== "beginner" || (P.easyRun || 0) < 3 || document.querySelector(".dialog-wrap, #bcel")) return;
+    const now = Date.now();
+    if ((P.easyHintN || 0) >= 5 || now - (P.easyHintAt || 0) < 3 * 86400000) return;
+    P.easyHintAt = now; P.easyHintN = (P.easyHintN || 0) + 1; P.easyRun = 0; saveState();
+    const w = document.createElement("div"); w.className = "dialog-wrap";
+    w.innerHTML = '<div class="dialog age-dialog" role="dialog" aria-modal="true" aria-labelledby="ehT"><h3 id="ehT">Masha’Allah, wat ga je goed! 🌟</h3>' +
+      '<p>Is Beginner te makkelijk voor je? Dan kun je gerust naar Gevorderd of Ervaren. Je voortgang in Beginner blijft bewaard en je kunt altijd terug.</p>' +
+      '<div class="stack dlg-foot"><button class="btn gold block" data-d="junior">Naar Gevorderd</button><button class="btn gold block" data-d="expert">Naar Ervaren</button><button class="btn ghost block" data-d="x">Ik blijf in Beginner</button></div></div>';
+    const close = function () { w.remove(); };
+    w.addEventListener("click", function (e) {
+      const d = e.target.closest("[data-d]");
+      if (e.target === w || (d && d.dataset.d === "x")) { close(); return; }
+      if (d) { const m = d.dataset.d; close(); chooseMode(m, function () { screen = "journey"; render(); }); }
+    });
+    document.body.appendChild(w); play("click");
+    const b = w.querySelector('[data-d="junior"]'); if (b) b.focus();
   }
 
   function viewResult() {
