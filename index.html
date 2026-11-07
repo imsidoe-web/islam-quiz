@@ -852,6 +852,7 @@ table.board thead th .avatar { display: grid; margin: 0 auto; }
 .journey-map { border-radius: 30px; overflow: hidden; box-shadow: 0 10px 28px rgba(27, 67, 50, .25); border: 4px solid #fff; background: #fff; }
 .jsvg { display: block; width: 100%; height: auto; }
 .j-stop { cursor: pointer; outline: none; }
+.j-chest { pointer-events: none; cursor: default; }
 .j-stop.locked { cursor: not-allowed; }
 .j-stop:hover:not(.locked) > circle:nth-last-of-type(n+1) { filter: brightness(1.05); }
 .j-stop:focus-visible circle:first-of-type { stroke: #1b4332; stroke-width: 4; }
@@ -8338,6 +8339,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v262", t: "Reis: de schatkisten op de kaart zijn nu alleen versiering, zodat je avatar nooit in de weg staat. Na een gehaald level met schatkist komt er een feestelijke pop-up om hem te openen." },
     { v: "v261", t: "Reis: je avatar staat nu altijd in het eerste land dat nog niet af is, ook als er nog schatkisten dicht zijn of je een level opnieuw speelde." },
     { v: "v260", t: "Reis: je kunt op een open poort tikken om naar het volgende land te lopen." },
     { v: "v259", t: "Studio: nieuwe regel Flyers met de tester-flyers (A5 om te drukken en 4:5 voor social media) om te downloaden; tester-pagina nurspark.app/tester." },
@@ -8694,6 +8696,7 @@ return exports;})();
     stopTimer(); mgClear(); idleStop();
     if (screen !== "rad") { clearTimeout(radCpuT); radCpuT = null; if (radNet || rad && rad.online) { radNetLeave(); rad = null; } }
     document.body.className = "";
+    if (screen !== "journey") chestPopupDone = {};
     if (screen !== "result" && screen !== "chestopen" && screen !== "minigame") { const cel = document.getElementById("celebrate"); if (cel) cel.remove(); }
     const inDuelQuiz = screen === "quiz" && quiz && quiz.kind === "duel";
     if (P && P.group && (screen === "group" || screen === "duelresult" || inDuelQuiz)) openGroupSub();
@@ -10385,7 +10388,7 @@ return exports;})();
     if (r.coinFirst) h += '<p class="fine coin-note">Dit is een NurSpark-munt. Je verdient ze met je levels. Je kunt er niets mee kopen: ze zijn bedoeld voor sadaka, insha’Allah binnenkort samen met anderen.</p>';
     if (r.lifeLost) h += '<div class="life-lost" role="status">' + heartSvg(22, false) + "<span>−1 leven · nog <b>" + r.livesLeft + "</b> van " + LIFE_MAX + (r.livesLeft ? "" : ". Tijd voor een pauze 🌙") + "</span></div>";
     if (r.chestReady) h += '<div class="chest-win ready"><svg viewBox="-34 -36 68 62" width="84" height="76" aria-hidden="true"><g class="chest-bounce">' + chest(0, 4, "closed", 1.3, "stop") + "</g></svg>" +
-      "<span><b>Een schatkist wacht op je!</b>Tik op de springende kist op de kaart om hem te openen.</span></div>";
+      "<span><b>Een schatkist wacht op je!</b>Op de kaart opent hij feestelijk.</span></div>";
     if (r.newBon) h += '<div class="bon-win" role="status"><span class="bw-art">' + bonSvg(r.newBon.kind, 78, "bn-bob", r.newBon.gold, true) + "</span><span><b>Nieuwe bonbon! " + esc(r.newBon.name) + "</b><small>Vakje " + r.newBon.slot + " van " + r.newBon.n + " in je doosje" + (r.newBon.full ? ". Doosje vol! +" + BON_FULL_GEMS + " edelstenen" : "") + '</small><button class="bw-btn" data-act="bon-box" data-cat="' + r.catId + '">Bekijk doosje</button></span></div>';
     if (r.landDone) h += '<div class="land-win"><span class="lw-flag">' + FLAG_SVG + "</span><span><b>Land voltooid!</b>Je hebt alle " + r.jCount + " levels van " + esc(catById(r.catId).title) + " gehaald.</span></div>";
     h += '<div class="result-actions">';
@@ -11824,9 +11827,31 @@ return exports;})();
     w.innerHTML = '<div class="dialog star-chest-dlg" role="dialog" aria-modal="true" aria-labelledby="scT"><div class="sc-art" aria-hidden="true"><svg viewBox="-40 -46 80 72" width="180" height="162">' + dailyChest3d(true) + "</svg></div>" +
       '<h3 id="scT">Sterrenkist! ⭐⭐⭐</h3><p>Alle levels van <b>' + esc(catById(cid).title) + "</b> met 3 sterren. Masha’Allah!</p>" +
       '<p class="sc-gems">' + gemSvg(22) + " +" + STAR_CHEST_GEMS + '</p><button class="btn gold block" data-d="ok">Alhamdulillah</button></div>';
-    w.addEventListener("click", function (e) { if (e.target === w || e.target.closest("[data-d]")) w.remove(); });
+    w.addEventListener("click", function (e) { if (e.target === w || e.target.closest("[data-d]")) { w.remove(); setTimeout(chestPopupCheck, 500); } });
     document.body.appendChild(w); play("fanfare"); celebrate(true);
     const b = w.querySelector("button"); if (b) b.focus();
+  }
+  /* v262: feestelijke schatkist-pop-up op de kaart (de kisten op de kaart zijn alleen versiering) */
+  let chestPopupDone = {};
+  function chestPopupCheck() {
+    if (screen !== "journey" || landFly || landFlyAfter || document.querySelector(".dialog-wrap, #bcel")) return;
+    const lv = P.mode, LS = landsFor(lv), c = LS[journeyLand === null ? defaultLand() : journeyLand];
+    if (!c || !jLandOpen(lv, c.id)) return;
+    const n = jCount(lv, c.id); let idx = -1;
+    for (let i = 0; i < n; i++) if (jIsMile(i, n) && jChestState(lv, c.id, i, n) === "ready") { idx = i; break; }
+    const key = lv + ":" + c.id + ":" + idx;
+    if (idx < 0 || chestPopupDone[key]) return;
+    chestPopupDone[key] = true;
+    const w = document.createElement("div"); w.className = "dialog-wrap";
+    w.innerHTML = '<div class="dialog star-chest-dlg" role="dialog" aria-modal="true" aria-labelledby="cpT"><div class="sc-art" aria-hidden="true"><svg viewBox="-50 -62 100 92" width="190" height="175"><g class="chest-bounce">' + chest(0, 6, "closed", 1.45, "stop") + "</g></svg></div>" +
+      '<h3 id="cpT">Een schatkist! 🎉</h3><p>Je hebt level ' + (jOff(lv, c.id) + idx + 1) + ' gehaald. Masha’Allah! Open je schatkist en speel de minigame.</p>' +
+      '<button class="btn gold block" data-d="go">' + icon("sparkles", 20) + 'Open de schatkist</button><button class="btn ghost block" data-d="later" style="margin-top:10px">Straks</button></div>';
+    w.addEventListener("click", function (e) {
+      if (e.target === w || e.target.closest('[data-d="later"]')) { w.remove(); return; }
+      if (e.target.closest('[data-d="go"]')) { w.remove(); openChest(c.id, idx); }
+    });
+    document.body.appendChild(w); play("fanfare"); celebrate(true);
+    const b = w.querySelector('[data-d="go"]'); if (b) b.focus();
   }
   /* sadaqa-doelen (gedeeld door alle spelers op dit toestel) */
   const BZ_GOALS = [
@@ -12613,13 +12638,12 @@ return exports;})();
       }
       else { cx = st.x + side * (R + 30); cy = st.y - 34; }
       const game = MG_NAME[chestGame(c.id, st.i)];
-      const label = "Schatkist na level " + (off + st.i + 1) + (ready ? ": klaar om te openen, met minigame " + game : state === "open" || state === "gold" ? ": geopend" : (jLandOpen(level, c.id) ? ": nog dicht, haal eerst level " + (st.i + 1) : ": vergrendeld, rond eerst het vorige land af"));
-      h += '<g class="j-stop j-chest' + (ready ? " j-ready" : "") + '" data-act="journey-chest" data-cat="' + c.id + '" data-i="' + st.i + '" role="button" tabindex="0" aria-label="' + label + '">' +
+      const label = "Schatkist na level " + (off + st.i + 1) + (ready ? ": klaar, opent straks in een pop-up, met minigame " + game : state === "open" || state === "gold" ? ": geopend" : (jLandOpen(level, c.id) ? ": nog dicht, haal eerst level " + (st.i + 1) : ": vergrendeld, rond eerst het vorige land af"));
+      h += '<g class="j-chest' + (ready ? " j-ready" : "") + '" role="img" aria-label="' + label + '">' +
         '<circle cx="' + cx + '" cy="' + cy + '" r="26" fill="#000" fill-opacity="0"/>';
       if (ready) h += '<circle cx="' + cx + '" cy="' + (cy - 4) + '" r="30" fill="#fff3a0" opacity=".5"><animate attributeName="opacity" values=".25;.8;.25" dur="1.1s" repeatCount="indefinite"/></circle>' +
         '<circle cx="' + cx + '" cy="' + (cy - 4) + '" r="27" fill="none" stroke="#ffd23f" stroke-width="2.5" stroke-dasharray="4 5" opacity=".9"/>';
       h += '<g class="' + (ready ? "chest-bounce" : "") + '">' + chest(cx, cy, ready ? "closed" : state, ready ? 1.25 : 0.95, "stop") + "</g>";
-      if (ready) h += '<g transform="translate(' + (cx + 16) + " " + (cy - 34) + ')"><circle r="9" fill="#ffbe3d" stroke="#fff" stroke-width="2"/><text y="4.5" text-anchor="middle" font-size="13" font-weight="900" fill="#fff">!</text></g>';
       h += "</g>";
     });
     h += bonusSvg(level, c);
@@ -13057,7 +13081,7 @@ return exports;})();
     const lv = P.mode, LS = landsFor(lv), c = LS[journeyLand === null ? defaultLand() : journeyLand], n = jCount(lv, c.id), st = jLandStats(lv, c.id);
     const list = [];
     if (st.passed === 0 && starsAt(P, lv) === 0) list.push({ e: "🌙", t: "Welkom, " + P.name + "! Tik op level 1 om je reis te beginnen.", w: 4 });
-    if (chestsReady(lv, c.id) > 0) list.push({ e: "🎁", t: "Er staat een schatkist op je te wachten! Tik op de springende kist.", w: 3 });
+    if (chestsReady(lv, c.id) > 0) list.push({ e: "🎁", t: "Er staat een schatkist voor je klaar!", w: 3 });
     const left = n - st.passed, li = LS.indexOf(c);
     if (left > 0 && left <= 3) list.push({ e: "🚩", t: li + 1 < LS.length ? "Nog " + left + (left === 1 ? " level" : " levels") + " tot Land " + (li + 2) + "!" : "Nog " + left + (left === 1 ? " level" : " levels") + " tot het einde van de Reis!", w: 3 });
     if (st.passed > 0 && st.stars < st.passed * 3 && st.passed >= 3) list.push({ e: "⭐", t: "Speel een level opnieuw voor een extra ster en meer edelstenen!", w: 1 });
@@ -13084,6 +13108,7 @@ return exports;})();
   function afterJourneyRender() {
     hulpBanner();
     if (starChestPending && !document.querySelector(".dialog-wrap, #bcel")) { const sc = starChestPending; starChestPending = null; setTimeout(function () { if (screen === "journey") starChestDialog(sc); }, 700); }
+    else setTimeout(chestPopupCheck, 900);
     /* meldingen onder het land-schild altijd net eronder zetten (het schild kan per telefoon iets hoger zijn) */
     const jsh = document.querySelector(".j-shield");
     if (jsh) { const y = Math.round(jsh.getBoundingClientRect().bottom + 8); document.querySelectorAll(".j-presence, .j-lockbanner").forEach(function (e) { e.style.top = y + "px"; }); }
