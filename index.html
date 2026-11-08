@@ -8384,6 +8384,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v269", t: "Kaart: meerdere medespelers bij hetzelfde level staan schuin op elkaar als een kleine stapel." },
     { v: "v268", t: "Kaart: medespelers staan klein vlak naast hun eigen level, zoals bij Candy Crush." },
     { v: "v267", t: "Kaart: medespelers staan nu naast de route en nooit meer op een level; bij veel spelers worden hun vakjes kleiner. Jouw volgende level glimt en heeft een START-label." },
     { v: "v266", t: "Je naam bestaat alleen uit letters (minstens 2); een bijnaam heeft minstens 2 letters en mag verder ook cijfers en tekens bevatten." },
@@ -12939,26 +12940,32 @@ return exports;})();
       for (let i = 0; i < used.length; i++) if (Math.abs(used[i].x - x) < 2 * T + 6 && Math.abs(used[i].y - y) < 2 * T + 6) return false;
       return true;
     }
-    /* zo dicht mogelijk bij het eigen level (buitenkant eerst), maar nooit op een level, kist of ander vakje */
-    function spot(st) {
+    /* meerdere spelers bij één level: schuin op elkaar, als een kleine stapel (voorste vakje bovenop) */
+    const ST = Math.round(T * .7);
+    function spot(st, m) {
       const R = st.last ? 27 : st.mile ? 21 : 19, out = st.x < 180 ? -1 : 1, o = R + T + 9;
       for (let d = 0; d <= 240; d += 8) {
         const ys = d ? [st.y - d, st.y + d] : [st.y];
         for (let k = 0; k < ys.length; k++) for (let g = 0; g < 3; g++) {
-          const x = st.x + (g === 0 ? out * o : g === 1 ? -out * o : out * (o + 26));
-          if (free(x, ys[k])) return { x: x, y: ys[k] };
+          const dir = g === 1 ? -out : out, x = st.x + (g === 0 ? out * o : g === 1 ? -out * o : out * (o + 26));
+          let ok = true;
+          for (let j = 0; j < m && ok; j++) if (!free(x + dir * j * ST, ys[k] - j * ST)) ok = false;
+          if (ok) return { x: x, y: ys[k], dir: dir };
         }
       }
       return null;
     }
     let h = "";
     Object.keys(by).map(Number).sort(function (a, b2) { return a - b2; }).forEach(function (k) {
-      const st = stops[k], list = by[k];
-      list.slice(0, 2).forEach(function (pe, n) {
-        const sp = spot(st); if (!sp) return;
-        used.push(sp); h += peerSvg(pe, sp.x, sp.y, sc);
-        if (n === 1 && list.length > 2) h += '<g transform="translate(' + (sp.x + T - 2) + " " + (sp.y + T - 2) + ')" aria-hidden="true"><circle r="13" fill="#1b4332" stroke="#ffd54f" stroke-width="2"/><text y="4" text-anchor="middle" font-size="11" font-weight="900" fill="#fff">+' + (list.length - 2) + "</text></g>";
-      });
+      const st = stops[k], list = by[k], m = Math.min(list.length, 3), sp = spot(st, m);
+      if (!sp) return;
+      let tiles = "";
+      for (let j = m - 1; j >= 0; j--) {          /* achterste eerst tekenen, voorste komt bovenop */
+        const x = sp.x + sp.dir * j * ST, y = sp.y - j * ST;
+        used.push({ x: x, y: y }); tiles += peerSvg(list[j], x, y, sc);
+      }
+      h += tiles;
+      if (list.length > m) { const x = sp.x + sp.dir * (m - 1) * ST, y = sp.y - (m - 1) * ST; h += '<g transform="translate(' + (x + T - 2) + " " + (y - T + 2) + ')" aria-hidden="true"><circle r="13" fill="#1b4332" stroke="#ffd54f" stroke-width="2"/><text y="4" text-anchor="middle" font-size="11" font-weight="900" fill="#fff">+' + (list.length - m) + "</text></g>"; }
     });
     return h;
   }
