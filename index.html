@@ -6467,6 +6467,7 @@ return exports;})();
   }
   function nameError(v) {
     v = String(v || "");
+    if (v.trim() && (v.trim().length < 2 || !/[\p{L}\p{N}]/u.test(v))) return "Kies een echte naam of bijnaam (minstens 2 tekens, met een letter of cijfer).";
     if (/@|https?:|www\./i.test(v) || /\.(com|nl|be|org|net)\b/i.test(v)) return "Een e-mailadres of link mag hier niet.";
     const one = function (x) { return x.replace(/(.)\1+/g, "$1"); };
     const f = nameFold(v), joined = f.replace(/[^a-z]/g, ""), collapsed = one(joined);
@@ -8339,6 +8340,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v264", t: "Namen zoals \"-\" of \"..\" kunnen niet meer: kies een echte naam of bijnaam (minstens 2 tekens, met een letter of cijfer)." },
     { v: "v263", t: "Beginner: als je steeds drie sterren haalt, krijg je af en toe een tip dat je gerust naar Gevorderd of Ervaren mag." },
     { v: "v262", t: "Reis: de schatkisten op de kaart zijn nu alleen versiering, zodat je avatar nooit in de weg staat. Na een gehaald level met schatkist komt er een feestelijke pop-up om hem te openen." },
     { v: "v261", t: "Reis: je avatar staat nu altijd in het eerste land dat nog niet af is, ook als er nog schatkisten dicht zijn of je een level opnieuw speelde." },
