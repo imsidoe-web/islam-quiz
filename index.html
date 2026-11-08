@@ -8384,6 +8384,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v271", t: "Reis: als je alle landen hebt uitgespeeld, open je op het land waar je als laatste speelde of anders het laatste land (het eind), niet meer op Land 1." },
     { v: "v270", t: "Kaart: als een land af is, staat je avatar bij het level dat je als laatste speelde (niet meer altijd bij het laatste) en dat level glimt met HIER." },
     { v: "v269", t: "Kaart: meerdere medespelers bij hetzelfde level staan schuin op elkaar als een kleine stapel." },
     { v: "v268", t: "Kaart: medespelers staan klein vlak naast hun eigen level, zoals bij Candy Crush." },
@@ -13060,7 +13061,10 @@ return exports;})();
   function defaultLand() {
     const LS = landsFor(P.mode);
     for (let i = 0; i < LS.length; i++) { if (!landDone(P.mode, LS[i].id)) return i; }
-    return 0;
+    /* alles uitgespeeld: ga naar het land waar je als laatste speelde, anders naar het laatste land (het eind) */
+    let best = LS.length - 1, tm = 0;
+    LS.forEach(function (c, i) { for (let k = 0, n = jCount(P.mode, c.id); k < n; k++) { const r = jBest(P.mode, c.id, k); if (r && r.t > tm) { tm = r.t; best = i; } } });
+    return Math.max(0, best);
   }
   /* tekst voor WhatsApp: totaaloverzicht van De Reis */
   function shareJourneyText() {
