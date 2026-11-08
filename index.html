@@ -7647,12 +7647,12 @@ return exports;})();
       '<div class="d-rov"><button class="d-mode" data-act="switch-mode" aria-label="Modus wisselen. Nu: ' + modeName(P.mode) + '. Tik om te kiezen">' + icon(MODE_ICON[P.mode], 13) + " " + modeName(P.mode) + ' <i aria-hidden="true">▾</i></button>' + lifeBtnHtml() + "</div></div>";
     h += '<nav class="d-grid" aria-label="Onderdelen">' +
       '<button class="d-tile hub" data-act="hub"><span class="hb-ic">' + dIc("book", "#1b4332", 40) + '</span><span class="hb-t"><span class="d-k ar" lang="ar" dir="rtl">بيت العلم</span><b>Bayt al-‘Ilm</b><small>' + (nf ? "Mijn foutjes: " + nf + " · du’a-boekje" : "Foutjes en du’a-boekje") + '</small></span><span class="hb-ch" aria-hidden="true">›</span></button>' +
+      '<button class="d-tile plt" data-act="play" aria-label="NurPlay, losse spellen voor tussendoor. Openen"><span class="plt-ic">' + dIc("pad", "#ffd54f", 36) + '</span><span class="plt-t"><b>NurPlay</b><small>Losse spellen voor tussendoor</small></span><span class="plt-ch" aria-hidden="true">›</span></button>' +
       (!mkOwner() ? "" : '<button class="d-tile kd" data-act="kd" aria-label="Koran-dagboek. Vers voor vers lezen en reflecteren. Alleen voor jou zichtbaar. Openen"><img src="journaal/lezer.webp" alt="" width="1024" height="572" loading="lazy"><span class="kd-badge" aria-hidden="true">In ontwikkeling</span><span class="kd-tx"><b>Koran-dagboek</b><small>Vers voor vers lezen en reflecteren</small></span></button>') +
       '<button class="d-tile" data-act="klas">' + "<span class=\"d-top\">" + dIc("book", "#ffd54f", 30) + "<span class=\"d-k ar\" lang=\"ar\" dir=\"rtl\">حلقة سبارك</span></span><b>Halaqa Spark</b><small>Leer samen met je klas</small></button>" +
       '<button class="d-tile" data-act="rad">' + '<span class="d-top">' + dIc("wheel", "#ffd54f", 30) + '<span class="d-k ar" lang="ar" dir="rtl">عجلة العلم</span></span><b>Ajalat al-‘Ilm</b><small>Rad van Kennis</small></button>' +
       '<button class="d-tile" data-act="group">' + "<span class=\"d-top\">" + dIc("users", "#ffd54f", 30) + "<span class=\"d-k ar\" lang=\"ar\" dir=\"rtl\">مسابقة</span></span><b>Musabaqah</b><small>Groep / Duel</small></button>" +
       '<button class="d-tile kids" disabled aria-label="KidsZone, komt binnenkort">' + dIc("star", "#ffd54f") + '<small class="d-k">KIDSZONE</small><b>[Naam volgt]</b><small>Binnenkort, insha’Allah</small></button>' +
-      '<button class="d-tile plt" data-act="play" aria-label="NurPlay, losse spellen voor tussendoor. Openen"><span class="plt-ic">' + dIc("pad", "#ffd54f", 36) + '</span><span class="plt-t"><b>NurPlay</b><small>Losse spellen voor tussendoor</small></span><span class="plt-ch" aria-hidden="true">›</span></button>' +
       /* v104: tegel voor geleerden, imams en gevorderde studenten (nog op slot, in ontwikkeling) — v104b: alleen zichtbaar voor de beheerder */
       (!mkOwner() ? "" : '<button class="d-tile maktabah" data-act="maktabah" aria-label="Al-Maktabah al-Mutaqaddimah, geavanceerde bibliotheek. In ontwikkeling, alleen voor jou zichtbaar. Openen">' +
         '<span class="mk-badge" aria-hidden="true"><i></i>In ontwikkeling</span>' +
@@ -8384,6 +8384,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v274", t: "Startscherm: NurPlay staat nu direct onder Bayt al-‘Ilm, zodat je er niet meer voor hoeft te scrollen." },
     { v: "v273", t: "Kaart: het HIER-label bij het eindlevel staat boven de vlag in plaats van erachter." },
     { v: "v272", t: "Reis: als alles is uitgespeeld sta je altijd aan het eind (laatste land, laatste level), ook als je terugkomt om levels opnieuw te spelen." },
     { v: "v271", t: "Reis: als je alle landen hebt uitgespeeld, open je op het land waar je als laatste speelde of anders het laatste land (het eind), niet meer op Land 1." },
