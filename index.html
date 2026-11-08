@@ -7665,8 +7665,23 @@ return exports;})();
     h += '<nav class="d-small" aria-label="Meer"><button data-act="board">Score</button><button data-act="album">Album</button><button data-act="bazaar">Bazaar</button></nav>';
     return '<section class="dash">' + h + "</section>";
   }
+  /* af en toe een tip voor de Kosmos-look: hooguit 3 keer, minstens 5 dagen na de vorige, nooit als hij al aan staat */
+  function maybeKosmosPromo(tries) {
+    if (!P || !P.mode || screen !== "dash" || S.look === "kosmos") return;
+    const ad = S.kosAd || { n: 0, t: 0 };
+    if (ad.n >= 3 || Date.now() - ad.t < 5 * 86400000) return;
+    setTimeout(function () {
+      if (!P || screen !== "dash" || S.look === "kosmos") return;
+      if (!P.npSeen || document.querySelector(".bm-wrap, .dialog-wrap, .bonus-ov, .modal-overlay:not(.hidden), .badges-modal.active")) { if ((tries || 0) < 4) maybeKosmosPromo((tries || 0) + 1); return; }
+      S.kosAd = { n: ad.n + 1, t: Date.now() }; saveState();
+      meldingDialog({ id: "kosAdWrap", badge: "TIP", title: "Kosmos-look", label: "Tip: probeer de Kosmos-look, een sterrenhemel met neon voor de reiskaart, de vragen en de uitslag.",
+        text: "Probeer eens de <b>Kosmos-look</b>: een sterrenhemel met neon op de reiskaart, bij de vragen en bij de uitslag.<br>Je zet hem altijd weer uit bij <b>Instellingen</b>.",
+        go: { label: "Probeer nu", fn: function () { S.look = "kosmos"; saveState(); stopTimer(); journeyReturn = false; journeyLand = null; screen = "journey"; render(); } }, later: "Later" });
+    }, 2300);
+  }
   function afterDashRender() {
     maybeNurPlayNews(0);
+    maybeKosmosPromo(0);
     clearInterval(dashTick);
     calTickStart();
     dashTick = setInterval(function () {
@@ -8384,6 +8399,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v275", t: "Af en toe (hooguit 3 keer, minstens 5 dagen tussen) een tip om de Kosmos-look te proberen, met knop om hem meteen aan te zetten." },
     { v: "v274", t: "Startscherm: NurPlay staat nu direct onder Bayt al-‘Ilm, zodat je er niet meer voor hoeft te scrollen." },
     { v: "v273", t: "Kaart: het HIER-label bij het eindlevel staat boven de vlag in plaats van erachter." },
     { v: "v272", t: "Reis: als alles is uitgespeeld sta je altijd aan het eind (laatste land, laatste level), ook als je terugkomt om levels opnieuw te spelen." },
