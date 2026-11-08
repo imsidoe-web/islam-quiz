@@ -6045,7 +6045,7 @@ return exports;})();
     let done = false;
     const finish = function (yes) {
       if (done) return; done = true;
-      S.kosOffer = true; if (yes) S.look = "kosmos";
+      S.kosOffer = true; if (yes) { S.look = "kosmos"; track("kosmos_aan"); }
       saveState(); try { play("click"); } catch (e) {}
       document.removeEventListener("keydown", onKey, true); w.remove();
       if (yes) announce("Kosmos-look staat aan.");
@@ -7673,10 +7673,10 @@ return exports;})();
     setTimeout(function () {
       if (!P || screen !== "dash" || S.look === "kosmos") return;
       if (!P.npSeen || document.querySelector(".bm-wrap, .dialog-wrap, .bonus-ov, .modal-overlay:not(.hidden), .badges-modal.active")) { if ((tries || 0) < 4) maybeKosmosPromo((tries || 0) + 1); return; }
-      S.kosAd = { n: ad.n + 1, t: Date.now() }; saveState();
+      S.kosAd = { n: ad.n + 1, t: Date.now() }; saveState(); track("kosmos_tip");
       meldingDialog({ id: "kosAdWrap", badge: "TIP", title: "Kosmos-look", label: "Tip: probeer de Kosmos-look, een sterrenhemel met neon voor de reiskaart, de vragen en de uitslag.",
         text: "Probeer eens de <b>Kosmos-look</b>: een sterrenhemel met neon op de reiskaart, bij de vragen en bij de uitslag.<br>Je zet hem altijd weer uit bij <b>Instellingen</b>.",
-        go: { label: "Probeer nu", fn: function () { S.look = "kosmos"; saveState(); stopTimer(); journeyReturn = false; journeyLand = null; screen = "journey"; render(); } }, later: "Later" });
+        go: { label: "Probeer nu", fn: function () { S.look = "kosmos"; track("kosmos_aan"); saveState(); stopTimer(); journeyReturn = false; journeyLand = null; screen = "journey"; render(); } }, later: "Later" });
     }, 2300);
   }
   function afterDashRender() {
@@ -8399,6 +8399,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v276", t: "Beheer: je ziet nu hoe vaak de Kosmos-look wordt aangezet, gebruikt en hoe vaak de tip is getoond." },
     { v: "v275", t: "Af en toe (hooguit 3 keer, minstens 5 dagen tussen) een tip om de Kosmos-look te proberen, met knop om hem meteen aan te zetten." },
     { v: "v274", t: "Startscherm: NurPlay staat nu direct onder Bayt al-‘Ilm, zodat je er niet meer voor hoeft te scrollen." },
     { v: "v273", t: "Kaart: het HIER-label bij het eindlevel staat boven de vlag in plaats van erachter." },
@@ -8512,7 +8513,7 @@ return exports;})();
     h += '<div class="bd-kg">' + kpi("Accounts", tot, ec + " echt · " + gs + " gast", "var(--blue)") + kpi("Actief 24 uur", n("actief_24u"), n("actief_5m") + " in de laatste 5 min", "var(--green)") + kpi("Nieuw, 7 dagen", n("nieuw_7d"), n("nieuw_vandaag") + " vandaag", "var(--violet)") + kpi("Via Play Store", n("play_spelers"), n("play_actief_24u") + " actief in 24 uur", "var(--amber)") + "</div>";
     h += sec("Echt account of gast") + '<div class="bd-card"><div class="bd-dn"><svg viewBox="0 0 36 36" width="140" height="140" role="img" aria-label="' + pe + ' procent echte accounts"><defs><linearGradient id="bdg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6ea8ff"/><stop offset="1" stop-color="#b48cff"/></linearGradient></defs><circle cx="18" cy="18" r="15.9155" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="3.4"/><circle cx="18" cy="18" r="15.9155" fill="none" stroke="url(#bdg)" stroke-width="3.4" stroke-linecap="round" stroke-dasharray="' + Math.max(pe - 2, 0) + " " + (102 - pe) + '" transform="rotate(-90 18 18)"/><text x="18" y="18.6" text-anchor="middle" font-size="7.4" font-weight="500" fill="#e9e8f6">' + pe + '%</text><text x="18" y="23.4" text-anchor="middle" font-size="2.6" fill="#8f8eb0">echt account</text></svg>' +
       '<div class="bd-lg"><div><u style="background:#8b9cff"></u><span>Echt account</span><b>' + ec + '</b></div><div><u style="background:rgba(255,255,255,.25)"></u><span>Gast</span><b>' + gs + "</b></div>" + nwLines() + "<p>Met score op het scorebord: " + n("spelers_echt") + " echt, " + n("spelers_gast") + " gast.</p></div></div></div>";
-    const NM = { spelwereld: "Spelwereld (reiskaart)", bayt_al_ilm: "Bayt al-‘Ilm (Learning Hub)", halaqa_spark: "Halaqa Spark (klas)", nurplay: "NurPlay (spellentegel)", spel_darb: "Spel: Darb an-Nur", spel_tayyibat: "Spel: Tayyibat", spel_thawr: "Spel: Het web van Thawr", rad_van_kennis: "Rad van Kennis", musabaqah: "Musabaqah (groep, duel)", koran: "Koran lezen", koran_dagboek: "Koran-dagboek", maktabah: "Al-Maktabah", bazaar: "Bazaar", duaboekje: "Du’a-boekje", mijn_foutjes: "Mijn foutjes", quiz_van_de_dag: "Quiz van de dag", album: "Album", scorebord: "Scorebord", quiz_level: "Levels gespeeld" };
+    const NM = { spelwereld: "Spelwereld (reiskaart)", bayt_al_ilm: "Bayt al-‘Ilm (Learning Hub)", halaqa_spark: "Halaqa Spark (klas)", nurplay: "NurPlay (spellentegel)", spel_darb: "Spel: Darb an-Nur", spel_tayyibat: "Spel: Tayyibat", spel_thawr: "Spel: Het web van Thawr", rad_van_kennis: "Rad van Kennis", musabaqah: "Musabaqah (groep, duel)", koran: "Koran lezen", koran_dagboek: "Koran-dagboek", maktabah: "Al-Maktabah", bazaar: "Bazaar", duaboekje: "Du’a-boekje", mijn_foutjes: "Mijn foutjes", quiz_van_de_dag: "Quiz van de dag", album: "Album", scorebord: "Scorebord", quiz_level: "Levels gespeeld", kosmos_gebruikt: "Kosmos-look gebruikt (1x per sessie)", kosmos_aan: "Kosmos-look aangezet", kosmos_tip: "Kosmos-tip getoond" };
     const cl = ["var(--blue)", "var(--violet)", "var(--teal)", "var(--pink)", "var(--amber)", "var(--indigo)", "var(--green)"];
     const gb = Array.isArray(BH.gebruik) ? BH.gebruik : [], gmax = Math.max(1, gb.reduce(function (m, x) { return Math.max(m, Number(x.w) || 0); }, 0));
     h += sec("Meest gebruikt");
@@ -8758,8 +8759,11 @@ return exports;})();
       sb.rpc("tel_gebruik", { p_onderdeel: n }).then(function () {}, function () {});
     } catch (e) {}
   }
+  let kosTrkT = 0;
   function render() {
     { const tn = TRK[screen]; if (tn && tn !== TRK[trkLast]) track(tn); trkLast = screen; }
+    /* Kosmos-look: tel hooguit eens per 30 minuten dat hij in gebruik is (zo zie je in Beheer hoeveel spelers hem echt gebruiken) */
+    if (kosmosOn() && KOS_SCREENS.indexOf(screen) >= 0 && Date.now() - kosTrkT > 1800000) { kosTrkT = Date.now(); track("kosmos_gebruikt"); }
     bonEnsureDefs();
     if (screen === "home") screen = lastRoot || "journey";
     clearInterval(dashTick); clearInterval(calTick); clearInterval(qTick); if (qObs) { qObs.disconnect(); qObs = null; }
@@ -14193,7 +14197,7 @@ return exports;})();
     if (el && el.dataset && el.dataset.act === "toggle-timer") { S.timer = el.checked; saveState(); play("click"); }
     if (el && el.id === "acctAge") { S.consent16 = !!el.checked; saveState(); if (el.checked) sbMsg(""); }
     if (el && el.dataset && el.dataset.act === "toggle-hg") { S.hgOff = !el.checked; saveState(); play("click"); }
-    if (el && el.dataset && el.dataset.act === "toggle-kos") { S.look = el.checked ? "kosmos" : ""; saveState(); play("click"); render(); }
+    if (el && el.dataset && el.dataset.act === "toggle-kos") { S.look = el.checked ? "kosmos" : ""; if (el.checked) track("kosmos_aan"); saveState(); play("click"); render(); }
   });
 
   document.addEventListener("keydown", function (e) {
