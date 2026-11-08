@@ -8384,6 +8384,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v270", t: "Kaart: als een land af is, staat je avatar bij het level dat je als laatste speelde (niet meer altijd bij het laatste) en dat level glimt met HIER." },
     { v: "v269", t: "Kaart: meerdere medespelers bij hetzelfde level staan schuin op elkaar als een kleine stapel." },
     { v: "v268", t: "Kaart: medespelers staan klein vlak naast hun eigen level, zoals bij Candy Crush." },
     { v: "v267", t: "Kaart: medespelers staan nu naast de route en nooit meer op een level; bij veel spelers worden hun vakjes kleiner. Jouw volgende level glimt en heeft een START-label." },
@@ -9194,7 +9195,7 @@ return exports;})();
       if (!prev || stars > prev.stars || (stars === prev.stars && score > prev.score)) {
         isRecord = !!prev && (stars > prev.stars || score > prev.score);
         jSave(lv, cid, ji, { score: score, total: total, stars: stars });
-      }
+      } else if (prev) prev.t = Date.now();   /* ook opnieuw spelen telt: zo onthoudt de kaart je laatste level */
       const passed = stars >= 1, first = passed && !wasPassed, mile = jIsMile(ji, n);
       jr = {
         jIdx: ji, jCount: n, passed: passed, firstPass: first,
@@ -9967,6 +9968,7 @@ return exports;})();
     if (!P.journey) P.journey = { beginner: {}, junior: {}, expert: {} };
     if (!P.journey[level]) P.journey[level] = {};
     if (!P.journey[level][catId]) P.journey[level][catId] = {};
+    if (rec && typeof rec === "object") rec.t = Date.now();   /* onthoud wanneer: zo weet de kaart waar je als laatste speelde */
     P.journey[level][catId][i] = rec;
   }
   function jStarsFor(score, total) {
@@ -10005,7 +10007,10 @@ return exports;})();
   function jCurrent(level, catId) {
     const n = jCount(level, catId);
     for (let i = 0; i < n; i++) if (!jPassed(level, catId, i)) return i;
-    return n - 1;
+    /* land helemaal af: je staat bij het level dat je als laatste speelde (anders bij het laatste level) */
+    let last = n - 1, tm = 0;
+    for (let i = 0; i < n; i++) { const b = jBest(level, catId, i); if (b && b.t > tm) { tm = b.t; last = i; } }
+    return last;
   }
   function jLandStats(level, catId) {
     const n = jCount(level, catId);
@@ -12721,7 +12726,8 @@ return exports;})();
       const name = "Level " + (off + st.i + 1) + " (level " + (st.i + 1) + " van " + n + " in " + c.title + ")" + (jHourglass(level, st.i) && !S.hgOff ? ", zandloper-level met tijd per vraag" : "") + (st.mile ? ", mijlpaal met schatkist" : "") + (st.last ? ", laatste level" : "") + (st.locked ? " (vergrendeld)" : st.passed ? " (gehaald, " + st.stars + " van 3 sterren)" : " (volgende)");
       h += '<g class="j-stop ' + state + (act && st.i === J.cur ? " j-current" : "") + '" data-act="journey-level" data-cat="' + c.id + '" data-i="' + st.i + '" role="button" tabindex="0"' + (st.locked ? ' aria-disabled="true"' : "") + ' aria-label="' + name + '" transform="translate(' + st.x + " " + st.y + ')">';
       h += '<circle r="' + (R + 7) + '" fill="#000" fill-opacity="0"/>';
-      if (state === "current") {
+      const landAll = stops.every(function (x) { return x.passed; }), hl = state === "current" || (act && landAll && st.i === J.cur);
+      if (hl) {
         const gc = kos ? "#3fe6d0" : "#ffc21a";
         h += '<circle class="j-glow" r="' + (R + 20) + '" fill="' + gc + '" opacity=".6"/><circle class="j-glow j-glow2" r="' + (R + 12) + '" fill="' + (kos ? "#d6fffa" : "#fff3a0") + '" opacity=".7"/>' +
           '<g class="j-spin"><circle r="' + (R + 9) + '" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="5 9" stroke-linecap="round"/></g>';
@@ -12734,7 +12740,7 @@ return exports;})();
       if (st.mile) h += '<circle r="' + (R - 5) + '" fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="1.6" stroke-dasharray="3 4"/>';
       if (state === "locked") h += '<g transform="translate(-7 -9)" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><rect x="0" y="7" width="14" height="11" rx="2.5" fill="#fff" stroke="none"/><path d="M3 7 V4 a4 4 0 0 1 8 0 V7"/></g>';
       else h += '<text y="' + (R > 22 ? 9 : 7) + '" text-anchor="middle" font-size="' + (R > 22 ? 25 : 20) + '" font-weight="900" fill="#fff" stroke="' + (kos ? (state === "done" ? "#7a4a00" : "#0a5b66") : state === "done" ? "#0b6b44" : "#c77d12") + '" stroke-width="1" paint-order="stroke">' + (off + st.i + 1) + "</text>";
-      if (state === "current" && act && st.i === J.cur) h += '<g transform="translate(0 ' + (R + 20) + ')"><g class="j-start"><rect x="-27" y="-10" width="54" height="20" rx="10" fill="#1b4332" stroke="#ffd54f" stroke-width="2"/><text y="5" text-anchor="middle" font-size="12" font-weight="900" fill="#ffe27a" letter-spacing=".5">START</text></g></g>';
+      if (hl && act && st.i === J.cur) { const again = state !== "current", ty = again ? -(R + 24 + (jHourglass(level, st.i) && !S.hgOff ? 24 : 0)) : R + 20, tw = again ? "HIER" : "START"; h += '<g transform="translate(0 ' + ty + ')"><g class="j-start"><rect x="-27" y="-10" width="54" height="20" rx="10" fill="#1b4332" stroke="#ffd54f" stroke-width="2"/><text y="5" text-anchor="middle" font-size="12" font-weight="900" fill="#ffe27a" letter-spacing=".5">' + tw + "</text></g></g>"; }
       if (state === "done") for (let k = 0; k < 3; k++) h += (k < st.stars ? '<g transform="translate(' + ((k - 1) * 15) + " " + (R + (k === 1 ? 8 : 5)) + ') scale(.72)" style="filter:drop-shadow(0 1.5px 1px rgba(0,0,0,.4))">' + starInner() + "</g>" : '<polygon points="' + starPoly((k - 1) * 15, R + (k === 1 ? 8 : 5), 7.5) + '" fill="rgba(0,0,0,.35)" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/>');
       if (jHourglass(level, st.i) && !S.hgOff) h += '<g transform="translate(-8 ' + (-R - 19) + ')"><circle cx="8" cy="9" r="10" fill="#1b4332" stroke="#ffd54f" stroke-width="1.6"/><g transform="translate(2 -1) scale(.5)">' + hgSvg(.6, 24).replace(/<svg[^>]*>/, "").replace("</svg>", "") + "</g></g>";
       if (st.last) h += '<g transform="translate(0 ' + (-R - 3) + ')"><line y2="-38" stroke="#b07a1a" stroke-width="3" stroke-linecap="round"/><path d="M1 -38 L33 -38 L27 -28 L33 -18 L1 -18Z" fill="#1f9d55" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"><animate attributeName="d" values="M1 -38 L33 -38 L27 -28 L33 -18 L1 -18Z;M1 -38 Q17 -42 33 -38 L27 -28 L33 -18 Q17 -14 1 -18Z;M1 -38 L33 -38 L27 -28 L33 -18 L1 -18Z" dur="2.2s" repeatCount="indefinite"/></path><circle cx="13" cy="-28" r="5.2" fill="#fff"/><circle cx="15.4" cy="-29" r="4.4" fill="#1f9d55"/><polygon points="' + starPoly(23.5, -28, 3.6) + '" fill="#ffd23f"/></g>';
