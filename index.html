@@ -6743,6 +6743,8 @@ return exports;})();
   let acctTab = "in", acctBusy = false;
   const FB_F = '<svg class="g-ic" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><path fill="#1877F2" d="M24 12a12 12 0 1 0-13.9 11.85v-8.38H7.08V12h3.02V9.36c0-3 1.79-4.67 4.53-4.67 1.31 0 2.69.23 2.69.23v2.95h-1.52c-1.49 0-1.96.93-1.96 1.87V12h3.33l-.53 3.47h-2.8v8.38A12 12 0 0 0 24 12z"/></svg>';
   function acctActive() { return !!P && !!S.entry; }
+  /* Facebook-inlog staat uit tot de Meta-app live is (bedrijfsverificatie). Zet op true om de knop terug te zetten. */
+  const FB_LOGIN_AAN = false;
   function acctProvider() { const m = sbUser && sbUser.app_metadata && sbUser.app_metadata.provider; return m === "google" ? "Google" : m === "facebook" ? "Facebook" : "e-mail"; }
   function acctHtml(keepEmail) {
     const logged = !!sbUser, active = acctActive();
@@ -6767,7 +6769,7 @@ return exports;})();
         '<p id="acctMsg" class="acct-msg" role="alert">' + esc(loginMsg) + "</p>" +
         '<div class="quiz-divider" role="separator"><span>OF</span></div>' +
         '<button class="btn-google-quiz" data-act="acct-oauth" data-provider="google">' + GOOGLE_G + "<span>Doorgaan met Google</span></button>" +
-        (kidU13() ? "" : '<button class="btn-google-quiz" data-act="acct-oauth" data-provider="facebook">' + FB_F + "<span>Doorgaan met Facebook</span></button>") +
+        (kidU13() || !FB_LOGIN_AAN ? "" : '<button class="btn-google-quiz" data-act="acct-oauth" data-provider="facebook">' + FB_F + "<span>Doorgaan met Facebook</span></button>") +
         '<div class="quiz-divider" role="separator"><span>OF</span></div>' +
         (active ? '<button class="btn-guest-quiz" data-d="x">⚪ Doorgaan als Gast</button>'
           : '<label class="quiz-label" for="username">Spelersnaam (Gast)</label>' + nameTipHtml() + '<input class="quiz-input" id="username" type="text" maxlength="14" autocomplete="off" placeholder="Voer je naam in..." aria-describedby="guestMsg"><p id="guestMsg" class="acct-msg" role="alert"></p><button class="btn-guest-quiz" data-act="acct-guest"><span aria-hidden="true">⚪</span> Doorgaan als Gast</button>');
