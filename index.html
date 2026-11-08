@@ -6423,10 +6423,39 @@ return exports;})();
     sbPush(sb, sbUser.id, p, lv);
   }
   /* één rij van speler 'p' (account of gast) naar het klassement schrijven met client 'cl' voor gebruiker 'uid' */
+  /* elke naam op het klassement is uniek: is "Abraham" al van een ander, dan wordt het "Abraham 2", "Abraham 3", enzovoort.
+     Wie de naam al had (eigen rij op de server) houdt hem. Lukt de controle niet (geen verbinding), dan gaat de score gewoon met de gewone naam door. */
+  const lbNameP = {};
+  function sbUniqueName(cl, uid, p) {
+    const base = publicName(p);
+    if (p.lbBase === base && p.lbName) return Promise.resolve(p.lbName);
+    const key = uid + "|" + base.toLowerCase();
+    if (lbNameP[key]) return lbNameP[key];
+    const like = base.replace(/[\\%_]/g, "\\$&") + "%";
+    lbNameP[key] = Promise.resolve(cl.from("leaderboard").select("user_id,display_name").ilike("display_name", like).limit(1000)).then(function (r) {
+      if (!r || r.error || !r.data) return base;
+      const mine = {}, taken = {};
+      r.data.forEach(function (x) { const n = String(x.display_name || "").toLowerCase(); if (x.user_id === uid) mine[n] = 1; else taken[n] = 1; });
+      let name = base;
+      if (!mine[base.toLowerCase()] && taken[base.toLowerCase()]) {
+        for (let i = 2; i < 1000; i++) {
+          const suf = " " + i; name = base.slice(0, 14 - suf.length).trim() + suf;
+          if (!taken[name.toLowerCase()]) break;
+        }
+      }
+      p.lbBase = base; p.lbName = name; saveState();
+      return name;
+    }).catch(function () { return base; }).then(function (n) { delete lbNameP[key]; return n; });
+    return lbNameP[key];
+  }
   function sbPush(cl, uid, p, lv) {
+    if (scoreAt(p, lv) <= 0) return;
+    return sbUniqueName(cl, uid, p).then(function (nm) { return sbPushNow(cl, uid, p, lv, nm); });
+  }
+  function sbPushNow(cl, uid, p, lv, nm) {
     if (lv === "beginner" && soc.noBeg) return;           /* server kent de modus Beginner nog niet (supabase-beginner.sql): Beginner blijft lokaal */
     const hs = scoreAt(p, lv); if (hs <= 0) return;
-    const row = { user_id: uid, mode: lv, display_name: publicName(p), avatar_url: !kidU13() && p.sharePhoto !== false && GOOGLE_PHOTO.test(p.photo || "") ? p.photo : null, highscore: hs, stars: starsAt(p, lv), xp: xpAt(p, lv) };
+    const row = { user_id: uid, mode: lv, display_name: nm || publicName(p), avatar_url: !kidU13() && p.sharePhoto !== false && GOOGLE_PHOTO.test(p.photo || "") ? p.photo : null, highscore: hs, stars: starsAt(p, lv), xp: xpAt(p, lv) };
     const pos = posOf(p, lv), full = Object.assign({}, row, { levels_done: passedLevels(p, lv), pos_land: pos.land, pos_level: pos.level, streak: streakOf(p) });
     const send = function (r) { return cl.from("leaderboard").upsert(r, { onConflict: "user_id,mode" }); };
     const av = avOf(p);
@@ -8340,6 +8369,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v265", t: "Namen op het klassement zijn uniek: heet iemand al Abraham, dan wordt jouw naam Abraham 2." },
     { v: "v264", t: "Namen zoals \"-\" of \"..\" kunnen niet meer: kies een echte naam of bijnaam (minstens 2 tekens, met een letter of cijfer)." },
     { v: "v263", t: "Beginner: als je steeds drie sterren haalt, krijg je af en toe een tip dat je gerust naar Gevorderd of Ervaren mag." },
     { v: "v262", t: "Reis: de schatkisten op de kaart zijn nu alleen versiering, zodat je avatar nooit in de weg staat. Na een gehaald level met schatkist komt er een feestelijke pop-up om hem te openen." },
