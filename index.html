@@ -8384,6 +8384,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v268", t: "Kaart: medespelers staan klein vlak naast hun eigen level, zoals bij Candy Crush." },
     { v: "v267", t: "Kaart: medespelers staan nu naast de route en nooit meer op een level; bij veel spelers worden hun vakjes kleiner. Jouw volgende level glimt en heeft een START-label." },
     { v: "v266", t: "Je naam bestaat alleen uit letters (minstens 2); een bijnaam heeft minstens 2 letters en mag verder ook cijfers en tekens bevatten." },
     { v: "v265", t: "Namen op het klassement zijn uniek: heet iemand al Abraham, dan wordt jouw naam Abraham 2." },
@@ -12917,12 +12918,12 @@ return exports;})();
     let tot = 0;
     socialPeers(lv, li).forEach(function (pe) { if (pe.level >= 0 && pe.level < stops.length) { (by[pe.level] = by[pe.level] || []).push(pe); tot++; } });
     /* hoe meer medespelers in dit land, hoe kleiner de vakjes */
-    const sc = tot <= 4 ? 1 : tot <= 8 ? .82 : tot <= 14 ? .68 : .56, T = Math.round(31 * sc);
+    const sc = tot <= 4 ? .72 : tot <= 8 ? .62 : tot <= 14 ? .52 : .44, T = Math.round(31 * sc);
     /* verboden plekken (cirkels): levels, kisten, bonuslevel, dagkist en jouw eigen marker */
     const obs = [], cur = stops[jCurrent(lv, c.id)];
     stops.forEach(function (st) {
       const R = st.last ? 27 : st.mile ? 21 : 19;
-      obs.push({ x: st.x, y: st.y, r: R + 12 });
+      obs.push({ x: st.x, y: st.y, r: R + 5 }, { x: st.x, y: st.y + R + 9, r: 19 });
       if (st.mile) { const q = jChestXY(st, stops); obs.push({ x: q.x, y: q.y, r: 32 }); }
     });
     try { const b = bonusOf(c.id); if (b) { const bp = bonusPos(lv, c.id, b); obs.push({ x: bp.x, y: bp.y + 8, r: 46 }); } } catch (e) {}
@@ -12930,7 +12931,7 @@ return exports;})();
     if (cur) { const R = cur.last ? 27 : cur.mile ? 21 : 19, sd = cur.x < 180 ? -1 : 1; obs.push({ x: cur.x + sd * (R + 17), y: cur.y, r: 30 }); }
     const used = [];
     function free(x, y) {
-      if (x < T || x > 360 - T || y < 60 || y > 780 - T) return false;
+      if (x < T + 6 || x > 360 - T - 8 || y < 60 || y > 780 - T) return false;
       for (let i = 0; i < obs.length; i++) {
         const o = obs[i], nx = Math.max(x - T, Math.min(o.x, x + T)), ny = Math.max(y - T, Math.min(o.y, y + T));
         if ((o.x - nx) * (o.x - nx) + (o.y - ny) * (o.y - ny) < o.r * o.r) return false;
@@ -12938,11 +12939,15 @@ return exports;})();
       for (let i = 0; i < used.length; i++) if (Math.abs(used[i].x - x) < 2 * T + 6 && Math.abs(used[i].y - y) < 2 * T + 6) return false;
       return true;
     }
+    /* zo dicht mogelijk bij het eigen level (buitenkant eerst), maar nooit op een level, kist of ander vakje */
     function spot(st) {
-      const e = T + 5, first = st.x < 180 ? e : 360 - e, cols = [first, 360 - first];
-      for (let d = 0; d <= 320; d += 10) {
+      const R = st.last ? 27 : st.mile ? 21 : 19, out = st.x < 180 ? -1 : 1, o = R + T + 9;
+      for (let d = 0; d <= 240; d += 8) {
         const ys = d ? [st.y - d, st.y + d] : [st.y];
-        for (let k = 0; k < ys.length; k++) for (let j = 0; j < 2; j++) if (free(cols[j], ys[k])) return { x: cols[j], y: ys[k] };
+        for (let k = 0; k < ys.length; k++) for (let g = 0; g < 3; g++) {
+          const x = st.x + (g === 0 ? out * o : g === 1 ? -out * o : out * (o + 26));
+          if (free(x, ys[k])) return { x: x, y: ys[k] };
+        }
       }
       return null;
     }
