@@ -1259,7 +1259,7 @@ body.ms-lite.ms-on .ms-wrap.ms-more .ms-hint { animation: none; }
       await dbReq("PUT", "klas/" + code + "/meta", { host: auth.uid, titel: quiz.titel, state: "hw", type: "hw", deadline: deadline, n: quiz.vragen.length, created: Date.now() });
       await dbReq("PUT", "klas/" + code + "/vragen", pub);
       var l = hwList(); l.unshift({ code: code, quizId: quiz.id, titel: quiz.titel, deadline: deadline }); lsSet(HW_KEY, l);
-      HWV = { entry: l[0], fresh: true, data: null }; show();
+      openHwv(l[0]);
     } catch (e) { var b = document.getElementById("hgo"); if (b) b.disabled = false; say("Het huiswerk kon niet worden gemaakt. Staan de Firebase-regels klaar?", true); }
   }
   async function openHwv(entry) {
@@ -1292,7 +1292,7 @@ body.ms-lite.ms-on .ms-wrap.ms-more .ms-hint { animation: none; }
   function renderHwv() {
     var v = HWV, e = v.entry, d = v.data, link = "https://nurspark.app/klas/?c=" + e.code;
     var h = '<h1>Huiswerk: ' + esc(e.titel) + '</h1><div class="card center"><p class="muted" style="margin:0">Code voor de leerlingen</p><div class="bigcode" style="font-size:44px">' + esc(e.code) + '</div>' +
-      '<p style="margin:4px 0">Tot ' + esc(fmtDeadline(e.deadline)) + ' · <a target="_blank" rel="noopener" href="https://wa.me/?text=' + encodeURIComponent("Huiswerk op NurSpark. Doe mee met code " + e.code + ": " + link) + '">Deel via WhatsApp</a></p></div>';
+      '<p style="margin:4px 0">Tot ' + esc(fmtDeadline(e.deadline)) + ' · <a target="_blank" rel="noopener" style="color:var(--em-d);font-weight:800" href="https://wa.me/?text=' + encodeURIComponent("Huiswerk op NurSpark. Doe mee met code " + e.code + ": " + link) + '">Deel via WhatsApp</a></p></div>';
     if (v.err) h += '<p class="msg err">' + esc(v.err) + '</p>';
     else if (!d) h += '<p>Uitslag laden…</p>';
     else {
