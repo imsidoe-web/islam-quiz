@@ -7804,7 +7804,19 @@ return exports;})();
   }
   /* v237: NurPlay, losse spellen (elk spel een kaart met voorbeeldplaatje) */
   const PLAY_GAMES = [{ id: "darb", name: "Darb an-Nur", ar: "دَرْب النُّور", src: "spel/darb-an-nur.html", sub: "Leid de gelovige door het licht-doolhof, weg van de duisternis.", tags: ["Doolhof", "Groot in beeld", "Geen muziek"], prev: "playPreview" },
-    { id: "tayyibat", name: "Tayyibat", ar: "طَيِّبَات", src: "spel/tayyibat.html", sub: "Tik op het halal eten en laat haram liggen. Ook een burger kan haram zijn: check het keurmerk!", tags: ["Tikspel", "Halal of haram", "Edelstenen"], prev: "playPreviewFood" }];
+    { id: "tayyibat", name: "Tayyibat", ar: "طَيِّبَات", src: "spel/tayyibat.html", sub: "Tik op het halal eten en laat haram liggen. Ook een burger kan haram zijn: check het keurmerk!", tags: ["Tikspel", "Halal of haram", "Edelstenen"], prev: "playPreviewFood" },
+    { id: "thawr", name: "Het web van Thawr", ar: "غَار ثَوْر", src: "spel/thawr.html", sub: "Span het web voor de grot en help de duiven hun nest bouwen, voordat de fakkellichtjes boven zijn.", tags: ["Slepen en tikken", "Hijra", "Edelstenen"], prev: "playPreviewThawr" }];
+  function playPreviewThawr() {
+    return '<svg viewBox="0 0 340 170" role="img" aria-label="Voorbeeld van het spel: een berg met de grot Thawr bij nacht, een spinnenweb voor de ingang en twee duiven"><rect width="340" height="170" fill="#101c2c"/>' +
+      '<g fill="#fff3c4" opacity=".85"><circle cx="40" cy="26" r="1.6"/><circle cx="96" cy="14" r="1.2"/><circle cx="150" cy="30" r="1.6"/><circle cx="214" cy="16" r="1.2"/><circle cx="300" cy="46" r="1.6"/><circle cx="262" cy="22" r="1.2"/></g>' +
+      '<path d="M286 22a20 20 0 1 0 20 28a16 16 0 1 1-20-28z" fill="#f0c94a"/>' +
+      '<path d="M0 170V118L52 84L96 112L150 58L210 104L262 74L340 122V170Z" fill="#1d2f44"/>' +
+      '<path d="M104 170V112Q104 66 170 66Q236 66 236 112V170Z" fill="#0a111c" stroke="#c9a46a" stroke-width="4"/>' +
+      '<circle cx="170" cy="120" r="22" fill="#f0c94a" opacity=".16"/><circle cx="170" cy="126" r="7" fill="#fff3c4" opacity=".7"/>' +
+      '<g stroke="#d8dde6" stroke-width="1.4" fill="none" opacity=".95"><path d="M118 112L170 70L222 112M118 112L170 168L222 112M170 70V168M118 112H222"/><path d="M135 99L170 112L205 99M135 125L170 112L205 125"/></g>' +
+      '<g fill="#f5efe0"><ellipse cx="68" cy="52" rx="13" ry="7"/><path d="M58 50L44 40L50 56Z"/><ellipse cx="270" cy="96" rx="13" ry="7"/><path d="M280 94L296 84L290 100Z"/></g>' +
+      '<path d="M236 146q12-8 26 0q-6 10-26 0z" fill="#8a5a2e"/></svg>';
+  }
   function playPreview() {
     return '<svg viewBox="0 0 340 170" role="img" aria-label="Voorbeeld van het doolhof: de gelovige, gouden lichtjes en de rook van de shaytan"><rect width="340" height="170" fill="#16222e"/>' +
       '<g fill="none" stroke="#c9a46a" stroke-width="5" stroke-linecap="round"><rect x="14" y="12" width="312" height="146" rx="10"/><path d="M60 12V74M60 106V158M110 42H200M110 42V126M110 126H170M230 12V84M230 116V158M270 62H326M150 84H190"/></g>' +
@@ -7820,7 +7832,7 @@ return exports;})();
   }
   function viewPlay() {
     return hubTop("NurPlay", "dash", "", "Losse spellen voor tussendoor") + '<section class="pl-list">' + PLAY_GAMES.map(function (g) {
-      return '<article class="pl-card">' + (g.prev === "playPreviewFood" ? playPreviewFood() : playPreview()) + '<div class="pl-body"><div class="pl-ar" lang="ar" dir="rtl">' + g.ar + "</div><h2>" + esc(g.name) + "</h2><p>" + esc(g.sub) + '</p><div class="pl-tags">' + g.tags.map(function (t) { return "<span>" + esc(t) + "</span>"; }).join("") + '</div><button class="pl-go" data-act="play-game" data-id="' + g.id + '" aria-label="Speel ' + esc(g.name) + '">Speel</button></div></article>';
+      return '<article class="pl-card">' + (g.prev === "playPreviewFood" ? playPreviewFood() : g.prev === "playPreviewThawr" ? playPreviewThawr() : playPreview()) + '<div class="pl-body"><div class="pl-ar" lang="ar" dir="rtl">' + g.ar + "</div><h2>" + esc(g.name) + "</h2><p>" + esc(g.sub) + '</p><div class="pl-tags">' + g.tags.map(function (t) { return "<span>" + esc(t) + "</span>"; }).join("") + '</div><button class="pl-go" data-act="play-game" data-id="' + g.id + '" aria-label="Speel ' + esc(g.name) + '">Speel</button></div></article>';
     }).join("") + "</section>";
   }
   function viewHub() {
@@ -8411,6 +8423,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v286", t: "NurPlay: Het web van Thawr staat nu ook bij de losse spellen (en blijft ook als bonuslevel op de kaart)." },
     { v: "v280", t: "Geleerden: in het bericht en op de pagina staat dat je van telefoon naar laptop kunt wisselen." },
     { v: "v279", t: "Geleerden: vriendelijk WhatsApp-verzoek, knop Naam wijzigen, en op de telefoon een kleinere werkbalk met grotere vraagtekst." },
     { v: "v278", t: "Geleerden: korte code (NUR-K7M4), link met code erin en een slot tegen gokken." },
@@ -12987,7 +13000,7 @@ return exports;})();
     const ov = document.createElement("div");
     ov.className = "bonus-ov"; ov.setAttribute("role", "dialog"); ov.setAttribute("aria-modal", "true"); ov.setAttribute("aria-label", g.name);
     track("spel_" + g.id);
-    ov.innerHTML = '<iframe src="' + g.src + "?snd=" + (S.sound ? 1 : 0) + '" title="' + esc(g.name) + '" allow="autoplay"></iframe>';
+    ov.innerHTML = '<iframe src="' + g.src + "?lv=" + P.mode + "&snd=" + (S.sound ? 1 : 0) + '" title="' + esc(g.name) + '" allow="autoplay"></iframe>';
     document.body.appendChild(ov); document.body.classList.add("bonus-on");
     const app = document.getElementById("app"); if (app) app.setAttribute("aria-hidden", "true");
     bonusCur = { lv: P.mode, catId: null, b: { id: g.id, name: g.name }, ov: ov, frame: ov.firstChild, msg: "" };
