@@ -8411,6 +8411,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v280", t: "Geleerden: in het bericht en op de pagina staat dat je van telefoon naar laptop kunt wisselen." },
     { v: "v279", t: "Geleerden: vriendelijk WhatsApp-verzoek, knop Naam wijzigen, en op de telefoon een kleinere werkbalk met grotere vraagtekst." },
     { v: "v278", t: "Geleerden: korte code (NUR-K7M4), link met code erin en een slot tegen gokken." },
     { v: "v277", t: "Beheer: nieuwe knop Geleerden met codes, thema's en voortgang van de nakijkers (nurspark.app/nakijken)." },
@@ -8474,7 +8475,7 @@ return exports;})();
   }
   function nkBericht(naam, code) {
     const c = nkFmt(code);
-    return "Assalamu alaikum " + naam + ",\n\nHet NurSpark-team bouwt een gratis islamitische educatieve app. Wij willen u met respect vragen of u bereid bent ons te ondersteunen bij het nakijken van de vragen op inhoud en bronnen. Het is geheel vrijblijvend, en u bepaalt zelf hoeveel en wanneer.\n\nBent u hiertoe bereid? Tik dan op uw persoonlijke link. U kiest zelf de thema’s die u wilt nakijken en uw voortgang wordt vanzelf bewaard:\nhttps://nurspark.app/nakijken/#" + c + "\n\n(Of ga naar nurspark.app/nakijken en vul uw persoonlijke code in: " + c + ". Wilt u de code voor uzelf houden?)\n\nHeeft u hiervoor geen tijd of mogelijkheid, dan is dat helemaal prima. Laat het ons dan gerust weten.\n\nJazakallahu khayran,\nTeam NurSpark";
+    return "Assalamu alaikum " + naam + ",\n\nHet NurSpark-team bouwt een gratis islamitische educatieve app. Wij willen u met respect vragen of u bereid bent ons te ondersteunen bij het nakijken van de vragen op inhoud en bronnen. Het is geheel vrijblijvend, en u bepaalt zelf hoeveel en wanneer.\n\nBent u hiertoe bereid? Tik dan op uw persoonlijke link. U kiest zelf de thema’s die u wilt nakijken. Uw voortgang wordt vanzelf bewaard, dus u kunt beginnen op uw telefoon en verdergaan op uw laptop (of andersom):\nhttps://nurspark.app/nakijken/#" + c + "\n\n(Of ga naar nurspark.app/nakijken en vul uw persoonlijke code in: " + c + ". Wilt u de code voor uzelf houden?)\n\nHeeft u hiervoor geen tijd of mogelijkheid, dan is dat helemaal prima. Laat het ons dan gerust weten.\n\nJazakallahu khayran,\nTeam NurSpark";
   }
   function viewGeleerden() {
     const ic = function (d) { return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + "</svg>"; };
