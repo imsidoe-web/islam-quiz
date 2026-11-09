@@ -8411,6 +8411,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v278", t: "Geleerden: korte code (NUR-K7M4), link met code erin en een slot tegen gokken." },
     { v: "v277", t: "Beheer: nieuwe knop Geleerden met codes, thema's en voortgang van de nakijkers (nurspark.app/nakijken)." },
     { v: "v276", t: "Beheer: je ziet nu hoe vaak de Kosmos-look wordt aangezet, gebruikt en hoe vaak de tip is getoond." },
     { v: "v275", t: "Af en toe (hooguit 3 keer, minstens 5 dagen tussen) een tip om de Kosmos-look te proberen, met knop om hem meteen aan te zetten." },
@@ -8442,8 +8443,8 @@ return exports;})();
   /* v277: Geleerden (nakijkdossier nurspark.app/nakijken): codes, thema's en voortgang. Alleen beheerder. De gegevens staan in Supabase (supabase-geleerden.sql). */
   let NK = null, nkErr = "", nkBusy = false, nkAdd = false, nkNew = null, nkCodeOf = null, nkEdits = null, nkMsg = "", nkAsk = null;
   const NK_ALF = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  function nkMakeCode() { const a = new Uint8Array(12); crypto.getRandomValues(a); let s = ""; for (let i = 0; i < 12; i++) { s += NK_ALF[a[i] % NK_ALF.length]; if (i % 4 === 3 && i < 11) s += "-"; } return "NUR-" + s; }
-  function nkFmt(c) { return String(c || "").replace(/^(NUR)(.{4})(.{4})(.{4})$/, "$1-$2-$3-$4"); }
+  function nkMakeCode() { const a = new Uint8Array(4); crypto.getRandomValues(a); let s = ""; for (let i = 0; i < 4; i++) s += NK_ALF[a[i] % NK_ALF.length]; return "NUR-" + s; }
+  function nkFmt(c) { return String(c || "").replace(/^(NUR)(.{4})$/, "$1-$2"); }
   function nkAgo(iso) {
     if (!iso) return "nog niet ingelogd";
     const m = Math.max(0, Math.round((Date.now() - new Date(iso).getTime()) / 60000));
@@ -8471,7 +8472,7 @@ return exports;})();
     try { navigator.clipboard.writeText(text).then(function () { jToast(ok); }).catch(fail); } catch (e) { fail(); }
   }
   function nkBericht(naam, code) {
-    return "Assalamu alaikum " + naam + ",\n\nhierbij uw persoonlijke code voor het nakijkdossier van NurSpark.\n\nLink: https://nurspark.app/nakijken/\nUw code: " + nkFmt(code) + "\n\nNa het inloggen kiest u zelf de thema’s die u wilt nakijken. Een gekozen thema is voor anderen niet meer beschikbaar. Uw voortgang wordt vanzelf bewaard. Wilt u de code voor uzelf houden?\n\nJazakallahu khayran.";
+    return "Assalamu alaikum " + naam + ",\n\nhierbij uw persoonlijke code voor het nakijkdossier van NurSpark.\n\nTik op deze link, dan komt u direct in het dossier:\nhttps://nurspark.app/nakijken/#" + nkFmt(code) + "\n\n(Of ga naar nurspark.app/nakijken en vul uw code in: " + nkFmt(code) + ")\n\nNa het inloggen kiest u zelf de thema’s die u wilt nakijken. Een gekozen thema is voor anderen niet meer beschikbaar. Uw voortgang wordt vanzelf bewaard. Wilt u de code voor uzelf houden?\n\nJazakallahu khayran.";
   }
   function viewGeleerden() {
     const ic = function (d) { return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + "</svg>"; };
