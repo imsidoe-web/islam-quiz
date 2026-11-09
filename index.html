@@ -2348,6 +2348,18 @@ a.bd-idbtn { text-decoration: none; justify-content: center; font-weight: 600; }
 .bd-id-lb small { font-weight: 400; color: var(--mut); }
 .bd-id-ta { width: 100%; min-height: 96px; resize: vertical; padding: 12px; border-radius: 12px; border: 1px solid var(--line); background: rgba(0,0,0,.28); color: var(--tx); font: inherit; font-size: 16px; line-height: 1.5; }
 .bd-id-ta:focus { outline: 2px solid var(--violet); outline-offset: 1px; }
+.nk-in { width: 100%; min-height: 48px; padding: 0 14px; border-radius: 12px; border: 1px solid var(--line); background: rgba(0,0,0,.28); color: var(--tx); font: inherit; font-size: 16px; }
+.nk-in:focus { outline: 2px solid var(--violet); outline-offset: 1px; }
+.nk-card { padding: 14px 16px; border-radius: 18px; background: rgba(255,255,255,.035); border: 1px solid rgba(255,255,255,.05); margin: 10px 0; }
+.nk-card h3 { margin: 0 0 2px; font-size: 17px; font-weight: 600; color: var(--tx); }
+.nk-st { font-size: 12.5px; color: var(--mut); }
+.nk-st.on { color: #7ee2a8; }
+.nk-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.nk-code { display: block; margin: 12px 0 4px; padding: 12px; border-radius: 12px; background: rgba(0,0,0,.35); font: 600 18px/1.2 ui-monospace, Consolas, monospace; letter-spacing: .08em; text-align: center; color: var(--amber); user-select: all; }
+.nk-th { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 9px 0; border-top: 1px solid rgba(255,255,255,.06); font-size: 14px; }
+.nk-th small { color: var(--mut); font-size: 12.5px; }
+.nk-th.vrij small { color: var(--amber); }
+.nk-sel { min-height: 40px; border-radius: 10px; border: 1px solid var(--line); background: rgba(0,0,0,.28); color: var(--tx); font: inherit; font-size: 14px; padding: 0 8px; max-width: 150px; }
 .bd-btn { min-height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid var(--line); background: rgba(255,255,255,.05); color: var(--tx); font: inherit; font-size: 14px; cursor: pointer; }
 .bd-btn:hover, .bd-btn:focus-visible { background: rgba(255,255,255,.1); outline: none; }
 .bd-btn.on { border-color: var(--amber); color: var(--amber); }
@@ -8399,6 +8411,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v277", t: "Beheer: nieuwe knop Geleerden met codes, thema's en voortgang van de nakijkers (nurspark.app/nakijken)." },
     { v: "v276", t: "Beheer: je ziet nu hoe vaak de Kosmos-look wordt aangezet, gebruikt en hoe vaak de tip is getoond." },
     { v: "v275", t: "Af en toe (hooguit 3 keer, minstens 5 dagen tussen) een tip om de Kosmos-look te proberen, met knop om hem meteen aan te zetten." },
     { v: "v274", t: "Startscherm: NurPlay staat nu direct onder Bayt al-‘Ilm, zodat je er niet meer voor hoeft te scrollen." },
@@ -8426,6 +8439,92 @@ return exports;})();
     { v: "v247", t: "Nieuw meldingsvenster in boogvorm (NurPlay-nieuws, streak)." }
   ];
   let ctlJust = null;
+  /* v277: Geleerden (nakijkdossier nurspark.app/nakijken): codes, thema's en voortgang. Alleen beheerder. De gegevens staan in Supabase (supabase-geleerden.sql). */
+  let NK = null, nkErr = "", nkBusy = false, nkAdd = false, nkNew = null, nkCodeOf = null, nkEdits = null, nkMsg = "", nkAsk = null;
+  const NK_ALF = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  function nkMakeCode() { const a = new Uint8Array(12); crypto.getRandomValues(a); let s = ""; for (let i = 0; i < 12; i++) { s += NK_ALF[a[i] % NK_ALF.length]; if (i % 4 === 3 && i < 11) s += "-"; } return "NUR-" + s; }
+  function nkFmt(c) { return String(c || "").replace(/^(NUR)(.{4})(.{4})(.{4})$/, "$1-$2-$3-$4"); }
+  function nkAgo(iso) {
+    if (!iso) return "nog niet ingelogd";
+    const m = Math.max(0, Math.round((Date.now() - new Date(iso).getTime()) / 60000));
+    if (m < 2) return "zojuist"; if (m < 60) return m + " min geleden"; if (m < 1440) return Math.round(m / 60) + " uur geleden";
+    const d = Math.round(m / 1440); return d + (d === 1 ? " dag" : " dagen") + " geleden";
+  }
+  function nkLoad(quiet) {
+    if (!sb || nkBusy) return; nkBusy = true;
+    sb.rpc("nk_beheer_overzicht").then(function (r) {
+      nkBusy = false;
+      if (r.error) { NK = null; nkErr = /nk_beheer|function|PGRST202/i.test(String(r.error.message)) ? "Dit onderdeel is nog niet klaar: het SQL-bestand supabase-geleerden.sql moet nog één keer in Supabase worden uitgevoerd." : "Laden is niet gelukt: " + r.error.message; }
+      else { NK = r.data || { geleerden: [], themas: [] }; nkErr = ""; }
+      bdDraw();
+    }).catch(function () { nkBusy = false; nkErr = "Verbinden is niet gelukt."; bdDraw(); });
+  }
+  function nkDo(fn, args, okMsg) {
+    nkMsg = "";
+    sb.rpc(fn, args).then(function (r) {
+      if (r.error) nkMsg = "Dat is niet gelukt: " + r.error.message; else if (okMsg) nkMsg = okMsg;
+      nkAsk = null; nkBusy = false; nkLoad(true);
+    }).catch(function () { nkMsg = "Verbinden is niet gelukt."; bdDraw(); });
+  }
+  function nkCopy(text, ok) {
+    const fail = function () { jToast("Kopiëren lukte niet. Selecteer de tekst en kopieer hem zelf."); };
+    try { navigator.clipboard.writeText(text).then(function () { jToast(ok); }).catch(fail); } catch (e) { fail(); }
+  }
+  function nkBericht(naam, code) {
+    return "Assalamu alaikum " + naam + ",\n\nhierbij uw persoonlijke code voor het nakijkdossier van NurSpark.\n\nLink: https://nurspark.app/nakijken/\nUw code: " + nkFmt(code) + "\n\nNa het inloggen kiest u zelf de thema’s die u wilt nakijken. Een gekozen thema is voor anderen niet meer beschikbaar. Uw voortgang wordt vanzelf bewaard. Wilt u de code voor uzelf houden?\n\nJazakallahu khayran.";
+  }
+  function viewGeleerden() {
+    const ic = function (d) { return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + "</svg>"; };
+    const G = NK ? NK.geleerden || [] : [];
+    let h = bdHead(ic, "Geleerden", NK ? G.length + (G.length === 1 ? " nakijker" : " nakijkers") : "Laden…");
+    if (nkErr) h += '<p class="bd-note">' + esc(nkErr) + "</p>";
+    if (nkMsg) h += '<p class="bd-note" role="status">' + esc(nkMsg) + "</p>";
+    if (!NK && !nkErr) h += '<p class="bd-note">Even laden…</p>';
+    if (!NK) return h + '<p class="bd-ft">NurSpark Beheer · alleen zichtbaar voor de beheerder</p></main></div>';
+    let tot = 0, done = 0, actief = 0;
+    G.forEach(function (g) { if (g.actief) actief++; (g.themas || []).forEach(function (t) { tot += t.aantal; done += t.akkoord + t.aanpassen; }); });
+    const pc = tot ? Math.round(done / tot * 100) : 0;
+    h += '<div class="bd-card"><div class="bd-r" style="--c:var(--green);border-top:0"><span class="bd-rl"><span>Samen klaar<small class="bd-sub">' + done + " van " + tot + " gekozen vragen · " + actief + " actief</small></span></span>" + '<span class="bd-rb" aria-hidden="true"><i style="width:' + pc + '%"></i></span><b>' + pc + "%</b></div></div>";
+    h += '<button class="bd-idbtn" data-act="nk-add"><span>Geleerde toevoegen<small>Naam invullen, dan krijg je een persoonlijke code</small></span></button>';
+    if (nkAdd) h += '<div class="nk-card"><label for="nkName" class="bd-sub" style="margin:0 0 6px">Naam van de geleerde</label><input id="nkName" class="nk-in" type="text" maxlength="60" placeholder="Bijvoorbeeld: Shaykh …" autocomplete="off"><div class="nk-row"><button class="bd-btn on" data-act="nk-add-go">Code maken</button><button class="bd-btn" data-act="nk-add">Annuleren</button></div></div>';
+    if (nkNew) h += '<div class="nk-card"><h3>Code voor ' + esc(nkNew.naam) + '</h3><span class="nk-code">' + esc(nkFmt(nkNew.code)) + '</span><div class="nk-row"><button class="bd-btn on" data-act="nk-copy" data-n="' + esc(nkNew.naam) + '" data-c="' + esc(nkNew.code) + '">Kopieer bericht voor WhatsApp</button></div><p class="bd-note">Plak het bericht in WhatsApp. De code staat altijd terug te vinden onder de naam.</p></div>';
+    h += '<h2 class="bd-sec"><span>Nakijkers</span><i></i></h2>';
+    if (!G.length) h += '<p class="bd-note">Nog niemand toegevoegd.</p>';
+    G.forEach(function (g) {
+      const k = g.themas || []; let a = 0, e = 0, n = 0;
+      k.forEach(function (t) { a += t.akkoord; e += t.aanpassen; n += t.aantal; });
+      const p = n ? Math.round((a + e) / n * 100) : 0;
+      h += '<div class="nk-card"><h3>' + esc(g.naam) + '</h3><span class="nk-st' + (g.actief ? " on" : "") + '">' + (g.actief ? "Actief" : "Stopgezet") + " · laatst bezig: " + esc(nkAgo(g.laatst_actief)) + "</span>";
+      h += '<div class="bd-r" style="--c:var(--green);border-top:0"><span class="bd-rl"><span>' + (n ? (a + e) + " van " + n + " klaar" : "Nog geen thema gekozen") + '<small class="bd-sub">' + a + " akkoord · " + e + ' aanpassen</small></span></span><span class="bd-rb" aria-hidden="true"><i style="width:' + p + '%"></i></span><b>' + p + "%</b></div>";
+      k.forEach(function (t) { h += '<div class="nk-th"><span>' + esc(t.thema) + "</span><small>" + (t.akkoord + t.aanpassen) + " / " + t.aantal + "</small></div>"; });
+      h += '<div class="nk-row"><button class="bd-btn" data-act="nk-code" data-id="' + esc(g.id) + '">' + (nkCodeOf === g.id ? "Code verbergen" : "Code tonen") + '</button><button class="bd-btn" data-act="nk-edits" data-id="' + esc(g.id) + '">Aanpassingen lezen</button>';
+      if (g.actief) h += nkAsk === g.id ? '<button class="bd-btn on" data-act="nk-stop2" data-id="' + esc(g.id) + '">Ja, stopzetten (thema’s komen vrij)</button><button class="bd-btn" data-act="nk-no">Annuleren</button>' : '<button class="bd-btn" data-act="nk-stop" data-id="' + esc(g.id) + '">Stopzetten</button>';
+      else h += '<button class="bd-btn on" data-act="nk-start" data-id="' + esc(g.id) + '">Weer activeren</button>';
+      h += '<button class="bd-btn" data-act="nk-max" data-id="' + esc(g.id) + '" data-m="' + g.max + '">Maximaal ' + g.max + " thema’s (+1)</button></div>";
+      if (nkCodeOf === g.id) h += '<span class="nk-code">' + esc(nkFmt(g.code)) + '</span><div class="nk-row"><button class="bd-btn on" data-act="nk-copy" data-n="' + esc(g.naam) + '" data-c="' + esc(g.code) + '">Kopieer bericht voor WhatsApp</button><button class="bd-btn" data-act="nk-newcode" data-id="' + esc(g.id) + '" data-n="' + esc(g.naam) + '">Nieuwe code maken</button></div><p class="bd-note">Een nieuwe code maakt de oude meteen ongeldig.</p>';
+      h += "</div>";
+    });
+    if (nkEdits) {
+      h += '<h2 class="bd-sec"><span>Gevraagde aanpassingen</span><i></i></h2><div class="nk-card">';
+      if (!nkEdits.length) h += '<p class="bd-note" style="margin:0">Nog geen aanpassingen gevraagd.</p>';
+      nkEdits.forEach(function (x) { h += '<div class="nk-th" style="display:block"><b>' + esc(x.vraag) + "</b> <small>" + esc(x.thema) + " · " + esc(x.naam) + "</small><br>" + esc(x.tekst || "(geen toelichting)") + "</div>"; });
+      if (nkEdits.length) h += '<div class="nk-row"><button class="bd-btn on" data-act="nk-copyedits">Kopieer alles</button></div>';
+      h += "</div>";
+    }
+    const vrij = (NK.themas || []).filter(function (t) { return !t.geleerde; }).length;
+    h += '<h2 class="bd-sec"><span>Thema’s</span><i></i></h2><div class="bd-card">';
+    (NK.themas || []).forEach(function (t, i) {
+      h += '<div class="nk-th' + (t.geleerde ? "" : " vrij") + '"><span>' + esc(t.thema) + "<small> · " + t.aantal + " vragen</small></span>";
+      if (t.geleerde) h += '<span><small>' + esc(t.naam || "") + '</small> <button class="bd-btn" data-act="nk-free" data-th="' + esc(t.thema) + '">Vrijgeven</button></span>';
+      else {
+        const act = G.filter(function (g) { return g.actief; });
+        h += "<span>" + (act.length ? '<select class="nk-sel" id="nkS' + i + '" aria-label="Geleerde voor ' + esc(t.thema) + '">' + act.map(function (g) { return '<option value="' + esc(g.id) + '">' + esc(g.naam) + "</option>"; }).join("") + '</select> <button class="bd-btn" data-act="nk-assign" data-th="' + esc(t.thema) + '" data-i="' + i + '">Toewijzen</button>' : "<small>Vrij</small>") + "</span>";
+      }
+      h += "</div>";
+    });
+    h += "</div><p class=\"bd-note\">" + (vrij ? vrij + " thema’s zijn nog vrij. " : "Alle thema’s hebben een nakijker. ") + "Geleerden kiezen zelf hun thema’s; hier kun je een thema ook vrijgeven of toewijzen. Een geleerde ziet nooit wie de anderen zijn.</p>";
+    return h + '<p class="bd-ft">NurSpark Beheer · alleen zichtbaar voor de beheerder</p></main></div>';
+  }
   function woOpen() { const d = ctlGet(); return WACHTEN.filter(function (x) { return !d[x.id]; }).length; }
   function bdHead(ic, t, sm) { return '<div class="bd"><header class="bd-top"><button class="bd-ib" data-act="bd-ideas-back" aria-label="Terug naar beheer">' + ic('<path d="M15 18l-6-6 6-6"/>') + '</button><div class="bd-tt"><b>' + t + "</b><small>" + sm + '</small></div><span style="width:44px"></span></header><main class="bd-m">'; }
   function viewWachten() {
@@ -8488,6 +8587,7 @@ return exports;})();
     if (bdMode === "wachten") return viewWachten();
     if (bdMode === "live") return viewLive();
     if (bdMode === "flyers") return viewFlyers();
+    if (bdMode === "geleerden") return viewGeleerden();
     if (!BH && !bhErr) { bhLoad(); return '<div class="bd">' + top("Laden…") + '<main class="bd-m"><p class="bd-note" role="status">De cijfers worden geladen…</p></main></div>'; }
     if (bhErr) return '<div class="bd">' + top("") + '<main class="bd-m"><p class="bd-note" role="alert">' + esc(bhErr) + "</p></main></div>";
     const n = function (k) { return Number(BH[k]) || 0; };
@@ -8505,6 +8605,7 @@ return exports;})();
       { urgent: false, h: blk("bd-tests", "--teal", '<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/>', "Meldingen testen", "Bekijk elke melding direct, zonder te wachten", "<b>6</b>") },
       { urgent: false, h: blk("bd-ideas", "--violet", '<path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/>', "Mijn ideeën", "Schrijf en bewaar je plannen", "<b>" + (IDS ? IDS.length : idLocal().length) + "</b>") },
       { urgent: false, h: blk("bd-live", "--green", '<path d="M12 19V5"/><path d="M5 12l7-7 7 7"/>', "Laatst live gezet", "Wat er recent nieuw in de app kwam", "") },
+      { urgent: false, h: blk("bd-geleerden", "--indigo", '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>', "Geleerden", "Voortgang van de nakijkers en hun codes", NK ? "<b>" + (NK.geleerden || []).filter(function (g) { return g.actief; }).length + "</b>" : "") },
       { urgent: false, h: blk("bd-flyers", "--pink", '<path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/>', "Flyers", "Testers zoeken: flyers met QR om te downloaden", "") }
     ];
     h += '<section class="bd-wp" aria-labelledby="bd-wp-t"><div class="bd-wph"><b id="bd-wp-t">Mijn studio</b><small>Jouw taken als maker van NurSpark</small></div>';
@@ -8547,7 +8648,7 @@ return exports;})();
     if (!mkOwner() || document.getElementById("bdWrap")) return;
     const w = document.createElement("div"); w.id = "bdWrap"; w.className = "bd-wrap";
     w.setAttribute("role", "dialog"); w.setAttribute("aria-modal", "true"); w.setAttribute("aria-label", "Beheer");
-    document.body.appendChild(w); BH = null; bhErr = ""; bdMode = "main"; bdEdit = null; bdDel = null; IDS = null; CTL = null; bdDraw(); idLoad(); ctlLoad();
+    document.body.appendChild(w); BH = null; bhErr = ""; bdMode = "main"; bdEdit = null; bdDel = null; IDS = null; CTL = null; nkMsg = ""; nkNew = null; nkEdits = null; nkCodeOf = null; nkAdd = false; nkAsk = null; bdDraw(); idLoad(); ctlLoad(); nkLoad(true);
     const b = w.querySelector(".bd-ib"); if (b) try { b.focus({ preventScroll: true }); } catch (e) {}
   }
   function bdClose() {
@@ -13968,6 +14069,32 @@ return exports;})();
       case "bd-controle": { if (!mkOwner()) break; play("click"); bdMode = "controle"; bdDraw(); const bc = document.querySelector("#bdWrap .bd"); if (bc) bc.scrollTop = 0; break; }
       case "bd-wachten": { if (!mkOwner()) break; play("click"); bdMode = "wachten"; bdDraw(); const bw = document.querySelector("#bdWrap .bd"); if (bw) bw.scrollTop = 0; break; }
       case "bd-flyers": { if (!mkOwner()) break; play("click"); bdMode = "flyers"; bdDraw(); const bf = document.querySelector("#bdWrap .bd"); if (bf) bf.scrollTop = 0; break; }
+      case "bd-geleerden": { if (!mkOwner()) break; play("click"); bdMode = "geleerden"; nkMsg = ""; nkNew = null; nkEdits = null; nkCodeOf = null; nkAdd = false; nkAsk = null; bdDraw(); nkLoad(true); const bg = document.querySelector("#bdWrap .bd"); if (bg) bg.scrollTop = 0; break; }
+      case "nk-add": { if (!mkOwner()) break; play("click"); nkAdd = !nkAdd; nkNew = null; nkMsg = ""; bdDraw(); if (nkAdd) { const ni = document.getElementById("nkName"); if (ni) ni.focus(); } break; }
+      case "nk-add-go": {
+        if (!mkOwner()) break; const ni = document.getElementById("nkName"), nm = ni ? ni.value.trim() : "";
+        if (!nm) { nkMsg = "Typ eerst een naam."; bdDraw(); break; }
+        play("click"); const cd = nkMakeCode(); nkMsg = "";
+        sb.rpc("nk_beheer_toevoegen", { p_naam: nm, p_code: cd, p_max: 3 }).then(function (r) {
+          if (r.error) nkMsg = "Dat is niet gelukt: " + r.error.message; else { nkNew = { naam: nm, code: cd }; nkAdd = false; }
+          nkBusy = false; nkLoad(true);
+        }).catch(function () { nkMsg = "Verbinden is niet gelukt."; bdDraw(); });
+        break;
+      }
+      case "nk-code": { if (!mkOwner()) break; play("click"); const id = el.dataset.id; nkCodeOf = nkCodeOf === id ? null : id; bdDraw(); break; }
+      case "nk-copy": { if (!mkOwner()) break; play("click"); nkCopy(nkBericht(el.dataset.n || "", el.dataset.c || ""), "Bericht gekopieerd. Plak het in WhatsApp."); break; }
+      case "nk-newcode": { if (!mkOwner()) break; play("click"); const cd = nkMakeCode(), nm = el.dataset.n || "", id = el.dataset.id; nkMsg = "";
+        sb.rpc("nk_beheer_wijzig", { p_id: id, p_code: cd }).then(function (r) { if (r.error) nkMsg = "Dat is niet gelukt: " + r.error.message; else { nkNew = { naam: nm, code: cd }; nkCodeOf = null; } nkBusy = false; nkLoad(true); }).catch(function () { nkMsg = "Verbinden is niet gelukt."; bdDraw(); }); break; }
+      case "nk-edits": { if (!mkOwner()) break; play("click"); const id = el.dataset.id; nkMsg = "";
+        sb.rpc("nk_beheer_aanpassingen", { p_id: id }).then(function (r) { if (r.error) nkMsg = "Dat is niet gelukt: " + r.error.message; else nkEdits = r.data || []; bdDraw(); }).catch(function () { nkMsg = "Verbinden is niet gelukt."; bdDraw(); }); break; }
+      case "nk-copyedits": { if (!mkOwner() || !nkEdits) break; play("click"); nkCopy(nkEdits.map(function (x) { return "[" + x.vraag + "] " + x.thema + " (" + x.naam + "): " + (x.tekst || ""); }).join("\n"), "Aanpassingen gekopieerd."); break; }
+      case "nk-stop": { if (!mkOwner()) break; play("click"); nkAsk = el.dataset.id; bdDraw(); break; }
+      case "nk-no": { play("click"); nkAsk = null; bdDraw(); break; }
+      case "nk-stop2": { if (!mkOwner()) break; play("click"); nkDo("nk_beheer_wijzig", { p_id: el.dataset.id, p_actief: false }, "Stopgezet. De thema’s van deze geleerde zijn weer vrij."); break; }
+      case "nk-start": { if (!mkOwner()) break; play("click"); nkDo("nk_beheer_wijzig", { p_id: el.dataset.id, p_actief: true }, "Weer actief. De geleerde kan opnieuw thema’s kiezen."); break; }
+      case "nk-max": { if (!mkOwner()) break; play("click"); nkDo("nk_beheer_wijzig", { p_id: el.dataset.id, p_max: Math.min(20, (parseInt(el.dataset.m, 10) || 3) + 1) }, "Eén thema extra toegestaan."); break; }
+      case "nk-free": { if (!mkOwner()) break; play("click"); nkDo("nk_beheer_vrij", { p_thema: el.dataset.th }, "Thema vrijgegeven."); break; }
+      case "nk-assign": { if (!mkOwner()) break; const se = document.getElementById("nkS" + el.dataset.i); if (!se || !se.value) break; play("click"); nkDo("nk_beheer_toewijzen", { p_id: se.value, p_thema: el.dataset.th }, "Thema toegewezen."); break; }
       case "bd-live": { if (!mkOwner()) break; play("click"); bdMode = "live"; bdDraw(); const bl = document.querySelector("#bdWrap .bd"); if (bl) bl.scrollTop = 0; break; }
       case "bd-ctl": { if (!mkOwner()) break; play("click"); ctlToggle(el.dataset.id); break; }
       case "bd-tests": { if (!mkOwner()) break; play("click"); bdMode = "tests"; bdDraw(); const bs = document.querySelector("#bdWrap .bd"); if (bs) bs.scrollTop = 0; break; }
