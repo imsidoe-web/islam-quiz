@@ -12202,22 +12202,55 @@ return exports;})();
     akhlaaq: [["SABR", "Geduld."], ["SHUKR", "Dankbaarheid."], ["ADAB", "Goede manieren."], ["SIDQ", "Eerlijkheid in woord en daad."], ["AMANA", "Iets wat aan je is toevertrouwd."], ["TAWAKKUL", "Vertrouwen op Allah."], ["ISTIGHFAR", "Allah om vergeving vragen."], ["DUA", "Een smeekbede."], ["DHIKR", "Het gedenken van Allah."], ["TAUBA", "Berouw tonen en terugkeren naar Allah."], ["SADAQA", "Vrijwillige gift."], ["RAHMA", "Barmhartigheid."], ["HAYA", "Bescheidenheid."], ["SALAAM", "De groet van vrede."]],
     ihsan: [["IHSAN", "Aanbidden alsof je Allah ziet."], ["IKHLAS", "Alles doen voor Allah alleen."], ["MURAQABA", "Je bewust zijn dat Allah toeziet."], ["TAQWA", "Godsbewustzijn."], ["TAZKIYA", "Het zuiveren van je ziel."], ["NAFS", "Je innerlijke zelf."], ["QALB", "Het hart."], ["NIYYA", "De intentie."], ["DHIKR", "Het gedenken van Allah."], ["TAUBA", "Berouw tonen."], ["ZUHD", "Je hart niet hechten aan de wereld."], ["SABR", "Geduld."], ["SHUKR", "Dankbaarheid."], ["KHUSHU", "Ootmoed en aandacht in het gebed."]]
   };
+  /* Beginner: woorden per land (v283) - eenvoudig, woorden zichtbaar */
+  const WORDS_LAND_BEG = {
+    reinheid: [["WUDHU", "De wassing vóór het gebed."], ["GHUSL", "Een grote wassing van heel je lichaam."], ["TAHARA", "Reinheid."], ["MISWAAK", "Een takje om je tanden mee te poetsen."], ["WATER", "Hiermee maak je je schoon."], ["HANDEN", "Die was je als eerste bij de wudhu."], ["GEZICHT", "Dat was je bij de wudhu."], ["ARMEN", "Die was je tot en met je ellebogen."], ["VOETEN", "Die was je aan het eind van de wudhu."], ["HOOFD", "Dat veeg je nat bij de wudhu."], ["NEUS", "Die spoel je schoon met water."], ["MOND", "Die spoel je schoon met water."], ["TAYAMMUM", "Je maakt je schoon met zuivere aarde als er geen water is."], ["SCHOON", "Het tegenovergestelde van vies."]],
+    gebed: [["SALAH", "Het verplichte gebed."], ["ADHAAN", "De oproep tot het gebed."], ["FAJR", "Het ochtendgebed."], ["DUHR", "Het middaggebed."], ["ASR", "Het namiddaggebed."], ["MAGHRIB", "Het gebed na zonsondergang."], ["ISHA", "Het avondgebed."], ["SUJUD", "Met je voorhoofd op de grond."], ["RUKU", "Buigen in het gebed."], ["QIBLA", "De richting van de Ka’ba."], ["IMAAM", "Hij gaat voor in het gebed."], ["MOSKEE", "Het gebedshuis."], ["SAF", "Een rij biddende mensen."], ["MIHRAAB", "De nis in de moskee."]],
+    elkedag: [["SALAAM", "De groet van vrede."], ["DUA", "Je vraagt Allah om iets."], ["DANKEN", "Je zegt Alhamdulillah om Allah te …"], ["DELEN", "Je geeft anderen iets van wat je hebt."], ["HELPEN", "Je steunt iemand die het nodig heeft."], ["GROET", "Hiermee begin je een gesprek."], ["GLIMLACH", "Een lach naar een ander is sadaqa."], ["EERLIJK", "Je zegt altijd de waarheid."], ["OUDERS", "Je behandelt hen met zorg en respect."], ["BUREN", "De mensen die naast je wonen."], ["RECHTS", "Met deze hand eet je."], ["HALAL", "Wat Allah toestaat."], ["ETEN", "Je zegt Bismillah voordat je begint."], ["VRIEND", "Iemand met wie je het goed hebt."]],
+    ramadan: [["RAMADAN", "De maand van het vasten."], ["VASTEN", "Overdag niet eten en drinken."], ["SUHOOR", "De maaltijd vóór zonsopkomst."], ["IFTAAR", "De maaltijd waarmee je het vasten verbreekt."], ["DADEL", "Hiermee verbreek je vaak het vasten."], ["EID", "Het feest na Ramadan."], ["TARAWIEH", "Extra gebed in de nachten van Ramadan."], ["KORAN", "In deze maand werd het neergezonden."], ["ZAKAAT", "Een deel van je geld geven."], ["MAAND", "Ramadan duurt een …"], ["MAAN", "Met de nieuwe … begint de maand."], ["DUA", "Je vraagt Allah om iets."], ["SADAQA", "Vrijwillige gift."], ["ITIKAAF", "Je terugtrekken in de moskee."], ["QADR", "De nacht van … is beter dan duizend maanden."]],
+    karakter: [["EERLIJK", "Je zegt altijd de waarheid."], ["GEDULD", "Je blijft rustig als iets lang duurt."], ["DANKBAAR", "Je bent blij met wat Allah je geeft."], ["SABR", "Geduld, in het Arabisch."], ["SHUKR", "Dankbaarheid, in het Arabisch."], ["HELPEN", "Je steunt iemand die het nodig heeft."], ["DELEN", "Je geeft anderen iets van wat je hebt."], ["VERGEVEN", "Je neemt het iemand niet meer kwalijk."], ["RESPECT", "Je behandelt iedereen met waardering."], ["NEDERIG", "Je doet niet groot over jezelf."], ["ZACHT", "Je praat vriendelijk en rustig."], ["ADAB", "Goede manieren."], ["LIEF", "Je bent aardig voor anderen."], ["TEVREDEN", "Je hebt genoeg aan wat je hebt."]],
+    ihsan: [["IHSAN", "Aanbidden alsof je Allah ziet."], ["ALLAH", "Hij ziet jou altijd."], ["NIYYA", "Je intentie."], ["HART", "Hier gaat het in de eerste plaats om."], ["DHIKR", "Het gedenken van Allah."], ["DUA", "Je vraagt Allah om iets."], ["TAQWA", "Je bent je bewust van Allah."], ["OPRECHT", "Je doet het echt, alleen voor Allah."], ["SHUKR", "Dankbaarheid, in het Arabisch."], ["SABR", "Geduld, in het Arabisch."], ["MOOI", "Doe alles op de mooiste manier."], ["BIDDEN", "Doe het met aandacht."]]
+  };
+  /* Ervaren: woorden per land (v283) - dieper, met omschrijving */
+  const WORDS_LAND_EX = {
+    profeten: [["IBRAHIM", "De vriend van Allah."], ["ISMAIL", "Zoon van Ibrahim."], ["ISHAQ", "Andere zoon van Ibrahim."], ["YAQUB", "Vader van Yusuf."], ["YUSUF", "Hij werd door zijn broers in de put gegooid."], ["MUSA", "Sprak met Allah."], ["HARUN", "Broer en helper van Musa."], ["DAWUD", "Hij kreeg de Zabur."], ["SULAIMAN", "Hij heerste over mensen en djinn."], ["ZAKARIYYA", "Vader van Yahya."], ["YAHYA", "Zoon van Zakariyya."], ["YUNUS", "De profeet van de vis."], ["AYYUB", "Zijn geduld is een voorbeeld."], ["ZABUR", "Het boek van Dawud."], ["INJIL", "Het boek van Isa."], ["TAWRAT", "Het boek van Musa."], ["MUHAMMAD", "De laatste profeet ﷺ."], ["SALIH", "Zijn volk kreeg een kameelmerrie als teken."], ["HUD", "Profeet van het volk Ad."], ["IDRIS", "Een profeet die in de Koran wordt genoemd om zijn geduld en waarheidsliefde."]],
+    zuilen: [["SHAHADA", "Het geloofsgetuigenis."], ["SALAH", "Het verplichte gebed."], ["ZAKAAT", "De verplichte gift."], ["SAWM", "Het vasten."], ["HADJ", "De bedevaart."], ["TAWHID", "De eenheid van Allah."], ["AQEEDA", "De geloofsleer."], ["MALAIKA", "De engelen."], ["QADR", "Alles is bij Allah bekend en beschikt."], ["AKHIRA", "Het leven na de dood."], ["NUBUWWA", "Het profeetschap."], ["BARZAKH", "De tussenwereld na de dood."], ["HISAAB", "De afrekening op de Dag des Oordeels."], ["SIRAAT", "De brug over de Hel."], ["MIZAAN", "De weegschaal op de Dag des Oordeels."], ["SHIRK", "Allah deelgenoten toeschrijven."], ["IMAAN", "Geloof."], ["ISLAM", "Overgave aan Allah."]],
+    seerah: [["IQRA", "Het eerste woord van de openbaring."], ["WAHY", "Openbaring."], ["HABASHA", "Het land waarheen de eerste moslims vluchtten."], ["AQABA", "Plaats van de eed van de Ansaar."], ["HUNAYN", "Slag in het jaar 8 na de Hijra."], ["TABUK", "De laatste veldtocht van de Profeet ﷺ."], ["KHAYBAR", "De oase die in het jaar 7 werd ingenomen."], ["FATH", "De overwinning: de inname van Mekka."], ["KHALID", "Het zwaard van Allah."], ["SALMAN", "De Perzische metgezel die de greppel voorstelde."], ["ABUTALIB", "Oom die de Profeet ﷺ beschermde."], ["FATIMA", "Dochter van de Profeet ﷺ."], ["HASAN", "Kleinzoon van de Profeet ﷺ."], ["HUSAYN", "Andere kleinzoon van de Profeet ﷺ."], ["ALI", "Neef en schoonzoon van de Profeet ﷺ."], ["KHANDAQ", "De slag van de greppel."], ["HUDAIBIYA", "Het verdrag in het jaar 6."], ["UHUD", "De berg van de slag in het jaar 3."], ["BADR", "De eerste grote slag."]],
+    koran: [["TAJWID", "Regels voor het mooi reciteren."], ["TAFSIR", "Uitleg van de Koran."], ["MAKKI", "Soera geopenbaard vóór de Hijra."], ["MADANI", "Soera geopenbaard na de Hijra."], ["QIRAAT", "De erkende leeswijzen."], ["MUSHAF", "De geschreven Koran."], ["HAFIZ", "Iemand die de Koran uit zijn hoofd kent."], ["QARI", "Een reciteur."], ["SAJDA", "De buiging van dankbaarheid bij bepaalde verzen."], ["WAQF", "Een pauze bij het reciteren."], ["GHUNNA", "Een neusklank bij het reciteren."], ["IDGHAAM", "Samensmelting van letters bij tajwid."], ["IQLAAB", "Omzetting van de noen in een mim."], ["IKHFAA", "Het verbergen van de noen."], ["MADD", "Verlenging van een klank."], ["TARTIL", "Langzaam en mooi reciteren."], ["FATIHA", "De openingssoera."], ["BAQARA", "De langste soera."], ["YASIN", "Een soera over het hart van de Koran."]],
+    akhlaaq: [["ZUHD", "Je hart niet hechten aan de wereld."], ["WARA", "Voorzichtigheid bij twijfelachtige zaken."], ["SIDQ", "Eerlijkheid in woord en daad."], ["AMANA", "Iets wat aan je is toevertrouwd."], ["ISTIGHFAR", "Om vergeving vragen."], ["TAWAKKUL", "Vertrouwen op Allah."], ["SABR", "Geduld."], ["SHUKR", "Dankbaarheid."], ["HILM", "Zachtmoedigheid."], ["HAYA", "Bescheidenheid."], ["TAWADU", "Nederigheid."], ["RIDA", "Tevredenheid met Allah’s beschikking."], ["QANAA", "Tevredenheid met wat je hebt."], ["IKHLAS", "Oprechtheid."], ["HASAD", "Afgunst."], ["KIBR", "Hoogmoed."], ["GHIBA", "Roddelen achter iemands rug."], ["NAMIMA", "Roddel doorgeven om onenigheid te zaaien."], ["BIRR", "Goed zijn voor je ouders."]],
+    ihsan: [["MURAQABA", "Je bewust zijn dat Allah toeziet."], ["MUHASABA", "Jezelf elke dag afrekenen."], ["TAZKIYA", "Het zuiveren van de ziel."], ["TAQWA", "Godsbewustzijn."], ["NAFS", "De innerlijke zelf."], ["QALB", "Het hart."], ["IKHLAS", "Oprechtheid."], ["KHUSHU", "Ootmoed in het gebed."], ["KHASHYA", "Ontzag voor Allah."], ["RAJAA", "Hoop op Allah’s barmhartigheid."], ["KHAWF", "Vrees voor Allah."], ["MAHABBA", "Liefde voor Allah."], ["MARIFA", "Kennis van Allah in het hart."], ["DHIKR", "Het gedenken van Allah."], ["ZUHD", "Je hart niet hechten aan de wereld."], ["TAWBA", "Berouw tonen."], ["IHSAN", "Aanbidden alsof je Allah ziet."]]
+  };
   /* Beginner: eenvoudige basiswoorden (v68) */
   const WORDS_BEG = [["MOSKEE", "Het gebedshuis van moslims."], ["KORAN", "Het heilige boek van de islam."], ["BIDDEN", "Moslims doen dit vijf keer per dag."], ["VASTEN", "Overdag niet eten en drinken in Ramadan."], ["RAMADAN", "De maand van het vasten."], ["MEKKA", "De stad waar de Ka’ba staat."], ["KAABA", "Het huis van Allah in Mekka."], ["IMAAM", "Hij gaat voor in het gebed."], ["SALAAM", "Vrede: zo groeten moslims elkaar."], ["DADEL", "Hiermee verbreek je vaak het vasten."], ["SALAH", "Het gebed dat moslims vijf keer per dag doen."], ["DUA", "Je vraagt Allah om iets."], ["DELEN", "Je geeft anderen iets van wat je hebt."], ["EID", "Het feest na Ramadan."], ["ENGEL", "Allah heeft ze geschapen uit licht."], ["PROFEET", "Een boodschapper van Allah."], ["ADAM", "De eerste mens."], ["NUH", "De profeet die de ark bouwde."], ["MUSA", "De profeet die met zijn volk door de zee trok."], ["WUDHU", "De wassing vóór het gebed."], ["DANKEN", "Alhamdulillah zeggen is Allah …"], ["ISLAM", "De godsdienst van moslims."]];
   /* hoe een woord op het scherm staat (in het rooster alleen letters) */
   const WORD_SHOW = { SAI: "SA’I", DUA: "DU’A" };
   function wShow(w) { return WORD_SHOW[w] || w; }
-  function wordsFor(lv, catId) { return lv === "beginner" ? WORDS_BEG : lv === "expert" ? WORDS_EX : (WORDS_LAND_JR[catId] || WORDS_JR); }
-  function wzPick(list, n, maxLen) {
+  function wordsFor(lv, catId) { return lv === "beginner" ? (WORDS_LAND_BEG[catId] || WORDS_BEG) : lv === "expert" ? (WORDS_LAND_EX[catId] || WORDS_EX) : (WORDS_LAND_JR[catId] || WORDS_JR); }
+  /* niet herhalen (v283): per niveau + land onthoudt dit toestel welke woorden al zijn geweest; pas als alles geweest is begint de lijst opnieuw */
+  function wzSeenGet(key) { try { return (JSON.parse(localStorage.getItem("iq-wz-seen") || "{}")[key]) || []; } catch (e) { return []; } }
+  function wzSeenSet(key, arr) { try { const o = JSON.parse(localStorage.getItem("iq-wz-seen") || "{}"); o[key] = arr; localStorage.setItem("iq-wz-seen", JSON.stringify(o)); } catch (e) {} }
+  function wzMarkSeen(key, picks) {
+    const seen = wzSeenGet(key), ok = picks.map(function (w) { return w[0]; });
+    wzSeenSet(key, seen.concat(ok.filter(function (w) { return seen.indexOf(w) < 0; })));
+  }
+  function wzPick(list, n, maxLen, key) {
     const ok = list.filter(function (w) { return !maxLen || w[0].length <= maxLen; });
-    return shuffle(ok.slice(), Math.random).slice(0, n);
+    let seen = key ? wzSeenGet(key) : [];
+    let fresh = ok.filter(function (w) { return seen.indexOf(w[0]) < 0; });
+    let picks = shuffle(fresh.slice(), Math.random).slice(0, n);
+    if (picks.length < n) {
+      const rest = shuffle(ok.filter(function (w) { return picks.indexOf(w) < 0; }), Math.random);
+      picks = picks.concat(rest.slice(0, n - picks.length));
+      if (key) wzSeenSet(key, []);   /* alles is geweest: nieuwe ronde */
+    }
+    return picks;
   }
   function mgInitWord() {
     const junior = mg.level !== "expert";
     mg.sub = chestSlot(mg.catId, mg.i) === "anagram" ? "anagram" : "zoeker";
     mg.done = false; mg.moves = 0;
     if (mg.sub === "anagram") {
-      mg.words = wzPick(wordsFor(mg.level, mg.catId), junior ? 3 : 4, junior ? 7 : 8); mg.wi = 0; wzNextWord();
+      mg.words = wzPick(wordsFor(mg.level, mg.catId), junior ? 3 : 4, junior ? 7 : 8, mg.level + "|" + mg.catId); wzMarkSeen(mg.level + "|" + mg.catId, mg.words); mg.wi = 0; wzNextWord();
     } else wzInitSearch();
   }
   /* — letters rangschikken — */
@@ -12286,7 +12319,7 @@ return exports;})();
     const beg = mg.level === "beginner", exp = mg.level === "expert", n = beg ? 8 : exp ? 10 : 9, count = beg ? 4 : exp ? 6 : 5;
     const dirs = beg ? [[0, 1], [1, 0]] : exp ? [[0, 1], [1, 0], [1, 1], [0, -1], [-1, 0]] : [[0, 1], [1, 0], [1, 1], [-1, 1]];
     for (let attempt = 0; attempt < 60; attempt++) {
-      const list = wzPick(wordsFor(mg.level, mg.catId), count, n).sort(function (a, b) { return b[0].length - a[0].length; });
+      const list = wzPick(wordsFor(mg.level, mg.catId), count, n, mg.level + "|" + mg.catId).sort(function (a, b) { return b[0].length - a[0].length; });
       const grid = []; for (let r = 0; r < n; r++) { grid.push([]); for (let c = 0; c < n; c++) grid[r].push(""); }
       let okAll = true; const placed = [];
       for (let wi = 0; wi < list.length && okAll; wi++) {
@@ -12305,12 +12338,12 @@ return exports;})();
       if (!okAll) continue;
       const abc = "ABDEHIKLMNORSTUWZ";
       for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (grid[r][c] === "") grid[r][c] = abc[Math.floor(Math.random() * abc.length)];
-      mg.grid = grid; mg.n = n; mg.placed = placed; mg.sel = null; mg.foundCells = {}; return;
+      mg.grid = grid; mg.n = n; mg.placed = placed; mg.sel = null; mg.foundCells = {}; wzMarkSeen(mg.level + "|" + mg.catId, list); return;
     }
   }
   function wzSearchHtml() {
-    const n = mg.n, junior = mg.level === "beginner";
-    let h = '<p class="wz-clue">' + (junior ? "Zoek de woorden in het rooster. Tik op de eerste en op de laatste letter van een woord." : "Zoek de woorden bij de omschrijvingen. Tik op de eerste en op de laatste letter. Woorden staan ook schuin" + (mg.level === "expert" ? " of achterstevoren." : ".")) + "</p>";
+    const n = mg.n, junior = mg.level !== "expert";
+    let h = '<p class="wz-clue">' + (junior ? "Zoek de woorden in het rooster. Tik op de eerste en op de laatste letter van een woord." + (mg.level === "junior" ? " Woorden staan ook schuin." : "") : "Zoek de woorden bij de omschrijvingen. Tik op de eerste en op de laatste letter. Woorden staan ook schuin of achterstevoren.") + "</p>";
     h += '<div class="wz-list" aria-label="Te vinden woorden"><ul>';
     mg.placed.forEach(function (p) { h += '<li class="' + (p.found ? "found" : "") + '">' + (junior ? (p.found ? "✓ " : "") + "<b>" + esc(wShow(p.word)) + "</b>" : (p.found ? "✓ <b>" + esc(wShow(p.word)) + "</b>" : "<span>" + esc(p.clue) + " <i>(" + p.word.length + " letters)</i></span>")) + (p.found ? '<span class="sr-only"> gevonden</span>' : "") + "</li>"; });
     h += '</ul></div><div class="ws-grid" role="group" aria-label="Woordzoeker" style="--n:' + n + '">';
