@@ -12316,8 +12316,8 @@ return exports;})();
   }
   /* — woordzoeker — */
   function wzInitSearch() {
-    const beg = mg.level === "beginner", exp = mg.level === "expert", n = beg ? 8 : exp ? 10 : 9, count = beg ? 4 : exp ? 6 : 5;
-    const dirs = beg ? [[0, 1], [1, 0]] : exp ? [[0, 1], [1, 0], [1, 1], [0, -1], [-1, 0]] : [[0, 1], [1, 0], [1, 1], [-1, 1]];
+    const beg = mg.level === "beginner", exp = mg.level === "expert", n = beg ? 8 : exp ? 11 : 9, count = beg ? 4 : exp ? 8 : 5;
+    const dirs = beg ? [[0, 1], [1, 0]] : exp ? [[0, 1], [1, 0], [1, 1], [0, -1], [-1, 0], [-1, -1], [-1, 1], [1, -1]] : [[0, 1], [1, 0], [1, 1], [-1, 1]];
     for (let attempt = 0; attempt < 60; attempt++) {
       const list = wzPick(wordsFor(mg.level, mg.catId), count, n, mg.level + "|" + mg.catId).sort(function (a, b) { return b[0].length - a[0].length; });
       const grid = []; for (let r = 0; r < n; r++) { grid.push([]); for (let c = 0; c < n; c++) grid[r].push(""); }
@@ -12336,7 +12336,7 @@ return exports;})();
         if (!ok) okAll = false;
       }
       if (!okAll) continue;
-      const abc = "ABDEHIKLMNORSTUWZ";
+      const abc = exp ? wordsFor(mg.level, mg.catId).map(function (w) { return w[0]; }).join("") : "ABDEHIKLMNORSTUWZ";   /* Ervaren: opvulletters uit de woorden van het land, dus lastiger */
       for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (grid[r][c] === "") grid[r][c] = abc[Math.floor(Math.random() * abc.length)];
       mg.grid = grid; mg.n = n; mg.placed = placed; mg.sel = null; mg.foundCells = {}; wzMarkSeen(mg.level + "|" + mg.catId, list); return;
     }
