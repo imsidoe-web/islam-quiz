@@ -8411,6 +8411,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v279", t: "Geleerden: vriendelijk WhatsApp-verzoek, knop Naam wijzigen, en op de telefoon een kleinere werkbalk met grotere vraagtekst." },
     { v: "v278", t: "Geleerden: korte code (NUR-K7M4), link met code erin en een slot tegen gokken." },
     { v: "v277", t: "Beheer: nieuwe knop Geleerden met codes, thema's en voortgang van de nakijkers (nurspark.app/nakijken)." },
     { v: "v276", t: "Beheer: je ziet nu hoe vaak de Kosmos-look wordt aangezet, gebruikt en hoe vaak de tip is getoond." },
@@ -8441,7 +8442,7 @@ return exports;})();
   ];
   let ctlJust = null;
   /* v277: Geleerden (nakijkdossier nurspark.app/nakijken): codes, thema's en voortgang. Alleen beheerder. De gegevens staan in Supabase (supabase-geleerden.sql). */
-  let NK = null, nkErr = "", nkBusy = false, nkAdd = false, nkNew = null, nkCodeOf = null, nkEdits = null, nkMsg = "", nkAsk = null;
+  let nkRen = null; let NK = null, nkErr = "", nkBusy = false, nkAdd = false, nkNew = null, nkCodeOf = null, nkEdits = null, nkMsg = "", nkAsk = null;
   const NK_ALF = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   function nkMakeCode() { const a = new Uint8Array(4); crypto.getRandomValues(a); let s = ""; for (let i = 0; i < 4; i++) s += NK_ALF[a[i] % NK_ALF.length]; return "NUR-" + s; }
   function nkFmt(c) { return String(c || "").replace(/^(NUR)(.{4})$/, "$1-$2"); }
@@ -8472,7 +8473,8 @@ return exports;})();
     try { navigator.clipboard.writeText(text).then(function () { jToast(ok); }).catch(fail); } catch (e) { fail(); }
   }
   function nkBericht(naam, code) {
-    return "Assalamu alaikum " + naam + ",\n\nhierbij uw persoonlijke code voor het nakijkdossier van NurSpark.\n\nTik op deze link, dan komt u direct in het dossier:\nhttps://nurspark.app/nakijken/#" + nkFmt(code) + "\n\n(Of ga naar nurspark.app/nakijken en vul uw code in: " + nkFmt(code) + ")\n\nNa het inloggen kiest u zelf de thema’s die u wilt nakijken. Een gekozen thema is voor anderen niet meer beschikbaar. Uw voortgang wordt vanzelf bewaard. Wilt u de code voor uzelf houden?\n\nJazakallahu khayran.";
+    const c = nkFmt(code);
+    return "Assalamu alaikum " + naam + ",\n\nHet NurSpark-team bouwt een gratis islamitische educatieve app. Wij willen u met respect vragen of u bereid bent ons te ondersteunen bij het nakijken van de vragen op inhoud en bronnen. Het is geheel vrijblijvend, en u bepaalt zelf hoeveel en wanneer.\n\nBent u hiertoe bereid? Tik dan op uw persoonlijke link. U kiest zelf de thema’s die u wilt nakijken en uw voortgang wordt vanzelf bewaard:\nhttps://nurspark.app/nakijken/#" + c + "\n\n(Of ga naar nurspark.app/nakijken en vul uw persoonlijke code in: " + c + ". Wilt u de code voor uzelf houden?)\n\nHeeft u hiervoor geen tijd of mogelijkheid, dan is dat helemaal prima. Laat het ons dan gerust weten.\n\nJazakallahu khayran,\nTeam NurSpark";
   }
   function viewGeleerden() {
     const ic = function (d) { return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + "</svg>"; };
@@ -8495,10 +8497,10 @@ return exports;})();
       const k = g.themas || []; let a = 0, e = 0, n = 0;
       k.forEach(function (t) { a += t.akkoord; e += t.aanpassen; n += t.aantal; });
       const p = n ? Math.round((a + e) / n * 100) : 0;
-      h += '<div class="nk-card"><h3>' + esc(g.naam) + '</h3><span class="nk-st' + (g.actief ? " on" : "") + '">' + (g.actief ? "Actief" : "Stopgezet") + " · laatst bezig: " + esc(nkAgo(g.laatst_actief)) + "</span>";
+      h += '<div class="nk-card"><h3>' + esc(g.naam) + '</h3>' + (nkRen === g.id ? '<label for="nkRenIn" class="bd-sub" style="margin:6px 0">Nieuwe naam (met titel)</label><input id="nkRenIn" class="nk-in" type="text" maxlength="60" value="' + esc(g.naam) + '" autocomplete="off"><div class="nk-row"><button class="bd-btn on" data-act="nk-ren-go" data-id="' + esc(g.id) + '">Opslaan</button><button class="bd-btn" data-act="nk-ren-no">Annuleren</button></div>' : '') + '<span class="nk-st' + (g.actief ? " on" : "") + '">' + (g.actief ? "Actief" : "Stopgezet") + " · laatst bezig: " + esc(nkAgo(g.laatst_actief)) + "</span>";
       h += '<div class="bd-r" style="--c:var(--green);border-top:0"><span class="bd-rl"><span>' + (n ? (a + e) + " van " + n + " klaar" : "Nog geen thema gekozen") + '<small class="bd-sub">' + a + " akkoord · " + e + ' aanpassen</small></span></span><span class="bd-rb" aria-hidden="true"><i style="width:' + p + '%"></i></span><b>' + p + "%</b></div>";
       k.forEach(function (t) { h += '<div class="nk-th"><span>' + esc(t.thema) + "</span><small>" + (t.akkoord + t.aanpassen) + " / " + t.aantal + "</small></div>"; });
-      h += '<div class="nk-row"><button class="bd-btn" data-act="nk-code" data-id="' + esc(g.id) + '">' + (nkCodeOf === g.id ? "Code verbergen" : "Code tonen") + '</button><button class="bd-btn" data-act="nk-edits" data-id="' + esc(g.id) + '">Aanpassingen lezen</button>';
+      h += '<div class="nk-row"><button class="bd-btn" data-act="nk-code" data-id="' + esc(g.id) + '">' + (nkCodeOf === g.id ? "Code verbergen" : "Code tonen") + '</button><button class="bd-btn" data-act="nk-edits" data-id="' + esc(g.id) + '">Aanpassingen lezen</button><button class="bd-btn" data-act="nk-ren" data-id="' + esc(g.id) + '">Naam wijzigen</button>';
       if (g.actief) h += nkAsk === g.id ? '<button class="bd-btn on" data-act="nk-stop2" data-id="' + esc(g.id) + '">Ja, stopzetten (thema’s komen vrij)</button><button class="bd-btn" data-act="nk-no">Annuleren</button>' : '<button class="bd-btn" data-act="nk-stop" data-id="' + esc(g.id) + '">Stopzetten</button>';
       else h += '<button class="bd-btn on" data-act="nk-start" data-id="' + esc(g.id) + '">Weer activeren</button>';
       h += '<button class="bd-btn" data-act="nk-max" data-id="' + esc(g.id) + '" data-m="' + g.max + '">Maximaal ' + g.max + " thema’s (+1)</button></div>";
@@ -14090,6 +14092,9 @@ return exports;})();
         sb.rpc("nk_beheer_aanpassingen", { p_id: id }).then(function (r) { if (r.error) nkMsg = "Dat is niet gelukt: " + r.error.message; else nkEdits = r.data || []; bdDraw(); }).catch(function () { nkMsg = "Verbinden is niet gelukt."; bdDraw(); }); break; }
       case "nk-copyedits": { if (!mkOwner() || !nkEdits) break; play("click"); nkCopy(nkEdits.map(function (x) { return "[" + x.vraag + "] " + x.thema + " (" + x.naam + "): " + (x.tekst || ""); }).join("\n"), "Aanpassingen gekopieerd."); break; }
       case "nk-stop": { if (!mkOwner()) break; play("click"); nkAsk = el.dataset.id; bdDraw(); break; }
+      case "nk-ren": { if (!mkOwner()) break; play("click"); nkRen = el.dataset.id; bdDraw(); const ri = document.getElementById("nkRenIn"); if (ri) { ri.focus(); ri.setSelectionRange(ri.value.length, ri.value.length); } break; }
+      case "nk-ren-no": { play("click"); nkRen = null; bdDraw(); break; }
+      case "nk-ren-go": { if (!mkOwner()) break; const ri = document.getElementById("nkRenIn"), nn = ri ? ri.value.trim() : ""; if (!nn) { nkMsg = "Typ eerst een naam."; bdDraw(); break; } play("click"); nkRen = null; nkDo("nk_beheer_wijzig", { p_id: el.dataset.id, p_naam: nn }, "Naam gewijzigd."); break; }
       case "nk-no": { play("click"); nkAsk = null; bdDraw(); break; }
       case "nk-stop2": { if (!mkOwner()) break; play("click"); nkDo("nk_beheer_wijzig", { p_id: el.dataset.id, p_actief: false }, "Stopgezet. De thema’s van deze geleerde zijn weer vrij."); break; }
       case "nk-start": { if (!mkOwner()) break; play("click"); nkDo("nk_beheer_wijzig", { p_id: el.dataset.id, p_actief: true }, "Weer actief. De geleerde kan opnieuw thema’s kiezen."); break; }
