@@ -7462,7 +7462,7 @@ return exports;})();
         if (ok) { document.getElementById("fbBody").innerHTML = '<p class="set-info" role="status"><b>Dankjewel!</b> Je bericht is verstuurd.</p><button class="btn gold block" data-d="ok">Klaar</button>'; announce("Je bericht is verstuurd."); }
         else { const b = document.getElementById("fbSend"); if (b) b.disabled = false; st.textContent = "Versturen lukt nu niet. Probeer het later opnieuw."; }
       };
-      try { sb.rpc("feedback_sturen", { p_type: type, p_bericht: txt, p_modus: (P && P.mode) || null, p_scherm: String(screen || ""), p_versie: "v289" }).then(function (r) { fin(!!(r && !r.error && r.data === true)); }, function () { fin(false); }); } catch (err) { fin(false); }
+      try { sb.rpc("feedback_sturen", { p_type: type, p_bericht: txt, p_modus: (P && P.mode) || null, p_scherm: String(screen || ""), p_versie: "v290" }).then(function (r) { fin(!!(r && !r.error && r.data === true)); }, function () { fin(false); }); } catch (err) { fin(false); }
     });
     if (document.getElementById("bdWrap")) w.style.zIndex = 6000;
     document.body.appendChild(w);
@@ -7844,7 +7844,7 @@ return exports;})();
   function feedbackNewsDialog() {
     meldingDialog({ id: "fbNewsWrap", badge: "NIEUW", title: "Feedback", label: "Nieuw in NurSpark: stuur ons je feedback. Heb je een fout gezien of een idee? Je vindt het bij Instellingen, Stuur feedback.",
       text: "Zag je een fout of heb je een idee? Laat het ons weten.<br>Je vindt het bij <b>Instellingen › Stuur feedback</b>. Wij lezen alles.",
-      go: { label: "Stuur feedback", fn: function () { feedbackDialog(); } }, later: "Later" });
+      go: { label: "Schrijf nu", fn: function () { feedbackDialog(); } }, later: "Later" });
   }
   function maybeFeedbackNews(tries) {
     if (!P || !P.mode || P.fbSeen || !P.npSeen || window.__npNow || screen !== "dash") return;
