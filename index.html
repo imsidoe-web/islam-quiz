@@ -8548,6 +8548,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v297", t: "Avatars: nieuwe Jade-avatars (man, vrouw en meisje) bij Mensen. Ze zijn in alle niveaus meteen te kiezen; de oude blijven staan." },
     { v: "v296", t: "Bazaar: boven de kwartetkaarten staat nu \"Dit zijn de kaarten die jij nog mist\", en elke kaart heeft een label \"Mis je\"." },
     { v: "v295", t: "Kruiswoordpuzzels: halverwege elk land is één level een verrassingspuzzel (Beginner vanaf land 2), zonder aankondiging op de kaart. Sterren en beloningen als een gewoon level, in alle drie de modi." },
     { v: "v294", t: "Reis: na een gehaald level met schatkist gaat de schatkist helemaal vanzelf open, zonder pop-up of tikken." },
@@ -9723,8 +9724,10 @@ return exports;})();
     FAMILY.forEach((a) => { a.need = FNEED[a.id]; });
     FAMILY.forEach((a) => { a.arch = true; a.img = "avatars/" + a.id + "-boog.webp"; });
     PEOPLE.forEach((a) => { a.arch = true; a.clip = true; });
-    const ALL = ANIMALS.concat(PEOPLE, THINGS, FAMILY);
-    return { ANIMALS: ANIMALS, PEOPLE: PEOPLE, THINGS: THINGS, FAMILY: FAMILY, ALL: ALL };
+    /* v297: Jade-avatars (3D jade-boog met edelsteentjes). Komen naast de oude erbij en zijn in alle niveaus meteen te kiezen (need 0) */
+    const JADE = [["jade-man", "Man jade"], ["jade-vrouw", "Vrouw jade"], ["jade-meisje", "Meisje jade"]].map((x) => ({ id: x[0], n: x[1], bg: ["#f2ead7", "#e6dcc0"], need: 0, art: "", arch: true, img: "avatars/" + x[0] + "-boog.webp" }));
+    const ALL = ANIMALS.concat(PEOPLE, THINGS, FAMILY, JADE);
+    return { ANIMALS: ANIMALS, PEOPLE: PEOPLE, THINGS: THINGS, FAMILY: FAMILY, JADE: JADE, ALL: ALL };
   })();
   let avUid = 0;
   function errTxt(e) { try { return e ? [e.message, e.details, e.hint, e.code].join(" ") : ""; } catch (x) { return ""; } }
@@ -12628,7 +12631,7 @@ return exports;})();
     const w = document.createElement("div"); w.className = "dialog-wrap"; w.id = "avDlg";
     const TABS = [["people", "Mensen"], ["animals", "Dieren"], ["things", "Dingen"]];
     function paint() {
-      const list = avTab === "animals" ? AVATARS.ANIMALS : avTab === "people" ? AVATARS.PEOPLE.concat(AVATARS.FAMILY) : AVATARS.THINGS, done = levelsDone(p), cur = avOf(p);
+      const list = avTab === "animals" ? AVATARS.ANIMALS : avTab === "people" ? AVATARS.JADE.concat(AVATARS.PEOPLE, AVATARS.FAMILY) : AVATARS.THINGS, done = levelsDone(p), cur = avOf(p);
       const open = list.filter(function (a) { return avUnlocked(p, a); }).length, hasPh = !!(p.photo && /^https:\/\//i.test(p.photo));
       let h = '<div class="dialog av-dlg" role="dialog" aria-modal="true" aria-labelledby="avT"><div class="avd-top"><span class="avd-big">' + (cur ? avSvg(cur) : '<span class="avd-ini" style="--c:' + p.color + '">' + esc((p.name || "?").trim().charAt(0).toUpperCase()) + (hasPh ? '<img src="' + esc(p.photo) + '" alt="" referrerpolicy="no-referrer" onerror="this.remove()">' : "") + "</span>") + "</span>" +
         '<div class="avd-name"><h3 id="avT">Kies je avatar</h3><span>' + esc(p.name) + '</span><b class="avd-pill">' + open + " van " + list.length + " ontgrendeld</b></div></div>" +
