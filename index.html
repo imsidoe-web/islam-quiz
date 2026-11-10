@@ -2074,6 +2074,7 @@ body:has(#avDlg) .back-toast { top: 92px !important; bottom: auto !important; z-
 .jm2-fl { width: 15cqw; height: auto; margin-bottom: 1cqw; }
 .jm2-badge { font-size: 2.8cqw; font-weight: 900; letter-spacing: .14em; color: #8a5a08; background: #fff8; border: .4cqw solid #c9a23a; border-radius: 99px; padding: .3cqw 2.4cqw; margin-bottom: 1cqw; }
 .jm2-t2 { font-weight: 900; font-size: 4.8cqw; line-height: 1.15; margin-bottom: 1.6cqw; }
+.jm2-avs { display: flex; justify-content: center; gap: .6cqw; margin: 0 0 1.4cqw; } .jm2-avs img { width: 15cqw; height: auto; display: block; }
 .jm2-tx { font-size: 3.4cqw; line-height: 1.3; color: #2d4a3a; margin-bottom: 1.6cqw; } .jm2-tx b { color: #1d4b33; }
 .jm2-link { background: none; border: 0; font: inherit; font-weight: 800; font-size: 3.1cqw; color: #1d4b33; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: .6cqw 2cqw; min-height: 32px; }
 .jm2-link:focus-visible { outline: 3px solid #1d4b33; outline-offset: 2px; border-radius: 10px; }
@@ -7761,6 +7762,7 @@ return exports;})();
   function afterDashRender() {
     maybeNurPlayNews(0);
     maybeFeedbackNews(0);
+    maybeNews(0);
     maybeKosmosPromo(0);
     clearInterval(dashTick);
     calTickStart();
@@ -7881,9 +7883,29 @@ return exports;})();
     setTimeout(function () {
       if (!P || P.fbSeen || window.__npNow || screen !== "dash") return;
       if (document.querySelector(".bm-wrap, .dialog-wrap, .bonus-ov, .modal-overlay:not(.hidden), .badges-modal.active")) { if ((tries || 0) < 4) maybeFeedbackNews((tries || 0) + 1); return; }
-      P.fbSeen = 1; saveState();
+      P.fbSeen = 1; window.__fbNow = 1; saveState();
       feedbackNewsDialog();
     }, 1500);
+  }
+  /* v298: nieuwtjes in het boog-venster. Bij elke update: zet hier bovenaan een nieuwtje bij, in eenvoudige woorden voor spelers.
+     Elk nieuwtje komt één keer per speler (P.newsSeen), één per keer, op het startscherm en na de NurPlay- en feedback-melding. */
+  const NEWS = [
+    { id: "n297-jade", title: "Nieuwe avatars",
+      label: "Nieuw in NurSpark: Jade-avatars. Een man, een vrouw en een meisje in een glanzende groene boog. Beschikbaar in alle niveaus.",
+      text: '<span class="jm2-avs"><img src="avatars/jade-man-boog.webp" alt=""><img src="avatars/jade-vrouw-boog.webp" alt=""><img src="avatars/jade-meisje-boog.webp" alt=""></span>Nieuwe <b>Jade-avatars</b>: een man, een vrouw en een meisje in een glanzende groene boog.<br>Beschikbaar in alle niveaus.',
+      go: { label: "Kies nu", fn: function () { avatarDialog(P.id); } } }
+  ];
+  function maybeNews(tries) {
+    if (!P || !P.mode || screen !== "dash") return;
+    if (!P.newsSeen) { if (levelsDone(P) === 0) { P.newsSeen = NEWS.map(function (n) { return n.id; }); saveState(); return; } P.newsSeen = []; }   /* nieuwe speler: geen oude nieuwtjes */
+    const n = NEWS.find(function (x) { return P.newsSeen.indexOf(x.id) < 0; });
+    if (!n || !P.npSeen || !P.fbSeen || window.__npNow || window.__fbNow) return;
+    setTimeout(function () {
+      if (!P || screen !== "dash" || window.__newsNow || window.__npNow || window.__fbNow) return;
+      if (document.querySelector(".bm-wrap, .dialog-wrap, .bonus-ov, .modal-overlay:not(.hidden), .badges-modal.active")) { if ((tries || 0) < 4) maybeNews((tries || 0) + 1); return; }
+      P.newsSeen.push(n.id); window.__newsNow = 1; saveState();
+      meldingDialog({ id: "newsWrap", badge: "NIEUW", title: n.title, label: n.label, text: n.text, go: n.go, later: "Later" });
+    }, 1800);
   }
   /* v237: NurPlay, losse spellen (elk spel een kaart met voorbeeldplaatje) */
   const PLAY_GAMES = [{ id: "darb", name: "Darb an-Nur", ar: "دَرْب النُّور", src: "spel/darb-an-nur.html", sub: "Leid de gelovige door het licht-doolhof, weg van de duisternis.", tags: ["Doolhof", "Groot in beeld", "Geen muziek"], prev: "playPreview" },
@@ -8548,6 +8570,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v298", t: "Nieuwtjes: bij elke update krijgen spelers één keer een melding in het boog-venster (nu: de Jade-avatars)." },
     { v: "v297", t: "Avatars: nieuwe Jade-avatars (man, vrouw en meisje) bij Mensen. Ze zijn in alle niveaus meteen te kiezen; de oude blijven staan." },
     { v: "v296", t: "Bazaar: boven de kwartetkaarten staat nu \"Dit zijn de kaarten die jij nog mist\", en elke kaart heeft een label \"Mis je\"." },
     { v: "v295", t: "Kruiswoordpuzzels: halverwege elk land is één level een verrassingspuzzel (Beginner vanaf land 2), zonder aankondiging op de kaart. Sterren en beloningen als een gewoon level, in alle drie de modi." },
