@@ -986,6 +986,31 @@ a.btn.block { display: flex; margin-top: 14px; }
 .np-where { font-size: .88rem; font-weight: 700; color: #cfe3d6; margin: 0 0 14px; line-height: 1.4; }
 .bonus-ov { position: fixed; inset: 0; z-index: 9000; background: #0b1a24; }
 .bonus-ov iframe { display: block; width: 100%; height: 100%; border: 0; }
+.pz-ov { position: fixed; inset: 0; z-index: 9000; background: #faf5e8; color: #2b2b2b; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.pz-top { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: #1b4332; color: #f4efe2; position: sticky; top: 0; z-index: 6; border-bottom: 3px solid #c9a227; }
+.pz-x { appearance: none; border: 0; background: rgba(255,255,255,.12); color: #fff; width: 44px; height: 44px; border-radius: 50%; font-size: 1.8rem; line-height: 1; cursor: pointer; }
+.pz-tt b { display: block; font-size: 1.1rem; font-weight: 900; } .pz-tt small { font-size: .8rem; color: #cfe3d6; font-weight: 700; }
+.pz-clue { position: sticky; top: 67px; z-index: 5; background: #2d6a4f; color: #fff; padding: 10px 14px; font-size: .95rem; min-height: 46px; font-weight: 700; }
+.pz-clue b { color: #f6ecc8; }
+.pz-gw { display: flex; justify-content: center; padding: 14px 8px 0; }
+.pz-grid { display: grid; gap: 2px; width: min(96vw, 440px); }
+.pz-cell { position: relative; aspect-ratio: 1; } .pz-cell.blk { visibility: hidden; }
+.pz-cell input { width: 100%; height: 100%; box-sizing: border-box; border: 1.5px solid #cdbf93; border-radius: 5px; background: #fff; text-align: center; font: inherit; font-size: clamp(16px, 4.4vw, 20px); font-weight: 800; text-transform: uppercase; padding: 0; color: #2b2b2b; caret-color: transparent; }
+.pz-cell input:focus { outline: none; }
+.pz-cell.word input { background: #f6ecc8; } .pz-cell.cur input { background: #c9a227; color: #fff; border-color: #c9a227; }
+.pz-cell.ok input, .pz-cell.giv input { background: #d9ecdf; border-color: #1b4332; color: #1b4332; } .pz-cell.bad input { background: #f7dcdc; border-color: #c0504d; }
+.pz-num { position: absolute; top: 1px; left: 3px; font-size: 9px; color: #7a6a3a; pointer-events: none; z-index: 2; }
+.pz-msg { text-align: center; font-weight: 800; color: #1b4332; min-height: 1.4em; padding: 8px 12px 0; margin: 0; }
+.pz-btns { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 10px 8px 14px; }
+.pz-btns button, .pz-res button { appearance: none; border: 0; border-radius: 22px; padding: 11px 18px; font: inherit; font-size: .95rem; font-weight: 800; cursor: pointer; min-height: 44px; }
+.pz-b1 { background: #1b4332; color: #fff; } .pz-b2 { background: #c9a227; color: #fff; } .pz-b3 { background: #fff; color: #1b4332; border: 1.5px solid #1b4332 !important; }
+.pz-cl { max-width: 520px; margin: 0 auto; padding: 0 14px 40px; }
+.pz-cl h2 { font-size: 1rem; color: #1b4332; border-bottom: 2px solid #c9a227; padding-bottom: 4px; margin: 18px 0 6px; }
+.pz-cl ul { padding: 0; margin: 0; } .pz-cl li { list-style: none; padding: 7px 8px; border-radius: 6px; cursor: pointer; font-size: .92rem; }
+.pz-cl li.act { background: #f6ecc8; } .pz-cl li.done { color: #1b4332; text-decoration: line-through; }
+.pz-res { max-width: 420px; margin: 0 auto; padding: 40px 20px; text-align: center; }
+.pz-res h2 { color: #1b4332; font-size: 1.6rem; margin: 0 0 8px; } .pz-res .pz-st { font-size: 2.4rem; color: #c9a227; letter-spacing: 6px; margin: 6px 0 12px; }
+.pz-res p { font-size: 1.05rem; font-weight: 700; margin: 6px 0; } .pz-res button { background: #1b4332; color: #fff; margin-top: 22px; }
 body.bonus-on { overflow: hidden; }
 .chest-win.ready { background: linear-gradient(135deg, #fff3c4, #ffd36a); box-shadow: 0 0 0 3px #fff6b8 inset, 0 6px 18px rgba(255, 180, 0, .35); }
 .co-stage { position: relative; overflow: hidden; text-align: center; padding: 18px 16px 24px; margin-top: 8px; border-radius: 28px; background: radial-gradient(circle at 50% 38%, #fff6c8, #ffd36a 45%, #f0a500); color: #5a3d00; display: flex; flex-direction: column; align-items: center; gap: 10px; }
@@ -5747,6 +5772,7 @@ return exports;})();
       badges: {},                           // badges[id] = tijdstempel; id = level:cat:master|grand
       group: null,                          // {code, mid} als de speler in een groep zit
       journey: { beginner: {}, junior: {}, expert: {} },  // journey[level][catId][levelIndex] = {score,total,stars} (De Reis)
+      puz: { beginner: {}, junior: {}, expert: {} },      // puz[level][catId] = {score,total,stars,hints} (kruiswoordpuzzel per land)
       age14: false,                         // 14+ bevestigd voor de Expert Modus
       seen: { beginner: {}, junior: {}, expert: {} },     // seen[level][vraagId] = hoe vaak beantwoord (voor variatie)
       recent: { beginner: [], junior: [], expert: [] },   // laatst beantwoorde vraag-id's per modus (niet meteen herhalen)
@@ -5766,6 +5792,7 @@ return exports;})();
       streak: Object.assign(d.streak, p.streak || {}),
       badges: Object.assign({}, p.badges || {}),
       journey: Object.assign({ beginner: {}, junior: {}, expert: {} }, p.journey || {}),
+      puz: Object.assign({ beginner: {}, junior: {}, expert: {} }, p.puz || {}),
       seen: Object.assign({ beginner: {}, junior: {}, expert: {} }, p.seen || {}),
       recent: Object.assign({ beginner: [], junior: [], expert: [] }, p.recent || {}),
       chests: Object.assign({ beginner: {}, junior: {}, expert: {} }, p.chests || {}),
@@ -6276,7 +6303,7 @@ return exports;})();
   }
   function mergePlayers(dst, src) {
     MODES.forEach(function (lv) {
-      ["best", "journey", "daily"].forEach(function (k) { dst[k] = dst[k] || {}; dst[k][lv] = dst[k][lv] || {}; mergeRecMap(dst[k][lv], (src[k] || {})[lv]); });
+      ["best", "journey", "daily", "puz"].forEach(function (k) { dst[k] = dst[k] || {}; dst[k][lv] = dst[k][lv] || {}; mergeRecMap(dst[k][lv], (src[k] || {})[lv]); });
       ["chests", "seen"].forEach(function (k) { dst[k] = dst[k] || {}; dst[k][lv] = dst[k][lv] || {}; mergeRecMap(dst[k][lv], (src[k] || {})[lv]); });
       dst.album = dst.album || {}; dst.album[lv] = dst.album[lv] || {}; mergeCountMap(dst.album[lv], (src.album || {})[lv]);
       dst.xp = dst.xp || {}; dst.gems = dst.gems || {};
@@ -6303,7 +6330,7 @@ return exports;})();
     const base = JSON.parse(JSON.stringify(cloudNewer ? cloud : local));
     const other = cloudNewer ? local : cloud;
     MODES.forEach(function (lv) {
-      ["best", "journey", "daily", "chests", "seen"].forEach(function (k) { base[k] = base[k] || {}; base[k][lv] = base[k][lv] || {}; mergeRecMap(base[k][lv], (other[k] || {})[lv]); });
+      ["best", "journey", "daily", "chests", "seen", "puz"].forEach(function (k) { base[k] = base[k] || {}; base[k][lv] = base[k][lv] || {}; mergeRecMap(base[k][lv], (other[k] || {})[lv]); });
       base.album = base.album || {}; base.album[lv] = base.album[lv] || {}; mergeCountMap(base.album[lv], (other.album || {})[lv]);
       base.xp = base.xp || {}; base.xp[lv] = Math.max(base.xp[lv] || 0, (other.xp || {})[lv] || 0);
     });
@@ -8518,6 +8545,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v292", t: "Kruiswoordpuzzels: halverwege elk land een puzzel als afwisseling (Beginner vanaf land 2), met sterren en beloningen als een gewoon level, in alle drie de modi." },
     { v: "v290", t: "Feedbackmelding: knoptekst korter (Schrijf nu), zodat hij netjes in de knop past." },
     { v: "v289", t: "Feedback voor iedereen: een eenmalige melding voor bestaande en nieuwe spelers over de knop Stuur feedback (te testen bij Meldingen testen)." },
     { v: "v288", t: "Feedback: spelers kunnen een fout of idee sturen via Instellingen; jij leest ze in Mijn studio › Feedback." },
@@ -13001,6 +13029,7 @@ return exports;})();
       h += "</g>";
     });
     h += bonusSvg(level, c);
+    h += puzSvg(level, c);
     // levels
     stops.forEach(function (st) {
       const R = st.last ? 27 : st.mile ? 21 : 19, state = st.locked ? "locked" : st.passed ? "done" : "current";
@@ -13131,6 +13160,159 @@ return exports;})();
     if (d.type === "close") closeBonus(); else if (d.type === "result") { if (bonusCur.catId) bonusResult(d); else playResult(d); }
   });
   document.addEventListener("keydown", function (e) { if (bonusCur && e.key === "Escape") closeBonus(); });
+
+  /* ───────────── Kruiswoordpuzzels (v292): afwisseling halverwege elk land (Beginner vanaf land 2) ───────────── */
+  const PUZZLES = {"beginner":{"gebed":{"t":"Het Gebed","h":9,"w":11,"ws":[["KHOETBAH","De preek vóór het vrijdaggebed.",3,0,"A"],["MUEZZIN","Hij roept de adhaan om.",1,3,"D"],["JUMMAH","Het gebed op vrijdag.",1,1,"A"],["TAKBIR","‘Allahu Akbar’ zeggen.",0,5,"D"],["RAKAAT","Eén ronde van staan, buigen en neerknielen.",5,5,"A"],["FATIHA","De soera die je in elke rakaat leest.",3,10,"D"],["IQAMA","De oproep vlak voordat het gebed begint.",8,6,"A"],["SUNNA","Extra gebed dat de Profeet ﷺ vaak bad, maar niet verplicht is.",7,0,"A"]]},"elkedag":{"t":"Elke dag mooi","h":13,"w":10,"ws":[["GASTVRIJ","Je ontvangt je bezoek vriendelijk.",6,0,"A"],["BISMILLAH","Dit zeg je voordat je begint met eten.",4,2,"D"],["BEDANKEN","‘Dankjewel’ zeggen tegen iemand die je helpt.",4,2,"A"],["MOEDER","In een bekende hadith moet je haar het eerst eren.",0,8,"D"],["SALAWAT","Vrede en zegen wensen voor de Profeet ﷺ.",9,0,"A"],["SLAPEN","Voordat je gaat … zeg je een du’a.",11,0,"A"],["KLEDING","Je trekt schone en nette … aan.",0,0,"D"],["ZIEKE","Je bezoekt een … om hem op te vrolijken.",0,3,"D"]]},"ramadan":{"t":"Ramadan & Eid","h":10,"w":10,"ws":[["MAALTIJD","Suhoor en iftaar zijn allebei een …",5,1,"A"],["FAMILIE","Met Eid bezoek je je …",3,1,"D"],["HILAAL","De nieuwe maan die de maand aankondigt.",0,4,"D"],["HONGER","Wie vast voelt …, en denkt aan arme mensen.",0,4,"A"],["CADEAUS","Kinderen krijgen vaak … met Eid.",3,3,"A"],["DORST","Wie vast voelt ook …",5,8,"D"],["FEEST","Eid is een … na een maand vasten.",9,0,"A"],["FITR","Eid al-… betekent: het verbreken van het vasten.",7,5,"A"]]},"karakter":{"t":"Akhlaaq","h":13,"w":11,"ws":[["VRIENDELIJK","Je praat en doet aardig tegen iedereen.",7,0,"A"],["BESCHEIDEN","Je doet niet groot over wat je hebt of kunt.",2,6,"D"],["ZORGZAAM","Je let goed op anderen.",5,1,"D"],["AMANA","Iets wat aan je is toevertrouwd.",12,0,"A"],["RAHMA","Barmhartigheid, in het Arabisch.",10,0,"A"],["LEUGEN","Dit zeg je nooit.",3,2,"A"],["KALM","Je blijft … als je boos wordt.",7,10,"D"],["TROUW","Je laat je vriend niet in de steek.",0,4,"D"]]},"ihsan":{"t":"Ihsan","h":11,"w":10,"ws":[["AANDACHT","Bij het gebed ben je er met je volle …",5,2,"A"],["MOOISTE","Doe alles op de … manier.",0,9,"D"],["TAWAKKUL","Vertrouwen op Allah, nadat je je best deed.",2,6,"D"],["ALLEEN","Ook als je … bent, ziet Allah je.",5,3,"D"],["GEHEIM","Ook wat je in het … doet, kent Allah.",0,4,"A"],["HOREN","Allah … alles wat je zegt.",9,0,"A"],["BEWUST","Je bent je … van Allah.",2,1,"A"],["ZIEN","Allah … alles wat je doet.",0,2,"D"]]}},"junior":{"profeten":{"t":"Profeten","h":10,"w":9,"ws":[["MARYAM","Moeder van Isa; een soera draagt haar naam.",3,0,"A"],["SHUAIB","Profeet van het volk van Madyan.",0,4,"D"],["SALIH","Zijn volk kreeg een kameelmerrie als teken.",0,4,"A"],["MUSA","Hij sprak met Allah.",3,0,"D"],["ADAM","De eerste mens en profeet.",6,0,"A"],["YAQUB","Zoon van Ishaq en vader van Yusuf.",5,2,"D"],["HUD","Profeet van het volk van Ad.",0,8,"D"],["NUH","Hij bouwde op Allahs bevel de ark.",8,1,"A"],["LUT","Profeet die zijn volk waarschuwde.",0,6,"D"],["ISA","Zoon van Maryam.",1,1,"D"]]},"zuilen":{"t":"De 5 Zuilen","h":10,"w":11,"ws":[["TAWAAF","Zeven rondes lopen om de Ka’ba.",7,2,"A"],["ARAFAT","Op deze vlakte staan bedevaarders op de 9e dag.",3,6,"D"],["SHAHADA","Het getuigenis dat er geen god is dan Allah.",3,0,"A"],["ZAMZAM","Bron bij de Ka’ba.",5,5,"A"],["NISAAB","De grens van bezit waarboven je zakaat betaalt.",2,9,"D"],["KAABA","Het huis in Mekka waar je je tijdens het gebed naartoe richt.",5,3,"D"],["IHRAM","Het witte kleed van de bedevaarder.",0,4,"D"],["FITRA","Gift voor de armen vóór het Eid-gebed.",0,3,"A"],["HADJ","De bedevaart naar Mekka.",3,1,"D"],["MINA","Plaats bij Mekka waar bedevaarders stenen werpen.",9,0,"A"]]},"seerah":{"t":"Seerah","h":11,"w":10,"ws":[["FATIMA","Zijn dochter.",6,3,"A"],["MADINA","De stad van de Profeet ﷺ.",1,4,"D"],["ABUBAKR","Zijn trouwe vriend tijdens de Hijra.",2,0,"A"],["KHADIJA","Zijn eerste vrouw.",4,8,"D"],["HIRA","Grot waar de eerste openbaring kwam.",0,6,"D"],["BADR","De eerste grote slag.",1,0,"D"],["HIJRA","De reis van Mekka naar Madina.",5,6,"D"],["UHUD","Berg bij Madina waar een slag plaatsvond.",2,2,"D"],["THAWR","Grot waar de Profeet ﷺ en Abu Bakr zich verborgen.",0,5,"A"],["ISRA","De nachtreis van Mekka naar Jeruzalem.",9,3,"A"]]},"koran":{"t":"Koran","h":10,"w":11,"ws":[["FATIHA","De openingssoera.",4,1,"A"],["TAJWID","De regels voor mooi en juist reciteren.",4,3,"D"],["YASIN","Soera die ‘het hart van de Koran’ wordt genoemd.",8,0,"A"],["IKHLAS","Soera over de eenheid van Allah.",0,6,"D"],["MUSHAF","Het geschreven Koranboek.",2,3,"A"],["SOERA","Een hoofdstuk van de Koran.",5,6,"A"],["KAHF","Soera die je op vrijdag leest.",1,1,"D"],["QARI","Iemand die de Koran reciteert.",3,9,"D"],["JUZ","Een van de dertig delen.",6,3,"A"],["AYA","Een vers.",6,1,"D"]]},"akhlaaq":{"t":"Akhlaaq","h":9,"w":8,"ws":[["TAWADU","Nederigheid.",6,1,"A"],["AMANA","Iets wat aan je is toevertrouwd.",4,4,"D"],["KARAM","Gul zijn.",4,1,"A"],["HILM","Zachtmoedigheid.",1,5,"D"],["RAHMA","Barmhartigheid.",0,2,"D"],["AFW","Vergeving schenken.",6,2,"D"],["SIDQ","Waarachtigheid.",2,4,"A"],["ADAB","Goede manieren.",1,0,"A"],["HAYA","Bescheidenheid en schaamte voor het slechte.",0,0,"D"],["ADL","Rechtvaardigheid.",8,4,"A"]]},"ihsan":{"t":"Ihsan","h":10,"w":12,"ws":[["ISTIGHFAR","Allah om vergeving vragen.",2,3,"A"],["TAWAKKUL","Vertrouwen op Allah na je inspanning.",2,5,"D"],["MAHABBA","Liefde voor Allah.",5,4,"A"],["TAUBA","Berouw tonen en terugkeren naar Allah.",1,10,"D"],["KHAWF","Ontzag voor Allah.",7,5,"A"],["SIRR","Het verborgene.",1,3,"D"],["RAJA","Hoop op Allahs barmhartigheid.",4,7,"D"],["ZUHD","Je hart niet hechten aan de wereld.",0,8,"D"],["FIKR","Nadenken over Allahs schepping.",3,0,"A"],["RIDA","Tevreden zijn met wat Allah beschikt.",2,1,"D"]]}},"expert":{"profeten":{"t":"Profeten","h":11,"w":11,"ws":[["DHULKIFL","Profeet die in de Koran wordt genoemd om zijn geduld.",4,0,"A"],["LUQMAN","Wijze man naar wie een soera is genoemd.",4,3,"D"],["SHUAIB","Profeet van Madyan.",0,5,"D"],["FIRAUN","Heerser die Musa en zijn volk achtervolgde.",2,1,"A"],["ALYASA","Opvolger van Ilyas.",3,7,"D"],["JALUT","Reus die door Dawud werd verslagen.",6,6,"A"],["QARUN","Man met enorme schatten, verzwolgen door de aarde.",8,6,"A"],["TALUT","Koning van de Israëlieten tegen Jalut.",2,10,"D"],["HAMAN","Minister van Firaun.",8,0,"A"],["ILYAS","Profeet die zijn volk waarschuwde voor het aanbidden van Baal.",0,1,"A"],["LUT","Profeet die met zijn familie vertrok.",2,8,"A"],["NUH","Profeet van de ark.",8,10,"D"]]},"zuilen":{"t":"De 5 Zuilen","h":12,"w":12,"ws":[["MUZDALIFA","Plaats waar bedevaarders de nacht na Arafat doorbrengen.",7,3,"A"],["TALBIYA","Het antwoord van de bedevaarder: ‘Labbayk Allahumma labbayk’.",1,7,"D"],["ISRAFIL","Engel die in de bazuin zal blazen.",2,9,"D"],["QURBANI","Het offerdier tijdens Eid al-Adha.",2,3,"A"],["JAMARAT","Pilaren waar bedevaarders stenen naar werpen.",5,3,"D"],["MIKAIL","Engel belast met regen en voorziening.",5,6,"A"],["RUSUL","De gezanten van Allah.",9,3,"A"],["JIBRIL","Engel die de openbaring bracht.",0,11,"D"],["KUTUB","De hemelse boeken.",11,1,"A"],["SAFA","Heuvel waar het lopen tussen twee heuvels begint.",6,0,"A"],["MARWA","Heuvel waar het lopen eindigt.",2,1,"D"],["FARD","Wat verplicht is.",0,5,"D"]]},"seerah":{"t":"Seerah","h":13,"w":11,"ws":[["HUDAYBIYA","Plaats van een verdrag in het jaar 6 na de Hijra.",6,1,"A"],["MUHAJIRUN","De emigranten uit Mekka.",4,1,"D"],["KHANDAQ","De greppel bij Madina.",4,9,"D"],["UTHMAN","Derde kalief.",11,1,"A"],["ABRAHA","Hij kwam met olifanten naar Mekka.",1,4,"D"],["ANSAR","De helpers uit Madina.",9,6,"A"],["TAIF","Stad waar de Profeet ﷺ werd weggejaagd.",4,3,"A"],["AISHA","Dochter van Abu Bakr en vrouw van de Profeet ﷺ.",8,3,"D"],["HAMZA","Oom van de Profeet ﷺ, gevallen bij Uhud.",1,0,"A"],["BILAL","De eerste muezzin.",2,4,"A"],["UMAR","Tweede kalief.",0,7,"D"],["FIL","Het jaar van de olifant.",5,7,"D"]]},"koran":{"t":"Koran","h":12,"w":10,"ws":[["KAWTHAR","De kortste soera.",5,3,"A"],["BAQARA","De langste soera.",2,4,"D"],["MAKKI","Soera neergezonden vóór de Hijra.",3,3,"A"],["WAQIA","Soera ‘De Gebeurtenis’.",7,0,"A"],["MADANI","Soera neergezonden na de Hijra.",6,1,"D"],["RAHMAN","Soera met de herhaalde vraag naar Allahs gunsten.",4,8,"D"],["NISA","Soera ‘De vrouwen’.",8,5,"A"],["MULK","Soera ‘De Heerschappij’.",0,6,"D"],["YUSUF","Soera met ‘het mooiste verhaal’.",1,5,"A"],["TAHA","Soera die begint met twee letters.",9,0,"A"],["NASR","Soera over de overwinning.",8,5,"D"],["ASR","Soera over de tijd.",9,3,"D"]]},"akhlaaq":{"t":"Akhlaaq","h":10,"w":11,"ws":[["GHIBA","Achter iemands rug kwaad spreken.",5,1,"A"],["QANAA","Tevredenheid met wat je hebt.",2,5,"D"],["NAMIMA","Roddels verspreiden.",4,5,"A"],["ISRAF","Verspilling.",5,3,"D"],["WAFA","Trouw aan je belofte.",3,10,"D"],["HASAD","Afgunst.",8,0,"A"],["ISAAR","Een ander voorrang geven boven jezelf.",4,8,"D"],["RIYAA","Goede daden doen om gezien te worden.",3,1,"A"],["ZULM","Onrecht.",1,7,"D"],["KIBR","Hoogmoed.",0,1,"D"],["SILA","Het onderhouden van familiebanden.",1,0,"A"],["BIRR","Goedheid, vooral tegenover ouders.",8,6,"A"]]},"ihsan":{"t":"Ihsan","h":11,"w":13,"ws":[["MUJAHADA","Strijd tegen de lagere neigingen van de ziel.",4,2,"A"],["TAFAKKUR","Diep nadenken over Allahs tekenen.",1,9,"D"],["TAZKIYA","Zuivering van de ziel.",3,5,"D"],["SAKINA","Rust die Allah in het hart neerlaat.",6,7,"A"],["KHASHYA","Ontzag voor Allah uit kennis.",8,0,"A"],["INABA","Je steeds weer tot Allah wenden.",0,7,"D"],["NIYYA","De intentie.",6,11,"D"],["MAQAM","Een stap op de weg van de ziel.",2,6,"A"],["SULUK","De weg van de innerlijke zuivering.",4,0,"D"],["SUHBA","Gezelschap van vromen.",10,7,"A"],["HUDUR","Aanwezigheid van het hart.",1,3,"D"],["WARA","Voorzichtigheid bij twijfelachtige zaken.",7,2,"D"]]}}};
+  const PUZ_STAR_GEMS = 5;
+  function puzData(lv, catId) { return (PUZZLES[lv] && PUZZLES[lv][catId]) || null; }
+  function puzK(lv, catId) { const n = jCount(lv, catId), k = Math.floor(n / 2); return k >= 1 && k <= n - 1 ? k : 0; }   /* de puzzel staat na level k (k = aantal levels ervoor) */
+  function puzRec(lv, catId) { return (P.puz && P.puz[lv] && P.puz[lv][catId]) || null; }
+  function puzActive(lv, catId) { return !!puzData(lv, catId) && puzK(lv, catId) > 0; }
+  function puzIsOpen(lv, catId) { return jPassed(lv, catId, puzK(lv, catId) - 1); }
+  function puzPos(lv, catId) {
+    const k = puzK(lv, catId), pts = jLayout(jCount(lv, catId)), ym = Math.round((pts[k - 1].y + pts[k].y) / 2), bo = bonusOf(catId), bp = bo ? bonusPos(lv, catId, bo) : null;
+    let best = { x: 34, y: ym }, bd = -1;
+    const cand = [[34, 0], [326, 0], [58, -18], [302, -18], [58, 18], [302, 18], [180, 0]];
+    for (let i = 0; i < cand.length; i++) {
+      const x = cand[i][0], y = ym + cand[i][1];
+      let d = Math.min.apply(null, pts.map(function (p) { return Math.hypot(p.x - x, p.y - y); }));
+      if (bp) d = Math.min(d, Math.hypot(bp.x - x, bp.y - y));
+      if (d >= 62) return { x: x, y: y };
+      if (d > bd) { bd = d; best = { x: x, y: y }; }
+    }
+    return best;
+  }
+  function puzSvg(level, c) {
+    if (!puzActive(level, c.id)) return "";
+    const bp = puzPos(level, c.id), open = puzIsOpen(level, c.id), rec = puzRec(level, c.id), fresh = open && !rec, st = rec ? rec.stars : 0, k = puzK(level, c.id);
+    const label = "Kruiswoordpuzzel" + (open ? (rec ? ": gedaan, " + st + " van 3 sterren, tik om opnieuw te spelen" : ": nieuw, tik om te spelen") : ": vergrendeld, haal eerst level " + k) + ".";
+    let h = '<g class="j-stop j-bonus" data-act="puz-open" data-cat="' + c.id + '" role="button" tabindex="0" aria-label="' + esc(label) + '" transform="translate(' + bp.x + " " + bp.y + ')"><circle r="34" fill="#000" fill-opacity="0"/>';
+    if (fresh) h += '<circle r="31" fill="#fff3a0" opacity=".5"><animate attributeName="opacity" values=".2;.85;.2" dur="1.3s" repeatCount="indefinite"/></circle>';
+    h += '<circle r="23" fill="' + (open ? "#2d6a4f" : "#8a8478") + '" stroke="#ffd54f" stroke-width="3.5"/>';
+    [[0, 0], [1, 0], [2, 0], [1, 1], [1, 2], [0, 2]].forEach(function (q) { h += '<rect x="' + (-13 + q[0] * 9) + '" y="' + (-13 + q[1] * 9) + '" width="8" height="8" rx="1.6" fill="#fff"/>'; });
+    h += '<rect x="-13" y="-4" width="8" height="8" rx="1.6" fill="none"/><text x="-9" y="2.4" text-anchor="middle" font-size="7" font-weight="900" fill="#2d6a4f">N</text>';
+    if (!open) h += '<g transform="translate(-7 -9)"><rect x="0" y="7" width="14" height="11" rx="2.5" fill="#fff"/><path d="M3 7 V4 a4 4 0 0 1 8 0 V7" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/></g>';
+    h += '<rect x="-28" y="25" width="56" height="16" rx="8" fill="#1b4332" stroke="#ffd54f" stroke-width="1.5"/><text y="37" text-anchor="middle" font-size="10" font-weight="900" fill="#ffe27a">PUZZEL</text>';
+    if (rec) for (let q = 0; q < 3; q++) h += (q < st ? '<g transform="translate(' + ((q - 1) * 14) + ' 50) scale(.6)">' + starInner() + "</g>" : '<polygon points="' + starPoly((q - 1) * 14, 50, 6.5) + '" fill="rgba(0,0,0,.35)" stroke="#fff" stroke-width="1.2" stroke-linejoin="round"/>');
+    if (fresh) h += '<g transform="translate(19 -20)"><circle r="9" fill="#ffbe3d" stroke="#fff" stroke-width="2"/><text y="4.5" text-anchor="middle" font-size="13" font-weight="900" fill="#fff">!</text></g>';
+    return h + "</g>";
+  }
+  let puzCur = null;
+  function puzOpenGame(catId) {
+    const lv = P.mode, D = puzData(lv, catId); if (!D || puzCur || bonusCur) return;
+    if (!puzActive(lv, catId)) return;
+    if (!puzIsOpen(lv, catId)) { play("wrong"); jToast("🧩 Kruiswoordpuzzel: haal eerst level " + puzK(lv, catId) + "."); return; }
+    play("click"); stopTimer(); track("puzzel");
+    const first = lv === "beginner", sol = {}, cells = {}, doneSet = {};
+    const words = D.ws.map(function (x) { return { a: x[0], clue: x[1], r: x[2], c: x[3], d: x[4] }; });
+    words.forEach(function (w) { for (let i = 0; i < w.a.length; i++) sol[(w.d === "A" ? w.r : w.r + i) + "," + (w.d === "A" ? w.c + i : w.c)] = w.a[i]; });
+    const starts = []; words.forEach(function (w) { const k = w.r + "," + w.c; if (starts.indexOf(k) === -1) starts.push(k); });
+    starts.sort(function (a, b) { const x = a.split(",").map(Number), y = b.split(",").map(Number); return x[0] - y[0] || x[1] - y[1]; });
+    const numOf = {}; starts.forEach(function (k, i) { numOf[k] = i + 1; }); words.forEach(function (w) { w.n = numOf[w.r + "," + w.c]; });
+    let dir = "A", cur = null, hints = 0, shown = false, finished = false;
+    const land = landsFor(lv).filter(function (x) { return x.id === catId; })[0], landTitle = land ? land.title : D.t;
+    const ov = document.createElement("div"); ov.className = "pz-ov"; ov.id = "pzOv"; ov.setAttribute("role", "dialog"); ov.setAttribute("aria-modal", "true"); ov.setAttribute("aria-label", "Kruiswoordpuzzel " + landTitle);
+    ov.innerHTML = '<div class="pz-top"><button class="pz-x" data-pz="x" aria-label="Sluit de puzzel">‹</button><div class="pz-tt"><b>Kruiswoordpuzzel</b><small>' + esc(landTitle) + (first ? " · eerste letters staan al ingevuld" : "") + '</small></div></div>' +
+      '<div class="pz-clue" id="pzClue" aria-live="polite">Tik op een vakje om te beginnen.</div><div class="pz-gw"><div class="pz-grid" id="pzGrid" role="grid" aria-label="Kruiswoordpuzzel"></div></div><p class="pz-msg" id="pzMsg" role="status"></p>' +
+      '<div class="pz-btns"><button class="pz-b1" data-pz="check">Controleer</button><button class="pz-b2" data-pz="hint">Hint (1 letter)</button><button class="pz-b3" data-pz="show">Toon oplossing</button></div>' +
+      '<div class="pz-cl"><h2>Horizontaal</h2><ul id="pzA"></ul><h2>Verticaal</h2><ul id="pzD"></ul></div>';
+    document.body.appendChild(ov); document.body.classList.add("bonus-on");
+    const app = document.getElementById("app"); if (app) app.setAttribute("aria-hidden", "true");
+    const q = function (id) { return ov.querySelector("#" + id); };
+    const grid = q("pzGrid"); grid.style.gridTemplateColumns = "repeat(" + D.w + ", 1fr)";
+    const firsts = {}; if (first) words.forEach(function (w) { firsts[w.r + "," + w.c] = 1; });
+    const keysOf = function (w) { const o = []; for (let i = 0; i < w.a.length; i++) o.push(w.d === "A" ? w.r + "," + (w.c + i) : (w.r + i) + "," + w.c); return o; };
+    const wordAt = function (k, d) { const p = k.split(",").map(Number); return words.filter(function (w) { return w.d === d && (d === "A" ? w.r === p[0] && p[1] >= w.c && p[1] < w.c + w.a.length : w.c === p[1] && p[0] >= w.r && p[0] < w.r + w.a.length); })[0]; };
+    const say = function (t) { q("pzMsg").textContent = t; };
+    const allOk = function () { return Object.keys(cells).every(function (k) { return cells[k].inp.value === sol[k]; }); };
+    const upd = function () {
+      Object.keys(cells).forEach(function (k) { cells[k].d.classList.remove("word", "cur"); });
+      ov.querySelectorAll(".pz-cl li").forEach(function (l) { l.classList.remove("act"); });
+      const w = cur && wordAt(cur, dir);
+      if (w) { keysOf(w).forEach(function (k) { cells[k].d.classList.add("word"); }); q("pzClue").innerHTML = "<b>" + w.n + (w.d === "A" ? " horizontaal" : " verticaal") + "</b> (" + w.a.length + " letters) – " + esc(w.clue); const li = q("pz" + w.n + w.d); if (li) li.classList.add("act"); }
+      if (cur) cells[cur].d.classList.add("cur");
+    };
+    const go = function (k) { cur = k; cells[k].inp.focus(); upd(); };
+    const move = function (st) { const w = wordAt(cur, dir); if (!w) return; const ks = keysOf(w); let i = ks.indexOf(cur) + st; while (i >= 0 && i < ks.length && cells[ks[i]].given) i += st; if (i >= 0 && i < ks.length) go(ks[i]); else upd(); };
+    const markDone = function () {
+      let nieuw = false;
+      words.forEach(function (w) { const ok = keysOf(w).every(function (k) { return cells[k].inp.value === sol[k]; }), id = w.n + w.d; q("pz" + id).classList.toggle("done", ok); if (ok && !doneSet[id]) { doneSet[id] = 1; nieuw = true; } else if (!ok) delete doneSet[id]; });
+      return nieuw;
+    };
+    const finish = function () {
+      if (finished) return; finished = true;
+      const rec = puzRec(lv, catId), prev = rec ? rec.stars || 0 : 0, firstTime = !rec, stars = hints === 0 ? 3 : hints <= 2 ? 2 : 1, extra = Math.max(0, stars - prev);
+      const xp = (firstTime ? 5 * (XP_PER[lv] || 10) : 0) + extra * 10, gems = (firstTime ? 5 : 0) + extra * PUZ_STAR_GEMS;
+      let coins = 0; if (firstTime) coins += 1; if (stars === 3 && prev < 3) coins += 2;
+      if (!P.puz) P.puz = { beginner: {}, junior: {}, expert: {} }; if (!P.puz[lv]) P.puz[lv] = {};
+      P.puz[lv][catId] = { score: words.length, total: words.length, stars: Math.max(prev, stars), hints: hints, t: Date.now() };
+      addReward(lv, xp, gems); if (coins) P.coins = (P.coins || 0) + coins;
+      saveState(); pushMember();
+      if (sbUser && P.sbId === sbUser.id) sbSyncSoon(lv); else if (!P.sbId) guestSyncSoon(P, lv);
+      play("fanfare");
+      const sstr = "★".repeat(stars) + '<span style="opacity:.3">' + "★".repeat(3 - stars) + "</span>";
+      ov.innerHTML = '<div class="pz-top"><button class="pz-x" data-pz="x" aria-label="Terug naar de kaart">‹</button><div class="pz-tt"><b>Kruiswoordpuzzel</b><small>' + esc(landTitle) + '</small></div></div><div class="pz-res" role="status"><h2>MashaAllah!</h2><div class="pz-st" aria-label="' + stars + ' van 3 sterren">' + sstr + "</div>" +
+        "<p>Alle woorden goed" + (hints ? " met " + hints + " hint" + (hints > 1 ? "s" : "") : ", zonder hints") + ".</p>" +
+        (xp || gems || coins ? "<p>" + (gems ? "💎 +" + gems + "  " : "") + (xp ? "XP +" + xp + "  " : "") + (coins ? "🪙 +" + coins : "") + "</p>" : "<p>Beloningen krijg je alleen de eerste keer en voor nieuwe sterren.</p>") +
+        '<button data-pz="x">Terug naar de kaart</button></div>';
+      const b = ov.querySelector("[data-pz]"); if (b) try { b.focus({ preventScroll: true }); } catch (e) {}
+    };
+    const after = function () { if (finished) return; if (allOk()) { if (shown) { say("Dit was de oplossing: daar krijg je geen beloning voor."); return; } finish(); } };
+    for (let r = 0; r < D.h; r++) for (let c = 0; c < D.w; c++) {
+      const k = r + "," + c, d = document.createElement("div"); d.className = "pz-cell";
+      if (!sol[k]) { d.classList.add("blk"); grid.appendChild(d); continue; }
+      if (numOf[k]) { const sp = document.createElement("span"); sp.className = "pz-num"; sp.textContent = numOf[k]; d.appendChild(sp); }
+      const inp = document.createElement("input"); inp.maxLength = 1; inp.autocomplete = "off"; inp.setAttribute("autocapitalize", "characters"); inp.setAttribute("aria-label", "Rij " + (r + 1) + ", kolom " + (c + 1));
+      if (firsts[k]) { inp.value = sol[k]; inp.readOnly = true; d.classList.add("giv"); }
+      inp.addEventListener("pointerdown", function (e) { if (cur === k) dir = dir === "A" ? "D" : "A"; else { cur = k; if (!wordAt(k, dir)) dir = dir === "A" ? "D" : "A"; } setTimeout(function () { inp.focus(); upd(); }, 0); e.preventDefault(); });
+      inp.addEventListener("focus", function () { if (cur !== k) { cur = k; if (!wordAt(k, dir)) dir = dir === "A" ? "D" : "A"; upd(); } });
+      inp.addEventListener("input", function () {
+        const v = inp.value.replace(/[^a-z]/gi, "").slice(-1).toUpperCase(); inp.value = v; d.classList.remove("bad", "ok"); say("");
+        if (v) { play("click"); move(1); }
+        if (markDone() && !allOk()) setTimeout(function () { play("correct"); }, 120);
+        after();
+      });
+      inp.addEventListener("keydown", function (e) {
+        if (e.key === "Backspace" && !inp.value) { move(-1); e.preventDefault(); }
+        if (e.key.indexOf("Arrow") === 0) { const m = { ArrowRight: [0, 1, "A"], ArrowLeft: [0, -1, "A"], ArrowDown: [1, 0, "D"], ArrowUp: [-1, 0, "D"] }[e.key]; dir = m[2]; const p = cur.split(",").map(Number), nk = (p[0] + m[0]) + "," + (p[1] + m[1]); if (sol[nk]) go(nk); else upd(); e.preventDefault(); }
+      });
+      d.appendChild(inp); cells[k] = { d: d, inp: inp, given: !!firsts[k] }; grid.appendChild(d);
+    }
+    ["A", "D"].forEach(function (dd) {
+      const ul = q("pz" + dd); words.filter(function (w) { return w.d === dd; }).sort(function (a, b) { return a.n - b.n; }).forEach(function (w) {
+        const li = document.createElement("li"); li.id = "pz" + w.n + dd; li.textContent = w.n + ". " + w.clue + " (" + w.a.length + ")";
+        li.addEventListener("click", function () { dir = dd; const ks = keysOf(w); go(ks.filter(function (k) { return !cells[k].inp.value; })[0] || ks[0]); ov.scrollTo({ top: 0, behavior: "smooth" }); });
+        ul.appendChild(li);
+      });
+    });
+    const close = function () {
+      document.removeEventListener("keydown", onKey, true); ov.remove(); document.body.classList.remove("bonus-on"); puzCur = null;
+      const a = document.getElementById("app"); if (a) a.removeAttribute("aria-hidden"); render();
+    };
+    const onKey = function (e) { if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); close(); } };
+    document.addEventListener("keydown", onKey, true);
+    ov.addEventListener("click", function (e) {
+      const b = e.target.closest("[data-pz]"); if (!b) return; const a = b.dataset.pz;
+      if (a === "x") { play("click"); close(); return; }
+      if (finished) return;
+      if (a === "check") {
+        let leeg = 0, fout = 0;
+        Object.keys(cells).forEach(function (k) { const x = cells[k]; if (x.given) return; x.d.classList.remove("ok", "bad"); if (!x.inp.value) leeg++; else if (x.inp.value === sol[k]) x.d.classList.add("ok"); else { x.d.classList.add("bad"); fout++; } });
+        markDone();
+        if (!leeg && !fout) after(); else { play("wrong"); say(fout + " fout · " + leeg + " leeg"); }
+      } else if (a === "hint") {
+        let k = cur && !cells[cur].inp.value ? cur : null;
+        if (!k) { const w = cur && wordAt(cur, dir); k = w ? keysOf(w).filter(function (x) { return cells[x].inp.value !== sol[x]; })[0] : null; }
+        if (!k) k = Object.keys(cells).filter(function (x) { return cells[x].inp.value !== sol[x]; })[0];
+        if (!k) return;
+        cells[k].inp.value = sol[k]; cells[k].d.classList.remove("bad"); cells[k].d.classList.add("ok"); hints++; play("click"); say("Hints gebruikt: " + hints + " (3 sterren alleen zonder hints)"); markDone(); go(k); after();
+      } else if (a === "show") {
+        shown = true; Object.keys(cells).forEach(function (k) { cells[k].inp.value = sol[k]; cells[k].d.classList.remove("bad"); cells[k].d.classList.add("ok"); }); markDone(); say("Dit is de oplossing. Daar krijg je geen beloning voor.");
+      }
+    });
+    puzCur = { lv: lv, catId: catId, ov: ov };
+    setTimeout(function () { try { const b = ov.querySelector(".pz-x"); if (b) b.focus({ preventScroll: true }); } catch (e) {} }, 200);
+  }
 
   /* ───────────── Medespelers op de kaart ───────────── */
   /* Alleen een nickname (of voornaam), een avatar en spelstatistieken. Nooit e-mail, achternaam of locatie. */
@@ -14337,6 +14519,7 @@ return exports;})();
       case "bon-box": stopTimer(); if (result) result.noAuto = true; openBonBox(el.dataset.cat); break;
       case "journey-chest": openChest(el.dataset.cat, parseInt(el.dataset.i, 10)); break;
       case "bonus-game": openBonus(el.dataset.cat); break;
+      case "puz-open": puzOpenGame(el.dataset.cat); break;
       case "mg-open-now": chestOpenNow(); break;
       case "mg-start": startMinigame(); break;
       case "rad": play("click"); rad = null; radNet = null; screen = "rad"; radGrpCheck(); render(); break;
