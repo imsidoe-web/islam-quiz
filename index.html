@@ -7409,7 +7409,7 @@ return exports;})();
       '<button class="btn ghost" data-act="group" data-d="x">' + icon("users", 18) + "Groep &amp; duel</button>" +
       '<button class="btn ghost" data-act="bazaar" data-d="x">' + gemSvg(18) + "Bazaar</button>" +
       '<button class="btn ghost" data-act="tour" data-d="x">Uitleg bekijken</button>' +
-      '<button class="btn ghost" data-act="age" data-d="x">Leeftijd: ' + ageLabel() + "</button>" + (mkOwner() ? '<button class="btn ghost" data-act="feedback" data-d="x">Stuur feedback</button>' : "") + (COLOFON_ON ? '<button class="btn ghost" data-act="colofon" data-d="x">Over de app (colofon)</button>' : "") + (isStandalone() ? "" : '<button class="btn ghost" data-act="install" data-d="x">Zet op beginscherm</button>') + "</div>" +
+      '<button class="btn ghost" data-act="age" data-d="x">Leeftijd: ' + ageLabel() + "</button>" + '<button class="btn ghost" data-act="feedback" data-d="x">Stuur feedback</button>' + (COLOFON_ON ? '<button class="btn ghost" data-act="colofon" data-d="x">Over de app (colofon)</button>' : "") + (isStandalone() ? "" : '<button class="btn ghost" data-act="install" data-d="x">Zet op beginscherm</button>') + "</div>" +
       '<button class="set-danger" data-act="reset" data-d="x">' + icon("trash", 16) + "Voortgang van " + esc(P.name) + " wissen</button>" +
       (sbUser && P.sbId === sbUser.id ? '<button class="set-danger" data-act="acct-delete" data-d="x">' + icon("trash", 16) + "Account verwijderen</button>" : "") +
       legalLinks() + '<button class="btn block" data-d="ok">Klaar</button></div></div>';
@@ -7462,8 +7462,9 @@ return exports;})();
         if (ok) { document.getElementById("fbBody").innerHTML = '<p class="set-info" role="status"><b>Dankjewel!</b> Je bericht is verstuurd.</p><button class="btn gold block" data-d="ok">Klaar</button>'; announce("Je bericht is verstuurd."); }
         else { const b = document.getElementById("fbSend"); if (b) b.disabled = false; st.textContent = "Versturen lukt nu niet. Probeer het later opnieuw."; }
       };
-      try { sb.rpc("feedback_sturen", { p_type: type, p_bericht: txt, p_modus: (P && P.mode) || null, p_scherm: String(screen || ""), p_versie: "v288" }).then(function (r) { fin(!!(r && !r.error && r.data === true)); }, function () { fin(false); }); } catch (err) { fin(false); }
+      try { sb.rpc("feedback_sturen", { p_type: type, p_bericht: txt, p_modus: (P && P.mode) || null, p_scherm: String(screen || ""), p_versie: "v289" }).then(function (r) { fin(!!(r && !r.error && r.data === true)); }, function () { fin(false); }); } catch (err) { fin(false); }
     });
+    if (document.getElementById("bdWrap")) w.style.zIndex = 6000;
     document.body.appendChild(w);
     setTimeout(function () { const t = document.getElementById("fbText"); if (t) try { t.focus(); } catch (e) {} }, 60);
   }
@@ -7729,6 +7730,7 @@ return exports;})();
   }
   function afterDashRender() {
     maybeNurPlayNews(0);
+    maybeFeedbackNews(0);
     maybeKosmosPromo(0);
     clearInterval(dashTick);
     calTickStart();
@@ -7834,9 +7836,24 @@ return exports;})();
     setTimeout(function () {
       if (!P || P.npSeen || screen !== "dash") return;
       if (document.querySelector(".bm-wrap, .dialog-wrap, .bonus-ov, .modal-overlay:not(.hidden), .badges-modal.active")) { if ((tries || 0) < 6) maybeNurPlayNews((tries || 0) + 1); return; }
-      P.npSeen = 1; saveState();
+      P.npSeen = 1; window.__npNow = 1; saveState();
       nurPlayNewsDialog();
     }, 1100);
+  }
+  /* v289: eenmalig per speler: nieuws over de feedbackknop (na het NurPlay-nieuws, nooit twee meldingen tegelijk) */
+  function feedbackNewsDialog() {
+    meldingDialog({ id: "fbNewsWrap", badge: "NIEUW", title: "Feedback", label: "Nieuw in NurSpark: stuur ons je feedback. Heb je een fout gezien of een idee? Je vindt het bij Instellingen, Stuur feedback.",
+      text: "Zag je een fout of heb je een idee? Laat het ons weten.<br>Je vindt het bij <b>Instellingen › Stuur feedback</b>. Wij lezen alles.",
+      go: { label: "Stuur feedback", fn: function () { feedbackDialog(); } }, later: "Later" });
+  }
+  function maybeFeedbackNews(tries) {
+    if (!P || !P.mode || P.fbSeen || !P.npSeen || window.__npNow || screen !== "dash") return;
+    setTimeout(function () {
+      if (!P || P.fbSeen || window.__npNow || screen !== "dash") return;
+      if (document.querySelector(".bm-wrap, .dialog-wrap, .bonus-ov, .modal-overlay:not(.hidden), .badges-modal.active")) { if ((tries || 0) < 4) maybeFeedbackNews((tries || 0) + 1); return; }
+      P.fbSeen = 1; saveState();
+      feedbackNewsDialog();
+    }, 1500);
   }
   /* v237: NurPlay, losse spellen (elk spel een kaart met voorbeeldplaatje) */
   const PLAY_GAMES = [{ id: "darb", name: "Darb an-Nur", ar: "دَرْب النُّور", src: "spel/darb-an-nur.html", sub: "Leid de gelovige door het licht-doolhof, weg van de duisternis.", tags: ["Doolhof", "Groot in beeld", "Geen muziek"], prev: "playPreview" },
@@ -8501,7 +8518,8 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
-    { v: "v288", t: "Feedback: spelers kunnen een fout of idee sturen (nu alleen voor jou zichtbaar in Instellingen); jij leest ze in Mijn studio › Feedback." },
+    { v: "v289", t: "Feedback voor iedereen: een eenmalige melding voor bestaande en nieuwe spelers over de knop Stuur feedback (te testen bij Meldingen testen)." },
+    { v: "v288", t: "Feedback: spelers kunnen een fout of idee sturen via Instellingen; jij leest ze in Mijn studio › Feedback." },
     { v: "v287", t: "Halaqa Spark: klein label ‘Kahoot-versie’ onder de tegel, zodat mensen weten wat het is." },
     { v: "v286", t: "NurPlay: Het web van Thawr staat nu ook bij de losse spellen (en blijft ook als bonuslevel op de kaart)." },
     { v: "v280", t: "Geleerden: in het bericht en op de pagina staat dat je van telefoon naar laptop kunt wisselen." },
@@ -8657,7 +8675,7 @@ return exports;})();
   }
   function viewTests() {
     const ic = function (d) { return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + "</svg>"; };
-    const items = [["welkom", "Welkom (elke dag)", "De groet de eerste keer per dag"], ["welkomlang", "Welkom na lange tijd", "Warm welkom na 3 dagen of langer"], ["gebed", "Gebedstijd", "Het eerstvolgende gebed, zoals de app het toont"], ["jummah", "Jummah Mubarak", "Alleen kijken: er wordt geen cadeau gegeven"], ["streak", "Streak in gevaar", "De herinnering aan je reeks"], ["nurplay", "Nieuw spel (NurPlay)", "Nieuws over Darb an-Nur"]];
+    const items = [["welkom", "Welkom (elke dag)", "De groet de eerste keer per dag"], ["welkomlang", "Welkom na lange tijd", "Warm welkom na 3 dagen of langer"], ["gebed", "Gebedstijd", "Het eerstvolgende gebed, zoals de app het toont"], ["jummah", "Jummah Mubarak", "Alleen kijken: er wordt geen cadeau gegeven"], ["streak", "Streak in gevaar", "De herinnering aan je reeks"], ["nurplay", "Nieuw spel (NurPlay)", "Nieuws over Darb an-Nur"], ["feedback", "Nieuw: feedback", "Nieuws over de feedbackknop"]];
     let h = '<div class="bd"><header class="bd-top"><button class="bd-ib" data-act="bd-ideas-back" aria-label="Terug naar beheer">' + ic('<path d="M15 18l-6-6 6-6"/>') + '</button><div class="bd-tt"><b>Meldingen testen</b><small>Tik om een melding te tonen</small></div><span style="width:44px"></span></header><main class="bd-m">';
     items.forEach(function (x) { h += '<button class="bd-idbtn" data-act="bd-test" data-t="' + x[0] + '"><span>' + x[1] + "<small>" + x[2] + "</small></span></button>"; });
     h += '<p class="bd-note">De melding verschijnt bovenop deze pagina. Sluit hem en je bent weer terug bij de lijst. Dit verandert niets in je voortgang.</p><p class="bd-ft">NurSpark Beheer · alleen zichtbaar voor de beheerder</p></main></div>';
@@ -14210,7 +14228,7 @@ return exports;})();
       case "bd-fbk": { if (!mkOwner()) break; play("click"); bdMode = "feedback"; fbkAsk = false; bdDraw(); const bf = document.querySelector("#bdWrap .bd"); if (bf) bf.scrollTop = 0; break; }
       case "bd-fbk-i": { if (!mkOwner()) break; play("click"); fbkToggle(el.dataset.id); break; }
       case "bd-fbk-clear": { if (!mkOwner()) break; play("click"); fbkClear(); break; }
-      case "feedback": { if (!mkOwner()) break; play("click"); feedbackDialog(); break; }
+      case "feedback": { play("click"); feedbackDialog(); break; }
       case "bd-controle": { if (!mkOwner()) break; play("click"); bdMode = "controle"; bdDraw(); const bc = document.querySelector("#bdWrap .bd"); if (bc) bc.scrollTop = 0; break; }
       case "bd-wachten": { if (!mkOwner()) break; play("click"); bdMode = "wachten"; bdDraw(); const bw = document.querySelector("#bdWrap .bd"); if (bw) bw.scrollTop = 0; break; }
       case "bd-flyers": { if (!mkOwner()) break; play("click"); bdMode = "flyers"; bdDraw(); const bf = document.querySelector("#bdWrap .bd"); if (bf) bf.scrollTop = 0; break; }
@@ -14254,6 +14272,7 @@ return exports;})();
         else if (t === "jummah") jummahDialog(true);
         else if (t === "streak") remindBanner();
         else if (t === "nurplay") nurPlayNewsDialog();
+        else if (t === "feedback") feedbackNewsDialog();
         document.querySelectorAll(".bm-wrap").forEach(function (w) { w.style.zIndex = 6000; });
         break;
       }
