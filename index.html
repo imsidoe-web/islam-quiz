@@ -8546,6 +8546,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v294", t: "Reis: na een gehaald level met schatkist gaat de schatkist helemaal vanzelf open, zonder pop-up of tikken." },
     { v: "v293", t: "Reis: de schatkist bij het laatste level van een land opent nu weer vanzelf in een pop-up (soms bleef hij weg). Een klaarstaande schatkist kun je ook aantikken." },
     { v: "v292", t: "Kruiswoordpuzzels: halverwege elk land een puzzel als afwisseling (Beginner vanaf land 2), met sterren en beloningen als een gewoon level, in alle drie de modi." },
     { v: "v290", t: "Feedbackmelding: knoptekst korter (Schrijf nu), zodat hij netjes in de knop past." },
@@ -12191,6 +12192,8 @@ return exports;})();
     const key = lv + ":" + c.id + ":" + idx;
     if (idx < 0 || chestPopupDone[key]) return;
     chestPopupDone[key] = true;
+    /* v294: geen pop-up met knop meer: de schatkist gaat vanzelf open (het openscherm opent hem na een paar tellen) */
+    play("fanfare"); openChest(c.id, idx); return;
     const w = document.createElement("div"); w.className = "dialog-wrap";
     w.innerHTML = '<div class="dialog star-chest-dlg" role="dialog" aria-modal="true" aria-labelledby="cpT"><div class="sc-art" aria-hidden="true"><svg viewBox="-50 -62 100 92" width="190" height="175"><g class="chest-bounce">' + chest(0, 6, "closed", 1.45, "stop") + "</g></svg></div>" +
       '<h3 id="cpT">Een schatkist! 🎉</h3><p>Je hebt level ' + (jOff(lv, c.id) + idx + 1) + ' gehaald. Masha’Allah! Open je schatkist en speel de minigame.</p>' +
