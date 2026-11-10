@@ -1719,6 +1719,8 @@ body.radgame { overflow: hidden; } body.radgame #app { max-width: 560px; padding
 .bz-tile.fr-paleis .avatar { box-shadow: 0 0 0 2px #f0c75e, 0 0 0 4px #1f8f6a, 0 0 0 6px #f0c75e; }
 .bz-fr b { font-size: .72rem; } .bz-fr small { font-size: .68rem; color: #cfe8da; font-weight: 800; } .bz-fr[aria-pressed="true"] small { color: #a8f0c6; }
 .bz-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.bz-missline { font-size: .85rem; font-weight: 900; color: #ffe08a; margin: 8px 0 6px; }
+.bz-kc { position: relative; } .bz-miss-tag { position: absolute; top: 4px; left: 4px; z-index: 1; background: #ffb703; color: #3b2410; font-size: .58rem; font-weight: 900; padding: 2px 6px; border-radius: 999px; box-shadow: 0 1px 2px rgba(0,0,0,.35); }
 .bz-kc { appearance: none; border: 3px solid #f0c75e; border-radius: 12px; background: #fffaf0; padding: 0 0 4px; cursor: pointer; overflow: hidden; display: grid; gap: 2px; font: inherit; }
 .bz-kc svg { width: 100%; aspect-ratio: 1; display: block; } .bz-kc small { font-size: .62rem; font-weight: 800; color: #3b2410; line-height: 1.1; padding: 0 2px; }
 .bz-well { display: flex; gap: 10px; align-items: center; } .bz-well b { color: #ffe08a; white-space: nowrap; }
@@ -8546,6 +8548,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v296", t: "Bazaar: boven de kwartetkaarten staat nu \"Dit zijn de kaarten die jij nog mist\", en elke kaart heeft een label \"Mis je\"." },
     { v: "v295", t: "Kruiswoordpuzzels: halverwege elk land is één level een verrassingspuzzel (Beginner vanaf land 2), zonder aankondiging op de kaart. Sterren en beloningen als een gewoon level, in alle drie de modi." },
     { v: "v294", t: "Reis: na een gehaald level met schatkist gaat de schatkist helemaal vanzelf open, zonder pop-up of tikken." },
     { v: "v293", t: "Reis: de schatkist bij het laatste level van een land opent nu weer vanzelf in een pop-up (soms bleef hij weg). Een klaarstaande schatkist kun je ook aantikken." },
@@ -12321,8 +12324,8 @@ return exports;})();
       if (!miss.length) h += '<p class="bz-own">Je album is compleet. MashaAllah!</p>';
       else if (today) h += '<p class="bz-own">Je hebt vandaag al een kaart gekocht. Morgen kan het weer.</p>';
       else {
-        h += '<div class="bz-cards">';
-        miss.slice(0, 8).forEach(function (k) { h += '<button class="bz-kc" data-act="bz-buy" data-k="card" data-id="' + k + '" aria-label="Kaart ' + esc(cardTitle(k)) + ' kopen voor ' + BZ_CARD_PRICE + ' edelstenen">' + artSvg(k, true) + "<small>" + esc(cardTitle(k)) + "</small></button>"; });
+        h += '<p class="bz-missline">Dit zijn de kaarten die jij nog mist (' + miss.length + '):</p><div class="bz-cards">';
+        miss.slice(0, 8).forEach(function (k) { h += '<button class="bz-kc" data-act="bz-buy" data-k="card" data-id="' + k + '" aria-label="Kaart ' + esc(cardTitle(k)) + ' kopen voor ' + BZ_CARD_PRICE + ' edelstenen">' + '<span class="bz-miss-tag">Mis je</span>' + artSvg(k, true) + "<small>" + esc(cardTitle(k)) + "</small></button>"; });
         h += "</div>";
       }
       h += '<p class="bz-own">' + albumOwned(lv) + "/" + albumTotal(lv) + " kaarten in je " + esc(modeName(lv)) + "-album</p></div>";
