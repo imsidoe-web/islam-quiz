@@ -2120,6 +2120,7 @@ body.dashfull { background: #0f2e22; color: #f4efe2; }
 .d-tile.hub .hb-t .d-k.ar { color: #2a1d08; font-size: 2rem; line-height: 1.25; letter-spacing: 0; }
 .d-tile.hub .hb-t b { font-size: 1.4rem; color: #1b4332; }
 .d-tile.hub small { color: #5a4a22; } .d-tile.hub .hb-ch { flex: none; font-size: 2rem; font-weight: 900; color: #5a4a22; line-height: 1; }
+.d-tile small.d-kahoot { margin-top: auto; font-size: .68rem; font-weight: 700; color: #8fb8a2; opacity: .9; }   /* v287: klein label onder Halaqa Spark */
 .d-tile.kids { border: 2px dashed #6f9f86; min-height: 150px; cursor: default; }
 .d-card { background: #1b4332; border: 2px solid #2d6a4f; border-radius: 20px; padding: 14px 16px; color: #f4efe2; }
 .d-card h2 { margin: 0; font-size: 1.05rem; font-weight: 900; color: #fff; }
@@ -7661,7 +7662,7 @@ return exports;})();
       '<button class="d-tile hub" data-act="hub"><span class="hb-ic">' + dIc("book", "#1b4332", 40) + '</span><span class="hb-t"><span class="d-k ar" lang="ar" dir="rtl">بيت العلم</span><b>Bayt al-‘Ilm</b><small>' + (nf ? "Mijn foutjes: " + nf + " · du’a-boekje" : "Foutjes en du’a-boekje") + '</small></span><span class="hb-ch" aria-hidden="true">›</span></button>' +
       '<button class="d-tile plt" data-act="play" aria-label="NurPlay, losse spellen voor tussendoor. Openen"><span class="plt-ic">' + dIc("pad", "#ffd54f", 36) + '</span><span class="plt-t"><b>NurPlay</b><small>Losse spellen voor tussendoor</small></span><span class="plt-ch" aria-hidden="true">›</span></button>' +
       (!mkOwner() ? "" : '<button class="d-tile kd" data-act="kd" aria-label="Koran-dagboek. Vers voor vers lezen en reflecteren. Alleen voor jou zichtbaar. Openen"><img src="journaal/lezer.webp" alt="" width="1024" height="572" loading="lazy"><span class="kd-badge" aria-hidden="true">In ontwikkeling</span><span class="kd-tx"><b>Koran-dagboek</b><small>Vers voor vers lezen en reflecteren</small></span></button>') +
-      '<button class="d-tile" data-act="klas">' + "<span class=\"d-top\">" + dIc("book", "#ffd54f", 30) + "<span class=\"d-k ar\" lang=\"ar\" dir=\"rtl\">حلقة سبارك</span></span><b>Halaqa Spark</b><small>Leer samen met je klas</small></button>" +
+      '<button class="d-tile" data-act="klas">' + "<span class=\"d-top\">" + dIc("book", "#ffd54f", 30) + "<span class=\"d-k ar\" lang=\"ar\" dir=\"rtl\">حلقة سبارك</span></span><b>Halaqa Spark</b><small>Leer samen met je klas</small><small class=\"d-kahoot\">Kahoot-versie</small></button>" +
       '<button class="d-tile" data-act="rad">' + '<span class="d-top">' + dIc("wheel", "#ffd54f", 30) + '<span class="d-k ar" lang="ar" dir="rtl">عجلة العلم</span></span><b>Ajalat al-‘Ilm</b><small>Rad van Kennis</small></button>' +
       '<button class="d-tile" data-act="group">' + "<span class=\"d-top\">" + dIc("users", "#ffd54f", 30) + "<span class=\"d-k ar\" lang=\"ar\" dir=\"rtl\">مسابقة</span></span><b>Musabaqah</b><small>Groep / Duel</small></button>" +
       '<button class="d-tile kids" disabled aria-label="KidsZone, komt binnenkort">' + dIc("star", "#ffd54f") + '<small class="d-k">KIDSZONE</small><b>[Naam volgt]</b><small>Binnenkort, insha’Allah</small></button>' +
