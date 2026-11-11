@@ -9995,6 +9995,10 @@ return exports;})();
     const W = 2 * rx + 24, H = W * 285 / 320;
     return gShadow(cx + 2, cy + H * 0.36, W * 0.47, H * 0.11) + gImg("oase", cx - W / 2, cy - H * 0.58, W, H) + sparkle(cx - rx * 0.2, cy - ry * 0.2, 5, 0.3) + sparkle(cx + rx * 0.4, cy + ry * 0.35, 4, 1);
   }
+  function gPondAt(cx, cy, W) {   /* proef: kleinere vijver op een vaste plek naast de route */
+    const H = W * 285 / 320;
+    return gShadow(cx + 2, cy + H * 0.36, W * 0.47, H * 0.11) + gImg("oase", cx - W / 2, cy - H * 0.58, W, H) + sparkle(cx - W * 0.2, cy - H * 0.1, 5, 0.3) + sparkle(cx + W * 0.25, cy + H * 0.12, 4, 1);
+  }
   function gLantern(x, y, k) {
     const H = 80 * k, W = H * 120 / 320;
     return '<g transform="translate(' + x + " " + y + ')">' + gShadow(W * 0.1, 71 * k, W * 0.5, 3.6 * k) +
@@ -12899,7 +12903,7 @@ return exports;})();
       gem(205, 640, "#ffc44f", 0) + gem(300, 500, "#35d0ff", .4) + gem(150, 510, "#7dff6a", .8) + gem(180, 330, "#ffc928", .2) + gem(55, 450, "#88c7ff", .6) + gem(310, 735, "#ff9f1c", 1);
   }
   function groundFlowers() { return flowers([[130, 590], [150, 610], [20, 650], [48, 670], [175, 770], [215, 740], [330, 480], [350, 500], [200, 330], [30, 440], [230, 280], [155, 345], [335, 610], [10, 760], [100, 760]]); }
-  function pondsAll(th) { return pond(262, 668, 80, 32, th) + pond(72, 524, 58, 24, th) + pond(62, 292, 40, 16, th); }
+  function pondsAll(th) { if (glansOn) return gPondAt(294, 556, 100) + gPondAt(264, 328, 84); return pond(262, 668, 80, 32, th) + pond(72, 524, 58, 24, th) + pond(62, 292, 40, 16, th); }
   function palms(th, extra) { return palm(20, 590, 0.9, false) + palm(342, 305, 0.6, true) + palm(150, 300, 0.55, false) + palm(18, 380, 0.7, false) + palm(215, 500, 0.5, true) + (extra || ""); }
 
   /* ── de vijf landen ── */
@@ -12937,11 +12941,11 @@ return exports;})();
         cols.forEach(function (c, i) { h += pillar(274 + i * 17, 206, 9, 34, c, i + 1); });
         return h + lbl(308, 226, "5 Zuilen");
       },
-      mr: function (th) { return fountain(312, 452, 1.15) + lbl(312, 474, "Wudhu"); },
+      mr: function (th) { return glansOn ? fountain(78, 460, 0.875) + lbl(98, 392, "Wudhu") : fountain(312, 452, 1.15) + lbl(312, 474, "Wudhu"); },
       front: function (th) {
         return pondsAll(th) + groundFlowers() + palm(20, 590, 0.9, false) + palm(342, 305, 0.6, true) + palm(150, 300, 0.55, false) + palm(18, 380, 0.7, false) + palm(215, 500, 0.5, true) +
           star8(60, 760, 12, "#ff7a59", 0) + star8(300, 700, 11, "#38bdf8", .5) + star8(190, 420, 10, "#5caef6", 1) + star8(330, 520, 9, "#4cd964", .3) + star8(40, 610, 9, "#ffc95d", .8) +
-          commonProps(th) + fountain(138, 592, 0.85) + dateBowl(246, 764, 1);
+          commonProps(th) + (glansOn ? "" : fountain(138, 592, 0.85)) + dateBowl(246, 764, 1);
       },
     },
     seerah: {
