@@ -6928,6 +6928,8 @@ return exports;})();
   let draftColor = AVATAR_COLORS[0];
   let journeyReturn = false;   /* quiz gestart vanaf De Reis: na afloop terug naar de kaart */
   let journeyLand = null;      /* index van het getoonde land (null = eerste onafgeronde land) */
+  /* PROEF (alleen op het testadres van de glans-proef, nooit op nurspark.app): alle landen open en je start in Land 2 */
+  const PROEF_TEST = /\.vercel\.app$/i.test(location.hostname) && location.hostname.indexOf("reiskaart-glans") !== -1;
   const journeyPos = {};       /* laatst getoonde stop per land, voor de sprong-animatie */
   let boardLevel = "junior";   /* wordt bij het openen van het scorebord op de actieve modus gezet */
   let flyerPending = !!(P && P.mode);   /* toon bij aankomst op de kaart een motivatieflyer */
@@ -10322,6 +10324,7 @@ return exports;})();
   /* Een land staat open zodra het vorige land 100% voltooid is (land 1 is altijd open).
      Een land waarin al voortgang zit (oudere spelers) blijft open. Vrij bladeren tussen de landen mag altijd. */
   function jLandOpen(level, catId) {
+    if (PROEF_TEST) return true;
     const LS = landsFor(level), ci = LS.findIndex(function (x) { return x.id === catId; });
     if (ci <= 0) return true;
     if (jLandStats(level, LS[ci - 1].id).done) return true;
@@ -13594,6 +13597,7 @@ return exports;})();
   function landDone(level, catId) { return jLandStats(level, catId).done; }
   function defaultLand() {
     const LS = landsFor(P.mode);
+    if (PROEF_TEST) return Math.min(1, LS.length - 1);
     for (let i = 0; i < LS.length; i++) { if (!landDone(P.mode, LS[i].id)) return i; }
     /* alles uitgespeeld: je staat altijd aan het eind (laatste land), ook als je terugkomt om levels opnieuw te spelen */
     return Math.max(0, LS.length - 1);
