@@ -12900,7 +12900,7 @@ return exports;})();
   }
   /* ── gemeenschappelijk voorgrond-decor ── */
   function commonProps(th) {
-    return lantern(316, 600, "#ffc95d", 0.8) + lantern(18, 655, "#35d0ff", 0.8) + lantern(160, 250, "#88c7ff", 0.8) + lantern(325, 335, "#7dff6a", 0.75) + lantern(25, 440, "#ffb703", 0.7) +
+    return lantern(316, 600, "#ffc95d", 0.8) + lantern(18, 655, "#35d0ff", 0.8) + (glansOn ? lantern(200, 276, "#88c7ff", 0.65) + palm(158, 436, 0.4, false) : lantern(160, 250, "#88c7ff", 0.8)) + lantern(325, 335, "#7dff6a", 0.75) + lantern(25, 440, "#ffb703", 0.7) +
       oilLamp(240, 470, 0.7) + oilLamp(48, 725, 0.75) +
       gem(205, 640, "#ffc44f", 0) + gem(300, 500, "#35d0ff", .4) + gem(150, 510, "#7dff6a", .8) + gem(180, 330, "#ffc928", .2) + gem(55, 450, "#88c7ff", .6) + gem(310, 735, "#ff9f1c", 1);
   }
