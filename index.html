@@ -12900,8 +12900,7 @@ return exports;})();
   }
   /* ── gemeenschappelijk voorgrond-decor ── */
   function commonProps(th) {
-    return (glansOn ? lantern(320, 600, "#ffc95d", 0.8) + lantern(110, 695, "#35d0ff", 0.8) + lantern(24, 490, "#88c7ff", 0.8) + lantern(145, 391, "#7dff6a", 0.75) + lantern(13, 412, "#ffb703", 0.7) :
-      lantern(316, 600, "#ffc95d", 0.8) + lantern(18, 655, "#35d0ff", 0.8) + lantern(160, 250, "#88c7ff", 0.8) + lantern(325, 335, "#7dff6a", 0.75) + lantern(25, 440, "#ffb703", 0.7)) +
+    return lantern(316, 600, "#ffc95d", 0.8) + lantern(18, 655, "#35d0ff", 0.8) + lantern(160, 250, "#88c7ff", 0.8) + lantern(325, 335, "#7dff6a", 0.75) + lantern(25, 440, "#ffb703", 0.7) +
       oilLamp(240, 470, 0.7) + oilLamp(48, 725, 0.75) +
       gem(205, 640, "#ffc44f", 0) + gem(300, 500, "#35d0ff", .4) + gem(150, 510, "#7dff6a", .8) + gem(180, 330, "#ffc928", .2) + gem(55, 450, "#88c7ff", .6) + gem(310, 735, "#ff9f1c", 1);
   }
@@ -12946,7 +12945,7 @@ return exports;})();
       },
       mr: function (th) { return glansOn ? fountain(78, 460, 0.875) + lbl(98, 392, "Wudhu") : fountain(312, 452, 1.15) + lbl(312, 474, "Wudhu"); },
       front: function (th) {
-        return pondsAll(th) + groundFlowers() + (glansOn ? palm(80, 730, 0.9, false) + palm(342, 333, 0.6, true) + palm(328, 439, 0.55, true) + palm(10, 396, 0.7, false) + palm(208, 591, 0.5, true) : palm(20, 590, 0.9, false) + palm(342, 305, 0.6, true) + palm(150, 300, 0.55, false) + palm(18, 380, 0.7, false) + palm(215, 500, 0.5, true)) +
+        return pondsAll(th) + groundFlowers() + palm(20, 590, 0.9, false) + palm(342, 305, 0.6, true) + (glansOn ? palm(328, 439, 0.55, true) : palm(150, 300, 0.55, false)) + palm(18, 380, 0.7, false) + (glansOn ? palm(216, 583, 0.5, true) : palm(215, 500, 0.5, true)) +
           star8(60, 760, 12, "#ff7a59", 0) + star8(300, 700, 11, "#38bdf8", .5) + star8(190, 420, 10, "#5caef6", 1) + star8(330, 520, 9, "#4cd964", .3) + star8(40, 610, 9, "#ffc95d", .8) +
           commonProps(th) + (glansOn ? "" : fountain(138, 592, 0.85)) + dateBowl(246, 764, 1);
       },
