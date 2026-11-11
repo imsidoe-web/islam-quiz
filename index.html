@@ -896,6 +896,14 @@ table.board thead th .avatar { display: grid; margin: 0 auto; }
 @keyframes rgMote { 0% { opacity: 0; transform: translate(0, 0); } 30% { opacity: .9; } 100% { opacity: 0; transform: translate(var(--dx), -7px); } }
 .rg-off .rg-sway, .rg-off .rg-tw, .rg-off .rg-drop, .rg-off .rg-ring, .rg-off .rg-wave, .rg-off .rg-bob, .rg-off .rg-glow, .rg-off .rg-mote { animation-play-state: paused; }
 @media (prefers-reduced-motion: reduce) { .rg-tw, .rg-drop, .rg-ring, .rg-wave, .rg-mote { animation: none; display: none; } .rg-bob { animation: none; } .rg-glow { animation: none; opacity: .8; } }
+/* ── Reiskaart-glans ronde 3 (proef Land 2): diepte bij scrollen. Zonder script: de browser doet het zelf (waar dat kan); lucht en verre heuvels blijven iets achter ── */
+@supports (animation-timeline: view()) { @media (prefers-reduced-motion: no-preference) {
+  .jsvg.rg-map { view-timeline: --rgmap block; }
+  .rg-px-sky { animation: rgPxSky linear both; animation-timeline: --rgmap; }
+  .rg-px-far { animation: rgPxFar linear both; animation-timeline: --rgmap; }
+  @keyframes rgPxSky { from { transform: translateY(-20px); } to { transform: translateY(0); } }
+  @keyframes rgPxFar { from { transform: translateY(-9px); } to { transform: translateY(0); } }
+} }
 .badge-icon { width: 72px !important; height: 72px !important; border: 0 !important; background: none !important; margin-bottom: 4px; }
 .badge-card.locked { opacity: .6; filter: none; }
 .badge-card.unlocked.grand { background: linear-gradient(145deg, #1a344a 0%, #2a557a 100%); border-color: #ffd54f; }
@@ -5900,6 +5908,60 @@ return exports;})();
   };
   function play(name) { if (S.sound) { try { sfx[name](); } catch (e) {} } }
 
+  /* ── Reiskaart-glans ronde 3 (proef Land 2): zachte woestijnsfeer. Alleen WebAudio, geen bestanden: laag windsuizen + heel zacht water.
+     Regels: volgt "Geluid" én de eigen schakelaar; begint pas na een echte tik; uit bij voorlezen, schermlezer-bediening en minder-beweging;
+     stopt als de app naar de achtergrond gaat of Land 2 uit beeld is; veel zachter dan de quizgeluiden (piek ±0,04 tegen 0,15). ── */
+  const rgAmb = (function () {
+    let live = null, want = false, tapped = false, assist = false, lastPd = 0, lastKey = 0;
+    function noise(c, secs, brown) {
+      const n = Math.floor(c.sampleRate * secs), F = Math.floor(c.sampleRate * 0.3), x = new Float32Array(n + F);
+      let last = 0;
+      for (let i = 0; i < n + F; i++) { const w = Math.random() * 2 - 1; if (brown) { last = (last + 0.02 * w) / 1.02; x[i] = last * 3.5; } else x[i] = w; }
+      const buf = c.createBuffer(1, n, c.sampleRate), d = buf.getChannelData(0);
+      for (let i = 0; i < n; i++) d[i] = i < F ? x[i] * (i / F) + x[n + i] * (1 - i / F) : x[i];   /* naadloze lus */
+      return buf;
+    }
+    function lfo(c, hz, depth, target, list) { const o = c.createOscillator(), g = c.createGain(); o.frequency.value = hz; g.gain.value = depth; o.connect(g); g.connect(target); o.start(); list.push(o); }
+    function ok() {
+      return want && tapped && !assist && S.sound && S.amb !== false && !S.speak && document.visibilityState === "visible" &&
+        !(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    }
+    function start() {
+      const c = ctx(); if (!c) return;
+      const srcs = [], master = c.createGain(), t = c.currentTime;
+      master.gain.setValueAtTime(0.0001, t); master.gain.exponentialRampToValueAtTime(1, t + 2.5); master.connect(c.destination);
+      /* wind: bruine ruis door een laag filter, die langzaam aanzwelt en wegzakt */
+      const w = c.createBufferSource(); w.buffer = noise(c, 5, true); w.loop = true;
+      const lp = c.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 340; lp.Q.value = 0.6;
+      const wg = c.createGain(); wg.gain.value = 0.02;
+      w.connect(lp); lp.connect(wg); wg.connect(master); w.start(); srcs.push(w);
+      lfo(c, 0.07, 0.009, wg.gain, srcs); lfo(c, 0.031, 0.006, wg.gain, srcs); lfo(c, 0.11, 110, lp.frequency, srcs);
+      /* water: heel zacht gekabbel (witte ruis door een smal filter) */
+      const s = c.createBufferSource(); s.buffer = noise(c, 3, false); s.loop = true;
+      const bp = c.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = 2300; bp.Q.value = 1.1;
+      const sg = c.createGain(); sg.gain.value = 0.0045;
+      s.connect(bp); bp.connect(sg); sg.connect(master); s.start(); srcs.push(s);
+      lfo(c, 1.3, 0.0015, sg.gain, srcs); lfo(c, 0.37, 0.0015, sg.gain, srcs); lfo(c, 0.9, 500, bp.frequency, srcs);
+      live = { master: master, srcs: srcs };
+    }
+    function stop(fast) {
+      const L = live; if (!L) return; live = null;
+      const c = audioCtx, fade = fast ? 0.05 : 0.8;
+      try { const t = c.currentTime; L.master.gain.cancelScheduledValues(t); L.master.gain.setValueAtTime(Math.max(0.0001, L.master.gain.value), t); L.master.gain.exponentialRampToValueAtTime(0.0001, t + fade); } catch (e) {}
+      setTimeout(function () { L.srcs.forEach(function (n) { try { n.stop(); } catch (e) {} }); try { L.master.disconnect(); } catch (e) {} }, fade * 1000 + 60);
+    }
+    function sync() { try { if (ok()) { if (!live) start(); } else stop(document.visibilityState !== "visible"); } catch (e) {} }
+    document.addEventListener("pointerdown", function (e) { lastPd = Date.now(); if (e.isTrusted && e.pointerType) { tapped = true; if (want) setTimeout(sync, 0); } }, true);
+    document.addEventListener("pointerup", function () { lastPd = Date.now(); }, true);
+    document.addEventListener("keydown", function () { lastKey = Date.now(); }, true);
+    document.addEventListener("keyup", function () { lastKey = Date.now(); }, true);
+    /* een "klik" zonder tik of toets komt van een schermlezer (TalkBack/VoiceOver-bediening): dan blijft de sfeer deze sessie uit */
+    document.addEventListener("click", function (e) { if (e.isTrusted && Date.now() - lastPd > 1500 && Date.now() - lastKey > 1500) { assist = true; sync(); } }, true);
+    document.addEventListener("visibilitychange", sync);
+    window.addEventListener("pagehide", function () { stop(true); });
+    return { show: function (v) { want = !!v; sync(); }, sync: sync };
+  })();
+
   /* ───────────── Presentator (echte stemclips) ─────────────
      Zet mp3-bestanden in de map audio/ met de namen uit de opnamelijst (bijv. goed-1.mp3, goed-2.mp3 …).
      Ontbreekt een bestand? Dan valt de app stil terug op de gewone geluidjes. */
@@ -7443,6 +7505,7 @@ return exports;})();
       '<div class="set-top"><h3 id="a11yT">' + icon("gear", 22) + "Instellingen</h3><button class=\"set-x\" data-d=\"x\" aria-label=\"Instellingen sluiten\">×</button></div>" +
       '<div class="set-body">' +
       row('id="optSound"' + (S.sound ? " checked" : ""), "Geluid", "Effecten en de stem van de presentator") +
+      row('id="optAmb"' + (S.amb !== false ? " checked" : ""), "Woestijnsfeer (proef)", "Zachte wind en water op de reiskaart van Land 2. Werkt alleen als Geluid aan staat.") +
       (P && P.mode === "expert" ? row('data-act="toggle-timer"' + (S.timer ? " checked" : ""), "Timer per vraag", TIMER_SECONDS + " seconden per vraag (Ervaren)") : "") +
       row('data-act="toggle-hg"' + (S.hgOff ? "" : " checked"), "Zandloper-levels", "Elk " + HG_EVERY + "e level heeft een tijd per vraag (" + (P ? HG_SECS[P.mode] : 20) + " sec). Uitzetten kan altijd.") +
       row('data-act="toggle-kos"' + (S.look === "kosmos" ? " checked" : ""), "Kosmos-look (tieners)", "Een sterrenhemel met neon voor de reiskaart, de vragen en de uitslag. Speciaal voor tieners.") +
@@ -7468,7 +7531,8 @@ return exports;})();
       (sbUser && P.sbId === sbUser.id ? '<button class="set-danger" data-act="acct-delete" data-d="x">' + icon("trash", 16) + "Account verwijderen</button>" : "") +
       legalLinks() + '<button class="btn block" data-d="ok">Klaar</button></div></div>';
     w.addEventListener("change", function (e) {
-      if (e.target.id === "optSound") { S.sound = e.target.checked; if (!S.sound) voiceStop(); }
+      if (e.target.id === "optSound") { S.sound = e.target.checked; if (!S.sound) voiceStop(); rgAmb.sync(); }
+      if (e.target.id === "optAmb") { S.amb = e.target.checked; rgAmb.sync(); }
       if (e.target.id === "optSpeak") {
         S.speak = e.target.checked;
         if (S.speak) { S.autoNext = false; const a = document.getElementById("optAuto"); if (a) a.checked = false; if (!("speechSynthesis" in window)) { announce("Voorlezen wordt niet ondersteund in deze browser."); } else speak("Voorlezen staat aan."); }
@@ -9135,7 +9199,7 @@ return exports;})();
     if (screen === "dash" || screen === "hub" || screen === "play" || screen === "lab" || screen === "labroom" || screen === "labquiz" || screen === "fout" || screen === "dua" || screen === "today" || screen === "prog" || screen === "quran" || screen === "qread" || screen === "qj" || screen === "kd") document.body.classList.add("dashfull");
     if (screen === "rad" && rad && rad.phase !== "intro" && rad.phase !== "end") document.body.classList.add("radgame");
     if (kosmosOn() && KOS_SCREENS.indexOf(screen) !== -1) document.body.classList.add("kosmos");
-    if (screen === "journey") afterJourneyRender();
+    if (screen === "journey") afterJourneyRender(); else rgAmb.show(false);
     duffUi();
     a11yAfter(prevA);
   }
@@ -10037,7 +10101,10 @@ return exports;})();
     return '<g transform="translate(' + x + " " + y + ')">' + gShadow(W * 0.1, 71 * k, W * 0.5, 3.6 * k) +
       '<defs><radialGradient id="rgLg"><stop offset="0" stop-color="#fff6c8" stop-opacity=".95"/><stop offset=".5" stop-color="#ffd36a" stop-opacity=".6"/><stop offset="1" stop-color="#ffd36a" stop-opacity="0"/></radialGradient></defs>' +
       '<circle cx="' + gx + '" cy="' + gy + '" r="' + (36 * k).toFixed(1) + '" fill="url(#rgLg)" opacity=".8" class="rg-glow" style="animation-duration:' + (3 + ((x * 3 + y) % 11) / 10).toFixed(1) + "s;animation-delay:-" + (((x + y * 2) % 30) / 10).toFixed(1) + 's"/>' +
-      gImg("lantaarn", -W * 0.3, -8 * k, W, H) + "</g>";
+      gImg("lantaarn", -W * 0.3, -8 * k, W, H) +
+      /* ronde 3: in de nacht (Ervaren) brandt de lantaarn: zacht warm goud licht, klein en helemaal binnen het eigen plaatje */
+      (curTh && !curTh.day ? '<defs><radialGradient id="rgLn"><stop offset="0" stop-color="#fffbe0" stop-opacity=".95"/><stop offset=".45" stop-color="#ffd978" stop-opacity=".7"/><stop offset="1" stop-color="#ffb93c" stop-opacity="0"/></radialGradient></defs>' +
+        '<ellipse cx="' + (W * 0.45).toFixed(1) + '" cy="' + (34.4 * k).toFixed(1) + '" rx="' + (6.6 * k).toFixed(1) + '" ry="' + (9.4 * k).toFixed(1) + '" fill="url(#rgLn)" class="rg-glow" style="animation-duration:' + (2.6 + ((x + y * 3) % 9) / 10).toFixed(1) + "s;animation-delay:-" + (((x * 2 + y) % 20) / 10).toFixed(1) + 's"/>' : "") + "</g>";
   }
   function gFountain(x, y, k) {   /* ronde 2: spuitend water (druppels omhoog en neer) en kringetjes op het water, alles binnen de fontein */
     const W = 96, H = W * 288 / 320;
@@ -13124,8 +13191,9 @@ return exports;})();
       '<pattern id="' + uid + 'tile" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M15 2 L28 15 L15 28 L2 15Z" fill="#26c6da" opacity=".55"/><path d="M15 8 L22 15 L15 22 L8 15Z" fill="#fff" opacity=".55"/><circle cx="15" cy="15" r="3.2" fill="#ffd54f"/><path d="M0 0 H6 L0 6Z M30 0 H24 L30 6Z M0 30 H6 L0 24Z M30 30 H24 L30 24Z" fill="#ff7a59" opacity=".6"/></pattern></defs>';
     if (kos) h += kosWorldBg(uid, c); else {
     h += '<rect width="360" height="800" fill="url(#' + uid + 'sky)"/>';
-    h += L.sky(th);
-    h += '<path d="M0 235 C 80 190, 160 225, 240 200 S 340 205, 360 190 L360 800 L0 800Z" fill="' + th.far + '"/>';
+    const rgPx = c.id === "zuilen";   /* ronde 3: lucht en verre heuvels in een eigen laag (diepte bij scrollen) */
+    h += rgPx ? '<g class="rg-px-sky">' + L.sky(th) + "</g>" : L.sky(th);
+    h += '<path' + (rgPx ? ' class="rg-px-far"' : "") + ' d="M0 235 C 80 190, 160 225, 240 200 S 340 205, 360 190 L360 800 L0 800Z" fill="' + th.far + '"/>';
     glansOn = c.id === "zuilen"; /* proef: alleen Land 2 */
     h += L.tl(th) + L.tr(th);
     h += '<path d="M0 420 C 90 365, 170 405, 250 372 S 340 355, 360 370 L360 800 L0 800Z" fill="' + th.mid + '"/>';
@@ -13854,8 +13922,9 @@ return exports;})();
     if (rgObs) { rgObs.disconnect(); rgObs = null; }
     if ("IntersectionObserver" in window) {
       const rgMaps = document.querySelectorAll(".jsvg.rg-map");
-      if (rgMaps.length) { rgObs = new IntersectionObserver(function (ents) { ents.forEach(function (e) { e.target.classList.toggle("rg-off", !e.isIntersecting); }); }, { rootMargin: "80px 0px" }); rgMaps.forEach(function (el) { rgObs.observe(el); }); }
-    }
+      if (rgMaps.length) { rgObs = new IntersectionObserver(function (ents) { ents.forEach(function (e) { e.target.classList.toggle("rg-off", !e.isIntersecting); }); rgAmb.show(!!document.querySelector(".jsvg.rg-map:not(.rg-off)")); }, { rootMargin: "80px 0px" }); rgMaps.forEach(function (el) { rgObs.observe(el); }); }
+      else rgAmb.show(false);
+    } else rgAmb.show(false);
     hulpBanner();
     if (starChestPending && !document.querySelector(".dialog-wrap, #bcel")) { const sc = starChestPending; starChestPending = null; setTimeout(function () { if (screen === "journey") starChestDialog(sc); }, 700); }
     else setTimeout(chestPopupCheck, 900);
@@ -14510,7 +14579,7 @@ return exports;})();
     switch (act) {
       case "pick-mode": chooseMode(el.dataset.mode, function () { screen = pendingCode ? "group" : "journey"; flyerPending = true; render(); }); break;
       case "switch-mode": modePickerDialog(); break;
-      case "toggle-sound": S.sound = !S.sound; if (!S.sound) voiceStop(); saveState(); if (S.sound) play("click"); render(); break;
+      case "toggle-sound": S.sound = !S.sound; if (!S.sound) voiceStop(); saveState(); rgAmb.sync(); if (S.sound) play("click"); render(); break;
       case "go-next-tier": play("click"); stopTimer(); startQuiz("category", result.catId, result.next); break;
       case "start-daily": play("click"); startQuiz("daily"); break;
       case "answer": answer(parseInt(el.dataset.pos, 10)); break;
