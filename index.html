@@ -10021,7 +10021,9 @@ return exports;})();
   }
   function gMoskee(cx, bottom, W) {
     const H = W * 350 / 300;
-    return gShadow(cx, bottom - 2, W * 0.42, 4) + gImg("moskee", cx - W / 2, bottom - H, W, H);
+    /* grond (zandvlek) onder de moskee zodat hij niet zweeft; gespiegeld zodat de ingang naar de route kijkt */
+    return '<ellipse cx="' + cx + '" cy="' + (bottom - 3) + '" rx="' + (W * 0.56).toFixed(1) + '" ry="11" fill="#f0c06a"/><ellipse cx="' + cx + '" cy="' + (bottom - 3) + '" rx="' + (W * 0.56).toFixed(1) + '" ry="11" fill="none" stroke="#fff3c8" stroke-opacity=".5" stroke-width="1.5"/>' +
+      gShadow(cx, bottom - 1, W * 0.4, 5) + '<g transform="translate(' + (2 * cx) + ' 0) scale(-1 1)">' + gImg("moskee", cx - W / 2, bottom - H, W, H) + "</g>";
   }
   function gZuilen(cx, bottom, W) {
     const H = W * 303 / 420;
@@ -12956,9 +12958,9 @@ return exports;})();
         expert: { sky: ["#0b2545", "#13547a", "#d9a441", "#ffd98a"], far: "#d8a95a", mid: "#c28a42", near: "#9c6a30", meadow: "#e0b040", meadow2: "#12889a", water: "#1aa6bf", water2: "#7fe9ff", leaf: "#2fae78", leaf2: "#1b8a5a", trunk: "#6b4228", path: "#f8e4bc", edge: "#c98a52", wall: "#f3e6c8", dome: "#2bbfa8", day: false },
       },
       sky: function (th) { return th.day ? skyDay(th, { sx: 290, sy: 66 }) : skyNight(th); },
-      tl: function (th) { if (glansOn) return gMoskee(72, 232, 100) + lbl(72, 248, "Moskee"); return domeMosque(72, 206, 1.15, th.wall, th.dome, th.day ? "#5cabf0" : "#ffe27a", true) + lbl(72, 226, "Moskee"); },
+      tl: function (th) { if (glansOn) return gMoskee(62, 240, 94) + lbl(62, 264, "Moskee"); return domeMosque(72, 206, 1.15, th.wall, th.dome, th.day ? "#5cabf0" : "#ffe27a", true) + lbl(72, 226, "Moskee"); },
       tr: function (th) {
-        if (glansOn) return gZuilen(314, 208, 92) + lbl(314, 226, "5 Zuilen");
+        if (glansOn) return gZuilen(314, 208, 92) + lbl(314, 136, "5 Zuilen");
         const cols = ["#ffc95d", "#ff9f43", "#4cd964", "#38bdf8", "#5caef6"];
         let h = '<ellipse cx="308" cy="206" rx="52" ry="8" fill="#f6efe2" stroke="#d8c8a8" stroke-width="1.5"/>';
         cols.forEach(function (c, i) { h += pillar(274 + i * 17, 206, 9, 34, c, i + 1); });
@@ -13117,7 +13119,7 @@ return exports;})();
       if (!st.mile) return;
       const R = st.last ? 27 : 21, side = st.x < 180 ? 1 : -1, state = jChestState(level, c.id, st.i, n), ready = state === "ready";
       /* v94b: de kist staat op de weg ná het level (tussen dit level en het volgende), de laatste boven het eindlevel */
-      const cq = jChestXY(st, stops), cx = cq.x, cy = cq.y;
+      const cq = jChestXY(st, stops), moveC = glansOn2 && cq.x > 280 && cq.y < 230, cx = moveC ? 304 : cq.x, cy = moveC ? 224 : cq.y;   /* proef: kist onder de 5 Zuilen */
       const game = MG_NAME[chestGame(c.id, st.i)];
       const label = "Schatkist na level " + (off + st.i + 1) + (ready ? ": klaar, opent straks in een pop-up, met minigame " + game : state === "open" || state === "gold" ? ": geopend" : (jLandOpen(level, c.id) ? ": nog dicht, haal eerst level " + (st.i + 1) : ": vergrendeld, rond eerst het vorige land af"));
       h += '<g class="j-chest' + (ready ? " j-ready" : "") + '"' + (ready ? ' data-act="journey-chest" data-cat="' + c.id + '" data-i="' + st.i + '" role="button" tabindex="0"' : ' role="img"') + ' aria-label="' + label + '">' +
