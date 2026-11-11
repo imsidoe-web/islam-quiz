@@ -894,6 +894,7 @@ table.board thead th .avatar { display: grid; margin: 0 auto; }
 @keyframes rgGlow { 0%, 100% { opacity: .6; transform: scale(.88); } 18% { opacity: .92; transform: scale(.97); } 31% { opacity: .76; transform: scale(.92); } 47% { opacity: 1; transform: scale(1); } 64% { opacity: .68; transform: scale(.9); } 82% { opacity: .88; transform: scale(.95); } }
 .rg-mote { opacity: 0; animation: rgMote 4.2s ease-in-out infinite; }
 @keyframes rgMote { 0% { opacity: 0; transform: translate(0, 0); } 30% { opacity: .9; } 100% { opacity: 0; transform: translate(var(--dx), -7px); } }
+.rg-scr * { animation-play-state: paused !important; }   /* tijdens swipen staat alles in Land 2 even stil: dan hoeft de telefoon de kaart niet steeds opnieuw te tekenen en verdwijnt er niets */
 .rg-off .rg-sway, .rg-off .rg-tw, .rg-off .rg-drop, .rg-off .rg-ring, .rg-off .rg-wave, .rg-off .rg-bob, .rg-off .rg-glow, .rg-off .rg-mote { animation-play-state: paused; }
 @media (prefers-reduced-motion: reduce) { .rg-tw, .rg-drop, .rg-ring, .rg-wave, .rg-mote { animation: none; display: none; } .rg-bob { animation: none; } .rg-glow { animation: none; opacity: .8; } }
 .badge-icon { width: 72px !important; height: 72px !important; border: 0 !important; background: none !important; margin-bottom: 4px; }
@@ -5905,13 +5906,15 @@ return exports;})();
      stopt als de app naar de achtergrond gaat of Land 2 uit beeld is; veel zachter dan de quizgeluiden (piek ±0,04 tegen 0,15). ── */
   const rgAmb = (function () {
     let live = null, want = false, tapped = false, assist = false, lastPd = 0, lastKey = 0;
+    const nbuf = {};
     function noise(c, secs, brown) {
+      const key = (brown ? "b" : "w") + c.sampleRate; if (nbuf[key]) return nbuf[key];
       const n = Math.floor(c.sampleRate * secs), F = Math.floor(c.sampleRate * 0.3), x = new Float32Array(n + F);
       let last = 0;
       for (let i = 0; i < n + F; i++) { const w = Math.random() * 2 - 1; if (brown) { last = (last + 0.02 * w) / 1.02; x[i] = last * 3.5; } else x[i] = w; }
       const buf = c.createBuffer(1, n, c.sampleRate), d = buf.getChannelData(0);
       for (let i = 0; i < n; i++) d[i] = i < F ? x[i] * (i / F) + x[n + i] * (1 - i / F) : x[i];   /* naadloze lus */
-      return buf;
+      nbuf[key] = buf; return buf;
     }
     function lfo(c, hz, depth, target, list) { const o = c.createOscillator(), g = c.createGain(); o.frequency.value = hz; g.gain.value = depth; o.connect(g); g.connect(target); o.start(); list.push(o); }
     function ok() {
@@ -10057,7 +10060,7 @@ return exports;})();
   }
   /* ── Reiskaart-glans (proef, alleen Land 2): glanzende plaatjes in plaats van de getekende onderdelen ── */
   let glansOn = false;
-  function gImg(name, x, y, w, h, extra) { return '<image href="reiskaart-glans/' + name + '.webp" x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + w.toFixed(1) + '" height="' + h.toFixed(1) + '"' + (extra || "") + "/>"; }
+  function gImg(name, x, y, w, h, extra) { return '<image href="reiskaart-glans/' + name + '.webp" x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + w.toFixed(1) + '" height="' + h.toFixed(1) + '" decoding="sync"' + (extra || "") + "/>"; }
   function gShadow(cx, cy, rx, ry) { return '<ellipse cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" rx="' + rx.toFixed(1) + '" ry="' + ry.toFixed(1) + '" fill="#4a3210" opacity=".2"/>'; }
   /* ronde 2: zacht sterretje dat af en toe oplicht (CSS, uit bij minder-beweging) */
   function gTw(x, y, r, dur, del, col) {
@@ -13021,11 +13024,11 @@ return exports;})();
   }
   /* ── gemeenschappelijk voorgrond-decor ── */
   function commonProps(th) {
-    return lantern(316, 600, "#ffc95d", 0.8) + lantern(18, 655, "#35d0ff", 0.8) + (glansOn ? lantern(200, 276, "#88c7ff", 0.65) + palm(158, 436, 0.4, false) : lantern(160, 250, "#88c7ff", 0.8)) + lantern(325, 335, "#7dff6a", 0.75) + lantern(25, 440, "#ffb703", 0.7) +
+    return lantern(316, 600, "#ffc95d", 0.8) + lantern(18, 655, "#35d0ff", 0.8) + (glansOn ? lantern(200, 276, "#88c7ff", 0.65) + palm(158, 436, 0.4, false) : lantern(160, 250, "#88c7ff", 0.8)) + (glansOn ? lantern(338, 426, "#7dff6a", 0.75) + lantern(13, 408, "#ffb703", 0.7) : lantern(325, 335, "#7dff6a", 0.75) + lantern(25, 440, "#ffb703", 0.7)) +   /* proef: twee lantaarns stonden in een palm; nu op eigen vrije grond ernaast */
       oilLamp(240, 470, 0.7) + oilLamp(48, 725, 0.75) +
       gem(205, 640, "#ffc44f", 0) + gem(300, 500, "#35d0ff", .4) + gem(150, 510, "#7dff6a", .8) + gem(180, 330, "#ffc928", .2) + gem(55, 450, "#88c7ff", .6) + gem(310, 735, "#ff9f1c", 1);
   }
-  function groundFlowers() { return (glansOn ? flowers([[34, 262], [78, 272], [26, 300], [150, 266], [192, 258], [230, 300], [58, 352], [172, 338], [112, 370], [14, 330], [236, 262], [96, 292]]) + gem(60, 290, "#ffc928", 0.3) + gem(205, 322, "#35d0ff", 0.7) + gem(30, 345, "#7dff6a", 0.5) : "") + flowers([[130, 590], [150, 610], [20, 650], [48, 670], [175, 770], [215, 740], [330, 480], [350, 500], [200, 330], [30, 440], [230, 280], [155, 345], [335, 610], [10, 760], [100, 760]]); }
+  function groundFlowers() { return (glansOn ? flowers([[34, 262], [78, 272], [26, 300], [150, 266], [192, 258], [230, 300], [58, 352], [172, 338], [112, 370], [14, 330], [236, 262], [96, 292]]) + gem(60, 290, "#ffc928", 0.3) + gem(205, 322, "#35d0ff", 0.7) + gem(30, 345, "#7dff6a", 0.5) : "") + flowers([[130, 590], [150, 610], [20, 650], [48, 670], [175, 770], [215, 740], [330, 480], [350, 500], [200, 330], [30, 440], [230, 280], [155, 345], [335, 610], [10, 760], [100, 760]].filter(function (f) { return !glansOn || !((f[0] === 330 && f[1] === 480) || (f[0] === 350 && f[1] === 500) || (f[0] === 30 && f[1] === 440)); })); }   /* proef: drie bloemetjes weg onder de twee verplaatste lantaarns */
   function pondsAll(th) { if (glansOn) return gPondAt(294, 556, 100) + gGrotAt(264, 328, 84); return pond(262, 668, 80, 32, th) + pond(72, 524, 58, 24, th) + pond(62, 292, 40, 16, th); }
   function palms(th, extra) { return palm(20, 590, 0.9, false) + palm(342, 305, 0.6, true) + palm(150, 300, 0.55, false) + palm(18, 380, 0.7, false) + palm(215, 500, 0.5, true) + (extra || ""); }
 
@@ -13908,6 +13911,17 @@ return exports;})();
     setTimeout(function () { d.classList.add("out"); setTimeout(function () { d.remove(); }, 500); }, 4500 + 90 * f.t.length);
   }
   let rgObs = null;
+  /* Reiskaart-glans: tijdens het scrollen alle beweging in Land 2 stilzetten (CSS én SMIL); kort na het stoppen weer aan */
+  function rgScrollCalm() {
+    const sc = document.querySelector(".jmap-scroll.jreis"); if (!sc || sc.dataset.rg) return;
+    sc.dataset.rg = 1;
+    let t = 0, on = false;
+    const set = function (v) {
+      on = v;
+      sc.querySelectorAll(".jsvg.rg-map").forEach(function (m) { m.classList.toggle("rg-scr", v); try { if (v) m.pauseAnimations(); else m.unpauseAnimations(); } catch (e) {} });
+    };
+    sc.addEventListener("scroll", function () { if (!on) set(true); clearTimeout(t); t = setTimeout(function () { set(false); }, 260); }, { passive: true });
+  }
   function afterJourneyRender() {
     /* Reiskaart-glans: bewegingen pauzeren zolang Land 2 niet in beeld is */
     if (rgObs) { rgObs.disconnect(); rgObs = null; }
@@ -13916,6 +13930,7 @@ return exports;})();
       if (rgMaps.length) { rgObs = new IntersectionObserver(function (ents) { ents.forEach(function (e) { e.target.classList.toggle("rg-off", !e.isIntersecting); }); rgAmb.show(!!document.querySelector(".jsvg.rg-map:not(.rg-off)")); }, { rootMargin: "80px 0px" }); rgMaps.forEach(function (el) { rgObs.observe(el); }); }
       else rgAmb.show(false);
     } else rgAmb.show(false);
+    rgScrollCalm();
     hulpBanner();
     if (starChestPending && !document.querySelector(".dialog-wrap, #bcel")) { const sc = starChestPending; starChestPending = null; setTimeout(function () { if (screen === "journey") starChestDialog(sc); }, 700); }
     else setTimeout(chestPopupCheck, 900);
