@@ -896,14 +896,6 @@ table.board thead th .avatar { display: grid; margin: 0 auto; }
 @keyframes rgMote { 0% { opacity: 0; transform: translate(0, 0); } 30% { opacity: .9; } 100% { opacity: 0; transform: translate(var(--dx), -7px); } }
 .rg-off .rg-sway, .rg-off .rg-tw, .rg-off .rg-drop, .rg-off .rg-ring, .rg-off .rg-wave, .rg-off .rg-bob, .rg-off .rg-glow, .rg-off .rg-mote { animation-play-state: paused; }
 @media (prefers-reduced-motion: reduce) { .rg-tw, .rg-drop, .rg-ring, .rg-wave, .rg-mote { animation: none; display: none; } .rg-bob { animation: none; } .rg-glow { animation: none; opacity: .8; } }
-/* ── Reiskaart-glans ronde 3 (proef Land 2): diepte bij scrollen. Zonder script: de browser doet het zelf (waar dat kan); lucht en verre heuvels blijven iets achter ── */
-@supports (animation-timeline: view()) { @media (prefers-reduced-motion: no-preference) {
-  .jsvg.rg-map { view-timeline: --rgmap block; }
-  .rg-px-sky { animation: rgPxSky linear both; animation-timeline: --rgmap; }
-  .rg-px-far { animation: rgPxFar linear both; animation-timeline: --rgmap; }
-  @keyframes rgPxSky { from { transform: translateY(-20px); } to { transform: translateY(0); } }
-  @keyframes rgPxFar { from { transform: translateY(-9px); } to { transform: translateY(0); } }
-} }
 .badge-icon { width: 72px !important; height: 72px !important; border: 0 !important; background: none !important; margin-bottom: 4px; }
 .badge-card.locked { opacity: .6; filter: none; }
 .badge-card.unlocked.grand { background: linear-gradient(145deg, #1a344a 0%, #2a557a 100%); border-color: #ffd54f; }
@@ -13191,9 +13183,8 @@ return exports;})();
       '<pattern id="' + uid + 'tile" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M15 2 L28 15 L15 28 L2 15Z" fill="#26c6da" opacity=".55"/><path d="M15 8 L22 15 L15 22 L8 15Z" fill="#fff" opacity=".55"/><circle cx="15" cy="15" r="3.2" fill="#ffd54f"/><path d="M0 0 H6 L0 6Z M30 0 H24 L30 6Z M0 30 H6 L0 24Z M30 30 H24 L30 24Z" fill="#ff7a59" opacity=".6"/></pattern></defs>';
     if (kos) h += kosWorldBg(uid, c); else {
     h += '<rect width="360" height="800" fill="url(#' + uid + 'sky)"/>';
-    const rgPx = c.id === "zuilen";   /* ronde 3: lucht en verre heuvels in een eigen laag (diepte bij scrollen) */
-    h += rgPx ? '<g class="rg-px-sky">' + L.sky(th) + "</g>" : L.sky(th);
-    h += '<path' + (rgPx ? ' class="rg-px-far"' : "") + ' d="M0 235 C 80 190, 160 225, 240 200 S 340 205, 360 190 L360 800 L0 800Z" fill="' + th.far + '"/>';
+    h += L.sky(th);
+    h += '<path d="M0 235 C 80 190, 160 225, 240 200 S 340 205, 360 190 L360 800 L0 800Z" fill="' + th.far + '"/>';
     glansOn = c.id === "zuilen"; /* proef: alleen Land 2 */
     h += L.tl(th) + L.tr(th);
     h += '<path d="M0 420 C 90 365, 170 405, 250 372 S 340 355, 360 370 L360 800 L0 800Z" fill="' + th.mid + '"/>';
