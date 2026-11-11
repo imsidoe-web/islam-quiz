@@ -875,6 +875,10 @@ table.board thead th .avatar { display: grid; margin: 0 auto; }
 .j-toast { position: fixed; left: 50%; bottom: 22px; transform: translate(-50%, 30px); opacity: 0; pointer-events: none; background: #1b4332; color: #fff; font-weight: 800; padding: 12px 18px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,.3); transition: all .25s ease; z-index: 60; max-width: 90vw; text-align: center; }
 .j-toast.show { opacity: 1; transform: translate(-50%, 0); }
 @media (prefers-reduced-motion: reduce) { .j-glow, .j-bob, .j-spin, .j-tw, .j-start { animation: none; } .j-marker { transition: none; } }
+/* ── Reiskaart-glans (proef Land 2): palm wiegt zacht vanaf de voet ── */
+.rg-sway { transform-box: fill-box; transform-origin: 45% 100%; animation: rgSway 5s ease-in-out infinite; }
+@keyframes rgSway { 0%, 100% { transform: rotate(-1.5deg); } 50% { transform: rotate(1.7deg); } }
+@media (prefers-reduced-motion: reduce) { .rg-sway { animation: none; } }
 .badge-icon { width: 72px !important; height: 72px !important; border: 0 !important; background: none !important; margin-bottom: 4px; }
 .badge-card.locked { opacity: .6; filter: none; }
 .badge-card.unlocked.grand { background: linear-gradient(145deg, #1a344a 0%, #2a557a 100%); border-color: #ffd54f; }
@@ -9976,7 +9980,31 @@ return exports;})();
     for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + (i * Math.PI) / 5, rr = i % 2 ? r * 0.45 : r; pts.push((cx + Math.cos(a) * rr).toFixed(1) + "," + (cy + Math.sin(a) * rr).toFixed(1)); }
     return pts.join(" ");
   }
+  /* ── Reiskaart-glans (proef, alleen Land 2): glanzende plaatjes in plaats van de getekende onderdelen ── */
+  let glansOn = false;
+  function gImg(name, x, y, w, h, extra) { return '<image href="reiskaart-glans/' + name + '.webp" x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + w.toFixed(1) + '" height="' + h.toFixed(1) + '"' + (extra || "") + "/>"; }
+  function gShadow(cx, cy, rx, ry) { return '<ellipse cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" rx="' + rx.toFixed(1) + '" ry="' + ry.toFixed(1) + '" fill="#4a3210" opacity=".2"/>'; }
+  function gPalm(x, y, k, flip) {
+    const H = 128 * k, W = H * 286 / 320, dur = (4.6 + ((x * 7 + y * 3) % 17) / 10).toFixed(1), del = (((x + y) % 40) / 10).toFixed(1);
+    return '<g transform="translate(' + x + " " + y + ") scale(" + (flip ? -1 : 1) + ' 1)">' + gShadow(W * 0.1, 2 * k, W * 0.34, 5.5 * k) +
+      gImg("palmboom", -W * 0.45, -H + 5 * k, W, H, ' class="rg-sway" style="animation-duration:' + dur + "s;animation-delay:-" + del + 's"') + "</g>";
+  }
+  function gPond(cx, cy, rx, ry) {
+    const W = 2 * rx + 24, H = W * 285 / 320;
+    return gShadow(cx + 2, cy + H * 0.36, W * 0.47, H * 0.11) + gImg("oase", cx - W / 2, cy - H * 0.58, W, H) + sparkle(cx - rx * 0.2, cy - ry * 0.2, 5, 0.3) + sparkle(cx + rx * 0.4, cy + ry * 0.35, 4, 1);
+  }
+  function gLantern(x, y, k) {
+    const H = 80 * k, W = H * 120 / 320;
+    return '<g transform="translate(' + x + " " + y + ')">' + gShadow(W * 0.1, 71 * k, W * 0.5, 3.6 * k) +
+      '<circle cx="' + (W * 0.32).toFixed(1) + '" cy="' + (34 * k).toFixed(1) + '" r="' + (20 * k).toFixed(1) + '" fill="#ffd36a" opacity=".3"><animate attributeName="opacity" values=".18;.42;.18" dur="1.8s" repeatCount="indefinite"/></circle>' +
+      gImg("lantaarn", -W * 0.3, -8 * k, W, H) + "</g>";
+  }
+  function gFountain(x, y, k) {
+    const W = 96, H = W * 288 / 320;
+    return '<g transform="translate(' + x + " " + y + ") scale(" + k + ')">' + gShadow(1, H * 0.13, W * 0.5, H * 0.1) + gImg("fontein", -W / 2, -H * 0.8, W, H) + sparkle(-20, -30, 4, 0.2) + sparkle(22, -26, 4, 0.7) + "</g>";
+  }
   function palm(x, y, k, flip) {
+    if (glansOn) return gPalm(x, y, k, flip);
     const f = flip ? -1 : 1, th = curTh;
     let h = '<g transform="translate(' + x + " " + y + ") scale(" + k * f + " " + k + ')">' +
       '<path d="M0 0 C 4 -26, 2 -52, 12 -78" fill="none" stroke="' + th.trunk + '" stroke-width="7" stroke-linecap="round"/>' +
@@ -10004,6 +10032,7 @@ return exports;})();
     return list.map(function (f, i) { const c = cols[i % cols.length]; return '<g transform="translate(' + f[0] + " " + f[1] + ')"><line y2="7" stroke="#3a9d4f" stroke-width="2"/><circle r="4" fill="' + c + '"/><circle r="1.6" fill="#fff6a0"/></g>'; }).join("");
   }
   function pond(cx, cy, rx, ry, th) {
+    if (glansOn) return gPond(cx, cy, rx, ry);
     return '<ellipse cx="' + cx + '" cy="' + (cy + 4) + '" rx="' + (rx + 22) + '" ry="' + (ry + 11) + '" fill="' + th.meadow2 + '"/><ellipse cx="' + cx + '" cy="' + cy + '" rx="' + (rx + 13) + '" ry="' + (ry + 6) + '" fill="' + th.meadow + '"/>' +
       '<ellipse cx="' + cx + '" cy="' + cy + '" rx="' + rx + '" ry="' + ry + '" fill="' + th.water + '"/><ellipse cx="' + (cx - rx * 0.1) + '" cy="' + (cy - ry * 0.18) + '" rx="' + rx * 0.78 + '" ry="' + ry * 0.62 + '" fill="' + th.water2 + '" opacity=".75"/>' +
       '<ellipse cx="' + (cx + rx * 0.2) + '" cy="' + (cy + ry * 0.1) + '" rx="' + rx * 0.4 + '" ry="' + ry * 0.2 + '" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="2"><animate attributeName="rx" values="' + rx * 0.25 + ";" + rx * 0.5 + ";" + rx * 0.25 + '" dur="3s" repeatCount="indefinite"/></ellipse>' +
@@ -10023,6 +10052,7 @@ return exports;})();
   }
   /* sierlijke hangende lantaarn op een paal (mozaïekglas) */
   function lantern(x, y, col, k) {
+    if (glansOn) return gLantern(x, y, k);
     return '<g transform="translate(' + x + " " + y + ") scale(" + k + ')"><line x1="0" y1="0" x2="0" y2="70" stroke="#6b4a2a" stroke-width="4" stroke-linecap="round"/><path d="M0 2 Q16 2 16 14" fill="none" stroke="#6b4a2a" stroke-width="3" stroke-linecap="round"/>' +
       '<line x1="16" y1="14" x2="16" y2="22" stroke="#b07a1a" stroke-width="1.6"/><circle cx="16" cy="38" r="22" fill="#ffd36a" opacity=".3"><animate attributeName="opacity" values=".2;.45;.2" dur="1.8s" repeatCount="indefinite"/></circle>' +
       '<path d="M7 22 Q16 14 25 22Z" fill="#c88a10" stroke="#8a5a00" stroke-width="1.2" stroke-linejoin="round"/><path d="M7 22 L25 22 L28 46 Q16 54 4 46Z" fill="' + col + '" stroke="#8a5a00" stroke-width="1.4" stroke-linejoin="round"/>' +
@@ -12803,6 +12833,7 @@ return exports;})();
       '<rect x="' + -w * 0.8 + '" y="' + (-h - 5) + '" width="' + w * 1.6 + '" height="6" rx="2" fill="#f5ead0" stroke="#c9b58a" stroke-width="1"/><circle cy="' + (-h - 14) + '" r="7.5" fill="#ffd54f" stroke="#fff" stroke-width="1.5"/><text y="' + (-h - 10.5) + '" text-anchor="middle" font-size="10" font-weight="900" fill="#7a4a00">' + num + "</text></g>";
   }
   function fountain(x, y, k) {
+    if (glansOn) return gFountain(x, y, k);
     let h = '<g transform="translate(' + x + " " + y + ") scale(" + k + ')"><ellipse cy="2" rx="40" ry="11" fill="#f3e6c8" stroke="#c9b58a" stroke-width="2"/><ellipse cy="0" rx="33" ry="8" fill="#38bdf8"/><ellipse cy="-1" rx="26" ry="5" fill="#a5f3fc"/>' +
       '<rect x="-4" y="-34" width="8" height="34" fill="#f3e6c8" stroke="#c9b58a" stroke-width="1.2"/><ellipse cy="-34" rx="12" ry="4" fill="#f3e6c8" stroke="#c9b58a" stroke-width="1.2"/>';
     ["M0 -38 Q-20 -62 -30 -8", "M0 -38 Q20 -62 30 -8", "M0 -38 Q-8 -70 -14 -6", "M0 -38 Q8 -70 14 -6"].forEach(function (d, i) {
@@ -13023,6 +13054,7 @@ return exports;})();
     h += '<rect width="360" height="800" fill="url(#' + uid + 'sky)"/>';
     h += L.sky(th);
     h += '<path d="M0 235 C 80 190, 160 225, 240 200 S 340 205, 360 190 L360 800 L0 800Z" fill="' + th.far + '"/>';
+    glansOn = c.id === "zuilen"; /* proef: alleen Land 2 */
     h += L.tl(th) + L.tr(th);
     h += '<path d="M0 420 C 90 365, 170 405, 250 372 S 340 355, 360 370 L360 800 L0 800Z" fill="' + th.mid + '"/>';
     h += L.mr(th);
@@ -13030,6 +13062,7 @@ return exports;})();
     h += '<path d="' + nearD + '" fill="' + th.near + '"/>';
     if (L.tile) h += '<path d="' + nearD + '" fill="url(#' + uid + 'tile)" opacity=".55"/>';
     h += L.front(th);
+    glansOn = false;
     }
     // pad
     const seg = function (a, b) { const ym = (a.y + b.y) / 2; return "M" + a.x + " " + a.y + " C" + a.x + " " + ym + " " + b.x + " " + ym + " " + b.x + " " + b.y; };
