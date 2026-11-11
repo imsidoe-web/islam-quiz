@@ -879,6 +879,23 @@ table.board thead th .avatar { display: grid; margin: 0 auto; }
 .rg-sway { transform-box: fill-box; transform-origin: 45% 100%; animation: rgSway 5s ease-in-out infinite; }
 @keyframes rgSway { 0%, 100% { transform: rotate(-1.5deg); } 50% { transform: rotate(1.7deg); } }
 @media (prefers-reduced-motion: reduce) { .rg-sway { animation: none; } }
+/* ── Reiskaart-glans ronde 2 (proef Land 2): bewegend water en zachte glinsteringen. Alleen CSS, licht; staat stil buiten beeld (.rg-off) ── */
+.rg-tw { transform-box: fill-box; transform-origin: center; opacity: 0; animation: rgTw 8s ease-in-out infinite; }
+@keyframes rgTw { 0%, 58%, 100% { opacity: 0; transform: scale(.3) rotate(0deg); } 72% { opacity: .95; transform: scale(1) rotate(18deg); } 86% { opacity: 0; transform: scale(.35) rotate(36deg); } }
+.rg-drop { opacity: 0; animation: rgDrop 2.6s linear infinite; }
+@keyframes rgDrop { 0% { opacity: 0; transform: translate(0, 0); animation-timing-function: ease-out; } 10% { opacity: .95; } 32% { transform: translate(calc(var(--dx) * .42), -5px); animation-timing-function: ease-in; } 86% { opacity: .85; } 100% { opacity: 0; transform: translate(var(--dx), var(--dy)); } }
+.rg-ring { transform-box: fill-box; transform-origin: center; opacity: 0; animation: rgRing 2.6s ease-out infinite; }
+@keyframes rgRing { 0% { opacity: 0; transform: scale(.25); } 15% { opacity: .8; } 100% { opacity: 0; transform: scale(1); } }
+.rg-wave { opacity: 0; animation: rgWave 5s ease-in-out infinite; }
+@keyframes rgWave { 0%, 100% { opacity: 0; transform: translate(-2.5px, 0); } 50% { opacity: .75; transform: translate(1px, .4px); } }
+.rg-bob { animation: rgBob 4.6s ease-in-out infinite; }
+@keyframes rgBob { 0%, 100% { transform: translate(-.5px, -.7px) rotate(-2.5deg); } 50% { transform: translate(.6px, .8px) rotate(2.5deg); } }
+.rg-glow { transform-box: fill-box; transform-origin: center; animation: rgGlow 3.4s ease-in-out infinite; }
+@keyframes rgGlow { 0%, 100% { opacity: .6; transform: scale(.88); } 18% { opacity: .92; transform: scale(.97); } 31% { opacity: .76; transform: scale(.92); } 47% { opacity: 1; transform: scale(1); } 64% { opacity: .68; transform: scale(.9); } 82% { opacity: .88; transform: scale(.95); } }
+.rg-mote { opacity: 0; animation: rgMote 4.2s ease-in-out infinite; }
+@keyframes rgMote { 0% { opacity: 0; transform: translate(0, 0); } 30% { opacity: .9; } 100% { opacity: 0; transform: translate(var(--dx), -7px); } }
+.rg-off .rg-sway, .rg-off .rg-tw, .rg-off .rg-drop, .rg-off .rg-ring, .rg-off .rg-wave, .rg-off .rg-bob, .rg-off .rg-glow, .rg-off .rg-mote { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) { .rg-tw, .rg-drop, .rg-ring, .rg-wave, .rg-mote { animation: none; display: none; } .rg-bob { animation: none; } .rg-glow { animation: none; opacity: .8; } }
 .badge-icon { width: 72px !important; height: 72px !important; border: 0 !important; background: none !important; margin-bottom: 4px; }
 .badge-card.locked { opacity: .6; filter: none; }
 .badge-card.unlocked.grand { background: linear-gradient(145deg, #1a344a 0%, #2a557a 100%); border-color: #ffd54f; }
@@ -9986,6 +10003,10 @@ return exports;})();
   let glansOn = false;
   function gImg(name, x, y, w, h, extra) { return '<image href="reiskaart-glans/' + name + '.webp" x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + w.toFixed(1) + '" height="' + h.toFixed(1) + '"' + (extra || "") + "/>"; }
   function gShadow(cx, cy, rx, ry) { return '<ellipse cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" rx="' + rx.toFixed(1) + '" ry="' + ry.toFixed(1) + '" fill="#4a3210" opacity=".2"/>'; }
+  /* ronde 2: zacht sterretje dat af en toe oplicht (CSS, uit bij minder-beweging) */
+  function gTw(x, y, r, dur, del, col) {
+    return '<path class="rg-tw" style="animation-duration:' + dur + "s;animation-delay:-" + del + 's" d="M' + x.toFixed(1) + " " + (y - r).toFixed(1) + " Q " + x.toFixed(1) + " " + y.toFixed(1) + " " + (x + r).toFixed(1) + " " + y.toFixed(1) + " Q " + x.toFixed(1) + " " + y.toFixed(1) + " " + x.toFixed(1) + " " + (y + r).toFixed(1) + " Q " + x.toFixed(1) + " " + y.toFixed(1) + " " + (x - r).toFixed(1) + " " + y.toFixed(1) + " Q " + x.toFixed(1) + " " + y.toFixed(1) + " " + x.toFixed(1) + " " + (y - r).toFixed(1) + 'Z" fill="' + (col || "#fffbe6") + '"/>';
+  }
   function gPalm(x, y, k, flip) {
     const H = 128 * k, W = H * 286 / 320, dur = (4.6 + ((x * 7 + y * 3) % 17) / 10).toFixed(1), del = (((x + y) % 40) / 10).toFixed(1);
     return '<g transform="translate(' + x + " " + y + ") scale(" + (flip ? -1 : 1) + ' 1)">' + gShadow(W * 0.1, 2 * k, W * 0.34, 5.5 * k) +
@@ -9995,43 +10016,62 @@ return exports;})();
     const W = 2 * rx + 24, H = W * 285 / 320;
     return gShadow(cx + 2, cy + H * 0.36, W * 0.47, H * 0.11) + gImg("oase", cx - W / 2, cy - H * 0.58, W, H) + sparkle(cx - rx * 0.2, cy - ry * 0.2, 5, 0.3) + sparkle(cx + rx * 0.4, cy + ry * 0.35, 4, 1);
   }
-  function gPondAt(cx, cy, W) {   /* proef: kleinere vijver op een vaste plek naast de route */
-    const H = W * 285 / 320;
-    return gShadow(cx + 2, cy + H * 0.36, W * 0.47, H * 0.11) + gImg("oase", cx - W / 2, cy - H * 0.58, W, H) + sparkle(cx - W * 0.2, cy - H * 0.1, 5, 0.3) + sparkle(cx + W * 0.25, cy + H * 0.12, 4, 1);
+  function gPondAt(cx, cy, W) {   /* proef: kleinere vijver op een vaste plek naast de route; ronde 2: golfjes, glinsters en deinende waterlelies (alles binnen het plaatje) */
+    const H = W * 285 / 320, x0 = cx - W / 2, y0 = cy - H * 0.58, s = W / 320, img = gImg("oase", x0, y0, W, H);
+    const X = function (a) { return x0 + a * s; }, Y = function (b) { return y0 + b * s; };
+    const lily = function (id, a, b, rx, ry, dur, del) {
+      return '<clipPath id="' + id + '"><ellipse cx="' + X(a).toFixed(1) + '" cy="' + Y(b).toFixed(1) + '" rx="' + (rx * s).toFixed(1) + '" ry="' + (ry * s).toFixed(1) + '"/></clipPath><g clip-path="url(#' + id + ')"><g class="rg-bob" style="transform-origin:' + X(a).toFixed(1) + "px " + Y(b).toFixed(1) + "px;animation-duration:" + dur + "s;animation-delay:-" + del + 's">' + img + "</g></g>";
+    };
+    const wave = function (a, b, w, dur, del) {
+      const x = X(a), y = Y(b);
+      return '<path class="rg-wave" style="animation-duration:' + dur + "s;animation-delay:-" + del + 's" d="M' + (x - w).toFixed(1) + " " + y.toFixed(1) + " Q " + x.toFixed(1) + " " + (y - 1.6).toFixed(1) + " " + (x + w).toFixed(1) + " " + y.toFixed(1) + '" fill="none" stroke="#fff" stroke-width=".9" stroke-linecap="round"/>';
+    };
+    return gShadow(cx + 2, cy + H * 0.36, W * 0.47, H * 0.11) + img +
+      lily("rgLc1", 212, 100, 50, 38, 4.6, 0.5) + lily("rgLc2", 93, 154, 38, 29, 5.4, 2.2) +
+      wave(132, 108, 4, 5, 0.3) + wave(205, 186, 4.5, 5.8, 2.1) + wave(150, 208, 3.5, 4.6, 3.4) + wave(250, 152, 3.5, 6.4, 1.2) + wave(88, 198, 3, 5.4, 4.4) +
+      gTw(X(172), Y(128), 3.4, 6.5, 0.4) + gTw(X(118), Y(186), 2.8, 8, 3.1) + gTw(X(226), Y(200), 3, 7.2, 5.3) + gTw(X(150), Y(262), 2.6, 9.5, 6.2);
   }
   function gLantern(x, y, k) {
     k *= 1.3;   /* proef: lantaarn groter en met zachte lichtgloed, zodat hij ook op de donkere, drukke grond te zien is */
     const H = 80 * k, W = H * 120 / 320, gx = (W * 0.31).toFixed(1), gy = (30 * k).toFixed(1);
     return '<g transform="translate(' + x + " " + y + ')">' + gShadow(W * 0.1, 71 * k, W * 0.5, 3.6 * k) +
       '<defs><radialGradient id="rgLg"><stop offset="0" stop-color="#fff6c8" stop-opacity=".95"/><stop offset=".5" stop-color="#ffd36a" stop-opacity=".6"/><stop offset="1" stop-color="#ffd36a" stop-opacity="0"/></radialGradient></defs>' +
-      '<circle cx="' + gx + '" cy="' + gy + '" r="' + (36 * k).toFixed(1) + '" fill="url(#rgLg)" opacity=".8"><animate attributeName="opacity" values=".6;.95;.6" dur="2.2s" repeatCount="indefinite"/></circle>' +
+      '<circle cx="' + gx + '" cy="' + gy + '" r="' + (36 * k).toFixed(1) + '" fill="url(#rgLg)" opacity=".8" class="rg-glow" style="animation-duration:' + (3 + ((x * 3 + y) % 11) / 10).toFixed(1) + "s;animation-delay:-" + (((x + y * 2) % 30) / 10).toFixed(1) + 's"/>' +
       gImg("lantaarn", -W * 0.3, -8 * k, W, H) + "</g>";
   }
-  function gFountain(x, y, k) {
+  function gFountain(x, y, k) {   /* ronde 2: spuitend water (druppels omhoog en neer) en kringetjes op het water, alles binnen de fontein */
     const W = 96, H = W * 288 / 320;
-    return '<g transform="translate(' + x + " " + y + ") scale(" + k + ')">' + gShadow(1, H * 0.13, W * 0.5, H * 0.1) + gImg("fontein", -W / 2, -H * 0.8, W, H) + sparkle(-20, -30, 4, 0.2) + sparkle(22, -26, 4, 0.7) + "</g>";
+    const drop = function (dx, dy, r, dur, del) { return '<circle class="rg-drop" cx="-3" cy="-60.5" r="' + r + '" fill="#eafcff" stroke="#7fdcf0" stroke-width=".3" style="--dx:' + dx + "px;--dy:" + dy + "px;animation-duration:" + dur + "s;animation-delay:-" + del + 's"/>'; };
+    const ring = function (cx, cy, rx, dur, del) { return '<ellipse class="rg-ring" cx="' + cx + '" cy="' + cy + '" rx="' + rx + '" ry="' + (rx * 0.42).toFixed(1) + '" fill="none" stroke="#fff" stroke-width=".8" style="animation-duration:' + dur + "s;animation-delay:-" + del + 's"/>'; };
+    return '<g transform="translate(' + x + " " + y + ") scale(" + k + ')">' + gShadow(1, H * 0.13, W * 0.5, H * 0.1) + gImg("fontein", -W / 2, -H * 0.8, W, H) +
+      ring(-17, -24.5, 7, 2.6, 0.2) + ring(16.5, -24.5, 7, 2.6, 1.5) + ring(-1, -18.5, 8, 3.2, 0.9) +
+      drop(-14, 34, 1.3, 2.4, 0) + drop(13, 34, 1.3, 2.4, 1.2) + drop(-9, 31, 1.1, 2.9, 0.7) + drop(9, 31, 1.1, 2.9, 2.1) + drop(-18, 35, 1, 3.3, 1.7) + drop(18, 35, 1, 3.3, 0.4) + drop(2, 39, 1.2, 2.7, 1.9) +
+      gTw(-27, -36, 3, 7.5, 1) + gTw(30, -20, 2.8, 9, 5) + "</g>";
   }
   /* proef: nieuwe glanzende stukken (grot, moskee, 5 Zuilen, schatkist) */
   function gGrotAt(cx, cy, W) {
     const H = W * 256 / 300, y0 = cy - H * 0.55;
     return gShadow(cx + 2, y0 + H * 0.96, W * 0.44, H * 0.07) + gImg("grot", cx - W / 2, y0, W, H) +
       '<defs><radialGradient id="rgCg"><stop offset="0" stop-color="#fff0b0" stop-opacity=".9"/><stop offset=".6" stop-color="#ffc95d" stop-opacity=".35"/><stop offset="1" stop-color="#ffc95d" stop-opacity="0"/></radialGradient></defs>' +
-      '<circle cx="' + (cx - W * 0.08).toFixed(1) + '" cy="' + (y0 + H * 0.62).toFixed(1) + '" r="' + (W * 0.17).toFixed(1) + '" fill="url(#rgCg)"><animate attributeName="opacity" values=".5;1;.5" dur="2.6s" repeatCount="indefinite"/></circle>' +
-      sparkle(cx + W * 0.3, y0 + H * 0.45, 4, 0.4);
+      '<circle cx="' + (cx - W * 0.08).toFixed(1) + '" cy="' + (y0 + H * 0.62).toFixed(1) + '" r="' + (W * 0.17).toFixed(1) + '" fill="url(#rgCg)" class="rg-glow" style="animation-duration:3.8s"/>' +
+      [[-0.13, 0.66, -1.5, 4.2, 0], [-0.05, 0.7, 1.5, 5, 1.8], [-0.1, 0.6, 0.5, 4.6, 3.1]].map(function (m) { return '<circle class="rg-mote" cx="' + (cx + W * m[0]).toFixed(1) + '" cy="' + (y0 + H * m[1]).toFixed(1) + '" r=".9" fill="#ffe9a6" style="--dx:' + m[2] + "px;animation-duration:" + m[3] + "s;animation-delay:-" + m[4] + 's"/>'; }).join("") +
+      gTw(cx + W * 0.29, y0 + H * 0.6, 3.2, 6.8, 2, "#eaffff") + gTw(cx - W * 0.2, y0 + H * 0.2, 2.8, 9.2, 6);
   }
   function gMoskee(cx, bottom, W) {
     const H = W * 350 / 300;
     /* grond (zandvlek) onder de moskee zodat hij niet zweeft; gespiegeld zodat de ingang naar de route kijkt */
     return '<ellipse cx="' + cx + '" cy="' + (bottom - 3) + '" rx="' + (W * 0.56).toFixed(1) + '" ry="11" fill="#f0c06a"/><ellipse cx="' + cx + '" cy="' + (bottom - 3) + '" rx="' + (W * 0.56).toFixed(1) + '" ry="11" fill="none" stroke="#fff3c8" stroke-opacity=".5" stroke-width="1.5"/>' +
-      gShadow(cx, bottom - 1, W * 0.4, 5) + '<g transform="translate(' + (2 * cx) + ' 0) scale(-1 1)">' + gImg("moskee", cx - W / 2, bottom - H, W, H) + "</g>";
+      gShadow(cx, bottom - 1, W * 0.4, 5) + '<g transform="translate(' + (2 * cx) + ' 0) scale(-1 1)">' + gImg("moskee", cx - W / 2, bottom - H, W, H) + "</g>" +
+      gTw(cx - W / 2 + W * 0.56, bottom - H + H * 0.2, 3.6, 7.6, 1.5) + gTw(cx - W / 2 + W * 0.5, bottom - H + H * 0.035, 2.8, 9.4, 5.5) + gTw(cx - W / 2 + W * 0.08, bottom - H + H * 0.17, 2.6, 10.5, 8);
   }
   function gZuilen(cx, bottom, W) {
     const H = W * 303 / 420;
-    return gShadow(cx, bottom - 2, W * 0.46, 4) + gImg("zuilen5", cx - W / 2, bottom - H, W, H);
+    return gShadow(cx, bottom - 2, W * 0.46, 4) + gImg("zuilen5", cx - W / 2, bottom - H, W, H) +
+      gTw(cx - W / 2 + W * 0.5, bottom - H + H * 0.1, 3, 8.2, 0.8) + gTw(cx - W / 2 + W * 0.68, bottom - H + H * 0.1, 3, 9.6, 4.6) + gTw(cx - W / 2 + W * 0.86, bottom - H + H * 0.1, 3, 8.8, 7.3);
   }
   function gChestImg(cx, cy, k, dim) {
     const W = 46 * k, H = W * 210 / 220;
-    return '<g' + (dim ? ' opacity=".6"' : "") + ">" + gShadow(cx, cy + H * 0.42, W * 0.42, 3.5) + gImg("schatkist", cx - W / 2, cy - H * 0.55, W, H) + "</g>";
+    return '<g' + (dim ? ' opacity=".6"' : "") + ">" + gShadow(cx, cy + H * 0.42, W * 0.42, 3.5) + gImg("schatkist", cx - W / 2, cy - H * 0.55, W, H) + gTw(cx + W * 0.16, cy - H * 0.3, 3.2 * k, (7.5 + (cy % 5) * 0.6).toFixed(1), (cy % 7).toFixed(1)) + "</g>";
   }
   function palm(x, y, k, flip) {
     if (glansOn) return gPalm(x, y, k, flip);
@@ -13075,7 +13115,7 @@ return exports;})();
     curTh = th;
     const kos = kosmosOn();
     const uid = "j" + level[0] + String(c.id).replace(/[^a-z0-9]/gi, "");
-    let h = '<svg class="jsvg" viewBox="0 0 360 800" role="group" aria-label="Routekaart ' + esc(c.title) + ", " + n + ' levels" xmlns="http://www.w3.org/2000/svg"><defs>' +
+    let h = '<svg class="jsvg' + (c.id === "zuilen" && !kos ? " rg-map" : "") + '" viewBox="0 0 360 800" role="group" aria-label="Routekaart ' + esc(c.title) + ", " + n + ' levels" xmlns="http://www.w3.org/2000/svg"><defs>' +
       '<linearGradient id="' + uid + 'sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + th.sky[0] + '"/><stop offset=".35" stop-color="' + th.sky[1] + '"/><stop offset=".7" stop-color="' + th.sky[2] + '"/><stop offset="1" stop-color="' + th.sky[3] + '"/></linearGradient>' +
       (kos ? kosDefs(uid) : "") + '<radialGradient id="' + uid + 'done" cx=".35" cy=".3"><stop offset="0" stop-color="' + (kos ? "#fff2b8" : "#7ae6b4") + '"/><stop offset="1" stop-color="' + (kos ? "#e8a33a" : "#14935f") + '"/></radialGradient>' +
       '<radialGradient id="' + uid + 'cur" cx=".35" cy=".3"><stop offset="0" stop-color="' + (kos ? "#d6fffa" : "#fff0a8") + '"/><stop offset="1" stop-color="' + (kos ? "#2bd4c8" : "#f0a02e") + '"/></radialGradient>' +
@@ -13808,7 +13848,14 @@ return exports;})();
     document.body.appendChild(d); announce(f.t);
     setTimeout(function () { d.classList.add("out"); setTimeout(function () { d.remove(); }, 500); }, 4500 + 90 * f.t.length);
   }
+  let rgObs = null;
   function afterJourneyRender() {
+    /* Reiskaart-glans: bewegingen pauzeren zolang Land 2 niet in beeld is */
+    if (rgObs) { rgObs.disconnect(); rgObs = null; }
+    if ("IntersectionObserver" in window) {
+      const rgMaps = document.querySelectorAll(".jsvg.rg-map");
+      if (rgMaps.length) { rgObs = new IntersectionObserver(function (ents) { ents.forEach(function (e) { e.target.classList.toggle("rg-off", !e.isIntersecting); }); }, { rootMargin: "80px 0px" }); rgMaps.forEach(function (el) { rgObs.observe(el); }); }
+    }
     hulpBanner();
     if (starChestPending && !document.querySelector(".dialog-wrap, #bcel")) { const sc = starChestPending; starChestPending = null; setTimeout(function () { if (screen === "journey") starChestDialog(sc); }, 700); }
     else setTimeout(chestPopupCheck, 900);
