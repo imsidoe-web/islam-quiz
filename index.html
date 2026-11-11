@@ -8570,6 +8570,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v299", t: "Medespelers staan weer op de kaart van elk land, niet alleen in het land waar jij bent." },
     { v: "v298", t: "Nieuwtjes: bij elke update krijgen spelers één keer een melding in het boog-venster (nu: de Jade-avatars)." },
     { v: "v297", t: "Avatars: nieuwe Jade-avatars (man, vrouw en meisje) bij Mensen. Ze zijn in alle niveaus meteen te kiezen; de oude blijven staan." },
     { v: "v296", t: "Bazaar: boven de kwartetkaarten staat nu \"Dit zijn de kaarten die jij nog mist\", en elke kaart heeft een label \"Mis je\"." },
@@ -13090,10 +13091,11 @@ return exports;})();
       if (st.last) h += '<g transform="translate(0 ' + (-R - 3) + ')"><line y2="-38" stroke="#b07a1a" stroke-width="3" stroke-linecap="round"/><path d="M1 -38 L33 -38 L27 -28 L33 -18 L1 -18Z" fill="#1f9d55" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"><animate attributeName="d" values="M1 -38 L33 -38 L27 -28 L33 -18 L1 -18Z;M1 -38 Q17 -42 33 -38 L27 -28 L33 -18 Q17 -14 1 -18Z;M1 -38 L33 -38 L27 -28 L33 -18 L1 -18Z" dur="2.2s" repeatCount="indefinite"/></path><circle cx="13" cy="-28" r="5.2" fill="#fff"/><circle cx="15.4" cy="-29" r="4.4" fill="#1f9d55"/><polygon points="' + starPoly(23.5, -28, 3.6) + '" fill="#ffd23f"/></g>';
       h += "</g>";
     });
-    if (!act) return h + "</svg>";      /* andere landen op de doorlopende kaart: zonder jouw avatar en medespelers */
+    /* medespelers staan in elk land (niet alleen in het land waar jij bent) */
+    h += '<g id="jSocial' + landsFor(level).indexOf(c) + '" class="j-social">' + socialSvg(c, stops) + "</g>";
+    if (!act) return h + "</svg>";      /* andere landen op de doorlopende kaart: zonder jouw avatar */
     // avatar-marker naast het huidige level
     const ini = esc((P.name || "?").trim().charAt(0).toUpperCase());
-    h += '<g id="jSocial">' + socialSvg(c, stops) + "</g>";
     const mpos = function (st) { const R = st.last ? 27 : st.mile ? 21 : 19, side = st.x < 180 ? -1 : 1; return (st.x + side * (R + 17)) + "," + st.y; };
     const cs = stops[J.cur], key = level + ":" + c.id, prev = journeyPos[key] !== undefined ? Math.min(journeyPos[key], n - 1) : J.cur, ps = stops[prev];
     h += '<g id="jMarker" class="j-marker j-me" data-act="peer" data-key="me" role="button" tabindex="0" aria-label="Jouw profiel" data-from="' + mpos(ps) + '" data-to="' + mpos(cs) + '" style="transform:translate(' + mpos(ps).split(",")[0] + "px," + mpos(ps).split(",")[1] + 'px)"><g class="j-bob"><g transform="scale(1.4)">' +
@@ -13491,9 +13493,10 @@ return exports;})();
         if (r.error) { if (/column|schema|pgrst204/i.test(String(r.error.message || r.error.code || ""))) soc.noCols = true; return; }
         soc.all[lv] = r.data || []; soc.t[key] = Date.now();
         presenceUpdate();
-        const li = journeyLand === null ? defaultLand() : journeyLand;
-        const g = document.getElementById("jSocial"), c = landsFor(lv)[li];
-        if (g && screen === "journey" && P && P.mode === lv) g.innerHTML = socialSvg(c, journeyStops(lv, c).stops);
+        if (screen === "journey" && P && P.mode === lv) landsFor(lv).forEach(function (c, li) {
+          const g = document.getElementById("jSocial" + li);
+          if (g) g.innerHTML = socialSvg(c, journeyStops(lv, c).stops);
+        });
       }).catch(function () { soc.busy[key] = false; });
     } catch (e) { soc.busy[key] = false; }
   }
