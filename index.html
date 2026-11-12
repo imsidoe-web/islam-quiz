@@ -879,6 +879,13 @@ table.board thead th .avatar { display: grid; margin: 0 auto; }
 .rg-sway { transform-box: fill-box; transform-origin: 45% 100%; animation: rgSway 5s ease-in-out infinite; }
 @keyframes rgSway { 0%, 100% { transform: rotate(-1.5deg); } 50% { transform: rotate(1.7deg); } }
 @media (prefers-reduced-motion: reduce) { .rg-sway { animation: none; } }
+/* Land 1 (proef): duif vliegt rustig een rondje bij het nest */
+.rg-fly { animation: rgFly 10s ease-in-out infinite; }
+@keyframes rgFly { 0%, 100% { transform: translate(0, 0); } 25% { transform: translate(-12px, -8px); } 50% { transform: translate(-24px, 1px); } 75% { transform: translate(-12px, 9px); } }
+.rg-flap { transform-box: fill-box; transform-origin: 50% 70%; animation: rgFlap .7s ease-in-out infinite; }
+@keyframes rgFlap { 0%, 100% { transform: scale(1, .93); } 50% { transform: scale(1, 1.05); } }
+@media (prefers-reduced-motion: reduce) { .rg-fly, .rg-flap { animation: none; } }
+.rg-off .rg-fly, .rg-off .rg-flap { animation-play-state: paused; }
 /* ── Reiskaart-glans ronde 2 (proef Land 2): bewegend water en zachte glinsteringen. Alleen CSS, licht; staat stil buiten beeld (.rg-off) ── */
 .rg-tw { transform-box: fill-box; transform-origin: center; opacity: 0; animation: rgTw 8s ease-in-out infinite; }
 @keyframes rgTw { 0%, 58%, 100% { opacity: 0; transform: scale(.3) rotate(0deg); } 72% { opacity: .95; transform: scale(1) rotate(18deg); } 86% { opacity: 0; transform: scale(.35) rotate(36deg); } }
@@ -10141,6 +10148,8 @@ return exports;})();
   function gKaaba(cx, bottom, W) { const H = W * 319 / 320; return gShadow(cx, bottom - 1, W * 0.5, 5) + gImg("kaaba", cx - W / 2, bottom - H, W, H); }
   function gThawr(cx, bottom, W) { const H = W * 307 / 320; return gShadow(cx, bottom - 1, W * 0.46, 5) + '<g transform="translate(' + (2 * cx) + ' 0) scale(-1 1)">' + gImg("thawr", cx - W / 2, bottom - H, W, H) + "</g>"; }   /* gespiegeld: ingang kijkt naar de route */
   function gNest(cx, cy, W) { const H = W * 0.85; return gShadow(cx + 1, cy + H * 0.34, W * 0.46, 3) + gImg("vogelnest", cx - W / 2, cy - H / 2, W, H); }   /* nest bij de ingang van Thawr */
+  function gDuif(cx, bottom, W) { const H = W * 0.92; return gShadow(cx, bottom + 0.5, W * 0.38, 2.2) + '<g transform="translate(' + (2 * cx) + ' 0) scale(-1 1)">' + gImg("duif-zit", cx - W / 2, bottom - H, W, H) + "</g>"; }   /* zittende duif, kijkt naar het nest */
+  function gDuifVlieg(cx, cy, W) { const H = W * 0.95; return '<g class="rg-fly">' + gImg("duif-vlieg", cx - W / 2, cy - H / 2, W, H, ' class="rg-flap"') + "</g>"; }   /* vliegende duif, rustig rondje bij het nest */
   function gCamel(x, y, k, flip) {
     const W = 118 * k, H = W * 297 / 320;
     return '<g transform="translate(' + x + " " + y + ") scale(" + (flip ? -1 : 1) + ' 1)">' + gShadow(14 * k, 2 * k, W * 0.36, 5.5 * k) + gImg("kameel", 14 * k - W / 2, -H + 2 * k, W, H) + "</g>";
@@ -13072,7 +13081,7 @@ return exports;})();
           '<rect x="283" y="160" width="30" height="5" fill="#f0b81e"/><polygon points="313,160 327,154 327,159 313,165" fill="#d9a010"/><rect x="299" y="172" width="9" height="16" rx="1" fill="#f0b81e" stroke="#b8860b" stroke-width="1.2"/>' + lbl(303, 210, "Ka’bah") + "</g>";
       },
       mr: function (th) {
-        if (glansOn) return gThawr(324, 462, 88) + gNest(334, 414, 26) + lbl(322, 476, "Grot Thawr");
+        if (glansOn) return gThawr(324, 462, 88) + gNest(334, 414, 26) + gDuif(346, 411, 24) + gDuifVlieg(334, 388, 28) + lbl(322, 476, "Grot Thawr");
         return '<g><path d="M262 452 L276 405 L296 384 L318 396 L336 378 L360 392 L360 452Z" fill="#8d6a5a"/><path d="M276 405 L296 384 L318 396 L300 410Z" fill="#b08c78"/><path d="M318 396 L336 378 L360 392 L346 408Z" fill="#a37c68"/>' +
           '<path d="M290 452 L290 428 Q312 396 334 428 L334 452Z" fill="#1b262f"/><path d="M296 452 L296 432 Q312 408 328 432 L328 452Z" fill="#273542"/>' +
           '<g stroke="#fff" stroke-opacity=".9" stroke-width="1" fill="none"><line x1="312" y1="414" x2="291" y2="436"/><line x1="312" y1="414" x2="333" y2="436"/><line x1="312" y1="414" x2="312" y2="452"/><line x1="312" y1="414" x2="293" y2="452"/><line x1="312" y1="414" x2="331" y2="452"/><path d="M303 424 Q312 428 321 424 M298 433 Q312 439 326 433 M294 443 Q312 450 330 443"/></g>' + lbl(312, 470, "Grot Thawr") + "</g>";
@@ -13203,7 +13212,7 @@ return exports;})();
     curTh = th;
     const kos = kosmosOn();
     const uid = "j" + level[0] + String(c.id).replace(/[^a-z0-9]/gi, "");
-    let h = '<svg class="jsvg' + (c.id === "zuilen" && !kos ? " rg-map" : "") + '" viewBox="0 0 360 800" role="group" aria-label="Routekaart ' + esc(c.title) + ", " + n + ' levels" xmlns="http://www.w3.org/2000/svg"><defs>' +
+    let h = '<svg class="jsvg' + ((c.id === "zuilen" || c.id === "profeten") && !kos ? " rg-map" : "") + (c.id === "zuilen" && !kos ? " rg-snd" : "") + '" viewBox="0 0 360 800" role="group" aria-label="Routekaart ' + esc(c.title) + ", " + n + ' levels" xmlns="http://www.w3.org/2000/svg"><defs>' +
       '<linearGradient id="' + uid + 'sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + th.sky[0] + '"/><stop offset=".35" stop-color="' + th.sky[1] + '"/><stop offset=".7" stop-color="' + th.sky[2] + '"/><stop offset="1" stop-color="' + th.sky[3] + '"/></linearGradient>' +
       (kos ? kosDefs(uid) : "") + '<radialGradient id="' + uid + 'done" cx=".35" cy=".3"><stop offset="0" stop-color="' + (kos ? "#fff2b8" : "#7ae6b4") + '"/><stop offset="1" stop-color="' + (kos ? "#e8a33a" : "#14935f") + '"/></radialGradient>' +
       '<radialGradient id="' + uid + 'cur" cx=".35" cy=".3"><stop offset="0" stop-color="' + (kos ? "#d6fffa" : "#fff0a8") + '"/><stop offset="1" stop-color="' + (kos ? "#2bd4c8" : "#f0a02e") + '"/></radialGradient>' +
@@ -13960,7 +13969,7 @@ return exports;})();
     if (rgObs) { rgObs.disconnect(); rgObs = null; }
     if ("IntersectionObserver" in window) {
       const rgMaps = document.querySelectorAll(".jsvg.rg-map");
-      if (rgMaps.length) { rgObs = new IntersectionObserver(function (ents) { ents.forEach(function (e) { e.target.classList.toggle("rg-off", !e.isIntersecting); }); rgAmb.show(!!document.querySelector(".jsvg.rg-map:not(.rg-off)")); }, { rootMargin: "80px 0px" }); rgMaps.forEach(function (el) { rgObs.observe(el); }); }
+      if (rgMaps.length) { rgObs = new IntersectionObserver(function (ents) { ents.forEach(function (e) { e.target.classList.toggle("rg-off", !e.isIntersecting); }); rgAmb.show(!!document.querySelector(".jsvg.rg-snd:not(.rg-off)")); }, { rootMargin: "80px 0px" }); rgMaps.forEach(function (el) { rgObs.observe(el); }); }
       else rgAmb.show(false);
     } else rgAmb.show(false);
     rgScrollCalm();
