@@ -13025,7 +13025,8 @@ return exports;})();
   /* ── gemeenschappelijk voorgrond-decor ── */
   function commonProps(th) {
     return lantern(316, 600, "#ffc95d", 0.8) + lantern(18, 655, "#35d0ff", 0.8) + (glansOn ? lantern(200, 276, "#88c7ff", 0.65) + palm(158, 436, 0.4, false) : lantern(160, 250, "#88c7ff", 0.8)) + (glansOn ? lantern(338, 426, "#7dff6a", 0.75) + lantern(13, 408, "#ffb703", 0.7) : lantern(325, 335, "#7dff6a", 0.75) + lantern(25, 440, "#ffb703", 0.7)) +   /* proef: twee lantaarns stonden in een palm; nu op eigen vrije grond ernaast */
-      oilLamp(240, 470, 0.7) + oilLamp(48, 725, 0.75) +
+      (glansOn ? "" : oilLamp(240, 470, 0.7)) + oilLamp(48, 725, 0.75) +   /* proef Land 2: olielamp lag half onder het pad (Gevorderd), weggehaald */
+     
       gem(205, 640, "#ffc44f", 0) + gem(300, 500, "#35d0ff", .4) + gem(150, 510, "#7dff6a", .8) + gem(180, 330, "#ffc928", .2) + gem(55, 450, "#88c7ff", .6) + gem(310, 735, "#ff9f1c", 1);
   }
   function groundFlowers() { return (glansOn ? flowers([[34, 262], [78, 272], [26, 300], [150, 266], [192, 258], [230, 300], [58, 352], [172, 338], [112, 370], [14, 330], [236, 262], [96, 292]]) + gem(60, 290, "#ffc928", 0.3) + gem(205, 322, "#35d0ff", 0.7) + gem(30, 345, "#7dff6a", 0.5) : "") + flowers([[130, 590], [150, 610], [20, 650], [48, 670], [175, 770], [215, 740], [330, 480], [350, 500], [200, 330], [30, 440], [230, 280], [155, 345], [335, 610], [10, 760], [100, 760]].filter(function (f) { return !glansOn || !((f[0] === 330 && f[1] === 480) || (f[0] === 350 && f[1] === 500) || (f[0] === 30 && f[1] === 440)); })); }   /* proef: drie bloemetjes weg onder de twee verplaatste lantaarns */
