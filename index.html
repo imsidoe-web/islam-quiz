@@ -10147,6 +10147,8 @@ return exports;})();
   /* Land 1 (proef): Ka'bah, berg Thawr, kameel en dadelschaal als glanzende plaatjes */
   function gKaaba(cx, bottom, W) { const H = W * 319 / 320; return gShadow(cx, bottom - 1, W * 0.5, 5) + gImg("kaaba", cx - W / 2, bottom - H, W, H) + gTw(cx + W * 0.12, bottom - H * 0.62, 3.2, 7.8, 1) + gTw(cx - W * 0.3, bottom - H * 0.66, 2.6, 9.6, 5) + gTw(cx + W * 0.3, bottom - H * 0.3, 2.8, 8.6, 3); }
   function gThawr(cx, bottom, W) { const H = W * 307 / 320; return gShadow(cx, bottom - 1, W * 0.46, 5) + '<g transform="translate(' + (2 * cx) + ' 0) scale(-1 1)">' + gImg("thawr", cx - W / 2, bottom - H, W, H) + "</g>" + gTw(cx - W * 0.1, bottom - H * 0.32, 3, 7, 2, "#eaffff") + gTw(cx - W * 0.2, bottom - H * 0.22, 2.4, 9.2, 6, "#eaffff"); }   /* gespiegeld: ingang kijkt naar de route */
+  function gTent(cx, bottom, W) { const H = W * 193 / 320; return gShadow(cx, bottom - 1, W * 0.46, 5) + gImg("tent", cx - W / 2, bottom - H, W, H) + gTw(cx - W * 0.28, bottom - H * 0.5, 2.8, 8, 1) + gTw(cx + W * 0.1, bottom - H * 0.9, 3, 7.4, 4) + gTw(cx + W * 0.34, bottom - H * 0.28, 2.6, 9, 6); }
+  function gUhud(cx, bottom, W) { const H = W * 145 / 320; return gShadow(cx, bottom - 1, W * 0.46, 5) + gImg("uhud", cx - W / 2, bottom - H, W, H) + gTw(cx + W * 0.06, bottom - H * 0.85, 3.2, 7.2, 2) + gTw(cx - W * 0.22, bottom - H * 0.55, 2.6, 9, 5); }
   function gNest(cx, cy, W) { const H = W * 0.85; return gShadow(cx + 1, cy + H * 0.2, W * 0.48, 3.2) + '<g transform="translate(0 ' + (cy * 0.4).toFixed(1) + ') scale(1 .6)">' + gImg("vogelnest", cx - W / 2, cy - H / 2, W, H) + "</g>"; }   /* nest plat op de grond */   /* nest bij de ingang van Thawr */
   function gDuif(cx, bottom, W) { const H = W * 0.92; return gShadow(cx, bottom + 0.5, W * 0.38, 2.2) + '<g transform="translate(' + (2 * cx) + ' 0) scale(-1 1)">' + gImg("duif-zit", cx - W / 2, bottom - H, W, H) + "</g>"; }   /* zittende duif, kijkt naar het nest */
   function gDuifVlieg(cx, cy, W) { const H = W * 0.95; return '<g class="rg-fly">' + gImg("duif-vlieg", cx - W / 2, cy - H / 2, W, H, ' class="rg-flap"') + "</g>"; }   /* vliegende duif, rustig rondje bij het nest */
@@ -10215,7 +10217,7 @@ return exports;})();
   }
   /* schaal met dadels */
   function dateBowl(x, y, k) {
-    if (glansOn && glansL === "profeten") return gDates(x, y, k);
+    if (glansOn && (glansL === "profeten" || glansL === "seerah")) return gDates(x, y, k);
     let h = '<g transform="translate(' + x + " " + y + ") scale(" + k + ')"><path d="M-22 -2 Q-22 16 0 16 Q22 16 22 -2Z" fill="#c9602a" stroke="#7a3410" stroke-width="1.6"/><rect x="-8" y="16" width="16" height="5" rx="2" fill="#a24a1c"/><path d="M-20 4 H20" stroke="#ffd36a" stroke-width="2"/>';
     [[-14, -4], [-6, -8], [3, -9], [12, -5], [-9, -1], [0, -3], [9, 0], [-15, 0], [15, -1]].forEach(function (d, i) {
       h += '<ellipse cx="' + d[0] + '" cy="' + d[1] + '" rx="5.4" ry="3.6" transform="rotate(' + (i * 40 % 60 - 25) + " " + d[0] + " " + d[1] + ')" fill="' + (i % 2 ? "#8c3a12" : "#b5521b") + '"/><ellipse cx="' + (d[0] - 1.5) + '" cy="' + (d[1] - 1.2) + '" rx="1.6" ry=".9" fill="#fff" opacity=".45"/>';
@@ -10224,7 +10226,7 @@ return exports;})();
   }
   /* dromedaris met kleurig zadeldekje (kijkt naar rechts; flip = naar links) */
   function camel(x, y, k, flip) {
-    if (glansOn && glansL === "profeten") return gCamel(x, y, k, flip);
+    if (glansOn && (glansL === "profeten" || glansL === "seerah")) return gCamel(x, y, k, flip);
     const f = flip ? -1 : 1, fur = "#e3aa6c", dark = "#c98b4a";
     return '<g transform="translate(' + x + " " + y + ") scale(" + k * f + " " + k + ')"><ellipse cx="2" cy="2" rx="40" ry="6" fill="#000" opacity=".16"/>' +
       '<path d="M-22 -30 L-24 -2 M-12 -30 L-12 -2 M16 -30 L16 -2 M26 -30 L28 -2" stroke="' + dark + '" stroke-width="8" stroke-linecap="round"/><path d="M-24 -2 h0 M-12 -2 h0 M16 -2 h0 M28 -2 h0" stroke="#7a4a1c" stroke-width="9" stroke-linecap="round"/>' +
@@ -13068,6 +13070,15 @@ return exports;})();
       dateBowl(110, 440, 0.8) + gCamelDrink(238, 552, 84) + gCamelRest(276, 338, 64) + (th.day ? sparkle(200, 300, 6, .2) + sparkle(60, 480, 5, .7) + sparkle(250, 120, 5, 1) : "");
   }
 
+  /* Land 3 (proef): zelfde glanzende stijl, eigen decor */
+  function L3glansFront(th) {
+    return gPondAt(298, 592, 92) + groundFlowers() +
+      palm(18, 615, 0.85, false) + palm(342, 305, 0.6, true) + palm(22, 395, 0.7, false) + palm(215, 330, 0.5, true) +
+      lantern(338, 598, "#ffc95d", 0.8) + lantern(18, 655, "#35d0ff", 0.8) + lantern(25, 470, "#ffb703", 0.7) +
+      gem(205, 640, "#ffc44f", 0) + gem(150, 510, "#7dff6a", .8) + gem(180, 330, "#ffc928", .2) + gem(55, 450, "#88c7ff", .6) +
+      dateBowl(110, 440, 0.8) + gCamel(240, 566, 0.7, true) + gCamelRest(276, 338, 64) + (th.day ? sparkle(200, 300, 6, .2) + sparkle(60, 480, 5, .7) + sparkle(250, 120, 5, 1) : "");
+  }
+
   /* ── de vijf landen ── */
   const LANDS = {
     profeten: {
@@ -13119,10 +13130,10 @@ return exports;})();
         expert: { sky: ["#12293d", "#2f4e6a", "#e5603f", "#ffb36b"], far: "#c9704f", mid: "#a65447", near: "#7a5a2a", meadow: "#3aa86a", meadow2: "#26874f", water: "#2aa7c8", water2: "#8be6ff", leaf: "#2fae78", leaf2: "#1b8a5a", trunk: "#6b4228", path: "#f8e4bc", edge: "#c98a52", wall: "#ffe9c9", dome: "#2fbf71", day: false },
       },
       sky: function (th) { return skyDawn(th); },
-      tl: function (th) { return domeMosque(72, 206, 1.15, th.wall, "#2fbf71", th.day ? "#5cabf0" : "#ffe27a", true) + lbl(72, 226, "Medina"); },
-      tr: function (th) { return tent(284, 206, 0.9, "#ff7a59", "#ffd23f") + tent(330, 205, 0.75, "#20c4b4", "#ffffff") + campfire(307, 206, 0.9) + lbl(307, 226, "Tenten"); },
-      mr: function (th) { return mountain(312, 452, 110, 92, "#a0522d", "#cf8350") + lbl(312, 470, "Jabal Uhud"); },
-      front: function (th) { return pondsAll(th) + groundFlowers() + palms(th, palm(335, 640, 0.8, true)) + commonProps(th) + dateBowl(206, 505, 0.8) + camel(246, 766, 0.72, true) + camel(136, 590, 0.62, false) + tent(60, 612, 0.7, "#5caef6", "#ffd23f"); },
+      tl: function (th) { if (glansOn) return gMoskee(66, 238, 92) + lbl(72, 246, "Medina"); return domeMosque(72, 206, 1.15, th.wall, "#2fbf71", th.day ? "#5cabf0" : "#ffe27a", true) + lbl(72, 226, "Medina"); },
+      tr: function (th) { if (glansOn) return gTent(325, 214, 76) + lbl(325, 226, "Tenten"); return tent(284, 206, 0.9, "#ff7a59", "#ffd23f") + tent(330, 205, 0.75, "#20c4b4", "#ffffff") + campfire(307, 206, 0.9) + lbl(307, 226, "Tenten"); },
+      mr: function (th) { if (glansOn) return gUhud(318, 526, 94) + lbl(316, 538, "Jabal Uhud"); return mountain(312, 452, 110, 92, "#a0522d", "#cf8350") + lbl(312, 470, "Jabal Uhud"); },
+      front: function (th) { if (glansOn) return L3glansFront(th); return pondsAll(th) + groundFlowers() + palms(th, palm(335, 640, 0.8, true)) + commonProps(th) + dateBowl(206, 505, 0.8) + camel(246, 766, 0.72, true) + camel(136, 590, 0.62, false) + tent(60, 612, 0.7, "#5caef6", "#ffd23f"); },
     },
     koran: {
       pal: {
@@ -13215,7 +13226,7 @@ return exports;})();
     curTh = th;
     const kos = kosmosOn();
     const uid = "j" + level[0] + String(c.id).replace(/[^a-z0-9]/gi, "");
-    let h = '<svg class="jsvg' + ((c.id === "zuilen" || c.id === "profeten") && !kos ? " rg-map" : "") + (c.id === "zuilen" && !kos ? " rg-snd" : "") + '" viewBox="0 0 360 800" role="group" aria-label="Routekaart ' + esc(c.title) + ", " + n + ' levels" xmlns="http://www.w3.org/2000/svg"><defs>' +
+    let h = '<svg class="jsvg' + ((c.id === "zuilen" || c.id === "profeten" || c.id === "seerah") && !kos ? " rg-map" : "") + (c.id === "zuilen" && !kos ? " rg-snd" : "") + '" viewBox="0 0 360 800" role="group" aria-label="Routekaart ' + esc(c.title) + ", " + n + ' levels" xmlns="http://www.w3.org/2000/svg"><defs>' +
       '<linearGradient id="' + uid + 'sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + th.sky[0] + '"/><stop offset=".35" stop-color="' + th.sky[1] + '"/><stop offset=".7" stop-color="' + th.sky[2] + '"/><stop offset="1" stop-color="' + th.sky[3] + '"/></linearGradient>' +
       (kos ? kosDefs(uid) : "") + '<radialGradient id="' + uid + 'done" cx=".35" cy=".3"><stop offset="0" stop-color="' + (kos ? "#fff2b8" : "#7ae6b4") + '"/><stop offset="1" stop-color="' + (kos ? "#e8a33a" : "#14935f") + '"/></radialGradient>' +
       '<radialGradient id="' + uid + 'cur" cx=".35" cy=".3"><stop offset="0" stop-color="' + (kos ? "#d6fffa" : "#fff0a8") + '"/><stop offset="1" stop-color="' + (kos ? "#2bd4c8" : "#f0a02e") + '"/></radialGradient>' +
@@ -13226,7 +13237,7 @@ return exports;})();
     h += '<rect width="360" height="800" fill="url(#' + uid + 'sky)"/>';
     h += L.sky(th);
     h += '<path d="M0 235 C 80 190, 160 225, 240 200 S 340 205, 360 190 L360 800 L0 800Z" fill="' + th.far + '"/>';
-    glansOn = c.id === "zuilen" || c.id === "profeten"; glansL = c.id; /* proef: Land 2 en Land 1 */
+    glansOn = c.id === "zuilen" || c.id === "profeten" || c.id === "seerah"; glansL = c.id; /* proef: Land 2, Land 1 en Land 3 */
     h += L.tl(th) + L.tr(th);
     h += '<path d="M0 420 C 90 365, 170 405, 250 372 S 340 355, 360 370 L360 800 L0 800Z" fill="' + th.mid + '"/>';
     h += L.mr(th);
@@ -13261,7 +13272,7 @@ return exports;})();
     const dDone = !!P.daily[level][todayStr()];
     if (act) h += '<g class="j-stop j-daily" data-act="start-daily" role="button" tabindex="0" aria-label="Quiz van de Dag' + (dDone ? " (vandaag gespeeld, kom morgen terug voor een nieuwe beloning)" : ": speel vandaag voor een dagbeloning en een bonus op je reeks") + '" style="cursor:pointer">' + (dDone ? "" : '<circle cx="318" cy="748" r="34" fill="#ffe08a" opacity=".5"><animate attributeName="opacity" values=".2;.7;.2" dur="1.4s" repeatCount="indefinite"/></circle>') + (dDone ? "" : sparkle(286, 724, 5, 0.2) + sparkle(352, 730, 4, 0.9) + sparkle(300, 778, 3.5, 1.5)) + '<g class="' + (dDone ? "" : "daily-wiggle") + '">' + chest(318, 752, dDone ? "open" : "closed", 1.3, "daily") + "</g>" + (dDone ? "" : '<g transform="translate(336 716)"><circle r="10" fill="#e8590c" stroke="#fff" stroke-width="2"/><text y="4.5" text-anchor="middle" font-size="12" font-weight="900" fill="#fff">!</text></g>') + lbl(318, 786, dDone ? "Morgen weer" : "Dagbeloning", 10) + "</g>";
     // mijlpalen: schatkisten naast het pad (springen als ze klaarstaan; tik om te openen)
-    const glansOn2 = c.id === "zuilen" || c.id === "profeten";
+    const glansOn2 = c.id === "zuilen" || c.id === "profeten" || c.id === "seerah";
     stops.forEach(function (st) {
       if (!st.mile) return;
       const R = st.last ? 27 : 21, side = st.x < 180 ? 1 : -1, state = jChestState(level, c.id, st.i, n), ready = state === "ready";
