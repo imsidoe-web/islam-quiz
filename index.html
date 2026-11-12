@@ -10212,6 +10212,12 @@ return exports;})();
     const c = (curTh && curTh.meadow) || "#8fe3b0";
     return '<ellipse cx="' + cx + '" cy="' + (cy + 2.5) + '" rx="' + (rx + 2).toFixed(1) + '" ry="' + (ry + 1.5).toFixed(1) + '" fill="#2f7d6a" opacity=".22"/><ellipse cx="' + cx + '" cy="' + cy + '" rx="' + rx + '" ry="' + ry + '" fill="' + c + '"/><ellipse cx="' + cx + '" cy="' + (cy - 1) + '" rx="' + (rx * 0.82).toFixed(1) + '" ry="' + (ry * 0.7).toFixed(1) + '" fill="#fff" opacity=".22"/>';
   }
+  function gPodium(cx, cy, rx, ry) {   /* lage ronde stenen sokkel: gebouw staat er echt op en de scheve (3/4) onderkant verdwijnt erop */
+    return '<ellipse cx="' + cx + '" cy="' + (cy + ry * 0.55 + 7) + '" rx="' + (rx + 5) + '" ry="' + (ry + 3) + '" fill="#2f7d6a" opacity=".22"/>' +
+      '<ellipse cx="' + cx + '" cy="' + (cy + 6) + '" rx="' + rx + '" ry="' + ry + '" fill="#c9b27c"/><rect x="' + (cx - rx) + '" y="' + cy + '" width="' + (2 * rx) + '" height="6" fill="#c9b27c"/>' +
+      '<ellipse cx="' + cx + '" cy="' + cy + '" rx="' + rx + '" ry="' + ry + '" fill="#f6ecd2" stroke="#e0bf6a" stroke-width="1.4"/>' +
+      '<ellipse cx="' + cx + '" cy="' + (cy - 1.5) + '" rx="' + (rx * 0.84).toFixed(1) + '" ry="' + (ry * 0.72).toFixed(1) + '" fill="#fff" opacity=".35"/>';
+  }
   function gWasplaats(cx, bottom, W) {
     const H = W * 320 / 377, x0 = cx - W / 2, y0 = bottom - H;
     const drop = function (fx, dur, del) { return '<circle class="rg-drop" cx="' + (x0 + W * fx).toFixed(1) + '" cy="' + (y0 + H * 0.47).toFixed(1) + '" r="1" fill="#eafcff" stroke="#7fdcf0" stroke-width=".3" style="--dx:0px;--dy:' + (H * 0.13).toFixed(1) + "px;animation-duration:" + dur + "s;animation-delay:-" + del + 's"/>'; };
@@ -13304,8 +13310,8 @@ return exports;})();
   LANDS.reinheid = {
     pal: { beginner: { sky: ["#7fd6ff", "#bfeaff", "#e6fbff", "#f4ffff"], far: "#bfe9e3", mid: "#8fd9d0", near: "#62c7c0", meadow: "#8fe3b0", meadow2: "#5cc98f", water: "#27c6e0", water2: "#a4f5ff", leaf: "#35c27a", leaf2: "#1f9c5c", trunk: "#a8703a", path: "#f4ffff", edge: "#7ccfd0", wall: "#f4ffff", dome: "#1fc2a8", day: true } },
     sky: function (th) { return skyDay(th, { sx: 300, sy: 60 }) + heartShape(70, 120, 6, "#a4f5ff", .2) + heartShape(200, 96, 5, "#ffffff", .8); },
-    tl: function (th) { if (glansOn) return gGrond(72, 252, 66, 13) + fountain(72, 236, 1.05) + lbl(72, 157, "Wudhu-fontein"); return fountain(72, 206, 1.05) + lbl(72, 226, "Wudhu-fontein"); },
-    tr: function (th) { if (glansOn) return gGrond(312, 262, 54, 11) + gMoskee(312, 266, 80, true, true) + lbl(312, 166, "Moskee"); return domeMosque(300, 206, 0.8, th.wall, th.dome, "#5cabf0") + lbl(304, 226, "Moskee"); },
+    tl: function (th) { if (glansOn) return gPodium(72, 246, 64, 14) + fountain(72, 236, 1.05) + lbl(72, 157, "Wudhu-fontein"); return fountain(72, 206, 1.05) + lbl(72, 226, "Wudhu-fontein"); },
+    tr: function (th) { if (glansOn) return gPodium(312, 258, 48, 14) + gMoskee(312, 266, 80, true, true) + lbl(312, 166, "Moskee"); return domeMosque(300, 206, 0.8, th.wall, th.dome, "#5cabf0") + lbl(304, 226, "Moskee"); },
     mr: function (th) { if (glansOn) return gGrond(306, 399, 64, 11) + gWasplaats(306, 402, 96) + lbl(306, 318, "Schoon water"); return fountain(312, 452, 0.9) + lbl(312, 472, "Schoon water"); },
     front: function (th) { if (glansOn) return LRglansFront(th); return pondsAll(th) + groundFlowers() + palms(th) + commonProps(th) + sparkle(200, 300, 6, .2) + sparkle(60, 480, 5, .7) + sparkle(250, 120, 5, 1); },
   };
