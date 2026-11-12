@@ -13194,7 +13194,7 @@ return exports;})();
     h += L.mr(th);
     const nearD = "M0 610 C 100 565, 200 612, 300 572 S 350 560, 360 566 L360 800 L0 800Z";
     h += '<path d="' + nearD + '" fill="' + th.near + '"/>';
-    if (L.tile) h += '<path d="' + nearD + '" fill="url(#' + uid + 'tile)" opacity=".55"/>';
+    if (L.tile) h += '<path d="' + nearD + '" fill="url(#' + uid + 'tile)" opacity="' + (c.id === "zuilen" ? ".2" : ".55") + '"/>';   /* proef Land 2: grondtegels rustiger */
     h += L.front(th);
     glansOn = false;
     }
@@ -13207,6 +13207,13 @@ return exports;})();
       segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="#2fe08a" stroke-width="24" stroke-linecap="round" opacity=".22" filter="url(#' + uid + 'ns)"/>'; });
       segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="' + (S[1] ? "#7dffd8" : "#3b4a9a") + '" stroke-width="5" stroke-linecap="round"' + (S[1] ? ' filter="url(#' + uid + 'ng)"' : "") + '/>'; });
       segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="2 12"/>'; });
+    } else if (c.id === "zuilen") {
+    /* proef Land 2: pad rustig en glanzend (zelfde plek en breedte; alleen zachte schaduw, lichte rand en glans) */
+    segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="#7a4a12" stroke-opacity=".16" stroke-width="26" stroke-linecap="round" transform="translate(0 2.5)"/>'; });
+    segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="' + th.edge + '" stroke-width="26" stroke-linecap="round"/>'; });
+    segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="' + (S[1] ? "#ffe08a" : th.path) + '" stroke-width="19" stroke-linecap="round"/>'; });
+    segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="7" stroke-linecap="round" transform="translate(-2 -2)"/>'; });
+    segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2" stroke-linecap="round" stroke-dasharray="1 14"/>'; });
     } else {
     segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="' + th.edge + '" stroke-width="26" stroke-linecap="round"/>'; });
     segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="' + (S[1] ? "#ffe08a" : th.path) + '" stroke-width="18" stroke-linecap="round"/>'; });
