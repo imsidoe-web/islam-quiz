@@ -10171,6 +10171,19 @@ return exports;})();
     return gShadow(cx, bottom - 2, W * 0.46, 5) + (flip ? '<g transform="translate(' + (2 * cx) + ' 0) scale(-1 1)">' : "") + gImg("bibliotheek", cx - W / 2, bottom - H, W, H) + (flip ? "</g>" : "") +
       gTw(fx(0.5), bottom - H * 0.95, 3, 7.6, 1) + gTw(fx(0.45), bottom - H * 0.62, 3.2, 9, 4) + gTw(fx(0.8), bottom - H * 0.4, 2.6, 8.2, 6);
   }
+  /* Land 5 (proef): prieel, rozenboog en cadeaus (sadaqa) als glanzende plaatjes */
+  function gPrieel(cx, bottom, W) {
+    const H = W * 320 / 236;
+    return gShadow(cx, bottom - 2, W * 0.48, 5) + gImg("prieel", cx - W / 2, bottom - H, W, H) + gTw(cx, bottom - H * 0.97, 3, 8, 1) + gTw(cx - W * 0.3, bottom - H * 0.42, 2.8, 9.2, 4) + gTw(cx + W * 0.3, bottom - H * 0.35, 2.6, 7.6, 6);
+  }
+  function gRozenboog(cx, bottom, W) {
+    const H = W * 320 / 246;
+    return gShadow(cx, bottom - 1, W * 0.46, 4.5) + gImg("rozenboog", cx - W / 2, bottom - H, W, H) + gTw(cx, bottom - H * 0.98, 3, 7.4, 2) + gTw(cx - W * 0.34, bottom - H * 0.55, 2.6, 9, 5) + gTw(cx + W * 0.34, bottom - H * 0.5, 2.6, 8.2, 0.5);
+  }
+  function gCadeaus(cx, bottom, W) {
+    const H = W * 315 / 316;
+    return gShadow(cx, bottom - 1, W * 0.44, 4.5) + gImg("cadeaus", cx - W / 2, bottom - H, W, H) + gTw(cx - W * 0.02, bottom - H * 0.93, 3, 8, 1) + gTw(cx + W * 0.3, bottom - H * 0.6, 2.6, 9.4, 4) + gTw(cx - W * 0.28, bottom - H * 0.5, 2.6, 7.2, 6);
+  }
   function gNest(cx, cy, W) { const H = W * 0.85; return gShadow(cx + 1, cy + H * 0.2, W * 0.48, 3.2) + '<g transform="translate(0 ' + (cy * 0.4).toFixed(1) + ') scale(1 .6)">' + gImg("vogelnest", cx - W / 2, cy - H / 2, W, H) + "</g>"; }   /* nest plat op de grond */   /* nest bij de ingang van Thawr */
   function gDuif(cx, bottom, W) { const H = W * 0.92; return gShadow(cx, bottom + 0.5, W * 0.38, 2.2) + '<g transform="translate(' + (2 * cx) + ' 0) scale(-1 1)">' + gImg("duif-zit", cx - W / 2, bottom - H, W, H) + "</g>"; }   /* zittende duif, kijkt naar het nest */
   function gDuifVlieg(cx, cy, W) { const H = W * 0.95; return '<g class="rg-fly">' + gImg("duif-vlieg", cx - W / 2, cy - H / 2, W, H, ' class="rg-flap"') + "</g>"; }   /* vliegende duif, rustig rondje bij het nest */
@@ -13110,6 +13123,15 @@ return exports;})();
       star8(60, 640, 10, "#ffd54f", 0.2) + star8(190, 430, 8, "#ffdd9a", 1.2) + sparkle(120, 700, 5, .2) + sparkle(60, 480, 5, .9);
   }
 
+  /* Land 5 (proef): rozentuin met glanzende palmen (rozenstruik volgt later), grootte volgt de diepte */
+  function L5glansFront(th) {
+    const pk = function (y) { return Math.round((0.45 + (y - 290) * 0.00115) * 100) / 100; };
+    return groundFlowers() + gRozenboog(320, 589, 66) + lbl(320, 498, "Adab") +
+      palm(345, 300, pk(300), true) + palm(8, 339, pk(339), false) + palm(189, 320, pk(320), true) + palm(0, 640, pk(640), false) +
+      lantern(336, 615, "#ffc95d", 0.8) + lantern(140, 407, "#ffb703", 0.7) +
+      heartShape(60, 690, 7, "#ffc95d", 0.4) + heartShape(190, 760, 7, "#ffdd9a", 0.2) + sparkle(120, 700, 5, .2) + sparkle(60, 560, 5, .9);
+  }
+
   /* ── de vijf landen ── */
   const LANDS = {
     profeten: {
@@ -13183,10 +13205,10 @@ return exports;})();
         expert: { sky: ["#142e45", "#2f608a", "#e8c070", "#ffc9a8"], far: "#4fa878", mid: "#3a9163", near: "#2a7a52", meadow: "#5cc088", meadow2: "#2f9460", water: "#5ec8e8", water2: "#bdf0ff", leaf: "#2fae78", leaf2: "#1b8a5a", trunk: "#6b4228", path: "#f8e4bc", edge: "#d8c090", wall: "#fef6e7", dome: "#ffd37a", day: false },
       },
       sky: function (th) { return (th.day ? skyDay(th, { sx: 300, sy: 60 }) : skyNight(th)) + heartShape(70, 120, 8, "#ffc95d", 0) + heartShape(200, 90, 6, "#ffffff", .6) + heartShape(330, 150, 7, "#ffdd9a", 1.1) + heartShape(120, 180, 5, "#ffbe3d", .3); },
-      tl: function (th) { return gazebo(72, 206, 1.1) + lbl(72, 226, "Rozentuin"); },
-      tr: function (th) { return roseArch(306, 206, 1) + lbl(306, 226, "Adab"); },
-      mr: function (th) { return gifts(312, 452, 1.15) + lbl(312, 472, "Sadaqa"); },
-      front: function (th) { return pondsAll(th) + groundFlowers() + rosebush(22, 592, 0.9) + rosebush(340, 305, 0.7) + rosebush(150, 305, 0.65) + rosebush(24, 385, 0.8) + rosebush(215, 502, 0.6) + rosebush(336, 640, 0.9) + rosebush(135, 592, 0.7) + heartShape(60, 690, 7, "#ffc95d", 0.4) + heartShape(290, 600, 6, "#ffffff", 0.9) + heartShape(190, 760, 7, "#ffdd9a", 0.2) + commonProps(th) + (th.day ? sparkle(200, 300, 6, .2) + sparkle(60, 480, 5, .7) : ""); },
+      tl: function (th) { if (glansOn) return gPrieel(71, 233, 80) + lbl(71, 106, "Rozentuin"); return gazebo(72, 206, 1.1) + lbl(72, 226, "Rozentuin"); },
+      tr: function (th) { if (glansOn) return ""; return roseArch(306, 206, 1) + lbl(306, 226, "Adab"); },
+      mr: function (th) { if (glansOn) return gCadeaus(57, 466, 66) + lbl(57, 396, "Sadaqa"); return gifts(312, 452, 1.15) + lbl(312, 472, "Sadaqa"); },
+      front: function (th) { if (glansOn) return L5glansFront(th); return pondsAll(th) + groundFlowers() + rosebush(22, 592, 0.9) + rosebush(340, 305, 0.7) + rosebush(150, 305, 0.65) + rosebush(24, 385, 0.8) + rosebush(215, 502, 0.6) + rosebush(336, 640, 0.9) + rosebush(135, 592, 0.7) + heartShape(60, 690, 7, "#ffc95d", 0.4) + heartShape(290, 600, 6, "#ffffff", 0.9) + heartShape(190, 760, 7, "#ffdd9a", 0.2) + commonProps(th) + (th.day ? sparkle(200, 300, 6, .2) + sparkle(60, 480, 5, .7) : ""); },
     },
   };
 
@@ -13257,7 +13279,7 @@ return exports;})();
     curTh = th;
     const kos = kosmosOn();
     const uid = "j" + level[0] + String(c.id).replace(/[^a-z0-9]/gi, "");
-    let h = '<svg class="jsvg' + ((c.id === "zuilen" || c.id === "profeten" || c.id === "seerah" || c.id === "koran") && !kos ? " rg-map" : "") + (c.id === "zuilen" && !kos ? " rg-snd" : "") + '" viewBox="0 0 360 800" role="group" aria-label="Routekaart ' + esc(c.title) + ", " + n + ' levels" xmlns="http://www.w3.org/2000/svg"><defs>' +
+    let h = '<svg class="jsvg' + ((c.id === "zuilen" || c.id === "profeten" || c.id === "seerah" || c.id === "koran" || c.id === "akhlaaq") && !kos ? " rg-map" : "") + (c.id === "zuilen" && !kos ? " rg-snd" : "") + '" viewBox="0 0 360 800" role="group" aria-label="Routekaart ' + esc(c.title) + ", " + n + ' levels" xmlns="http://www.w3.org/2000/svg"><defs>' +
       '<linearGradient id="' + uid + 'sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + th.sky[0] + '"/><stop offset=".35" stop-color="' + th.sky[1] + '"/><stop offset=".7" stop-color="' + th.sky[2] + '"/><stop offset="1" stop-color="' + th.sky[3] + '"/></linearGradient>' +
       (kos ? kosDefs(uid) : "") + '<radialGradient id="' + uid + 'done" cx=".35" cy=".3"><stop offset="0" stop-color="' + (kos ? "#fff2b8" : "#7ae6b4") + '"/><stop offset="1" stop-color="' + (kos ? "#e8a33a" : "#14935f") + '"/></radialGradient>' +
       '<radialGradient id="' + uid + 'cur" cx=".35" cy=".3"><stop offset="0" stop-color="' + (kos ? "#d6fffa" : "#fff0a8") + '"/><stop offset="1" stop-color="' + (kos ? "#2bd4c8" : "#f0a02e") + '"/></radialGradient>' +
@@ -13268,7 +13290,7 @@ return exports;})();
     h += '<rect width="360" height="800" fill="url(#' + uid + 'sky)"/>';
     h += L.sky(th);
     h += '<path d="M0 235 C 80 190, 160 225, 240 200 S 340 205, 360 190 L360 800 L0 800Z" fill="' + th.far + '"/>';
-    glansOn = c.id === "zuilen" || c.id === "profeten" || c.id === "seerah" || c.id === "koran"; glansL = c.id; /* proef: Land 2, Land 1, Land 3 en Land 4 */
+    glansOn = c.id === "zuilen" || c.id === "profeten" || c.id === "seerah" || c.id === "koran" || c.id === "akhlaaq"; glansL = c.id; /* proef: Land 2, Land 1, Land 3, Land 4 en Land 5 */
     h += L.tl(th) + L.tr(th);
     h += '<path d="M0 420 C 90 365, 170 405, 250 372 S 340 355, 360 370 L360 800 L0 800Z" fill="' + th.mid + '"/>';
     h += L.mr(th);
@@ -13303,7 +13325,7 @@ return exports;})();
     const dDone = !!P.daily[level][todayStr()];
     if (act) h += '<g class="j-stop j-daily" data-act="start-daily" role="button" tabindex="0" aria-label="Quiz van de Dag' + (dDone ? " (vandaag gespeeld, kom morgen terug voor een nieuwe beloning)" : ": speel vandaag voor een dagbeloning en een bonus op je reeks") + '" style="cursor:pointer">' + (dDone ? "" : '<circle cx="318" cy="748" r="34" fill="#ffe08a" opacity=".5"><animate attributeName="opacity" values=".2;.7;.2" dur="1.4s" repeatCount="indefinite"/></circle>') + (dDone ? "" : sparkle(286, 724, 5, 0.2) + sparkle(352, 730, 4, 0.9) + sparkle(300, 778, 3.5, 1.5)) + '<g class="' + (dDone ? "" : "daily-wiggle") + '">' + chest(318, 752, dDone ? "open" : "closed", 1.3, "daily") + "</g>" + (dDone ? "" : '<g transform="translate(336 716)"><circle r="10" fill="#e8590c" stroke="#fff" stroke-width="2"/><text y="4.5" text-anchor="middle" font-size="12" font-weight="900" fill="#fff">!</text></g>') + lbl(318, 786, dDone ? "Morgen weer" : "Dagbeloning", 10) + "</g>";
     // mijlpalen: schatkisten naast het pad (springen als ze klaarstaan; tik om te openen)
-    const glansOn2 = c.id === "zuilen" || c.id === "profeten" || c.id === "seerah" || c.id === "koran";
+    const glansOn2 = c.id === "zuilen" || c.id === "profeten" || c.id === "seerah" || c.id === "koran" || c.id === "akhlaaq";
     stops.forEach(function (st) {
       if (!st.mile) return;
       const R = st.last ? 27 : 21, side = st.x < 180 ? 1 : -1, state = jChestState(level, c.id, st.i, n), ready = state === "ready";
