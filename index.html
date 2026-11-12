@@ -10095,7 +10095,7 @@ return exports;})();
       return '<path class="rg-wave" style="animation-duration:' + dur + "s;animation-delay:-" + del + 's" d="M' + (x - w).toFixed(1) + " " + y.toFixed(1) + " Q " + x.toFixed(1) + " " + (y - 1.6).toFixed(1) + " " + (x + w).toFixed(1) + " " + y.toFixed(1) + '" fill="none" stroke="#fff" stroke-width=".9" stroke-linecap="round"/>';
     };
     return gShadow(cx + 2, cy + H * 0.36, W * 0.47, H * 0.11) + img +
-      lily("rgLc1", 212, 100, 50, 38, 4.6, 0.5) + lily("rgLc2", 93, 154, 38, 29, 5.4, 2.2) +
+      lily("rgLc1" + glansL, 212, 100, 50, 38, 4.6, 0.5) + lily("rgLc2" + glansL, 93, 154, 38, 29, 5.4, 2.2) +
       wave(132, 108, 4, 5, 0.3) + wave(205, 186, 4.5, 5.8, 2.1) + wave(150, 208, 3.5, 4.6, 3.4) + wave(250, 152, 3.5, 6.4, 1.2) + wave(88, 198, 3, 5.4, 4.4) +
       gTw(X(172), Y(128), 3.4, 6.5, 0.4) + gTw(X(118), Y(186), 2.8, 8, 3.1) + gTw(X(226), Y(200), 3, 7.2, 5.3) + gTw(X(150), Y(262), 2.6, 9.5, 6.2);
   }
@@ -10145,18 +10145,18 @@ return exports;})();
     return '<g' + (dim ? ' opacity=".6"' : "") + ">" + gShadow(cx, cy + H * 0.42, W * 0.42, 3.5) + gImg("schatkist", cx - W / 2, cy - H * 0.55, W, H) + gTw(cx + W * 0.16, cy - H * 0.3, 3.2 * k, (7.5 + (cy % 5) * 0.6).toFixed(1), (cy % 7).toFixed(1)) + "</g>";
   }
   /* Land 1 (proef): Ka'bah, berg Thawr, kameel en dadelschaal als glanzende plaatjes */
-  function gKaaba(cx, bottom, W) { const H = W * 319 / 320; return gShadow(cx, bottom - 1, W * 0.5, 5) + gImg("kaaba", cx - W / 2, bottom - H, W, H); }
-  function gThawr(cx, bottom, W) { const H = W * 307 / 320; return gShadow(cx, bottom - 1, W * 0.46, 5) + '<g transform="translate(' + (2 * cx) + ' 0) scale(-1 1)">' + gImg("thawr", cx - W / 2, bottom - H, W, H) + "</g>"; }   /* gespiegeld: ingang kijkt naar de route */
+  function gKaaba(cx, bottom, W) { const H = W * 319 / 320; return gShadow(cx, bottom - 1, W * 0.5, 5) + gImg("kaaba", cx - W / 2, bottom - H, W, H) + gTw(cx + W * 0.12, bottom - H * 0.62, 3.2, 7.8, 1) + gTw(cx - W * 0.3, bottom - H * 0.66, 2.6, 9.6, 5) + gTw(cx + W * 0.3, bottom - H * 0.3, 2.8, 8.6, 3); }
+  function gThawr(cx, bottom, W) { const H = W * 307 / 320; return gShadow(cx, bottom - 1, W * 0.46, 5) + '<g transform="translate(' + (2 * cx) + ' 0) scale(-1 1)">' + gImg("thawr", cx - W / 2, bottom - H, W, H) + "</g>" + gTw(cx - W * 0.1, bottom - H * 0.32, 3, 7, 2, "#eaffff") + gTw(cx - W * 0.2, bottom - H * 0.22, 2.4, 9.2, 6, "#eaffff"); }   /* gespiegeld: ingang kijkt naar de route */
   function gNest(cx, cy, W) { const H = W * 0.85; return gShadow(cx + 1, cy + H * 0.2, W * 0.48, 3.2) + '<g transform="translate(0 ' + (cy * 0.4).toFixed(1) + ') scale(1 .6)">' + gImg("vogelnest", cx - W / 2, cy - H / 2, W, H) + "</g>"; }   /* nest plat op de grond */   /* nest bij de ingang van Thawr */
   function gDuif(cx, bottom, W) { const H = W * 0.92; return gShadow(cx, bottom + 0.5, W * 0.38, 2.2) + '<g transform="translate(' + (2 * cx) + ' 0) scale(-1 1)">' + gImg("duif-zit", cx - W / 2, bottom - H, W, H) + "</g>"; }   /* zittende duif, kijkt naar het nest */
   function gDuifVlieg(cx, cy, W) { const H = W * 0.95; return '<g class="rg-fly">' + gImg("duif-vlieg", cx - W / 2, cy - H / 2, W, H, ' class="rg-flap"') + "</g>"; }   /* vliegende duif, rustig rondje bij het nest */
-  function gCamelDrink(cx, bottom, W) { const H = W * 281 / 320; return gShadow(cx, bottom - 1, W * 0.46, 4) + gImg("kameel-drinkt", cx - W / 2, bottom - H, W, H); }   /* kameel drinkt uit zijn eigen waterplas */
-  function gCamelRest(cx, bottom, W) { const H = W * 280 / 320; return gShadow(cx, bottom - 1, W * 0.4, 4) + gImg("kameel-rust", cx - W / 2, bottom - H, W, H); }   /* kameel ligt te rusten */
+  function gCamelDrink(cx, bottom, W) { const H = W * 281 / 320; return gShadow(cx, bottom - 1, W * 0.46, 4) + gImg("kameel-drinkt", cx - W / 2, bottom - H, W, H) + '<ellipse class="rg-ring" cx="' + (cx + W * 0.28).toFixed(1) + '" cy="' + (bottom - H * 0.13).toFixed(1) + '" rx="6" ry="2.4" fill="none" stroke="#fff" stroke-width=".8" style="animation-duration:2.8s"/>' + gTw(cx - W * 0.05, bottom - H * 0.86, 2.8, 8, 3); }   /* kameel drinkt uit zijn eigen waterplas */
+  function gCamelRest(cx, bottom, W) { const H = W * 280 / 320; return gShadow(cx, bottom - 1, W * 0.4, 4) + gImg("kameel-rust", cx - W / 2, bottom - H, W, H) + gTw(cx - W * 0.05, bottom - H * 0.82, 2.8, 8, 3) + gTw(cx + W * 0.12, bottom - H * 0.7, 2.4, 9.4, 6); }   /* kameel ligt te rusten */
   function gCamel(x, y, k, flip) {
     const W = 118 * k, H = W * 297 / 320;
     return '<g transform="translate(' + x + " " + y + ") scale(" + (flip ? -1 : 1) + ' 1)">' + gShadow(14 * k, 2 * k, W * 0.36, 5.5 * k) + gImg("kameel", 14 * k - W / 2, -H + 2 * k, W, H) + "</g>";
   }
-  function gDates(x, y, k) { const W = 56 * k, H = W * 249 / 320; return gShadow(x, y + 18 * k, W * 0.45, 4 * k) + gImg("dadelschaal", x - W / 2, y + 19 * k - H, W, H); }
+  function gDates(x, y, k) { const W = 56 * k, H = W * 249 / 320; return gShadow(x, y + 18 * k, W * 0.45, 4 * k) + gImg("dadelschaal", x - W / 2, y + 19 * k - H, W, H) + gTw(x + W * 0.22, y + 19 * k - H * 0.72, 2.6, 8.5, 2); }
   function palm(x, y, k, flip) {
     if (glansOn) return gPalm(x, y, k, flip);
     const f = flip ? -1 : 1, th = curTh;
@@ -13059,7 +13059,7 @@ return exports;})();
 
   /* Land 1 (proef): glanzend voorgrond-decor op vrije grond, naast de route */
   function L1glansFront(th) {
-    return gPond(298, 592, 34, 22) + groundFlowers() +
+    return gPondAt(298, 592, 92) + groundFlowers() +
       palm(18, 615, 0.85, false) + palm(342, 305, 0.6, true) + palm(22, 395, 0.7, false) + palm(215, 330, 0.5, true) +
       lantern(338, 598, "#ffc95d", 0.8) + lantern(18, 655, "#35d0ff", 0.8) + lantern(25, 470, "#ffb703", 0.7) +   /* proef Land 1: lantaarn bij Thawr weggehaald (te druk met de duiven) */
       
