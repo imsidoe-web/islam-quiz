@@ -15166,7 +15166,7 @@ return exports;})();
     return Array.prototype.some.call(document.querySelectorAll(".modal-overlay, [role=dialog]"), function (el) { return el.offsetParent !== null || getComputedStyle(el).position === "fixed" && getComputedStyle(el).display !== "none" && getComputedStyle(el).visibility !== "hidden"; });
   }
   function moveNudge() {
-    if (!OLD_HOST) return;
+    if (!OLD_HOST || PROEF_TEST) return;   /* testadres: geen verhuis-pop-up en geen doorsturen */
     try { if (sessionStorage.getItem("iq-mvask")) return; } catch (e) {}
     if (overlayOpen() || !document.getElementById("app")) { setTimeout(moveNudge, 2000); return; }
     try { sessionStorage.setItem("iq-mvask", "1"); } catch (e) {}
@@ -15227,7 +15227,7 @@ return exports;})();
     } catch (e) {}
     location.replace(NEW_HOME);
   }
-  const MOVED_AWAY = OLD_HOST && !!S.movedOut && !/[?#&](code|access_token|error|verhuis)=/.test(location.href);
+  const MOVED_AWAY = OLD_HOST && !PROEF_TEST && !!S.movedOut && !/[?#&](code|access_token|error|verhuis)=/.test(location.href);
   if (MOVED_AWAY) moveRedirect();
   moveIn();
   if (!MOVED_AWAY) startSplash(function () { if (OLD_HOST) setTimeout(moveNudge, 1500); else moveWelcome(); });   /* v91b: eerst het welkomstscherm met logo en salaam; het inlogvenster opent pas na een tik op "Account & Inloggen" */
