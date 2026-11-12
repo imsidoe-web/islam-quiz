@@ -2746,6 +2746,7 @@ body.mk-typing .mk-res{gap:8px}
 
 /* v124: één doorlopende reis */
 .jmap-scroll.jreis { background: #12362a; }
+html.proef-test .j-social, html.proef-test .j-marker { display: none !important; }   /* proef: alleen testadres, tijdelijk */
 .jl-land { position: relative; z-index: 2; }
 /* zachte overgang: de randen van de landen vervagen in de poort */
 .jl-land.ft .jsvg { -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 74px); mask-image: linear-gradient(180deg, transparent 0, #000 74px); }
@@ -7004,6 +7005,7 @@ return exports;})();
   let journeyLand = null;      /* index van het getoonde land (null = eerste onafgeronde land) */
   /* PROEF (alleen op het testadres van de glans-proef, nooit op nurspark.app): alle landen open en je start in Land 2 */
   const PROEF_TEST = /\.vercel\.app$/i.test(location.hostname) && location.hostname.indexOf("reiskaart-glans") !== -1;
+  if (PROEF_TEST) document.documentElement.classList.add("proef-test");   /* alleen op het testadres: spelers op de kaart tijdelijk verbergen (mag NIET live) */
   const journeyPos = {};       /* laatst getoonde stop per land, voor de sprong-animatie */
   let boardLevel = "junior";   /* wordt bij het openen van het scorebord op de actieve modus gezet */
   let flyerPending = !!(P && P.mode);   /* toon bij aankomst op de kaart een motivatieflyer */
