@@ -10070,7 +10070,9 @@ return exports;})();
   }
   /* ── Reiskaart-glans (proef, alleen Land 2): glanzende plaatjes in plaats van de getekende onderdelen ── */
   let glansOn = false, glansL = "", glansBeg = false;   /* glansBeg: Beginner-kaart (5 levels, andere route) */   /* glansL: welk land (alleen "zuilen" en "profeten" doen mee) */
-  function gImg(name, x, y, w, h, extra) { return '<image href="reiskaart-glans/' + name + '.webp" x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + w.toFixed(1) + '" height="' + h.toFixed(1) + '" decoding="sync"' + (extra || "") + "/>"; }
+  let nachtOn = false;   /* Land 6 (proef): nachtlook aan tijdens het tekenen van de kaart */
+  const NACHT_TINT = { nachtmoskee: 1, lantaarnpaar: 1, ihsanpoort: 1, schatkist: 1 };
+  function gImg(name, x, y, w, h, extra) { if (nachtOn && NACHT_TINT[name]) extra = (extra || "") + ' filter="url(#nachtTint)"'; return '<image href="reiskaart-glans/' + name + '.webp" x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + w.toFixed(1) + '" height="' + h.toFixed(1) + '" decoding="sync"' + (extra || "") + "/>"; }
   function gShadow(cx, cy, rx, ry) { return '<ellipse cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" rx="' + rx.toFixed(1) + '" ry="' + ry.toFixed(1) + '" fill="#4a3210" opacity=".2"/>'; }
   /* ronde 2: zacht sterretje dat af en toe oplicht (CSS, uit bij minder-beweging) */
   function gTw(x, y, r, dur, del, col) {
@@ -10203,7 +10205,7 @@ return exports;})();
   }
   function gIhsanPoort(cx, bottom, W) {
     const H = W * 320 / 295, x0 = cx - W / 2, y0 = bottom - H, uid = "rgIp" + glansL;
-    return gShadow(cx, bottom - 1, W * 0.46, 4.5) + gGlowDef(uid) + gImg("ihsanpoort", x0, y0, W, H) +
+    return (nachtOn ? gNachtGrond(cx, bottom - 2, W * .42, 6) : "") + gShadow(cx, bottom - 1, W * 0.46, 4.5) + gGlowDef(uid) + gImg("ihsanpoort", x0, y0, W, H) +
       gGlow(uid, x0 + W * 0.13, y0 + H * 0.69, W * 0.09, H * 0.08, 3.1, 0.6) + gGlow(uid, x0 + W * 0.84, y0 + H * 0.69, W * 0.09, H * 0.08, 3.7, 2.2) +
       gTw(x0 + W * 0.5, y0 + H * 0.03, 3, 7.6, 1) + gTw(x0 + W * 0.2, y0 + H * 0.3, 2.8, 9, 4) + gTw(x0 + W * 0.82, y0 + H * 0.28, 2.6, 8.2, 6);
   }
@@ -13200,8 +13202,15 @@ return exports;})();
       sparkle(120, 700, 5, .2) + sparkle(60, 560, 5, .9) + sparkle(190, 430, 4, 1.2) + sparkle(40, 640, 4, .6);
   }
   /* Land 6 (proef): nachtbos-achtergrond uit drie plaatjes (boven, midden, onder), zacht in elkaar overlopend */
+  function gNachtGrond(cx, cy, rx, ry) {   /* donker mosplekje met grassprietjes: zet een plaatje echt op de grond */
+    const k = Math.round(cx * 7 + cy), g = '<defs><radialGradient id="ng' + k + '"><stop offset="0" stop-color="#2c5a35" stop-opacity=".95"/><stop offset=".6" stop-color="#1f4328" stop-opacity=".8"/><stop offset="1" stop-color="#143020" stop-opacity="0"/></radialGradient></defs>';
+    let t = "";
+    [-.8, -.45, .1, .5, .85].forEach(function (f, i) { const x = cx + f * rx * .9, y = cy + ry * (.55 + (i % 2) * .15), h = 5 + (i % 3) * 1.6; t += '<path d="M' + (x - 1.6).toFixed(1) + " " + y.toFixed(1) + " Q " + (x - .6).toFixed(1) + " " + (y - h * .6).toFixed(1) + " " + (x + (i % 2 ? 2 : -2)).toFixed(1) + " " + (y - h).toFixed(1) + " Q " + (x + .8).toFixed(1) + " " + (y - h * .5).toFixed(1) + " " + (x + 1.6).toFixed(1) + " " + y.toFixed(1) + 'Z" fill="' + (i % 2 ? "#3f7a45" : "#2f6038") + '"/>'; });
+    return g + '<ellipse cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" rx="' + (rx * 1.25).toFixed(1) + '" ry="' + (ry * 1.35).toFixed(1) + '" fill="url(#ng' + k + ')"/>' + t;
+  }
   function nachtBg() {
-    return '<rect width="360" height="800" fill="#0f261c"/>' +
+    return '<defs><filter id="nachtTint" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values=".80 .06 .02 0 0  .03 .86 .05 0 0  .02 .08 .86 0 .015  0 0 0 1 0"/></filter></defs>' +
+      '<rect width="360" height="800" fill="#0f261c"/>' +
       '<image href="reiskaart-glans/nacht-boven.webp" x="0" y="0" width="360" height="420" preserveAspectRatio="none" decoding="sync"/>' +
       '<image href="reiskaart-glans/nacht-midden.webp" x="0" y="335" width="360" height="285" preserveAspectRatio="none" decoding="sync"/>' +
       '<image href="reiskaart-glans/nacht-onder.webp" x="0" y="535" width="360" height="265" preserveAspectRatio="none" decoding="sync"/>';
@@ -13303,8 +13312,8 @@ return exports;})();
       expert: { sky: ["#0d1030", "#25296a", "#6a4f9a", "#d9a46b"], far: "#4b3f86", mid: "#3a2f70", near: "#2a225a", meadow: "#3f9a72", meadow2: "#2a7a58", water: "#4f86d9", water2: "#a8c8ff", leaf: "#2fae78", leaf2: "#1b8a5a", trunk: "#5a3b26", path: "#f3e6d0", edge: "#a88fd0", wall: "#efe6ff", dome: "#c9a6ff", day: false },
     },
     sky: function (th) { return skyNight(th) + star8(330, 44, 8, "#ffd54f", 0) + star8(210, 92, 6, "#ffffff", .6) + star8(96, 150, 7, "#e6d6ff", 1.1) + star8(280, 160, 5, "#ffffff", .3); },
-    tl: function (th) { if (glansOn) return gNachtmoskee(62, 226, 88) + lbl(62, 118, "Stilte"); return domeMosque(72, 206, 1.05, th.wall, th.dome, "#ffe27a", true) + lbl(72, 226, "Stilte"); },
-    tr: function (th) { if (glansOn) return gLantaarnpaar(330, 214, 52) + lbl(330, 142, "Licht"); return lantern(296, 190, "#ffd54f", 1.5) + lantern(334, 198, "#c9a6ff", 1.2) + lbl(316, 226, "Licht"); },
+    tl: function (th) { if (glansOn) { const m = glansBeg ? [58, 640, 76] : [252, 332, 66]; return gNachtGrond(m[0], m[1] - 2, m[2] * .45, 6) + gNachtmoskee(m[0], m[1], m[2]) + lbl(m[0], m[1] - m[2] * 320 / 281 - 6, "Stilte"); } return domeMosque(72, 206, 1.05, th.wall, th.dome, "#ffe27a", true) + lbl(72, 226, "Stilte"); },
+    tr: function (th) { if (glansOn) { const m = glansBeg ? [38, 492, 46] : [34, 480, 48]; return gNachtGrond(m[0], m[1] - 2, m[2] * .42, 5) + gLantaarnpaar(m[0], m[1], m[2]) + lbl(m[0], m[1] - m[2] * 320 / 261 - 6, "Licht"); } return lantern(296, 190, "#ffd54f", 1.5) + lantern(334, 198, "#c9a6ff", 1.2) + lbl(316, 226, "Licht"); },
     mr: function (th) { if (glansOn) return ""; return archGate(312, 452, 1, "#8e7cc3") + lbl(312, 470, "Ihsan"); },
     front: function (th) { if (glansOn) return L6glansFront(th); return pondsAll(th) + groundFlowers() + cypress(20, 590, 0.9) + cypress(342, 305, 0.6) + cypress(150, 300, 0.55) + cypress(330, 640, 0.8) + commonProps(th) + lantern(100, 700, "#ffd54f", 1) + star8(60, 640, 9, "#ffd54f", 0.2) + star8(300, 700, 8, "#e6d6ff", .7) + star8(190, 430, 7, "#ffdd9a", 1.2); },
   };
@@ -13362,7 +13371,7 @@ return exports;})();
     const level = P.mode, L = LANDS[c.id] || LANDS.profeten, th = L.pal[level] || L.pal.junior, J = journeyStops(level, c), stops = J.stops, n = stops.length;
     curTh = th;
     const kos = kosmosOn();
-    const nacht = c.id === "ihsan" && !kos;   /* Land 6 (proef): nachtbos-achtergrond uit 3 plaatjes, route in nachtgroen en goud */
+    const nacht = c.id === "ihsan" && !kos; nachtOn = nacht;   /* Land 6 (proef): nachtbos-achtergrond uit 3 plaatjes, route in nachtgroen en goud */
     const uid = "j" + level[0] + String(c.id).replace(/[^a-z0-9]/gi, "");
     let h = '<svg class="jsvg' + (glansLandIds.indexOf(c.id) >= 0 && !kos ? " rg-map" : "") + (glansLandIds.indexOf(c.id) >= 0 && !kos ? " rg-snd" : "") + '" viewBox="0 0 360 800" role="group" aria-label="Routekaart ' + esc(c.title) + ", " + n + ' levels" xmlns="http://www.w3.org/2000/svg"><defs>' +
       '<linearGradient id="' + uid + 'sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + th.sky[0] + '"/><stop offset=".35" stop-color="' + th.sky[1] + '"/><stop offset=".7" stop-color="' + th.sky[2] + '"/><stop offset="1" stop-color="' + th.sky[3] + '"/></linearGradient>' +
@@ -13400,7 +13409,7 @@ return exports;})();
     segs.forEach(function (S) { if (S[1]) h += '<path d="' + S[0] + '" fill="none" stroke="#ffd54f" stroke-opacity=".3" stroke-width="38" stroke-linecap="round"/>'; });
     segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="#04140f" stroke-opacity=".35" stroke-width="28" stroke-linecap="round" transform="translate(0 2.5)"/>'; });
     segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="' + (S[1] ? "#c98f10" : "#0d2a22") + '" stroke-width="26" stroke-linecap="round"/>'; });
-    segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="' + (S[1] ? "#ffe08a" : "#7d9f98") + '" stroke-width="19" stroke-linecap="round"/>'; });
+    segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="' + (S[1] ? "#ffe08a" : "#8c9f86") + '" stroke-width="19" stroke-linecap="round"/>'; });
     segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="#fff" stroke-opacity="' + (S[1] ? ".5" : ".28") + '" stroke-width="7" stroke-linecap="round" transform="translate(-2 -2)"/>'; });
     segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="#fff8d0" stroke-opacity=".75" stroke-width="2" stroke-linecap="round" stroke-dasharray="1 14"/>'; });
     } else if (c.id === "zuilen") {
@@ -13431,6 +13440,7 @@ return exports;})();
         '<circle cx="' + cx + '" cy="' + cy + '" r="26" fill="#000" fill-opacity="0"/>';
       if (ready) h += '<circle cx="' + cx + '" cy="' + (cy - 4) + '" r="30" fill="#fff3a0" opacity=".5"><animate attributeName="opacity" values=".25;.8;.25" dur="1.1s" repeatCount="indefinite"/></circle>' +
         '<circle cx="' + cx + '" cy="' + (cy - 4) + '" r="27" fill="none" stroke="#ffd23f" stroke-width="2.5" stroke-dasharray="4 5" opacity=".9"/>';
+      if (nacht) h += gNachtGrond(cx, cy + 10, 20, 5);
       h += '<g class="' + (ready ? "chest-bounce" : "") + '">' + (glansOn2 && state !== "open" && state !== "gold" ? gChestImg(cx, cy, ready ? 1.25 : 0.95, state === "closed-dim") : chest(cx, cy, ready ? "closed" : state, ready ? 1.25 : 0.95, "stop")) + "</g>";
       h += "</g>";
     });
@@ -13464,7 +13474,7 @@ return exports;})();
     });
     /* medespelers staan in elk land (niet alleen in het land waar jij bent) */
     h += '<g id="jSocial' + landsFor(level).indexOf(c) + '" class="j-social">' + socialSvg(c, stops) + "</g>";
-    if (!act) return h + "</svg>";      /* andere landen op de doorlopende kaart: zonder jouw avatar */
+    if (!act) { nachtOn = false; return h + "</svg>"; }      /* andere landen op de doorlopende kaart: zonder jouw avatar */
     // avatar-marker naast het huidige level
     const ini = esc((P.name || "?").trim().charAt(0).toUpperCase());
     const mpos = function (st) { const R = st.last ? 27 : st.mile ? 21 : 19, side = st.x < 180 ? -1 : 1; return (st.x + side * (R + 17)) + "," + st.y; };
@@ -13473,7 +13483,7 @@ return exports;})();
       (avOf(P) && avOf(P).arch ? '<ellipse cx="0" cy="19" rx="11" ry="2.6" fill="#000" fill-opacity=".28"/><svg x="-21" y="-23" width="42" height="42" viewBox="0 0 100 100">' + avInner(avOf(P), true) + "</svg>" :
       !avOf(P) && !(P.photo && /^https:\/\//i.test(P.photo)) ? '<ellipse cx="0" cy="19" rx="11" ry="2.6" fill="#000" fill-opacity=".28"/><svg x="-21" y="-23" width="42" height="42" viewBox="0 0 100 100"><image href="avatars/boog.webp" x="0" y="0" width="100" height="100" preserveAspectRatio="xMidYMid meet"/><text x="50" y="62" text-anchor="middle" font-size="34" font-weight="900" fill="#f4d675" stroke="#123b2b" stroke-width="2" paint-order="stroke">' + ini + "</text></svg>" :
       '<circle r="17" fill="' + (bzFrameColor(P) || "#fff") + '"/><circle r="14" fill="' + P.color + '"/>' + (avOf(P) ? '<clipPath id="jmc"><circle r="14"/></clipPath><g clip-path="url(#jmc)"><svg x="-14" y="-14" width="28" height="28" viewBox="0 0 100 100">' + avInner(avOf(P), true) + "</svg></g>" : '<text y="5.5" text-anchor="middle" font-size="15" font-weight="900" fill="#fff">' + ini + "</text>" + (P.photo && /^https:\/\//i.test(P.photo) ? '<clipPath id="jmc"><circle r="14"/></clipPath><image href="' + esc(P.photo) + '" x="-14" y="-14" width="28" height="28" preserveAspectRatio="xMidYMid slice" clip-path="url(#jmc)" referrerpolicy="no-referrer"/>' : ""))) + "</g>" + "</g></g>";
-    journeyPos[key] = J.cur;
+    journeyPos[key] = J.cur; nachtOn = false;
     return h + "</svg>";
   }
 
@@ -13786,9 +13796,16 @@ return exports;})();
   /* plek van de schatkist bij een mijlpaal (ook gebruikt om medespelers er niet overheen te zetten) */
   function jChestXY(st, stops) {
     const R = st.last ? 27 : 21, side = st.x < 180 ? 1 : -1, nx = stops[st.i + 1];
+    if (!nx && nachtOn) {   /* nacht: de laatste kist op de grond naast het hoogste level, vrij van het pad */
+      const far = function (x, y) { let m = 999; for (let i = 0; i < stops.length - 1; i++) { const a = stops[i], b = stops[i + 1], vx = b.x - a.x, vy = b.y - a.y, t = Math.max(0, Math.min(1, ((x - a.x) * vx + (y - a.y) * vy) / Math.max(1, vx * vx + vy * vy))); m = Math.min(m, Math.hypot(x - a.x - t * vx, y - a.y - t * vy)); } return m; };
+      const cand = [[70, 30], [-70, 78], [70, 78], [-70, 30], [0, 80]];
+      for (let i = 0; i < cand.length; i++) { const x = st.x + cand[i][0], y = st.y + cand[i][1]; if (y > 245 && y < 600 && x > 30 && x < 330 && far(x, y) >= 40) return { x: x, y: y }; }
+      return { x: st.x + side * (R + 30), y: st.y + 70 };
+    }
     if (!nx) return { x: st.x + side * (R + 30), y: st.y - 34 };
     const mx = (st.x + nx.x) / 2, my = (st.y + nx.y) / 2, dx = nx.x - st.x, dy = nx.y - st.y, ln = Math.max(1, Math.hypot(dx, dy));
-    let px = -dy / ln, py = dx / ln; if (py > 0) { px = -px; py = -py; }
+    let px = -dy / ln, py = dx / ln; if (nachtOn ? py < 0 : py > 0) { px = -px; py = -py; }   /* nacht: kist onder het pad, op de grond */
+    if (nachtOn && my + py * 42 + 6 > 625) { px = -px; py = -py; }   /* nacht: niet in de vijver */
     return { x: mx + px * 42, y: my + py * 42 + 6 };
   }
   /* Medespelers staan nooit op een level: ze krijgen een vrije plek naast de route (links of rechts langs de rand) */
