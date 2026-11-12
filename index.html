@@ -5912,7 +5912,7 @@ return exports;})();
   /* ── Reiskaart-glans ronde 3 (proef Land 2): zachte woestijnsfeer. Alleen WebAudio, geen bestanden: laag windsuizen + heel zacht water.
      Regels: volgt "Geluid" én de eigen schakelaar; begint pas na een echte tik; uit bij voorlezen, schermlezer-bediening en minder-beweging;
      stopt als de app naar de achtergrond gaat of Land 2 uit beeld is; veel zachter dan de quizgeluiden (piek ±0,04 tegen 0,15). ── */
-  const glansLandIds = ["zuilen", "profeten", "seerah", "koran", "akhlaaq", "ihsan", "reinheid", "gebed", "elkedag"];   /* landen met glans-look: die krijgen ook de woestijnsfeer */
+  const glansLandIds = ["zuilen", "profeten", "seerah", "koran", "akhlaaq", "ihsan", "reinheid", "gebed", "elkedag", "ramadan"];   /* landen met glans-look: die krijgen ook de woestijnsfeer */
   const rgAmb = (function () {
     let live = null, want = false, tapped = false, assist = false, lastPd = 0, lastKey = 0;
     const nbuf = {};
@@ -13343,10 +13343,10 @@ return exports;})();
   LANDS.ramadan = {
     pal: { beginner: { sky: ["#0b1740", "#1d3a78", "#c9892f", "#ffcf7a"], far: "#2a5b78", mid: "#1f4a66", near: "#17384f", meadow: "#2a9b72", meadow2: "#1c7a58", water: "#2a8fd0", water2: "#8fd7ff", leaf: "#2fae78", leaf2: "#1b8a5a", trunk: "#5a3b26", path: "#ffeab8", edge: "#d9a441", wall: "#ffe9b8", dome: "#e8b93c", day: false } },
     sky: function (th) { return skyNight(th) + star8(330, 40, 8, "#ffd54f", 0) + star8(215, 95, 6, "#ffffff", .6) + star8(95, 150, 7, "#ffdd9a", 1.1); },
-    tl: function (th) { return domeMosque(72, 206, 1.1, th.wall, th.dome, "#ffe27a", true) + lbl(72, 226, "Iftar"); },
-    tr: function (th) { return lantern(300, 190, "#ffc95d", 1.6) + lantern(336, 200, "#35d0ff", 1.2) + lbl(318, 226, "Lantaarns"); },
-    mr: function (th) { return dateBowl(312, 452, 1.2) + lbl(312, 472, "Dadels"); },
-    front: function (th) { return pondsAll(th) + groundFlowers() + palms(th) + commonProps(th) + lantern(100, 700, "#ffc95d", 1) + star8(60, 640, 10, "#ffd54f", 0.2) + star8(300, 700, 9, "#7de3ff", .7) + star8(190, 430, 8, "#ffdd9a", 1.2); },
+    tl: function (th) { if (glansOn) return gPodium(90, 258, 42, 12) + gNachtmoskee(90, 266, 72) + lbl(90, 172, "Iftar"); return domeMosque(72, 206, 1.1, th.wall, th.dome, "#ffe27a", true) + lbl(72, 226, "Iftar"); },
+    tr: function (th) { if (glansOn) return gLantaarnpaar(312, 262, 56) + lbl(312, 186, "Lantaarns"); return lantern(300, 190, "#ffc95d", 1.6) + lantern(336, 200, "#35d0ff", 1.2) + lbl(318, 226, "Lantaarns"); },
+    mr: function (th) { if (glansOn) return ""; return dateBowl(312, 452, 1.2) + lbl(312, 472, "Dadels"); },
+    front: function (th) { if (glansOn) return groundFlowers() + gPondAt(302, 440, 90) + lbl(302, 392, "Oase") + gDates(322, 500, 1) + lbl(322, 530, "Dadels") + palm(8, 340, 0.51, false) + palm(0, 440, 0.62, false) + gLantern(26, 636, 0.7) + gLantern(236, 332, 0.7) + sparkle(200, 330, 6, .2) + sparkle(60, 600, 5, .7); return pondsAll(th) + groundFlowers() + palms(th) + commonProps(th) + lantern(100, 700, "#ffc95d", 1) + star8(60, 640, 10, "#ffd54f", 0.2) + star8(300, 700, 9, "#7de3ff", .7) + star8(190, 430, 8, "#ffdd9a", 1.2); },
   };
 
   function journeyMap(c, act) {
@@ -13367,7 +13367,7 @@ return exports;})();
     h += '<rect width="360" height="800" fill="url(#' + uid + 'sky)"/>';
     h += L.sky(th);
     h += '<path d="M0 235 C 80 190, 160 225, 240 200 S 340 205, 360 190 L360 800 L0 800Z" fill="' + th.far + '"/>';
-    glansOn = c.id === "zuilen" || c.id === "profeten" || c.id === "seerah" || c.id === "koran" || c.id === "akhlaaq" || c.id === "ihsan" || c.id === "reinheid" || c.id === "gebed" || c.id === "elkedag"; glansL = c.id; glansBeg = level === "beginner"; /* proef: Land 2, Land 1, Land 3, Land 4, Land 5, Land 6 en Beginner Schoon & Wudhu */
+    glansOn = c.id === "zuilen" || c.id === "profeten" || c.id === "seerah" || c.id === "koran" || c.id === "akhlaaq" || c.id === "ihsan" || c.id === "reinheid" || c.id === "gebed" || c.id === "elkedag" || c.id === "ramadan"; glansL = c.id; glansBeg = level === "beginner"; /* proef: Land 2, Land 1, Land 3, Land 4, Land 5, Land 6 en Beginner Schoon & Wudhu */
     h += L.tl(th) + L.tr(th);
     h += '<path d="M0 420 C 90 365, 170 405, 250 372 S 340 355, 360 370 L360 800 L0 800Z" fill="' + th.mid + '"/>';
     h += L.mr(th);
@@ -13402,7 +13402,7 @@ return exports;})();
     const dDone = !!P.daily[level][todayStr()];
     if (act) h += '<g class="j-stop j-daily" data-act="start-daily" role="button" tabindex="0" aria-label="Quiz van de Dag' + (dDone ? " (vandaag gespeeld, kom morgen terug voor een nieuwe beloning)" : ": speel vandaag voor een dagbeloning en een bonus op je reeks") + '" style="cursor:pointer">' + (dDone ? "" : '<circle cx="318" cy="748" r="34" fill="#ffe08a" opacity=".5"><animate attributeName="opacity" values=".2;.7;.2" dur="1.4s" repeatCount="indefinite"/></circle>') + (dDone ? "" : sparkle(286, 724, 5, 0.2) + sparkle(352, 730, 4, 0.9) + sparkle(300, 778, 3.5, 1.5)) + '<g class="' + (dDone ? "" : "daily-wiggle") + '">' + chest(318, 752, dDone ? "open" : "closed", 1.3, "daily") + "</g>" + (dDone ? "" : '<g transform="translate(336 716)"><circle r="10" fill="#e8590c" stroke="#fff" stroke-width="2"/><text y="4.5" text-anchor="middle" font-size="12" font-weight="900" fill="#fff">!</text></g>') + lbl(318, 786, dDone ? "Morgen weer" : "Dagbeloning", 10) + "</g>";
     // mijlpalen: schatkisten naast het pad (springen als ze klaarstaan; tik om te openen)
-    const glansOn2 = c.id === "zuilen" || c.id === "profeten" || c.id === "seerah" || c.id === "koran" || c.id === "akhlaaq" || c.id === "ihsan" || c.id === "reinheid" || c.id === "gebed" || c.id === "elkedag";
+    const glansOn2 = c.id === "zuilen" || c.id === "profeten" || c.id === "seerah" || c.id === "koran" || c.id === "akhlaaq" || c.id === "ihsan" || c.id === "reinheid" || c.id === "gebed" || c.id === "elkedag" || c.id === "ramadan";
     stops.forEach(function (st) {
       if (!st.mile) return;
       const R = st.last ? 27 : 21, side = st.x < 180 ? 1 : -1, state = jChestState(level, c.id, st.i, n), ready = state === "ready";
