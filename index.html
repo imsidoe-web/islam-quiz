@@ -10151,6 +10151,26 @@ return exports;})();
   function gUhud(cx, bottom, W, hk) { const H = W * 145 / 320 * (hk || 1); return gShadow(cx + 3, bottom - 1, W * 0.52, 6.5) + gImg("uhud", cx - W / 2, bottom - H, W, H, ' preserveAspectRatio="none"') + gTw(cx + W * 0.06, bottom - H * 0.85, 3.2, 7.2, 2) + gTw(cx - W * 0.22, bottom - H * 0.55, 2.6, 9, 5); }
   function gNur(cx, bottom, W) { const H = W * 268 / 320; return gShadow(cx + 2, bottom - 1, W * 0.46, 5.5) + gImg("nur", cx - W / 2, bottom - H, W, H) + gTw(cx - W * 0.04, bottom - H * 0.96, 3.4, 6.6, 1) + gTw(cx + W * 0.12, bottom - H * 0.78, 2.6, 8.4, 4); }
   function gNabawi(cx, bottom, W) { const H = W * 172 / 320; return gShadow(cx, bottom - 1, W * 0.48, 5.5) + gImg("nabawi", cx - W / 2, bottom - H, W, H) + gTw(cx - W * 0.02, bottom - H * 0.9, 3.4, 6.8, 1) + gTw(cx - W * 0.4, bottom - H * 0.8, 2.6, 8.8, 3) + gTw(cx + W * 0.4, bottom - H * 0.78, 2.6, 9.4, 5); }
+  /* Land 4 (proef): Koran op standaard, lamp Nur en bibliotheek als glanzende plaatjes */
+  function gKoranStand(cx, bottom, W) {
+    const H = W * 291 / 320, gx = cx, gy = bottom - H * 0.74, uid = "rgKg" + glansL;
+    return gShadow(cx, bottom - 1, W * 0.44, 5) +
+      '<defs><radialGradient id="' + uid + '"><stop offset="0" stop-color="#fff6c8" stop-opacity=".9"/><stop offset=".6" stop-color="#ffd36a" stop-opacity=".35"/><stop offset="1" stop-color="#ffd36a" stop-opacity="0"/></radialGradient></defs>' +
+      '<ellipse cx="' + gx.toFixed(1) + '" cy="' + gy.toFixed(1) + '" rx="' + (W * 0.3).toFixed(1) + '" ry="' + (H * 0.2).toFixed(1) + '" fill="url(#' + uid + ')" class="rg-glow" style="animation-duration:3.6s"/>' +
+      gImg("koran-standaard", cx - W / 2, bottom - H, W, H) + gTw(cx - W * 0.2, bottom - H * 0.72, 3.4, 7, 1) + gTw(cx + W * 0.22, bottom - H * 0.68, 3, 8.6, 4) + gTw(cx, bottom - H * 0.9, 2.6, 9.4, 6.5);
+  }
+  function gLampNur(cx, bottom, W) {
+    const H = W * 320 / 161, uid = "rgLm" + glansL;
+    return gShadow(cx, bottom - 1, W * 0.5, 4.5) +
+      '<defs><radialGradient id="' + uid + '"><stop offset="0" stop-color="#fffbe0" stop-opacity=".95"/><stop offset=".5" stop-color="#ffd978" stop-opacity=".5"/><stop offset="1" stop-color="#ffb93c" stop-opacity="0"/></radialGradient></defs>' +
+      '<circle cx="' + cx.toFixed(1) + '" cy="' + (bottom - H * 0.5).toFixed(1) + '" r="' + (W * 0.46).toFixed(1) + '" fill="url(#' + uid + ')" class="rg-glow" style="animation-duration:3.2s"/>' +
+      gImg("lamp", cx - W / 2, bottom - H, W, H) + gTw(cx, bottom - H * 0.98, 2.8, 8, 2) + gTw(cx - W * 0.28, bottom - H * 0.55, 2.6, 9, 5) + gTw(cx + W * 0.26, bottom - H * 0.4, 2.6, 7.4, 0.5);
+  }
+  function gBiblio(cx, bottom, W, flip) {
+    const H = W * 320 / 285, fx = function (f) { return cx - W / 2 + W * (flip ? 1 - f : f); };
+    return gShadow(cx, bottom - 2, W * 0.46, 5) + (flip ? '<g transform="translate(' + (2 * cx) + ' 0) scale(-1 1)">' : "") + gImg("bibliotheek", cx - W / 2, bottom - H, W, H) + (flip ? "</g>" : "") +
+      gTw(fx(0.5), bottom - H * 0.95, 3, 7.6, 1) + gTw(fx(0.45), bottom - H * 0.62, 3.2, 9, 4) + gTw(fx(0.8), bottom - H * 0.4, 2.6, 8.2, 6);
+  }
   function gNest(cx, cy, W) { const H = W * 0.85; return gShadow(cx + 1, cy + H * 0.2, W * 0.48, 3.2) + '<g transform="translate(0 ' + (cy * 0.4).toFixed(1) + ') scale(1 .6)">' + gImg("vogelnest", cx - W / 2, cy - H / 2, W, H) + "</g>"; }   /* nest plat op de grond */   /* nest bij de ingang van Thawr */
   function gDuif(cx, bottom, W) { const H = W * 0.92; return gShadow(cx, bottom + 0.5, W * 0.38, 2.2) + '<g transform="translate(' + (2 * cx) + ' 0) scale(-1 1)">' + gImg("duif-zit", cx - W / 2, bottom - H, W, H) + "</g>"; }   /* zittende duif, kijkt naar het nest */
   function gDuifVlieg(cx, cy, W) { const H = W * 0.95; return '<g class="rg-fly">' + gImg("duif-vlieg", cx - W / 2, cy - H / 2, W, H, ' class="rg-flap"') + "</g>"; }   /* vliegende duif, rustig rondje bij het nest */
@@ -13081,6 +13101,15 @@ return exports;})();
       dateBowl(110, 440, 0.8) + gCamel(240, 566, 0.7, true) + gCamelRest(276, 338, 64) + (th.day ? sparkle(200, 300, 6, .2) + sparkle(60, 480, 5, .7) + sparkle(250, 120, 5, 1) : "");
   }
 
+  /* Land 4 (proef): zelfde glanzende stijl; palmen in plaats van cipressen, grootte volgt de diepte (ver = klein, dichtbij = groot) */
+  function L4glansFront(th) {
+    const pk = function (y) { return Math.round((0.45 + (y - 290) * 0.00115) * 100) / 100; };
+    return gPondAt(316, 536, 84) + groundFlowers() +
+      palm(146, 199, pk(199), false) + palm(332, 318, pk(318), true) + palm(9, 329, pk(329), false) + palm(196, 314, pk(314), true) + palm(0, 640, pk(640), false) +
+      lantern(337, 599, "#ffc95d", 0.8) + lantern(138, 407, "#ffb703", 0.7) +
+      star8(60, 640, 10, "#ffd54f", 0.2) + star8(190, 430, 8, "#ffdd9a", 1.2) + sparkle(120, 700, 5, .2) + sparkle(60, 480, 5, .9);
+  }
+
   /* ── de vijf landen ── */
   const LANDS = {
     profeten: {
@@ -13143,10 +13172,10 @@ return exports;})();
         expert: { sky: ["#050a2a", "#14226a", "#2a5d8a", "#3f7bb0"], far: "#1f6f7a", mid: "#18555f", near: "#103f4a", meadow: "#1d8a74", meadow2: "#12685a", water: "#2b6fe0", water2: "#7fb4ff", leaf: "#23a37a", leaf2: "#157a58", trunk: "#4a3322", path: "#f3dfb0", edge: "#6aa0d0", wall: "#c8e2f8", dome: "#5cb3ff", day: false },
       },
       sky: function (th) { return skyNight(th) + star8(330, 40, 8, "#ffd54f", 0) + star8(215, 95, 6, "#ffffff", .6) + star8(95, 150, 7, "#ffdd9a", 1.1) + star8(262, 150, 5, "#7de3ff", .3); },
-      tl: function (th) { return rehal(80, 206, 1.2) + lbl(80, 226, "Al-Qur’an"); },
-      tr: function (th) { return '<ellipse cx="305" cy="206" rx="26" ry="6" fill="#e8f4ff" opacity=".8"/><rect x="298" y="146" width="14" height="60" fill="' + th.wall + '"/><path d="M297 146 L305 126 L313 146Z" fill="#ffb703"/><rect x="298" y="170" width="14" height="3" fill="#ffd54f"/>' + star8(305, 118, 12, "#ffd54f", 0.2) + lbl(305, 226, "Nur"); },
-      mr: function (th) { return archGate(312, 452, 1, "#6bbaff") + lbl(312, 470, "Poort"); },
-      front: function (th) { return pondsAll(th) + groundFlowers() + cypress(20, 590, 0.9) + cypress(342, 305, 0.6) + cypress(150, 300, 0.55) + cypress(18, 380, 0.7) + cypress(215, 500, 0.5) + cypress(330, 640, 0.8) + star8(60, 640, 10, "#ffd54f", 0.2) + star8(300, 700, 9, "#7de3ff", .7) + star8(190, 430, 8, "#ffdd9a", 1.2) + commonProps(th) + sparkle(120, 700, 5, .2) + sparkle(280, 440, 5, .9); },
+      tl: function (th) { if (glansOn) return gKoranStand(70, 240, 100) + lbl(70, 140, "Al-Qur’an"); return rehal(80, 206, 1.2) + lbl(80, 226, "Al-Qur’an"); },
+      tr: function (th) { if (glansOn) return gLampNur(328, 200, 56) + lbl(328, 214, "Nur"); return '<ellipse cx="305" cy="206" rx="26" ry="6" fill="#e8f4ff" opacity=".8"/><rect x="298" y="146" width="14" height="60" fill="' + th.wall + '"/><path d="M297 146 L305 126 L313 146Z" fill="#ffb703"/><rect x="298" y="170" width="14" height="3" fill="#ffd54f"/>' + star8(305, 118, 12, "#ffd54f", 0.2) + lbl(305, 226, "Nur"); },
+      mr: function (th) { if (glansOn) return gBiblio(50, 460, 90, true) + lbl(46, 474, "Bibliotheek"); return archGate(312, 452, 1, "#6bbaff") + lbl(312, 470, "Poort"); },
+      front: function (th) { if (glansOn) return L4glansFront(th); return pondsAll(th) + groundFlowers() + cypress(20, 590, 0.9) + cypress(342, 305, 0.6) + cypress(150, 300, 0.55) + cypress(18, 380, 0.7) + cypress(215, 500, 0.5) + cypress(330, 640, 0.8) + star8(60, 640, 10, "#ffd54f", 0.2) + star8(300, 700, 9, "#7de3ff", .7) + star8(190, 430, 8, "#ffdd9a", 1.2) + commonProps(th) + sparkle(120, 700, 5, .2) + sparkle(280, 440, 5, .9); },
     },
     akhlaaq: {
       pal: {
@@ -13228,7 +13257,7 @@ return exports;})();
     curTh = th;
     const kos = kosmosOn();
     const uid = "j" + level[0] + String(c.id).replace(/[^a-z0-9]/gi, "");
-    let h = '<svg class="jsvg' + ((c.id === "zuilen" || c.id === "profeten" || c.id === "seerah") && !kos ? " rg-map" : "") + (c.id === "zuilen" && !kos ? " rg-snd" : "") + '" viewBox="0 0 360 800" role="group" aria-label="Routekaart ' + esc(c.title) + ", " + n + ' levels" xmlns="http://www.w3.org/2000/svg"><defs>' +
+    let h = '<svg class="jsvg' + ((c.id === "zuilen" || c.id === "profeten" || c.id === "seerah" || c.id === "koran") && !kos ? " rg-map" : "") + (c.id === "zuilen" && !kos ? " rg-snd" : "") + '" viewBox="0 0 360 800" role="group" aria-label="Routekaart ' + esc(c.title) + ", " + n + ' levels" xmlns="http://www.w3.org/2000/svg"><defs>' +
       '<linearGradient id="' + uid + 'sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + th.sky[0] + '"/><stop offset=".35" stop-color="' + th.sky[1] + '"/><stop offset=".7" stop-color="' + th.sky[2] + '"/><stop offset="1" stop-color="' + th.sky[3] + '"/></linearGradient>' +
       (kos ? kosDefs(uid) : "") + '<radialGradient id="' + uid + 'done" cx=".35" cy=".3"><stop offset="0" stop-color="' + (kos ? "#fff2b8" : "#7ae6b4") + '"/><stop offset="1" stop-color="' + (kos ? "#e8a33a" : "#14935f") + '"/></radialGradient>' +
       '<radialGradient id="' + uid + 'cur" cx=".35" cy=".3"><stop offset="0" stop-color="' + (kos ? "#d6fffa" : "#fff0a8") + '"/><stop offset="1" stop-color="' + (kos ? "#2bd4c8" : "#f0a02e") + '"/></radialGradient>' +
@@ -13239,7 +13268,7 @@ return exports;})();
     h += '<rect width="360" height="800" fill="url(#' + uid + 'sky)"/>';
     h += L.sky(th);
     h += '<path d="M0 235 C 80 190, 160 225, 240 200 S 340 205, 360 190 L360 800 L0 800Z" fill="' + th.far + '"/>';
-    glansOn = c.id === "zuilen" || c.id === "profeten" || c.id === "seerah"; glansL = c.id; /* proef: Land 2, Land 1 en Land 3 */
+    glansOn = c.id === "zuilen" || c.id === "profeten" || c.id === "seerah" || c.id === "koran"; glansL = c.id; /* proef: Land 2, Land 1, Land 3 en Land 4 */
     h += L.tl(th) + L.tr(th);
     h += '<path d="M0 420 C 90 365, 170 405, 250 372 S 340 355, 360 370 L360 800 L0 800Z" fill="' + th.mid + '"/>';
     h += L.mr(th);
@@ -13274,7 +13303,7 @@ return exports;})();
     const dDone = !!P.daily[level][todayStr()];
     if (act) h += '<g class="j-stop j-daily" data-act="start-daily" role="button" tabindex="0" aria-label="Quiz van de Dag' + (dDone ? " (vandaag gespeeld, kom morgen terug voor een nieuwe beloning)" : ": speel vandaag voor een dagbeloning en een bonus op je reeks") + '" style="cursor:pointer">' + (dDone ? "" : '<circle cx="318" cy="748" r="34" fill="#ffe08a" opacity=".5"><animate attributeName="opacity" values=".2;.7;.2" dur="1.4s" repeatCount="indefinite"/></circle>') + (dDone ? "" : sparkle(286, 724, 5, 0.2) + sparkle(352, 730, 4, 0.9) + sparkle(300, 778, 3.5, 1.5)) + '<g class="' + (dDone ? "" : "daily-wiggle") + '">' + chest(318, 752, dDone ? "open" : "closed", 1.3, "daily") + "</g>" + (dDone ? "" : '<g transform="translate(336 716)"><circle r="10" fill="#e8590c" stroke="#fff" stroke-width="2"/><text y="4.5" text-anchor="middle" font-size="12" font-weight="900" fill="#fff">!</text></g>') + lbl(318, 786, dDone ? "Morgen weer" : "Dagbeloning", 10) + "</g>";
     // mijlpalen: schatkisten naast het pad (springen als ze klaarstaan; tik om te openen)
-    const glansOn2 = c.id === "zuilen" || c.id === "profeten" || c.id === "seerah";
+    const glansOn2 = c.id === "zuilen" || c.id === "profeten" || c.id === "seerah" || c.id === "koran";
     stops.forEach(function (st) {
       if (!st.mile) return;
       const R = st.last ? 27 : 21, side = st.x < 180 ? 1 : -1, state = jChestState(level, c.id, st.i, n), ready = state === "ready";
