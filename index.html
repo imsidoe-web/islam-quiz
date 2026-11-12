@@ -10208,14 +10208,18 @@ return exports;})();
       gTw(x0 + W * 0.5, y0 + H * 0.03, 3, 7.6, 1) + gTw(x0 + W * 0.2, y0 + H * 0.3, 2.8, 9, 4) + gTw(x0 + W * 0.82, y0 + H * 0.28, 2.6, 8.2, 6);
   }
   /* Land Schoon & Wudhu (Beginner, proef): wudhu-wasplaats (stromend water), waterkruik en schoonmaakset (handdoek, zeep, miswak) als glanzende plaatjes */
+  function gGrond(cx, cy, rx, ry) {   /* plat grasplekje onder een object: horizontaal, zacht, zodat het plat op de grond staat en niet gekanteld lijkt */
+    const c = (curTh && curTh.meadow) || "#8fe3b0";
+    return '<ellipse cx="' + cx + '" cy="' + (cy + 2.5) + '" rx="' + (rx + 2).toFixed(1) + '" ry="' + (ry + 1.5).toFixed(1) + '" fill="#2f7d6a" opacity=".22"/><ellipse cx="' + cx + '" cy="' + cy + '" rx="' + rx + '" ry="' + ry + '" fill="' + c + '"/><ellipse cx="' + cx + '" cy="' + (cy - 1) + '" rx="' + (rx * 0.82).toFixed(1) + '" ry="' + (ry * 0.7).toFixed(1) + '" fill="#fff" opacity=".22"/>';
+  }
   function gWasplaats(cx, bottom, W) {
     const H = W * 320 / 377, x0 = cx - W / 2, y0 = bottom - H;
     const drop = function (fx, dur, del) { return '<circle class="rg-drop" cx="' + (x0 + W * fx).toFixed(1) + '" cy="' + (y0 + H * 0.47).toFixed(1) + '" r="1" fill="#eafcff" stroke="#7fdcf0" stroke-width=".3" style="--dx:0px;--dy:' + (H * 0.13).toFixed(1) + "px;animation-duration:" + dur + "s;animation-delay:-" + del + 's"/>'; };
     const ring = function (fx, fy, rx, dur, del) { return '<ellipse class="rg-ring" cx="' + (x0 + W * fx).toFixed(1) + '" cy="' + (y0 + H * fy).toFixed(1) + '" rx="' + rx + '" ry="' + (rx * 0.4).toFixed(1) + '" fill="none" stroke="#fff" stroke-width=".8" style="animation-duration:' + dur + "s;animation-delay:-" + del + 's"/>'; };
-    return gShadow(cx, bottom - 1, W * 0.46, 5) + gImg("wudhu-wasplaats", x0, y0, W, H) +
+    return '<g transform="translate(' + (2 * cx) + ' 0) scale(-1 1)">' + gShadow(cx, bottom - 1, W * 0.46, 5) + gImg("wudhu-wasplaats", x0, y0, W, H) +
       drop(0.27, 2.2, 0) + drop(0.52, 2.6, 0.9) + drop(0.71, 2.4, 1.6) +
       ring(0.31, 0.6, 5, 2.6, 0.2) + ring(0.52, 0.58, 5, 3, 1.4) + ring(0.7, 0.54, 4.5, 2.8, 0.8) +
-      gTw(x0 + W * 0.17, y0 + H * 0.3, 2.8, 7.4, 1) + gTw(x0 + W * 0.9, y0 + H * 0.2, 2.6, 9, 4) + gTw(x0 + W * 0.45, y0 + H * 0.12, 2.4, 8.2, 6.5);
+      gTw(x0 + W * 0.17, y0 + H * 0.3, 2.8, 7.4, 1) + gTw(x0 + W * 0.9, y0 + H * 0.2, 2.6, 9, 4) + gTw(x0 + W * 0.45, y0 + H * 0.12, 2.4, 8.2, 6.5) + "</g>";
   }
   function gKruik(cx, bottom, W) {
     const H = W * 320 / 333, x0 = cx - W / 2, y0 = bottom - H;
@@ -13300,9 +13304,9 @@ return exports;})();
   LANDS.reinheid = {
     pal: { beginner: { sky: ["#7fd6ff", "#bfeaff", "#e6fbff", "#f4ffff"], far: "#bfe9e3", mid: "#8fd9d0", near: "#62c7c0", meadow: "#8fe3b0", meadow2: "#5cc98f", water: "#27c6e0", water2: "#a4f5ff", leaf: "#35c27a", leaf2: "#1f9c5c", trunk: "#a8703a", path: "#f4ffff", edge: "#7ccfd0", wall: "#f4ffff", dome: "#1fc2a8", day: true } },
     sky: function (th) { return skyDay(th, { sx: 300, sy: 60 }) + heartShape(70, 120, 6, "#a4f5ff", .2) + heartShape(200, 96, 5, "#ffffff", .8); },
-    tl: function (th) { if (glansOn) return fountain(72, 236, 1.05) + lbl(72, 157, "Wudhu-fontein"); return fountain(72, 206, 1.05) + lbl(72, 226, "Wudhu-fontein"); },
-    tr: function (th) { if (glansOn) return gMoskee(312, 266, 80, true, true) + lbl(312, 166, "Moskee"); return domeMosque(300, 206, 0.8, th.wall, th.dome, "#5cabf0") + lbl(304, 226, "Moskee"); },
-    mr: function (th) { if (glansOn) return gWasplaats(306, 402, 96) + lbl(306, 318, "Schoon water"); return fountain(312, 452, 0.9) + lbl(312, 472, "Schoon water"); },
+    tl: function (th) { if (glansOn) return gGrond(72, 252, 66, 13) + fountain(72, 236, 1.05) + lbl(72, 157, "Wudhu-fontein"); return fountain(72, 206, 1.05) + lbl(72, 226, "Wudhu-fontein"); },
+    tr: function (th) { if (glansOn) return gGrond(312, 262, 54, 11) + gMoskee(312, 266, 80, true, true) + lbl(312, 166, "Moskee"); return domeMosque(300, 206, 0.8, th.wall, th.dome, "#5cabf0") + lbl(304, 226, "Moskee"); },
+    mr: function (th) { if (glansOn) return gGrond(306, 399, 64, 11) + gWasplaats(306, 402, 96) + lbl(306, 318, "Schoon water"); return fountain(312, 452, 0.9) + lbl(312, 472, "Schoon water"); },
     front: function (th) { if (glansOn) return LRglansFront(th); return pondsAll(th) + groundFlowers() + palms(th) + commonProps(th) + sparkle(200, 300, 6, .2) + sparkle(60, 480, 5, .7) + sparkle(250, 120, 5, 1); },
   };
   LANDS.gebed = {
