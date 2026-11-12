@@ -10150,6 +10150,7 @@ return exports;})();
   function gTent(cx, bottom, W) { const H = W * 193 / 320; return gShadow(cx, bottom - 1, W * 0.46, 5) + gImg("tent", cx - W / 2, bottom - H, W, H) + gTw(cx - W * 0.28, bottom - H * 0.5, 2.8, 8, 1) + gTw(cx + W * 0.1, bottom - H * 0.9, 3, 7.4, 4) + gTw(cx + W * 0.34, bottom - H * 0.28, 2.6, 9, 6); }
   function gUhud(cx, bottom, W, hk) { const H = W * 145 / 320 * (hk || 1); return gShadow(cx + 3, bottom - 1, W * 0.52, 6.5) + gImg("uhud", cx - W / 2, bottom - H, W, H, ' preserveAspectRatio="none"') + gTw(cx + W * 0.06, bottom - H * 0.85, 3.2, 7.2, 2) + gTw(cx - W * 0.22, bottom - H * 0.55, 2.6, 9, 5); }
   function gNur(cx, bottom, W) { const H = W * 268 / 320; return gShadow(cx + 2, bottom - 1, W * 0.46, 5.5) + gImg("nur", cx - W / 2, bottom - H, W, H) + gTw(cx - W * 0.04, bottom - H * 0.96, 3.4, 6.6, 1) + gTw(cx + W * 0.12, bottom - H * 0.78, 2.6, 8.4, 4); }
+  function gNabawi(cx, bottom, W) { const H = W * 172 / 320; return gShadow(cx, bottom - 1, W * 0.48, 5.5) + gImg("nabawi", cx - W / 2, bottom - H, W, H) + gTw(cx - W * 0.02, bottom - H * 0.9, 3.4, 6.8, 1) + gTw(cx - W * 0.4, bottom - H * 0.8, 2.6, 8.8, 3) + gTw(cx + W * 0.4, bottom - H * 0.78, 2.6, 9.4, 5); }
   function gNest(cx, cy, W) { const H = W * 0.85; return gShadow(cx + 1, cy + H * 0.2, W * 0.48, 3.2) + '<g transform="translate(0 ' + (cy * 0.4).toFixed(1) + ') scale(1 .6)">' + gImg("vogelnest", cx - W / 2, cy - H / 2, W, H) + "</g>"; }   /* nest plat op de grond */   /* nest bij de ingang van Thawr */
   function gDuif(cx, bottom, W) { const H = W * 0.92; return gShadow(cx, bottom + 0.5, W * 0.38, 2.2) + '<g transform="translate(' + (2 * cx) + ' 0) scale(-1 1)">' + gImg("duif-zit", cx - W / 2, bottom - H, W, H) + "</g>"; }   /* zittende duif, kijkt naar het nest */
   function gDuifVlieg(cx, cy, W) { const H = W * 0.95; return '<g class="rg-fly">' + gImg("duif-vlieg", cx - W / 2, cy - H / 2, W, H, ' class="rg-flap"') + "</g>"; }   /* vliegende duif, rustig rondje bij het nest */
@@ -13073,9 +13074,9 @@ return exports;})();
 
   /* Land 3 (proef): zelfde glanzende stijl, eigen decor */
   function L3glansFront(th) {
-    return gPondAt(298, 592, 92) + groundFlowers() + gNur(104, 738, 76) + lbl(104, 750, "Jabal Nur") +
+    return gPondAt(298, 592, 92) + groundFlowers() + gNabawi(100, 750, 182) + lbl(100, 762, "Medina") +
       palm(18, 615, 0.85, false) + palm(342, 305, 0.6, true) + palm(22, 395, 0.7, false) + palm(215, 330, 0.5, true) +
-      lantern(338, 598, "#ffc95d", 0.8) + lantern(18, 655, "#35d0ff", 0.8) + lantern(25, 470, "#ffb703", 0.7) +
+      lantern(338, 598, "#ffc95d", 0.8) + lantern(25, 470, "#ffb703", 0.7) +
       gem(205, 640, "#ffc44f", 0) + gem(150, 510, "#7dff6a", .8) + gem(180, 330, "#ffc928", .2) + gem(55, 450, "#88c7ff", .6) +
       dateBowl(110, 440, 0.8) + gCamel(240, 566, 0.7, true) + gCamelRest(276, 338, 64) + (th.day ? sparkle(200, 300, 6, .2) + sparkle(60, 480, 5, .7) + sparkle(250, 120, 5, 1) : "");
   }
@@ -13131,7 +13132,7 @@ return exports;})();
         expert: { sky: ["#12293d", "#2f4e6a", "#e5603f", "#ffb36b"], far: "#c9704f", mid: "#a65447", near: "#7a5a2a", meadow: "#3aa86a", meadow2: "#26874f", water: "#2aa7c8", water2: "#8be6ff", leaf: "#2fae78", leaf2: "#1b8a5a", trunk: "#6b4228", path: "#f8e4bc", edge: "#c98a52", wall: "#ffe9c9", dome: "#2fbf71", day: false },
       },
       sky: function (th) { return skyDawn(th); },
-      tl: function (th) { if (glansOn) return gMoskee(66, 238, 92) + lbl(72, 246, "Medina"); return domeMosque(72, 206, 1.15, th.wall, "#2fbf71", th.day ? "#5cabf0" : "#ffe27a", true) + lbl(72, 226, "Medina"); },
+      tl: function (th) { if (glansOn) return gNur(68, 238, 84) + lbl(68, 250, "Jabal Nur"); return domeMosque(72, 206, 1.15, th.wall, "#2fbf71", th.day ? "#5cabf0" : "#ffe27a", true) + lbl(72, 226, "Medina"); },
       tr: function (th) { if (glansOn) return gTent(318, 526, 94) + lbl(316, 538, "Tenten"); return tent(284, 206, 0.9, "#ff7a59", "#ffd23f") + tent(330, 205, 0.75, "#20c4b4", "#ffffff") + campfire(307, 206, 0.9) + lbl(307, 226, "Tenten"); },
       mr: function (th) { if (glansOn) return gUhud(324, 214, 84, 1.9) + lbl(322, 226, "Jabal Uhud"); return mountain(312, 452, 110, 92, "#a0522d", "#cf8350") + lbl(312, 470, "Jabal Uhud"); },
       front: function (th) { if (glansOn) return L3glansFront(th); return pondsAll(th) + groundFlowers() + palms(th, palm(335, 640, 0.8, true)) + commonProps(th) + dateBowl(206, 505, 0.8) + camel(246, 766, 0.72, true) + camel(136, 590, 0.62, false) + tent(60, 612, 0.7, "#5caef6", "#ffd23f"); },
