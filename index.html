@@ -13126,7 +13126,7 @@ return exports;})();
   /* Land 5 (proef): rozentuin met glanzende palmen (rozenstruik volgt later), grootte volgt de diepte */
   function L5glansFront(th) {
     const pk = function (y) { return Math.round((0.45 + (y - 290) * 0.00115) * 100) / 100; };
-    return groundFlowers() + gRozenboog(320, 589, 66) + lbl(320, 498, "Adab") +
+    return groundFlowers() + gRozenboog(316, 586, 84) + lbl(316, 471, "Adab") +
       palm(345, 300, pk(300), true) + palm(8, 339, pk(339), false) + palm(189, 320, pk(320), true) + palm(0, 640, pk(640), false) +
       lantern(336, 615, "#ffc95d", 0.8) + lantern(140, 407, "#ffb703", 0.7) +
       heartShape(60, 690, 7, "#ffc95d", 0.4) + heartShape(190, 760, 7, "#ffdd9a", 0.2) + sparkle(120, 700, 5, .2) + sparkle(60, 560, 5, .9);
@@ -13205,7 +13205,7 @@ return exports;})();
         expert: { sky: ["#142e45", "#2f608a", "#e8c070", "#ffc9a8"], far: "#4fa878", mid: "#3a9163", near: "#2a7a52", meadow: "#5cc088", meadow2: "#2f9460", water: "#5ec8e8", water2: "#bdf0ff", leaf: "#2fae78", leaf2: "#1b8a5a", trunk: "#6b4228", path: "#f8e4bc", edge: "#d8c090", wall: "#fef6e7", dome: "#ffd37a", day: false },
       },
       sky: function (th) { return (th.day ? skyDay(th, { sx: 300, sy: 60 }) : skyNight(th)) + heartShape(70, 120, 8, "#ffc95d", 0) + heartShape(200, 90, 6, "#ffffff", .6) + heartShape(330, 150, 7, "#ffdd9a", 1.1) + heartShape(120, 180, 5, "#ffbe3d", .3); },
-      tl: function (th) { if (glansOn) return gPrieel(71, 233, 80) + lbl(71, 106, "Rozentuin"); return gazebo(72, 206, 1.1) + lbl(72, 226, "Rozentuin"); },
+      tl: function (th) { if (glansOn) return gPrieel(71, 233, 68) + lbl(71, 106, "Rozentuin"); return gazebo(72, 206, 1.1) + lbl(72, 226, "Rozentuin"); },
       tr: function (th) { if (glansOn) return ""; return roseArch(306, 206, 1) + lbl(306, 226, "Adab"); },
       mr: function (th) { if (glansOn) return gCadeaus(57, 466, 66) + lbl(57, 396, "Sadaqa"); return gifts(312, 452, 1.15) + lbl(312, 472, "Sadaqa"); },
       front: function (th) { if (glansOn) return L5glansFront(th); return pondsAll(th) + groundFlowers() + rosebush(22, 592, 0.9) + rosebush(340, 305, 0.7) + rosebush(150, 305, 0.65) + rosebush(24, 385, 0.8) + rosebush(215, 502, 0.6) + rosebush(336, 640, 0.9) + rosebush(135, 592, 0.7) + heartShape(60, 690, 7, "#ffc95d", 0.4) + heartShape(290, 600, 6, "#ffffff", 0.9) + heartShape(190, 760, 7, "#ffdd9a", 0.2) + commonProps(th) + (th.day ? sparkle(200, 300, 6, .2) + sparkle(60, 480, 5, .7) : ""); },
