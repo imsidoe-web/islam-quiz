@@ -10140,6 +10140,7 @@ return exports;})();
   /* Land 1 (proef): Ka'bah, berg Thawr, kameel en dadelschaal als glanzende plaatjes */
   function gKaaba(cx, bottom, W) { const H = W * 319 / 320; return gShadow(cx, bottom - 1, W * 0.5, 5) + gImg("kaaba", cx - W / 2, bottom - H, W, H); }
   function gThawr(cx, bottom, W) { const H = W * 307 / 320; return gShadow(cx, bottom - 1, W * 0.46, 5) + '<g transform="translate(' + (2 * cx) + ' 0) scale(-1 1)">' + gImg("thawr", cx - W / 2, bottom - H, W, H) + "</g>"; }   /* gespiegeld: ingang kijkt naar de route */
+  function gNest(cx, cy, W) { const H = W * 0.85; return gShadow(cx + 1, cy + H * 0.34, W * 0.46, 3) + gImg("vogelnest", cx - W / 2, cy - H / 2, W, H); }   /* nest bij de ingang van Thawr */
   function gCamel(x, y, k, flip) {
     const W = 118 * k, H = W * 297 / 320;
     return '<g transform="translate(' + x + " " + y + ") scale(" + (flip ? -1 : 1) + ' 1)">' + gShadow(14 * k, 2 * k, W * 0.36, 5.5 * k) + gImg("kameel", 14 * k - W / 2, -H + 2 * k, W, H) + "</g>";
@@ -13071,7 +13072,7 @@ return exports;})();
           '<rect x="283" y="160" width="30" height="5" fill="#f0b81e"/><polygon points="313,160 327,154 327,159 313,165" fill="#d9a010"/><rect x="299" y="172" width="9" height="16" rx="1" fill="#f0b81e" stroke="#b8860b" stroke-width="1.2"/>' + lbl(303, 210, "Ka’bah") + "</g>";
       },
       mr: function (th) {
-        if (glansOn) return gThawr(324, 462, 88) + lbl(322, 476, "Grot Thawr");
+        if (glansOn) return gThawr(324, 462, 88) + gNest(334, 414, 26) + lbl(322, 476, "Grot Thawr");
         return '<g><path d="M262 452 L276 405 L296 384 L318 396 L336 378 L360 392 L360 452Z" fill="#8d6a5a"/><path d="M276 405 L296 384 L318 396 L300 410Z" fill="#b08c78"/><path d="M318 396 L336 378 L360 392 L346 408Z" fill="#a37c68"/>' +
           '<path d="M290 452 L290 428 Q312 396 334 428 L334 452Z" fill="#1b262f"/><path d="M296 452 L296 432 Q312 408 328 432 L328 452Z" fill="#273542"/>' +
           '<g stroke="#fff" stroke-opacity=".9" stroke-width="1" fill="none"><line x1="312" y1="414" x2="291" y2="436"/><line x1="312" y1="414" x2="333" y2="436"/><line x1="312" y1="414" x2="312" y2="452"/><line x1="312" y1="414" x2="293" y2="452"/><line x1="312" y1="414" x2="331" y2="452"/><path d="M303 424 Q312 428 321 424 M298 433 Q312 439 326 433 M294 443 Q312 450 330 443"/></g>' + lbl(312, 470, "Grot Thawr") + "</g>";
