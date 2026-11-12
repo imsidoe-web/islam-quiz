@@ -13193,15 +13193,18 @@ return exports;})();
 
   /* Land 6 (proef): stille nacht met glanzende palmen (grootte volgt de diepte); de poort staat op de voorgrond, anders snijdt de heuvel hem af */
   function L6glansFront(th) {
-    const pk = function (y) { return Math.round((0.45 + (y - 290) * 0.00115) * 100) / 100; };
-    if (glansBeg) return groundFlowers() + gIhsanPoort(312, 470, 90) + lbl(312, 366, "Ihsan") +   /* Beginner: langere route (5 levels), poort hoger op vrije grond */
-      palm(345, 300, pk(300), true) + palm(8, 339, pk(339), false) + palm(0, 640, pk(640), false) +
-      lantern(24, 470, "#ffb703", 0.7) +
-      star8(60, 640, 9, "#ffd54f", 0.2) + sparkle(120, 700, 5, .2) + sparkle(60, 560, 5, .9);
-    return groundFlowers() + gIhsanPoort(316, 580, 84) + lbl(316, 482, "Ihsan") +
-      palm(345, 300, pk(300), true) + palm(8, 339, pk(339), false) + palm(189, 320, pk(320), true) + palm(0, 640, pk(640), false) +
-      lantern(140, 407, "#ffb703", 0.7) +
-      star8(60, 640, 9, "#ffd54f", 0.2) + star8(190, 430, 7, "#ffdd9a", 1.2) + sparkle(120, 700, 5, .2) + sparkle(60, 560, 5, .9);
+    /* nachtbos: de bomen zitten in de achtergrond; hier alleen de poort van Ihsan, het label en een paar lichtjes */
+    if (glansBeg) return gIhsanPoort(312, 470, 90) + lbl(312, 366, "Ihsan") +   /* Beginner: langere route (5 levels), poort hoger op vrije grond */
+      sparkle(60, 640, 5, .2) + sparkle(120, 560, 5, .9) + sparkle(40, 420, 4, .5);
+    return gIhsanPoort(316, 580, 84) + lbl(316, 482, "Ihsan") +
+      sparkle(120, 700, 5, .2) + sparkle(60, 560, 5, .9) + sparkle(190, 430, 4, 1.2) + sparkle(40, 640, 4, .6);
+  }
+  /* Land 6 (proef): nachtbos-achtergrond uit drie plaatjes (boven, midden, onder), zacht in elkaar overlopend */
+  function nachtBg() {
+    return '<rect width="360" height="800" fill="#0f261c"/>' +
+      '<image href="reiskaart-glans/nacht-boven.webp" x="0" y="0" width="360" height="420" preserveAspectRatio="none" decoding="sync"/>' +
+      '<image href="reiskaart-glans/nacht-midden.webp" x="0" y="335" width="360" height="285" preserveAspectRatio="none" decoding="sync"/>' +
+      '<image href="reiskaart-glans/nacht-onder.webp" x="0" y="535" width="360" height="265" preserveAspectRatio="none" decoding="sync"/>';
   }
 
   /* Schoon & Wudhu (Beginner, proef): glanzende palmen op diepte-maat, kruik en schoonmaakset op vrije grond (5 levels, gemeten) */
@@ -13359,24 +13362,26 @@ return exports;})();
     const level = P.mode, L = LANDS[c.id] || LANDS.profeten, th = L.pal[level] || L.pal.junior, J = journeyStops(level, c), stops = J.stops, n = stops.length;
     curTh = th;
     const kos = kosmosOn();
+    const nacht = c.id === "ihsan" && !kos;   /* Land 6 (proef): nachtbos-achtergrond uit 3 plaatjes, route in nachtgroen en goud */
     const uid = "j" + level[0] + String(c.id).replace(/[^a-z0-9]/gi, "");
     let h = '<svg class="jsvg' + (glansLandIds.indexOf(c.id) >= 0 && !kos ? " rg-map" : "") + (glansLandIds.indexOf(c.id) >= 0 && !kos ? " rg-snd" : "") + '" viewBox="0 0 360 800" role="group" aria-label="Routekaart ' + esc(c.title) + ", " + n + ' levels" xmlns="http://www.w3.org/2000/svg"><defs>' +
       '<linearGradient id="' + uid + 'sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + th.sky[0] + '"/><stop offset=".35" stop-color="' + th.sky[1] + '"/><stop offset=".7" stop-color="' + th.sky[2] + '"/><stop offset="1" stop-color="' + th.sky[3] + '"/></linearGradient>' +
       (kos ? kosDefs(uid) : "") + '<radialGradient id="' + uid + 'done" cx=".35" cy=".3"><stop offset="0" stop-color="' + (kos ? "#fff2b8" : "#7ae6b4") + '"/><stop offset="1" stop-color="' + (kos ? "#e8a33a" : "#14935f") + '"/></radialGradient>' +
       '<radialGradient id="' + uid + 'cur" cx=".35" cy=".3"><stop offset="0" stop-color="' + (kos ? "#d6fffa" : "#fff0a8") + '"/><stop offset="1" stop-color="' + (kos ? "#2bd4c8" : "#f0a02e") + '"/></radialGradient>' +
-      '<radialGradient id="' + uid + 'lock" cx=".35" cy=".3"><stop offset="0" stop-color="' + (kos ? "#3b4580" : "#dcd7cd") + '"/><stop offset="1" stop-color="' + (kos ? "#1c2257" : "#9a9488") + '"/></radialGradient>' +
+      '<radialGradient id="' + uid + 'lock" cx=".35" cy=".3"><stop offset="0" stop-color="' + (kos ? "#3b4580" : nacht ? "#6f8f89" : "#dcd7cd") + '"/><stop offset="1" stop-color="' + (kos ? "#1c2257" : nacht ? "#2f4b47" : "#9a9488") + '"/></radialGradient>' +
       '<radialGradient id="' + uid + 'gold" cx=".35" cy=".3"><stop offset="0" stop-color="' + (kos ? "#fffbe0" : "#fff3b0") + '"/><stop offset="1" stop-color="' + (kos ? "#ffc21a" : "#e0a100") + '"/></radialGradient>' +
       '<pattern id="' + uid + 'tile" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M15 2 L28 15 L15 28 L2 15Z" fill="#26c6da" opacity=".55"/><path d="M15 8 L22 15 L15 22 L8 15Z" fill="#fff" opacity=".55"/><circle cx="15" cy="15" r="3.2" fill="#ffd54f"/><path d="M0 0 H6 L0 6Z M30 0 H24 L30 6Z M0 30 H6 L0 24Z M30 30 H24 L30 24Z" fill="#ff7a59" opacity=".6"/></pattern></defs>';
     if (kos) h += kosWorldBg(uid, c); else {
     h += '<rect width="360" height="800" fill="url(#' + uid + 'sky)"/>';
     h += L.sky(th);
-    h += '<path d="M0 235 C 80 190, 160 225, 240 200 S 340 205, 360 190 L360 800 L0 800Z" fill="' + th.far + '"/>';
+    if (nacht) h += nachtBg();
+    if (!nacht) h += '<path d="M0 235 C 80 190, 160 225, 240 200 S 340 205, 360 190 L360 800 L0 800Z" fill="' + th.far + '"/>';
     glansOn = c.id === "zuilen" || c.id === "profeten" || c.id === "seerah" || c.id === "koran" || c.id === "akhlaaq" || c.id === "ihsan" || c.id === "reinheid" || c.id === "gebed" || c.id === "elkedag" || c.id === "ramadan" || c.id === "karakter"; glansL = c.id; glansBeg = level === "beginner"; /* proef: Land 2, Land 1, Land 3, Land 4, Land 5, Land 6 en Beginner Schoon & Wudhu */
     h += L.tl(th) + L.tr(th);
-    h += '<path d="M0 420 C 90 365, 170 405, 250 372 S 340 355, 360 370 L360 800 L0 800Z" fill="' + th.mid + '"/>';
+    if (!nacht) h += '<path d="M0 420 C 90 365, 170 405, 250 372 S 340 355, 360 370 L360 800 L0 800Z" fill="' + th.mid + '"/>';
     h += L.mr(th);
     const nearD = "M0 610 C 100 565, 200 612, 300 572 S 350 560, 360 566 L360 800 L0 800Z";
-    h += '<path d="' + nearD + '" fill="' + th.near + '"/>';
+    if (!nacht) h += '<path d="' + nearD + '" fill="' + th.near + '"/>';
     if (L.tile) h += '<path d="' + nearD + '" fill="url(#' + uid + 'tile)" opacity="' + (c.id === "zuilen" ? ".2" : ".55") + '"/>';   /* proef Land 2: grondtegels rustiger */
     h += L.front(th);
     glansOn = false; glansL = "";
@@ -13390,6 +13395,14 @@ return exports;})();
       segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="#2fe08a" stroke-width="24" stroke-linecap="round" opacity=".22" filter="url(#' + uid + 'ns)"/>'; });
       segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="' + (S[1] ? "#7dffd8" : "#3b4a9a") + '" stroke-width="5" stroke-linecap="round"' + (S[1] ? ' filter="url(#' + uid + 'ng)"' : "") + '/>'; });
       segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="2 12"/>'; });
+    } else if (nacht) {
+    /* proef Land 6: lichtspoor door het nachtbos (zelfde plek en breedte; donkere rand, maanlicht-grijsgroen, gouden gloed op wat je al gehaald hebt) */
+    segs.forEach(function (S) { if (S[1]) h += '<path d="' + S[0] + '" fill="none" stroke="#ffd54f" stroke-opacity=".3" stroke-width="38" stroke-linecap="round"/>'; });
+    segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="#04140f" stroke-opacity=".35" stroke-width="28" stroke-linecap="round" transform="translate(0 2.5)"/>'; });
+    segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="' + (S[1] ? "#c98f10" : "#0d2a22") + '" stroke-width="26" stroke-linecap="round"/>'; });
+    segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="' + (S[1] ? "#ffe08a" : "#7d9f98") + '" stroke-width="19" stroke-linecap="round"/>'; });
+    segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="#fff" stroke-opacity="' + (S[1] ? ".5" : ".28") + '" stroke-width="7" stroke-linecap="round" transform="translate(-2 -2)"/>'; });
+    segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="#fff8d0" stroke-opacity=".75" stroke-width="2" stroke-linecap="round" stroke-dasharray="1 14"/>'; });
     } else if (c.id === "zuilen") {
     /* proef Land 2: pad rustig en glanzend (zelfde plek en breedte; alleen zachte schaduw, lichte rand en glans) */
     segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="#7a4a12" stroke-opacity=".16" stroke-width="26" stroke-linecap="round" transform="translate(0 2.5)"/>'; });
