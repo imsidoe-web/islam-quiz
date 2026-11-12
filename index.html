@@ -10069,7 +10069,7 @@ return exports;})();
     return pts.join(" ");
   }
   /* ── Reiskaart-glans (proef, alleen Land 2): glanzende plaatjes in plaats van de getekende onderdelen ── */
-  let glansOn = false, glansL = "";   /* glansL: welk land (alleen "zuilen" en "profeten" doen mee) */
+  let glansOn = false, glansL = "", glansBeg = false;   /* glansBeg: Beginner-kaart (5 levels, andere route) */   /* glansL: welk land (alleen "zuilen" en "profeten" doen mee) */
   function gImg(name, x, y, w, h, extra) { return '<image href="reiskaart-glans/' + name + '.webp" x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + w.toFixed(1) + '" height="' + h.toFixed(1) + '" decoding="sync"' + (extra || "") + "/>"; }
   function gShadow(cx, cy, rx, ry) { return '<ellipse cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" rx="' + rx.toFixed(1) + '" ry="' + ry.toFixed(1) + '" fill="#4a3210" opacity=".2"/>'; }
   /* ronde 2: zacht sterretje dat af en toe oplicht (CSS, uit bij minder-beweging) */
@@ -10129,11 +10129,11 @@ return exports;})();
       [[-0.13, 0.66, -1.5, 4.2, 0], [-0.05, 0.7, 1.5, 5, 1.8], [-0.1, 0.6, 0.5, 4.6, 3.1]].map(function (m) { return '<circle class="rg-mote" cx="' + (cx + W * m[0]).toFixed(1) + '" cy="' + (y0 + H * m[1]).toFixed(1) + '" r=".9" fill="#ffe9a6" style="--dx:' + m[2] + "px;animation-duration:" + m[3] + "s;animation-delay:-" + m[4] + 's"/>'; }).join("") +
       gTw(cx + W * 0.29, y0 + H * 0.6, 3.2, 6.8, 2, "#eaffff") + gTw(cx - W * 0.2, y0 + H * 0.2, 2.8, 9.2, 6);
   }
-  function gMoskee(cx, bottom, W, noSand) {
+  function gMoskee(cx, bottom, W, noSand, noFlip) {
     const H = W * 350 / 300;
     /* grond (zandvlek) onder de moskee zodat hij niet zweeft; gespiegeld zodat de ingang naar de route kijkt */
     return (noSand ? "" : '<ellipse cx="' + cx + '" cy="' + (bottom - 3) + '" rx="' + (W * 0.56).toFixed(1) + '" ry="11" fill="#f0c06a"/><ellipse cx="' + cx + '" cy="' + (bottom - 3) + '" rx="' + (W * 0.56).toFixed(1) + '" ry="11" fill="none" stroke="#fff3c8" stroke-opacity=".5" stroke-width="1.5"/>') +
-      gShadow(cx, bottom - 1, W * 0.4, 5) + '<g transform="translate(' + (2 * cx) + ' 0) scale(-1 1)">' + gImg("moskee", cx - W / 2, bottom - H, W, H) + "</g>" +
+      gShadow(cx, bottom - 1, W * 0.44, 6) + '<g transform="translate(' + (noFlip ? 0 : 2 * cx) + ' 0) scale(' + (noFlip ? 1 : -1) + ' 1)">' + gImg("moskee", cx - W / 2, bottom - H, W, H) + "</g>" +
       gTw(cx - W / 2 + W * 0.56, bottom - H + H * 0.2, 3.6, 7.6, 1.5) + gTw(cx - W / 2 + W * 0.5, bottom - H + H * 0.035, 2.8, 9.4, 5.5) + gTw(cx - W / 2 + W * 0.08, bottom - H + H * 0.17, 2.6, 10.5, 8);
   }
   function gZuilen(cx, bottom, W) {
@@ -10633,7 +10633,7 @@ return exports;})();
   }
   /* slingerend pad: x volgt een sinus, y loopt omhoog; ruim genoeg voor 15 levels */
   function jLayout(n) {
-    const bottom = 722, top = 112, step = Math.min(58, (bottom - top) / Math.max(1, n - 1)), pts = [];
+    const bottom = 722, top = 112, step = Math.min(n < 10 ? 112 : 58, (bottom - top) / Math.max(1, n - 1)), pts = [];   /* Beginner (weinig levels): levels verder uit elkaar, route loopt tot ver omhoog */
     for (let i = 0; i < n; i++) pts.push({ x: Math.round(180 + 104 * Math.sin(i * 1.45 + 0.4)), y: Math.round(bottom - i * step) });
     return pts;
   }
@@ -13176,6 +13176,10 @@ return exports;})();
   /* Land 6 (proef): stille nacht met glanzende palmen (grootte volgt de diepte); de poort staat op de voorgrond, anders snijdt de heuvel hem af */
   function L6glansFront(th) {
     const pk = function (y) { return Math.round((0.45 + (y - 290) * 0.00115) * 100) / 100; };
+    if (glansBeg) return groundFlowers() + gIhsanPoort(312, 470, 90) + lbl(312, 366, "Ihsan") +   /* Beginner: langere route (5 levels), poort hoger op vrije grond */
+      palm(345, 300, pk(300), true) + palm(8, 339, pk(339), false) + palm(0, 640, pk(640), false) +
+      lantern(24, 470, "#ffb703", 0.7) +
+      star8(60, 640, 9, "#ffd54f", 0.2) + sparkle(120, 700, 5, .2) + sparkle(60, 560, 5, .9);
     return groundFlowers() + gIhsanPoort(316, 580, 84) + lbl(316, 482, "Ihsan") +
       palm(345, 300, pk(300), true) + palm(8, 339, pk(339), false) + palm(189, 320, pk(320), true) + palm(0, 640, pk(640), false) +
       lantern(140, 407, "#ffb703", 0.7) +
@@ -13185,10 +13189,9 @@ return exports;})();
   /* Schoon & Wudhu (Beginner, proef): glanzende palmen op diepte-maat, kruik en schoonmaakset op vrije grond (5 levels, gemeten) */
   function LRglansFront(th) {
     const pk = function (y) { return Math.round((0.45 + (y - 290) * 0.00115) * 100) / 100; };
-    return groundFlowers() + gSchoonset(130, 405, 72) + gKruik(44, 452, 40) +
-      palm(350, 310, pk(310), true) + palm(8, 339, pk(339), false) + palm(189, 320, pk(320), true) + palm(345, 560, pk(560), true) +
-      lantern(20, 495, "#ffb703", 0.7) +
-      sparkle(200, 300, 6, .2) + sparkle(60, 480, 5, .7) + sparkle(250, 120, 5, 1);
+    return groundFlowers() + gSchoonset(214, 436, 76) + gKruik(282, 474, 52) +
+      palm(2, 480, pk(480), false) + palm(350, 520, pk(520), true) +
+      sparkle(200, 330, 6, .2) + sparkle(60, 600, 5, .7);
   }
 
   /* ── de vijf landen ── */
@@ -13297,9 +13300,9 @@ return exports;})();
   LANDS.reinheid = {
     pal: { beginner: { sky: ["#7fd6ff", "#bfeaff", "#e6fbff", "#f4ffff"], far: "#bfe9e3", mid: "#8fd9d0", near: "#62c7c0", meadow: "#8fe3b0", meadow2: "#5cc98f", water: "#27c6e0", water2: "#a4f5ff", leaf: "#35c27a", leaf2: "#1f9c5c", trunk: "#a8703a", path: "#f4ffff", edge: "#7ccfd0", wall: "#f4ffff", dome: "#1fc2a8", day: true } },
     sky: function (th) { return skyDay(th, { sx: 300, sy: 60 }) + heartShape(70, 120, 6, "#a4f5ff", .2) + heartShape(200, 96, 5, "#ffffff", .8); },
-    tl: function (th) { return fountain(72, 206, 1.05) + lbl(72, 226, "Wudhu-fontein"); },
-    tr: function (th) { if (glansOn) return gMoskee(298, 240, 86, true) + lbl(298, 264, "Moskee"); return domeMosque(300, 206, 0.8, th.wall, th.dome, "#5cabf0") + lbl(304, 226, "Moskee"); },
-    mr: function (th) { if (glansOn) return gWasplaats(304, 420, 90) + lbl(304, 336, "Schoon water"); return fountain(312, 452, 0.9) + lbl(312, 472, "Schoon water"); },
+    tl: function (th) { if (glansOn) return fountain(72, 236, 1.05) + lbl(72, 157, "Wudhu-fontein"); return fountain(72, 206, 1.05) + lbl(72, 226, "Wudhu-fontein"); },
+    tr: function (th) { if (glansOn) return gMoskee(312, 266, 80, true, true) + lbl(312, 166, "Moskee"); return domeMosque(300, 206, 0.8, th.wall, th.dome, "#5cabf0") + lbl(304, 226, "Moskee"); },
+    mr: function (th) { if (glansOn) return gWasplaats(306, 402, 96) + lbl(306, 318, "Schoon water"); return fountain(312, 452, 0.9) + lbl(312, 472, "Schoon water"); },
     front: function (th) { if (glansOn) return LRglansFront(th); return pondsAll(th) + groundFlowers() + palms(th) + commonProps(th) + sparkle(200, 300, 6, .2) + sparkle(60, 480, 5, .7) + sparkle(250, 120, 5, 1); },
   };
   LANDS.gebed = {
@@ -13349,7 +13352,7 @@ return exports;})();
     h += '<rect width="360" height="800" fill="url(#' + uid + 'sky)"/>';
     h += L.sky(th);
     h += '<path d="M0 235 C 80 190, 160 225, 240 200 S 340 205, 360 190 L360 800 L0 800Z" fill="' + th.far + '"/>';
-    glansOn = c.id === "zuilen" || c.id === "profeten" || c.id === "seerah" || c.id === "koran" || c.id === "akhlaaq" || c.id === "ihsan" || c.id === "reinheid"; glansL = c.id; /* proef: Land 2, Land 1, Land 3, Land 4, Land 5, Land 6 en Beginner Schoon & Wudhu */
+    glansOn = c.id === "zuilen" || c.id === "profeten" || c.id === "seerah" || c.id === "koran" || c.id === "akhlaaq" || c.id === "ihsan" || c.id === "reinheid"; glansL = c.id; glansBeg = level === "beginner"; /* proef: Land 2, Land 1, Land 3, Land 4, Land 5, Land 6 en Beginner Schoon & Wudhu */
     h += L.tl(th) + L.tr(th);
     h += '<path d="M0 420 C 90 365, 170 405, 250 372 S 340 355, 360 370 L360 800 L0 800Z" fill="' + th.mid + '"/>';
     h += L.mr(th);
