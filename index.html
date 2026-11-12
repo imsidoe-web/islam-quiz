@@ -5912,6 +5912,7 @@ return exports;})();
   /* ── Reiskaart-glans ronde 3 (proef Land 2): zachte woestijnsfeer. Alleen WebAudio, geen bestanden: laag windsuizen + heel zacht water.
      Regels: volgt "Geluid" én de eigen schakelaar; begint pas na een echte tik; uit bij voorlezen, schermlezer-bediening en minder-beweging;
      stopt als de app naar de achtergrond gaat of Land 2 uit beeld is; veel zachter dan de quizgeluiden (piek ±0,04 tegen 0,15). ── */
+  const glansLandIds = ["zuilen", "profeten", "seerah", "koran", "akhlaaq"];   /* landen met glans-look: die krijgen ook de woestijnsfeer */
   const rgAmb = (function () {
     let live = null, want = false, tapped = false, assist = false, lastPd = 0, lastKey = 0;
     const nbuf = {};
@@ -7509,7 +7510,7 @@ return exports;})();
       '<div class="set-top"><h3 id="a11yT">' + icon("gear", 22) + "Instellingen</h3><button class=\"set-x\" data-d=\"x\" aria-label=\"Instellingen sluiten\">×</button></div>" +
       '<div class="set-body">' +
       row('id="optSound"' + (S.sound ? " checked" : ""), "Geluid", "Effecten en de stem van de presentator") +
-      row('id="optAmb"' + (S.amb !== false ? " checked" : ""), "Woestijnsfeer (proef)", "Zachte wind en water op de reiskaart van Land 2. Werkt alleen als Geluid aan staat.") +
+      row('id="optAmb"' + (S.amb !== false ? " checked" : ""), "Woestijnsfeer (proef)", "Zachte wind en water op de reiskaart. Werkt alleen als Geluid aan staat.") +
       (P && P.mode === "expert" ? row('data-act="toggle-timer"' + (S.timer ? " checked" : ""), "Timer per vraag", TIMER_SECONDS + " seconden per vraag (Ervaren)") : "") +
       row('data-act="toggle-hg"' + (S.hgOff ? "" : " checked"), "Zandloper-levels", "Elk " + HG_EVERY + "e level heeft een tijd per vraag (" + (P ? HG_SECS[P.mode] : 20) + " sec). Uitzetten kan altijd.") +
       row('data-act="toggle-kos"' + (S.look === "kosmos" ? " checked" : ""), "Kosmos-look (tieners)", "Een sterrenhemel met neon voor de reiskaart, de vragen en de uitslag. Speciaal voor tieners.") +
@@ -13279,7 +13280,7 @@ return exports;})();
     curTh = th;
     const kos = kosmosOn();
     const uid = "j" + level[0] + String(c.id).replace(/[^a-z0-9]/gi, "");
-    let h = '<svg class="jsvg' + ((c.id === "zuilen" || c.id === "profeten" || c.id === "seerah" || c.id === "koran" || c.id === "akhlaaq") && !kos ? " rg-map" : "") + (c.id === "zuilen" && !kos ? " rg-snd" : "") + '" viewBox="0 0 360 800" role="group" aria-label="Routekaart ' + esc(c.title) + ", " + n + ' levels" xmlns="http://www.w3.org/2000/svg"><defs>' +
+    let h = '<svg class="jsvg' + (glansLandIds.indexOf(c.id) >= 0 && !kos ? " rg-map" : "") + (glansLandIds.indexOf(c.id) >= 0 && !kos ? " rg-snd" : "") + '" viewBox="0 0 360 800" role="group" aria-label="Routekaart ' + esc(c.title) + ", " + n + ' levels" xmlns="http://www.w3.org/2000/svg"><defs>' +
       '<linearGradient id="' + uid + 'sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + th.sky[0] + '"/><stop offset=".35" stop-color="' + th.sky[1] + '"/><stop offset=".7" stop-color="' + th.sky[2] + '"/><stop offset="1" stop-color="' + th.sky[3] + '"/></linearGradient>' +
       (kos ? kosDefs(uid) : "") + '<radialGradient id="' + uid + 'done" cx=".35" cy=".3"><stop offset="0" stop-color="' + (kos ? "#fff2b8" : "#7ae6b4") + '"/><stop offset="1" stop-color="' + (kos ? "#e8a33a" : "#14935f") + '"/></radialGradient>' +
       '<radialGradient id="' + uid + 'cur" cx=".35" cy=".3"><stop offset="0" stop-color="' + (kos ? "#d6fffa" : "#fff0a8") + '"/><stop offset="1" stop-color="' + (kos ? "#2bd4c8" : "#f0a02e") + '"/></radialGradient>' +
