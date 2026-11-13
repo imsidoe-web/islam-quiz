@@ -8846,7 +8846,7 @@ return exports;})();
   }
   function viewTests() {
     const ic = function (d) { return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + "</svg>"; };
-    const items = [["welkom", "Welkom (elke dag)", "De groet de eerste keer per dag"], ["welkomlang", "Welkom na lange tijd", "Warm welkom na 3 dagen of langer"], ["gebed", "Gebedstijd", "Het eerstvolgende gebed, zoals de app het toont"], ["jummah", "Jummah Mubarak", "Alleen kijken: er wordt geen cadeau gegeven"], ["streak", "Streak in gevaar", "De herinnering aan je reeks"], ["nurplay", "Nieuw spel (NurPlay)", "Nieuws over Darb an-Nur"], ["feedback", "Nieuw: feedback", "Nieuws over de feedbackknop"]];
+    const items = [["welkom", "Welkom (elke dag)", "De groet de eerste keer per dag"], ["welkomlang", "Welkom na lange tijd", "Warm welkom na 3 dagen of langer"], ["gebed", "Gebedstijd", "Het eerstvolgende gebed, zoals de app het toont"], ["jummah", "Jummah Mubarak", "Alleen kijken: er wordt geen cadeau gegeven"], ["streak", "Streak in gevaar", "De herinnering aan je reeks"], ["nurplay", "Nieuw spel (NurPlay)", "Nieuws over Darb an-Nur"], ["feedback", "Nieuw: feedback", "Nieuws over de feedbackknop"], ["schatkist", "Schatkist (nieuw scherm)", "Het scherm als je een schatkist opent"], ["beloning", "Beloning wacht op je", "De herinnering op de kaart"]];
     let h = '<div class="bd"><header class="bd-top"><button class="bd-ib" data-act="bd-ideas-back" aria-label="Terug naar beheer">' + ic('<path d="M15 18l-6-6 6-6"/>') + '</button><div class="bd-tt"><b>Meldingen testen</b><small>Tik om een melding te tonen</small></div><span style="width:44px"></span></header><main class="bd-m">';
     items.forEach(function (x) { h += '<button class="bd-idbtn" data-act="bd-test" data-t="' + x[0] + '"><span>' + x[1] + "<small>" + x[2] + "</small></span></button>"; });
     h += '<p class="bd-note">De melding verschijnt bovenop deze pagina. Sluit hem en je bent weer terug bij de lijst. Dit verandert niets in je voortgang.</p><p class="bd-ft">NurSpark Beheer · alleen zichtbaar voor de beheerder</p></main></div>';
@@ -8890,7 +8890,7 @@ return exports;})();
       { urgent: co > 0, h: blk("bd-controle", "--amber", '<path d="M9 11l3 3 8-8"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/>', "Te controleren", "Dingen die jouw aandacht nodig hebben", dot(co)) },
       { urgent: wo > 0, h: blk("bd-wachten", "--blue", '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>', "Wachten op", "Antwoorden die je nog verwacht", dot(wo)) },
       { urgent: fbkOpen() > 0, h: blk("bd-fbk", "--pink", '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>', "Feedback", "Berichten van spelers: fouten en ideeën", FBK ? dot(fbkOpen()) : "") },
-      { urgent: false, h: blk("bd-tests", "--teal", '<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/>', "Meldingen testen", "Bekijk elke melding direct, zonder te wachten", "<b>6</b>") },
+      { urgent: false, h: blk("bd-tests", "--teal", '<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/>', "Meldingen testen", "Bekijk elke melding direct, zonder te wachten", "<b>9</b>") },
       { urgent: false, h: blk("bd-ideas", "--violet", '<path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/>', "Mijn ideeën", "Schrijf en bewaar je plannen", "<b>" + (IDS ? IDS.length : idLocal().length) + "</b>") },
       { urgent: false, h: blk("bd-live", "--green", '<path d="M12 19V5"/><path d="M5 12l7-7 7 7"/>', "Laatst live gezet", "Wat er recent nieuw in de app kwam", "") },
       { urgent: false, h: blk("bd-geleerden", "--indigo", '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>', "Geleerden", "Voortgang van de nakijkers en hun codes", NK ? "<b>" + (NK.geleerden || []).filter(function (g) { return g.actief; }).length + "</b>" : "") },
@@ -11369,15 +11369,37 @@ return exports;})();
     mg = { level: level, catId: catId, i: i, game: chestGame(catId, i), phase: "closed" };
     screen = "chestopen"; render();
   }
-  function viewChestOpen() {
+  function viewChestOpen(demoGame) {
+    const gm = demoGame || mg.game;
     return '<section class="cg-stage"><div class="cg-rays" aria-hidden="true"></div><div class="cg-card">' +
       '<h1 id="coTitle" class="cg-title">Een schatkist!</h1>' +
       '<button class="cg-x" data-act="journey-back" aria-label="Terug naar de kaart"></button>' +
       '<button class="co-chest cg-chest" id="coChest" data-glans="1" data-act="mg-open-now" aria-label="Open de schatkist"><img src="melding/schatkist-kist.webp" alt=""></button>' +
       '<div class="cg-info"><p class="co-sub" id="coSub" aria-live="polite">Tik op de kist of wacht even…</p>' +
-      '<div class="co-game" id="coGame" style="visibility:hidden"><span><b>Minigame: ' + MG_NAME[mg.game] + "</b><small>" + mgBlurb(mg.game) + "</small></span></div></div>" +
+      '<div class="co-game" id="coGame" style="visibility:hidden"><span><b>Minigame: ' + MG_NAME[gm] + "</b><small>" + mgBlurb(gm) + "</small></span></div></div>" +
       '<button class="cg-gem" data-act="mg-open-now" id="coBtn"><span>Open de schatkist</span></button>' +
       '<button class="cg-later" data-act="journey-back">Later openen</button></div></section>';
+  }
+  /* v305 (proef): voorbeeld van het nieuwe schatkist-scherm en de herinnering, te zien bij Beheer > Meldingen testen (verandert niets in je voortgang) */
+  function chestGlansDemo() {
+    const old = document.getElementById("cgDemo"); if (old) old.remove();
+    const w = document.createElement("div"); w.id = "cgDemo";
+    w.style.cssText = "position:fixed;inset:0;z-index:6000;overflow:auto;background:#08262c;padding:4px";
+    w.innerHTML = viewChestOpen("kwartet").replace(/data-act="[^"]*"/g, 'data-demo="1"');
+    w.addEventListener("click", function (e) {
+      if (e.target.closest(".cg-x, .cg-later")) { w.remove(); return; }
+      if (e.target.closest(".cg-chest, .cg-gem")) {
+        const ch = w.querySelector("#coChest"), t = w.querySelector("#coTitle"), sb2 = w.querySelector("#coSub"), g = w.querySelector("#coGame"), b = w.querySelector("#coBtn");
+        if (ch) ch.classList.add("opened"); if (t) t.textContent = "Masha’Allah! Open!"; if (sb2) sb2.textContent = "Je minigame begint zo…"; if (g) g.style.visibility = "visible"; if (b) b.innerHTML = "<span>Start: " + MG_NAME.kwartet + "</span>";
+        play("win");
+      }
+    });
+    document.body.appendChild(w); play("fanfare");
+  }
+  function chestRemDemo() {
+    const old = document.getElementById("chestRemDemo"); if (old) old.remove();
+    document.body.insertAdjacentHTML("beforeend", '<div id="chestRemDemo" class="hulp-ban" style="z-index:6000" role="status"><span aria-hidden="true">🎁</span><span><b>Je beloning wacht op je</b></span><button class="btn gold small" data-demo="1">Open</button></div>');
+    document.getElementById("chestRemDemo").addEventListener("click", function () { this.remove(); });
   }
   function mgIcon(g) { return g === "memory" ? "🃏" : g === "kwartet" ? "🎴" : g === "woord" ? "🔤" : "🧩"; }
   function mgBlurb(g) { return g === "woord" ? "Zet letters in de goede volgorde of zoek verborgen woorden." : g === "memory" ? "Vind de paartjes mooie plaatjes." : g === "kwartet" ? "Pak je verzamelkaarten uit en vul je album." : "Leg de grote afbeelding weer in elkaar."; }
@@ -14993,6 +15015,8 @@ return exports;})();
         else if (t === "streak") remindBanner();
         else if (t === "nurplay") nurPlayNewsDialog();
         else if (t === "feedback") feedbackNewsDialog();
+        else if (t === "schatkist") chestGlansDemo();
+        else if (t === "beloning") chestRemDemo();
         document.querySelectorAll(".bm-wrap").forEach(function (w) { w.style.zIndex = 6000; });
         break;
       }
