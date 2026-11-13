@@ -10070,7 +10070,7 @@ return exports;})();
   }
   /* ── Reiskaart-glans (proef, alleen Land 2): glanzende plaatjes in plaats van de getekende onderdelen ── */
   let glansOn = false, glansL = "", glansBeg = false;   /* glansBeg: Beginner-kaart (5 levels, andere route) */   /* glansL: welk land (alleen "zuilen" en "profeten" doen mee) */
-  let nachtOn = false, nachtMemo = {};   /* Land 6 (proef): nachtlook aan tijdens het tekenen van de kaart */
+  let nachtOn = false, nachtMemo = {}, nachtStops = [];   /* Land 6 (proef): nachtlook aan tijdens het tekenen van de kaart */
   const NACHT_TINT = { nachtmoskee: 1, lantaarnpaar: 1, ihsanpoort: 1, schatkist: 1 };
   function gImg(name, x, y, w, h, extra) { if (nachtOn && NACHT_TINT[name]) extra = (extra || "") + ' filter="url(#nachtTint)"'; return '<image href="reiskaart-glans/' + name + '.webp" x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + w.toFixed(1) + '" height="' + h.toFixed(1) + '" decoding="sync"' + (extra || "") + "/>"; }
   function gShadow(cx, cy, rx, ry) { return '<ellipse cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" rx="' + rx.toFixed(1) + '" ry="' + ry.toFixed(1) + '" fill="#4a3210" opacity=".2"/>'; }
@@ -13194,11 +13194,12 @@ return exports;})();
   }
 
   /* Land 6 (proef): stille nacht met glanzende palmen (grootte volgt de diepte); de poort staat op de voorgrond, anders snijdt de heuvel hem af */
+  function nachtPoortSvg() { const q = nachtPoort(); return gIhsanPoort(q[0], q[1], q[2]) + lbl(q[0], q[1] - q[2] * 320 / 295 - 6, "Ihsan"); }
   function L6glansFront(th) {
     /* nachtbos: de bomen zitten in de achtergrond; hier alleen de poort van Ihsan, het label en een paar lichtjes */
-    if (glansBeg) return gIhsanPoort(180, 775, 210) + lbl(180, 530, "Ihsan") +   /* grote poort aan het begin van de route: het pad loopt erdoor */
+    if (glansBeg) return nachtPoortSvg() +
       sparkle(60, 640, 5, .2) + sparkle(120, 560, 5, .9) + sparkle(40, 420, 4, .5);
-    return gIhsanPoort(180, 775, 210) + lbl(180, 530, "Ihsan") +
+    return nachtPoortSvg() +
       sparkle(120, 700, 5, .2) + sparkle(60, 560, 5, .9) + sparkle(190, 430, 4, 1.2) + sparkle(40, 640, 4, .6);
   }
   /* Land 6 (proef): nachtbos-achtergrond uit drie plaatjes (boven, midden, onder), zacht in elkaar overlopend */
@@ -13371,7 +13372,7 @@ return exports;})();
     const level = P.mode, L = LANDS[c.id] || LANDS.profeten, th = L.pal[level] || L.pal.junior, J = journeyStops(level, c), stops = J.stops, n = stops.length;
     curTh = th;
     const kos = kosmosOn();
-    const nacht = c.id === "ihsan" && !kos; nachtOn = nacht; nachtMemo = {};   /* Land 6 (proef): nachtbos-achtergrond uit 3 plaatjes, route in nachtgroen en goud */
+    const nacht = c.id === "ihsan" && !kos; nachtOn = nacht; nachtMemo = {}; nachtStops = stops;   /* Land 6 (proef): nachtbos-achtergrond uit 3 plaatjes, route in nachtgroen en goud */
     const uid = "j" + level[0] + String(c.id).replace(/[^a-z0-9]/gi, "");
     let h = '<svg class="jsvg' + (glansLandIds.indexOf(c.id) >= 0 && !kos ? " rg-map" : "") + (glansLandIds.indexOf(c.id) >= 0 && !kos ? " rg-snd" : "") + '" viewBox="0 0 360 800" role="group" aria-label="Routekaart ' + esc(c.title) + ", " + n + ' levels" xmlns="http://www.w3.org/2000/svg"><defs>' +
       '<linearGradient id="' + uid + 'sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + th.sky[0] + '"/><stop offset=".35" stop-color="' + th.sky[1] + '"/><stop offset=".7" stop-color="' + th.sky[2] + '"/><stop offset="1" stop-color="' + th.sky[3] + '"/></linearGradient>' +
@@ -13809,7 +13810,11 @@ return exports;})();
     const m = stops.filter(function (x) { return x.mile && !x.last; });
     return m.length > 0 && m[Math.floor((m.length - 1) / 2)].i === st.i;
   }
-  function nachtSpots() { return P && P.mode === "beginner" ? { lant: [38, 492, 46], poort: [180, 775, 210] } : { lant: [34, 480, 48], poort: [180, 775, 210] }; }
+  function nachtPoort() {   /* grote poort midden in de route: een level staat onder de boog en het pad loopt er recht doorheen */
+    const n = nachtStops.length, st = nachtStops[Math.max(0, (n - 1) >> 1)] || { x: 180, y: 480 }, W = n < 10 ? 170 : 130;
+    return [Math.round(st.x), Math.round(st.y + W * 0.42), W];
+  }
+  function nachtSpots() { return P && P.mode === "beginner" ? { lant: [38, 492, 46], poort: nachtPoort() } : { lant: [34, 480, 48], poort: nachtPoort() }; }
   function nachtChestPos(st, stops) {
     if (nachtMemo[st.i]) return nachtMemo[st.i];
     const sp = nachtSpots(), L = sp.lant, Q = sp.poort, lh = L[2] * 320 / 261, qh = Q[2] * 320 / 295;
