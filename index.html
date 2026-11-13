@@ -875,6 +875,35 @@ table.board thead th .avatar { display: grid; margin: 0 auto; }
 .j-toast { position: fixed; left: 50%; bottom: 22px; transform: translate(-50%, 30px); opacity: 0; pointer-events: none; background: #1b4332; color: #fff; font-weight: 800; padding: 12px 18px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,.3); transition: all .25s ease; z-index: 60; max-width: 90vw; text-align: center; }
 .j-toast.show { opacity: 1; transform: translate(-50%, 0); }
 @media (prefers-reduced-motion: reduce) { .j-glow, .j-bob, .j-spin, .j-tw, .j-start { animation: none; } .j-marker { transition: none; } }
+/* ── Reiskaart-glans (proef Land 2): palm wiegt zacht vanaf de voet ── */
+.rg-sway { transform-box: fill-box; transform-origin: 45% 100%; animation: rgSway 5s ease-in-out infinite; }
+@keyframes rgSway { 0%, 100% { transform: rotate(-1.5deg); } 50% { transform: rotate(1.7deg); } }
+@media (prefers-reduced-motion: reduce) { .rg-sway { animation: none; } }
+/* Land 1 (proef): duif vliegt rustig een rondje bij het nest */
+.rg-fly { animation: rgFly 10s ease-in-out infinite; }
+@keyframes rgFly { 0%, 100% { transform: translate(0, 0); } 25% { transform: translate(-12px, -8px); } 50% { transform: translate(-24px, 1px); } 75% { transform: translate(-12px, 9px); } }
+.rg-flap { transform-box: fill-box; transform-origin: 50% 70%; animation: rgFlap .7s ease-in-out infinite; }
+@keyframes rgFlap { 0%, 100% { transform: scale(1, .93); } 50% { transform: scale(1, 1.05); } }
+@media (prefers-reduced-motion: reduce) { .rg-fly, .rg-flap { animation: none; } }
+.rg-off .rg-fly, .rg-off .rg-flap { animation-play-state: paused; }
+/* ── Reiskaart-glans ronde 2 (proef Land 2): bewegend water en zachte glinsteringen. Alleen CSS, licht; staat stil buiten beeld (.rg-off) ── */
+.rg-tw { transform-box: fill-box; transform-origin: center; opacity: 0; animation: rgTw 8s ease-in-out infinite; }
+@keyframes rgTw { 0%, 58%, 100% { opacity: 0; transform: scale(.3) rotate(0deg); } 72% { opacity: .95; transform: scale(1) rotate(18deg); } 86% { opacity: 0; transform: scale(.35) rotate(36deg); } }
+.rg-drop { opacity: 0; animation: rgDrop 2.6s linear infinite; }
+@keyframes rgDrop { 0% { opacity: 0; transform: translate(0, 0); animation-timing-function: ease-out; } 10% { opacity: .95; } 32% { transform: translate(calc(var(--dx) * .42), -5px); animation-timing-function: ease-in; } 86% { opacity: .85; } 100% { opacity: 0; transform: translate(var(--dx), var(--dy)); } }
+.rg-ring { transform-box: fill-box; transform-origin: center; opacity: 0; animation: rgRing 2.6s ease-out infinite; }
+@keyframes rgRing { 0% { opacity: 0; transform: scale(.25); } 15% { opacity: .8; } 100% { opacity: 0; transform: scale(1); } }
+.rg-wave { opacity: 0; animation: rgWave 5s ease-in-out infinite; }
+@keyframes rgWave { 0%, 100% { opacity: 0; transform: translate(-2.5px, 0); } 50% { opacity: .75; transform: translate(1px, .4px); } }
+.rg-bob { animation: rgBob 4.6s ease-in-out infinite; }
+@keyframes rgBob { 0%, 100% { transform: translate(-.5px, -.7px) rotate(-2.5deg); } 50% { transform: translate(.6px, .8px) rotate(2.5deg); } }
+.rg-glow { transform-box: fill-box; transform-origin: center; animation: rgGlow 3.4s ease-in-out infinite; }
+@keyframes rgGlow { 0%, 100% { opacity: .6; transform: scale(.88); } 18% { opacity: .92; transform: scale(.97); } 31% { opacity: .76; transform: scale(.92); } 47% { opacity: 1; transform: scale(1); } 64% { opacity: .68; transform: scale(.9); } 82% { opacity: .88; transform: scale(.95); } }
+.rg-mote { opacity: 0; animation: rgMote 4.2s ease-in-out infinite; }
+@keyframes rgMote { 0% { opacity: 0; transform: translate(0, 0); } 30% { opacity: .9; } 100% { opacity: 0; transform: translate(var(--dx), -7px); } }
+.rg-scr * { animation-play-state: paused !important; }   /* tijdens swipen staat alles in Land 2 even stil: dan hoeft de telefoon de kaart niet steeds opnieuw te tekenen en verdwijnt er niets */
+.rg-off .rg-sway, .rg-off .rg-tw, .rg-off .rg-drop, .rg-off .rg-ring, .rg-off .rg-wave, .rg-off .rg-bob, .rg-off .rg-glow, .rg-off .rg-mote { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) { .rg-tw, .rg-drop, .rg-ring, .rg-wave, .rg-mote { animation: none; display: none; } .rg-bob { animation: none; } .rg-glow { animation: none; opacity: .8; } }
 .badge-icon { width: 72px !important; height: 72px !important; border: 0 !important; background: none !important; margin-bottom: 4px; }
 .badge-card.locked { opacity: .6; filter: none; }
 .badge-card.unlocked.grand { background: linear-gradient(145deg, #1a344a 0%, #2a557a 100%); border-color: #ffd54f; }
@@ -2724,10 +2753,12 @@ body.mk-typing .mk-res{gap:8px}
 
 /* v124: één doorlopende reis */
 .jmap-scroll.jreis { background: #12362a; }
+html.proef-test .j-social, html.proef-test .j-marker { display: none !important; }   /* proef: alleen testadres, tijdelijk */
 .jl-land { position: relative; z-index: 2; }
 /* zachte overgang: de randen van de landen vervagen in de poort */
 .jl-land.ft .jsvg { -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 74px); mask-image: linear-gradient(180deg, transparent 0, #000 74px); }
 .jl-land.fb .jsvg { -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 74px), transparent 100%); mask-image: linear-gradient(180deg, #000 calc(100% - 74px), transparent 100%); }
+.jl-land .jsvg.j-nacht, .jl-land.fb .jsvg.j-nacht, .jl-land.ft .jsvg.j-nacht { -webkit-mask-image: linear-gradient(180deg, transparent 0, rgba(0,0,0,.55) 70px, #000 150px, #000 calc(100% - 74px), transparent 100%); mask-image: linear-gradient(180deg, transparent 0, rgba(0,0,0,.55) 70px, #000 150px, #000 calc(100% - 74px), transparent 100%); }   /* Land 6 (proef): de lantaarnhemel loopt zacht uit in de donkere balk bovenin, geen harde rand */
 .jl-land.ft.fb .jsvg { -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 74px, #000 calc(100% - 74px), transparent 100%); mask-image: linear-gradient(180deg, transparent 0, #000 74px, #000 calc(100% - 74px), transparent 100%); }
 .jl-land.jl-locked .jsvg { filter: saturate(.72) brightness(.95); }
 .jl-gate { position: relative; z-index: 1; height: 420px; margin: -80px 0; padding-bottom: 86px !important; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 6px; overflow: hidden; }
@@ -5879,6 +5910,63 @@ return exports;})();
   };
   function play(name) { if (S.sound) { try { sfx[name](); } catch (e) {} } }
 
+  /* ── Reiskaart-glans ronde 3 (proef Land 2): zachte woestijnsfeer. Alleen WebAudio, geen bestanden: laag windsuizen + heel zacht water.
+     Regels: volgt "Geluid" én de eigen schakelaar; begint pas na een echte tik; uit bij voorlezen, schermlezer-bediening en minder-beweging;
+     stopt als de app naar de achtergrond gaat of Land 2 uit beeld is; veel zachter dan de quizgeluiden (piek ±0,04 tegen 0,15). ── */
+  const glansLandIds = ["zuilen", "profeten", "seerah", "koran", "akhlaaq", "ihsan", "reinheid", "gebed", "elkedag", "ramadan", "karakter"];   /* landen met glans-look: die krijgen ook de woestijnsfeer */
+  const rgAmb = (function () {
+    let live = null, want = false, tapped = false, assist = false, lastPd = 0, lastKey = 0;
+    const nbuf = {};
+    function noise(c, secs, brown) {
+      const key = (brown ? "b" : "w") + c.sampleRate; if (nbuf[key]) return nbuf[key];
+      const n = Math.floor(c.sampleRate * secs), F = Math.floor(c.sampleRate * 0.3), x = new Float32Array(n + F);
+      let last = 0;
+      for (let i = 0; i < n + F; i++) { const w = Math.random() * 2 - 1; if (brown) { last = (last + 0.02 * w) / 1.02; x[i] = last * 3.5; } else x[i] = w; }
+      const buf = c.createBuffer(1, n, c.sampleRate), d = buf.getChannelData(0);
+      for (let i = 0; i < n; i++) d[i] = i < F ? x[i] * (i / F) + x[n + i] * (1 - i / F) : x[i];   /* naadloze lus */
+      nbuf[key] = buf; return buf;
+    }
+    function lfo(c, hz, depth, target, list) { const o = c.createOscillator(), g = c.createGain(); o.frequency.value = hz; g.gain.value = depth; o.connect(g); g.connect(target); o.start(); list.push(o); }
+    function ok() {
+      return want && tapped && !assist && S.sound && S.amb !== false && !S.speak && document.visibilityState === "visible" &&
+        !(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    }
+    function start() {
+      const c = ctx(); if (!c) return;
+      const srcs = [], master = c.createGain(), t = c.currentTime;
+      master.gain.setValueAtTime(0.0001, t); master.gain.exponentialRampToValueAtTime(1, t + 2.5); master.connect(c.destination);
+      /* wind: bruine ruis door een laag filter, die langzaam aanzwelt en wegzakt */
+      const w = c.createBufferSource(); w.buffer = noise(c, 5, true); w.loop = true;
+      const lp = c.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 340; lp.Q.value = 0.6;
+      const wg = c.createGain(); wg.gain.value = 0.02;
+      w.connect(lp); lp.connect(wg); wg.connect(master); w.start(); srcs.push(w);
+      lfo(c, 0.07, 0.009, wg.gain, srcs); lfo(c, 0.031, 0.006, wg.gain, srcs); lfo(c, 0.11, 110, lp.frequency, srcs);
+      /* water: heel zacht gekabbel (witte ruis door een smal filter) */
+      const s = c.createBufferSource(); s.buffer = noise(c, 3, false); s.loop = true;
+      const bp = c.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = 2300; bp.Q.value = 1.1;
+      const sg = c.createGain(); sg.gain.value = 0.0045;
+      s.connect(bp); bp.connect(sg); sg.connect(master); s.start(); srcs.push(s);
+      lfo(c, 1.3, 0.0015, sg.gain, srcs); lfo(c, 0.37, 0.0015, sg.gain, srcs); lfo(c, 0.9, 500, bp.frequency, srcs);
+      live = { master: master, srcs: srcs };
+    }
+    function stop(fast) {
+      const L = live; if (!L) return; live = null;
+      const c = audioCtx, fade = fast ? 0.05 : 0.8;
+      try { const t = c.currentTime; L.master.gain.cancelScheduledValues(t); L.master.gain.setValueAtTime(Math.max(0.0001, L.master.gain.value), t); L.master.gain.exponentialRampToValueAtTime(0.0001, t + fade); } catch (e) {}
+      setTimeout(function () { L.srcs.forEach(function (n) { try { n.stop(); } catch (e) {} }); try { L.master.disconnect(); } catch (e) {} }, fade * 1000 + 60);
+    }
+    function sync() { try { if (ok()) { if (!live) start(); } else stop(document.visibilityState !== "visible"); } catch (e) {} }
+    document.addEventListener("pointerdown", function (e) { lastPd = Date.now(); if (e.isTrusted && e.pointerType) { tapped = true; if (want) setTimeout(sync, 0); } }, true);
+    document.addEventListener("pointerup", function () { lastPd = Date.now(); }, true);
+    document.addEventListener("keydown", function () { lastKey = Date.now(); }, true);
+    document.addEventListener("keyup", function () { lastKey = Date.now(); }, true);
+    /* een "klik" zonder tik of toets komt van een schermlezer (TalkBack/VoiceOver-bediening): dan blijft de sfeer deze sessie uit */
+    document.addEventListener("click", function (e) { if (e.isTrusted && Date.now() - lastPd > 1500 && Date.now() - lastKey > 1500) { assist = true; sync(); } }, true);
+    document.addEventListener("visibilitychange", sync);
+    window.addEventListener("pagehide", function () { stop(true); });
+    return { show: function (v) { want = !!v; sync(); }, sync: sync };
+  })();
+
   /* ───────────── Presentator (echte stemclips) ─────────────
      Zet mp3-bestanden in de map audio/ met de namen uit de opnamelijst (bijv. goed-1.mp3, goed-2.mp3 …).
      Ontbreekt een bestand? Dan valt de app stil terug op de gewone geluidjes. */
@@ -6924,6 +7012,9 @@ return exports;})();
   let draftColor = AVATAR_COLORS[0];
   let journeyReturn = false;   /* quiz gestart vanaf De Reis: na afloop terug naar de kaart */
   let journeyLand = null;      /* index van het getoonde land (null = eerste onafgeronde land) */
+  /* PROEF (alleen op het testadres van de glans-proef, nooit op nurspark.app): alle landen open en je start in Land 2 */
+  const PROEF_TEST = /\.vercel\.app$/i.test(location.hostname) && location.hostname.indexOf("reiskaart-glans") !== -1;
+  if (PROEF_TEST) document.documentElement.classList.add("proef-test");   /* alleen op het testadres: spelers op de kaart tijdelijk verbergen (mag NIET live) */
   const journeyPos = {};       /* laatst getoonde stop per land, voor de sprong-animatie */
   let boardLevel = "junior";   /* wordt bij het openen van het scorebord op de actieve modus gezet */
   let flyerPending = !!(P && P.mode);   /* toon bij aankomst op de kaart een motivatieflyer */
@@ -7420,6 +7511,7 @@ return exports;})();
       '<div class="set-top"><h3 id="a11yT">' + icon("gear", 22) + "Instellingen</h3><button class=\"set-x\" data-d=\"x\" aria-label=\"Instellingen sluiten\">×</button></div>" +
       '<div class="set-body">' +
       row('id="optSound"' + (S.sound ? " checked" : ""), "Geluid", "Effecten en de stem van de presentator") +
+      row('id="optAmb"' + (S.amb !== false ? " checked" : ""), "Woestijnsfeer (proef)", "Zachte wind en water op de reiskaart. Werkt alleen als Geluid aan staat.") +
       (P && P.mode === "expert" ? row('data-act="toggle-timer"' + (S.timer ? " checked" : ""), "Timer per vraag", TIMER_SECONDS + " seconden per vraag (Ervaren)") : "") +
       row('data-act="toggle-hg"' + (S.hgOff ? "" : " checked"), "Zandloper-levels", "Elk " + HG_EVERY + "e level heeft een tijd per vraag (" + (P ? HG_SECS[P.mode] : 20) + " sec). Uitzetten kan altijd.") +
       row('data-act="toggle-kos"' + (S.look === "kosmos" ? " checked" : ""), "Kosmos-look (tieners)", "Een sterrenhemel met neon voor de reiskaart, de vragen en de uitslag. Speciaal voor tieners.") +
@@ -7445,7 +7537,8 @@ return exports;})();
       (sbUser && P.sbId === sbUser.id ? '<button class="set-danger" data-act="acct-delete" data-d="x">' + icon("trash", 16) + "Account verwijderen</button>" : "") +
       legalLinks() + '<button class="btn block" data-d="ok">Klaar</button></div></div>';
     w.addEventListener("change", function (e) {
-      if (e.target.id === "optSound") { S.sound = e.target.checked; if (!S.sound) voiceStop(); }
+      if (e.target.id === "optSound") { S.sound = e.target.checked; if (!S.sound) voiceStop(); rgAmb.sync(); }
+      if (e.target.id === "optAmb") { S.amb = e.target.checked; rgAmb.sync(); }
       if (e.target.id === "optSpeak") {
         S.speak = e.target.checked;
         if (S.speak) { S.autoNext = false; const a = document.getElementById("optAuto"); if (a) a.checked = false; if (!("speechSynthesis" in window)) { announce("Voorlezen wordt niet ondersteund in deze browser."); } else speak("Voorlezen staat aan."); }
@@ -9112,7 +9205,7 @@ return exports;})();
     if (screen === "dash" || screen === "hub" || screen === "play" || screen === "lab" || screen === "labroom" || screen === "labquiz" || screen === "fout" || screen === "dua" || screen === "today" || screen === "prog" || screen === "quran" || screen === "qread" || screen === "qj" || screen === "kd") document.body.classList.add("dashfull");
     if (screen === "rad" && rad && rad.phase !== "intro" && rad.phase !== "end") document.body.classList.add("radgame");
     if (kosmosOn() && KOS_SCREENS.indexOf(screen) !== -1) document.body.classList.add("kosmos");
-    if (screen === "journey") afterJourneyRender();
+    if (screen === "journey") afterJourneyRender(); else rgAmb.show(false);
     duffUi();
     a11yAfter(prevA);
   }
@@ -9976,7 +10069,194 @@ return exports;})();
     for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + (i * Math.PI) / 5, rr = i % 2 ? r * 0.45 : r; pts.push((cx + Math.cos(a) * rr).toFixed(1) + "," + (cy + Math.sin(a) * rr).toFixed(1)); }
     return pts.join(" ");
   }
+  /* ── Reiskaart-glans (proef, alleen Land 2): glanzende plaatjes in plaats van de getekende onderdelen ── */
+  let glansOn = false, glansL = "", glansBeg = false;   /* glansBeg: Beginner-kaart (5 levels, andere route) */   /* glansL: welk land (alleen "zuilen" en "profeten" doen mee) */
+  let nachtOn = false, nachtMemo = {}, nachtStops = [];   /* Land 6 (proef): nachtlook aan tijdens het tekenen van de kaart */
+  const NACHT_TINT = { nachtmoskee: 1, lantaarnpaar: 1, ihsanpoort: 1, schatkist: 1 };
+  function gImg(name, x, y, w, h, extra) { if (nachtOn && NACHT_TINT[name]) extra = (extra || "") + ' filter="url(#nachtTint)"'; return '<image href="reiskaart-glans/' + name + '.webp" x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + w.toFixed(1) + '" height="' + h.toFixed(1) + '" decoding="sync"' + (extra || "") + "/>"; }
+  function gShadow(cx, cy, rx, ry) { return '<ellipse cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" rx="' + rx.toFixed(1) + '" ry="' + ry.toFixed(1) + '" fill="#4a3210" opacity=".2"/>'; }
+  /* ronde 2: zacht sterretje dat af en toe oplicht (CSS, uit bij minder-beweging) */
+  function gTw(x, y, r, dur, del, col) {
+    return '<path class="rg-tw" style="animation-duration:' + dur + "s;animation-delay:-" + del + 's" d="M' + x.toFixed(1) + " " + (y - r).toFixed(1) + " Q " + x.toFixed(1) + " " + y.toFixed(1) + " " + (x + r).toFixed(1) + " " + y.toFixed(1) + " Q " + x.toFixed(1) + " " + y.toFixed(1) + " " + x.toFixed(1) + " " + (y + r).toFixed(1) + " Q " + x.toFixed(1) + " " + y.toFixed(1) + " " + (x - r).toFixed(1) + " " + y.toFixed(1) + " Q " + x.toFixed(1) + " " + y.toFixed(1) + " " + x.toFixed(1) + " " + (y - r).toFixed(1) + 'Z" fill="' + (col || "#fffbe6") + '"/>';
+  }
+  function gPalm(x, y, k, flip) {
+    const H = 128 * k, W = H * 286 / 320, dur = (4.6 + ((x * 7 + y * 3) % 17) / 10).toFixed(1), del = (((x + y) % 40) / 10).toFixed(1);
+    return '<g transform="translate(' + x + " " + y + ") scale(" + (flip ? -1 : 1) + ' 1)">' + gShadow(W * 0.1, 2 * k, W * 0.34, 5.5 * k) +
+      gImg("palmboom", -W * 0.45, -H + 5 * k, W, H, ' class="rg-sway" style="animation-duration:' + dur + "s;animation-delay:-" + del + 's"') + "</g>";
+  }
+  function gPond(cx, cy, rx, ry) {
+    const W = 2 * rx + 24, H = W * 285 / 320;
+    return gShadow(cx + 2, cy + H * 0.36, W * 0.47, H * 0.11) + gImg("oase", cx - W / 2, cy - H * 0.58, W, H) + sparkle(cx - rx * 0.2, cy - ry * 0.2, 5, 0.3) + sparkle(cx + rx * 0.4, cy + ry * 0.35, 4, 1);
+  }
+  function gPondAt(cx, cy, W) {   /* proef: kleinere vijver op een vaste plek naast de route; ronde 2: golfjes, glinsters en deinende waterlelies (alles binnen het plaatje) */
+    const H = W * 285 / 320, x0 = cx - W / 2, y0 = cy - H * 0.58, s = W / 320, img = gImg("oase", x0, y0, W, H);
+    const X = function (a) { return x0 + a * s; }, Y = function (b) { return y0 + b * s; };
+    const lily = function (id, a, b, rx, ry, dur, del) {
+      return '<clipPath id="' + id + '"><ellipse cx="' + X(a).toFixed(1) + '" cy="' + Y(b).toFixed(1) + '" rx="' + (rx * s).toFixed(1) + '" ry="' + (ry * s).toFixed(1) + '"/></clipPath><g clip-path="url(#' + id + ')"><g class="rg-bob" style="transform-origin:' + X(a).toFixed(1) + "px " + Y(b).toFixed(1) + "px;animation-duration:" + dur + "s;animation-delay:-" + del + 's">' + img + "</g></g>";
+    };
+    const wave = function (a, b, w, dur, del) {
+      const x = X(a), y = Y(b);
+      return '<path class="rg-wave" style="animation-duration:' + dur + "s;animation-delay:-" + del + 's" d="M' + (x - w).toFixed(1) + " " + y.toFixed(1) + " Q " + x.toFixed(1) + " " + (y - 1.6).toFixed(1) + " " + (x + w).toFixed(1) + " " + y.toFixed(1) + '" fill="none" stroke="#fff" stroke-width=".9" stroke-linecap="round"/>';
+    };
+    return gShadow(cx + 2, cy + H * 0.36, W * 0.47, H * 0.11) + img +
+      lily("rgLc1" + glansL, 212, 100, 50, 38, 4.6, 0.5) + lily("rgLc2" + glansL, 93, 154, 38, 29, 5.4, 2.2) +
+      wave(132, 108, 4, 5, 0.3) + wave(205, 186, 4.5, 5.8, 2.1) + wave(150, 208, 3.5, 4.6, 3.4) + wave(250, 152, 3.5, 6.4, 1.2) + wave(88, 198, 3, 5.4, 4.4) +
+      gTw(X(172), Y(128), 3.4, 6.5, 0.4) + gTw(X(118), Y(186), 2.8, 8, 3.1) + gTw(X(226), Y(200), 3, 7.2, 5.3) + gTw(X(150), Y(262), 2.6, 9.5, 6.2);
+  }
+  function gLantern(x, y, k) {
+    k *= 1.3;   /* proef: lantaarn groter en met zachte lichtgloed, zodat hij ook op de donkere, drukke grond te zien is */
+    const H = 80 * k, W = H * 120 / 320, gx = (W * 0.31).toFixed(1), gy = (30 * k).toFixed(1);
+    return '<g transform="translate(' + x + " " + y + ')">' + gShadow(W * 0.1, 71 * k, W * 0.5, 3.6 * k) +
+      '<defs><radialGradient id="rgLg"><stop offset="0" stop-color="#fff6c8" stop-opacity=".95"/><stop offset=".5" stop-color="#ffd36a" stop-opacity=".6"/><stop offset="1" stop-color="#ffd36a" stop-opacity="0"/></radialGradient></defs>' +
+      '<circle cx="' + gx + '" cy="' + gy + '" r="' + (36 * k).toFixed(1) + '" fill="url(#rgLg)" opacity=".8" class="rg-glow" style="animation-duration:' + (3 + ((x * 3 + y) % 11) / 10).toFixed(1) + "s;animation-delay:-" + (((x + y * 2) % 30) / 10).toFixed(1) + 's"/>' +
+      gImg("lantaarn", -W * 0.3, -8 * k, W, H) +
+      /* ronde 3: in de nacht (Ervaren) brandt de lantaarn: zacht warm goud licht, klein en helemaal binnen het eigen plaatje */
+      (curTh && !curTh.day ? '<defs><radialGradient id="rgLn"><stop offset="0" stop-color="#fffbe0" stop-opacity=".95"/><stop offset=".45" stop-color="#ffd978" stop-opacity=".7"/><stop offset="1" stop-color="#ffb93c" stop-opacity="0"/></radialGradient></defs>' +
+        '<ellipse cx="' + (W * 0.45).toFixed(1) + '" cy="' + (34.4 * k).toFixed(1) + '" rx="' + (6.6 * k).toFixed(1) + '" ry="' + (9.4 * k).toFixed(1) + '" fill="url(#rgLn)" class="rg-glow" style="animation-duration:' + (2.6 + ((x + y * 3) % 9) / 10).toFixed(1) + "s;animation-delay:-" + (((x * 2 + y) % 20) / 10).toFixed(1) + 's"/>' : "") + "</g>";
+  }
+  function gFountain(x, y, k) {   /* ronde 2: spuitend water (druppels omhoog en neer) en kringetjes op het water, alles binnen de fontein */
+    const W = 96, H = W * 288 / 320;
+    const drop = function (dx, dy, r, dur, del) { return '<circle class="rg-drop" cx="-3" cy="-60.5" r="' + r + '" fill="#eafcff" stroke="#7fdcf0" stroke-width=".3" style="--dx:' + dx + "px;--dy:" + dy + "px;animation-duration:" + dur + "s;animation-delay:-" + del + 's"/>'; };
+    const ring = function (cx, cy, rx, dur, del) { return '<ellipse class="rg-ring" cx="' + cx + '" cy="' + cy + '" rx="' + rx + '" ry="' + (rx * 0.42).toFixed(1) + '" fill="none" stroke="#fff" stroke-width=".8" style="animation-duration:' + dur + "s;animation-delay:-" + del + 's"/>'; };
+    return '<g transform="translate(' + x + " " + y + ") scale(" + k + ')">' + gShadow(1, H * 0.13, W * 0.5, H * 0.1) + gImg("fontein", -W / 2, -H * 0.8, W, H) +
+      ring(-17, -24.5, 7, 2.6, 0.2) + ring(16.5, -24.5, 7, 2.6, 1.5) + ring(-1, -18.5, 8, 3.2, 0.9) +
+      drop(-14, 34, 1.3, 2.4, 0) + drop(13, 34, 1.3, 2.4, 1.2) + drop(-9, 31, 1.1, 2.9, 0.7) + drop(9, 31, 1.1, 2.9, 2.1) + drop(-18, 35, 1, 3.3, 1.7) + drop(18, 35, 1, 3.3, 0.4) + drop(2, 39, 1.2, 2.7, 1.9) +
+      gTw(-27, -36, 3, 7.5, 1) + gTw(30, -20, 2.8, 9, 5) + "</g>";
+  }
+  /* proef: nieuwe glanzende stukken (grot, moskee, 5 Zuilen, schatkist) */
+  function gGrotAt(cx, cy, W) {
+    const H = W * 256 / 300, y0 = cy - H * 0.55;
+    return gShadow(cx + 2, y0 + H * 0.96, W * 0.44, H * 0.07) + gImg("grot", cx - W / 2, y0, W, H) +
+      '<defs><radialGradient id="rgCg"><stop offset="0" stop-color="#fff0b0" stop-opacity=".9"/><stop offset=".6" stop-color="#ffc95d" stop-opacity=".35"/><stop offset="1" stop-color="#ffc95d" stop-opacity="0"/></radialGradient></defs>' +
+      '<circle cx="' + (cx - W * 0.08).toFixed(1) + '" cy="' + (y0 + H * 0.62).toFixed(1) + '" r="' + (W * 0.17).toFixed(1) + '" fill="url(#rgCg)" class="rg-glow" style="animation-duration:3.8s"/>' +
+      [[-0.13, 0.66, -1.5, 4.2, 0], [-0.05, 0.7, 1.5, 5, 1.8], [-0.1, 0.6, 0.5, 4.6, 3.1]].map(function (m) { return '<circle class="rg-mote" cx="' + (cx + W * m[0]).toFixed(1) + '" cy="' + (y0 + H * m[1]).toFixed(1) + '" r=".9" fill="#ffe9a6" style="--dx:' + m[2] + "px;animation-duration:" + m[3] + "s;animation-delay:-" + m[4] + 's"/>'; }).join("") +
+      gTw(cx + W * 0.29, y0 + H * 0.6, 3.2, 6.8, 2, "#eaffff") + gTw(cx - W * 0.2, y0 + H * 0.2, 2.8, 9.2, 6);
+  }
+  function gMoskee(cx, bottom, W, noSand, noFlip) {
+    const H = W * 350 / 300;
+    /* grond (zandvlek) onder de moskee zodat hij niet zweeft; gespiegeld zodat de ingang naar de route kijkt */
+    return (noSand ? "" : '<ellipse cx="' + cx + '" cy="' + (bottom - 3) + '" rx="' + (W * 0.56).toFixed(1) + '" ry="11" fill="#f0c06a"/><ellipse cx="' + cx + '" cy="' + (bottom - 3) + '" rx="' + (W * 0.56).toFixed(1) + '" ry="11" fill="none" stroke="#fff3c8" stroke-opacity=".5" stroke-width="1.5"/>') +
+      gShadow(cx, bottom - 1, W * 0.44, 6) + '<g transform="translate(' + (noFlip ? 0 : 2 * cx) + ' 0) scale(' + (noFlip ? 1 : -1) + ' 1)">' + gImg("moskee", cx - W / 2, bottom - H, W, H) + "</g>" +
+      gTw(cx - W / 2 + W * 0.56, bottom - H + H * 0.2, 3.6, 7.6, 1.5) + gTw(cx - W / 2 + W * 0.5, bottom - H + H * 0.035, 2.8, 9.4, 5.5) + gTw(cx - W / 2 + W * 0.08, bottom - H + H * 0.17, 2.6, 10.5, 8);
+  }
+  function gZuilen(cx, bottom, W) {
+    const H = W * 303 / 420;
+    return gShadow(cx, bottom - 2, W * 0.46, 4) + gImg("zuilen5", cx - W / 2, bottom - H, W, H) +
+      gTw(cx - W / 2 + W * 0.5, bottom - H + H * 0.1, 3, 8.2, 0.8) + gTw(cx - W / 2 + W * 0.68, bottom - H + H * 0.1, 3, 9.6, 4.6) + gTw(cx - W / 2 + W * 0.86, bottom - H + H * 0.1, 3, 8.8, 7.3);
+  }
+  function gChestImg(cx, cy, k, dim) {
+    const W = 46 * k, H = W * 210 / 220;
+    return '<g' + (dim ? ' opacity=".6"' : "") + ">" + gShadow(cx, cy + H * 0.42, W * 0.42, 3.5) + gImg("schatkist", cx - W / 2, cy - H * 0.55, W, H) + gTw(cx + W * 0.16, cy - H * 0.3, 3.2 * k, (7.5 + (cy % 5) * 0.6).toFixed(1), (cy % 7).toFixed(1)) + "</g>";
+  }
+  /* Land 1 (proef): Ka'bah, berg Thawr, kameel en dadelschaal als glanzende plaatjes */
+  function gKaaba(cx, bottom, W) { const H = W * 319 / 320; return gShadow(cx, bottom - 1, W * 0.5, 5) + gImg("kaaba", cx - W / 2, bottom - H, W, H) + gTw(cx + W * 0.12, bottom - H * 0.62, 3.2, 7.8, 1) + gTw(cx - W * 0.3, bottom - H * 0.66, 2.6, 9.6, 5) + gTw(cx + W * 0.3, bottom - H * 0.3, 2.8, 8.6, 3); }
+  function gThawr(cx, bottom, W) { const H = W * 307 / 320; return gShadow(cx, bottom - 1, W * 0.46, 5) + '<g transform="translate(' + (2 * cx) + ' 0) scale(-1 1)">' + gImg("thawr", cx - W / 2, bottom - H, W, H) + "</g>" + gTw(cx - W * 0.1, bottom - H * 0.32, 3, 7, 2, "#eaffff") + gTw(cx - W * 0.2, bottom - H * 0.22, 2.4, 9.2, 6, "#eaffff"); }   /* gespiegeld: ingang kijkt naar de route */
+  function gTent(cx, bottom, W) { const H = W * 193 / 320; return gShadow(cx, bottom - 1, W * 0.46, 5) + gImg("tent", cx - W / 2, bottom - H, W, H) + gTw(cx - W * 0.28, bottom - H * 0.5, 2.8, 8, 1) + gTw(cx + W * 0.1, bottom - H * 0.9, 3, 7.4, 4) + gTw(cx + W * 0.34, bottom - H * 0.28, 2.6, 9, 6); }
+  function gUhud(cx, bottom, W, hk) { const H = W * 145 / 320 * (hk || 1); return gShadow(cx + 3, bottom - 1, W * 0.52, 6.5) + gImg("uhud", cx - W / 2, bottom - H, W, H, ' preserveAspectRatio="none"') + gTw(cx + W * 0.06, bottom - H * 0.85, 3.2, 7.2, 2) + gTw(cx - W * 0.22, bottom - H * 0.55, 2.6, 9, 5); }
+  function gNur(cx, bottom, W) { const H = W * 268 / 320; return gShadow(cx + 2, bottom - 1, W * 0.46, 5.5) + gImg("nur", cx - W / 2, bottom - H, W, H) + gTw(cx - W * 0.04, bottom - H * 0.96, 3.4, 6.6, 1) + gTw(cx + W * 0.12, bottom - H * 0.78, 2.6, 8.4, 4); }
+  function gNabawi(cx, bottom, W) { const H = W * 172 / 320; return gShadow(cx, bottom - 1, W * 0.48, 5.5) + gImg("nabawi", cx - W / 2, bottom - H, W, H) + gTw(cx - W * 0.02, bottom - H * 0.9, 3.4, 6.8, 1) + gTw(cx - W * 0.4, bottom - H * 0.8, 2.6, 8.8, 3) + gTw(cx + W * 0.4, bottom - H * 0.78, 2.6, 9.4, 5); }
+  /* Land 4 (proef): Koran op standaard, lamp Nur en bibliotheek als glanzende plaatjes */
+  function gKoranStand(cx, bottom, W) {
+    const H = W * 291 / 320, gx = cx, gy = bottom - H * 0.74, uid = "rgKg" + glansL;
+    return gShadow(cx, bottom - 1, W * 0.44, 5) +
+      '<defs><radialGradient id="' + uid + '"><stop offset="0" stop-color="#fff6c8" stop-opacity=".9"/><stop offset=".6" stop-color="#ffd36a" stop-opacity=".35"/><stop offset="1" stop-color="#ffd36a" stop-opacity="0"/></radialGradient></defs>' +
+      '<ellipse cx="' + gx.toFixed(1) + '" cy="' + gy.toFixed(1) + '" rx="' + (W * 0.3).toFixed(1) + '" ry="' + (H * 0.2).toFixed(1) + '" fill="url(#' + uid + ')" class="rg-glow" style="animation-duration:3.6s"/>' +
+      gImg("koran-standaard", cx - W / 2, bottom - H, W, H) + gTw(cx - W * 0.2, bottom - H * 0.72, 3.4, 7, 1) + gTw(cx + W * 0.22, bottom - H * 0.68, 3, 8.6, 4) + gTw(cx, bottom - H * 0.9, 2.6, 9.4, 6.5);
+  }
+  function gLampNur(cx, bottom, W) {
+    const H = W * 320 / 161, uid = "rgLm" + glansL;
+    return gShadow(cx, bottom - 1, W * 0.5, 4.5) +
+      '<defs><radialGradient id="' + uid + '"><stop offset="0" stop-color="#fffbe0" stop-opacity=".95"/><stop offset=".5" stop-color="#ffd978" stop-opacity=".5"/><stop offset="1" stop-color="#ffb93c" stop-opacity="0"/></radialGradient></defs>' +
+      '<circle cx="' + cx.toFixed(1) + '" cy="' + (bottom - H * 0.5).toFixed(1) + '" r="' + (W * 0.46).toFixed(1) + '" fill="url(#' + uid + ')" class="rg-glow" style="animation-duration:3.2s"/>' +
+      gImg("lamp", cx - W / 2, bottom - H, W, H) + gTw(cx, bottom - H * 0.98, 2.8, 8, 2) + gTw(cx - W * 0.28, bottom - H * 0.55, 2.6, 9, 5) + gTw(cx + W * 0.26, bottom - H * 0.4, 2.6, 7.4, 0.5);
+  }
+  function gBiblio(cx, bottom, W, flip) {
+    const H = W * 320 / 285, fx = function (f) { return cx - W / 2 + W * (flip ? 1 - f : f); };
+    return gShadow(cx, bottom - 2, W * 0.46, 5) + (flip ? '<g transform="translate(' + (2 * cx) + ' 0) scale(-1 1)">' : "") + gImg("bibliotheek", cx - W / 2, bottom - H, W, H) + (flip ? "</g>" : "") +
+      gTw(fx(0.5), bottom - H * 0.95, 3, 7.6, 1) + gTw(fx(0.45), bottom - H * 0.62, 3.2, 9, 4) + gTw(fx(0.8), bottom - H * 0.4, 2.6, 8.2, 6);
+  }
+  /* Land 5 (proef): prieel, rozenboog en cadeaus (sadaqa) als glanzende plaatjes */
+  function gPrieel(cx, bottom, W) {
+    const H = W * 320 / 236;
+    return gShadow(cx, bottom - 2, W * 0.48, 5) + gImg("prieel", cx - W / 2, bottom - H, W, H) + gTw(cx, bottom - H * 0.97, 3, 8, 1) + gTw(cx - W * 0.3, bottom - H * 0.42, 2.8, 9.2, 4) + gTw(cx + W * 0.3, bottom - H * 0.35, 2.6, 7.6, 6);
+  }
+  function gRozenboog(cx, bottom, W) {
+    const H = W * 320 / 246;
+    return gShadow(cx, bottom - 1, W * 0.46, 4.5) + gImg("rozenboog", cx - W / 2, bottom - H, W, H) + gTw(cx, bottom - H * 0.98, 3, 7.4, 2) + gTw(cx - W * 0.34, bottom - H * 0.55, 2.6, 9, 5) + gTw(cx + W * 0.34, bottom - H * 0.5, 2.6, 8.2, 0.5);
+  }
+  function gCadeaus(cx, bottom, W) {
+    const H = W * 315 / 316;
+    return gShadow(cx, bottom - 1, W * 0.44, 4.5) + gImg("cadeaus", cx - W / 2, bottom - H, W, H) + gTw(cx - W * 0.02, bottom - H * 0.93, 3, 8, 1) + gTw(cx + W * 0.3, bottom - H * 0.6, 2.6, 9.4, 4) + gTw(cx - W * 0.28, bottom - H * 0.5, 2.6, 7.2, 6);
+  }
+  /* Land 6 (proef): stille nachtmoskee, lantaarnpaar en poort van Ihsan als glanzende plaatjes (zacht gouden gloed, alles binnen het eigen plaatje) */
+  function gGlowDef(uid) { return '<defs><radialGradient id="' + uid + '"><stop offset="0" stop-color="#fff6c8" stop-opacity=".9"/><stop offset=".55" stop-color="#ffd36a" stop-opacity=".4"/><stop offset="1" stop-color="#ffd36a" stop-opacity="0"/></radialGradient></defs>'; }
+  function gGlow(uid, cx, cy, rx, ry, dur, del) { return '<ellipse cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" rx="' + rx.toFixed(1) + '" ry="' + ry.toFixed(1) + '" fill="url(#' + uid + ')" class="rg-glow" style="animation-duration:' + dur + "s;animation-delay:-" + del + 's"/>'; }
+  function gNachtmoskee(cx, bottom, W) {
+    const H = W * 320 / 281, x0 = cx - W / 2, y0 = bottom - H, uid = "rgNm" + glansL;
+    return gShadow(cx, bottom - 1, W * 0.46, 5) + gGlowDef(uid) + gImg("nachtmoskee", x0, y0, W, H) +
+      gGlow(uid, x0 + W * 0.32, y0 + H * 0.8, W * 0.11, H * 0.1, 3.4, 0.4) + gGlow(uid, x0 + W * 0.84, y0 + H * 0.8, W * 0.07, H * 0.08, 4.1, 1.7) +
+      gTw(x0 + W * 0.4, y0 + H * 0.3, 3.2, 7.2, 1) + gTw(x0 + W * 0.52, y0 + H * 0.07, 3, 8.8, 4) + gTw(x0 + W * 0.28, y0 + H * 0.45, 2.6, 9.4, 6) + gTw(x0 + W * 0.9, y0 + H * 0.17, 2.4, 8, 2.5);
+  }
+  function gLantaarnpaar(cx, bottom, W) {
+    const H = W * 320 / 261, x0 = cx - W / 2, y0 = bottom - H, uid = "rgLq" + glansL;
+    return gShadow(cx + W * 0.08, bottom - 1, W * 0.4, 4) + gGlowDef(uid) +
+      gGlow(uid, x0 + W * 0.25, y0 + H * 0.46, W * 0.24, H * 0.2, 3.2, 0.3) + gGlow(uid, x0 + W * 0.71, y0 + H * 0.63, W * 0.2, H * 0.17, 3.8, 1.9) +
+      gImg("lantaarnpaar", x0, y0, W, H) +
+      gTw(x0 + W * 0.05, y0 + H * 0.3, 2.6, 7.4, 1) + gTw(x0 + W * 0.95, y0 + H * 0.4, 2.6, 8.6, 4) + gTw(x0 + W * 0.5, y0 + H * 0.8, 2.4, 9.2, 6);
+  }
+  function gIhsanPoort(cx, bottom, W) {
+    const H = W * 320 / 295, x0 = cx - W / 2, y0 = bottom - H, uid = "rgIp" + glansL;
+    return (nachtOn ? gNachtGrond(cx, bottom - 2, W * .42, 6) : "") + gShadow(cx, bottom - 1, W * 0.46, 4.5) + gGlowDef(uid) + gImg("ihsanpoort", x0, y0, W, H) +
+      gGlow(uid, x0 + W * 0.13, y0 + H * 0.69, W * 0.09, H * 0.08, 3.1, 0.6) + gGlow(uid, x0 + W * 0.84, y0 + H * 0.69, W * 0.09, H * 0.08, 3.7, 2.2) +
+      gTw(x0 + W * 0.5, y0 + H * 0.03, 3, 7.6, 1) + gTw(x0 + W * 0.2, y0 + H * 0.3, 2.8, 9, 4) + gTw(x0 + W * 0.82, y0 + H * 0.28, 2.6, 8.2, 6);
+  }
+  /* Land Schoon & Wudhu (Beginner, proef): wudhu-wasplaats (stromend water), waterkruik en schoonmaakset (handdoek, zeep, miswak) als glanzende plaatjes */
+  function gGrond(cx, cy, rx, ry) {   /* plat grasplekje onder een object: horizontaal, zacht, zodat het plat op de grond staat en niet gekanteld lijkt */
+    const c = (curTh && curTh.meadow) || "#8fe3b0";
+    return '<ellipse cx="' + cx + '" cy="' + (cy + 2.5) + '" rx="' + (rx + 2).toFixed(1) + '" ry="' + (ry + 1.5).toFixed(1) + '" fill="#2f7d6a" opacity=".22"/><ellipse cx="' + cx + '" cy="' + cy + '" rx="' + rx + '" ry="' + ry + '" fill="' + c + '"/><ellipse cx="' + cx + '" cy="' + (cy - 1) + '" rx="' + (rx * 0.82).toFixed(1) + '" ry="' + (ry * 0.7).toFixed(1) + '" fill="#fff" opacity=".22"/>';
+  }
+  function gPodium(cx, cy, rx, ry) {   /* lage ronde stenen sokkel: gebouw staat er echt op en de scheve (3/4) onderkant verdwijnt erop */
+    return '<ellipse cx="' + cx + '" cy="' + (cy + ry * 0.55 + 7) + '" rx="' + (rx + 5) + '" ry="' + (ry + 3) + '" fill="#2f7d6a" opacity=".22"/>' +
+      '<ellipse cx="' + cx + '" cy="' + (cy + 6) + '" rx="' + rx + '" ry="' + ry + '" fill="#c9b27c"/><rect x="' + (cx - rx) + '" y="' + cy + '" width="' + (2 * rx) + '" height="6" fill="#c9b27c"/>' +
+      '<ellipse cx="' + cx + '" cy="' + cy + '" rx="' + rx + '" ry="' + ry + '" fill="#f6ecd2" stroke="#e0bf6a" stroke-width="1.4"/>' +
+      '<ellipse cx="' + cx + '" cy="' + (cy - 1.5) + '" rx="' + (rx * 0.84).toFixed(1) + '" ry="' + (ry * 0.72).toFixed(1) + '" fill="#fff" opacity=".35"/>';
+  }
+  function gWasplaats(cx, bottom, W) {
+    const H = W * 320 / 377, x0 = cx - W / 2, y0 = bottom - H;
+    const drop = function (fx, dur, del) { return '<circle class="rg-drop" cx="' + (x0 + W * fx).toFixed(1) + '" cy="' + (y0 + H * 0.47).toFixed(1) + '" r="1" fill="#eafcff" stroke="#7fdcf0" stroke-width=".3" style="--dx:0px;--dy:' + (H * 0.13).toFixed(1) + "px;animation-duration:" + dur + "s;animation-delay:-" + del + 's"/>'; };
+    const ring = function (fx, fy, rx, dur, del) { return '<ellipse class="rg-ring" cx="' + (x0 + W * fx).toFixed(1) + '" cy="' + (y0 + H * fy).toFixed(1) + '" rx="' + rx + '" ry="' + (rx * 0.4).toFixed(1) + '" fill="none" stroke="#fff" stroke-width=".8" style="animation-duration:' + dur + "s;animation-delay:-" + del + 's"/>'; };
+    return '<g transform="translate(' + (2 * cx) + ' 0) scale(-1 1)">' + gShadow(cx, bottom - 1, W * 0.46, 5) + gImg("wudhu-wasplaats", x0, y0, W, H) +
+      drop(0.27, 2.2, 0) + drop(0.52, 2.6, 0.9) + drop(0.71, 2.4, 1.6) +
+      ring(0.31, 0.6, 5, 2.6, 0.2) + ring(0.52, 0.58, 5, 3, 1.4) + ring(0.7, 0.54, 4.5, 2.8, 0.8) +
+      gTw(x0 + W * 0.17, y0 + H * 0.3, 2.8, 7.4, 1) + gTw(x0 + W * 0.9, y0 + H * 0.2, 2.6, 9, 4) + gTw(x0 + W * 0.45, y0 + H * 0.12, 2.4, 8.2, 6.5) + "</g>";
+  }
+  function gKruik(cx, bottom, W) {
+    const H = W * 320 / 333, x0 = cx - W / 2, y0 = bottom - H;
+    return gShadow(cx, bottom - 1, W * 0.4, 3.6) + gImg("waterkruik", x0, y0, W, H) + gTw(x0 + W * 0.5, y0 + H * 0.04, 2.8, 7.6, 1) + gTw(x0 + W * 0.9, y0 + H * 0.45, 2.4, 9.2, 4) + gTw(x0 + W * 0.1, y0 + H * 0.7, 2.4, 8.4, 6);
+  }
+  function gSchoonset(cx, bottom, W) {
+    const H = W * 320 / 581, x0 = cx - W / 2, y0 = bottom - H;
+    return gShadow(cx, bottom - 1, W * 0.46, 3.8) + gImg("schoonset", x0, y0, W, H) + gTw(x0 + W * 0.62, y0 + H * 0.25, 2.8, 7.2, 1) + gTw(x0 + W * 0.85, y0 + H * 0.12, 2.4, 9, 4.5) + gTw(x0 + W * 0.3, y0 + H * 0.06, 2.4, 8, 6.5);
+  }
+  function gMinaret(cx, bottom, W) { const H = W * 320 / 114; return gGlowDef("rgMn") + gGlow("rgMn", cx, bottom - H * 0.72, W * 1.1, H * 0.28, 4.4, 0) + gShadow(cx + 1, bottom - 1, W * 0.5, 4.5) + gImg("minaret", cx - W / 2, bottom - H, W, H) + gTw(cx, bottom - H * 0.97, 3, 7.4, 1.2) + gTw(cx + W * 0.2, bottom - H * 0.7, 2.4, 9, 4); }
+  function gMatten(cx, bottom, W) { const H = W * 320 / 651; return gShadow(cx, bottom - 1, W * 0.46, 5) + gImg("gebedsmatten", cx - W / 2, bottom - H, W, H) + gTw(cx - W * 0.28, bottom - H * 0.6, 2.8, 8, 1) + gTw(cx + W * 0.3, bottom - H * 0.45, 2.6, 9.6, 5); }
+  function gRoos(cx, bottom, W) { const H = W * 320 / 432; return gShadow(cx, bottom - 1, W * 0.46, 4) + gImg("rozenstruik", cx - W / 2, bottom - H, W, H) + gTw(cx - W * 0.2, bottom - H * 0.7, 2.6, 8.4, 2) + gTw(cx + W * 0.25, bottom - H * 0.5, 2.4, 9.6, 5.5); }
+  function gThee(cx, bottom, W) { const H = W * 320 / 519; return gShadow(cx, bottom - 1, W * 0.46, 4.5) + gImg("theeservies", cx - W / 2, bottom - H, W, H) + gTw(cx - W * 0.2, bottom - H * 0.9, 2.8, 8, 1.5) + gTw(cx + W * 0.1, bottom - H * 0.8, 2.4, 9.2, 4.5); }
+  function gLos(name, ratio, cx, bottom, W) { const H = W * ratio; return gShadow(cx, bottom - 1, W * 0.44, 4.5) + gImg(name, cx - W / 2, bottom - H, W, H) + gTw(cx - W * 0.22, bottom - H * 0.8, 2.8, 8.2, 1.2) + gTw(cx + W * 0.25, bottom - H * 0.55, 2.5, 9.4, 4.8); }
+  function gStruik(cx, bottom, W) { const H = W * 0.9357; return gShadow(cx, bottom - 1, W * 0.44, 4) + gImg("struik", cx - W / 2, bottom - H, W, H) + gTw(cx - W * 0.2, bottom - H * 0.7, 2.6, 8.4, 2) + gTw(cx + W * 0.25, bottom - H * 0.5, 2.4, 9.6, 5.5); }
+  function gGras(cx, bottom, W, del) { const H = W * 320 / 193; return gShadow(cx, bottom - 1, W * 0.38, 3.2) + gImg("grasbos", cx - W / 2, bottom - H, W, H, ' class="rg-sway" style="animation-duration:' + (3.6 + del * 0.4).toFixed(1) + "s;animation-delay:-" + del + 's"'); }
+  function gNest(cx, cy, W) { const H = W * 0.85; return gShadow(cx + 1, cy + H * 0.2, W * 0.48, 3.2) + '<g transform="translate(0 ' + (cy * 0.4).toFixed(1) + ') scale(1 .6)">' + gImg("vogelnest", cx - W / 2, cy - H / 2, W, H) + "</g>"; }   /* nest plat op de grond */   /* nest bij de ingang van Thawr */
+  function gDuif(cx, bottom, W) { const H = W * 0.92; return gShadow(cx, bottom + 0.5, W * 0.38, 2.2) + '<g transform="translate(' + (2 * cx) + ' 0) scale(-1 1)">' + gImg("duif-zit", cx - W / 2, bottom - H, W, H) + "</g>"; }   /* zittende duif, kijkt naar het nest */
+  function gDuifVlieg(cx, cy, W) { const H = W * 0.95; return '<g class="rg-fly">' + gImg("duif-vlieg", cx - W / 2, cy - H / 2, W, H, ' class="rg-flap"') + "</g>"; }   /* vliegende duif, rustig rondje bij het nest */
+  function gCamelDrink(cx, bottom, W) { const H = W * 281 / 320; return gShadow(cx, bottom - 1, W * 0.46, 4) + gImg("kameel-drinkt", cx - W / 2, bottom - H, W, H) + '<ellipse class="rg-ring" cx="' + (cx + W * 0.28).toFixed(1) + '" cy="' + (bottom - H * 0.13).toFixed(1) + '" rx="6" ry="2.4" fill="none" stroke="#fff" stroke-width=".8" style="animation-duration:2.8s"/>' + gTw(cx - W * 0.05, bottom - H * 0.86, 2.8, 8, 3); }   /* kameel drinkt uit zijn eigen waterplas */
+  function gCamelRest(cx, bottom, W) { const H = W * 280 / 320; return gShadow(cx, bottom - 1, W * 0.4, 4) + gImg("kameel-rust", cx - W / 2, bottom - H, W, H) + gTw(cx - W * 0.05, bottom - H * 0.82, 2.8, 8, 3) + gTw(cx + W * 0.12, bottom - H * 0.7, 2.4, 9.4, 6); }   /* kameel ligt te rusten */
+  function gCamel(x, y, k, flip) {
+    const W = 118 * k, H = W * 297 / 320;
+    return '<g transform="translate(' + x + " " + y + ") scale(" + (flip ? -1 : 1) + ' 1)">' + gShadow(14 * k, 2 * k, W * 0.36, 5.5 * k) + gImg("kameel", 14 * k - W / 2, -H + 2 * k, W, H) + "</g>";
+  }
+  function gDates(x, y, k) { const W = 56 * k, H = W * 249 / 320; return gShadow(x, y + 18 * k, W * 0.45, 4 * k) + gImg("dadelschaal", x - W / 2, y + 19 * k - H, W, H) + gTw(x + W * 0.22, y + 19 * k - H * 0.72, 2.6, 8.5, 2); }
   function palm(x, y, k, flip) {
+    if (glansOn) return gPalm(x, y, k, flip);
     const f = flip ? -1 : 1, th = curTh;
     let h = '<g transform="translate(' + x + " " + y + ") scale(" + k * f + " " + k + ')">' +
       '<path d="M0 0 C 4 -26, 2 -52, 12 -78" fill="none" stroke="' + th.trunk + '" stroke-width="7" stroke-linecap="round"/>' +
@@ -10004,6 +10284,7 @@ return exports;})();
     return list.map(function (f, i) { const c = cols[i % cols.length]; return '<g transform="translate(' + f[0] + " " + f[1] + ')"><line y2="7" stroke="#3a9d4f" stroke-width="2"/><circle r="4" fill="' + c + '"/><circle r="1.6" fill="#fff6a0"/></g>'; }).join("");
   }
   function pond(cx, cy, rx, ry, th) {
+    if (glansOn) return gPond(cx, cy, rx, ry);
     return '<ellipse cx="' + cx + '" cy="' + (cy + 4) + '" rx="' + (rx + 22) + '" ry="' + (ry + 11) + '" fill="' + th.meadow2 + '"/><ellipse cx="' + cx + '" cy="' + cy + '" rx="' + (rx + 13) + '" ry="' + (ry + 6) + '" fill="' + th.meadow + '"/>' +
       '<ellipse cx="' + cx + '" cy="' + cy + '" rx="' + rx + '" ry="' + ry + '" fill="' + th.water + '"/><ellipse cx="' + (cx - rx * 0.1) + '" cy="' + (cy - ry * 0.18) + '" rx="' + rx * 0.78 + '" ry="' + ry * 0.62 + '" fill="' + th.water2 + '" opacity=".75"/>' +
       '<ellipse cx="' + (cx + rx * 0.2) + '" cy="' + (cy + ry * 0.1) + '" rx="' + rx * 0.4 + '" ry="' + ry * 0.2 + '" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="2"><animate attributeName="rx" values="' + rx * 0.25 + ";" + rx * 0.5 + ";" + rx * 0.25 + '" dur="3s" repeatCount="indefinite"/></ellipse>' +
@@ -10023,6 +10304,7 @@ return exports;})();
   }
   /* sierlijke hangende lantaarn op een paal (mozaïekglas) */
   function lantern(x, y, col, k) {
+    if (glansOn) return gLantern(x, y, k);
     return '<g transform="translate(' + x + " " + y + ") scale(" + k + ')"><line x1="0" y1="0" x2="0" y2="70" stroke="#6b4a2a" stroke-width="4" stroke-linecap="round"/><path d="M0 2 Q16 2 16 14" fill="none" stroke="#6b4a2a" stroke-width="3" stroke-linecap="round"/>' +
       '<line x1="16" y1="14" x2="16" y2="22" stroke="#b07a1a" stroke-width="1.6"/><circle cx="16" cy="38" r="22" fill="#ffd36a" opacity=".3"><animate attributeName="opacity" values=".2;.45;.2" dur="1.8s" repeatCount="indefinite"/></circle>' +
       '<path d="M7 22 Q16 14 25 22Z" fill="#c88a10" stroke="#8a5a00" stroke-width="1.2" stroke-linejoin="round"/><path d="M7 22 L25 22 L28 46 Q16 54 4 46Z" fill="' + col + '" stroke="#8a5a00" stroke-width="1.4" stroke-linejoin="round"/>' +
@@ -10031,6 +10313,7 @@ return exports;})();
   }
   /* schaal met dadels */
   function dateBowl(x, y, k) {
+    if (glansOn && (glansL === "profeten" || glansL === "seerah")) return gDates(x, y, k);
     let h = '<g transform="translate(' + x + " " + y + ") scale(" + k + ')"><path d="M-22 -2 Q-22 16 0 16 Q22 16 22 -2Z" fill="#c9602a" stroke="#7a3410" stroke-width="1.6"/><rect x="-8" y="16" width="16" height="5" rx="2" fill="#a24a1c"/><path d="M-20 4 H20" stroke="#ffd36a" stroke-width="2"/>';
     [[-14, -4], [-6, -8], [3, -9], [12, -5], [-9, -1], [0, -3], [9, 0], [-15, 0], [15, -1]].forEach(function (d, i) {
       h += '<ellipse cx="' + d[0] + '" cy="' + d[1] + '" rx="5.4" ry="3.6" transform="rotate(' + (i * 40 % 60 - 25) + " " + d[0] + " " + d[1] + ')" fill="' + (i % 2 ? "#8c3a12" : "#b5521b") + '"/><ellipse cx="' + (d[0] - 1.5) + '" cy="' + (d[1] - 1.2) + '" rx="1.6" ry=".9" fill="#fff" opacity=".45"/>';
@@ -10039,6 +10322,7 @@ return exports;})();
   }
   /* dromedaris met kleurig zadeldekje (kijkt naar rechts; flip = naar links) */
   function camel(x, y, k, flip) {
+    if (glansOn && (glansL === "profeten" || glansL === "seerah")) return gCamel(x, y, k, flip);
     const f = flip ? -1 : 1, fur = "#e3aa6c", dark = "#c98b4a";
     return '<g transform="translate(' + x + " " + y + ") scale(" + k * f + " " + k + ')"><ellipse cx="2" cy="2" rx="40" ry="6" fill="#000" opacity=".16"/>' +
       '<path d="M-22 -30 L-24 -2 M-12 -30 L-12 -2 M16 -30 L16 -2 M26 -30 L28 -2" stroke="' + dark + '" stroke-width="8" stroke-linecap="round"/><path d="M-24 -2 h0 M-12 -2 h0 M16 -2 h0 M28 -2 h0" stroke="#7a4a1c" stroke-width="9" stroke-linecap="round"/>' +
@@ -10292,6 +10576,7 @@ return exports;})();
   /* Een land staat open zodra het vorige land 100% voltooid is (land 1 is altijd open).
      Een land waarin al voortgang zit (oudere spelers) blijft open. Vrij bladeren tussen de landen mag altijd. */
   function jLandOpen(level, catId) {
+    if (PROEF_TEST) return true;
     const LS = landsFor(level), ci = LS.findIndex(function (x) { return x.id === catId; });
     if (ci <= 0) return true;
     if (jLandStats(level, LS[ci - 1].id).done) return true;
@@ -10367,13 +10652,50 @@ return exports;})();
     return c;
   }
   /* slingerend pad: x volgt een sinus, y loopt omhoog; ruim genoeg voor 15 levels */
-  function jLayout(n) {
-    const bottom = 722, top = 112, step = Math.min(58, (bottom - top) / Math.max(1, n - 1)), pts = [];
+  const L6_ROUTE = { 10: [[220, 722], [280, 664], [164, 606], [76, 548], [171, 490], [283, 432], [205, 322], [86, 316], [124, 258], [260, 200]] };   /* Land 6 (proef): zelfde route als altijd, alleen het level dat onder de kroon van de poort viel staat nu hoger, boven de boog */
+  /* Land 6 (proef): route met diepte. Breed en laag vooraan, smaller en kleiner naar de moskee bovenaan; het laatste level ligt vlak voor de moskee */
+  const NG = { yB: 724, yT: 322, xc: 182 };
+  function nachtS(y) { return Math.max(.5, Math.min(1.1, .5 + .55 * (y - NG.yT) / (NG.yB - NG.yT))); }   /* schaal naar diepte: 1 vooraan, .5 bij de moskee */
+  function nachtNs(st, n) { const s = nachtS(st.y); return st.last || st.i === n - 1 ? Math.max(.84, s) : Math.max(.74, Math.min(1.05, s)); }   /* levels blijven goed te tikken */
+  function nachtGateIdx(n) { return Math.min(n - 2, ((n - 1) >> 1) + 1); }
+  function nachtLayout(n) {
+    const w = []; let tot = 0;
+    for (let i = 0; i < n - 1; i++) { const k = 1 - .45 * i / Math.max(1, n - 2); w.push(k); tot += k; }
+    const g = nachtGateIdx(n), pts = []; let y = NG.yB;
+    for (let i = 0; i < n; i++) {
+      const s = nachtS(y), last = i === n - 1;
+      const o = last || i === g ? 0 : (i % 2 ? -1 : 1) * (.62 + .3 * Math.abs(Math.sin(i * 2.1 + .7)));
+      pts.push({ x: Math.round(NG.xc + o * 94 * s) + (i === g ? 14 : 0), y: Math.round(y) });   /* de poort (en het level erin) staat iets rechts van het midden */
+      if (i < n - 1) y -= w[i] / tot * (NG.yB - NG.yT);
+    }
+    return pts;
+  }
+  /* het pad als lint dat smaller wordt: stukjes lijn met gelijke kleur, dus geen naden en geen dubbele doorzichtigheid */
+  function nachtRibbon(stops) {
+    const smp = [], bez = function (a, b, ym, done) { for (let t = 0; t <= 1.0001; t += .04) { const u = 1 - t, x = u * u * u * a.x + 3 * u * u * t * a.x + 3 * u * t * t * b.x + t * t * t * b.x, yy = u * u * u * a.y + 3 * u * u * t * ym + 3 * u * t * t * ym + t * t * t * b.y; smp.push({ x: x, y: yy, d: done }); } };
+    const s0 = stops[0]; bez({ x: s0.x - 60, y: 812 }, s0, (812 + s0.y) / 2 + 10, true);
+    for (let i = 0; i < stops.length - 1; i++) bez(stops[i], stops[i + 1], (stops[i].y + stops[i + 1].y) / 2, stops[i].passed);
+    const layer = function (wd, colDone, colTodo, dx, dy, op, extra) {
+      const B = {};
+      for (let i = 0; i < smp.length - 1; i++) {
+        const p = smp[i], q = smp[i + 1], ym = (p.y + q.y) / 2, k = Math.round(nachtS(ym) * wd * 2) / 2, c = p.d ? colDone : colTodo; if (!c) continue;
+        const key = k + "|" + c; (B[key] = B[key] || []).push("M" + (p.x + dx).toFixed(1) + " " + (p.y + dy).toFixed(1) + "L" + (q.x + dx).toFixed(1) + " " + (q.y + dy).toFixed(1));
+      }
+      let o = ""; for (const key in B) { const kk = key.split("|"); o += '<path d="' + B[key].join("") + '" fill="none" stroke="' + kk[1] + '" stroke-width="' + kk[0] + '" stroke-linecap="round" stroke-linejoin="round"' + (op ? ' stroke-opacity="' + op + '"' : "") + (extra || "") + "/>"; }
+      return o;
+    };
+    return layer(40, "#ffd54f", null, 0, 0, .3) + layer(30, "#04140f", "#04140f", 0, 3.5, .38) + layer(26, "#b9770a", "#2f5a3e", 0, 0) + layer(19, "#ffe08a", "#efe3c6", 0, 0) +
+      layer(7, "#fff6cf", "#fffaf0", -1.6, -1.6, .55) + layer(2, "#fff8d0", "#fff8d0", 0, 0, .7, ' stroke-dasharray="1 13"');
+  }
+  function jLayout(n, catId, level) {
+    if (catId === "ihsan" && level && level !== "beginner" && n >= 10) return nachtLayout(n);   /* Land 6 (proef): Gevorderd/Ervaren met diepte */
+    if (catId === "ihsan" && L6_ROUTE[n]) return L6_ROUTE[n].map(function (q) { return { x: q[0], y: q[1] }; });
+    const bottom = 722, top = 112, step = Math.min(n < 10 ? 112 : 58, (bottom - top) / Math.max(1, n - 1)), pts = [];   /* Beginner (weinig levels): levels verder uit elkaar, route loopt tot ver omhoog */
     for (let i = 0; i < n; i++) pts.push({ x: Math.round(180 + 104 * Math.sin(i * 1.45 + 0.4)), y: Math.round(bottom - i * step) });
     return pts;
   }
   function journeyStops(level, c) {
-    const n = jCount(level, c.id), pts = jLayout(n), cur = jCurrent(level, c.id);
+    const n = jCount(level, c.id), pts = jLayout(n, c.id, level), cur = jCurrent(level, c.id);
     const stops = pts.map(function (p, i) {
       const b = jBest(level, c.id, i);
       return { i: i, x: p.x, y: p.y, locked: jLocked(level, c.id, i), passed: !!b && b.stars >= 1, stars: b ? b.stars || 0 : 0, mile: jIsMile(i, n), last: i === n - 1 };
@@ -12325,7 +12647,7 @@ return exports;})();
       '<path d="M48 40 L58 50 L48 64 L38 50Z" fill="#7fe4ff" stroke="#fff" stroke-width="1.5"/><path d="M38 50 H58" stroke="#fff" stroke-width="1" opacity=".7"/>' +
       '<text x="48" y="27" text-anchor="middle" font-family="Orbitron, Nunito, sans-serif" font-size="9" font-weight="900" fill="#7dffd8" letter-spacing="1">BAZAAR</text></svg>' +
       '<span class="jbz-gems">' + gemSvg(13) + gemsAt(P, P.mode) + "</span></button>";
-    return '<button class="jbz" data-act="bazaar" aria-label="Bazaar. Je hebt ' + gemsAt(P, P.mode) + ' edelstenen. Open de bazaar">' + bzStallSvg("small") + '<span class="jbz-gems">' + gemSvg(13) + gemsAt(P, P.mode) + "</span></button>";
+    return '<button class="jbz" data-act="bazaar" aria-label="Bazaar. Je hebt ' + gemsAt(P, P.mode) + ' edelstenen. Open de bazaar"><img src="reiskaart-glans/bazaar.webp" width="84" height="90" alt="" aria-hidden="true" draggable="false" style="display:block">' + '<span class="jbz-gems">' + gemSvg(13) + gemsAt(P, P.mode) + "</span></button>";
   }
   function viewBazaar() {
     const lv = P.mode, gems = gemsAt(P, lv), fr = bzFrames(P), sv = P.streakSave || 0, s = bzSadaqa(), g = BZ_GOALS[s.g];
@@ -12803,6 +13125,7 @@ return exports;})();
       '<rect x="' + -w * 0.8 + '" y="' + (-h - 5) + '" width="' + w * 1.6 + '" height="6" rx="2" fill="#f5ead0" stroke="#c9b58a" stroke-width="1"/><circle cy="' + (-h - 14) + '" r="7.5" fill="#ffd54f" stroke="#fff" stroke-width="1.5"/><text y="' + (-h - 10.5) + '" text-anchor="middle" font-size="10" font-weight="900" fill="#7a4a00">' + num + "</text></g>";
   }
   function fountain(x, y, k) {
+    if (glansOn) return gFountain(x, y, k);
     let h = '<g transform="translate(' + x + " " + y + ") scale(" + k + ')"><ellipse cy="2" rx="40" ry="11" fill="#f3e6c8" stroke="#c9b58a" stroke-width="2"/><ellipse cy="0" rx="33" ry="8" fill="#38bdf8"/><ellipse cy="-1" rx="26" ry="5" fill="#a5f3fc"/>' +
       '<rect x="-4" y="-34" width="8" height="34" fill="#f3e6c8" stroke="#c9b58a" stroke-width="1.2"/><ellipse cy="-34" rx="12" ry="4" fill="#f3e6c8" stroke="#c9b58a" stroke-width="1.2"/>';
     ["M0 -38 Q-20 -62 -30 -8", "M0 -38 Q20 -62 30 -8", "M0 -38 Q-8 -70 -14 -6", "M0 -38 Q8 -70 14 -6"].forEach(function (d, i) {
@@ -12860,13 +13183,92 @@ return exports;})();
   }
   /* ── gemeenschappelijk voorgrond-decor ── */
   function commonProps(th) {
-    return lantern(316, 600, "#ffc95d", 0.8) + lantern(18, 655, "#35d0ff", 0.8) + lantern(160, 250, "#88c7ff", 0.8) + lantern(325, 335, "#7dff6a", 0.75) + lantern(25, 440, "#ffb703", 0.7) +
-      oilLamp(240, 470, 0.7) + oilLamp(48, 725, 0.75) +
+    return lantern(316, 600, "#ffc95d", 0.8) + lantern(18, 655, "#35d0ff", 0.8) + (glansL === "zuilen" ? lantern(200, 276, "#88c7ff", 0.65) + palm(158, 436, 0.4, false) : lantern(160, 250, "#88c7ff", 0.8)) + (glansL === "zuilen" ? lantern(338, 426, "#7dff6a", 0.75) + lantern(13, 408, "#ffb703", 0.7) : lantern(325, 335, "#7dff6a", 0.75) + lantern(25, 440, "#ffb703", 0.7)) +   /* proef: twee lantaarns stonden in een palm; nu op eigen vrije grond ernaast */
+      (glansL === "zuilen" ? "" : oilLamp(240, 470, 0.7)) + oilLamp(48, 725, 0.75) +   /* proef Land 2: olielamp lag half onder het pad (Gevorderd), weggehaald */
+     
       gem(205, 640, "#ffc44f", 0) + gem(300, 500, "#35d0ff", .4) + gem(150, 510, "#7dff6a", .8) + gem(180, 330, "#ffc928", .2) + gem(55, 450, "#88c7ff", .6) + gem(310, 735, "#ff9f1c", 1);
   }
-  function groundFlowers() { return flowers([[130, 590], [150, 610], [20, 650], [48, 670], [175, 770], [215, 740], [330, 480], [350, 500], [200, 330], [30, 440], [230, 280], [155, 345], [335, 610], [10, 760], [100, 760]]); }
-  function pondsAll(th) { return pond(262, 668, 80, 32, th) + pond(72, 524, 58, 24, th) + pond(62, 292, 40, 16, th); }
+  function groundFlowers() { return (glansOn && glansL === "zuilen" ? flowers([[34, 262], [78, 272], [26, 300], [150, 266], [192, 258], [230, 300], [58, 352], [172, 338], [112, 370], [14, 330], [236, 262], [96, 292]]) + gem(60, 290, "#ffc928", 0.3) + gem(205, 322, "#35d0ff", 0.7) + gem(30, 345, "#7dff6a", 0.5) : "") + flowers([[130, 590], [150, 610], [20, 650], [48, 670], [175, 770], [215, 740], [330, 480], [350, 500], [200, 330], [30, 440], [230, 280], [155, 345], [335, 610], [10, 760], [100, 760]].filter(function (f) { return !(glansOn && glansL === "zuilen") || !((f[0] === 330 && f[1] === 480) || (f[0] === 350 && f[1] === 500) || (f[0] === 30 && f[1] === 440)); })); }   /* proef: drie bloemetjes weg onder de twee verplaatste lantaarns */
+  function pondsAll(th) { if (glansOn && glansL === "zuilen") return gPondAt(294, 556, 100) + gGrotAt(264, 328, 84); return pond(262, 668, 80, 32, th) + pond(72, 524, 58, 24, th) + pond(62, 292, 40, 16, th); }
   function palms(th, extra) { return palm(20, 590, 0.9, false) + palm(342, 305, 0.6, true) + palm(150, 300, 0.55, false) + palm(18, 380, 0.7, false) + palm(215, 500, 0.5, true) + (extra || ""); }
+
+  /* Land 1 (proef): glanzend voorgrond-decor op vrije grond, naast de route */
+  function L1glansFront(th) {
+    return gPondAt(298, 592, 92) + groundFlowers() +
+      palm(18, 615, 0.85, false) + palm(342, 305, 0.6, true) + palm(22, 395, 0.7, false) + palm(215, 330, 0.5, true) +
+      lantern(338, 598, "#ffc95d", 0.8) + lantern(18, 655, "#35d0ff", 0.8) + lantern(25, 470, "#ffb703", 0.7) +   /* proef Land 1: lantaarn bij Thawr weggehaald (te druk met de duiven) */
+      
+      
+      gem(205, 640, "#ffc44f", 0) + gem(300, 500, "#35d0ff", .4) + gem(150, 510, "#7dff6a", .8) + gem(180, 330, "#ffc928", .2) + gem(55, 450, "#88c7ff", .6) +   /* proef Land 1: rechtsonder blijft vrij voor de dagbeloning */
+      dateBowl(110, 440, 0.8) + gCamelDrink(238, 552, 84) + gCamelRest(276, 338, 64) + (th.day ? sparkle(200, 300, 6, .2) + sparkle(60, 480, 5, .7) + sparkle(250, 120, 5, 1) : "");
+  }
+
+  /* Land 3 (proef): zelfde glanzende stijl, eigen decor */
+  function L3glansFront(th) {
+    return gPondAt(298, 592, 92) + groundFlowers() + gNur(104, 738, 76) + lbl(104, 750, "Jabal Nur") +
+      palm(18, 615, 0.85, false) + palm(342, 305, 0.6, true) + palm(22, 395, 0.7, false) + palm(215, 330, 0.5, true) +
+      lantern(338, 598, "#ffc95d", 0.8) + lantern(18, 655, "#35d0ff", 0.8) + lantern(25, 470, "#ffb703", 0.7) +
+      gem(205, 640, "#ffc44f", 0) + gem(150, 510, "#7dff6a", .8) + gem(180, 330, "#ffc928", .2) + gem(55, 450, "#88c7ff", .6) +
+      dateBowl(110, 440, 0.8) + gCamel(240, 566, 0.7, true) + gCamelRest(276, 338, 64) + gTent(326, 505, 72) + lbl(326, 517, "Tenten") + (th.day ? sparkle(200, 300, 6, .2) + sparkle(60, 480, 5, .7) + sparkle(250, 120, 5, 1) : "");
+  }
+
+  /* Land 4 (proef): zelfde glanzende stijl; palmen in plaats van cipressen, grootte volgt de diepte (ver = klein, dichtbij = groot) */
+  function L4glansFront(th) {
+    const pk = function (y) { return Math.round((0.45 + (y - 290) * 0.00115) * 100) / 100; };
+    return gPondAt(316, 536, 84) + groundFlowers() +
+      palm(245, 562, 0.62, false) + palm(332, 318, pk(318), true) + palm(9, 329, pk(329), false) + palm(196, 314, pk(314), true) + palm(0, 640, pk(640), false) +
+      lantern(337, 599, "#ffc95d", 0.8) + lantern(138, 407, "#ffb703", 0.7) +
+      star8(60, 640, 10, "#ffd54f", 0.2) + star8(190, 430, 8, "#ffdd9a", 1.2) + sparkle(120, 700, 5, .2) + sparkle(60, 480, 5, .9);
+  }
+
+  /* Land 5 (proef): rozentuin met glanzende palmen (rozenstruik volgt later), grootte volgt de diepte */
+  function L5glansFront(th) {
+    const pk = function (y) { return Math.round((0.45 + (y - 290) * 0.00115) * 100) / 100; };
+    return groundFlowers() + gRozenboog(316, 586, 84) + lbl(316, 471, "Adab") +
+      palm(345, 300, pk(300), true) + palm(8, 339, pk(339), false) + palm(189, 320, pk(320), true) + palm(0, 640, pk(640), false) +
+      lantern(336, 615, "#ffc95d", 0.8) + lantern(140, 407, "#ffb703", 0.7) +
+      gGras(60, 450, 30, 0.8) + gGras(250, 560, 30, 2.1) + gGras(350, 450, 30, 3.0) + gGras(350, 380, 30, 1.4) +
+      heartShape(60, 690, 7, "#ffc95d", 0.4) + heartShape(190, 760, 7, "#ffdd9a", 0.2) + sparkle(120, 700, 5, .2) + sparkle(60, 560, 5, .9);
+  }
+
+  /* Land 6 (proef): stille nacht met glanzende palmen (grootte volgt de diepte); de poort staat op de voorgrond, anders snijdt de heuvel hem af */
+  function nachtPoortSvg() { const q = nachtPoort(), zij = nachtStops.length >= 10; return gIhsanPoort(q[0], q[1], q[2]) + (zij ? lbl(q[0] + q[2] / 2 + 24, q[1] - 26, "Ihsan") : lbl(q[0], q[1] - q[2] * 320 / 295 - 6, "Ihsan")); }   /* Ervaren: label links naast de poort, want daarboven staat een level */
+  function L6glansFront(th) {
+    if (!nachtOn) {   /* Beginner: oude look met palmen en poort op de voorgrond */
+      const pk = function (y) { return Math.round((0.45 + (y - 290) * 0.00115) * 100) / 100; };
+      return groundFlowers() + gIhsanPoort(312, 470, 90) + lbl(312, 366, "Ihsan") +
+        palm(345, 300, pk(300), true) + palm(8, 339, pk(339), false) + palm(0, 640, pk(640), false) +
+        lantern(24, 470, "#ffb703", 0.7) +
+        star8(60, 640, 9, "#ffd54f", 0.2) + sparkle(120, 700, 5, .2) + sparkle(60, 560, 5, .9);
+    }
+    /* nachtbos: de bomen zitten in de achtergrond; hier alleen de poort van Ihsan, het label en een paar lichtjes */
+    if (glansBeg) return "" +
+      sparkle(60, 640, 5, .2) + sparkle(120, 560, 5, .9) + sparkle(40, 420, 4, .5);
+    return "" +
+      sparkle(120, 700, 5, .2) + sparkle(60, 560, 5, .9) + sparkle(190, 430, 4, 1.2) + sparkle(40, 640, 4, .6);
+  }
+  /* Land 6 (proef): nachtbos-achtergrond uit drie plaatjes (boven, midden, onder), zacht in elkaar overlopend */
+  function gNachtGrond(cx, cy, rx, ry) {   /* donker mosplekje met grassprietjes: zet een plaatje echt op de grond */
+    const k = Math.round(cx * 7 + cy), g = '<defs><radialGradient id="ng' + k + '"><stop offset="0" stop-color="#4c8346" stop-opacity=".95"/><stop offset=".6" stop-color="#3a6a3c" stop-opacity=".8"/><stop offset="1" stop-color="#2c5530" stop-opacity="0"/></radialGradient></defs>';
+    let t = "";
+    [-.8, -.45, .1, .5, .85].forEach(function (f, i) { const x = cx + f * rx * .9, y = cy + ry * (.55 + (i % 2) * .15), h = 5 + (i % 3) * 1.6; t += '<path d="M' + (x - 1.6).toFixed(1) + " " + y.toFixed(1) + " Q " + (x - .6).toFixed(1) + " " + (y - h * .6).toFixed(1) + " " + (x + (i % 2 ? 2 : -2)).toFixed(1) + " " + (y - h).toFixed(1) + " Q " + (x + .8).toFixed(1) + " " + (y - h * .5).toFixed(1) + " " + (x + 1.6).toFixed(1) + " " + y.toFixed(1) + 'Z" fill="' + (i % 2 ? "#3f7a45" : "#2f6038") + '"/>'; });
+    return g + '<ellipse cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" rx="' + (rx * 1.25).toFixed(1) + '" ry="' + (ry * 1.35).toFixed(1) + '" fill="url(#ng' + k + ')"/>' + t;
+  }
+  function nachtBg() {   /* Land 6 (proef): paradijstuin bij schemering, drie plaatjes zacht in elkaar */
+    return '<defs><filter id="nachtTint" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values=".97 .02 0 0 0  .01 .97 .02 0 0  0 .03 .96 0 0  0 0 0 1 0"/></filter></defs>' +
+      '<rect width="360" height="800" fill="#23263c"/>' +
+      '<image href="reiskaart-glans/jannah-boven.webp" x="0" y="0" width="360" height="395.8" preserveAspectRatio="none" decoding="sync"/>' +
+      '<image href="reiskaart-glans/jannah-midden.webp" x="0" y="330" width="360" height="199.8" preserveAspectRatio="none" decoding="sync"/>' +
+      '<image href="reiskaart-glans/jannah-onder.webp" x="0" y="440" width="360" height="360" preserveAspectRatio="none" decoding="sync"/>';
+  }
+
+  /* Schoon & Wudhu (Beginner, proef): glanzende palmen op diepte-maat, kruik en schoonmaakset op vrije grond (5 levels, gemeten) */
+  function LRglansFront(th) {
+    const pk = function (y) { return Math.round((0.45 + (y - 290) * 0.00115) * 100) / 100; };
+    return groundFlowers() + gSchoonset(214, 436, 76) + gKruik(282, 474, 52) +
+      palm(2, 480, pk(480), false) + palm(350, 520, pk(520), true) +
+      sparkle(200, 330, 6, .2) + sparkle(60, 600, 5, .7);
+  }
 
   /* ── de vijf landen ── */
   const LANDS = {
@@ -12876,18 +13278,20 @@ return exports;})();
         expert: { sky: ["#141d4f", "#3a668c", "#c29c50", "#ffae6b"], far: "#e8a64a", mid: "#c9893a", near: "#937d51", meadow: "#38a869", meadow2: "#238a54", water: "#21a9d6", water2: "#7fe4ff", leaf: "#2fae78", leaf2: "#1b8a5a", trunk: "#6b4228", path: "#f8e4bc", edge: "#c98a52", wall: "#bfd4e6", dome: "#2fc0ae", day: false },
       },
       sky: function (th) { return th.day ? skyDay(th, { rainbow: true, sx: 60, sy: 62 }) : skyNight(th); },
-      tl: function (th) { return domeMosque(72, 206, 1, th.wall, th.dome, th.day ? "#5cabf0" : "#ffe27a"); },
+      tl: function (th) { if (glansOn) return gMoskee(66, 238, 92); return domeMosque(72, 206, 1, th.wall, th.dome, th.day ? "#5cabf0" : "#ffe27a"); },
       tr: function (th) {
+        if (glansOn) return gKaaba(320, 202, 66) + lbl(324, 214, "Ka’bah");
         return '<g transform="translate(0 14)"><ellipse cx="302" cy="190" rx="48" ry="11" fill="#f6efe2" stroke="#d8c8a8" stroke-width="2"/>' +
           '<rect x="283" y="152" width="30" height="36" fill="#1f1f26"/><polygon points="313,152 327,146 327,182 313,188" fill="#121517"/><polygon points="283,152 297,146 327,146 313,152" fill="#3b3b46"/>' +
           '<rect x="283" y="160" width="30" height="5" fill="#f0b81e"/><polygon points="313,160 327,154 327,159 313,165" fill="#d9a010"/><rect x="299" y="172" width="9" height="16" rx="1" fill="#f0b81e" stroke="#b8860b" stroke-width="1.2"/>' + lbl(303, 210, "Ka’bah") + "</g>";
       },
       mr: function (th) {
+        if (glansOn) return gThawr(324, 462, 88) + gNest(338, 463, 38) + gDuif(343, 462, 28) + gDuifVlieg(338, 432, 32) + lbl(288, 478, "Grot Thawr");
         return '<g><path d="M262 452 L276 405 L296 384 L318 396 L336 378 L360 392 L360 452Z" fill="#8d6a5a"/><path d="M276 405 L296 384 L318 396 L300 410Z" fill="#b08c78"/><path d="M318 396 L336 378 L360 392 L346 408Z" fill="#a37c68"/>' +
           '<path d="M290 452 L290 428 Q312 396 334 428 L334 452Z" fill="#1b262f"/><path d="M296 452 L296 432 Q312 408 328 432 L328 452Z" fill="#273542"/>' +
           '<g stroke="#fff" stroke-opacity=".9" stroke-width="1" fill="none"><line x1="312" y1="414" x2="291" y2="436"/><line x1="312" y1="414" x2="333" y2="436"/><line x1="312" y1="414" x2="312" y2="452"/><line x1="312" y1="414" x2="293" y2="452"/><line x1="312" y1="414" x2="331" y2="452"/><path d="M303 424 Q312 428 321 424 M298 433 Q312 439 326 433 M294 443 Q312 450 330 443"/></g>' + lbl(312, 470, "Grot Thawr") + "</g>";
       },
-      front: function (th) { return pondsAll(th) + groundFlowers() + palms(th) + commonProps(th) + dateBowl(206, 505, 0.8) + camel(246, 766, 0.72, true) + camel(136, 590, 0.62, false) + (th.day ? sparkle(200, 300, 6, .2) + sparkle(60, 480, 5, .7) + sparkle(250, 120, 5, 1) : ""); },
+      front: function (th) { if (glansOn) return L1glansFront(th); return pondsAll(th) + groundFlowers() + palms(th) + commonProps(th) + dateBowl(206, 505, 0.8) + camel(246, 766, 0.72, true) + camel(136, 590, 0.62, false) + (th.day ? sparkle(200, 300, 6, .2) + sparkle(60, 480, 5, .7) + sparkle(250, 120, 5, 1) : ""); },
     },
     zuilen: {
       tile: true,
@@ -12896,18 +13300,19 @@ return exports;})();
         expert: { sky: ["#0b2545", "#13547a", "#d9a441", "#ffd98a"], far: "#d8a95a", mid: "#c28a42", near: "#9c6a30", meadow: "#e0b040", meadow2: "#12889a", water: "#1aa6bf", water2: "#7fe9ff", leaf: "#2fae78", leaf2: "#1b8a5a", trunk: "#6b4228", path: "#f8e4bc", edge: "#c98a52", wall: "#f3e6c8", dome: "#2bbfa8", day: false },
       },
       sky: function (th) { return th.day ? skyDay(th, { sx: 290, sy: 66 }) : skyNight(th); },
-      tl: function (th) { return domeMosque(72, 206, 1.15, th.wall, th.dome, th.day ? "#5cabf0" : "#ffe27a", true) + lbl(72, 226, "Moskee"); },
+      tl: function (th) { if (glansOn) return gMoskee(62, 240, 94) + lbl(62, 264, "Moskee"); return domeMosque(72, 206, 1.15, th.wall, th.dome, th.day ? "#5cabf0" : "#ffe27a", true) + lbl(72, 226, "Moskee"); },
       tr: function (th) {
+        if (glansOn) return gZuilen(314, 208, 92) + lbl(314, 136, "5 Zuilen");
         const cols = ["#ffc95d", "#ff9f43", "#4cd964", "#38bdf8", "#5caef6"];
         let h = '<ellipse cx="308" cy="206" rx="52" ry="8" fill="#f6efe2" stroke="#d8c8a8" stroke-width="1.5"/>';
         cols.forEach(function (c, i) { h += pillar(274 + i * 17, 206, 9, 34, c, i + 1); });
         return h + lbl(308, 226, "5 Zuilen");
       },
-      mr: function (th) { return fountain(312, 452, 1.15) + lbl(312, 474, "Wudhu"); },
+      mr: function (th) { return glansOn ? fountain(78, 460, 0.875) + lbl(98, 392, "Wudhu") : fountain(312, 452, 1.15) + lbl(312, 474, "Wudhu"); },
       front: function (th) {
-        return pondsAll(th) + groundFlowers() + palm(20, 590, 0.9, false) + palm(342, 305, 0.6, true) + palm(150, 300, 0.55, false) + palm(18, 380, 0.7, false) + palm(215, 500, 0.5, true) +
+        return pondsAll(th) + groundFlowers() + palm(20, 590, 0.9, false) + palm(342, 305, 0.6, true) + (glansOn ? palm(328, 439, 0.55, true) : palm(150, 300, 0.55, false)) + palm(18, 380, 0.7, false) + (glansOn ? palm(216, 583, 0.5, true) : palm(215, 500, 0.5, true)) +
           star8(60, 760, 12, "#ff7a59", 0) + star8(300, 700, 11, "#38bdf8", .5) + star8(190, 420, 10, "#5caef6", 1) + star8(330, 520, 9, "#4cd964", .3) + star8(40, 610, 9, "#ffc95d", .8) +
-          commonProps(th) + fountain(138, 592, 0.85) + dateBowl(246, 764, 1);
+          commonProps(th) + (glansOn ? "" : fountain(138, 592, 0.85)) + dateBowl(246, 764, 1);
       },
     },
     seerah: {
@@ -12916,10 +13321,10 @@ return exports;})();
         expert: { sky: ["#12293d", "#2f4e6a", "#e5603f", "#ffb36b"], far: "#c9704f", mid: "#a65447", near: "#7a5a2a", meadow: "#3aa86a", meadow2: "#26874f", water: "#2aa7c8", water2: "#8be6ff", leaf: "#2fae78", leaf2: "#1b8a5a", trunk: "#6b4228", path: "#f8e4bc", edge: "#c98a52", wall: "#ffe9c9", dome: "#2fbf71", day: false },
       },
       sky: function (th) { return skyDawn(th); },
-      tl: function (th) { return domeMosque(72, 206, 1.15, th.wall, "#2fbf71", th.day ? "#5cabf0" : "#ffe27a", true) + lbl(72, 226, "Medina"); },
-      tr: function (th) { return tent(284, 206, 0.9, "#ff7a59", "#ffd23f") + tent(330, 205, 0.75, "#20c4b4", "#ffffff") + campfire(307, 206, 0.9) + lbl(307, 226, "Tenten"); },
-      mr: function (th) { return mountain(312, 452, 110, 92, "#a0522d", "#cf8350") + lbl(312, 470, "Jabal Uhud"); },
-      front: function (th) { return pondsAll(th) + groundFlowers() + palms(th, palm(335, 640, 0.8, true)) + commonProps(th) + dateBowl(206, 505, 0.8) + camel(246, 766, 0.72, true) + camel(136, 590, 0.62, false) + tent(60, 612, 0.7, "#5caef6", "#ffd23f"); },
+      tl: function (th) { if (glansOn) return gNabawi(88, 230, 148) + lbl(44, 243, "Medina"); return domeMosque(72, 206, 1.15, th.wall, "#2fbf71", th.day ? "#5cabf0" : "#ffe27a", true) + lbl(72, 226, "Medina"); },
+      tr: function (th) { if (glansOn) return ""; return tent(284, 206, 0.9, "#ff7a59", "#ffd23f") + tent(330, 205, 0.75, "#20c4b4", "#ffffff") + campfire(307, 206, 0.9) + lbl(307, 226, "Tenten"); },
+      mr: function (th) { if (glansOn) return gUhud(324, 214, 84, 1.9) + lbl(322, 226, "Jabal Uhud"); return mountain(312, 452, 110, 92, "#a0522d", "#cf8350") + lbl(312, 470, "Jabal Uhud"); },
+      front: function (th) { if (glansOn) return L3glansFront(th); return pondsAll(th) + groundFlowers() + palms(th, palm(335, 640, 0.8, true)) + commonProps(th) + dateBowl(206, 505, 0.8) + camel(246, 766, 0.72, true) + camel(136, 590, 0.62, false) + tent(60, 612, 0.7, "#5caef6", "#ffd23f"); },
     },
     koran: {
       pal: {
@@ -12927,10 +13332,10 @@ return exports;})();
         expert: { sky: ["#050a2a", "#14226a", "#2a5d8a", "#3f7bb0"], far: "#1f6f7a", mid: "#18555f", near: "#103f4a", meadow: "#1d8a74", meadow2: "#12685a", water: "#2b6fe0", water2: "#7fb4ff", leaf: "#23a37a", leaf2: "#157a58", trunk: "#4a3322", path: "#f3dfb0", edge: "#6aa0d0", wall: "#c8e2f8", dome: "#5cb3ff", day: false },
       },
       sky: function (th) { return skyNight(th) + star8(330, 40, 8, "#ffd54f", 0) + star8(215, 95, 6, "#ffffff", .6) + star8(95, 150, 7, "#ffdd9a", 1.1) + star8(262, 150, 5, "#7de3ff", .3); },
-      tl: function (th) { return rehal(80, 206, 1.2) + lbl(80, 226, "Al-Qur’an"); },
-      tr: function (th) { return '<ellipse cx="305" cy="206" rx="26" ry="6" fill="#e8f4ff" opacity=".8"/><rect x="298" y="146" width="14" height="60" fill="' + th.wall + '"/><path d="M297 146 L305 126 L313 146Z" fill="#ffb703"/><rect x="298" y="170" width="14" height="3" fill="#ffd54f"/>' + star8(305, 118, 12, "#ffd54f", 0.2) + lbl(305, 226, "Nur"); },
-      mr: function (th) { return archGate(312, 452, 1, "#6bbaff") + lbl(312, 470, "Poort"); },
-      front: function (th) { return pondsAll(th) + groundFlowers() + cypress(20, 590, 0.9) + cypress(342, 305, 0.6) + cypress(150, 300, 0.55) + cypress(18, 380, 0.7) + cypress(215, 500, 0.5) + cypress(330, 640, 0.8) + star8(60, 640, 10, "#ffd54f", 0.2) + star8(300, 700, 9, "#7de3ff", .7) + star8(190, 430, 8, "#ffdd9a", 1.2) + commonProps(th) + sparkle(120, 700, 5, .2) + sparkle(280, 440, 5, .9); },
+      tl: function (th) { if (glansOn) return gKoranStand(70, 240, 100) + lbl(70, 140, "Al-Qur’an"); return rehal(80, 206, 1.2) + lbl(80, 226, "Al-Qur’an"); },
+      tr: function (th) { if (glansOn) return gLampNur(328, 200, 56) + lbl(328, 214, "Nur"); return '<ellipse cx="305" cy="206" rx="26" ry="6" fill="#e8f4ff" opacity=".8"/><rect x="298" y="146" width="14" height="60" fill="' + th.wall + '"/><path d="M297 146 L305 126 L313 146Z" fill="#ffb703"/><rect x="298" y="170" width="14" height="3" fill="#ffd54f"/>' + star8(305, 118, 12, "#ffd54f", 0.2) + lbl(305, 226, "Nur"); },
+      mr: function (th) { if (glansOn) return gBiblio(50, 460, 90, true) + lbl(46, 474, "Bibliotheek"); return archGate(312, 452, 1, "#6bbaff") + lbl(312, 470, "Poort"); },
+      front: function (th) { if (glansOn) return L4glansFront(th); return pondsAll(th) + groundFlowers() + cypress(20, 590, 0.9) + cypress(342, 305, 0.6) + cypress(150, 300, 0.55) + cypress(18, 380, 0.7) + cypress(215, 500, 0.5) + cypress(330, 640, 0.8) + star8(60, 640, 10, "#ffd54f", 0.2) + star8(300, 700, 9, "#7de3ff", .7) + star8(190, 430, 8, "#ffdd9a", 1.2) + commonProps(th) + sparkle(120, 700, 5, .2) + sparkle(280, 440, 5, .9); },
     },
     akhlaaq: {
       pal: {
@@ -12938,10 +13343,10 @@ return exports;})();
         expert: { sky: ["#142e45", "#2f608a", "#e8c070", "#ffc9a8"], far: "#4fa878", mid: "#3a9163", near: "#2a7a52", meadow: "#5cc088", meadow2: "#2f9460", water: "#5ec8e8", water2: "#bdf0ff", leaf: "#2fae78", leaf2: "#1b8a5a", trunk: "#6b4228", path: "#f8e4bc", edge: "#d8c090", wall: "#fef6e7", dome: "#ffd37a", day: false },
       },
       sky: function (th) { return (th.day ? skyDay(th, { sx: 300, sy: 60 }) : skyNight(th)) + heartShape(70, 120, 8, "#ffc95d", 0) + heartShape(200, 90, 6, "#ffffff", .6) + heartShape(330, 150, 7, "#ffdd9a", 1.1) + heartShape(120, 180, 5, "#ffbe3d", .3); },
-      tl: function (th) { return gazebo(72, 206, 1.1) + lbl(72, 226, "Rozentuin"); },
-      tr: function (th) { return roseArch(306, 206, 1) + lbl(306, 226, "Adab"); },
-      mr: function (th) { return gifts(312, 452, 1.15) + lbl(312, 472, "Sadaqa"); },
-      front: function (th) { return pondsAll(th) + groundFlowers() + rosebush(22, 592, 0.9) + rosebush(340, 305, 0.7) + rosebush(150, 305, 0.65) + rosebush(24, 385, 0.8) + rosebush(215, 502, 0.6) + rosebush(336, 640, 0.9) + rosebush(135, 592, 0.7) + heartShape(60, 690, 7, "#ffc95d", 0.4) + heartShape(290, 600, 6, "#ffffff", 0.9) + heartShape(190, 760, 7, "#ffdd9a", 0.2) + commonProps(th) + (th.day ? sparkle(200, 300, 6, .2) + sparkle(60, 480, 5, .7) : ""); },
+      tl: function (th) { if (glansOn) return gPrieel(71, 233, 68) + lbl(71, 106, "Rozentuin"); return gazebo(72, 206, 1.1) + lbl(72, 226, "Rozentuin"); },
+      tr: function (th) { if (glansOn) return ""; return roseArch(306, 206, 1) + lbl(306, 226, "Adab"); },
+      mr: function (th) { if (glansOn) return gCadeaus(57, 466, 66) + lbl(57, 396, "Sadaqa"); return gifts(312, 452, 1.15) + lbl(312, 472, "Sadaqa"); },
+      front: function (th) { if (glansOn) return L5glansFront(th); return pondsAll(th) + groundFlowers() + rosebush(22, 592, 0.9) + rosebush(340, 305, 0.7) + rosebush(150, 305, 0.65) + rosebush(24, 385, 0.8) + rosebush(215, 502, 0.6) + rosebush(336, 640, 0.9) + rosebush(135, 592, 0.7) + heartShape(60, 690, 7, "#ffc95d", 0.4) + heartShape(290, 600, 6, "#ffffff", 0.9) + heartShape(190, 760, 7, "#ffdd9a", 0.2) + commonProps(th) + (th.day ? sparkle(200, 300, 6, .2) + sparkle(60, 480, 5, .7) : ""); },
     },
   };
 
@@ -12953,56 +13358,57 @@ return exports;})();
       expert: { sky: ["#0d1030", "#25296a", "#6a4f9a", "#d9a46b"], far: "#4b3f86", mid: "#3a2f70", near: "#2a225a", meadow: "#3f9a72", meadow2: "#2a7a58", water: "#4f86d9", water2: "#a8c8ff", leaf: "#2fae78", leaf2: "#1b8a5a", trunk: "#5a3b26", path: "#f3e6d0", edge: "#a88fd0", wall: "#efe6ff", dome: "#c9a6ff", day: false },
     },
     sky: function (th) { return skyNight(th) + star8(330, 44, 8, "#ffd54f", 0) + star8(210, 92, 6, "#ffffff", .6) + star8(96, 150, 7, "#e6d6ff", 1.1) + star8(280, 160, 5, "#ffffff", .3); },
-    tl: function (th) { return domeMosque(72, 206, 1.05, th.wall, th.dome, "#ffe27a", true) + lbl(72, 226, "Stilte"); },
-    tr: function (th) { return lantern(296, 190, "#ffd54f", 1.5) + lantern(334, 198, "#c9a6ff", 1.2) + lbl(316, 226, "Licht"); },
-    mr: function (th) { return archGate(312, 452, 1, "#8e7cc3") + lbl(312, 470, "Ihsan"); },
-    front: function (th) { return pondsAll(th) + groundFlowers() + cypress(20, 590, 0.9) + cypress(342, 305, 0.6) + cypress(150, 300, 0.55) + cypress(330, 640, 0.8) + commonProps(th) + lantern(100, 700, "#ffd54f", 1) + star8(60, 640, 9, "#ffd54f", 0.2) + star8(300, 700, 8, "#e6d6ff", .7) + star8(190, 430, 7, "#ffdd9a", 1.2); },
+    tl: function (th) { if (nachtOn) return ""; if (glansOn) return gNachtmoskee(62, 226, 88) + lbl(62, 118, "Stilte"); return domeMosque(72, 206, 1.05, th.wall, th.dome, "#ffe27a", true) + lbl(72, 226, "Stilte"); },
+    tr: function (th) { if (glansOn && !nachtOn) return gLantaarnpaar(330, 214, 52) + lbl(330, 142, "Licht"); if (glansOn) { const m = nachtSpots().lant; return gNachtGrond(m[0], m[1] - 2, m[2] * .42, 5) + gLantaarnpaar(m[0], m[1], m[2]) + lbl(m[0], m[1] - m[2] * 320 / 261 - 6, "Licht"); } return lantern(296, 190, "#ffd54f", 1.5) + lantern(334, 198, "#c9a6ff", 1.2) + lbl(316, 226, "Licht"); },
+    mr: function (th) { if (glansOn) return ""; return archGate(312, 452, 1, "#8e7cc3") + lbl(312, 470, "Ihsan"); },
+    front: function (th) { if (glansOn) return L6glansFront(th); return pondsAll(th) + groundFlowers() + cypress(20, 590, 0.9) + cypress(342, 305, 0.6) + cypress(150, 300, 0.55) + cypress(330, 640, 0.8) + commonProps(th) + lantern(100, 700, "#ffd54f", 1) + star8(60, 640, 9, "#ffd54f", 0.2) + star8(300, 700, 8, "#e6d6ff", .7) + star8(190, 430, 7, "#ffdd9a", 1.2); },
   };
   LANDS.karakter = {
     pal: { beginner: { sky: ["#ffc9d6", "#ffe0e8", "#fff0f3", "#fffaf0"], far: "#ffd0dc", mid: "#ffb3c6", near: "#f78fa8", meadow: "#b8ec8a", meadow2: "#86d65e", water: "#7fd6ef", water2: "#d6f7ff", leaf: "#35c27a", leaf2: "#1f9c5c", trunk: "#a8703a", path: "#fffaf3", edge: "#f0a8b8", wall: "#fff7fb", dome: "#ff8fa8", day: true } },
     sky: function (th) { return skyDay(th, { sx: 60, sy: 62 }) + heartShape(80, 120, 8, "#ff7a9c", 0) + heartShape(210, 90, 6, "#ffffff", .6) + heartShape(320, 150, 7, "#ffc95d", 1.1); },
-    tl: function (th) { return gazebo(72, 206, 1.1) + lbl(72, 226, "Geduld"); },
-    tr: function (th) { return roseArch(306, 206, 1) + lbl(306, 226, "Eerlijk"); },
-    mr: function (th) { return gifts(312, 452, 1.1) + lbl(312, 472, "Vergeven"); },
-    front: function (th) { return pondsAll(th) + groundFlowers() + rosebush(22, 592, 0.9) + rosebush(340, 305, 0.7) + rosebush(150, 305, 0.65) + rosebush(336, 640, 0.9) + commonProps(th) + heartShape(60, 640, 8, "#ff7a9c", .2) + heartShape(300, 700, 7, "#ffc95d", .7); },
+    tl: function (th) { if (glansOn) return gGrond(92, 260, 36, 8) + gLos("zandloper", 320 / 264, 92, 262, 52) + lbl(92, 188, "Geduld"); return gazebo(72, 206, 1.1) + lbl(72, 226, "Geduld"); },
+    tr: function (th) { if (glansOn) return gGrond(312, 260, 46, 8) + gLos("weegschaal", 320 / 463, 312, 262, 84) + lbl(312, 192, "Eerlijk"); return roseArch(306, 206, 1) + lbl(306, 226, "Eerlijk"); },
+    mr: function (th) { if (glansOn) return ""; return gifts(312, 452, 1.1) + lbl(312, 472, "Vergeven"); },
+    front: function (th) { if (glansOn) return groundFlowers() + gGrond(302, 423, 40, 8) + gLos("olijftak", 320 / 311, 302, 425, 66) + lbl(302, 350, "Vergeven") + gCadeaus(322, 505, 56) + gStruik(22, 352, 52) + gStruik(24, 478, 56) + gStruik(344, 590, 40) + gStruik(236, 340, 44) + gLantern(26, 636, 0.7) + gGras(350, 330, 30, 0.5) + gGras(255, 470, 30, 1.7) + gGras(60, 500, 30, 2.6) + gGras(350, 640, 30, 3.4) + sparkle(200, 330, 6, .2) + sparkle(60, 600, 5, .7); return pondsAll(th) + groundFlowers() + rosebush(22, 592, 0.9) + rosebush(340, 305, 0.7) + rosebush(150, 305, 0.65) + rosebush(336, 640, 0.9) + commonProps(th) + heartShape(60, 640, 8, "#ff7a9c", .2) + heartShape(300, 700, 7, "#ffc95d", .7); },
   };
 
   /* ── Beginner: vier eigen landen (één stemming per land) ── */
   LANDS.reinheid = {
     pal: { beginner: { sky: ["#7fd6ff", "#bfeaff", "#e6fbff", "#f4ffff"], far: "#bfe9e3", mid: "#8fd9d0", near: "#62c7c0", meadow: "#8fe3b0", meadow2: "#5cc98f", water: "#27c6e0", water2: "#a4f5ff", leaf: "#35c27a", leaf2: "#1f9c5c", trunk: "#a8703a", path: "#f4ffff", edge: "#7ccfd0", wall: "#f4ffff", dome: "#1fc2a8", day: true } },
     sky: function (th) { return skyDay(th, { sx: 300, sy: 60 }) + heartShape(70, 120, 6, "#a4f5ff", .2) + heartShape(200, 96, 5, "#ffffff", .8); },
-    tl: function (th) { return fountain(72, 206, 1.05) + lbl(72, 226, "Wudhu-fontein"); },
-    tr: function (th) { return domeMosque(300, 206, 0.8, th.wall, th.dome, "#5cabf0") + lbl(304, 226, "Moskee"); },
-    mr: function (th) { return fountain(312, 452, 0.9) + lbl(312, 472, "Schoon water"); },
-    front: function (th) { return pondsAll(th) + groundFlowers() + palms(th) + commonProps(th) + sparkle(200, 300, 6, .2) + sparkle(60, 480, 5, .7) + sparkle(250, 120, 5, 1); },
+    tl: function (th) { if (glansOn) return gPodium(72, 246, 64, 14) + fountain(72, 236, 1.05) + lbl(72, 157, "Wudhu-fontein"); return fountain(72, 206, 1.05) + lbl(72, 226, "Wudhu-fontein"); },
+    tr: function (th) { if (glansOn) return gPodium(312, 258, 48, 14) + gMoskee(312, 266, 80, true, true) + lbl(312, 166, "Moskee"); return domeMosque(300, 206, 0.8, th.wall, th.dome, "#5cabf0") + lbl(304, 226, "Moskee"); },
+    mr: function (th) { if (glansOn) return gGrond(306, 399, 64, 11) + gWasplaats(306, 402, 96) + lbl(306, 318, "Schoon water"); return fountain(312, 452, 0.9) + lbl(312, 472, "Schoon water"); },
+    front: function (th) { if (glansOn) return LRglansFront(th); return pondsAll(th) + groundFlowers() + palms(th) + commonProps(th) + sparkle(200, 300, 6, .2) + sparkle(60, 480, 5, .7) + sparkle(250, 120, 5, 1); },
   };
   LANDS.gebed = {
     pal: { beginner: { sky: ["#3d7bd9", "#8fb8f0", "#ffe0a0", "#ffd08a"], far: "#a8d8b0", mid: "#7cc08c", near: "#4ea36c", meadow: "#9bd85a", meadow2: "#6cbc3e", water: "#2ec4d6", water2: "#a4f5ff", leaf: "#35c27a", leaf2: "#1f9c5c", trunk: "#a8703a", path: "#fff7e0", edge: "#c9a24a", wall: "#fff7e6", dome: "#2fbf71", day: true } },
     sky: function (th) { return skyDay(th, { sx: 60, sy: 62 }); },
-    tl: function (th) { return domeMosque(72, 206, 1.1, th.wall, th.dome, "#5cabf0", true) + lbl(72, 226, "Moskee"); },
+    tl: function (th) { if (glansOn) return gMinaret(26, 264, 44) + gPodium(92, 258, 46, 13) + gMoskee(92, 266, 76, true) + lbl(92, 170, "Moskee"); return domeMosque(72, 206, 1.1, th.wall, th.dome, "#5cabf0", true) + lbl(72, 226, "Moskee"); },
     tr: function (th) {
+      if (glansOn) return gPodium(312, 254, 44, 12) + gKaaba(312, 262, 66) + lbl(312, 186, "Qibla");
       return '<g transform="translate(0 14)"><ellipse cx="302" cy="190" rx="48" ry="11" fill="#f6efe2" stroke="#d8c8a8" stroke-width="2"/>' +
         '<rect x="283" y="152" width="30" height="36" fill="#1f1f26"/><polygon points="313,152 327,146 327,182 313,188" fill="#121517"/><polygon points="283,152 297,146 327,146 313,152" fill="#3b3b46"/>' +
         '<rect x="283" y="160" width="30" height="5" fill="#f0b81e"/><polygon points="313,160 327,154 327,159 313,165" fill="#d9a010"/>' + lbl(303, 210, "Qibla") + "</g>";
     },
-    mr: function (th) { return archGate(312, 452, 1, "#2fbf71") + lbl(312, 470, "Poort"); },
-    front: function (th) { return pondsAll(th) + groundFlowers() + cypress(20, 590, 0.9) + cypress(342, 305, 0.6) + cypress(150, 300, 0.55) + cypress(18, 380, 0.7) + cypress(215, 500, 0.5) + cypress(330, 640, 0.8) + commonProps(th) + sparkle(200, 300, 6, .2) + sparkle(250, 120, 5, 1); },
+    mr: function (th) { if (glansOn) return ""; return archGate(312, 452, 1, "#2fbf71") + lbl(312, 470, "Poort"); },
+    front: function (th) { if (glansOn) return groundFlowers() + gGrond(302, 423, 62, 10) + palm(322, 396, 0.78, false) + gMatten(302, 425, 100) + lbl(302, 442, "Gebedsmatten") + gKoranStand(326, 505, 54) + palm(8, 340, 0.51, false) + palm(0, 440, 0.62, false) + gLantern(26, 636, 0.7) + gLantern(236, 332, 0.7) + sparkle(200, 330, 6, .2) + sparkle(60, 600, 5, .7); return pondsAll(th) + groundFlowers() + cypress(20, 590, 0.9) + cypress(342, 305, 0.6) + cypress(150, 300, 0.55) + cypress(18, 380, 0.7) + cypress(215, 500, 0.5) + cypress(330, 640, 0.8) + commonProps(th) + sparkle(200, 300, 6, .2) + sparkle(250, 120, 5, 1); },
   };
   LANDS.elkedag = {
     pal: { beginner: { sky: ["#ffd9a8", "#ffe7c2", "#fff2d6", "#fffbe9"], far: "#ffd9b0", mid: "#ffc48a", near: "#f7a85f", meadow: "#c2ec7e", meadow2: "#8fd75a", water: "#6fd6ea", water2: "#cdf6ff", leaf: "#35c27a", leaf2: "#1f9c5c", trunk: "#a8703a", path: "#fffaf0", edge: "#e8b678", wall: "#fff7fb", dome: "#ffb35c", day: true } },
     sky: function (th) { return skyDay(th, { sx: 300, sy: 60 }) + heartShape(70, 120, 8, "#ffc95d", 0) + heartShape(200, 90, 6, "#ffffff", .6) + heartShape(120, 180, 5, "#ffbe3d", .3); },
-    tl: function (th) { return gazebo(72, 206, 1.1) + lbl(72, 226, "Thuis"); },
-    tr: function (th) { return roseArch(306, 206, 1) + lbl(306, 226, "Salaam"); },
-    mr: function (th) { return gifts(312, 452, 1.1) + lbl(312, 472, "Delen"); },
-    front: function (th) { return pondsAll(th) + groundFlowers() + rosebush(22, 592, 0.9) + rosebush(340, 305, 0.7) + rosebush(150, 305, 0.65) + rosebush(336, 640, 0.9) + commonProps(th) + heartShape(60, 640, 8, "#ff7a9c", .2) + heartShape(300, 700, 7, "#ffc95d", .7); },
+    tl: function (th) { if (glansOn) return gPodium(92, 258, 40, 12) + gPrieel(92, 266, 62) + lbl(92, 172, "Thuis"); return gazebo(72, 206, 1.1) + lbl(72, 226, "Thuis"); },
+    tr: function (th) { if (glansOn) return gPodium(312, 254, 38, 11) + gRozenboog(312, 262, 64) + lbl(312, 170, "Salaam"); return roseArch(306, 206, 1) + lbl(306, 226, "Salaam"); },
+    mr: function (th) { if (glansOn) return ""; return gifts(312, 452, 1.1) + lbl(312, 472, "Delen"); },
+    front: function (th) { if (glansOn) return groundFlowers() + gGrond(302, 423, 50, 9) + gCadeaus(302, 425, 72) + lbl(302, 442, "Delen") + gThee(322, 505, 64) + gRoos(22, 352, 52) + gRoos(24, 478, 56) + gRoos(344, 590, 40) + gRoos(236, 340, 44) + sparkle(200, 330, 6, .2) + sparkle(60, 600, 5, .7); return pondsAll(th) + groundFlowers() + rosebush(22, 592, 0.9) + rosebush(340, 305, 0.7) + rosebush(150, 305, 0.65) + rosebush(336, 640, 0.9) + commonProps(th) + heartShape(60, 640, 8, "#ff7a9c", .2) + heartShape(300, 700, 7, "#ffc95d", .7); },
   };
   LANDS.ramadan = {
     pal: { beginner: { sky: ["#0b1740", "#1d3a78", "#c9892f", "#ffcf7a"], far: "#2a5b78", mid: "#1f4a66", near: "#17384f", meadow: "#2a9b72", meadow2: "#1c7a58", water: "#2a8fd0", water2: "#8fd7ff", leaf: "#2fae78", leaf2: "#1b8a5a", trunk: "#5a3b26", path: "#ffeab8", edge: "#d9a441", wall: "#ffe9b8", dome: "#e8b93c", day: false } },
     sky: function (th) { return skyNight(th) + star8(330, 40, 8, "#ffd54f", 0) + star8(215, 95, 6, "#ffffff", .6) + star8(95, 150, 7, "#ffdd9a", 1.1); },
-    tl: function (th) { return domeMosque(72, 206, 1.1, th.wall, th.dome, "#ffe27a", true) + lbl(72, 226, "Iftar"); },
-    tr: function (th) { return lantern(300, 190, "#ffc95d", 1.6) + lantern(336, 200, "#35d0ff", 1.2) + lbl(318, 226, "Lantaarns"); },
-    mr: function (th) { return dateBowl(312, 452, 1.2) + lbl(312, 472, "Dadels"); },
-    front: function (th) { return pondsAll(th) + groundFlowers() + palms(th) + commonProps(th) + lantern(100, 700, "#ffc95d", 1) + star8(60, 640, 10, "#ffd54f", 0.2) + star8(300, 700, 9, "#7de3ff", .7) + star8(190, 430, 8, "#ffdd9a", 1.2); },
+    tl: function (th) { if (glansOn) return gPodium(90, 258, 42, 12) + gNachtmoskee(90, 266, 72) + lbl(90, 172, "Iftar"); return domeMosque(72, 206, 1.1, th.wall, th.dome, "#ffe27a", true) + lbl(72, 226, "Iftar"); },
+    tr: function (th) { if (glansOn) return gLantaarnpaar(312, 262, 56) + lbl(312, 186, "Lantaarns"); return lantern(300, 190, "#ffc95d", 1.6) + lantern(336, 200, "#35d0ff", 1.2) + lbl(318, 226, "Lantaarns"); },
+    mr: function (th) { if (glansOn) return ""; return dateBowl(312, 452, 1.2) + lbl(312, 472, "Dadels"); },
+    front: function (th) { if (glansOn) return groundFlowers() + gPondAt(302, 440, 90) + lbl(302, 392, "Oase") + gDates(322, 500, 1) + lbl(322, 530, "Dadels") + palm(8, 340, 0.51, false) + palm(0, 440, 0.62, false) + gLantern(26, 636, 0.7) + gLantern(236, 332, 0.7) + sparkle(200, 330, 6, .2) + sparkle(60, 600, 5, .7); return pondsAll(th) + groundFlowers() + palms(th) + commonProps(th) + lantern(100, 700, "#ffc95d", 1) + star8(60, 640, 10, "#ffd54f", 0.2) + star8(300, 700, 9, "#7de3ff", .7) + star8(190, 430, 8, "#ffdd9a", 1.2); },
   };
 
   function journeyMap(c, act) {
@@ -13011,25 +13417,29 @@ return exports;})();
     const level = P.mode, L = LANDS[c.id] || LANDS.profeten, th = L.pal[level] || L.pal.junior, J = journeyStops(level, c), stops = J.stops, n = stops.length;
     curTh = th;
     const kos = kosmosOn();
+    const nacht = c.id === "ihsan" && !kos && level !== "beginner"; nachtOn = nacht; nachtMemo = {}; nachtStops = stops;   /* Land 6 (proef): nachtbos-achtergrond uit 3 plaatjes, route in nachtgroen en goud */
     const uid = "j" + level[0] + String(c.id).replace(/[^a-z0-9]/gi, "");
-    let h = '<svg class="jsvg" viewBox="0 0 360 800" role="group" aria-label="Routekaart ' + esc(c.title) + ", " + n + ' levels" xmlns="http://www.w3.org/2000/svg"><defs>' +
+    let h = '<svg class="jsvg' + (nacht ? " j-nacht" : "") + (glansLandIds.indexOf(c.id) >= 0 && !kos ? " rg-map" : "") + (glansLandIds.indexOf(c.id) >= 0 && !kos ? " rg-snd" : "") + '" viewBox="0 0 360 800" role="group" aria-label="Routekaart ' + esc(c.title) + ", " + n + ' levels" xmlns="http://www.w3.org/2000/svg"><defs>' +
       '<linearGradient id="' + uid + 'sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + th.sky[0] + '"/><stop offset=".35" stop-color="' + th.sky[1] + '"/><stop offset=".7" stop-color="' + th.sky[2] + '"/><stop offset="1" stop-color="' + th.sky[3] + '"/></linearGradient>' +
       (kos ? kosDefs(uid) : "") + '<radialGradient id="' + uid + 'done" cx=".35" cy=".3"><stop offset="0" stop-color="' + (kos ? "#fff2b8" : "#7ae6b4") + '"/><stop offset="1" stop-color="' + (kos ? "#e8a33a" : "#14935f") + '"/></radialGradient>' +
       '<radialGradient id="' + uid + 'cur" cx=".35" cy=".3"><stop offset="0" stop-color="' + (kos ? "#d6fffa" : "#fff0a8") + '"/><stop offset="1" stop-color="' + (kos ? "#2bd4c8" : "#f0a02e") + '"/></radialGradient>' +
-      '<radialGradient id="' + uid + 'lock" cx=".35" cy=".3"><stop offset="0" stop-color="' + (kos ? "#3b4580" : "#dcd7cd") + '"/><stop offset="1" stop-color="' + (kos ? "#1c2257" : "#9a9488") + '"/></radialGradient>' +
+      '<radialGradient id="' + uid + 'lock" cx=".35" cy=".3"><stop offset="0" stop-color="' + (kos ? "#3b4580" : nacht ? "#7e9a8e" : "#dcd7cd") + '"/><stop offset="1" stop-color="' + (kos ? "#1c2257" : nacht ? "#38584f" : "#9a9488") + '"/></radialGradient>' +
       '<radialGradient id="' + uid + 'gold" cx=".35" cy=".3"><stop offset="0" stop-color="' + (kos ? "#fffbe0" : "#fff3b0") + '"/><stop offset="1" stop-color="' + (kos ? "#ffc21a" : "#e0a100") + '"/></radialGradient>' +
       '<pattern id="' + uid + 'tile" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M15 2 L28 15 L15 28 L2 15Z" fill="#26c6da" opacity=".55"/><path d="M15 8 L22 15 L15 22 L8 15Z" fill="#fff" opacity=".55"/><circle cx="15" cy="15" r="3.2" fill="#ffd54f"/><path d="M0 0 H6 L0 6Z M30 0 H24 L30 6Z M0 30 H6 L0 24Z M30 30 H24 L30 24Z" fill="#ff7a59" opacity=".6"/></pattern></defs>';
     if (kos) h += kosWorldBg(uid, c); else {
     h += '<rect width="360" height="800" fill="url(#' + uid + 'sky)"/>';
     h += L.sky(th);
-    h += '<path d="M0 235 C 80 190, 160 225, 240 200 S 340 205, 360 190 L360 800 L0 800Z" fill="' + th.far + '"/>';
+    if (nacht) h += nachtBg();
+    if (!nacht) h += '<path d="M0 235 C 80 190, 160 225, 240 200 S 340 205, 360 190 L360 800 L0 800Z" fill="' + th.far + '"/>';
+    glansOn = c.id === "zuilen" || c.id === "profeten" || c.id === "seerah" || c.id === "koran" || c.id === "akhlaaq" || c.id === "ihsan" || c.id === "reinheid" || c.id === "gebed" || c.id === "elkedag" || c.id === "ramadan" || c.id === "karakter"; glansL = c.id; glansBeg = level === "beginner"; /* proef: Land 2, Land 1, Land 3, Land 4, Land 5, Land 6 en Beginner Schoon & Wudhu */
     h += L.tl(th) + L.tr(th);
-    h += '<path d="M0 420 C 90 365, 170 405, 250 372 S 340 355, 360 370 L360 800 L0 800Z" fill="' + th.mid + '"/>';
+    if (!nacht) h += '<path d="M0 420 C 90 365, 170 405, 250 372 S 340 355, 360 370 L360 800 L0 800Z" fill="' + th.mid + '"/>';
     h += L.mr(th);
     const nearD = "M0 610 C 100 565, 200 612, 300 572 S 350 560, 360 566 L360 800 L0 800Z";
-    h += '<path d="' + nearD + '" fill="' + th.near + '"/>';
-    if (L.tile) h += '<path d="' + nearD + '" fill="url(#' + uid + 'tile)" opacity=".55"/>';
+    if (!nacht) h += '<path d="' + nearD + '" fill="' + th.near + '"/>';
+    if (L.tile) h += '<path d="' + nearD + '" fill="url(#' + uid + 'tile)" opacity="' + (c.id === "zuilen" ? ".2" : ".55") + '"/>';   /* proef Land 2: grondtegels rustiger */
     h += L.front(th);
+    glansOn = false; glansL = "";
     }
     // pad
     const seg = function (a, b) { const ym = (a.y + b.y) / 2; return "M" + a.x + " " + a.y + " C" + a.x + " " + ym + " " + b.x + " " + ym + " " + b.x + " " + b.y; };
@@ -13040,36 +13450,49 @@ return exports;})();
       segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="#2fe08a" stroke-width="24" stroke-linecap="round" opacity=".22" filter="url(#' + uid + 'ns)"/>'; });
       segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="' + (S[1] ? "#7dffd8" : "#3b4a9a") + '" stroke-width="5" stroke-linecap="round"' + (S[1] ? ' filter="url(#' + uid + 'ng)"' : "") + '/>'; });
       segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="2 12"/>'; });
+    } else if (nacht) {
+    /* proef Land 6: het pad is een lint met diepte: breed en laag vooraan, smaller naar de moskee (gouden gloed op wat je al gehaald hebt) */
+    h += nachtRibbon(stops);
+    } else if (c.id === "zuilen") {
+    /* proef Land 2: pad rustig en glanzend (zelfde plek en breedte; alleen zachte schaduw, lichte rand en glans) */
+    segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="#7a4a12" stroke-opacity=".16" stroke-width="26" stroke-linecap="round" transform="translate(0 2.5)"/>'; });
+    segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="' + th.edge + '" stroke-width="26" stroke-linecap="round"/>'; });
+    segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="' + (S[1] ? "#ffe08a" : th.path) + '" stroke-width="19" stroke-linecap="round"/>'; });
+    segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="7" stroke-linecap="round" transform="translate(-2 -2)"/>'; });
+    segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2" stroke-linecap="round" stroke-dasharray="1 14"/>'; });
     } else {
     segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="' + th.edge + '" stroke-width="26" stroke-linecap="round"/>'; });
     segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="' + (S[1] ? "#ffe08a" : th.path) + '" stroke-width="18" stroke-linecap="round"/>'; });
     segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="1 10"/>'; });
     }
+    if (nacht) h += nachtPoortSvg();   /* Land 6 (proef): de poort staat óver het pad: het pad loopt erachter door en komt tussen de pilaren weer tevoorschijn */
     // dagelijkse kist (Quiz van de Dag)
     const dDone = !!P.daily[level][todayStr()];
     if (act) h += '<g class="j-stop j-daily" data-act="start-daily" role="button" tabindex="0" aria-label="Quiz van de Dag' + (dDone ? " (vandaag gespeeld, kom morgen terug voor een nieuwe beloning)" : ": speel vandaag voor een dagbeloning en een bonus op je reeks") + '" style="cursor:pointer">' + (dDone ? "" : '<circle cx="318" cy="748" r="34" fill="#ffe08a" opacity=".5"><animate attributeName="opacity" values=".2;.7;.2" dur="1.4s" repeatCount="indefinite"/></circle>') + (dDone ? "" : sparkle(286, 724, 5, 0.2) + sparkle(352, 730, 4, 0.9) + sparkle(300, 778, 3.5, 1.5)) + '<g class="' + (dDone ? "" : "daily-wiggle") + '">' + chest(318, 752, dDone ? "open" : "closed", 1.3, "daily") + "</g>" + (dDone ? "" : '<g transform="translate(336 716)"><circle r="10" fill="#e8590c" stroke="#fff" stroke-width="2"/><text y="4.5" text-anchor="middle" font-size="12" font-weight="900" fill="#fff">!</text></g>') + lbl(318, 786, dDone ? "Morgen weer" : "Dagbeloning", 10) + "</g>";
     // mijlpalen: schatkisten naast het pad (springen als ze klaarstaan; tik om te openen)
+    const glansOn2 = c.id === "zuilen" || c.id === "profeten" || c.id === "seerah" || c.id === "koran" || c.id === "akhlaaq" || c.id === "ihsan" || c.id === "reinheid" || c.id === "gebed" || c.id === "elkedag" || c.id === "ramadan" || c.id === "karakter";
     stops.forEach(function (st) {
-      if (!st.mile) return;
+      if (!st.mile || !nachtShowChest(st, stops)) return;
       const R = st.last ? 27 : 21, side = st.x < 180 ? 1 : -1, state = jChestState(level, c.id, st.i, n), ready = state === "ready";
       /* v94b: de kist staat op de weg ná het level (tussen dit level en het volgende), de laatste boven het eindlevel */
-      const cq = jChestXY(st, stops), cx = cq.x, cy = cq.y;
+      const cq = jChestXY(st, stops), moveC = c.id === "zuilen" && cq.x > 280 && cq.y < 230, cx = moveC ? 304 : cq.x, cy = moveC ? 224 : cq.y;   /* proef: kist onder de 5 Zuilen */
       const game = MG_NAME[chestGame(c.id, st.i)];
       const label = "Schatkist na level " + (off + st.i + 1) + (ready ? ": klaar, opent straks in een pop-up, met minigame " + game : state === "open" || state === "gold" ? ": geopend" : (jLandOpen(level, c.id) ? ": nog dicht, haal eerst level " + (st.i + 1) : ": vergrendeld, rond eerst het vorige land af"));
       h += '<g class="j-chest' + (ready ? " j-ready" : "") + '"' + (ready ? ' data-act="journey-chest" data-cat="' + c.id + '" data-i="' + st.i + '" role="button" tabindex="0"' : ' role="img"') + ' aria-label="' + label + '">' +
         '<circle cx="' + cx + '" cy="' + cy + '" r="26" fill="#000" fill-opacity="0"/>';
       if (ready) h += '<circle cx="' + cx + '" cy="' + (cy - 4) + '" r="30" fill="#fff3a0" opacity=".5"><animate attributeName="opacity" values=".25;.8;.25" dur="1.1s" repeatCount="indefinite"/></circle>' +
         '<circle cx="' + cx + '" cy="' + (cy - 4) + '" r="27" fill="none" stroke="#ffd23f" stroke-width="2.5" stroke-dasharray="4 5" opacity=".9"/>';
-      h += '<g class="' + (ready ? "chest-bounce" : "") + '">' + chest(cx, cy, ready ? "closed" : state, ready ? 1.25 : 0.95, "stop") + "</g>";
+      if (nacht && st.last) { const kW = 46 * nachtChestK(st); h += gNachtGrond(cx, cy + kW * 210 / 220 * .45 - 3, kW * .62, 5); } if (nacht) h += (ready ? lbl(Math.max(60, Math.min(300, cx)), cy + 46, "Je beloning wacht!", 10) : "");
+      h += '<g class="' + (ready ? "chest-bounce" : "") + '">' + (glansOn2 && state !== "open" && state !== "gold" ? gChestImg(cx, cy, nacht ? nachtChestK(st) : (ready ? 1.25 : 0.95), state === "closed-dim") : chest(cx, cy, ready ? "closed" : state, ready ? 1.25 : 0.95, "stop")) + "</g>";
       h += "</g>";
     });
     h += bonusSvg(level, c);
     // levels
     stops.forEach(function (st) {
-      const R = st.last ? 27 : st.mile ? 21 : 19, state = st.locked ? "locked" : st.passed ? "done" : "current";
+      const R = st.last ? 27 : st.mile ? 21 : 19, state = st.locked ? "locked" : st.passed ? "done" : "current", ns = nacht ? nachtNs(st, n) : 1;   /* Land 6: levels worden kleiner naar de moskee */
       const fill = state === "locked" ? "lock" : state === "done" ? (st.stars === 3 ? "gold" : "done") : "cur";
       const name = "Level " + (off + st.i + 1) + " (level " + (st.i + 1) + " van " + n + " in " + c.title + ")" + (jHourglass(level, st.i) && !S.hgOff ? ", zandloper-level met tijd per vraag" : "") + (st.mile ? ", mijlpaal met schatkist" : "") + (st.last ? ", laatste level" : "") + (st.locked ? " (vergrendeld)" : st.passed ? " (gehaald, " + st.stars + " van 3 sterren)" : " (volgende)");
-      h += '<g class="j-stop ' + state + (act && st.i === J.cur ? " j-current" : "") + '" data-act="journey-level" data-cat="' + c.id + '" data-i="' + st.i + '" role="button" tabindex="0"' + (st.locked ? ' aria-disabled="true"' : "") + ' aria-label="' + name + '" transform="translate(' + st.x + " " + st.y + ')">';
+      h += '<g class="j-stop ' + state + (act && st.i === J.cur ? " j-current" : "") + '" data-act="journey-level" data-cat="' + c.id + '" data-i="' + st.i + '" role="button" tabindex="0"' + (st.locked ? ' aria-disabled="true"' : "") + ' aria-label="' + name + '" transform="translate(' + st.x + " " + st.y + ')' + (ns !== 1 ? " scale(" + ns.toFixed(3) + ")" : "") + '">';
       h += '<circle r="' + (R + 7) + '" fill="#000" fill-opacity="0"/>';
       const landAll = stops.every(function (x) { return x.passed; }), hl = state === "current" || (act && landAll && st.i === J.cur);
       if (hl) {
@@ -13085,7 +13508,7 @@ return exports;})();
       if (st.mile) h += '<circle r="' + (R - 5) + '" fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="1.6" stroke-dasharray="3 4"/>';
       if (state === "locked") h += '<g transform="translate(-7 -9)" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><rect x="0" y="7" width="14" height="11" rx="2.5" fill="#fff" stroke="none"/><path d="M3 7 V4 a4 4 0 0 1 8 0 V7"/></g>';
       else h += '<text y="' + (R > 22 ? 9 : 7) + '" text-anchor="middle" font-size="' + (R > 22 ? 25 : 20) + '" font-weight="900" fill="#fff" stroke="' + (kos ? (state === "done" ? "#7a4a00" : "#0a5b66") : state === "done" ? "#0b6b44" : "#c77d12") + '" stroke-width="1" paint-order="stroke">' + (off + st.i + 1) + "</text>";
-      if (hl && act && st.i === J.cur) { const again = state !== "current", ty = again ? -(R + 24 + (jHourglass(level, st.i) && !S.hgOff ? 24 : 0) + (st.last ? 30 : 0)) : R + 20, tw = again ? "HIER" : "START"; h += '<g transform="translate(0 ' + ty + ')"><g class="j-start"><rect x="-27" y="-10" width="54" height="20" rx="10" fill="#1b4332" stroke="#ffd54f" stroke-width="2"/><text y="5" text-anchor="middle" font-size="12" font-weight="900" fill="#ffe27a" letter-spacing=".5">' + tw + "</text></g></g>"; }
+      if (hl && act && st.i === J.cur) { const again = state !== "current", ty = again ? -(R + 24 + (jHourglass(level, st.i) && !S.hgOff ? 24 : 0) + (st.last ? 30 : 0)) : R + 20, tw = again ? "HIER" : "START", tl = ns !== 1 ? (ty > 0 ? R + (ty - R) / ns : -(R + (-ty - R) / ns)) : ty; h += '<g transform="translate(0 ' + tl + ')' + (ns !== 1 ? " scale(" + (1 / ns).toFixed(3) + ")" : "") + '"><g class="j-start"><rect x="-27" y="-10" width="54" height="20" rx="10" fill="#1b4332" stroke="#ffd54f" stroke-width="2"/><text y="5" text-anchor="middle" font-size="12" font-weight="900" fill="#ffe27a" letter-spacing=".5">' + tw + "</text></g></g>"; }
       if (state === "done") for (let k = 0; k < 3; k++) h += (k < st.stars ? '<g transform="translate(' + ((k - 1) * 15) + " " + (R + (k === 1 ? 8 : 5)) + ') scale(.72)" style="filter:drop-shadow(0 1.5px 1px rgba(0,0,0,.4))">' + starInner() + "</g>" : '<polygon points="' + starPoly((k - 1) * 15, R + (k === 1 ? 8 : 5), 7.5) + '" fill="rgba(0,0,0,.35)" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/>');
       if (jHourglass(level, st.i) && !S.hgOff) h += '<g transform="translate(-8 ' + (-R - 19) + ')"><circle cx="8" cy="9" r="10" fill="#1b4332" stroke="#ffd54f" stroke-width="1.6"/><g transform="translate(2 -1) scale(.5)">' + hgSvg(.6, 24).replace(/<svg[^>]*>/, "").replace("</svg>", "") + "</g></g>";
       if (st.last) h += '<g transform="translate(0 ' + (-R - 3) + ')"><line y2="-38" stroke="#b07a1a" stroke-width="3" stroke-linecap="round"/><path d="M1 -38 L33 -38 L27 -28 L33 -18 L1 -18Z" fill="#1f9d55" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"><animate attributeName="d" values="M1 -38 L33 -38 L27 -28 L33 -18 L1 -18Z;M1 -38 Q17 -42 33 -38 L27 -28 L33 -18 Q17 -14 1 -18Z;M1 -38 L33 -38 L27 -28 L33 -18 L1 -18Z" dur="2.2s" repeatCount="indefinite"/></path><circle cx="13" cy="-28" r="5.2" fill="#fff"/><circle cx="15.4" cy="-29" r="4.4" fill="#1f9d55"/><polygon points="' + starPoly(23.5, -28, 3.6) + '" fill="#ffd23f"/></g>';
@@ -13093,16 +13516,16 @@ return exports;})();
     });
     /* medespelers staan in elk land (niet alleen in het land waar jij bent) */
     h += '<g id="jSocial' + landsFor(level).indexOf(c) + '" class="j-social">' + socialSvg(c, stops) + "</g>";
-    if (!act) return h + "</svg>";      /* andere landen op de doorlopende kaart: zonder jouw avatar */
+    if (!act) { nachtOn = false; return h + "</svg>"; }      /* andere landen op de doorlopende kaart: zonder jouw avatar */
     // avatar-marker naast het huidige level
     const ini = esc((P.name || "?").trim().charAt(0).toUpperCase());
-    const mpos = function (st) { const R = st.last ? 27 : st.mile ? 21 : 19, side = st.x < 180 ? -1 : 1; return (st.x + side * (R + 17)) + "," + st.y; };
+    const mpos = function (st) { const R = (st.last ? 27 : st.mile ? 21 : 19) * (nacht ? nachtNs(st, n) : 1), side = st.x < 180 ? -1 : 1; return (st.x + side * (R + 17)) + "," + st.y; };
     const cs = stops[J.cur], key = level + ":" + c.id, prev = journeyPos[key] !== undefined ? Math.min(journeyPos[key], n - 1) : J.cur, ps = stops[prev];
     h += '<g id="jMarker" class="j-marker j-me" data-act="peer" data-key="me" role="button" tabindex="0" aria-label="Jouw profiel" data-from="' + mpos(ps) + '" data-to="' + mpos(cs) + '" style="transform:translate(' + mpos(ps).split(",")[0] + "px," + mpos(ps).split(",")[1] + 'px)"><g class="j-bob"><g transform="scale(1.4)">' +
       (avOf(P) && avOf(P).arch ? '<ellipse cx="0" cy="19" rx="11" ry="2.6" fill="#000" fill-opacity=".28"/><svg x="-21" y="-23" width="42" height="42" viewBox="0 0 100 100">' + avInner(avOf(P), true) + "</svg>" :
       !avOf(P) && !(P.photo && /^https:\/\//i.test(P.photo)) ? '<ellipse cx="0" cy="19" rx="11" ry="2.6" fill="#000" fill-opacity=".28"/><svg x="-21" y="-23" width="42" height="42" viewBox="0 0 100 100"><image href="avatars/boog.webp" x="0" y="0" width="100" height="100" preserveAspectRatio="xMidYMid meet"/><text x="50" y="62" text-anchor="middle" font-size="34" font-weight="900" fill="#f4d675" stroke="#123b2b" stroke-width="2" paint-order="stroke">' + ini + "</text></svg>" :
       '<circle r="17" fill="' + (bzFrameColor(P) || "#fff") + '"/><circle r="14" fill="' + P.color + '"/>' + (avOf(P) ? '<clipPath id="jmc"><circle r="14"/></clipPath><g clip-path="url(#jmc)"><svg x="-14" y="-14" width="28" height="28" viewBox="0 0 100 100">' + avInner(avOf(P), true) + "</svg></g>" : '<text y="5.5" text-anchor="middle" font-size="15" font-weight="900" fill="#fff">' + ini + "</text>" + (P.photo && /^https:\/\//i.test(P.photo) ? '<clipPath id="jmc"><circle r="14"/></clipPath><image href="' + esc(P.photo) + '" x="-14" y="-14" width="28" height="28" preserveAspectRatio="xMidYMid slice" clip-path="url(#jmc)" referrerpolicy="no-referrer"/>' : ""))) + "</g>" + "</g></g>";
-    journeyPos[key] = J.cur;
+    journeyPos[key] = J.cur; nachtOn = false;
     return h + "</svg>";
   }
 
@@ -13115,11 +13538,11 @@ return exports;})();
   /* het bonuslevel gaat open zodra je het level haalt dat er op de kaart het dichtst bij ligt */
   /* plek op de kaart: de eerste vaste plek bij de grot die vrij ligt van de levels (anders de ruimste) */
   function bonusPos(lv, catId, b) {
-    const pts = jLayout(jCount(lv, catId)); let best = b.spots[0], bd = -1;
+    const pts = jLayout(jCount(lv, catId), catId, lv); let best = b.spots[0], bd = -1;
     for (let k = 0; k < b.spots.length; k++) { const sp = b.spots[k], d = Math.min.apply(null, pts.map(function (p) { return Math.hypot(p.x - sp[0], p.y - sp[1]); })); if (d >= 62) return { x: sp[0], y: sp[1] }; if (d > bd) { bd = d; best = sp; } }
     return { x: best[0], y: best[1] };
   }
-  function bonusNeed(lv, catId, b) { const pts = jLayout(jCount(lv, catId)), y = bonusPos(lv, catId, b).y; let bi = 0, bd = 1e9; pts.forEach(function (p, i) { const d = Math.abs(p.y - y); if (d < bd) { bd = d; bi = i; } }); return bi; }
+  function bonusNeed(lv, catId, b) { const pts = jLayout(jCount(lv, catId), catId, lv), y = bonusPos(lv, catId, b).y; let bi = 0, bd = 1e9; pts.forEach(function (p, i) { const d = Math.abs(p.y - y); if (d < bd) { bd = d; bi = i; } }); return bi; }
   function bonusOpen(lv, catId, b) { return jPassed(lv, catId, bonusNeed(lv, catId, b)); }
   function bonusSvg(level, c) {
     const b = bonusOf(c.id); if (!b) return "";
@@ -13206,7 +13629,7 @@ return exports;})();
   function puzIs(lv, catId, i) { return puzActive(lv, catId) && puzK(lv, catId) === i; }
   function puzIsOpen(lv, catId) { return !jLocked(lv, catId, puzK(lv, catId)); }
   function puzPos(lv, catId) {
-    const k = puzK(lv, catId), pts = jLayout(jCount(lv, catId)), ym = Math.round((pts[k - 1].y + pts[k].y) / 2), bo = bonusOf(catId), bp = bo ? bonusPos(lv, catId, bo) : null;
+    const k = puzK(lv, catId), pts = jLayout(jCount(lv, catId), catId, lv), ym = Math.round((pts[k - 1].y + pts[k].y) / 2), bo = bonusOf(catId), bp = bo ? bonusPos(lv, catId, bo) : null;
     let best = { x: 34, y: ym }, bd = -1;
     const cand = [[34, 0], [326, 0], [58, -18], [302, -18], [58, 18], [302, 18], [180, 0]];
     for (let i = 0; i < cand.length; i++) {
@@ -13414,11 +13837,31 @@ return exports;})();
   }
   /* plek van de schatkist bij een mijlpaal (ook gebruikt om medespelers er niet overheen te zetten) */
   function jChestXY(st, stops) {
+    if (nachtOn) return nachtChestPos(st, stops);   /* Land 6 (proef): grote kisten op vrije grond, niet in het water */
     const R = st.last ? 27 : 21, side = st.x < 180 ? 1 : -1, nx = stops[st.i + 1];
     if (!nx) return { x: st.x + side * (R + 30), y: st.y - 34 };
     const mx = (st.x + nx.x) / 2, my = (st.y + nx.y) / 2, dx = nx.x - st.x, dy = nx.y - st.y, ln = Math.max(1, Math.hypot(dx, dy));
     let px = -dy / ln, py = dx / ln; if (py > 0) { px = -px; py = -py; }
     return { x: mx + px * 42, y: my + py * 42 + 6 };
+  }
+  /* Land 6 (proef): plekken van lantaarnpaar en poort per kaart (Beginner of Gevorderd/Ervaren) */
+  function nachtShowChest(st, stops) {   /* Land 6 (proef): 2 grote kisten als decoratie (halverwege en bovenaan); de beloningen blijven bij elke mijlpaal */
+    if (!nachtOn || st.last) return true;
+    const rd = stops.filter(function (x) { return x.mile && !x.last && jChestState(P.mode, "ihsan", x.i, stops.length) === "ready"; });
+    if (rd.length) return rd[0].i === st.i;   /* de beloning wacht nog: die kist is er dan als herinnering (springt, tikken opent hem) en neemt de plek van de andere kist in: nooit meer dan 2 kisten */
+    const m = stops.filter(function (x) { return x.mile && !x.last; });
+    return m.length > 0 && m[Math.floor((m.length - 1) / 2)].i === st.i;
+  }
+  function nachtPoort() {   /* grote poort midden in de route, op het grasveld langs de vijver: het stuk pad tussen twee levels loopt er dwars doorheen */
+    const n = nachtStops.length, a = nachtStops[nachtGateIdx(n)] || { x: NG.xc, y: 468 };
+    return [a.x, a.y + 26, 96];   /* de poort staat op de oever, het pad loopt er recht doorheen en het level staat in de opening */
+  }
+  function nachtSpots() { return P && P.mode === "beginner" ? { lant: [264, 492, 46], poort: nachtPoort() } : { lant: [34, 480, 48], poort: nachtPoort() }; }
+  function nachtChestK(st) { return st.last ? .62 : 1.05; }   /* kistgrootte: de laatste staat klein en ver weg, de andere past op de rots */
+  function nachtChestPos(st, stops) {   /* Land 6 (proef): vaste plekken, zo bepaald door Irshaad: de laatste kist klein op het gras rechts van de moskee, de andere op de rots links van de poort */
+    if (nachtMemo[st.i]) return nachtMemo[st.i];
+    const W = 46 * nachtChestK(st), H = W * 210 / 220, base = st.last ? [252, 314] : [90, 468];
+    return (nachtMemo[st.i] = { x: base[0], y: Math.round(base[1] - .45 * H) });
   }
   /* Medespelers staan nooit op een level: ze krijgen een vrije plek naast de route (links of rechts langs de rand) */
   function socialSvg(c, stops) {
@@ -13432,7 +13875,7 @@ return exports;})();
     stops.forEach(function (st) {
       const R = st.last ? 27 : st.mile ? 21 : 19;
       obs.push({ x: st.x, y: st.y, r: R + 5 }, { x: st.x, y: st.y + R + 9, r: 19 });
-      if (st.mile) { const q = jChestXY(st, stops); obs.push({ x: q.x, y: q.y, r: 32 }); }
+      if (st.mile && nachtShowChest(st, stops)) { const q = jChestXY(st, stops); obs.push({ x: q.x, y: q.y, r: nachtOn ? 44 : 32 }); }
     });
     try { const b = bonusOf(c.id); if (b) { const bp = bonusPos(lv, c.id, b); obs.push({ x: bp.x, y: bp.y + 8, r: 46 }); } } catch (e) {}
     obs.push({ x: 318, y: 748, r: 36 });
@@ -13561,6 +14004,7 @@ return exports;})();
   function landDone(level, catId) { return jLandStats(level, catId).done; }
   function defaultLand() {
     const LS = landsFor(P.mode);
+    if (PROEF_TEST) return Math.min(1, LS.length - 1);
     for (let i = 0; i < LS.length; i++) { if (!landDone(P.mode, LS[i].id)) return i; }
     /* alles uitgespeeld: je staat altijd aan het eind (laatste land), ook als je terugkomt om levels opnieuw te spelen */
     return Math.max(0, LS.length - 1);
@@ -13657,7 +14101,7 @@ return exports;})();
     /* v124: één doorlopende reis: alle landen onder elkaar (Land 1 onderaan), met de Poort van Jannah ertussen */
     const topL = LANDS[LS[LS.length - 1].id] || LANDS.profeten, topTh = topL.pal[level] || topL.pal.junior;
     const botL = LANDS[LS[0].id] || LANDS.profeten, botTh = botL.pal[level] || botL.pal.junior;
-    h += '<div class="jmap-scroll jreis"><div class="journey-map" style="background:' + (kosmosOn() ? "#060a22" : "linear-gradient(180deg," + topTh.sky[0] + " 50%," + botTh.near + " 50%)") + '">' + mapHtml + "</div></div>";
+    h += '<div class="jmap-scroll jreis"><div class="journey-map" style="background:' + (kosmosOn() ? "#060a22" : "linear-gradient(180deg," + (LS[LS.length - 1].id === "ihsan" && level !== "beginner" ? "#23263c" : topTh.sky[0]) + " 50%," + botTh.near + " 50%)") + '">' + mapHtml + "</div></div>";
     /* onderste navigatiebalk */
     h += '<nav class="j-nav" aria-label="Hoofdmenu"><div class="jn-in">' +
       '<button class="jn-item" data-act="dash" aria-label="Startscherm"><span class="jn-ic" aria-hidden="true">🏠</span>Start</button>' +
@@ -13741,7 +14185,27 @@ return exports;})();
     document.body.appendChild(d); announce(f.t);
     setTimeout(function () { d.classList.add("out"); setTimeout(function () { d.remove(); }, 500); }, 4500 + 90 * f.t.length);
   }
+  let rgObs = null;
+  /* Reiskaart-glans: tijdens het scrollen alle beweging in Land 2 stilzetten (CSS én SMIL); kort na het stoppen weer aan */
+  function rgScrollCalm() {
+    const sc = document.querySelector(".jmap-scroll.jreis"); if (!sc || sc.dataset.rg) return;
+    sc.dataset.rg = 1;
+    let t = 0, on = false;
+    const set = function (v) {
+      on = v;
+      sc.querySelectorAll(".jsvg.rg-map").forEach(function (m) { m.classList.toggle("rg-scr", v); try { if (v) m.pauseAnimations(); else m.unpauseAnimations(); } catch (e) {} });
+    };
+    sc.addEventListener("scroll", function () { if (!on) set(true); clearTimeout(t); t = setTimeout(function () { set(false); }, 260); }, { passive: true });
+  }
   function afterJourneyRender() {
+    /* Reiskaart-glans: bewegingen pauzeren zolang Land 2 niet in beeld is */
+    if (rgObs) { rgObs.disconnect(); rgObs = null; }
+    if ("IntersectionObserver" in window) {
+      const rgMaps = document.querySelectorAll(".jsvg.rg-map");
+      if (rgMaps.length) { rgObs = new IntersectionObserver(function (ents) { ents.forEach(function (e) { e.target.classList.toggle("rg-off", !e.isIntersecting); }); rgAmb.show(!!document.querySelector(".jsvg.rg-snd:not(.rg-off)")); }, { rootMargin: "80px 0px" }); rgMaps.forEach(function (el) { rgObs.observe(el); }); }
+      else rgAmb.show(false);
+    } else rgAmb.show(false);
+    rgScrollCalm();
     hulpBanner();
     if (starChestPending && !document.querySelector(".dialog-wrap, #bcel")) { const sc = starChestPending; starChestPending = null; setTimeout(function () { if (screen === "journey") starChestDialog(sc); }, 700); }
     else setTimeout(chestPopupCheck, 900);
@@ -14396,7 +14860,7 @@ return exports;})();
     switch (act) {
       case "pick-mode": chooseMode(el.dataset.mode, function () { screen = pendingCode ? "group" : "journey"; flyerPending = true; render(); }); break;
       case "switch-mode": modePickerDialog(); break;
-      case "toggle-sound": S.sound = !S.sound; if (!S.sound) voiceStop(); saveState(); if (S.sound) play("click"); render(); break;
+      case "toggle-sound": S.sound = !S.sound; if (!S.sound) voiceStop(); saveState(); rgAmb.sync(); if (S.sound) play("click"); render(); break;
       case "go-next-tier": play("click"); stopTimer(); startQuiz("category", result.catId, result.next); break;
       case "start-daily": play("click"); startQuiz("daily"); break;
       case "answer": answer(parseInt(el.dataset.pos, 10)); break;
@@ -14945,7 +15409,7 @@ return exports;})();
     return Array.prototype.some.call(document.querySelectorAll(".modal-overlay, [role=dialog]"), function (el) { return el.offsetParent !== null || getComputedStyle(el).position === "fixed" && getComputedStyle(el).display !== "none" && getComputedStyle(el).visibility !== "hidden"; });
   }
   function moveNudge() {
-    if (!OLD_HOST) return;
+    if (!OLD_HOST || PROEF_TEST) return;   /* testadres: geen verhuis-pop-up en geen doorsturen */
     try { if (sessionStorage.getItem("iq-mvask")) return; } catch (e) {}
     if (overlayOpen() || !document.getElementById("app")) { setTimeout(moveNudge, 2000); return; }
     try { sessionStorage.setItem("iq-mvask", "1"); } catch (e) {}
@@ -15006,7 +15470,7 @@ return exports;})();
     } catch (e) {}
     location.replace(NEW_HOME);
   }
-  const MOVED_AWAY = OLD_HOST && !!S.movedOut && !/[?#&](code|access_token|error|verhuis)=/.test(location.href);
+  const MOVED_AWAY = OLD_HOST && !PROEF_TEST && !!S.movedOut && !/[?#&](code|access_token|error|verhuis)=/.test(location.href);
   if (MOVED_AWAY) moveRedirect();
   moveIn();
   if (!MOVED_AWAY) startSplash(function () { if (OLD_HOST) setTimeout(moveNudge, 1500); else moveWelcome(); });   /* v91b: eerst het welkomstscherm met logo en salaam; het inlogvenster opent pas na een tik op "Account & Inloggen" */
