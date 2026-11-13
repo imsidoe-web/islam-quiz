@@ -10664,7 +10664,7 @@ return exports;})();
     for (let i = 0; i < n; i++) {
       const s = nachtS(y), last = i === n - 1;
       const o = last || i === g ? 0 : (i % 2 ? -1 : 1) * (.62 + .3 * Math.abs(Math.sin(i * 2.1 + .7)));
-      pts.push({ x: Math.round(NG.xc + o * 94 * s), y: Math.round(y) });
+      pts.push({ x: Math.round(NG.xc + o * 94 * s) + (i === g ? 14 : 0), y: Math.round(y) });   /* de poort (en het level erin) staat iets rechts van het midden */
       if (i < n - 1) y -= w[i] / tot * (NG.yB - NG.yT);
     }
     return pts;
@@ -13481,7 +13481,7 @@ return exports;})();
         '<circle cx="' + cx + '" cy="' + cy + '" r="26" fill="#000" fill-opacity="0"/>';
       if (ready) h += '<circle cx="' + cx + '" cy="' + (cy - 4) + '" r="30" fill="#fff3a0" opacity=".5"><animate attributeName="opacity" values=".25;.8;.25" dur="1.1s" repeatCount="indefinite"/></circle>' +
         '<circle cx="' + cx + '" cy="' + (cy - 4) + '" r="27" fill="none" stroke="#ffd23f" stroke-width="2.5" stroke-dasharray="4 5" opacity=".9"/>';
-      if (nacht) h += gNachtGrond(cx, cy + 15, 30, 7) + (ready ? lbl(Math.max(60, Math.min(300, cx)), cy - 62, "Je beloning wacht!", 10) : "");
+      if (nacht) { const kW = 46 * (ready ? 1.25 : .95) * 1.45; h += gNachtGrond(cx, cy + kW * 210 / 220 * .45 - 4, kW * .6, 9); } if (nacht) h += (ready ? lbl(Math.max(60, Math.min(300, cx)), cy - 62, "Je beloning wacht!", 10) : "");
       h += '<g class="' + (ready ? "chest-bounce" : "") + '">' + (glansOn2 && state !== "open" && state !== "gold" ? gChestImg(cx, cy, (ready ? 1.25 : 0.95) * (nacht ? 1.45 : 1), state === "closed-dim") : chest(cx, cy, ready ? "closed" : state, ready ? 1.25 : 0.95, "stop")) + "</g>";
       h += "</g>";
     });
@@ -13846,7 +13846,8 @@ return exports;})();
   /* Land 6 (proef): plekken van lantaarnpaar en poort per kaart (Beginner of Gevorderd/Ervaren) */
   function nachtShowChest(st, stops) {   /* Land 6 (proef): 2 grote kisten als decoratie (halverwege en bovenaan); de beloningen blijven bij elke mijlpaal */
     if (!nachtOn || st.last) return true;
-    if (jChestState(P.mode, "ihsan", st.i, stops.length) === "ready") return true;   /* de beloning wacht nog: de kist verschijnt als herinnering (springt, tikken opent hem) */
+    const rd = stops.filter(function (x) { return x.mile && !x.last && jChestState(P.mode, "ihsan", x.i, stops.length) === "ready"; });
+    if (rd.length) return rd[0].i === st.i;   /* de beloning wacht nog: die kist is er dan als herinnering (springt, tikken opent hem) en neemt de plek van de andere kist in: nooit meer dan 2 kisten */
     const m = stops.filter(function (x) { return x.mile && !x.last; });
     return m.length > 0 && m[Math.floor((m.length - 1) / 2)].i === st.i;
   }
