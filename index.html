@@ -9590,7 +9590,7 @@ return exports;})();
         isRecord = !!prev && (stars > prev.stars || score > prev.score);
         jSave(lv, cid, ji, { score: score, total: total, stars: stars });
       } else if (prev) prev.t = Date.now();   /* ook opnieuw spelen telt: zo onthoudt de kaart je laatste level */
-      const passed = stars >= 1, first = passed && !wasPassed, mile = jIsMile(ji, n, cid);
+      const passed = stars >= 1, first = passed && !wasPassed, mile = jIsMile(ji, n);
       jr = {
         jIdx: ji, jCount: n, passed: passed, firstPass: first,
         chestReady: first && mile,
@@ -10591,7 +10591,7 @@ return exports;})();
   function jLockText(level, catId, i, what) {
     return !jLandOpen(level, catId) ? jLandLockMsg(level, catId) : "🔒 Haal eerst level " + (jOff(level, catId) + i + (what === "chest" ? 1 : 0)) + (what === "chest" ? " om deze schatkist te openen" : " om dit level te openen");
   }
-  function jIsMile(i, n, catId) { if (catId === "ihsan") return i === n - 1 || i === ((n - 1) >> 1); return (i + 1) % J_MILE === 0 || i === n - 1; }   /* Land 6 (proef): 2 grote kisten, halverwege en bovenaan */
+  function jIsMile(i, n) { return (i + 1) % J_MILE === 0 || i === n - 1; }
   function jCurrent(level, catId) {
     const n = jCount(level, catId);
     for (let i = 0; i < n; i++) if (!jPassed(level, catId, i)) return i;
@@ -10641,13 +10641,13 @@ return exports;})();
     if (!jPassed(level, catId, i)) return jLocked(level, catId, i) ? "closed-dim" : "closed";
     if (!chestRec(level, catId, i)) return "ready";
     let s = i;
-    while (s > 0 && !jIsMile(s - 1, n, catId)) s--;
+    while (s > 0 && !jIsMile(s - 1, n)) s--;
     for (let k = s; k <= i; k++) { const b = jBest(level, catId, k); if (!b || b.stars < 3) return "open"; }
     return "gold";
   }
   function chestsReady(level, catId) {
     const n = jCount(level, catId); let c = 0;
-    for (let i = 0; i < n; i++) if (jIsMile(i, n, catId) && jChestState(level, catId, i, n) === "ready") c++;
+    for (let i = 0; i < n; i++) if (jIsMile(i, n) && jChestState(level, catId, i, n) === "ready") c++;
     return c;
   }
   /* slingerend pad: x volgt een sinus, y loopt omhoog; ruim genoeg voor 15 levels */
@@ -10660,7 +10660,7 @@ return exports;})();
     const n = jCount(level, c.id), pts = jLayout(n), cur = jCurrent(level, c.id);
     const stops = pts.map(function (p, i) {
       const b = jBest(level, c.id, i);
-      return { i: i, x: p.x, y: p.y, locked: jLocked(level, c.id, i), passed: !!b && b.stars >= 1, stars: b ? b.stars || 0 : 0, mile: jIsMile(i, n, c.id), last: i === n - 1 };
+      return { i: i, x: p.x, y: p.y, locked: jLocked(level, c.id, i), passed: !!b && b.stars >= 1, stars: b ? b.stars || 0 : 0, mile: jIsMile(i, n), last: i === n - 1 };
     });
     return { stops: stops, cur: cur };
   }
@@ -12502,7 +12502,7 @@ return exports;})();
     const lv = P.mode, LS = landsFor(lv), c = LS[journeyLand === null ? defaultLand() : journeyLand];
     if (!c || !jLandOpen(lv, c.id)) return;
     const n = jCount(lv, c.id); let idx = -1;
-    for (let i = 0; i < n; i++) if (jIsMile(i, n, c.id) && jChestState(lv, c.id, i, n) === "ready") { idx = i; break; }
+    for (let i = 0; i < n; i++) if (jIsMile(i, n) && jChestState(lv, c.id, i, n) === "ready") { idx = i; break; }
     const key = lv + ":" + c.id + ":" + idx;
     if (idx < 0 || chestPopupDone[key]) return;
     chestPopupDone[key] = true;
@@ -13430,7 +13430,7 @@ return exports;})();
     // mijlpalen: schatkisten naast het pad (springen als ze klaarstaan; tik om te openen)
     const glansOn2 = c.id === "zuilen" || c.id === "profeten" || c.id === "seerah" || c.id === "koran" || c.id === "akhlaaq" || c.id === "ihsan" || c.id === "reinheid" || c.id === "gebed" || c.id === "elkedag" || c.id === "ramadan" || c.id === "karakter";
     stops.forEach(function (st) {
-      if (!st.mile) return;
+      if (!st.mile || !nachtShowChest(st, stops)) return;
       const R = st.last ? 27 : 21, side = st.x < 180 ? 1 : -1, state = jChestState(level, c.id, st.i, n), ready = state === "ready";
       /* v94b: de kist staat op de weg ná het level (tussen dit level en het volgende), de laatste boven het eindlevel */
       const cq = jChestXY(st, stops), moveC = c.id === "zuilen" && cq.x > 280 && cq.y < 230, cx = moveC ? 304 : cq.x, cy = moveC ? 224 : cq.y;   /* proef: kist onder de 5 Zuilen */
@@ -13803,6 +13803,11 @@ return exports;})();
     return { x: mx + px * 42, y: my + py * 42 + 6 };
   }
   /* Land 6 (proef): plekken van lantaarnpaar en poort per kaart (Beginner of Gevorderd/Ervaren) */
+  function nachtShowChest(st, stops) {   /* Land 6 (proef): 2 grote kisten als decoratie (halverwege en bovenaan); de beloningen blijven bij elke mijlpaal */
+    if (!nachtOn || st.last) return true;
+    const m = stops.filter(function (x) { return x.mile && !x.last; });
+    return m.length > 0 && m[Math.floor((m.length - 1) / 2)].i === st.i;
+  }
   function nachtSpots() { return P && P.mode === "beginner" ? { lant: [38, 492, 46], poort: [312, 470, 90] } : { lant: [34, 480, 48], poort: [316, 580, 84] }; }
   function nachtChestPos(st, stops) {
     const sp = nachtSpots(), L = sp.lant, Q = sp.poort, lh = L[2] * 320 / 261, qh = Q[2] * 320 / 295;
@@ -13810,8 +13815,8 @@ return exports;})();
     let best = null, bd = 1e9;
     for (let y = 255; y <= 470; y += 8) for (let x = 40; x <= 320; x += 8) {
       if (far(x, y) < 54) continue;
-      if (x > L[0] - L[2] / 2 - 34 && x < L[0] + L[2] / 2 + 34 && y > L[1] - lh - 34 && y < L[1] + 30) continue;
-      if (x > Q[0] - Q[2] / 2 - 34 && x < Q[0] + Q[2] / 2 + 34 && y > Q[1] - qh - 34 && y < Q[1] + 30) continue;
+      if (x > L[0] - L[2] / 2 - 54 && x < L[0] + L[2] / 2 + 54 && y > L[1] - lh - 54 && y < L[1] + 30) continue;
+      if (x > Q[0] - Q[2] / 2 - 54 && x < Q[0] + Q[2] / 2 + 54 && y > Q[1] - qh - 54 && y < Q[1] + 30) continue;
       let ok = true; for (let i = 0; i < stops.length; i++) { if (Math.hypot(x - stops[i].x, y - stops[i].y) < 76) { ok = false; break; } }
       if (!ok) continue;
       const d = Math.hypot(x - st.x, y - st.y); if (d < bd) { bd = d; best = { x: x, y: y }; }
@@ -13830,7 +13835,7 @@ return exports;})();
     stops.forEach(function (st) {
       const R = st.last ? 27 : st.mile ? 21 : 19;
       obs.push({ x: st.x, y: st.y, r: R + 5 }, { x: st.x, y: st.y + R + 9, r: 19 });
-      if (st.mile) { const q = jChestXY(st, stops); obs.push({ x: q.x, y: q.y, r: nachtOn ? 44 : 32 }); }
+      if (st.mile && nachtShowChest(st, stops)) { const q = jChestXY(st, stops); obs.push({ x: q.x, y: q.y, r: nachtOn ? 44 : 32 }); }
     });
     try { const b = bonusOf(c.id); if (b) { const bp = bonusPos(lv, c.id, b); obs.push({ x: bp.x, y: bp.y + 8, r: 46 }); } } catch (e) {}
     obs.push({ x: 318, y: 748, r: 36 });
