@@ -1047,20 +1047,19 @@ body.bonus-on { overflow: hidden; }
 /* v305 (proef): schatkist-scherm in de glans-stijl (kader, kist en knop uit Gemini) */
 .cg-stage { position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; min-height: calc(100dvh - 24px); margin-top: 8px; padding: 14px 8px; border-radius: 28px; background: radial-gradient(circle at 50% 42%, #1f7a72, #0e3d44 62%, #08262c); }
 .cg-rays { position: absolute; z-index: 0; left: 50%; top: 42%; width: 160%; aspect-ratio: 1; margin: -80% 0 0 -80%; background: repeating-conic-gradient(rgba(255,226,140,.16) 0 9deg, transparent 9deg 24deg); animation: coSpin 24s linear infinite; pointer-events: none; }
-.cg-card { position: relative; z-index: 1; width: min(94vw, 400px); aspect-ratio: 315 / 502; container-type: inline-size; background: url(melding/schatkist-kader.webp) center / 100% 100% no-repeat; filter: drop-shadow(0 14px 22px rgba(0,0,0,.45)); }
+.cg-card { position: relative; z-index: 1; width: min(92vw, 380px); aspect-ratio: 770 / 1308; container-type: inline-size; background: url(melding/schatkist-venster.webp) center / 100% 100% no-repeat; filter: drop-shadow(0 14px 22px rgba(0,0,0,.45)); }
 .cg-card > * { position: absolute; margin: 0; }
-.cg-title { left: 22%; width: 56%; top: 11.6%; height: 8%; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 6.4cqw; line-height: 1.05; color: #5a3d00; text-shadow: 0 1px 0 rgba(255,255,255,.7); }
-.cg-x { appearance: none; border: 0; background: transparent; right: 0; top: 10.6%; width: 14%; aspect-ratio: 1; cursor: pointer; }
-.cg-card .co-chest.cg-chest { left: 12%; top: 26.5%; width: 76%; }
-.cg-chest img { width: 100%; height: auto; display: block; }
-.cg-chest.opened { filter: drop-shadow(0 0 18px rgba(255,214,90,.9)); }
-.cg-info { left: 12%; width: 76%; top: 58.5%; height: 12%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #4a3300; gap: 1cqw; }
-.cg-info .co-sub { font-size: 4.4cqw; }
+.cg-title { left: 17.7%; width: 67.5%; top: 9.3%; height: 11.9%; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 5.3cqw; line-height: 1.05; color: #5a3d00; text-shadow: 0 1px 0 rgba(255,255,255,.7); }
+.cg-chest { appearance: none; border: 0; background: transparent; padding: 0; cursor: pointer; left: 10%; width: 79.5%; top: 30%; height: 31%; }
+.cg-chest.opened::after { content: ""; position: absolute; inset: -6% -4%; background: radial-gradient(circle, rgba(255,226,120,.85), rgba(255,226,120,0) 62%); mix-blend-mode: screen; pointer-events: none; animation: cgGlow 1.4s ease-out both; }
+@keyframes cgGlow { 0% { opacity: 0; transform: scale(.6); } 35% { opacity: 1; } 100% { opacity: .55; transform: scale(1.05); } }
+.cg-info { left: 12%; width: 76%; top: 61.5%; height: 9.6%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #4a3300; gap: .8cqw; }
+.cg-info .co-sub { font-size: 4.3cqw; }
 .cg-info .co-game { background: none; padding: 0; justify-content: center; text-align: center; animation: pop .5s ease both; }
-.cg-info .co-game b { font-size: 4.8cqw; } .cg-info .co-game small { font-size: 3.7cqw; line-height: 1.25; }
-.cg-gem { appearance: none; border: 0; cursor: pointer; left: 15%; width: 70%; top: 72.5%; aspect-ratio: 288 / 95; background: url(melding/schatkist-knop.webp) center / 100% 100% no-repeat; display: flex; align-items: center; justify-content: center; padding: 0 9%; font: inherit; font-weight: 900; font-size: 5cqw; color: #fff; text-shadow: 0 2px 3px rgba(0,60,30,.85); filter: drop-shadow(0 4px 6px rgba(0,0,0,.3)); }
+.cg-info .co-game b { font-size: 4.6cqw; } .cg-info .co-game small { font-size: 3.5cqw; line-height: 1.2; }
+.cg-gem { appearance: none; border: 0; cursor: pointer; left: 18.7%; width: 62.6%; top: 71.9%; height: 13.9%; background: transparent; display: flex; align-items: center; justify-content: center; padding: 0 6%; font: inherit; font-weight: 900; font-size: 5.2cqw; color: #fff; text-shadow: 0 2px 3px rgba(0,60,30,.85); }
 .cg-gem:active { transform: scale(.97); }
-.cg-later { appearance: none; border: 0; background: none; left: 25%; width: 50%; top: 88.5%; height: 6%; cursor: pointer; font: inherit; font-weight: 800; font-size: 4.2cqw; color: #0d4a43; text-decoration: underline; }
+.cg-later { appearance: none; border: 0; background: none; left: 25%; width: 50%; top: 86.6%; height: 4.6%; cursor: pointer; font: inherit; font-weight: 800; font-size: 4.2cqw; color: #0d4a43; text-decoration: underline; }
 .co-stage > * { position: relative; z-index: 1; }
 .co-stage .co-rays { position: absolute; z-index: 0; left: 50%; top: 36%; width: 150%; aspect-ratio: 1; margin: -75% 0 0 -75%; background: repeating-conic-gradient(rgba(255,255,255,.55) 0 9deg, transparent 9deg 24deg); animation: coSpin 18s linear infinite; border-radius: 50%; -webkit-mask-image: radial-gradient(circle, #000 15%, transparent 62%); mask-image: radial-gradient(circle, #000 15%, transparent 62%); }
 @keyframes coSpin { to { transform: rotate(360deg); } }
@@ -11373,8 +11372,7 @@ return exports;})();
     const gm = demoGame || mg.game;
     return '<section class="cg-stage"><div class="cg-rays" aria-hidden="true"></div><div class="cg-card">' +
       '<h1 id="coTitle" class="cg-title">Een schatkist!</h1>' +
-      '<button class="cg-x" data-act="journey-back" aria-label="Terug naar de kaart"></button>' +
-      '<button class="co-chest cg-chest" id="coChest" data-glans="1" data-act="mg-open-now" aria-label="Open de schatkist"><img src="melding/schatkist-kist.webp" alt=""></button>' +
+      '<button class="cg-chest" id="coChest" data-glans="1" data-act="mg-open-now" aria-label="Open de schatkist"></button>' +
       '<div class="cg-info"><p class="co-sub" id="coSub" aria-live="polite">Tik op de kist of wacht even…</p>' +
       '<div class="co-game" id="coGame" style="visibility:hidden"><span><b>Minigame: ' + MG_NAME[gm] + "</b><small>" + mgBlurb(gm) + "</small></span></div></div>" +
       '<button class="cg-gem" data-act="mg-open-now" id="coBtn"><span>Open de schatkist</span></button>' +
