@@ -9162,7 +9162,7 @@ return exports;})();
     stopTimer(); mgClear(); idleStop();
     if (screen !== "rad") { clearTimeout(radCpuT); radCpuT = null; if (radNet || rad && rad.online) { radNetLeave(); rad = null; } }
     document.body.className = "";
-    if (screen !== "journey") chestPopupDone = {};
+    if (screen !== "journey") { chestPopupDone = {}; const cr = document.getElementById("chestRem"); if (cr) cr.remove(); }
     if (screen !== "result" && screen !== "chestopen" && screen !== "minigame") { const cel = document.getElementById("celebrate"); if (cel) cel.remove(); }
     const inDuelQuiz = screen === "quiz" && quiz && quiz.kind === "duel";
     if (P && P.group && (screen === "group" || screen === "duelresult" || inDuelQuiz)) openGroupSub();
@@ -12552,6 +12552,22 @@ return exports;})();
   }
   /* v262: feestelijke schatkist-pop-up op de kaart (de kisten op de kaart zijn alleen versiering) */
   let chestPopupDone = {};
+  let chestSkip = {};   /* v305: kist die de speler weggetikt heeft: niet meteen weer openen, maar een herinnering tonen */
+  function chestReadyInfo() {
+    const lv = P.mode, LS = landsFor(lv), c = LS[journeyLand === null ? defaultLand() : journeyLand];
+    if (!c || !jLandOpen(lv, c.id)) return null;
+    const n = jCount(lv, c.id);
+    for (let i = 0; i < n; i++) if (jIsMile(i, n) && jChestState(lv, c.id, i, n) === "ready") return { c: c, idx: i, key: lv + ":" + c.id + ":" + i };
+    return null;
+  }
+  function chestReminder() {
+    const old = document.getElementById("chestRem");
+    const inf = screen === "journey" && !landFly && P ? chestReadyInfo() : null;
+    if (!inf || !chestSkip[inf.key] || document.querySelector(".dialog-wrap, #bcel")) { if (old) old.remove(); return; }
+    if (old) return;
+    document.body.insertAdjacentHTML("beforeend", '<div id="chestRem" class="hulp-ban" role="status"><span aria-hidden="true">🎁</span><span><b>Je beloning wacht op je</b></span>' +
+      '<button class="btn gold small" data-act="chest-rem-open" data-cat="' + esc(inf.c.id) + '" data-i="' + inf.idx + '">Open</button></div>');
+  }
   function chestPopupCheck() {
     if (screen !== "journey" || landFly || document.querySelector(".dialog-wrap, #bcel")) return;   /* v293: ook tonen als het land af is en de laatste kist nog klaarstaat (landFlyAfter) */
     const lv = P.mode, LS = landsFor(lv), c = LS[journeyLand === null ? defaultLand() : journeyLand];
@@ -12559,6 +12575,7 @@ return exports;})();
     const n = jCount(lv, c.id); let idx = -1;
     for (let i = 0; i < n; i++) if (jIsMile(i, n) && jChestState(lv, c.id, i, n) === "ready") { idx = i; break; }
     const key = lv + ":" + c.id + ":" + idx;
+    if (idx >= 0 && chestSkip[key]) { chestReminder(); return; }
     if (idx < 0 || chestPopupDone[key]) return;
     chestPopupDone[key] = true;
     /* v294: geen pop-up met knop meer: de schatkist gaat vanzelf open (het openscherm opent hem na een paar tellen) */
@@ -15017,7 +15034,7 @@ return exports;})();
       case "dash-city": play("click"); cityDialog(); break;
       case "dash-hijri": play("click"); hijriDialog(); break;
       case "journey": play("click"); landFly = null; if (!voiceOnce.reis) { voiceOnce.reis = 1; voice("reis", undefined, 500); } stopTimer(); journeyReturn = false; journeyLand = null; screen = "journey"; render(); break;
-      case "journey-back": { const fromRB = screen === "rad" || screen === "bazaar"; if (screen === "rad" && (radNet || rad && rad.online)) { radNetLeave(); rad = null; } play("click"); stopTimer(); if (mg && mg.saved) flyerPending = true; screen = fromRB ? (lastRoot || "journey") : "journey"; render(); break; }
+      case "journey-back": { if (mg && !mg.saved && mg.catId !== undefined && (screen === "chestopen" || screen === "minigame")) chestSkip[mg.level + ":" + mg.catId + ":" + mg.i] = true; const fromRB = screen === "rad" || screen === "bazaar"; if (screen === "rad" && (radNet || rad && rad.online)) { radNetLeave(); rad = null; } play("click"); stopTimer(); if (mg && mg.saved) flyerPending = true; screen = fromRB ? (lastRoot || "journey") : "journey"; render(); break; }
       case "journey-land": play("click"); journeyLand = parseInt(el.dataset.i, 10); render(); break;
       case "journey-level": {
         const jc = el.dataset.cat, ji = parseInt(el.dataset.i, 10);
@@ -15042,6 +15059,7 @@ return exports;})();
       case "bonus-game": openBonus(el.dataset.cat); break;
       case "puz-open": puzOpenGame(el.dataset.cat); break;
       case "mg-open-now": chestOpenNow(); break;
+      case "chest-rem-open": { const cr = document.getElementById("chestRem"); const cat = el.dataset.cat, ci = parseInt(el.dataset.i, 10); if (cr) cr.remove(); delete chestSkip[P.mode + ":" + cat + ":" + ci]; openChest(cat, ci); break; }
       case "mg-start": startMinigame(); break;
       case "rad": play("click"); rad = null; radNet = null; screen = "rad"; radGrpCheck(); render(); break;
       case "rad-inv-later": { radAlQueue = radAlNow; radAlertHide(); play("click"); break; }
