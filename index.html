@@ -14053,7 +14053,7 @@ return exports;})();
     const bg = kosmosOn() ? "#060a22" : "linear-gradient(180deg," + tth.near + " 0%," + tth.near + " 22%," + fth.sky[0] + " 78%," + fth.sky[0] + " 100%)";
     /* v260: staat je avatar nog onder een open poort? Dan kun je op de poort tikken en loop je er zelf doorheen */
     const tap = open && journeyLand !== null && journeyLand < k;
-    const nachtPoortK = to.id === "ihsan" && lv !== "beginner" && !kosmosOn();   /* Land 6 Gevorderd/Ervaren: het rechte wegstuk boven het bord hoort bij het vorige land en sluit nergens op aan */
+    const nachtPoortK = to.id === "ihsan" && !kosmosOn();   /* Land 6 (alle niveaus): het rechte wegstuk boven het bord hoort bij het vorige land en sluit nergens op aan */
     return '<div class="jl-gate' + (open ? " open" : "") + (tap ? " tap" : "") + (nachtPoortK ? " jg-nacht" : "") + '" data-to="' + k + '" style="background:' + bg + '" ' + (tap ? 'data-act="gate-go" role="button" tabindex="0"' : 'role="img"') + ' aria-label="Poort van Jannah naar Land ' + (k + 1) + ": " + esc(to.title) + (tap ? ", open. Tik om door de poort te lopen" : open ? ", open" : ", dicht. Haal eerst alle levels van " + esc(from.title)) + '">' +
       '<span class="jg-road" aria-hidden="true"></span><span class="jg-sign"><b>Land ' + (k + 1) + ": " + esc(to.title) + "</b><small>" + (tap ? "Open! Tik op de poort" : open ? "Open! Loop door de poort" : "Haal alle levels van Land " + k) + "</small></span>" + svg + "</div>";
   }
