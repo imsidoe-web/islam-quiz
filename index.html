@@ -8714,6 +8714,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v313", t: "Ranglijst-venster: bij andere spelers staan geen nullen meer voor edelstenen en munten zolang hun cijfers er nog niet zijn." },
     { v: "v312", t: "Ranglijst-venster op de reiskaart: halverwege en aan het einde van elk land zie je je plek bij andere spelers, met edelstenen, munten, punten en je nieuwe badge." },
     { v: "v311", t: "Nieuw schatkist-scherm in de glans-stijl met het lettertype Berkshire Swash, en een herinnering \u201cJe beloning wacht op je\u201d als je de kist wegtikt." },
     { v: "v299", t: "Medespelers staan weer op de kaart van elk land, niet alleen in het land waar jij bent." },
@@ -12636,7 +12637,8 @@ return exports;})();
   }
   function rankRow(it, i, rankNum) {
     const av = '<span class="rk-av">' + gbAvatar(it.name, it.url, it.user_id, it.avId) + "</span>";
-    const chip = function (ic, v) { return v == null ? "" : '<span class="rk-st">' + ic + "<b>" + v + "</b></span>"; };
+    const hide = !it.me && !(it.gems > 0 || it.coins > 0);   /* v313: bij anderen geen 0 tonen zolang hun cijfers nog niet zijn doorgegeven */
+    const chip = function (ic, v) { return v == null || hide ? "" : '<span class="rk-st">' + ic + "<b>" + v + "</b></span>"; };
     return '<div class="rk-row' + (it.me ? " me" : "") + '" data-i="' + i + '" style="--i:' + i + '"><b class="rk-n">' + rankNum + "</b>" + av +
       '<span class="rk-nm">' + (it.me ? "Jij" : esc(it.name)) + (it.me ? "<small></small>" : "") + "</span>" +
       chip(gemSvg(18), it.gems) + chip(coinImg(18), it.coins) + '<span class="rk-pt">' + it.pts + "</span></div>";
