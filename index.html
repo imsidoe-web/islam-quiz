@@ -10651,7 +10651,7 @@ return exports;})();
     return c;
   }
   /* slingerend pad: x volgt een sinus, y loopt omhoog; ruim genoeg voor 15 levels */
-  const L6_ROUTE = { 10: [[235, 722], [125, 676], [235, 630], [125, 584], [180, 540], [180, 262], [255, 222], [110, 178], [235, 140], [130, 112]], 5: [[230, 722], [110, 640], [180, 540], [180, 262], [255, 150]] };   /* Land 6 (proef): onder de poort van Ihsan staan geen levels; het pad loopt er recht doorheen, van onder naar boven */
+  const L6_ROUTE = { 10: [[220, 722], [280, 664], [164, 606], [76, 548], [171, 490], [283, 432], [205, 322], [86, 316], [124, 258], [260, 200]], 5: [[220, 722], [280, 610], [164, 498], [70, 282], [235, 200]] };   /* Land 6 (proef): zelfde route als altijd, alleen het level dat onder de kroon van de poort viel staat nu hoger, boven de boog */
   function jLayout(n, catId) {
     if (catId === "ihsan" && L6_ROUTE[n]) return L6_ROUTE[n].map(function (q) { return { x: q[0], y: q[1] }; });
     const bottom = 722, top = 112, step = Math.min(n < 10 ? 112 : 58, (bottom - top) / Math.max(1, n - 1)), pts = [];   /* Beginner (weinig levels): levels verder uit elkaar, route loopt tot ver omhoog */
@@ -13196,7 +13196,7 @@ return exports;})();
   }
 
   /* Land 6 (proef): stille nacht met glanzende palmen (grootte volgt de diepte); de poort staat op de voorgrond, anders snijdt de heuvel hem af */
-  function nachtPoortSvg() { const q = nachtPoort(); return gIhsanPoort(q[0], q[1], q[2]) + lbl(q[0], q[1] - q[2] * 320 / 295 - 6, "Ihsan"); }
+  function nachtPoortSvg() { const q = nachtPoort(), zij = nachtStops.length >= 10; return gIhsanPoort(q[0], q[1], q[2]) + (zij ? lbl(q[0] - q[2] / 2 - 22, q[1] - 26, "Ihsan") : lbl(q[0], q[1] - q[2] * 320 / 295 - 6, "Ihsan")); }   /* Ervaren: label links naast de poort, want daarboven staat een level */
   function L6glansFront(th) {
     /* nachtbos: de bomen zitten in de achtergrond; hier alleen de poort van Ihsan, het label en een paar lichtjes */
     if (glansBeg) return nachtPoortSvg() +
@@ -13814,7 +13814,6 @@ return exports;})();
   }
   function nachtPoort() {   /* grote poort midden in de route, op het grasveld langs de vijver: het stuk pad tussen twee levels loopt er dwars doorheen */
     const n = nachtStops.length, m = Math.max(0, (n - 1) >> 1), a = nachtStops[m] || { x: 180, y: 480 }, b = nachtStops[m + 1] || a, W = n < 10 ? 170 : 130;
-    if (L6_ROUTE[n]) return [180, 488, 170];   /* de route loopt precies door het midden van de poort */
     return [Math.round((a.x + b.x) / 2), 488, W];
   }
   function nachtSpots() { return P && P.mode === "beginner" ? { lant: [264, 492, 46], poort: nachtPoort() } : { lant: [34, 480, 48], poort: nachtPoort() }; }
@@ -13829,6 +13828,7 @@ return exports;})();
       if (near) continue;
       if (x > L[0] - L[2] / 2 - 54 && x < L[0] + L[2] / 2 + 54 && y > L[1] - lh - 54 && y < L[1] + 30) continue;
       if (x > Q[0] - Q[2] / 2 - 30 && x < Q[0] + Q[2] / 2 + 30 && y > Q[1] - qh - 54 && y < Q[1] + 30) continue;
+      if (stops.length >= 10 && Math.abs(x - (Q[0] - Q[2] / 2 - 22)) < 66 && Math.abs(y - (Q[1] - 26)) < 52) continue;   /* niet over het Ihsan-label naast de poort */
       let ok = true; for (let i = 0; i < stops.length; i++) { if (Math.hypot(x - stops[i].x, y - stops[i].y) < 76) { ok = false; break; } }
       if (!ok) continue;
       const d = Math.hypot(x - st.x, y - st.y); if (d < bd) { bd = d; best = { x: x, y: y }; }
