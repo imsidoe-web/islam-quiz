@@ -10651,7 +10651,7 @@ return exports;})();
     return c;
   }
   /* slingerend pad: x volgt een sinus, y loopt omhoog; ruim genoeg voor 15 levels */
-  const L6_ROUTE = { 10: [[220, 722], [280, 664], [164, 606], [76, 548], [171, 490], [283, 432], [205, 322], [86, 316], [124, 258], [260, 200]], 5: [[220, 722], [280, 610], [164, 498], [70, 282], [235, 200]] };   /* Land 6 (proef): zelfde route als altijd, alleen het level dat onder de kroon van de poort viel staat nu hoger, boven de boog */
+  const L6_ROUTE = { 10: [[220, 722], [280, 664], [164, 606], [76, 548], [171, 490], [283, 432], [205, 322], [86, 316], [124, 258], [260, 200]] };   /* Land 6 (proef): zelfde route als altijd, alleen het level dat onder de kroon van de poort viel staat nu hoger, boven de boog */
   function jLayout(n, catId) {
     if (catId === "ihsan" && L6_ROUTE[n]) return L6_ROUTE[n].map(function (q) { return { x: q[0], y: q[1] }; });
     const bottom = 722, top = 112, step = Math.min(n < 10 ? 112 : 58, (bottom - top) / Math.max(1, n - 1)), pts = [];   /* Beginner (weinig levels): levels verder uit elkaar, route loopt tot ver omhoog */
@@ -13198,6 +13198,13 @@ return exports;})();
   /* Land 6 (proef): stille nacht met glanzende palmen (grootte volgt de diepte); de poort staat op de voorgrond, anders snijdt de heuvel hem af */
   function nachtPoortSvg() { const q = nachtPoort(), zij = nachtStops.length >= 10; return gIhsanPoort(q[0], q[1], q[2]) + (zij ? lbl(q[0] - q[2] / 2 - 22, q[1] - 26, "Ihsan") : lbl(q[0], q[1] - q[2] * 320 / 295 - 6, "Ihsan")); }   /* Ervaren: label links naast de poort, want daarboven staat een level */
   function L6glansFront(th) {
+    if (!nachtOn) {   /* Beginner: oude look met palmen en poort op de voorgrond */
+      const pk = function (y) { return Math.round((0.45 + (y - 290) * 0.00115) * 100) / 100; };
+      return groundFlowers() + gIhsanPoort(312, 470, 90) + lbl(312, 366, "Ihsan") +
+        palm(345, 300, pk(300), true) + palm(8, 339, pk(339), false) + palm(0, 640, pk(640), false) +
+        lantern(24, 470, "#ffb703", 0.7) +
+        star8(60, 640, 9, "#ffd54f", 0.2) + sparkle(120, 700, 5, .2) + sparkle(60, 560, 5, .9);
+    }
     /* nachtbos: de bomen zitten in de achtergrond; hier alleen de poort van Ihsan, het label en een paar lichtjes */
     if (glansBeg) return "" +
       sparkle(60, 640, 5, .2) + sparkle(120, 560, 5, .9) + sparkle(40, 420, 4, .5);
@@ -13315,8 +13322,8 @@ return exports;})();
       expert: { sky: ["#0d1030", "#25296a", "#6a4f9a", "#d9a46b"], far: "#4b3f86", mid: "#3a2f70", near: "#2a225a", meadow: "#3f9a72", meadow2: "#2a7a58", water: "#4f86d9", water2: "#a8c8ff", leaf: "#2fae78", leaf2: "#1b8a5a", trunk: "#5a3b26", path: "#f3e6d0", edge: "#a88fd0", wall: "#efe6ff", dome: "#c9a6ff", day: false },
     },
     sky: function (th) { return skyNight(th) + star8(330, 44, 8, "#ffd54f", 0) + star8(210, 92, 6, "#ffffff", .6) + star8(96, 150, 7, "#e6d6ff", 1.1) + star8(280, 160, 5, "#ffffff", .3); },
-    tl: function (th) { if (glansOn) return ""; return domeMosque(72, 206, 1.05, th.wall, th.dome, "#ffe27a", true) + lbl(72, 226, "Stilte"); },
-    tr: function (th) { if (glansOn) { const m = nachtSpots().lant; return gNachtGrond(m[0], m[1] - 2, m[2] * .42, 5) + gLantaarnpaar(m[0], m[1], m[2]) + lbl(m[0], m[1] - m[2] * 320 / 261 - 6, "Licht"); } return lantern(296, 190, "#ffd54f", 1.5) + lantern(334, 198, "#c9a6ff", 1.2) + lbl(316, 226, "Licht"); },
+    tl: function (th) { if (nachtOn) return ""; if (glansOn) return gNachtmoskee(62, 226, 88) + lbl(62, 118, "Stilte"); return domeMosque(72, 206, 1.05, th.wall, th.dome, "#ffe27a", true) + lbl(72, 226, "Stilte"); },
+    tr: function (th) { if (glansOn && !nachtOn) return gLantaarnpaar(330, 214, 52) + lbl(330, 142, "Licht"); if (glansOn) { const m = nachtSpots().lant; return gNachtGrond(m[0], m[1] - 2, m[2] * .42, 5) + gLantaarnpaar(m[0], m[1], m[2]) + lbl(m[0], m[1] - m[2] * 320 / 261 - 6, "Licht"); } return lantern(296, 190, "#ffd54f", 1.5) + lantern(334, 198, "#c9a6ff", 1.2) + lbl(316, 226, "Licht"); },
     mr: function (th) { if (glansOn) return ""; return archGate(312, 452, 1, "#8e7cc3") + lbl(312, 470, "Ihsan"); },
     front: function (th) { if (glansOn) return L6glansFront(th); return pondsAll(th) + groundFlowers() + cypress(20, 590, 0.9) + cypress(342, 305, 0.6) + cypress(150, 300, 0.55) + cypress(330, 640, 0.8) + commonProps(th) + lantern(100, 700, "#ffd54f", 1) + star8(60, 640, 9, "#ffd54f", 0.2) + star8(300, 700, 8, "#e6d6ff", .7) + star8(190, 430, 7, "#ffdd9a", 1.2); },
   };
@@ -13374,7 +13381,7 @@ return exports;})();
     const level = P.mode, L = LANDS[c.id] || LANDS.profeten, th = L.pal[level] || L.pal.junior, J = journeyStops(level, c), stops = J.stops, n = stops.length;
     curTh = th;
     const kos = kosmosOn();
-    const nacht = c.id === "ihsan" && !kos; nachtOn = nacht; nachtMemo = {}; nachtStops = stops;   /* Land 6 (proef): nachtbos-achtergrond uit 3 plaatjes, route in nachtgroen en goud */
+    const nacht = c.id === "ihsan" && !kos && level !== "beginner"; nachtOn = nacht; nachtMemo = {}; nachtStops = stops;   /* Land 6 (proef): nachtbos-achtergrond uit 3 plaatjes, route in nachtgroen en goud */
     const uid = "j" + level[0] + String(c.id).replace(/[^a-z0-9]/gi, "");
     let h = '<svg class="jsvg' + (glansLandIds.indexOf(c.id) >= 0 && !kos ? " rg-map" : "") + (glansLandIds.indexOf(c.id) >= 0 && !kos ? " rg-snd" : "") + '" viewBox="0 0 360 800" role="group" aria-label="Routekaart ' + esc(c.title) + ", " + n + ' levels" xmlns="http://www.w3.org/2000/svg"><defs>' +
       '<linearGradient id="' + uid + 'sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + th.sky[0] + '"/><stop offset=".35" stop-color="' + th.sky[1] + '"/><stop offset=".7" stop-color="' + th.sky[2] + '"/><stop offset="1" stop-color="' + th.sky[3] + '"/></linearGradient>' +
