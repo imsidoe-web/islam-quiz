@@ -13810,11 +13810,11 @@ return exports;})();
     const m = stops.filter(function (x) { return x.mile && !x.last; });
     return m.length > 0 && m[Math.floor((m.length - 1) / 2)].i === st.i;
   }
-  function nachtPoort() {   /* grote poort midden in de route: een level staat onder de boog en het pad loopt er recht doorheen */
-    const n = nachtStops.length, st = nachtStops[Math.max(0, (n - 1) >> 1)] || { x: 180, y: 480 }, W = n < 10 ? 170 : 130;
-    return [Math.round(st.x), Math.round(st.y + W * 0.42), W];
+  function nachtPoort() {   /* grote poort midden in de route, op het grasveld langs de vijver: het stuk pad tussen twee levels loopt er dwars doorheen */
+    const n = nachtStops.length, m = Math.max(0, (n - 1) >> 1), a = nachtStops[m] || { x: 180, y: 480 }, b = nachtStops[m + 1] || a, W = n < 10 ? 170 : 130;
+    return [Math.round((a.x + b.x) / 2), 488, W];
   }
-  function nachtSpots() { return P && P.mode === "beginner" ? { lant: [38, 492, 46], poort: nachtPoort() } : { lant: [34, 480, 48], poort: nachtPoort() }; }
+  function nachtSpots() { return P && P.mode === "beginner" ? { lant: [264, 492, 46], poort: nachtPoort() } : { lant: [34, 480, 48], poort: nachtPoort() }; }
   function nachtChestPos(st, stops) {
     if (nachtMemo[st.i]) return nachtMemo[st.i];
     const sp = nachtSpots(), L = sp.lant, Q = sp.poort, lh = L[2] * 320 / 261, qh = Q[2] * 320 / 295;
