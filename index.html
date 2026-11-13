@@ -1024,7 +1024,8 @@ a.btn.block { display: flex; margin-top: 14px; }
 .pz-clue b { color: #f6ecc8; }
 .pz-gw { display: flex; justify-content: center; padding: 14px 8px 0; }
 .pz-grid { display: grid; gap: 2px; width: min(96vw, 440px); }
-.pz-cell { position: relative; aspect-ratio: 1; } .pz-cell.blk { visibility: hidden; }
+.pz-cell { position: relative; aspect-ratio: 1; min-width: 0; min-height: 0; } .pz-cell.blk { visibility: hidden; }
+.pz-gw .pz-grid { box-sizing: border-box; max-width: 100%; aspect-ratio: auto; } .pz-cell input { min-width: 0; }
 .pz-cell input { width: 100%; height: 100%; box-sizing: border-box; border: 1.5px solid #cdbf93; border-radius: 5px; background: #fff; text-align: center; font: inherit; font-size: clamp(16px, 4.4vw, 20px); font-weight: 800; text-transform: uppercase; padding: 0; color: #2b2b2b; caret-color: transparent; }
 .pz-cell input:focus { outline: none; }
 .pz-cell.word input { background: #f6ecc8; } .pz-cell.cur input { background: #c9a227; color: #fff; border-color: #c9a227; }
@@ -8719,6 +8720,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v316", t: "Kruiswoordpuzzel: het rooster past nu altijd binnen het scherm, ook bij brede puzzels (er stak een vakje buiten beeld)." },
     { v: "v315", t: "Kruiswoordpuzzel: de knop \u201cToon oplossing\u201d is weg, zodat de puzzel niet meer in \u00e9\u00e9n tik is op te lossen. Hint (1 letter) blijft." },
     { v: "v314", t: "Halaqa Spark: bij het eerste gebruik kies je Docent, Ouder of Gewoon iemand. In Beheer zie je nu hoeveel quizzen, live spellen, huiswerkopdrachten en spelers er zijn, zonder namen." },
     { v: "v313", t: "Ranglijst-venster: bij andere spelers staan geen nullen meer voor edelstenen en munten zolang hun cijfers er nog niet zijn." },
@@ -13914,7 +13916,7 @@ return exports;})();
     document.body.appendChild(ov); document.body.classList.add("bonus-on");
     const app = document.getElementById("app"); if (app) app.setAttribute("aria-hidden", "true");
     const q = function (id) { return ov.querySelector("#" + id); };
-    const grid = q("pzGrid"); grid.style.gridTemplateColumns = "repeat(" + D.w + ", 1fr)";
+    const grid = q("pzGrid"); grid.style.gridTemplateColumns = "repeat(" + D.w + ", minmax(0, 1fr))";
     const firsts = {}; if (first) words.forEach(function (w) { firsts[w.r + "," + w.c] = 1; });
     const keysOf = function (w) { const o = []; for (let i = 0; i < w.a.length; i++) o.push(w.d === "A" ? w.r + "," + (w.c + i) : (w.r + i) + "," + w.c); return o; };
     const wordAt = function (k, d) { const p = k.split(",").map(Number); return words.filter(function (w) { return w.d === d && (d === "A" ? w.r === p[0] && p[1] >= w.c && p[1] < w.c + w.a.length : w.c === p[1] && p[0] >= w.r && p[0] < w.r + w.a.length); })[0]; };
