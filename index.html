@@ -1049,17 +1049,17 @@ body.bonus-on { overflow: hidden; }
 .cg-rays { position: absolute; z-index: 0; left: 50%; top: 42%; width: 160%; aspect-ratio: 1; margin: -80% 0 0 -80%; background: repeating-conic-gradient(rgba(255,226,140,.16) 0 9deg, transparent 9deg 24deg); animation: coSpin 24s linear infinite; pointer-events: none; }
 .cg-card { position: relative; z-index: 1; width: min(92vw, 380px); aspect-ratio: 770 / 1308; container-type: inline-size; background: url(melding/schatkist-venster.webp) center / 100% 100% no-repeat; filter: drop-shadow(0 14px 22px rgba(0,0,0,.45)); }
 .cg-card > * { position: absolute; margin: 0; }
-.cg-title { left: 17.7%; width: 67.5%; top: 9.3%; height: 11.9%; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 5.3cqw; line-height: 1.05; color: #5a3d00; text-shadow: 0 1px 0 rgba(255,255,255,.7); }
+.cg-title { left: 17.7%; width: 67.5%; top: 9.3%; height: 11.9%; display: flex; align-items: center; justify-content: center; text-align: center; font-family: "Lilita One", "Nunito", sans-serif; font-weight: 400; letter-spacing: .02em; font-size: 6.3cqw; line-height: 1; color: #6b3f00; text-shadow: 0 1.5px 0 rgba(255,248,220,.9), 0 3px 3px rgba(90,50,0,.25); }
 .cg-chest { appearance: none; border: 0; background: transparent; padding: 0; cursor: pointer; left: 10%; width: 79.5%; top: 30%; height: 31%; }
 .cg-chest.opened::after { content: ""; position: absolute; inset: -6% -4%; background: radial-gradient(circle, rgba(255,226,120,.85), rgba(255,226,120,0) 62%); mix-blend-mode: screen; pointer-events: none; animation: cgGlow 1.4s ease-out both; }
 @keyframes cgGlow { 0% { opacity: 0; transform: scale(.6); } 35% { opacity: 1; } 100% { opacity: .55; transform: scale(1.05); } }
 .cg-info { left: 12%; width: 76%; top: 61.5%; height: 9.6%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #4a3300; gap: .8cqw; }
-.cg-info .co-sub { font-size: 4.3cqw; }
+.cg-info .co-sub { font-size: 4.2cqw; }
 .cg-info .co-game { background: none; padding: 0; justify-content: center; text-align: center; animation: pop .5s ease both; }
-.cg-info .co-game b { font-size: 4.6cqw; } .cg-info .co-game small { font-size: 3.5cqw; line-height: 1.2; }
-.cg-gem { appearance: none; border: 0; cursor: pointer; left: 18.7%; width: 62.6%; top: 71.9%; height: 13.9%; background: transparent; display: flex; align-items: center; justify-content: center; padding: 0 6%; font: inherit; font-weight: 900; font-size: 5.2cqw; color: #fff; text-shadow: 0 2px 3px rgba(0,60,30,.85); }
+.cg-info .co-game b { display: block; font-family: "Lilita One", "Nunito", sans-serif; font-weight: 400; letter-spacing: .02em; font-size: 5cqw; color: #6b3f00; } .cg-info .co-game small { display: block; font-size: 3.4cqw; line-height: 1.2; }
+.cg-gem { appearance: none; border: 0; cursor: pointer; left: 18.7%; width: 62.6%; top: 71.9%; height: 13.9%; background: transparent; display: flex; align-items: center; justify-content: center; padding: 0 6%; font-family: "Lilita One", "Nunito", sans-serif; font-weight: 400; letter-spacing: .02em; font-size: 5.4cqw; white-space: nowrap; line-height: 1; color: #fff; -webkit-text-stroke: 1.2cqw #0a5a35; paint-order: stroke fill; text-shadow: 0 2px 0 #0a5a35, 0 3px 4px rgba(0,50,25,.5); }
 .cg-gem:active { transform: scale(.97); }
-.cg-later { appearance: none; border: 0; background: none; left: 25%; width: 50%; top: 86.6%; height: 4.6%; cursor: pointer; font: inherit; font-weight: 800; font-size: 4.2cqw; color: #0d4a43; text-decoration: underline; }
+.cg-later { appearance: none; border: 0; background: none; left: 25%; width: 50%; top: 86.6%; height: 4.6%; cursor: pointer; font-family: "Lilita One", "Nunito", sans-serif; font-weight: 400; letter-spacing: .03em; font-size: 4.8cqw; color: #0d4a43; text-decoration: underline; }
 .co-stage > * { position: relative; z-index: 1; }
 .co-stage .co-rays { position: absolute; z-index: 0; left: 50%; top: 36%; width: 150%; aspect-ratio: 1; margin: -75% 0 0 -75%; background: repeating-conic-gradient(rgba(255,255,255,.55) 0 9deg, transparent 9deg 24deg); animation: coSpin 18s linear infinite; border-radius: 50%; -webkit-mask-image: radial-gradient(circle, #000 15%, transparent 62%); mask-image: radial-gradient(circle, #000 15%, transparent 62%); }
 @keyframes coSpin { to { transform: rotate(360deg); } }
