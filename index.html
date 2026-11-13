@@ -13815,7 +13815,7 @@ return exports;})();
   }
   function nachtPoort() {   /* grote poort midden in de route, op het grasveld langs de vijver: het stuk pad tussen twee levels loopt er dwars doorheen */
     const n = nachtStops.length, m = Math.max(0, (n - 1) >> 1), a = nachtStops[m] || { x: 180, y: 480 }, b = nachtStops[m + 1] || a, W = n < 10 ? 170 : 130;
-    return [Math.round((a.x + b.x) / 2), 488, W];
+    return [Math.round((a.x + b.x) / 2) + 18, 488, W];
   }
   function nachtSpots() { return P && P.mode === "beginner" ? { lant: [264, 492, 46], poort: nachtPoort() } : { lant: [34, 480, 48], poort: nachtPoort() }; }
   function nachtChestPos(st, stops) {
