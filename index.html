@@ -10651,7 +10651,7 @@ return exports;})();
     return c;
   }
   /* slingerend pad: x volgt een sinus, y loopt omhoog; ruim genoeg voor 15 levels */
-  const L6_ROUTE = { 10: [[220, 722], [280, 664], [164, 606], [76, 548], [171, 490], [283, 432], [205, 322], [86, 316], [124, 258], [260, 200]] };   /* Land 6 (proef): zelfde route als altijd, alleen het level dat onder de kroon van de poort viel staat nu hoger, boven de boog */
+  const L6_ROUTE = { 10: [[220, 722], [280, 664], [164, 606], [76, 548], [190, 515], [190, 262], [90, 220], [250, 186], [110, 150], [255, 118]] };   /* Land 6 (proef): zelfde route als altijd, alleen het level dat onder de kroon van de poort viel staat nu hoger, boven de boog */
   function jLayout(n, catId) {
     if (catId === "ihsan" && L6_ROUTE[n]) return L6_ROUTE[n].map(function (q) { return { x: q[0], y: q[1] }; });
     const bottom = 722, top = 112, step = Math.min(n < 10 ? 112 : 58, (bottom - top) / Math.max(1, n - 1)), pts = [];   /* Beginner (weinig levels): levels verder uit elkaar, route loopt tot ver omhoog */
@@ -13821,7 +13821,7 @@ return exports;})();
     return m.length > 0 && m[Math.floor((m.length - 1) / 2)].i === st.i;
   }
   function nachtPoort() {   /* grote poort midden in de route, op het grasveld langs de vijver: het stuk pad tussen twee levels loopt er dwars doorheen */
-    const n = nachtStops.length, m = Math.max(0, (n - 1) >> 1), a = nachtStops[m] || { x: 180, y: 480 }, b = nachtStops[m + 1] || a, W = n < 10 ? 170 : 130;
+    const n = nachtStops.length, m = Math.max(0, (n - 1) >> 1), a = nachtStops[m] || { x: 180, y: 480 }, b = nachtStops[m + 1] || a, W = 170;
     return [Math.round((a.x + b.x) / 2) + 18, 488, W];
   }
   function nachtSpots() { return P && P.mode === "beginner" ? { lant: [264, 492, 46], poort: nachtPoort() } : { lant: [34, 480, 48], poort: nachtPoort() }; }
