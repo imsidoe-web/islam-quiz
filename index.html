@@ -2767,6 +2767,7 @@ html.proef-test .j-social, html.proef-test .j-marker { display: none !important;
 @keyframes jgHint { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
 @media (prefers-reduced-motion: reduce) { .jl-gate.tap .jg-sign { animation: none; } }
 .jg-road { position: absolute; left: 50%; top: 0; bottom: 0; width: 22px; margin-left: -11px; border-radius: 11px; background: #fff6dc; box-shadow: 0 0 0 4px rgba(255,255,255,.35); background-image: repeating-linear-gradient(180deg, transparent 0 10px, #e8b84a 10px 13px); background-size: 4px 100%; background-repeat: repeat-y; background-position: center; }
+.jl-gate.jg-nacht .jg-road { top: auto; height: 290px; }   /* weg alleen onder en achter het bord: het stuk erboven is weggesneden */
 .jg-sign { position: relative; z-index: 2; margin-bottom: -4px; padding: 5px 14px; border-radius: 12px; background: #fbf3df; color: #12362a; border: 3px solid #e8b84a; box-shadow: 0 4px 10px rgba(0,0,0,.25); text-align: center; max-width: 92%; }
 .jg-sign b { display: block; font-size: .85rem; font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .jg-sign small { display: block; font-size: .68rem; font-weight: 700; color: #7a5a1c; }
@@ -14052,7 +14053,8 @@ return exports;})();
     const bg = kosmosOn() ? "#060a22" : "linear-gradient(180deg," + tth.near + " 0%," + tth.near + " 22%," + fth.sky[0] + " 78%," + fth.sky[0] + " 100%)";
     /* v260: staat je avatar nog onder een open poort? Dan kun je op de poort tikken en loop je er zelf doorheen */
     const tap = open && journeyLand !== null && journeyLand < k;
-    return '<div class="jl-gate' + (open ? " open" : "") + (tap ? " tap" : "") + '" data-to="' + k + '" style="background:' + bg + '" ' + (tap ? 'data-act="gate-go" role="button" tabindex="0"' : 'role="img"') + ' aria-label="Poort van Jannah naar Land ' + (k + 1) + ": " + esc(to.title) + (tap ? ", open. Tik om door de poort te lopen" : open ? ", open" : ", dicht. Haal eerst alle levels van " + esc(from.title)) + '">' +
+    const nachtPoortK = to.id === "ihsan" && lv !== "beginner" && !kosmosOn();   /* Land 6 Gevorderd/Ervaren: het rechte wegstuk boven het bord hoort bij het vorige land en sluit nergens op aan */
+    return '<div class="jl-gate' + (open ? " open" : "") + (tap ? " tap" : "") + (nachtPoortK ? " jg-nacht" : "") + '" data-to="' + k + '" style="background:' + bg + '" ' + (tap ? 'data-act="gate-go" role="button" tabindex="0"' : 'role="img"') + ' aria-label="Poort van Jannah naar Land ' + (k + 1) + ": " + esc(to.title) + (tap ? ", open. Tik om door de poort te lopen" : open ? ", open" : ", dicht. Haal eerst alle levels van " + esc(from.title)) + '">' +
       '<span class="jg-road" aria-hidden="true"></span><span class="jg-sign"><b>Land ' + (k + 1) + ": " + esc(to.title) + "</b><small>" + (tap ? "Open! Tik op de poort" : open ? "Open! Loop door de poort" : "Haal alle levels van Land " + k) + "</small></span>" + svg + "</div>";
   }
   /* welk land staat midden in beeld? dan past de balk zich aan */
