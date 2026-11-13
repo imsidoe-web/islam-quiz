@@ -2758,6 +2758,7 @@ html.proef-test .j-social, html.proef-test .j-marker { display: none !important;
 /* zachte overgang: de randen van de landen vervagen in de poort */
 .jl-land.ft .jsvg { -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 74px); mask-image: linear-gradient(180deg, transparent 0, #000 74px); }
 .jl-land.fb .jsvg { -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 74px), transparent 100%); mask-image: linear-gradient(180deg, #000 calc(100% - 74px), transparent 100%); }
+.jl-land .jsvg.j-nacht, .jl-land.fb .jsvg.j-nacht, .jl-land.ft .jsvg.j-nacht { -webkit-mask-image: linear-gradient(180deg, transparent 0, rgba(0,0,0,.55) 70px, #000 150px, #000 calc(100% - 74px), transparent 100%); mask-image: linear-gradient(180deg, transparent 0, rgba(0,0,0,.55) 70px, #000 150px, #000 calc(100% - 74px), transparent 100%); }   /* Land 6 (proef): de lantaarnhemel loopt zacht uit in de donkere balk bovenin, geen harde rand */
 .jl-land.ft.fb .jsvg { -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 74px, #000 calc(100% - 74px), transparent 100%); mask-image: linear-gradient(180deg, transparent 0, #000 74px, #000 calc(100% - 74px), transparent 100%); }
 .jl-land.jl-locked .jsvg { filter: saturate(.72) brightness(.95); }
 .jl-gate { position: relative; z-index: 1; height: 420px; margin: -80px 0; padding-bottom: 86px !important; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 6px; overflow: hidden; }
@@ -13418,7 +13419,7 @@ return exports;})();
     const kos = kosmosOn();
     const nacht = c.id === "ihsan" && !kos && level !== "beginner"; nachtOn = nacht; nachtMemo = {}; nachtStops = stops;   /* Land 6 (proef): nachtbos-achtergrond uit 3 plaatjes, route in nachtgroen en goud */
     const uid = "j" + level[0] + String(c.id).replace(/[^a-z0-9]/gi, "");
-    let h = '<svg class="jsvg' + (glansLandIds.indexOf(c.id) >= 0 && !kos ? " rg-map" : "") + (glansLandIds.indexOf(c.id) >= 0 && !kos ? " rg-snd" : "") + '" viewBox="0 0 360 800" role="group" aria-label="Routekaart ' + esc(c.title) + ", " + n + ' levels" xmlns="http://www.w3.org/2000/svg"><defs>' +
+    let h = '<svg class="jsvg' + (nacht ? " j-nacht" : "") + (glansLandIds.indexOf(c.id) >= 0 && !kos ? " rg-map" : "") + (glansLandIds.indexOf(c.id) >= 0 && !kos ? " rg-snd" : "") + '" viewBox="0 0 360 800" role="group" aria-label="Routekaart ' + esc(c.title) + ", " + n + ' levels" xmlns="http://www.w3.org/2000/svg"><defs>' +
       '<linearGradient id="' + uid + 'sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + th.sky[0] + '"/><stop offset=".35" stop-color="' + th.sky[1] + '"/><stop offset=".7" stop-color="' + th.sky[2] + '"/><stop offset="1" stop-color="' + th.sky[3] + '"/></linearGradient>' +
       (kos ? kosDefs(uid) : "") + '<radialGradient id="' + uid + 'done" cx=".35" cy=".3"><stop offset="0" stop-color="' + (kos ? "#fff2b8" : "#7ae6b4") + '"/><stop offset="1" stop-color="' + (kos ? "#e8a33a" : "#14935f") + '"/></radialGradient>' +
       '<radialGradient id="' + uid + 'cur" cx=".35" cy=".3"><stop offset="0" stop-color="' + (kos ? "#d6fffa" : "#fff0a8") + '"/><stop offset="1" stop-color="' + (kos ? "#2bd4c8" : "#f0a02e") + '"/></radialGradient>' +
@@ -14100,7 +14101,7 @@ return exports;})();
     /* v124: één doorlopende reis: alle landen onder elkaar (Land 1 onderaan), met de Poort van Jannah ertussen */
     const topL = LANDS[LS[LS.length - 1].id] || LANDS.profeten, topTh = topL.pal[level] || topL.pal.junior;
     const botL = LANDS[LS[0].id] || LANDS.profeten, botTh = botL.pal[level] || botL.pal.junior;
-    h += '<div class="jmap-scroll jreis"><div class="journey-map" style="background:' + (kosmosOn() ? "#060a22" : "linear-gradient(180deg," + topTh.sky[0] + " 50%," + botTh.near + " 50%)") + '">' + mapHtml + "</div></div>";
+    h += '<div class="jmap-scroll jreis"><div class="journey-map" style="background:' + (kosmosOn() ? "#060a22" : "linear-gradient(180deg," + (LS[LS.length - 1].id === "ihsan" && level !== "beginner" ? "#23263c" : topTh.sky[0]) + " 50%," + botTh.near + " 50%)") + '">' + mapHtml + "</div></div>";
     /* onderste navigatiebalk */
     h += '<nav class="j-nav" aria-label="Hoofdmenu"><div class="jn-in">' +
       '<button class="jn-item" data-act="dash" aria-label="Startscherm"><span class="jn-ic" aria-hidden="true">🏠</span>Start</button>' +
