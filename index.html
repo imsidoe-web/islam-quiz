@@ -13199,9 +13199,9 @@ return exports;})();
   function nachtPoortSvg() { const q = nachtPoort(), zij = nachtStops.length >= 10; return gIhsanPoort(q[0], q[1], q[2]) + (zij ? lbl(q[0] - q[2] / 2 - 22, q[1] - 26, "Ihsan") : lbl(q[0], q[1] - q[2] * 320 / 295 - 6, "Ihsan")); }   /* Ervaren: label links naast de poort, want daarboven staat een level */
   function L6glansFront(th) {
     /* nachtbos: de bomen zitten in de achtergrond; hier alleen de poort van Ihsan, het label en een paar lichtjes */
-    if (glansBeg) return nachtPoortSvg() +
+    if (glansBeg) return "" +
       sparkle(60, 640, 5, .2) + sparkle(120, 560, 5, .9) + sparkle(40, 420, 4, .5);
-    return nachtPoortSvg() +
+    return "" +
       sparkle(120, 700, 5, .2) + sparkle(60, 560, 5, .9) + sparkle(190, 430, 4, 1.2) + sparkle(40, 640, 4, .6);
   }
   /* Land 6 (proef): nachtbos-achtergrond uit drie plaatjes (boven, midden, onder), zacht in elkaar overlopend */
@@ -13427,6 +13427,7 @@ return exports;})();
     segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="' + (S[1] ? "#ffe08a" : th.path) + '" stroke-width="18" stroke-linecap="round"/>'; });
     segs.forEach(function (S) { h += '<path d="' + S[0] + '" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="1 10"/>'; });
     }
+    if (nacht) h += nachtPoortSvg();   /* Land 6 (proef): de poort staat óver het pad: het pad loopt erachter door en komt tussen de pilaren weer tevoorschijn */
     // dagelijkse kist (Quiz van de Dag)
     const dDone = !!P.daily[level][todayStr()];
     if (act) h += '<g class="j-stop j-daily" data-act="start-daily" role="button" tabindex="0" aria-label="Quiz van de Dag' + (dDone ? " (vandaag gespeeld, kom morgen terug voor een nieuwe beloning)" : ": speel vandaag voor een dagbeloning en een bonus op je reeks") + '" style="cursor:pointer">' + (dDone ? "" : '<circle cx="318" cy="748" r="34" fill="#ffe08a" opacity=".5"><animate attributeName="opacity" values=".2;.7;.2" dur="1.4s" repeatCount="indefinite"/></circle>') + (dDone ? "" : sparkle(286, 724, 5, 0.2) + sparkle(352, 730, 4, 0.9) + sparkle(300, 778, 3.5, 1.5)) + '<g class="' + (dDone ? "" : "daily-wiggle") + '">' + chest(318, 752, dDone ? "open" : "closed", 1.3, "daily") + "</g>" + (dDone ? "" : '<g transform="translate(336 716)"><circle r="10" fill="#e8590c" stroke="#fff" stroke-width="2"/><text y="4.5" text-anchor="middle" font-size="12" font-weight="900" fill="#fff">!</text></g>') + lbl(318, 786, dDone ? "Morgen weer" : "Dagbeloning", 10) + "</g>";
