@@ -378,6 +378,7 @@ body.ms-lite.ms-on .ms-wrap.ms-more .ms-hint { animation: none; }
       '<li><b>Huiswerk.</b> Tik bij je quiz op Huiswerk en kies een einddatum. Deel de code met WhatsApp. Leerlingen spelen in hun eigen tempo. Onder Huiswerk zie je de uitslag per leerling en per vraag.</li>' +
       '<li><b>Daarna.</b> Download de uitslag voor Excel, of tik op Nog een keer spelen. Sluit het spel af als je klaar bent.</li></ol>' +
       '<p class="muted">Leerlingen hebben geen account nodig en gebruiken een bijnaam. Jouw naam is niet zichtbaar. Let op: je huiswerk staat in de browser waarmee je het gemaakt hebt. Jij bent zelf verantwoordelijk voor de inhoud van je vragen.</p></details>';
+    if (!klasRol()) h += '<div class="card" id="rolcard"><p><b>Wie ben jij?</b></p><p class="muted" style="margin-top:0">Dit helpt ons te zien voor wie Halaqa Spark wordt gebruikt. Je naam wordt niet bewaard.</p><div class="row"><button class="btn small gold" data-rol="docent" type="button">Docent</button><button class="btn small gold" data-rol="ouder" type="button">Ouder</button><button class="btn small gold" data-rol="prive" type="button">Gewoon iemand</button></div></div>';
     var hs = lsGet(HOST_KEY);
     if (hs) h += '<div class="card"><p><b>Je hebt een lopend spel</b> (code ' + esc(hs.code) + ').</p><div class="row"><button class="btn small gold" id="resume" type="button">Hervatten</button><button class="btn small bad" id="dropgame" type="button">Wissen</button></div></div>';
     if (!quizzes.length) h += '<div class="card"><p>Je hebt nog geen quiz. Tik op <b>+ Nieuwe quiz</b> om te beginnen.</p></div>';
@@ -396,6 +397,7 @@ body.ms-lite.ms-on .ms-wrap.ms-more .ms-hint { animation: none; }
     h += '<div class="disc">' + esc(DISC) + '</div>';
     app.innerHTML = h;
     app.querySelectorAll("[data-hwv]").forEach(function (b) { b.onclick = function () { openHwv(hwList().filter(function (x) { return x.code === b.getAttribute("data-hwv"); })[0]); }; });
+    app.querySelectorAll("[data-rol]").forEach(function (b) { b.onclick = function () { var r = b.getAttribute("data-rol"); lsSet(ROL_KEY, r); telKlas("rol_gekozen", r); show(); }; });
     var rs = document.getElementById("resume");
     if (rs) { rs.onclick = function () { rs.disabled = true; resumeHost().then(function (ok) { if (!ok) { say("Dit spel kon niet worden hervat.", true); rs.disabled = false; } }); }; }
     var dg = document.getElementById("dropgame");
@@ -612,6 +614,7 @@ body.ms-lite.ms-on .ms-wrap.ms-more .ms-hint { animation: none; }
     var p = edit.id ? sb.from("klas_quizzen").update(row).eq("id", edit.id) : sb.from("klas_quizzen").insert(row);
     p.then(function (r) {
       if (r.error) { btn.disabled = false; say("Opslaan lukte niet. Probeer het opnieuw.", true); return; }
+      if (!edit.id) telKlas("quiz_gemaakt");
       edit = null; msg = "Opgeslagen. Barakallahu feek!"; msgErr = false; loadQuizzes();
     });
   }
@@ -623,7 +626,10 @@ body.ms-lite.ms-on .ms-wrap.ms-more .ms-hint { animation: none; }
     signUpUrl: "https://identitytoolkit.googleapis.com/v1/accounts:signUp",
     tokenUrl: "https://securetoken.googleapis.com/v1/token"
   };
-  var AUTH_KEY = "islam-quiz-auth", HOST_KEY = "klas-host", LLN_KEY = "klas-leerling";
+  var AUTH_KEY = "islam-quiz-auth", HOST_KEY = "klas-host", LLN_KEY = "klas-leerling", ROL_KEY = "klas-rol";
+  /* v314: anonieme tellers voor Halaqa Spark: alleen een getal per dag, per soort en per rol (docent, ouder, privé). Geen namen, geen codes, niet gekoppeld aan een persoon. */
+  function klasRol() { var r = lsGet(ROL_KEY); return r === "docent" || r === "ouder" || r === "prive" ? r : ""; }
+  function telKlas(soort, rol) { try { if (sb) sb.rpc("tel_klas", { p_soort: soort, p_rol: rol == null ? klasRol() : rol }).then(function () {}, function () {}); } catch (e) {} }
   var CODE_CHARS = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
   var cloud = { auth: null, pending: null };
   var G = null, L = null, prefill = "", tickT = null;
@@ -1016,6 +1022,7 @@ body.ms-lite.ms-on .ms-wrap.ms-more .ms-hint { animation: none; }
       while (Object.keys(sp).some(function (u) { return u !== auth.uid && sp[u] && sp[u].name && sp[u].name.toLowerCase() === name.toLowerCase(); })) { var suf = " " + n++; name = base.slice(0, 14 - suf.length) + suf; }
       await dbReq("PUT", "klas/" + code + "/spelers/" + auth.uid + "/name", name);
       lsSet(LLN_KEY, { code: code });
+      telKlas(meta.type === "hw" ? "speler_huiswerk" : "speler_live", "");
       startLeerling(code, auth.uid, name);
     } catch (e) { bad("Meedoen lukt nu niet. Controleer je verbinding en probeer opnieuw."); }
   }
@@ -1258,6 +1265,7 @@ body.ms-lite.ms-on .ms-wrap.ms-more .ms-hint { animation: none; }
       var pub = quiz.vragen.map(hwPubQ);
       await dbReq("PUT", "klas/" + code + "/meta", { host: auth.uid, titel: quiz.titel, state: "hw", type: "hw", deadline: deadline, n: quiz.vragen.length, created: Date.now() });
       await dbReq("PUT", "klas/" + code + "/vragen", pub);
+      telKlas("huiswerk_gemaakt");
       var l = hwList(); l.unshift({ code: code, quizId: quiz.id, titel: quiz.titel, deadline: deadline }); lsSet(HW_KEY, l);
       openHwv(l[0]);
     } catch (e) { var b = document.getElementById("hgo"); if (b) b.disabled = false; say("Het huiswerk kon niet worden gemaakt. Staan de Firebase-regels klaar?", true); }
@@ -1338,6 +1346,7 @@ body.ms-lite.ms-on .ms-wrap.ms-more .ms-hint { animation: none; }
       await dbReq("PUT", "klas/" + code + "/vragen", pub);
       lsSet(HOST_KEY, { code: code, quizId: quiz.id });
       attachHost(code, quiz, "lobby", -1, pub, "klassiek", 0, 1);
+      telKlas("live_gestart");
       show();
     } catch (e) { btns.forEach(function (b) { b.disabled = false; }); say("Het spel kon niet starten. Staan de Firebase-regels klaar? (zie de handleiding)", true); }
   }

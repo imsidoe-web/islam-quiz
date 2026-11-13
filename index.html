@@ -8493,7 +8493,7 @@ return exports;})();
   function kdSoeras() { const out = []; if (!QJ) return out; for (let s = 1; s <= 114; s++) if (kdComplete(s)) out.push(s); return out; }
   function qjAuto() { const t = document.getElementById("qjText"); if (t && qjKey) qjSet(qjKey, t.value); }
   /* v233: beheerpagina (alleen beheerder): cijfers komen uit de Supabase-functie beheer_cijfers() */
-  let BH = null, bhBusy = false, bhErr = "", bhAt = null, BN = null, BNerr = false;
+  let BH = null, bhBusy = false, bhErr = "", bhAt = null, BN = null, BNerr = false, BK = null, BKerr = false;
   /* v251: ideeënblok op de beheerpagina (alleen beheerder). De ideeën staan in Supabase (tabel beheer_ideeen) en dus op al je toestellen. Is de tabel er nog niet, dan werkt het blok op dit toestel. */
   let bdMode = "main", bdFilter = "alle", bdEdit = null, bdDel = null, bdDraft = "", bdIdeaErr = "";
   let IDS = null, idLoading = false, idRemote = false, idNote = "", idBusy = false;
@@ -8579,8 +8579,13 @@ return exports;})();
   }
   document.addEventListener("input", function (e) { if (e.target && e.target.id === "bdIdeaNew") bdDraft = e.target.value; });
   function bhLoad() {
-    if (bhBusy || !sb) return; bhBusy = true; bhErr = ""; BN = null; BNerr = false;
+    if (bhBusy || !sb) return; bhBusy = true; bhErr = ""; BN = null; BNerr = false; BK = null; BKerr = false;
     try {
+      /* v314: Halaqa Spark-gebruik (docent, ouder, privé) uit een aparte functie; alleen getallen */
+      sb.rpc("beheer_klas").then(function (r) {
+        if (r && r.error) { BKerr = true; BK = null; } else { BK = r.data || null; }
+        bdDraw();
+      }).catch(function () { BKerr = true; bdDraw(); });
       /* v258: nieuwe gebruikers per soort (echt/gast) komen uit een aparte, kleine functie, zodat de bestaande cijfers er niet van afhangen */
       sb.rpc("beheer_nieuw").then(function (r) {
         if (r && r.error) { BNerr = true; BN = null; } else { BN = r.data || null; }
@@ -8714,6 +8719,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v314", t: "Halaqa Spark: bij het eerste gebruik kies je Docent, Ouder of Gewoon iemand. In Beheer zie je nu hoeveel quizzen, live spellen, huiswerkopdrachten en spelers er zijn, zonder namen." },
     { v: "v313", t: "Ranglijst-venster: bij andere spelers staan geen nullen meer voor edelstenen en munten zolang hun cijfers er nog niet zijn." },
     { v: "v312", t: "Ranglijst-venster op de reiskaart: halverwege en aan het einde van elk land zie je je plek bij andere spelers, met edelstenen, munten, punten en je nieuwe badge." },
     { v: "v311", t: "Nieuw schatkist-scherm in de glans-stijl met het lettertype Berkshire Swash, en een herinnering \u201cJe beloning wacht op je\u201d als je de kist wegtikt." },
@@ -8948,6 +8954,20 @@ return exports;})();
       return '<div class="bd-r" style="--c:' + cl[i % cl.length] + '"><span class="bd-rl"><span>' + esc(NM[x.o] || x.o) + '<small class="bd-sub">vandaag ' + v + "</small></span></span>" +
         '<span class="bd-rb" aria-hidden="true"><i style="width:' + Math.max(w > 0 ? 4 : 0, Math.round(w / gmax * 100)) + '%"></i></span><b>' + w + "</b></div>";
     }).join("") + '</div><p class="bd-note">Aantal keer geopend in de laatste 7 dagen. Alleen tellers, geen personen.</p>';
+    /* v314: Halaqa Spark in detail: wie start (docent, ouder, privé) en wat er gebeurt */
+    h += sec("Halaqa Spark: wie gebruikt het?");
+    if (!BK || !Array.isArray(BK.rijen)) h += '<div class="bd-card"><p class="bd-note">' + (BKerr ? "Nog geen cijfers: het SQL-bestand supabase-klas-gebruik.sql moet nog één keer in Supabase worden uitgevoerd." : "Cijfers laden…") + "</p></div>";
+    else {
+      const kz = function (soort, f, rol) { return BK.rijen.reduce(function (t, x) { return t + (x.s === soort && (rol == null || x.r === rol) ? Number(x[f]) || 0 : 0); }, 0); };
+      const kd = kz("rol_gekozen", "tot", "docent"), ko = kz("rol_gekozen", "tot", "ouder"), kp = kz("rol_gekozen", "tot", "prive");
+      const km = Math.max(kd, ko, kp, 1);
+      const sub = function (l, soort) { const t = kz(soort, "tot"), d7 = kz(soort, "d7"), v = kz(soort, "vandaag"); return '<div class="bd-r" style="--c:var(--green)"><span class="bd-rl"><span>' + l + '<small class="bd-sub">7 dagen ' + d7 + " · vandaag " + v + "</small></span></span><b>" + t + "</b></div>"; };
+      const lg = kz("live_gestart", "tot"), sl = kz("speler_live", "tot");
+      h += '<div class="bd-card">' + row("Docenten", kd, km, "var(--blue)") + row("Ouders", ko, km, "var(--teal)") + row("Gewoon iemand (privé)", kp, km, "var(--amber)") +
+        '<p class="bd-note">Aantal toestellen waarop iemand dit koos.</p></div>' +
+        '<div class="bd-card">' + sub("Quizzen gemaakt", "quiz_gemaakt") + sub("Live spellen gestart", "live_gestart") + sub("Huiswerk gemaakt", "huiswerk_gemaakt") + sub("Spelers live", "speler_live") + sub("Spelers huiswerk", "speler_huiswerk") +
+        '<p class="bd-note">' + (lg ? "Gemiddeld ongeveer " + (Math.round(sl / lg * 10) / 10).toString().replace(".", ",") + " speler" + (Math.round(sl / lg * 10) / 10 === 1 ? "" : "s") + " per live spel. " : "") + "Alleen tellers, geen personen. Wie meedoet (leerling of gewoon iemand) is niet te zien.</p></div>";
+    }
     const a = Math.max(n("actief_7d"), 1);
     h += sec("Actieve gebruikers") + '<div class="bd-card">' + row("Laatste 5 minuten", n("actief_5m"), a, "var(--green)", true) + row("Laatste uur", n("actief_1u"), a, "var(--teal)") + row("Laatste 24 uur", n("actief_24u"), a, "var(--blue)") + row("Laatste 7 dagen", n("actief_7d"), a, "var(--indigo)") + '</div><p class="bd-note">Gebaseerd op de laatst doorgegeven score.</p>';
     const pm = Math.max(n("prov_google"), n("prov_facebook"), n("prov_email"), 1);
