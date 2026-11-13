@@ -10651,7 +10651,7 @@ return exports;})();
     return c;
   }
   /* slingerend pad: x volgt een sinus, y loopt omhoog; ruim genoeg voor 15 levels */
-  const L6_ROUTE = { 10: [[235, 722], [130, 664], [245, 606], [140, 548], [180, 490], [180, 432], [180, 374], [270, 316], [130, 258], [230, 200]], 5: [[230, 722], [110, 610], [180, 498], [180, 386], [260, 274]] };   /* Land 6 (proef): het midden van de route loopt recht door de poort van Ihsan */
+  const L6_ROUTE = { 10: [[235, 722], [125, 676], [235, 630], [125, 584], [180, 540], [180, 262], [255, 222], [110, 178], [235, 140], [130, 112]], 5: [[230, 722], [110, 640], [180, 540], [180, 262], [255, 150]] };   /* Land 6 (proef): onder de poort van Ihsan staan geen levels; het pad loopt er recht doorheen, van onder naar boven */
   function jLayout(n, catId) {
     if (catId === "ihsan" && L6_ROUTE[n]) return L6_ROUTE[n].map(function (q) { return { x: q[0], y: q[1] }; });
     const bottom = 722, top = 112, step = Math.min(n < 10 ? 112 : 58, (bottom - top) / Math.max(1, n - 1)), pts = [];   /* Beginner (weinig levels): levels verder uit elkaar, route loopt tot ver omhoog */
@@ -13814,7 +13814,7 @@ return exports;})();
   }
   function nachtPoort() {   /* grote poort midden in de route, op het grasveld langs de vijver: het stuk pad tussen twee levels loopt er dwars doorheen */
     const n = nachtStops.length, m = Math.max(0, (n - 1) >> 1), a = nachtStops[m] || { x: 180, y: 480 }, b = nachtStops[m + 1] || a, W = n < 10 ? 170 : 130;
-    if (L6_ROUTE[n]) return [180, 488, W];   /* de route loopt precies door het midden van de poort */
+    if (L6_ROUTE[n]) return [180, 488, 170];   /* de route loopt precies door het midden van de poort */
     return [Math.round((a.x + b.x) / 2), 488, W];
   }
   function nachtSpots() { return P && P.mode === "beginner" ? { lant: [264, 492, 46], poort: nachtPoort() } : { lant: [34, 480, 48], poort: nachtPoort() }; }
@@ -13828,7 +13828,7 @@ return exports;})();
       let near = false; for (const k in nachtMemo) if (Math.hypot(x - nachtMemo[k].x, y - nachtMemo[k].y) < 84) { near = true; break; }
       if (near) continue;
       if (x > L[0] - L[2] / 2 - 54 && x < L[0] + L[2] / 2 + 54 && y > L[1] - lh - 54 && y < L[1] + 30) continue;
-      if (x > Q[0] - Q[2] / 2 - 54 && x < Q[0] + Q[2] / 2 + 54 && y > Q[1] - qh - 54 && y < Q[1] + 30) continue;
+      if (x > Q[0] - Q[2] / 2 - 30 && x < Q[0] + Q[2] / 2 + 30 && y > Q[1] - qh - 54 && y < Q[1] + 30) continue;
       let ok = true; for (let i = 0; i < stops.length; i++) { if (Math.hypot(x - stops[i].x, y - stops[i].y) < 76) { ok = false; break; } }
       if (!ok) continue;
       const d = Math.hypot(x - st.x, y - st.y); if (d < bd) { bd = d; best = { x: x, y: y }; }
