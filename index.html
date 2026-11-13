@@ -8719,6 +8719,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v315", t: "Kruiswoordpuzzel: de knop \u201cToon oplossing\u201d is weg, zodat de puzzel niet meer in \u00e9\u00e9n tik is op te lossen. Hint (1 letter) blijft." },
     { v: "v314", t: "Halaqa Spark: bij het eerste gebruik kies je Docent, Ouder of Gewoon iemand. In Beheer zie je nu hoeveel quizzen, live spellen, huiswerkopdrachten en spelers er zijn, zonder namen." },
     { v: "v313", t: "Ranglijst-venster: bij andere spelers staan geen nullen meer voor edelstenen en munten zolang hun cijfers er nog niet zijn." },
     { v: "v312", t: "Ranglijst-venster op de reiskaart: halverwege en aan het einde van elk land zie je je plek bij andere spelers, met edelstenen, munten, punten en je nieuwe badge." },
@@ -13908,7 +13909,7 @@ return exports;})();
     const ov = document.createElement("div"); ov.className = "pz-ov"; ov.id = "pzOv"; ov.setAttribute("role", "dialog"); ov.setAttribute("aria-modal", "true"); ov.setAttribute("aria-label", "Kruiswoordpuzzel " + landTitle);
     ov.innerHTML = '<div class="pz-top"><button class="pz-x" data-pz="x" aria-label="Sluit de puzzel">‹</button><div class="pz-tt"><b>Kruiswoordpuzzel</b><small>' + esc(landTitle) + (first ? " · eerste letters staan al ingevuld" : "") + '</small></div></div>' +
       '<div class="pz-clue" id="pzClue" aria-live="polite">Tik op een vakje om te beginnen.</div><div class="pz-gw"><div class="pz-grid" id="pzGrid" role="grid" aria-label="Kruiswoordpuzzel"></div></div><p class="pz-msg" id="pzMsg" role="status"></p>' +
-      '<div class="pz-btns"><button class="pz-b1" data-pz="check">Controleer</button><button class="pz-b2" data-pz="hint">Hint (1 letter)</button><button class="pz-b3" data-pz="show">Toon oplossing</button></div>' +
+      '<div class="pz-btns"><button class="pz-b1" data-pz="check">Controleer</button><button class="pz-b2" data-pz="hint">Hint (1 letter)</button></div>' +
       '<div class="pz-cl"><h2>Horizontaal</h2><ul id="pzA"></ul><h2>Verticaal</h2><ul id="pzD"></ul></div>';
     document.body.appendChild(ov); document.body.classList.add("bonus-on");
     const app = document.getElementById("app"); if (app) app.setAttribute("aria-hidden", "true");
@@ -14001,8 +14002,6 @@ return exports;})();
         if (!k) k = Object.keys(cells).filter(function (x) { return cells[x].inp.value !== sol[x]; })[0];
         if (!k) return;
         cells[k].inp.value = sol[k]; cells[k].d.classList.remove("bad"); cells[k].d.classList.add("ok"); hints++; play("click"); say("Hints gebruikt: " + hints + " (3 sterren alleen zonder hints)"); markDone(); go(k); after();
-      } else if (a === "show") {
-        shown = true; Object.keys(cells).forEach(function (k) { cells[k].inp.value = sol[k]; cells[k].d.classList.remove("bad"); cells[k].d.classList.add("ok"); }); markDone(); say("Dit is de oplossing. Daar krijg je geen beloning voor.");
       }
     });
     puzCur = { lv: lv, catId: catId, ov: ov };
