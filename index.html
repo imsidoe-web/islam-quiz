@@ -1044,6 +1044,23 @@ a.btn.block { display: flex; margin-top: 14px; }
 body.bonus-on { overflow: hidden; }
 .chest-win.ready { background: linear-gradient(135deg, #fff3c4, #ffd36a); box-shadow: 0 0 0 3px #fff6b8 inset, 0 6px 18px rgba(255, 180, 0, .35); }
 .co-stage { position: relative; overflow: hidden; text-align: center; padding: 18px 16px 24px; margin-top: 8px; border-radius: 28px; background: radial-gradient(circle at 50% 38%, #fff6c8, #ffd36a 45%, #f0a500); color: #5a3d00; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+/* v305 (proef): schatkist-scherm in de glans-stijl (kader, kist en knop uit Gemini) */
+.cg-stage { position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; min-height: calc(100dvh - 24px); margin-top: 8px; padding: 14px 8px; border-radius: 28px; background: radial-gradient(circle at 50% 42%, #1f7a72, #0e3d44 62%, #08262c); }
+.cg-rays { position: absolute; z-index: 0; left: 50%; top: 42%; width: 160%; aspect-ratio: 1; margin: -80% 0 0 -80%; background: repeating-conic-gradient(rgba(255,226,140,.16) 0 9deg, transparent 9deg 24deg); animation: coSpin 24s linear infinite; pointer-events: none; }
+.cg-card { position: relative; z-index: 1; width: min(94vw, 400px); aspect-ratio: 315 / 502; container-type: inline-size; background: url(melding/schatkist-kader.webp) center / 100% 100% no-repeat; filter: drop-shadow(0 14px 22px rgba(0,0,0,.45)); }
+.cg-card > * { position: absolute; margin: 0; }
+.cg-title { left: 22%; width: 56%; top: 11.6%; height: 8%; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 6.4cqw; line-height: 1.05; color: #5a3d00; text-shadow: 0 1px 0 rgba(255,255,255,.7); }
+.cg-x { appearance: none; border: 0; background: transparent; right: 0; top: 10.6%; width: 14%; aspect-ratio: 1; cursor: pointer; }
+.cg-card .co-chest.cg-chest { left: 12%; top: 26.5%; width: 76%; }
+.cg-chest img { width: 100%; height: auto; display: block; }
+.cg-chest.opened { filter: drop-shadow(0 0 18px rgba(255,214,90,.9)); }
+.cg-info { left: 12%; width: 76%; top: 58.5%; height: 12%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #4a3300; gap: 1cqw; }
+.cg-info .co-sub { font-size: 4.4cqw; }
+.cg-info .co-game { background: none; padding: 0; justify-content: center; text-align: center; animation: pop .5s ease both; }
+.cg-info .co-game b { font-size: 4.8cqw; } .cg-info .co-game small { font-size: 3.7cqw; line-height: 1.25; }
+.cg-gem { appearance: none; border: 0; cursor: pointer; left: 15%; width: 70%; top: 72.5%; aspect-ratio: 288 / 95; background: url(melding/schatkist-knop.webp) center / 100% 100% no-repeat; display: flex; align-items: center; justify-content: center; padding: 0 9%; font: inherit; font-weight: 900; font-size: 5cqw; color: #fff; text-shadow: 0 2px 3px rgba(0,60,30,.85); filter: drop-shadow(0 4px 6px rgba(0,0,0,.3)); }
+.cg-gem:active { transform: scale(.97); }
+.cg-later { appearance: none; border: 0; background: none; left: 25%; width: 50%; top: 88.5%; height: 6%; cursor: pointer; font: inherit; font-weight: 800; font-size: 4.2cqw; color: #0d4a43; text-decoration: underline; }
 .co-stage > * { position: relative; z-index: 1; }
 .co-stage .co-rays { position: absolute; z-index: 0; left: 50%; top: 36%; width: 150%; aspect-ratio: 1; margin: -75% 0 0 -75%; background: repeating-conic-gradient(rgba(255,255,255,.55) 0 9deg, transparent 9deg 24deg); animation: coSpin 18s linear infinite; border-radius: 50%; -webkit-mask-image: radial-gradient(circle, #000 15%, transparent 62%); mask-image: radial-gradient(circle, #000 15%, transparent 62%); }
 @keyframes coSpin { to { transform: rotate(360deg); } }
@@ -11353,15 +11370,14 @@ return exports;})();
     screen = "chestopen"; render();
   }
   function viewChestOpen() {
-    const c = catById(mg.catId);
-    return '<div class="topbar"><button class="icon-btn" data-act="journey-back" aria-label="Terug naar de kaart">' + icon("left", 22) + "</button>" +
-      '<div class="brand">' + icon("map", 24) + 'Schatkist</div><span style="width:44px"></span></div>' +
-      '<section class="co-stage" style="--accent:' + c.color + '"><div class="co-rays" aria-hidden="true"></div>' +
-      '<h1 id="coTitle">Een schatkist!</h1><p class="co-sub" id="coSub" aria-live="polite">Tik op de kist of wacht even…</p>' +
-      '<button class="co-chest" id="coChest" data-act="mg-open-now" aria-label="Open de schatkist"><svg viewBox="-50 -62 100 92" aria-hidden="true">' + chest(0, 6, "closed", 1.45, "stop") + "</svg></button>" +
-      '<div class="co-game" id="coGame" style="visibility:hidden"><span class="co-game-ic">' + mgIcon(mg.game) + "</span><span><b>Minigame: " + MG_NAME[mg.game] + "</b><small>" + mgBlurb(mg.game) + "</small></span></div>" +
-      '<button class="btn gold" data-act="mg-open-now" id="coBtn">' + icon("sparkles", 20) + "Open de schatkist</button>" +
-      '<button class="btn ghost" data-act="journey-back">Later openen</button></section>';
+    return '<section class="cg-stage"><div class="cg-rays" aria-hidden="true"></div><div class="cg-card">' +
+      '<h1 id="coTitle" class="cg-title">Een schatkist!</h1>' +
+      '<button class="cg-x" data-act="journey-back" aria-label="Terug naar de kaart"></button>' +
+      '<button class="co-chest cg-chest" id="coChest" data-glans="1" data-act="mg-open-now" aria-label="Open de schatkist"><img src="melding/schatkist-kist.webp" alt=""></button>' +
+      '<div class="cg-info"><p class="co-sub" id="coSub" aria-live="polite">Tik op de kist of wacht even…</p>' +
+      '<div class="co-game" id="coGame" style="visibility:hidden"><span><b>Minigame: ' + MG_NAME[mg.game] + "</b><small>" + mgBlurb(mg.game) + "</small></span></div></div>" +
+      '<button class="cg-gem" data-act="mg-open-now" id="coBtn"><span>Open de schatkist</span></button>' +
+      '<button class="cg-later" data-act="journey-back">Later openen</button></div></section>';
   }
   function mgIcon(g) { return g === "memory" ? "🃏" : g === "kwartet" ? "🎴" : g === "woord" ? "🔤" : "🧩"; }
   function mgBlurb(g) { return g === "woord" ? "Zet letters in de goede volgorde of zoek verborgen woorden." : g === "memory" ? "Vind de paartjes mooie plaatjes." : g === "kwartet" ? "Pak je verzamelkaarten uit en vul je album." : "Leg de grote afbeelding weer in elkaar."; }
@@ -11373,11 +11389,11 @@ return exports;})();
     if (screen !== "chestopen" || !mg || mg.phase !== "closed") return;
     mg.phase = "opened";
     const ch = document.getElementById("coChest"), t = document.getElementById("coTitle"), s = document.getElementById("coSub"), g = document.getElementById("coGame"), b = document.getElementById("coBtn");
-    if (ch) { ch.classList.add("opened"); ch.setAttribute("aria-label", "Schatkist is open"); ch.innerHTML = '<svg viewBox="-50 -62 100 92" aria-hidden="true">' + chest(0, 6, "gold", 1.45, "stop") + "</svg>"; }
+    if (ch) { ch.classList.add("opened"); ch.setAttribute("aria-label", "Schatkist is open"); if (!ch.dataset.glans) ch.innerHTML = '<svg viewBox="-50 -62 100 92" aria-hidden="true">' + chest(0, 6, "gold", 1.45, "stop") + "</svg>"; }
     if (t) t.textContent = "Masha’Allah! Open!";
     if (s) s.textContent = "Je minigame begint zo…";
     if (g) g.style.visibility = "visible";
-    if (b) { b.innerHTML = icon("right", 20) + "Start: " + MG_NAME[mg.game]; b.setAttribute("data-act", "mg-start"); }
+    if (b) { b.innerHTML = b.classList.contains("cg-gem") ? "<span>Start: " + MG_NAME[mg.game] + "</span>" : icon("right", 20) + "Start: " + MG_NAME[mg.game]; b.setAttribute("data-act", "mg-start"); }
     play("win"); celebrate(true);
     mgLater(function () { if (screen === "chestopen") startMinigame(); }, 3600);
   }
