@@ -8784,6 +8784,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v321", t: "Kennistoets voor alle landen (Beginner, Gevorderd, Ervaren): 10 vragen verspreid over het hele land." },
     { v: "v320", t: "Kennistoets (Het Gebed, Beginner): de Toets-knop is nu voor alle spelers zichtbaar." },
     { v: "v319", t: "Kennistoets: antwoorden zonder uitleg tussen haakjes, dus kortere en grotere letters." },
     { v: "v318", t: "Kennistoets: vraagtekst groter en het woord \u201cGeweldig!\u201d valt niet meer over de vraag." },
@@ -9412,23 +9413,32 @@ return exports;})();
   /* ───────────── Kennistoets (proef, v317): 10 vragen per land, goud-groen ontwerp ─────────────
      Alleen in de proeflanden (TOETS_LAND). Punten per vraag: makkelijk 1, middel 2, moeilijk 3. Sterren: 50 / 70 / 90 %.
      Beloningen (schatkist, ranglijst) volgen na goedkeuring van het ontwerp. */
-  const TOETS_LAND = { beginner: ["gebed"] };
-  function toetsOn(lv, catId) { return !!(TOETS_LAND[lv] && TOETS_LAND[lv].indexOf(catId) !== -1); }
+  /* v321: voor alle landen met genoeg vragen (Beginner, Gevorderd, Ervaren) */
+  function toetsOn(lv, catId) { return poolFor(lv, catId).filter(function (q) { return !isMulti(q) && !q.madhhab; }).length >= 10; }
+  /* kies n vragen verspreid over de hele lijst van het land (van begin tot eind), met een willekeurige keuze per stuk */
+  function toetsSpread(arr, n) {
+    const out = [], len = arr.length;
+    if (n >= len) return arr.slice();
+    for (let i = 0; i < n; i++) {
+      const a = Math.floor(i * len / n), b = Math.max(a + 1, Math.floor((i + 1) * len / n));
+      out.push(arr[a + Math.floor(Math.random() * (b - a))]);
+    }
+    return out;
+  }
   function toetsPts(q) { return Math.min(3, qTier(q)); }
   function toetsLabel(q) { const t = qTier(q); return t <= 1 ? "Makkelijk" : t === 2 ? "Middel" : "Moeilijk"; }
   function toetsDraw(level, catId) {
     const pool = poolFor(level, catId).filter(function (q) { return !isMulti(q) && !q.madhhab; });
     const by = { 1: [], 2: [], 3: [] };
     pool.forEach(function (q) { by[toetsPts(q)].push(q); });
-    [1, 2, 3].forEach(function (t) { by[t] = shuffle(by[t]); });
     const have = [1, 2, 3].filter(function (t) { return by[t].length; });
     const quota = { 1: 0, 2: 0, 3: 0 };
     if (have.length >= 3) { quota[1] = 4; quota[2] = 4; quota[3] = 2; }
     else if (have.length === 2) { quota[have[0]] = 5; quota[have[1]] = 5; }
     else if (have.length === 1) quota[have[0]] = 10;
     let out = [];
-    [1, 2, 3].forEach(function (t) { out = out.concat(by[t].splice(0, quota[t])); });
-    const rest = [].concat(by[1], by[2], by[3]);
+    [1, 2, 3].forEach(function (t) { out = out.concat(toetsSpread(by[t], Math.min(quota[t], by[t].length))); });
+    const rest = shuffle(pool.filter(function (q) { return out.indexOf(q) === -1; }));
     while (out.length < 10 && rest.length) out.push(rest.shift());
     out.sort(function (a, b) { return toetsPts(a) - toetsPts(b); });
     return out;
