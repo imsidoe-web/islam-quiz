@@ -8784,6 +8784,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v319", t: "Kennistoets: antwoorden zonder uitleg tussen haakjes, dus kortere en grotere letters." },
     { v: "v318", t: "Kennistoets: vraagtekst groter en het woord \u201cGeweldig!\u201d valt niet meer over de vraag." },
     { v: "v317", t: "Kennistoets (proef): 10 vragen in het goud-groene ontwerp, nu alleen voor jou te openen via Mijn studio > Meldingen testen > Toets (Het Gebed). Spelers zien hem nog niet." },
     { v: "v316", t: "Kruiswoordpuzzel: het rooster past nu altijd binnen het scherm, ook bij brede puzzels (er stak een vakje buiten beeld)." },
@@ -9442,8 +9443,13 @@ return exports;})();
     if (!toetsOn(lv, c.id) || !mkOwner()) return "";
     return '<button class="jb-toets" data-act="toets-start" data-cat="' + c.id + '" aria-label="Doe de toets van ' + esc(c.title) + '">Toets</button>';
   }
+  function toetsShort(q) {
+    const cut = q.options.map(function (o) { return String(o).replace(/\s*\([^)]*\)\s*$/, "").trim(); });
+    const ok = cut.every(function (c, i) { return c && cut.indexOf(c) === i; });
+    return ok ? cut : q.options;
+  }
   function viewToets() {
-    const it = quiz.items[quiz.idx], q = it.q, total = quiz.items.length, cat = catById(q.category), aset = answerSet(q);
+    const it = quiz.items[quiz.idx], q = it.q, total = quiz.items.length, cat = catById(q.category), aset = answerSet(q), opts = toetsShort(q);
     document.body.className = quiz.level + " toets";
     let h = '<div class="t-wrap"><div class="t-top"><button class="t-back" data-act="leave" aria-label="Stoppen met de toets">' + icon("left", 26) + "</button>" +
       '<span class="t-title">' + esc((quiz.practice ? "Oefenen · " : "Toets · ") + cat.title) + '</span><span class="t-score" id="scorePill">' + quiz.score + "/" + total + "</span></div>";
@@ -9454,10 +9460,10 @@ return exports;})();
     h += '<div class="t-lab l' + pts + '">' + toetsLabel(q) + " · " + pts + (pts === 1 ? " punt" : " punten") + "</div>";
     const qn = q.question.length, qsz = qn <= 40 ? "q-l" : qn <= 60 ? "q-m" : "q-s";
     h += '<div class="t-q ' + qsz + '" id="qcard" role="group" tabindex="-1" aria-labelledby="qh" aria-describedby="qopts"><div class="q-num sr-only">Vraag ' + (quiz.idx + 1) + " van " + total + '</div><div class="t-qin"><h2 id="qh">' + esc(q.question) + "</h2>" + (q.questionArabic ? ar(q.questionArabic) : "") + "</div>" +
-      '<span class="sr-only" id="qopts">Antwoordopties: ' + it.order.map(function (o, p) { return LETTERS[p] + ": " + esc(q.options[o]); }).join(". ") + "</span></div>";
+      '<span class="sr-only" id="qopts">Antwoordopties: ' + it.order.map(function (o, p) { return LETTERS[p] + ": " + esc(opts[o]); }).join(". ") + "</span></div>";
     h += '<div class="t-opts" role="group" aria-label="Antwoordopties">';
     it.order.forEach(function (orig, pos) {
-      const txt = q.options[orig], n = txt.length, sz = n <= 10 ? "l" : n <= 20 ? "m" : "s";
+      const txt = opts[orig], n = txt.length, sz = n <= 10 ? "l" : n <= 20 ? "m" : "s";
       let cls = "t-opt", mark = "", sr = "";
       if (quiz.answered) {
         if (aset.indexOf(orig) !== -1) { cls += " correct"; mark = icon("check", 22); sr = "Juist antwoord"; }
