@@ -8784,6 +8784,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v320", t: "Kennistoets (Het Gebed, Beginner): de Toets-knop is nu voor alle spelers zichtbaar." },
     { v: "v319", t: "Kennistoets: antwoorden zonder uitleg tussen haakjes, dus kortere en grotere letters." },
     { v: "v318", t: "Kennistoets: vraagtekst groter en het woord \u201cGeweldig!\u201d valt niet meer over de vraag." },
     { v: "v317", t: "Kennistoets (proef): 10 vragen in het goud-groene ontwerp, nu alleen voor jou te openen via Mijn studio > Meldingen testen > Toets (Het Gebed). Spelers zien hem nog niet." },
@@ -9440,7 +9441,7 @@ return exports;})();
     screen = "quiz"; render();
   }
   function toetsPillHtml(lv, c) {
-    if (!toetsOn(lv, c.id) || !mkOwner()) return "";
+    if (!toetsOn(lv, c.id)) return "";
     return '<button class="jb-toets" data-act="toets-start" data-cat="' + c.id + '" aria-label="Doe de toets van ' + esc(c.title) + '">Toets</button>';
   }
   function toetsShort(q) {
@@ -15436,7 +15437,7 @@ return exports;})();
       case "duff-toggle": duffToggle(); break;
       case "settings": case "a11y": play("click"); settingsDialog(); break;
       case "gate-go": { const gk = parseInt(el.dataset.to, 10); if (landFly || isNaN(gk) || screen !== "journey") break; play("click"); landFlyAfter = null; landFly = { from: Math.max(0, Math.min(journeyLand === null ? gk - 1 : journeyLand, gk - 1)), to: gk }; runLandFlight(); break; }
-      case "toets-start": if (!mkOwner()) break; play("click"); startToets(el.dataset.cat); break;
+      case "toets-start": play("click"); startToets(el.dataset.cat); break;
       case "toets-fix": play("click"); if (result && result.wrong) startToets(result.catId, result.wrong, result.demo); break;
       case "toets-again": play("click"); if (result) startToets(result.catId, null, result.demo); break;
       case "toets-back": play("click"); screen = "journey"; render(); break;
