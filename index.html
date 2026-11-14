@@ -8951,7 +8951,7 @@ return exports;})();
   }
   function viewTests() {
     const ic = function (d) { return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + "</svg>"; };
-    const items = [["welkom", "Welkom (elke dag)", "De groet de eerste keer per dag"], ["welkomlang", "Welkom na lange tijd", "Warm welkom na 3 dagen of langer"], ["gebed", "Gebedstijd", "Het eerstvolgende gebed, zoals de app het toont"], ["jummah", "Jummah Mubarak", "Alleen kijken: er wordt geen cadeau gegeven"], ["streak", "Streak in gevaar", "De herinnering aan je reeks"], ["nurplay", "Nieuw spel (NurPlay)", "Nieuws over Darb an-Nur"], ["feedback", "Nieuw: feedback", "Nieuws over de feedbackknop"], ["schatkist", "Schatkist (nieuw scherm)", "Het scherm als je een schatkist opent"], ["beloning", "Beloning wacht op je", "De herinnering op de kaart"], ["ranglijst", "Ranglijst (land)", "Je plek tussen andere spelers, met verdiensten"]];
+    const items = [["welkom", "Welkom (elke dag)", "De groet de eerste keer per dag"], ["welkomlang", "Welkom na lange tijd", "Warm welkom na 3 dagen of langer"], ["gebed", "Gebedstijd", "Het eerstvolgende gebed, zoals de app het toont"], ["jummah", "Jummah Mubarak", "Alleen kijken: er wordt geen cadeau gegeven"], ["streak", "Streak in gevaar", "De herinnering aan je reeks"], ["nurplay", "Nieuw spel (NurPlay)", "Nieuws over Darb an-Nur"], ["feedback", "Nieuw: feedback", "Nieuws over de feedbackknop"], ["schatkist", "Schatkist (nieuw scherm)", "Het scherm als je een schatkist opent"], ["beloning", "Beloning wacht op je", "De herinnering op de kaart"], ["ranglijst", "Ranglijst (land)", "Je plek tussen andere spelers, met verdiensten"], ["toets", "Toets (Het Gebed)", "Opent direct de toets van 10 vragen; verandert niets in je voortgang"]];
     let h = '<div class="bd"><header class="bd-top"><button class="bd-ib" data-act="bd-ideas-back" aria-label="Terug naar beheer">' + ic('<path d="M15 18l-6-6 6-6"/>') + '</button><div class="bd-tt"><b>Meldingen testen</b><small>Tik om een melding te tonen</small></div><span style="width:44px"></span></header><main class="bd-m">';
     items.forEach(function (x) { h += '<button class="bd-idbtn" data-act="bd-test" data-t="' + x[0] + '"><span>' + x[1] + "<small>" + x[2] + "</small></span></button>"; });
     h += '<p class="bd-note">De melding verschijnt bovenop deze pagina. Sluit hem en je bent weer terug bij de lijst. Dit verandert niets in je voortgang.</p><p class="bd-ft">NurSpark Beheer · alleen zichtbaar voor de beheerder</p></main></div>';
@@ -9425,11 +9425,11 @@ return exports;})();
     out.sort(function (a, b) { return toetsPts(a) - toetsPts(b); });
     return out;
   }
-  function startToets(catId, qs) {
-    const level = P.mode, practice = !!qs;
+  function startToets(catId, qs, demo) {
+    const level = demo ? "beginner" : P.mode, practice = !!qs;
     const questions = qs || toetsDraw(level, catId);
     if (!questions.length) { jToast("Voor deze toets zijn nog te weinig vragen."); return; }
-    quiz = { kind: "toets", catId: catId, level: level, tier: null, jIdx: null, practice: practice, items: makeItems(questions), idx: 0, score: 0, answered: false, timeLeft: TIMER_SECONDS };
+    quiz = { kind: "toets", catId: catId, level: level, tier: null, jIdx: null, practice: practice, demo: !!demo, items: makeItems(questions), idx: 0, score: 0, answered: false, timeLeft: TIMER_SECONDS };
     screen = "quiz"; render();
   }
   function toetsPillHtml(lv, c) {
@@ -9473,12 +9473,12 @@ return exports;})();
     });
     const total = quiz.items.length, pct = max ? Math.round(pts / max * 100) : 0, stars = pct >= 90 ? 3 : pct >= 70 ? 2 : pct >= 50 ? 1 : 0;
     let first = null;
-    if (!quiz.practice) {
+    if (!quiz.practice && !quiz.demo) {
       P.toets = P.toets || {}; const k = quiz.level + ":" + quiz.catId, r0 = P.toets[k];
       P.toets[k] = { first: r0 ? r0.first : pct, last: pct, best: Math.max(pct, r0 ? r0.best : 0), n: (r0 ? r0.n : 0) + 1 };
       first = P.toets[k].first; saveState();
     }
-    result = { kind: "toets", level: quiz.level, catId: quiz.catId, practice: quiz.practice, pts: pts, max: max, pct: pct, stars: stars, groups: groups, wrong: wrong, total: total, correct: total - wrong.length, first: first };
+    result = { kind: "toets", level: quiz.level, catId: quiz.catId, practice: quiz.practice, demo: quiz.demo, pts: pts, max: max, pct: pct, stars: stars, groups: groups, wrong: wrong, total: total, correct: total - wrong.length, first: first };
     play(stars >= 2 ? "win" : "click");
     screen = "result"; render();
   }
@@ -9489,7 +9489,7 @@ return exports;})();
     h += '<div class="t-card"><p class="t-sub">' + esc(cat.title) + '</p><div class="t-pct">' + r.pct + '%</div><div class="t-stars" role="img" aria-label="' + r.stars + ' van 3 sterren">';
     for (let i = 1; i <= 3; i++) h += '<i class="t-st' + (i <= r.stars ? " on" : "") + '">' + icon("star", 46, "fill") + "</i>";
     h += '</div><p class="t-pts">' + r.pts + " van " + r.max + " punten · " + r.correct + " van " + r.total + " goed</p>";
-    if (!r.practice && r.first !== null && r.first !== r.pct) h += '<p class="t-grow">Eerste keer ' + r.first + "% → nu " + r.pct + "%</p>";
+    if (!r.practice && !r.demo && r.first !== null && r.first !== r.pct) h += '<p class="t-grow">Eerste keer ' + r.first + "% → nu " + r.pct + "%</p>";
     const NM = { "Makkelijk": "Makkelijke vragen", "Middel": "Middelmoeilijke vragen", "Moeilijk": "Moeilijke vragen" };
     h += '<div class="t-rows">';
     ["Makkelijk", "Middel", "Moeilijk"].forEach(function (g) {
@@ -9773,7 +9773,7 @@ return exports;})();
     quiz.answered = true;
     if (quiz.kind === "category" || quiz.kind === "journey" || quiz.kind === "daily" || quiz.kind === "duel") markSeen(quiz.level, it.q.id);
     if (quiz.kind === "duel") { quiz.ms += Date.now() - quiz.qStart; pushDuelProgress(); }
-    else if (quiz.level) { foutMark(quiz.level, it.q.id, it.correct); goalAns(it.correct); }
+    else if (quiz.level && !quiz.demo) { foutMark(quiz.level, it.q.id, it.correct); goalAns(it.correct); }
     if (it.correct) {
       quiz.score++;
       lastPraise = pick(PRAISE);
@@ -15365,6 +15365,7 @@ return exports;})();
         else if (t === "schatkist") chestGlansDemo();
         else if (t === "beloning") chestRemDemo();
         else if (t === "ranglijst") rankDemo();
+        else if (t === "toets") { bdClose(); startToets("gebed", null, true); break; }
         document.querySelectorAll(".bm-wrap").forEach(function (w) { w.style.zIndex = 6000; });
         break;
       }
@@ -15423,8 +15424,8 @@ return exports;})();
       case "settings": case "a11y": play("click"); settingsDialog(); break;
       case "gate-go": { const gk = parseInt(el.dataset.to, 10); if (landFly || isNaN(gk) || screen !== "journey") break; play("click"); landFlyAfter = null; landFly = { from: Math.max(0, Math.min(journeyLand === null ? gk - 1 : journeyLand, gk - 1)), to: gk }; runLandFlight(); break; }
       case "toets-start": play("click"); startToets(el.dataset.cat); break;
-      case "toets-fix": play("click"); if (result && result.wrong) startToets(result.catId, result.wrong); break;
-      case "toets-again": play("click"); if (result) startToets(result.catId); break;
+      case "toets-fix": play("click"); if (result && result.wrong) startToets(result.catId, result.wrong, result.demo); break;
+      case "toets-again": play("click"); if (result) startToets(result.catId, null, result.demo); break;
       case "toets-back": play("click"); screen = "journey"; render(); break;
       case "journey-here": { play("click"); const hc = document.querySelector(".j-current"); if (hc && hc.scrollIntoView) hc.scrollIntoView({ block: "center", behavior: reducedMotion() ? "auto" : "smooth" }); break; }
       case "profile-menu": play("click"); profileMenu(); break;
