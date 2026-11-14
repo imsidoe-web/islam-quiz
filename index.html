@@ -2882,7 +2882,11 @@ body.toets { background: radial-gradient(120% 80% at 50% 18%, #1f5039 0%, #15382
 .t-lab.l3 { box-shadow: 0 0 0 2px #7a1018, 0 0 10px rgba(255, 200, 70, .7); }
 .t-q { position: relative; margin-top: 10px; aspect-ratio: 648 / 242; background: url(/toets/toets-vraag.webp) 0 0 / 100% 100% no-repeat; display: flex; align-items: center; container-type: inline-size; padding: 0 8%; }
 .t-qin { width: 100%; padding: 6% 0; }
-.t-qin h2 { font: 400 5.8cqw/1.28 "Berkshire Swash", "Lilita One", "Nunito", sans-serif; color: #1d4a35; margin: 0; text-shadow: 0 1px 0 rgba(255, 246, 200, .6); }
+.t-qin h2 { font: 400 6.2cqw/1.25 "Berkshire Swash", "Lilita One", "Nunito", sans-serif; color: #1d4a35; margin: 0; text-shadow: 0 1px 0 rgba(255, 246, 200, .6); }
+.t-q.q-l .t-qin h2 { font-size: 7.8cqw; }
+.t-q.q-m .t-qin h2 { font-size: 7cqw; }
+.t-q.q-s .t-qin h2 { font-size: 6.3cqw; }
+.t-q .praise-pop { display: none; }
 .t-qin .arabic { font-size: 8cqw; margin-top: 2cqw; background: transparent; color: #1d4a35; }
 .t-opts { display: flex; flex-direction: column; gap: 12px; margin-top: 18px; }
 .t-opt { container-type: inline-size; position: relative; transition: filter .2s, opacity .2s; }
@@ -8780,6 +8784,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v318", t: "Kennistoets: vraagtekst groter en het woord \u201cGeweldig!\u201d valt niet meer over de vraag." },
     { v: "v317", t: "Kennistoets (proef): 10 vragen in het goud-groene ontwerp, nu alleen voor jou te openen via Mijn studio > Meldingen testen > Toets (Het Gebed). Spelers zien hem nog niet." },
     { v: "v316", t: "Kruiswoordpuzzel: het rooster past nu altijd binnen het scherm, ook bij brede puzzels (er stak een vakje buiten beeld)." },
     { v: "v315", t: "Kruiswoordpuzzel: de knop \u201cToon oplossing\u201d is weg, zodat de puzzel niet meer in \u00e9\u00e9n tik is op te lossen. Hint (1 letter) blijft." },
@@ -9447,7 +9452,8 @@ return exports;})();
     h += "</div>";
     const pts = toetsPts(q);
     h += '<div class="t-lab l' + pts + '">' + toetsLabel(q) + " · " + pts + (pts === 1 ? " punt" : " punten") + "</div>";
-    h += '<div class="t-q" id="qcard" role="group" tabindex="-1" aria-labelledby="qh" aria-describedby="qopts"><div class="q-num sr-only">Vraag ' + (quiz.idx + 1) + " van " + total + '</div><div class="t-qin"><h2 id="qh">' + esc(q.question) + "</h2>" + (q.questionArabic ? ar(q.questionArabic) : "") + "</div>" +
+    const qn = q.question.length, qsz = qn <= 40 ? "q-l" : qn <= 60 ? "q-m" : "q-s";
+    h += '<div class="t-q ' + qsz + '" id="qcard" role="group" tabindex="-1" aria-labelledby="qh" aria-describedby="qopts"><div class="q-num sr-only">Vraag ' + (quiz.idx + 1) + " van " + total + '</div><div class="t-qin"><h2 id="qh">' + esc(q.question) + "</h2>" + (q.questionArabic ? ar(q.questionArabic) : "") + "</div>" +
       '<span class="sr-only" id="qopts">Antwoordopties: ' + it.order.map(function (o, p) { return LETTERS[p] + ": " + esc(q.options[o]); }).join(". ") + "</span></div>";
     h += '<div class="t-opts" role="group" aria-label="Antwoordopties">';
     it.order.forEach(function (orig, pos) {
