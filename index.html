@@ -2865,6 +2865,66 @@ html.proef-test .j-social, html.proef-test .j-marker { display: none !important;
 .avd-tile:has(> svg.av-arch) { border-color: transparent; overflow: visible; }
 .av-art > svg.av-arch, .avd-big > svg.av-arch, .avd-tile > svg.av-arch { border-radius: 0 !important; overflow: visible; filter: drop-shadow(0 2px 3px rgba(0,0,0,.35)); }
 .avd-cell.lock .avd-tile > svg.av-arch { filter: grayscale(1) brightness(.5); }
+/* ── Kennistoets (proef v317) ── */
+body.toets { background: radial-gradient(120% 80% at 50% 18%, #1f5039 0%, #15382b 55%, #0c2218 100%) fixed; color: #f3e3b0; }
+.t-wrap { max-width: 440px; margin: 0 auto; padding: calc(env(safe-area-inset-top, 0px) + 12px) 14px 32px; font-family: "Berkshire Swash", "Lilita One", "Nunito", sans-serif; font-weight: 400; }
+.t-top { display: flex; align-items: center; gap: 10px; }
+.t-back { appearance: none; border: 0; width: 54px; height: 53px; flex: none; background: url(/toets/toets-terug.webp) center / 100% 100% no-repeat; color: #8a1118; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; -webkit-tap-highlight-color: transparent; }
+.t-back:active { filter: drop-shadow(0 0 8px #ffd45c); transform: scale(.96); }
+.t-title { flex: 1; text-align: center; font-size: 1.25rem; line-height: 1.1; color: #f4dd96; text-shadow: 0 2px 0 rgba(0, 0, 0, .45); }
+.t-score { min-width: 54px; text-align: right; font-size: 1.15rem; color: #f4dd96; text-shadow: 0 2px 0 rgba(0, 0, 0, .45); }
+.t-dots { display: flex; justify-content: center; gap: 5px; margin: 16px 0 12px; }
+.t-dot { position: relative; flex: 0 1 30px; aspect-ratio: 1; background: url(/toets/toets-bol-grijs.webp) center / contain no-repeat; }
+.t-dot.ok, .t-dot.cur { background-image: url(/toets/toets-bol-goud.webp); }
+.t-dot.cur { filter: drop-shadow(0 0 5px #ffd45c) drop-shadow(0 0 9px rgba(255, 190, 60, .85)); }
+.t-dot.no::after { content: "✕"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font: 900 .8rem "Nunito", sans-serif; color: #e0503c; }
+.t-lab { display: inline-block; font: 800 .8rem "Nunito", sans-serif; background: #f4dd96; color: #1d4a35; border-radius: 999px; padding: 3px 13px; }
+.t-lab.l3 { box-shadow: 0 0 0 2px #7a1018, 0 0 10px rgba(255, 200, 70, .7); }
+.t-q { position: relative; margin-top: 10px; aspect-ratio: 648 / 242; background: url(/toets/toets-vraag.webp) 0 0 / 100% 100% no-repeat; display: flex; align-items: center; container-type: inline-size; padding: 0 8%; }
+.t-qin { width: 100%; padding: 6% 0; }
+.t-qin h2 { font: 400 5.8cqw/1.28 "Berkshire Swash", "Lilita One", "Nunito", sans-serif; color: #1d4a35; margin: 0; text-shadow: 0 1px 0 rgba(255, 246, 200, .6); }
+.t-qin .arabic { font-size: 8cqw; margin-top: 2cqw; background: transparent; color: #1d4a35; }
+.t-opts { display: flex; flex-direction: column; gap: 12px; margin-top: 18px; }
+.t-opt { container-type: inline-size; position: relative; transition: filter .2s, opacity .2s; }
+.t-ob { appearance: none; border: 0; width: 100%; aspect-ratio: 646 / 139; background: url(/toets/toets-antwoord.webp) 0 0 / 100% 100% no-repeat; display: flex; align-items: center; text-align: left; padding: 0 29% 0 22%; position: relative; font: inherit; color: #1d4a35; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.t-ob:disabled { cursor: default; opacity: 1; color: #1d4a35; }
+.t-ob:active, .t-ob:focus-visible { filter: drop-shadow(0 0 6px #ffd45c) drop-shadow(0 0 14px rgba(255, 190, 60, .85)); outline: none; }
+.t-let { position: absolute; left: 4.6%; width: 12.6%; top: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 8cqw; color: #1d4a35; text-shadow: 0 1px 0 rgba(255, 246, 200, .6); }
+.t-tx { font-size: 7cqw; line-height: 1.08; text-shadow: 0 1px 0 rgba(255, 246, 200, .6); }
+.t-ob.s-m .t-tx { font-size: 5.4cqw; }
+.t-ob.s-s .t-tx { font-size: 4.3cqw; }
+.t-mark { position: absolute; right: 8%; top: 50%; transform: translateY(-50%); width: 9cqw; height: 9cqw; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; }
+.t-mark svg { width: 70%; height: 70%; }
+.t-opt.correct { filter: drop-shadow(0 0 7px #43e08c) drop-shadow(0 0 16px rgba(60, 230, 140, .75)); }
+.t-opt.correct .t-mark { background: #1e9a58; }
+.t-opt.wrong { filter: drop-shadow(0 0 7px #ff5a3d) drop-shadow(0 0 16px rgba(255, 80, 50, .75)); animation: tshake .4s; }
+.t-opt.wrong .t-mark { background: #c23a24; }
+.t-opt.dim { opacity: .55; }
+@keyframes tshake { 0%, 100% { transform: none; } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+@media (prefers-reduced-motion: reduce) { .t-opt.wrong { animation: none; } }
+.t-fb { margin-top: 18px; font-family: "Nunito", sans-serif; }
+.t-fb .feedback, .t-fb .feedback.good, .t-fb .feedback.bad { background: #f7edd0; color: #26382c; border: 2px solid #c9a24a; box-shadow: 0 0 0 3px #7a1018; border-radius: 14px; }
+.t-fb .feedback .head { font-family: "Berkshire Swash", "Lilita One", "Nunito", sans-serif; font-weight: 400; color: #1d4a35; }
+.t-fb .feedback.bad .head { color: #8a1a14; }
+.t-fb .next-row .btn { background: linear-gradient(#f6e0a0, #d0a343); color: #1d3a2a; border: 2px solid #7a1018; font-family: "Berkshire Swash", "Lilita One", "Nunito", sans-serif; font-weight: 400; }
+.t-res .t-top { justify-content: center; margin-bottom: 14px; }
+.t-card { background: linear-gradient(#f9eecb, #ecd896); color: #1d4a35; text-align: center; border: 3px solid #c9a24a; border-radius: 14px; box-shadow: 0 0 0 5px #7a1018, 0 0 0 7px #c9a24a, 0 12px 26px rgba(0, 0, 0, .4); padding: 18px 16px 12px; margin: 6px 7px 20px; }
+.t-sub { margin: 0; font-size: 1.05rem; color: #7a1018; }
+.t-pct { font-size: 3.4rem; line-height: 1.1; color: #1d4a35; }
+.t-stars { display: flex; justify-content: center; gap: 6px; margin: 2px 0 6px; }
+.t-st svg { fill: #cdbf94; stroke: #a89968; stroke-width: 1.2; }
+.t-st.on svg { fill: #f2b81f; stroke: #a66a00; filter: drop-shadow(0 0 7px rgba(255, 200, 60, .9)); }
+.t-pts, .t-grow { font: 800 .95rem "Nunito", sans-serif; margin: 4px 0; color: #26382c; }
+.t-grow { color: #7a1018; }
+.t-rows { margin-top: 10px; text-align: left; }
+.t-row { display: flex; justify-content: space-between; align-items: center; padding: 9px 2px; border-top: 1px solid rgba(122, 16, 24, .25); font: 800 .95rem "Nunito", sans-serif; color: #26382c; }
+.t-row small { font-weight: 700; color: #6b6a55; }
+.t-tag { font: 800 .8rem "Nunito", sans-serif; padding: 3px 12px; border-radius: 999px; }
+.t-tag.good { background: #cfe9d4; color: #14492c; } .t-tag.mid { background: #f6e3a1; color: #5e4709; } .t-tag.bad { background: #f3cfc7; color: #7a1c12; }
+.t-btn { display: block; width: 100%; margin: 0 0 10px; padding: 13px 16px; border-radius: 14px; border: 2px solid #7a1018; background: linear-gradient(#f6e0a0, #d0a343); color: #1d3a2a; font: 400 1.1rem "Berkshire Swash", "Lilita One", "Nunito", sans-serif; cursor: pointer; }
+.t-btn.alt { background: transparent; color: #f4dd96; border-color: #c9a24a; }
+.t-btn:active { filter: drop-shadow(0 0 8px #ffd45c); transform: scale(.98); }
+.jb-toets { appearance: none; border: 2px solid #7a1018; background: linear-gradient(#f6e0a0, #d0a343); color: #1d3a2a; font: 400 .85rem "Berkshire Swash", "Lilita One", "Nunito", sans-serif; padding: 3px 11px; border-radius: 999px; cursor: pointer; }
 </style>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=3">
@@ -5709,7 +5769,7 @@ return exports;})();
   function quizSecs() {
     if (!quiz) return 0;
     if (quizHg()) return HG_SECS[quiz.level] || 20;
-    return quiz.level === "expert" && S.timer && quiz.kind !== "duel" ? TIMER_SECONDS : 0;
+    return quiz.level === "expert" && S.timer && quiz.kind !== "duel" && quiz.kind !== "toets" ? TIMER_SECONDS : 0;
   }
   function hgSvg(frac, sz) {   /* zandloper; frac = hoeveel zand er nog boven zit (1 → 0) */
     const f = Math.max(0, Math.min(1, frac)), top = 4 + 11 * (1 - f), bot = 29 - 11 * (1 - f);
@@ -9341,7 +9401,111 @@ return exports;})();
     return 0;
   }
 
+  /* ───────────── Kennistoets (proef, v317): 10 vragen per land, goud-groen ontwerp ─────────────
+     Alleen in de proeflanden (TOETS_LAND). Punten per vraag: makkelijk 1, middel 2, moeilijk 3. Sterren: 50 / 70 / 90 %.
+     Beloningen (schatkist, ranglijst) volgen na goedkeuring van het ontwerp. */
+  const TOETS_LAND = { beginner: ["gebed"] };
+  function toetsOn(lv, catId) { return !!(TOETS_LAND[lv] && TOETS_LAND[lv].indexOf(catId) !== -1); }
+  function toetsPts(q) { return Math.min(3, qTier(q)); }
+  function toetsLabel(q) { const t = qTier(q); return t <= 1 ? "Makkelijk" : t === 2 ? "Middel" : "Moeilijk"; }
+  function toetsDraw(level, catId) {
+    const pool = poolFor(level, catId).filter(function (q) { return !isMulti(q) && !q.madhhab; });
+    const by = { 1: [], 2: [], 3: [] };
+    pool.forEach(function (q) { by[toetsPts(q)].push(q); });
+    [1, 2, 3].forEach(function (t) { by[t] = shuffle(by[t]); });
+    const have = [1, 2, 3].filter(function (t) { return by[t].length; });
+    const quota = { 1: 0, 2: 0, 3: 0 };
+    if (have.length >= 3) { quota[1] = 4; quota[2] = 4; quota[3] = 2; }
+    else if (have.length === 2) { quota[have[0]] = 5; quota[have[1]] = 5; }
+    else if (have.length === 1) quota[have[0]] = 10;
+    let out = [];
+    [1, 2, 3].forEach(function (t) { out = out.concat(by[t].splice(0, quota[t])); });
+    const rest = [].concat(by[1], by[2], by[3]);
+    while (out.length < 10 && rest.length) out.push(rest.shift());
+    out.sort(function (a, b) { return toetsPts(a) - toetsPts(b); });
+    return out;
+  }
+  function startToets(catId, qs) {
+    const level = P.mode, practice = !!qs;
+    const questions = qs || toetsDraw(level, catId);
+    if (!questions.length) { jToast("Voor deze toets zijn nog te weinig vragen."); return; }
+    quiz = { kind: "toets", catId: catId, level: level, tier: null, jIdx: null, practice: practice, items: makeItems(questions), idx: 0, score: 0, answered: false, timeLeft: TIMER_SECONDS };
+    screen = "quiz"; render();
+  }
+  function toetsPillHtml(lv, c) {
+    if (!toetsOn(lv, c.id)) return "";
+    return '<button class="jb-toets" data-act="toets-start" data-cat="' + c.id + '" aria-label="Doe de toets van ' + esc(c.title) + '">Toets</button>';
+  }
+  function viewToets() {
+    const it = quiz.items[quiz.idx], q = it.q, total = quiz.items.length, cat = catById(q.category), aset = answerSet(q);
+    document.body.className = quiz.level + " toets";
+    let h = '<div class="t-wrap"><div class="t-top"><button class="t-back" data-act="leave" aria-label="Stoppen met de toets">' + icon("left", 26) + "</button>" +
+      '<span class="t-title">' + esc((quiz.practice ? "Oefenen · " : "Toets · ") + cat.title) + '</span><span class="t-score" id="scorePill">' + quiz.score + "/" + total + "</span></div>";
+    h += '<div class="t-dots" role="img" aria-label="Vraag ' + (quiz.idx + 1) + " van " + total + '">';
+    quiz.items.forEach(function (x, i) { h += '<i class="t-dot' + (x.correct === true ? " ok" : x.correct === false ? " no" : i === quiz.idx ? " cur" : "") + '"></i>'; });
+    h += "</div>";
+    const pts = toetsPts(q);
+    h += '<div class="t-lab l' + pts + '">' + toetsLabel(q) + " · " + pts + (pts === 1 ? " punt" : " punten") + "</div>";
+    h += '<div class="t-q" id="qcard" role="group" tabindex="-1" aria-labelledby="qh" aria-describedby="qopts"><div class="q-num sr-only">Vraag ' + (quiz.idx + 1) + " van " + total + '</div><div class="t-qin"><h2 id="qh">' + esc(q.question) + "</h2>" + (q.questionArabic ? ar(q.questionArabic) : "") + "</div>" +
+      '<span class="sr-only" id="qopts">Antwoordopties: ' + it.order.map(function (o, p) { return LETTERS[p] + ": " + esc(q.options[o]); }).join(". ") + "</span></div>";
+    h += '<div class="t-opts" role="group" aria-label="Antwoordopties">';
+    it.order.forEach(function (orig, pos) {
+      const txt = q.options[orig], n = txt.length, sz = n <= 10 ? "l" : n <= 20 ? "m" : "s";
+      let cls = "t-opt", mark = "", sr = "";
+      if (quiz.answered) {
+        if (aset.indexOf(orig) !== -1) { cls += " correct"; mark = icon("check", 22); sr = "Juist antwoord"; }
+        else if (it.picked === orig) { cls += " wrong"; mark = icon("x", 22); sr = "Jouw antwoord, fout"; }
+        else { cls += " dim"; sr = "Niet gekozen"; }
+      }
+      h += '<div class="' + cls + '"><button class="t-ob s-' + sz + '" data-act="answer" data-pos="' + pos + '"' + (quiz.answered ? " disabled" : "") + '><span class="t-let" aria-hidden="true">' + LETTERS[pos] + '</span><span class="t-tx">' + esc(txt) + "</span>" +
+        (mark ? '<span class="t-mark" aria-hidden="true">' + mark + "</span>" : "") + (sr ? '<span class="sr-only">' + sr + "</span>" : "") + "</button></div>";
+    });
+    h += "</div>";
+    if (quiz.answered) h += '<div class="t-fb">' + feedbackHtml(it) + "</div>";
+    return h + "</div>";
+  }
+  function finishToets() {
+    let pts = 0, max = 0; const groups = {}, wrong = [];
+    quiz.items.forEach(function (it) {
+      const p = toetsPts(it.q), g = toetsLabel(it.q); max += p;
+      groups[g] = groups[g] || { n: 0, ok: 0 }; groups[g].n++;
+      if (it.correct) { pts += p; groups[g].ok++; } else wrong.push(it.q);
+    });
+    const total = quiz.items.length, pct = max ? Math.round(pts / max * 100) : 0, stars = pct >= 90 ? 3 : pct >= 70 ? 2 : pct >= 50 ? 1 : 0;
+    let first = null;
+    if (!quiz.practice) {
+      P.toets = P.toets || {}; const k = quiz.level + ":" + quiz.catId, r0 = P.toets[k];
+      P.toets[k] = { first: r0 ? r0.first : pct, last: pct, best: Math.max(pct, r0 ? r0.best : 0), n: (r0 ? r0.n : 0) + 1 };
+      first = P.toets[k].first; saveState();
+    }
+    result = { kind: "toets", level: quiz.level, catId: quiz.catId, practice: quiz.practice, pts: pts, max: max, pct: pct, stars: stars, groups: groups, wrong: wrong, total: total, correct: total - wrong.length, first: first };
+    play(stars >= 2 ? "win" : "click");
+    screen = "result"; render();
+  }
+  function viewToetsResult(r) {
+    const cat = catById(r.catId);
+    document.body.className = r.level + " toets";
+    let h = '<div class="t-wrap t-res"><div class="t-top"><span class="t-title">' + (r.practice ? "Oefenen klaar" : "Toets klaar") + "</span></div>";
+    h += '<div class="t-card"><p class="t-sub">' + esc(cat.title) + '</p><div class="t-pct">' + r.pct + '%</div><div class="t-stars" role="img" aria-label="' + r.stars + ' van 3 sterren">';
+    for (let i = 1; i <= 3; i++) h += '<i class="t-st' + (i <= r.stars ? " on" : "") + '">' + icon("star", 46, "fill") + "</i>";
+    h += '</div><p class="t-pts">' + r.pts + " van " + r.max + " punten · " + r.correct + " van " + r.total + " goed</p>";
+    if (!r.practice && r.first !== null && r.first !== r.pct) h += '<p class="t-grow">Eerste keer ' + r.first + "% → nu " + r.pct + "%</p>";
+    const NM = { "Makkelijk": "Makkelijke vragen", "Middel": "Middelmoeilijke vragen", "Moeilijk": "Moeilijke vragen" };
+    h += '<div class="t-rows">';
+    ["Makkelijk", "Middel", "Moeilijk"].forEach(function (g) {
+      const o = r.groups[g]; if (!o) return;
+      const f = o.ok / o.n, tag = f >= 0.8 ? ["Sterk", "good"] : f >= 0.5 ? ["Bijna", "mid"] : ["Herhalen", "bad"];
+      h += '<div class="t-row"><span>' + NM[g] + " <small>" + o.ok + "/" + o.n + '</small></span><b class="t-tag ' + tag[1] + '">' + tag[0] + "</b></div>";
+    });
+    h += "</div></div>";
+    if (r.wrong.length) h += '<button class="t-btn" data-act="toets-fix">Oefen wat ik fout had</button>';
+    if (toetsOn(r.level, r.catId)) h += '<button class="t-btn alt" data-act="toets-again">Nog een toets</button>';
+    h += '<button class="t-btn alt" data-act="toets-back">Verder op de reiskaart</button></div>';
+    return h;
+  }
+
   function viewQuiz() {
+    if (quiz.kind === "toets") return viewToets();
     const it = quiz.items[quiz.idx], q = it.q, total = quiz.items.length;
     const cat = catById(q.category);
     const isDaily = quiz.kind === "daily", isDuel = quiz.kind === "duel";
@@ -9657,6 +9821,7 @@ return exports;})();
   }
 
   function finishQuiz() {
+    if (quiz.kind === "toets") { finishToets(); return; }
     const total = quiz.items.length, score = quiz.score;
     let stars = starsFor(score, total), isRecord = false, jr = null, dailyFirst = false, dailyDs = 0, weekBonus = false;
 
@@ -9779,6 +9944,7 @@ return exports;})();
   }
 
   function viewResult() {
+    if (result.kind === "toets") return viewToetsResult(result);
     if (result.kind === "journey") return viewJourneyResult(result);
     const r = result, junior = r.level !== "expert";
     let title, msg, arabicTxt;
@@ -14261,7 +14427,7 @@ return exports;})();
     const lv = P.mode, LS = landsFor(lv), c = LS[k], st = jLandStats(lv, c.id), pct = st.n ? Math.round(st.passed / st.n * 100) : 0;
     return '<span class="jb-nr" aria-hidden="true">' + (k + 1) + '</span><span class="jb-t"><b>Land ' + (k + 1) + ": " + esc(c.title) + (jLandOpen(lv, c.id) ? "" : " 🔒") + "</b>" +
       '<span class="jb-row"><span class="jb-prog" aria-label="' + st.passed + " van " + st.n + ' levels gehaald"><i style="width:' + pct + '%"></i></span><small>' + st.passed + "/" + st.n + " ⭐" + st.stars + "</small>" +
-      '<span class="jb-pills">' + bonChipHtml(lv, c) + badgePillHtml(lv, c, st) + "</span></span></span>";
+      '<span class="jb-pills">' + toetsPillHtml(lv, c) + bonChipHtml(lv, c) + badgePillHtml(lv, c, st) + "</span></span></span>";
   }
   /* Poort van Jannah tussen land k-1 (onder) en land k (boven) */
   function jGateHtml(lv, k) {
@@ -15256,6 +15422,10 @@ return exports;})();
       case "duff-toggle": duffToggle(); break;
       case "settings": case "a11y": play("click"); settingsDialog(); break;
       case "gate-go": { const gk = parseInt(el.dataset.to, 10); if (landFly || isNaN(gk) || screen !== "journey") break; play("click"); landFlyAfter = null; landFly = { from: Math.max(0, Math.min(journeyLand === null ? gk - 1 : journeyLand, gk - 1)), to: gk }; runLandFlight(); break; }
+      case "toets-start": play("click"); startToets(el.dataset.cat); break;
+      case "toets-fix": play("click"); if (result && result.wrong) startToets(result.catId, result.wrong); break;
+      case "toets-again": play("click"); if (result) startToets(result.catId); break;
+      case "toets-back": play("click"); screen = "journey"; render(); break;
       case "journey-here": { play("click"); const hc = document.querySelector(".j-current"); if (hc && hc.scrollIntoView) hc.scrollIntoView({ block: "center", behavior: reducedMotion() ? "auto" : "smooth" }); break; }
       case "profile-menu": play("click"); profileMenu(); break;
       case "move-out": play("click"); moveDialog(); break;
