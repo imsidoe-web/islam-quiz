@@ -8138,7 +8138,8 @@ return exports;})();
   const NEWS = [
     { id: "n322-feedback-week", title: "Jouw mening telt",
       label: "Nieuw in NurSpark: in het weekend vragen we je af en toe om feedback. Loop je ergens tegenaan of heb je een tip? Laat het ons weten.",
-      text: "In het weekend vragen we je <b>af en toe om je mening</b>.<br>Loop je ergens tegenaan, ging er iets fout of heb je een tip? Je kunt het altijd sturen via <b>Instellingen › Stuur feedback</b>." },
+      text: "In het weekend vragen we je <b>af en toe om je mening</b>.<br>Loop je ergens tegenaan, ging er iets fout of heb je een tip? Je kunt het altijd sturen via <b>Instellingen › Stuur feedback</b>.",
+      go: { label: "Schrijf nu", fn: function () { feedbackDialog(); } } },
     { id: "n312-ranglijst", scr: "journey", title: "Nieuw: ranglijst",
       label: "Nieuw in NurSpark: halverwege en aan het einde van elk land zie je waar je staat bij andere spelers, met hun edelstenen, munten en punten. Klim omhoog en je rij gaat blinken.",
       text: "Halverwege en aan het einde van elk land zie je nu <b>waar je staat</b> bij andere spelers: hun edelstenen, munten en punten.<br>Klim omhoog en jouw rij gaat blinken!" },
@@ -8832,6 +8833,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v325", t: "Nieuwtje \"Jouw mening telt\": knop Schrijf nu erbij, zodat spelers meteen feedback kunnen sturen." },
     { v: "v324", t: "Meldingen: ingelogde spelers krijgen één keer (na hun 3e level) een vriendelijke vraag of ze meldingen willen aanzetten. Te testen bij Meldingen testen." },
     { v: "v323", t: "Feedback vragen: de eerste keer is vanavond (ma 16 nov), daarna elk weekend. Eerder stond dinsdag 17 nov." },
     { v: "v322", t: "Feedback vragen: op di 17 nov en daarna elk weekend 's avonds een vriendelijke vraag in de app, en een pushmelding buiten de app (voor spelers met een account en meldingen aan). Te testen bij Meldingen testen." },
