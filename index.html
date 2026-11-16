@@ -2290,7 +2290,7 @@ body.dashfull { background: #0f2e22; color: #f4efe2; }
 .d-today { appearance: none; font: inherit; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-radius: 20px; background: #1b4332; border: 2px solid #2d6a4f; color: #f4efe2; }
 .d-today > span { flex: 1; display: flex; flex-direction: column; gap: 2px; }
 .d-today b { font-size: 1.05rem; font-weight: 900; } .d-today small { color: #cfe8d8; font-weight: 700; font-size: .82rem; }
-.d-today:focus-visible, .t-btn:focus-visible { outline: 3px solid #ffb703; outline-offset: 3px; }
+.d-today:focus-visible, .tg-btn:focus-visible { outline: 3px solid #ffb703; outline-offset: 3px; }
 .t-sum { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 20px; background: #1b4332; border: 2px solid #2d6a4f; }
 .t-sum span { display: flex; flex-direction: column; gap: 2px; } .t-sum b { font-size: 1.15rem; } .t-sum small { color: #cfe8d8; font-weight: 700; }
 .t-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
@@ -2299,9 +2299,9 @@ body.dashfull { background: #0f2e22; color: #f4efe2; }
 .t-list li.on { background: #e9f7ef; border-color: #9fd6b4; }
 .t-ck { width: 28px; height: 28px; border-radius: 50%; flex: none; display: grid; place-items: center; border: 2.5px solid #c9b48a; font-weight: 900; color: #fff; }
 .t-list li.on .t-ck { background: #2d8a5f; border-color: #2d8a5f; }
-.t-tx { flex: 1; display: flex; flex-direction: column; min-width: 0; } .t-tx b { font-weight: 900; } .t-tx small { color: #6b5a3a; font-weight: 700; font-size: .8rem; }
-.t-btn { appearance: none; font: inherit; font-weight: 900; font-size: .85rem; cursor: pointer; border: 0; border-radius: 12px; padding: 8px 12px; min-height: 40px; background: #1b4332; color: #fff; flex: none; }
-.t-btn.on { background: #2d8a5f; }
+.tg-tx { flex: 1; display: flex; flex-direction: column; min-width: 0; } .tg-tx b { font-weight: 900; } .tg-tx small { color: #6b5a3a; font-weight: 700; font-size: .8rem; }
+.tg-btn { appearance: none; font: inherit; font-weight: 900; font-size: .85rem; cursor: pointer; border: 0; border-radius: 12px; padding: 8px 12px; min-height: 40px; background: #1b4332; color: #fff; flex: none; }
+.tg-btn.on { background: #2d8a5f; }
 .t-note { margin: 0; font-size: .8rem; color: #9fc4b0; }
 .p-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .p-stats div { background: #1b4332; border: 2px solid #2d6a4f; border-radius: 16px; padding: 10px; display: flex; flex-direction: column; }
@@ -8483,10 +8483,10 @@ return exports;})();
       const on = goalDone(x[0]), self = x[3] === "self";
       const go = x[0] === "level" ? "journey" : x[0] === "daily" ? "journey" : x[0] === "dua" ? "dua" : "";
       let act = "";
-      if (x[0] === "quran" && !on) act = '<button class="t-btn" data-act="quran">Lees</button> ';
-      if (self) act += '<button class="t-btn' + (on ? " on" : "") + '" data-act="goal-tog" data-g="' + x[0] + '" aria-pressed="' + on + '">' + (on ? "Gedaan ✓" : "Gedaan") + "</button>";
-      else if (!on && go) act = '<button class="t-btn" data-act="' + go + '">Ga</button>';
-      return '<li class="' + (on ? "on" : "") + (self ? " self" : "") + '"><span class="t-ck" aria-hidden="true">' + (on ? "✓" : "") + '</span><span class="t-tx"><b>' + x[1] + "</b><small>" + x[2] + '</small></span><span class="sr-only">' + (on ? "gehaald" : "nog niet gehaald") + "</span>" + act + "</li>";
+      if (x[0] === "quran" && !on) act = '<button class="tg-btn" data-act="quran">Lees</button> ';
+      if (self) act += '<button class="tg-btn' + (on ? " on" : "") + '" data-act="goal-tog" data-g="' + x[0] + '" aria-pressed="' + on + '">' + (on ? "Gedaan ✓" : "Gedaan") + "</button>";
+      else if (!on && go) act = '<button class="tg-btn" data-act="' + go + '">Ga</button>';
+      return '<li class="' + (on ? "on" : "") + (self ? " self" : "") + '"><span class="t-ck" aria-hidden="true">' + (on ? "✓" : "") + '</span><span class="tg-tx"><b>' + x[1] + "</b><small>" + x[2] + '</small></span><span class="sr-only">' + (on ? "gehaald" : "nog niet gehaald") + "</span>" + act + "</li>";
     }).join("") + "</ul>";
     h += '<p class="t-note">Koran lezen telt vanzelf na 5 minuten lezen in de app; lees je in je eigen mushaf, vink het dan zelf af. Adhkar vink je zelf af. Doelen beginnen elke dag opnieuw.</p>';
     h += '<button class="btn block" data-act="prog">📊 Mijn voortgang</button></section>';
@@ -8561,7 +8561,7 @@ return exports;})();
     t += "</div></div>";
     h += '<section class="hub">' + t + '<div class="q-nav">' + (s < 114 ? '<button class="btn" data-act="q-open" data-s="' + (s + 1) + '" data-a="1">Volgende: ' + Q_TR[s] + "</button>" : "") + (s > 1 ? '<button class="btn ghost" data-act="q-open" data-s="' + (s - 1) + '" data-a="1">Vorige: ' + Q_TR[s - 2] + "</button>" : "") + "</div>" +
       '<p class="q-src">Tekst en lettertype: Ayman Siddiqui / Quranic Universal Library by Tarteel. Tik op een ayah voor een bladwijzer. De ayah-nummers staan in de rondjes, zoals in een IndoPak-mushaf.</p></section>' +
-      '<div class="q-selbar" id="qSel" hidden><span id="qSelT"></span><button class="t-btn" data-act="q-mark" id="qSelB">🔖 Bladwijzer</button>' + (mkOwner() ? '<button class="t-btn" data-act="q-journal">📓 Journal</button>' : "") + '<button class="t-btn" data-act="q-unsel" aria-label="Sluiten">✕</button></div>';
+      '<div class="q-selbar" id="qSel" hidden><span id="qSelT"></span><button class="tg-btn" data-act="q-mark" id="qSelB">🔖 Bladwijzer</button>' + (mkOwner() ? '<button class="tg-btn" data-act="q-journal">📓 Journal</button>' : "") + '<button class="tg-btn" data-act="q-unsel" aria-label="Sluiten">✕</button></div>';
     return h;
   }
   /* ── Koran-dagboek (voorlopig alleen beheerder): uitleg, reflectie en journalvragen per vers. Eigen notities blijven alleen op dit toestel. ── */
