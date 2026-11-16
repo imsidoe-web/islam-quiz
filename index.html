@@ -2688,6 +2688,12 @@ body.kosmos .rad-inv-ban { background: rgba(8,12,40,.95); border-color: #3fe6d0;
 .sp-title span.mu svg { display: block; width: .66em; height: .66em; filter: drop-shadow(0 3px 0 #8a5a0a) drop-shadow(0 6px 10px rgba(0,0,0,.35)); }
 .d-brand { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .d-wm { display: block; line-height: 0; }
+.d-br { display: flex; align-items: center; gap: 10px; flex: none; }
+.d-lang { appearance: none; border: 2px solid #ffd54f; border-radius: 9px; padding: 0; background: #2d6a4f; cursor: pointer; overflow: hidden; flex: none; width: 46px; height: 32px; display: block; line-height: 0; }
+.d-lang svg { width: 100%; height: 100%; display: block; }
+.d-langopt { display: flex; align-items: center; gap: 12px; text-align: left; }
+.d-flag { flex: none; width: 36px; height: 24px; border-radius: 5px; overflow: hidden; line-height: 0; box-shadow: 0 0 0 1px rgba(0,0,0,.18); }
+.d-flag svg { width: 100%; height: 100%; display: block; }
 .d-wm .brand-wm { height: 28px; width: auto; display: block; }
 .dash > .d-hello { flex: none; }
 .dash > .d-hello small { font-size: .95rem; }
@@ -5972,6 +5978,45 @@ return exports;})();
   function currentPlayer() { return S.players.find(function (p) { return p.id === S.current; }) || null; }
   let P = currentPlayer();
 
+  /* ───────────── proef-talen: taalkeuze + tekstenlijst (nl, en, tr) ─────────────
+     Een nieuwe taal erbij: voeg de code toe aan LANGS, een vlag aan LANG_FLAG en een blok aan TXT.
+     Ontbreekt een tekst in een taal, dan toont T() altijd het Nederlands. De taal staat in S.lang (per toestel). */
+  const LANGS = ["nl", "en", "tr"];
+  const LANG_LOCALE = { nl: "nl-NL", en: "en-GB", tr: "tr-TR" };
+  const LANG_FLAG = {"nl":"<rect width=\"30\" height=\"20\" fill=\"#fff\"/><rect width=\"30\" height=\"6.67\" fill=\"#AE1C28\"/><rect y=\"13.33\" width=\"30\" height=\"6.67\" fill=\"#21468B\"/>","en":"<rect width=\"30\" height=\"20\" fill=\"#012169\"/><path d=\"M0 0L30 20M30 0L0 20\" stroke=\"#fff\" stroke-width=\"4\"/><path d=\"M0 0L30 20M30 0L0 20\" stroke=\"#C8102E\" stroke-width=\"1.6\"/><path d=\"M15 0V20M0 10H30\" stroke=\"#fff\" stroke-width=\"6.6\"/><path d=\"M15 0V20M0 10H30\" stroke=\"#C8102E\" stroke-width=\"4\"/>","tr":"<rect width=\"30\" height=\"20\" fill=\"#E30A17\"/><circle cx=\"11\" cy=\"10\" r=\"5\" fill=\"#fff\"/><circle cx=\"12.3\" cy=\"10\" r=\"4\" fill=\"#E30A17\"/><polygon points=\"14.60,10.00 16.22,9.44 16.26,7.72 17.30,9.09 18.94,8.59 17.96,10.00 18.94,11.41 17.30,10.91 16.26,12.28 16.22,10.56\" fill=\"#fff\"/>"};
+  const TXT = {
+    nl: {"lang.name":"Nederlands","lang.btn":"Taal kiezen. Nu: {taal}","lang.title":"Kies je taal","lang.note":"Nog niet alles is vertaald. De vragen zijn nu nog in het Nederlands.","lang.set":"Taal: {taal}","close":"Sluiten","mode.beginner":"Beginner","mode.junior":"Gevorderd","mode.expert":"Ervaren","dash.h1":"Startscherm","dash.profile":"Profiel en instellingen","dash.salam":"As-salamu ‘alaykum,","dash.rihla.aria":"Rihlat al-‘Ilm, het spel. {mode}, land {n}: {title}, level {cur} van {tot}. Verder spelen","dash.world":"SPELWERELD","dash.land":"Land {n}: {title}","dash.lvl":"Lvl {n}","dash.go":"Verder","dash.mode.aria":"Modus wisselen. Nu: {mode}. Tik om te kiezen","dash.nav":"Onderdelen","dash.hub.n":"Mijn foutjes: {n} · du’a-boekje","dash.hub.0":"Foutjes en du’a-boekje","dash.play.aria":"NurPlay, losse spellen voor tussendoor. Openen","dash.play.sub":"Losse spellen voor tussendoor","dash.klas.sub":"Leer samen met je klas","dash.klas.kahoot":"Kahoot-versie","dash.rad.sub":"Rad van Kennis","dash.group.sub":"Groep / Duel","dash.kids.aria":"KidsZone, komt binnenkort","dash.kids.name":"[Naam volgt]","dash.kids.soon":"Binnenkort, insha’Allah","dash.more":"Meer","dash.score":"Score","dash.album":"Album","dash.bazaar":"Bazaar","sal.title":"🕌 Gebedstijden","sal.city":"Kies stad","sal.intro":"Kies je stad om de gebedstijden van vandaag te zien. Je locatie wordt niet gevraagd en niet bewaard.","sal.choose":"Kies je stad","sal.next":"<b>{naam}</b> om {tijd} · nog {rest}","sal.fine":"Indicatie (Asr volgens Hanafi). Volg het rooster van je eigen moskee.","sal.fajr":"Fajr","sal.shuruq":"Shuruq","sal.dhuhr":"Duhr","sal.asr":"Asr","sal.maghrib":"Maghrib","sal.isha":"Isha","sal.jumuah":"Jumu’ah","sal.h":"u","sal.min":"min","city.text":"Kies de stad die het dichtst bij je is. Alleen de naam van de stad wordt op dit toestel bewaard.","cal.aria":"Kalender","cal.today.aria":"Vandaag {datum}. Tik om de islamitische datum gelijk te zetten met je moskee","cal.today":"vandaag","cal.tomorrow":"morgen","cal.left.d":"nog {n} d","cal.in.days":"over {n} dagen","cal.upcoming":"Komende islamitische dagen: ","cal.ah":"AH","hij.title":"Islamitische datum","hij.text":"Kies wat je moskee vandaag aanhoudt.","hij.minus":"1 dag eerder","hij.zero":"Zoals berekend","hij.plus":"1 dag later","today.all":"Alle doelen gehaald, Masha’Allah!","today.one":"Nog 1 doel: {doel}","today.more":"Nog {n} doelen · eerst: {doel}","today.aria":"Vandaag: {n} van {tot} doelen gehaald. ","today.title":"Vandaag","goal.level":"Eén level spelen","goal.daily":"Quiz van de Dag","goal.dua":"Een du’a lezen","goal.quran":"Koran lezen","goal.adhm":"Ochtend-adhkar","goal.adha":"Avond-adhkar","streak.aria1":"Dagreeks: {n} dag","streak.aria":"Dagreeks: {n} dagen","streak.risk":". Speel vandaag een level om hem te houden","streak.done":". Vandaag al gespeeld","lives.aria":"{n} van {max} levens. Meer informatie","prof.avatar":"Avatar kiezen","prof.settings":"Instellingen"},
+    en: {"lang.name":"English","lang.btn":"Choose language. Now: {taal}","lang.title":"Choose your language","lang.note":"Not everything is translated yet. The questions are still in Dutch for now.","lang.set":"Language: {taal}","close":"Close","mode.beginner":"Beginner","mode.junior":"Intermediate","mode.expert":"Advanced","dash.h1":"Home screen","dash.profile":"Profile and settings","dash.salam":"As-salamu ‘alaykum,","dash.rihla.aria":"Rihlat al-‘Ilm, the game. {mode}, land {n}: {title}, level {cur} of {tot}. Continue playing","dash.world":"GAME WORLD","dash.land":"Land {n}: {title}","dash.lvl":"Lvl {n}","dash.go":"Continue","dash.mode.aria":"Change mode. Now: {mode}. Tap to choose","dash.nav":"Sections","dash.hub.n":"My mistakes: {n} · du’a booklet","dash.hub.0":"Mistakes and du’a booklet","dash.play.aria":"NurPlay, short games for in between. Open","dash.play.sub":"Short games for in between","dash.klas.sub":"Learn together with your class","dash.klas.kahoot":"Kahoot version","dash.rad.sub":"Wheel of Knowledge","dash.group.sub":"Group / Duel","dash.kids.aria":"KidsZone, coming soon","dash.kids.name":"[Name to follow]","dash.kids.soon":"Coming soon, insha’Allah","dash.more":"More","dash.score":"Score","dash.album":"Album","dash.bazaar":"Bazaar","sal.title":"🕌 Salah (prayer) times","sal.city":"Choose city","sal.intro":"Choose your city to see today’s Salah times. Your location is not asked for and not stored.","sal.choose":"Choose your city","sal.next":"<b>{naam}</b> at {tijd} · {rest} left","sal.fine":"Estimate (Asr according to the Hanafi school). Follow the timetable of your own mosque.","sal.fajr":"Fajr","sal.shuruq":"Shuruq","sal.dhuhr":"Duhr","sal.asr":"Asr","sal.maghrib":"Maghrib","sal.isha":"Isha","sal.jumuah":"Jumu’ah","sal.h":"h","sal.min":"min","city.text":"Choose the city closest to you. Only the name of the city is stored on this device.","cal.aria":"Calendar","cal.today.aria":"Today {datum}. Tap to match the Islamic date with your mosque","cal.today":"today","cal.tomorrow":"tomorrow","cal.left.d":"{n} d left","cal.in.days":"in {n} days","cal.upcoming":"Upcoming Islamic days: ","cal.ah":"AH","hij.title":"Islamic date","hij.text":"Choose what your mosque follows today.","hij.minus":"1 day earlier","hij.zero":"As calculated","hij.plus":"1 day later","today.all":"All goals reached, Masha’Allah!","today.one":"1 goal left: {doel}","today.more":"{n} goals left · first: {doel}","today.aria":"Today: {n} of {tot} goals reached. ","today.title":"Today","goal.level":"Play one level","goal.daily":"Quiz of the Day","goal.dua":"Read a du’a","goal.quran":"Read Qur’an","goal.adhm":"Morning adhkar","goal.adha":"Evening adhkar","streak.aria1":"Daily streak: {n} day","streak.aria":"Daily streak: {n} days","streak.risk":". Play a level today to keep it","streak.done":". Already played today","lives.aria":"{n} of {max} lives. More information","prof.avatar":"Choose avatar","prof.settings":"Settings"},
+    tr: {"lang.name":"Türkçe","lang.btn":"Dil seç. Şimdi: {taal}","lang.title":"Dilini seç","lang.note":"Henüz her şey çevrilmedi. Sorular şimdilik hâlâ Hollandaca.","lang.set":"Dil: {taal}","close":"Kapat","mode.beginner":"Başlangıç","mode.junior":"Orta","mode.expert":"İleri","dash.h1":"Ana ekran","dash.profile":"Profil ve ayarlar","dash.salam":"Es-selâmü aleyküm,","dash.rihla.aria":"Rihlat al-‘Ilm, oyun. {mode}, {n}. ülke: {title}, seviye {cur} / {tot}. Oynamaya devam et","dash.world":"OYUN DÜNYASI","dash.land":"{n}. Ülke: {title}","dash.lvl":"Sv {n}","dash.go":"Devam","dash.mode.aria":"Modu değiştir. Şimdi: {mode}. Seçmek için dokun","dash.nav":"Bölümler","dash.hub.n":"Hatalarım: {n} · dua kitapçığı","dash.hub.0":"Hatalar ve dua kitapçığı","dash.play.aria":"NurPlay, ara vermek için kısa oyunlar. Aç","dash.play.sub":"Ara vermek için kısa oyunlar","dash.klas.sub":"Sınıfınla birlikte öğren","dash.klas.kahoot":"Kahoot sürümü","dash.rad.sub":"Bilgi Çarkı","dash.group.sub":"Grup / Düello","dash.kids.aria":"KidsZone, yakında","dash.kids.name":"[İsim gelecek]","dash.kids.soon":"Yakında, inşallah","dash.more":"Daha fazla","dash.score":"Puan","dash.album":"Albüm","dash.bazaar":"Çarşı","sal.title":"🕌 Namaz vakitleri","sal.city":"Şehir seç","sal.intro":"Bugünün namaz vakitlerini görmek için şehrini seç. Konumun sorulmaz ve kaydedilmez.","sal.choose":"Şehrini seç","sal.next":"<b>{naam}</b> {tijd} · {rest} kaldı","sal.fine":"Yaklaşık vakitler (ikindi Hanefî mezhebine göre). Kendi caminin vakit çizelgesini takip et.","sal.fajr":"İmsak","sal.shuruq":"Güneş","sal.dhuhr":"Öğle","sal.asr":"İkindi","sal.maghrib":"Akşam","sal.isha":"Yatsı","sal.jumuah":"Cuma","sal.h":"sa","sal.min":"dk","city.text":"Sana en yakın şehri seç. Bu cihazda yalnızca şehrin adı saklanır.","cal.aria":"Takvim","cal.today.aria":"Bugün {datum}. İslami tarihi caminle eşitlemek için dokun","cal.today":"bugün","cal.tomorrow":"yarın","cal.left.d":"{n} g kaldı","cal.in.days":"{n} gün sonra","cal.upcoming":"Yaklaşan İslami günler: ","cal.ah":"H.","hij.title":"İslami tarih","hij.text":"Caminin bugün esas aldığı tarihi seç.","hij.minus":"1 gün önce","hij.zero":"Hesaplandığı gibi","hij.plus":"1 gün sonra","today.all":"Tüm hedefler tamam, maşallah!","today.one":"1 hedef kaldı: {doel}","today.more":"{n} hedef kaldı · önce: {doel}","today.aria":"Bugün: {tot} hedeften {n} tanesi tamam. ","today.title":"Bugün","goal.level":"Bir seviye oyna","goal.daily":"Günün Quizi","goal.dua":"Bir dua oku","goal.quran":"Kur’an oku","goal.adhm":"Sabah zikirleri","goal.adha":"Akşam zikirleri","streak.aria1":"Günlük seri: {n} gün","streak.aria":"Günlük seri: {n} gün","streak.risk":". Seriyi korumak için bugün bir seviye oyna","streak.done":". Bugün zaten oynadın","lives.aria":"{max} candan {n}. Daha fazla bilgi","prof.avatar":"Avatar seç","prof.settings":"Ayarlar"}
+  };
+  const TXT_LIST = {"hijm":{"tr":["Muharrem","Safer","Rebiülevvel","Rebiülahir","Cemaziyelevvel","Cemaziyelahir","Recep","Şaban","Ramazan","Şevval","Zilkade","Zilhicce"]},"hijd":{"en":["Start of Ramadan","Eid al-Fitr","Day of ‘Arafah","Eid al-Adha","Islamic New Year","Ashura"],"tr":["Ramazan başlangıcı","Ramazan Bayramı","Arefe günü","Kurban Bayramı","Hicri Yılbaşı","Aşure günü"]}};
+  function LANG() { return LANGS.indexOf(S.lang) >= 0 ? S.lang : "nl"; }
+  function LOCALE() { return LANG_LOCALE[LANG()]; }
+  function T(key, v) {
+    let t = TXT[LANG()][key]; if (t == null) t = TXT.nl[key]; if (t == null) return key;
+    return v ? t.replace(/\{(\w+)\}/g, function (m, k) { return v[k] != null ? v[k] : m; }) : t;
+  }
+  /* TL: lijst-tekst (bijv. maandnamen); nl = de bestaande Nederlandse waarde uit de code */
+  function TL(list, i, nl) { const a = (TXT_LIST[list] || {})[LANG()]; return a && a[i] != null ? a[i] : nl; }
+  function langFlag(l) { return '<svg viewBox="0 0 30 20" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">' + LANG_FLAG[l] + "</svg>"; }
+  function applyLang() { try { document.documentElement.lang = LANG(); } catch (e) {} }
+  applyLang();
+  function langDialog() {
+    const old = document.getElementById("langDlg"); if (old) old.remove();
+    const w = document.createElement("div"); w.className = "dialog-wrap"; w.id = "langDlg";
+    w.innerHTML = '<div class="dialog" role="dialog" aria-modal="true" aria-labelledby="langT"><h3 id="langT">' + T("lang.title") + '</h3><div class="d-cities one">' +
+      LANGS.map(function (l) { return '<button class="d-city d-langopt' + (LANG() === l ? " on" : "") + '" data-d="l" data-v="' + l + '" lang="' + l + '" aria-pressed="' + (LANG() === l) + '"><span class="d-flag">' + langFlag(l) + "</span><b>" + TXT[l]["lang.name"] + "</b></button>"; }).join("") +
+      '</div><p class="fine">' + T("lang.note") + '</p><button class="btn ghost block" data-d="x">' + T("close") + "</button></div>";
+    w.addEventListener("click", function (e) {
+      const d = e.target.closest("[data-d]");
+      if (e.target === w || (d && d.dataset.d === "x")) { w.remove(); return; }
+      if (d && d.dataset.d === "l") { S.lang = d.dataset.v; saveState(); applyLang(); play("click"); w.remove(); render(); announce(T("lang.set", { taal: T("lang.name") })); }
+    });
+    w.addEventListener("keydown", function (e) { if (e.key === "Escape") w.remove(); });
+    document.body.appendChild(w);
+    const f = w.querySelector(".d-city.on") || w.querySelector(".d-city"); if (f) f.focus();
+  }
+
   /* ───────────── Geluid (Web Audio API) ───────────── */
   let audioCtx = null;
   function ctx() {
@@ -7753,25 +7798,25 @@ return exports;})();
     const tm = salToday(new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1));
     return { k: "fajr", at: tm.fajr, left: tm.fajr + 1440 - cur };
   }
-  function salLabel(k) { if (k === "dhuhr" && new Date().getDay() === 5) return "Jumu’ah"; const n = SAL_NAMES.find(function (x) { return x[0] === k; }); return n ? n[1] : k; }
-  function leftTxt(m) { const h = Math.floor(m / 60), mm = m % 60; return h ? h + " u " + mm + " min" : mm + " min"; }
+  function salLabel(k) { if (k === "dhuhr" && new Date().getDay() === 5) return T("sal.jumuah"); const n = SAL_NAMES.find(function (x) { return x[0] === k; }); return n ? T("sal." + n[0]) : k; }
+  function leftTxt(m) { const h = Math.floor(m / 60), mm = m % 60; return h ? h + " " + T("sal.h") + " " + mm + " " + T("sal.min") : mm + " " + T("sal.min"); }
   function salHtml() {
     const c = salCity();
-    let h = '<section class="d-card d-salat" aria-labelledby="dSalT"><div class="d-row"><h2 id="dSalT">🕌 Gebedstijden</h2><button class="d-link" data-act="dash-city">' + (c ? esc(c[0]) + " ▾" : "Kies stad") + "</button></div>";
-    if (!c) return h + '<p class="d-fine">Kies je stad om de gebedstijden van vandaag te zien. Je locatie wordt niet gevraagd en niet bewaard.</p><button class="btn block" data-act="dash-city">Kies je stad</button></section>';
+    let h = '<section class="d-card d-salat" aria-labelledby="dSalT"><div class="d-row"><h2 id="dSalT">' + T("sal.title") + '</h2><button class="d-link" data-act="dash-city">' + (c ? esc(c[0]) + " ▾" : T("sal.city")) + "</button></div>";
+    if (!c) return h + '<p class="d-fine">' + T("sal.intro") + '</p><button class="btn block" data-act="dash-city">' + T("sal.choose") + "</button></section>";
     const t = salToday(), nx = salNext();
-    h += '<p class="d-next" id="dSalNext" aria-live="off"><b>' + salLabel(nx.k) + "</b> om " + hm(nx.at) + " · nog " + leftTxt(nx.left) + "</p>";
+    h += '<p class="d-next" id="dSalNext" aria-live="off">' + T("sal.next", { naam: salLabel(nx.k), tijd: hm(nx.at), rest: leftTxt(nx.left) }) + "</p>";
     h += '<ul class="d-times">' + SAL_NAMES.map(function (n) {
-      return '<li class="' + (n[0] === nx.k ? "on" : "") + (n[0] === "shuruq" ? " sub" : "") + '"><span>' + (n[0] === "shuruq" ? "Shuruq" : salLabel(n[0])) + "</span><b>" + hm(t[n[0]]) + "</b></li>";
+      return '<li class="' + (n[0] === nx.k ? "on" : "") + (n[0] === "shuruq" ? " sub" : "") + '"><span>' + salLabel(n[0]) + "</span><b>" + hm(t[n[0]]) + "</b></li>";
     }).join("") + "</ul>";
-    return h + '<p class="d-fine">Indicatie (Asr volgens Hanafi). Volg het rooster van je eigen moskee.</p></section>';
+    return h + '<p class="d-fine">' + T("sal.fine") + "</p></section>";
   }
   function cityDialog() {
     const old = document.getElementById("cityDlg"); if (old) old.remove();
     const w = document.createElement("div"); w.className = "dialog-wrap"; w.id = "cityDlg";
-    w.innerHTML = '<div class="dialog" role="dialog" aria-modal="true" aria-labelledby="cityT"><h3 id="cityT">Kies je stad</h3><p class="fine">Kies de stad die het dichtst bij je is. Alleen de naam van de stad wordt op dit toestel bewaard.</p><div class="d-cities">' +
+    w.innerHTML = '<div class="dialog" role="dialog" aria-modal="true" aria-labelledby="cityT"><h3 id="cityT">' + T("sal.choose") + '</h3><p class="fine">' + T("city.text") + '</p><div class="d-cities">' +
       SAL_CITIES.map(function (c) { return '<button class="d-city' + (S.salCity === c[0] ? " on" : "") + '" data-d="c" data-c="' + esc(c[0]) + '" aria-pressed="' + (S.salCity === c[0]) + '">' + esc(c[0]) + "</button>"; }).join("") +
-      '</div><button class="btn ghost block" data-d="x">Sluiten</button></div>';
+      '</div><button class="btn ghost block" data-d="x">' + T("close") + "</button></div>";
     w.addEventListener("click", function (e) {
       const d = e.target.closest("[data-d]");
       if (e.target === w || (d && d.dataset.d === "x")) { w.remove(); return; }
@@ -7801,12 +7846,13 @@ return exports;})();
     return o.month ? { d: o.day, m: o.month, y: o.year } : null;
   }
   function arNum(n) { return String(n).replace(/\d/g, function (x) { return "٠١٢٣٤٥٦٧٨٩"[x]; }); }
-  function hijTxt(h) { return h.d + " " + HIJ_NL[h.m - 1] + " " + h.y + " AH"; }
+  function hijMonth(m) { return TL("hijm", m - 1, HIJ_NL[m - 1]); }
+  function hijTxt(h) { return h.d + " " + hijMonth(h.m) + " " + h.y + " " + T("cal.ah"); }
   function hijUpcoming(max) {
     const out = [], now = new Date(), seen = {};
     for (let i = 0; i < 400 && out.length < max; i++) {
       const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i), h = hijParts(d); if (!h) break;
-      HIJ_DAYS.forEach(function (e) { const key = e[2] + h.y; if (e[0] === h.m && e[1] === h.d && !seen[key]) { seen[key] = 1; out.push({ name: e[2], ic: e[3], days: i, date: d }); } });
+      HIJ_DAYS.forEach(function (e, ei) { const key = e[2] + h.y; if (e[0] === h.m && e[1] === h.d && !seen[key]) { seen[key] = 1; out.push({ name: TL("hijd", ei, e[2]), ic: e[3], days: i, date: d }); } });
     }
     return out.slice(0, max);
   }
@@ -7826,14 +7872,14 @@ return exports;})();
   let calTick = null;
   function calBarHtml() {
     const now = new Date(), h = hijParts(now);
-    const greg = now.toLocaleDateString("nl-NL", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
-    let s = '<section class="d-calbar" aria-label="Kalender"><button class="d-calrow" data-act="dash-hijri" aria-label="Vandaag ' + esc(greg) + (h ? ", " + hijTxt(h) : "") + '. Tik om de islamitische datum gelijk te zetten met je moskee">' +
-      '<span class="d-cg">' + esc(greg.charAt(0).toUpperCase() + greg.slice(1)) + "</span>" + (h ? '<span class="d-ch">' + h.d + " " + HIJ_NL[h.m - 1] + " " + h.y + '</span><span class="d-ca" lang="ar" dir="rtl">' + arNum(h.d) + " " + HIJ_AR[h.m - 1] + "</span>" : "") + "</button>";
+    const greg = now.toLocaleDateString(LOCALE(), { weekday: "short", day: "numeric", month: "short", year: "numeric" });
+    let s = '<section class="d-calbar" aria-label="' + T("cal.aria") + '"><button class="d-calrow" data-act="dash-hijri" aria-label="' + T("cal.today.aria", { datum: esc(greg) + (h ? ", " + hijTxt(h) : "") }) + '">' +
+      '<span class="d-cg">' + esc(greg.charAt(0).toUpperCase() + greg.slice(1)) + "</span>" + (h ? '<span class="d-ch">' + h.d + " " + hijMonth(h.m) + " " + h.y + '</span><span class="d-ca" lang="ar" dir="rtl">' + arNum(h.d) + " " + HIJ_AR[h.m - 1] + "</span>" : "") + "</button>";
     const up = h ? hijUpcoming(6) : [];
     if (up.length) {
       s += '<div class="d-tick" aria-hidden="true">' + up.map(function (e, i) {
-        return '<div class="d-ti' + (i ? "" : " on") + '"><span>' + e.ic + "</span><b>" + e.name + "</b><small>" + esc(e.date.toLocaleDateString("nl-NL", { day: "numeric", month: "short" })) + "</small><em>" + (e.days === 0 ? "vandaag" : e.days === 1 ? "morgen" : "nog " + e.days + " d") + "</em></div>";
-      }).join("") + '</div><span class="sr-only">Komende islamitische dagen: ' + up.map(function (e) { return e.name + ", " + (e.days === 0 ? "vandaag" : e.days === 1 ? "morgen" : "over " + e.days + " dagen"); }).join("; ") + "</span>";
+        return '<div class="d-ti' + (i ? "" : " on") + '"><span>' + e.ic + "</span><b>" + e.name + "</b><small>" + esc(e.date.toLocaleDateString(LOCALE(), { day: "numeric", month: "short" })) + "</small><em>" + (e.days === 0 ? T("cal.today") : e.days === 1 ? T("cal.tomorrow") : T("cal.left.d", { n: e.days })) + "</em></div>";
+      }).join("") + '</div><span class="sr-only">' + T("cal.upcoming") + up.map(function (e) { return e.name + ", " + (e.days === 0 ? T("cal.today") : e.days === 1 ? T("cal.tomorrow") : T("cal.in.days", { n: e.days })); }).join("; ") + "</span>";
     }
     return s + "</section>";
   }
@@ -7852,8 +7898,8 @@ return exports;})();
     const old = document.getElementById("hijDlg"); if (old) old.remove();
     const w = document.createElement("div"); w.className = "dialog-wrap"; w.id = "hijDlg";
     const opt = function (v, lbl) { const keep = S.hijriAdj; S.hijriAdj = v; const t = hijTxt(hijParts(new Date())); S.hijriAdj = keep; return '<button class="d-city' + ((S.hijriAdj || 0) === v ? " on" : "") + '" data-d="a" data-v="' + v + '" aria-pressed="' + ((S.hijriAdj || 0) === v) + '"><b>' + lbl + "</b><small>" + t + "</small></button>"; };
-    w.innerHTML = '<div class="dialog" role="dialog" aria-modal="true" aria-labelledby="hijT"><h3 id="hijT">Islamitische datum</h3><p class="fine">Kies wat je moskee vandaag aanhoudt.</p><div class="d-cities one">' +
-      opt(-1, "1 dag eerder") + opt(0, "Zoals berekend") + opt(1, "1 dag later") + '</div><button class="btn ghost block" data-d="x">Sluiten</button></div>';
+    w.innerHTML = '<div class="dialog" role="dialog" aria-modal="true" aria-labelledby="hijT"><h3 id="hijT">' + T("hij.title") + '</h3><p class="fine">' + T("hij.text") + '</p><div class="d-cities one">' +
+      opt(-1, T("hij.minus")) + opt(0, T("hij.zero")) + opt(1, T("hij.plus")) + '</div><button class="btn ghost block" data-d="x">' + T("close") + "</button></div>";
     w.addEventListener("click", function (e) {
       const d = e.target.closest("[data-d]");
       if (e.target === w || (d && d.dataset.d === "x")) { w.remove(); return; }
@@ -7917,23 +7963,23 @@ return exports;})();
   function viewDash() {
     const LS = landsFor(P.mode), li = Math.min(defaultLand(), LS.length - 1), c = LS[li], st = jLandStats(P.mode, c.id);
     const cur = Math.min(st.passed + 1, st.n), pct = st.n ? Math.round(st.passed / st.n * 100) : 0, nf = foutList().length;
-    let h = '<h1 class="sr-only" tabindex="-1">Startscherm</h1>';
+    let h = '<h1 class="sr-only" tabindex="-1">' + T("dash.h1") + "</h1>";
     /* v91: merkbalk met woordmerk + avatar (profiel & instellingen); reeks op Vandaag, levens en modus op de Rihlat-tegel */
-    h += '<header class="d-brand"><span class="d-wm" role="img" aria-label="NurSpark">' + brandWordmark(true) + '</span><button class="d-av" data-act="profile-menu" aria-label="Profiel en instellingen">' + avatarHtml(P, 44) + "</button></header>";
-    h += '<div class="d-hello"><small>As-salamu ‘alaykum,</small><b>' + esc(P.name) + "</b></div>";
+    h += '<header class="d-brand"><span class="d-wm" role="img" aria-label="NurSpark">' + brandWordmark(true) + '</span><span class="d-br"><button class="d-lang" data-act="lang" aria-label="' + T("lang.btn", { taal: T("lang.name") }) + '">' + langFlag(LANG()) + '</button><button class="d-av" data-act="profile-menu" aria-label="' + T("dash.profile") + '">' + avatarHtml(P, 44) + "</button></span></header>";
+    h += '<div class="d-hello"><small>' + T("dash.salam") + "</small><b>" + esc(P.name) + "</b></div>";
     h += '<div class="d-tw">' + todayCardHtml() + streakPillHtml() + "</div>";
     h += calBarHtml();
-    h += '<div class="d-rw"><button class="d-rihla" data-act="journey" aria-label="Rihlat al-‘Ilm, het spel. ' + modeName(P.mode) + ", land " + (li + 1) + ": " + esc(c.title) + ", level " + cur + " van " + st.n + '. Verder spelen">' + rkScene(cur > 1 ? cur - 1 : 0, cur, cur < st.n ? cur + 1 : 0) +
-      '<span class="d-rb"><span class="d-rt"><small>SPELWERELD</small><b>Rihlat al-‘Ilm <span lang="ar" dir="rtl">رحلة العلم</span></b><span class="d-rl">Land ' + (li + 1) + ": " + esc(c.title) + '</span><span class="d-rx"><b>Lvl ' + cur + '</b><span class="d-bar"><i style="width:' + pct + '%"></i></span></span></span><span class="d-go">Verder</span></span></button>' +
-      '<div class="d-rov"><button class="d-mode" data-act="switch-mode" aria-label="Modus wisselen. Nu: ' + modeName(P.mode) + '. Tik om te kiezen">' + icon(MODE_ICON[P.mode], 13) + " " + modeName(P.mode) + ' <i aria-hidden="true">▾</i></button>' + lifeBtnHtml() + "</div></div>";
-    h += '<nav class="d-grid" aria-label="Onderdelen">' +
-      '<button class="d-tile hub" data-act="hub"><span class="hb-ic">' + dIc("book", "#1b4332", 40) + '</span><span class="hb-t"><span class="d-k ar" lang="ar" dir="rtl">بيت العلم</span><b>Bayt al-‘Ilm</b><small>' + (nf ? "Mijn foutjes: " + nf + " · du’a-boekje" : "Foutjes en du’a-boekje") + '</small></span><span class="hb-ch" aria-hidden="true">›</span></button>' +
-      '<button class="d-tile plt" data-act="play" aria-label="NurPlay, losse spellen voor tussendoor. Openen"><span class="plt-ic">' + dIc("pad", "#ffd54f", 36) + '</span><span class="plt-t"><b>NurPlay</b><small>Losse spellen voor tussendoor</small></span><span class="plt-ch" aria-hidden="true">›</span></button>' +
+    h += '<div class="d-rw"><button class="d-rihla" data-act="journey" aria-label="' + T("dash.rihla.aria", { mode: modeName(P.mode), n: li + 1, title: esc(c.title), cur: cur, tot: st.n }) + '">' + rkScene(cur > 1 ? cur - 1 : 0, cur, cur < st.n ? cur + 1 : 0) +
+      '<span class="d-rb"><span class="d-rt"><small>' + T("dash.world") + '</small><b>Rihlat al-‘Ilm <span lang="ar" dir="rtl">رحلة العلم</span></b><span class="d-rl">' + T("dash.land", { n: li + 1, title: esc(c.title) }) + '</span><span class="d-rx"><b>' + T("dash.lvl", { n: cur }) + '</b><span class="d-bar"><i style="width:' + pct + '%"></i></span></span></span><span class="d-go">' + T("dash.go") + '</span></span></button>' +
+      '<div class="d-rov"><button class="d-mode" data-act="switch-mode" aria-label="' + T("dash.mode.aria", { mode: modeName(P.mode) }) + '">' + icon(MODE_ICON[P.mode], 13) + " " + modeName(P.mode) + ' <i aria-hidden="true">▾</i></button>' + lifeBtnHtml() + "</div></div>";
+    h += '<nav class="d-grid" aria-label="' + T("dash.nav") + '">' +
+      '<button class="d-tile hub" data-act="hub"><span class="hb-ic">' + dIc("book", "#1b4332", 40) + '</span><span class="hb-t"><span class="d-k ar" lang="ar" dir="rtl">بيت العلم</span><b>Bayt al-‘Ilm</b><small>' + (nf ? T("dash.hub.n", { n: nf }) : T("dash.hub.0")) + '</small></span><span class="hb-ch" aria-hidden="true">›</span></button>' +
+      '<button class="d-tile plt" data-act="play" aria-label="' + T("dash.play.aria") + '"><span class="plt-ic">' + dIc("pad", "#ffd54f", 36) + '</span><span class="plt-t"><b>NurPlay</b><small>' + T("dash.play.sub") + '</small></span><span class="plt-ch" aria-hidden="true">›</span></button>' +
       (!mkOwner() ? "" : '<button class="d-tile kd" data-act="kd" aria-label="Koran-dagboek. Vers voor vers lezen en reflecteren. Alleen voor jou zichtbaar. Openen"><img src="journaal/lezer.webp" alt="" width="1024" height="572" loading="lazy"><span class="kd-badge" aria-hidden="true">In ontwikkeling</span><span class="kd-tx"><b>Koran-dagboek</b><small>Vers voor vers lezen en reflecteren</small></span></button>') +
-      '<button class="d-tile" data-act="klas">' + "<span class=\"d-top\">" + dIc("book", "#ffd54f", 30) + "<span class=\"d-k ar\" lang=\"ar\" dir=\"rtl\">حلقة سبارك</span></span><b>Halaqa Spark</b><small>Leer samen met je klas</small><small class=\"d-kahoot\">Kahoot-versie</small></button>" +
-      '<button class="d-tile" data-act="rad">' + '<span class="d-top">' + dIc("wheel", "#ffd54f", 30) + '<span class="d-k ar" lang="ar" dir="rtl">عجلة العلم</span></span><b>Ajalat al-‘Ilm</b><small>Rad van Kennis</small></button>' +
-      '<button class="d-tile" data-act="group">' + "<span class=\"d-top\">" + dIc("users", "#ffd54f", 30) + "<span class=\"d-k ar\" lang=\"ar\" dir=\"rtl\">مسابقة</span></span><b>Musabaqah</b><small>Groep / Duel</small></button>" +
-      '<button class="d-tile kids" disabled aria-label="KidsZone, komt binnenkort">' + dIc("star", "#ffd54f") + '<small class="d-k">KIDSZONE</small><b>[Naam volgt]</b><small>Binnenkort, insha’Allah</small></button>' +
+      '<button class="d-tile" data-act="klas">' + "<span class=\"d-top\">" + dIc("book", "#ffd54f", 30) + "<span class=\"d-k ar\" lang=\"ar\" dir=\"rtl\">حلقة سبارك</span></span><b>Halaqa Spark</b><small>" + T("dash.klas.sub") + "</small><small class=\"d-kahoot\">" + T("dash.klas.kahoot") + "</small></button>" +
+      '<button class="d-tile" data-act="rad">' + '<span class="d-top">' + dIc("wheel", "#ffd54f", 30) + '<span class="d-k ar" lang="ar" dir="rtl">عجلة العلم</span></span><b>Ajalat al-‘Ilm</b><small>' + T("dash.rad.sub") + '</small></button>' +
+      '<button class="d-tile" data-act="group">' + "<span class=\"d-top\">" + dIc("users", "#ffd54f", 30) + "<span class=\"d-k ar\" lang=\"ar\" dir=\"rtl\">مسابقة</span></span><b>Musabaqah</b><small>" + T("dash.group.sub") + "</small></button>" +
+      '<button class="d-tile kids" disabled aria-label="' + T("dash.kids.aria") + '">' + dIc("star", "#ffd54f") + '<small class="d-k">KIDSZONE</small><b>' + T("dash.kids.name") + "</b><small>" + T("dash.kids.soon") + "</small></button>" +
       /* v104: tegel voor geleerden, imams en gevorderde studenten (nog op slot, in ontwikkeling) — v104b: alleen zichtbaar voor de beheerder */
       (!mkOwner() ? "" : '<button class="d-tile maktabah" data-act="maktabah" aria-label="Al-Maktabah al-Mutaqaddimah, geavanceerde bibliotheek. In ontwikkeling, alleen voor jou zichtbaar. Openen">' +
         '<span class="mk-badge" aria-hidden="true"><i></i>In ontwikkeling</span>' +
@@ -7943,7 +7989,7 @@ return exports;})();
         '<span class="mk-balk" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c9a24a" stroke-width="1.8"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span>Klassieke bronnen uit de Dars-e-Nizami, vertaald uit het Arabisch en nagekeken door geleerden. <u>Alleen voor jou: tik om te openen.</u></span></span></button>') +
       "</nav>";
     h += salHtml();
-    h += '<nav class="d-small" aria-label="Meer"><button data-act="board">Score</button><button data-act="album">Album</button><button data-act="bazaar">Bazaar</button></nav>';
+    h += '<nav class="d-small" aria-label="' + T("dash.more") + '"><button data-act="board">' + T("dash.score") + '</button><button data-act="album">' + T("dash.album") + '</button><button data-act="bazaar">' + T("dash.bazaar") + "</button></nav>";
     return '<section class="dash">' + h + "</section>";
   }
   /* af en toe een tip voor de Kosmos-look: hooguit 3 keer, minstens 5 dagen na de vorige, nooit als hij al aan staat */
@@ -8470,8 +8516,9 @@ return exports;})();
   }
   function todayCardHtml() {
     const n = goalCount(), tot = GOALS.length, open = GOALS.filter(function (x) { return !goalDone(x[0]); });
-    const txt = !open.length ? "Alle doelen gehaald, Masha’Allah!" : open.length === 1 ? "Nog 1 doel: " + open[0][1] : "Nog " + open.length + " doelen · eerst: " + open[0][1];
-    return '<button class="d-today" data-act="today" aria-label="Vandaag: ' + n + " van " + tot + " doelen gehaald. " + txt + '">' + ringSvg(n, tot, 64) + '<span><b>Vandaag</b><small>' + txt + '</small></span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffd54f" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>';
+    const gn = open.length ? T("goal." + open[0][0]) : "";
+    const txt = !open.length ? T("today.all") : open.length === 1 ? T("today.one", { doel: gn }) : T("today.more", { n: open.length, doel: gn });
+    return '<button class="d-today" data-act="today" aria-label="' + T("today.aria", { n: n, tot: tot }) + txt + '">' + ringSvg(n, tot, 64) + "<span><b>" + T("today.title") + "</b><small>" + txt + '</small></span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffd54f" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>';
   }
   function viewToday() {
     goalSync(); saveState();
@@ -10322,7 +10369,7 @@ return exports;})();
 
   function streakPillHtml() {
     const n = streakOf(P), st = n === 0 ? "zero" : playedToday(P) ? "done" : "risk";
-    return '<button class="jstreak ' + st + '" data-act="streak" aria-label="Dagreeks: ' + n + (n === 1 ? " dag" : " dagen") + (st === "risk" ? ". Speel vandaag een level om hem te houden" : st === "done" ? ". Vandaag al gespeeld" : "") + '"><span aria-hidden="true">🔥</span><b>' + n + "</b></button>";
+    return '<button class="jstreak ' + st + '" data-act="streak" aria-label="' + T(n === 1 ? "streak.aria1" : "streak.aria", { n: n }) + (st === "risk" ? T("streak.risk") : st === "done" ? T("streak.done") : "") + '"><span aria-hidden="true">🔥</span><b>' + n + "</b></button>";
   }
   function streakDialog() {
     const fl = document.getElementById("flyer"); if (fl) fl.remove();
@@ -11639,7 +11686,7 @@ return exports;})();
   const NEW_LABEL_ON = true;
   const NEW_LABEL_TXT = NEW_LABEL_ON ? " · Nieuw · in opbouw" : "";
   const NEW_LABEL_HTML = NEW_LABEL_ON ? ' <em class="new-tag">Nieuw · in opbouw</em>' : "";
-  function modeName(lv) { return MODE_NAME[lv] || "Gevorderd"; }
+  function modeName(lv) { return T("mode." + (MODE_NAME[lv] ? lv : "junior")); }
   const MODE_BLURB = {
     beginner: "Rustig beginnen: Salah, reinheid, mooie gewoontes en Ramadan.",
     junior: "Vrolijk en zonder tijdsdruk, met leuke beloningen.",
@@ -12716,7 +12763,7 @@ return exports;})();
   }
   function lifeBtnHtml() {
     const n = livesNow();
-    return '<button class="jh-lifebtn' + (n ? "" : " empty") + '" data-act="lives" aria-label="' + n + " van " + LIFE_MAX + ' levens. Meer informatie">' + heart3dSvg(26) + "<b>" + n + "</b></button>";
+    return '<button class="jh-lifebtn' + (n ? "" : " empty") + '" data-act="lives" aria-label="' + T("lives.aria", { n: n, max: LIFE_MAX }) + '">' + heart3dSvg(26) + "<b>" + n + "</b></button>";
   }
 
   /* ── sadaqa-hulp binnen de groep (Firebase: hulp/<groepscode>) ──
@@ -15274,9 +15321,9 @@ return exports;})();
     const w = document.createElement("div");
     w.className = "dialog-wrap";
     w.innerHTML = '<div class="dialog" role="dialog" aria-modal="true"><h3>' + esc(P.name) + '</h3><div class="stack">' +
-      '<button class="btn block" data-d="av">' + icon("users", 20) + "Avatar kiezen</button>" +
-      '<button class="btn block gold" data-d="set">' + icon("gear", 20) + "Instellingen</button>" +
-      '<button class="btn block ghost" data-d="x">Sluiten</button></div></div>';
+      '<button class="btn block" data-d="av">' + icon("users", 20) + T("prof.avatar") + "</button>" +
+      '<button class="btn block gold" data-d="set">' + icon("gear", 20) + T("prof.settings") + "</button>" +
+      '<button class="btn block ghost" data-d="x">' + T("close") + "</button></div></div>";
     w.addEventListener("click", function (e) {
       const d = e.target.closest("[data-d]");
       if (!d && e.target !== w) return;
@@ -15483,6 +15530,7 @@ return exports;})();
       case "prog": play("click"); screen = "prog"; render(); break;
       case "goal-tog": { const gk = el.dataset.g, gd = goalsDay(); if (gd.done[gk]) delete gd.done[gk]; else { gd.done[gk] = 1; play("correct"); } goalSync(); saveState(); render(); break; }
       case "fout-ok": play("correct"); foutMark(P.mode, el.dataset.id, true); saveState(); render(); break;
+      case "lang": play("click"); langDialog(); break;
       case "dash-city": play("click"); cityDialog(); break;
       case "dash-hijri": play("click"); hijriDialog(); break;
       case "journey": play("click"); landFly = null; if (!voiceOnce.reis) { voiceOnce.reis = 1; voice("reis", undefined, 500); } stopTimer(); journeyReturn = false; journeyLand = null; screen = "journey"; render(); break;
