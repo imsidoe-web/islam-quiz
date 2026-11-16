@@ -14559,8 +14559,8 @@ return exports;})();
   /* Poort van Jannah tussen land k-1 (onder) en land k (boven) */
   function jGateHtml(lv, k) {
     const LS = landsFor(lv), to = LS[k], from = LS[k - 1], open = jLandOpen(lv, to.id), u = "jg" + k;
-    const T = (LANDS[to.id] || LANDS.profeten), F = (LANDS[from.id] || LANDS.profeten);
-    const tth = T.pal[lv] || T.pal.junior, fth = F.pal[lv] || F.pal.junior;
+    const GT = (LANDS[to.id] || LANDS.profeten), F = (LANDS[from.id] || LANDS.profeten);
+    const tth = GT.pal[lv] || GT.pal.junior, fth = F.pal[lv] || F.pal.junior;
     const bars = function (x0, x1) { let b = ""; for (let x = x0 + 6; x < x1 - 3; x += 7) b += '<line x1="' + x + '" y1="88" x2="' + x + '" y2="168" stroke="url(#' + u + 'g)" stroke-width="2.4"/>'; return b; };
     let rays = ""; for (let q = 0; q < 12; q++) { const a = q * Math.PI / 6; rays += '<path d="M105 80 L' + (105 + 140 * Math.cos(a - .07)).toFixed(1) + " " + (80 + 140 * Math.sin(a - .07)).toFixed(1) + " L" + (105 + 140 * Math.cos(a + .07)).toFixed(1) + " " + (80 + 140 * Math.sin(a + .07)).toFixed(1) + 'Z" fill="#fff6c8" opacity=".35"/>'; }
     const door = function (L) {
