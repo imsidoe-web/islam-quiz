@@ -1,6 +1,6 @@
 /* Islam Quiz – service worker (netwerk eerst, cache als terugval)
    Verhoog CACHE_VERSION bij elke release. Zo zien bezoekers altijd meteen de nieuwste versie. */
-const CACHE_VERSION = "islam-quiz-v321";
+const CACHE_VERSION = "islam-quiz-v322";
 const QURAN_CACHE = "iq-quran-1";   // Koran-tekst en -lettertype: blijven bewaard tussen versies (offline lezen)
 const PRECACHE = [];
 
@@ -80,7 +80,7 @@ self.addEventListener("push", (event) => {
     if (wins.some((c) => c.visibilityState === "visible")) return;   // de app is open en toont zelf de herinnering
     await self.registration.showNotification(d.title || "Islam Quiz", {
       body: d.body || "Speel vandaag nog één level om je reeks te houden.",
-      icon: "icon-192.png", badge: "badge-96.png", tag: "streak", renotify: false,
+      icon: "icon-192.png", badge: "badge-96.png", tag: d.tag || "streak", renotify: false,
       data: { url: d.url || "./" }
     });
   })());

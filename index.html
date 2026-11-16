@@ -7691,10 +7691,10 @@ return exports;})();
       busy = true; e.target.disabled = true; st.textContent = "Bezig met versturen…";
       const fin = function (ok) {
         busy = false;
-        if (ok) { document.getElementById("fbBody").innerHTML = '<p class="set-info" role="status"><b>Dankjewel!</b> Je bericht is verstuurd.</p><button class="btn gold block" data-d="ok">Klaar</button>'; announce("Je bericht is verstuurd."); }
+        if (ok) { if (P) { P.fbSent = Date.now(); saveState(); } document.getElementById("fbBody").innerHTML = '<p class="set-info" role="status"><b>Dankjewel!</b> Je bericht is verstuurd.</p><button class="btn gold block" data-d="ok">Klaar</button>'; announce("Je bericht is verstuurd."); }
         else { const b = document.getElementById("fbSend"); if (b) b.disabled = false; st.textContent = "Versturen lukt nu niet. Probeer het later opnieuw."; }
       };
-      try { sb.rpc("feedback_sturen", { p_type: type, p_bericht: txt, p_modus: (P && P.mode) || null, p_scherm: String(screen || ""), p_versie: "v290" }).then(function (r) { fin(!!(r && !r.error && r.data === true)); }, function () { fin(false); }); } catch (err) { fin(false); }
+      try { sb.rpc("feedback_sturen", { p_type: type, p_bericht: txt, p_modus: (P && P.mode) || null, p_scherm: String(screen || ""), p_versie: "v322" }).then(function (r) { fin(!!(r && !r.error && r.data === true)); }, function () { fin(false); }); } catch (err) { fin(false); }
     });
     if (document.getElementById("bdWrap")) w.style.zIndex = 6000;
     document.body.appendChild(w);
@@ -7964,6 +7964,7 @@ return exports;})();
     maybeNurPlayNews(0);
     maybeFeedbackNews(0);
     maybeNews(0);
+    maybeFeedbackAsk(0);
     maybeKosmosPromo(0);
     clearInterval(dashTick);
     calTickStart();
@@ -8088,9 +8089,38 @@ return exports;})();
       feedbackNewsDialog();
     }, 1500);
   }
+  /* v322: elke week in het weekend (en de eerste keer op di 17 nov) 's avonds een vriendelijke vraag om feedback, in het boog-venster.
+     Slot = de avond waarop hij hoort te komen: di 17 nov 2026, daarna zaterdag en zondag (één keer per weekend, vanaf 19:00).
+     Niet voor nieuwe spelers (minder dan 3 levels), niet als de speler de laatste 7 dagen al feedback stuurde. De pushmelding buiten de app loopt via de server (send-reminders). */
+  function fbSlot() {
+    const d = new Date(); if (d.getHours() < 19) return null;
+    const ds = dateStr(d); if (ds < "2026-11-17") return null;
+    if (ds === "2026-11-17" || d.getDay() === 6) return ds;
+    if (d.getDay() === 0) { const y = new Date(d); y.setDate(y.getDate() - 1); return dateStr(y); }
+    return null;
+  }
+  function feedbackAskDialog() {
+    meldingDialog({ id: "fbAskWrap", badge: "VRAAG", title: "Help ons beter te worden", label: "Loop je ergens tegenaan, ging er iets fout of heb je een tip? Laat het ons weten.",
+      text: "Loop je ergens tegenaan, ging er iets fout of heb je een tip?<br>Vertel het ons. Jouw mening helpt <b>NurSpark</b> beter te maken.",
+      go: { label: "Schrijf nu", fn: function () { feedbackDialog(); } }, later: "Later" });
+  }
+  function maybeFeedbackAsk(tries) {
+    if (!P || !P.mode || screen !== "dash" || !P.fbSeen || !P.npSeen || levelsDone(P) < 3) return;
+    const slot = fbSlot(); if (!slot || P.fbAsk === slot) return;
+    if (P.fbSent && Date.now() - P.fbSent < 7 * 864e5) return;
+    setTimeout(function () {
+      if (!P || screen !== "dash" || P.fbAsk === slot || window.__newsNow || window.__npNow || window.__fbNow || rankPending) return;
+      if (document.querySelector(".bm-wrap, .dialog-wrap, .bonus-ov, .modal-overlay:not(.hidden), .badges-modal.active, #rankWin, #bcel, .cg-stage")) { if ((tries || 0) < 4) maybeFeedbackAsk((tries || 0) + 1); return; }
+      P.fbAsk = slot; window.__fbAskNow = 1; saveState();
+      feedbackAskDialog();
+    }, 2600);
+  }
   /* v298: nieuwtjes in het boog-venster. Bij elke update: zet hier bovenaan een nieuwtje bij, in eenvoudige woorden voor spelers.
      Elk nieuwtje komt één keer per speler (P.newsSeen), één per keer, op het startscherm en na de NurPlay- en feedback-melding. */
   const NEWS = [
+    { id: "n322-feedback-week", title: "Jouw mening telt",
+      label: "Nieuw in NurSpark: in het weekend vragen we je af en toe om feedback. Loop je ergens tegenaan of heb je een tip? Laat het ons weten.",
+      text: "In het weekend vragen we je <b>af en toe om je mening</b>.<br>Loop je ergens tegenaan, ging er iets fout of heb je een tip? Je kunt het altijd sturen via <b>Instellingen › Stuur feedback</b>." },
     { id: "n312-ranglijst", scr: "journey", title: "Nieuw: ranglijst",
       label: "Nieuw in NurSpark: halverwege en aan het einde van elk land zie je waar je staat bij andere spelers, met hun edelstenen, munten en punten. Klim omhoog en je rij gaat blinken.",
       text: "Halverwege en aan het einde van elk land zie je nu <b>waar je staat</b> bij andere spelers: hun edelstenen, munten en punten.<br>Klim omhoog en jouw rij gaat blinken!" },
@@ -8784,6 +8814,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v322", t: "Feedback vragen: op di 17 nov en daarna elk weekend 's avonds een vriendelijke vraag in de app, en een pushmelding buiten de app (voor spelers met een account en meldingen aan). Te testen bij Meldingen testen." },
     { v: "v321", t: "Kennistoets voor alle landen (Beginner, Gevorderd, Ervaren): 10 vragen verspreid over het hele land." },
     { v: "v320", t: "Kennistoets (Het Gebed, Beginner): de Toets-knop is nu voor alle spelers zichtbaar." },
     { v: "v319", t: "Kennistoets: antwoorden zonder uitleg tussen haakjes, dus kortere en grotere letters." },
@@ -8960,7 +8991,7 @@ return exports;})();
   }
   function viewTests() {
     const ic = function (d) { return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + "</svg>"; };
-    const items = [["welkom", "Welkom (elke dag)", "De groet de eerste keer per dag"], ["welkomlang", "Welkom na lange tijd", "Warm welkom na 3 dagen of langer"], ["gebed", "Gebedstijd", "Het eerstvolgende gebed, zoals de app het toont"], ["jummah", "Jummah Mubarak", "Alleen kijken: er wordt geen cadeau gegeven"], ["streak", "Streak in gevaar", "De herinnering aan je reeks"], ["nurplay", "Nieuw spel (NurPlay)", "Nieuws over Darb an-Nur"], ["feedback", "Nieuw: feedback", "Nieuws over de feedbackknop"], ["schatkist", "Schatkist (nieuw scherm)", "Het scherm als je een schatkist opent"], ["beloning", "Beloning wacht op je", "De herinnering op de kaart"], ["ranglijst", "Ranglijst (land)", "Je plek tussen andere spelers, met verdiensten"], ["toets", "Toets (Het Gebed)", "Opent direct de toets van 10 vragen; verandert niets in je voortgang"]];
+    const items = [["welkom", "Welkom (elke dag)", "De groet de eerste keer per dag"], ["welkomlang", "Welkom na lange tijd", "Warm welkom na 3 dagen of langer"], ["gebed", "Gebedstijd", "Het eerstvolgende gebed, zoals de app het toont"], ["jummah", "Jummah Mubarak", "Alleen kijken: er wordt geen cadeau gegeven"], ["streak", "Streak in gevaar", "De herinnering aan je reeks"], ["nurplay", "Nieuw spel (NurPlay)", "Nieuws over Darb an-Nur"], ["feedback", "Nieuw: feedback", "Nieuws over de feedbackknop"], ["feedbackvraag", "Feedback vragen (weekend)", "De vraag om feedback die in het weekend 's avonds komt"], ["schatkist", "Schatkist (nieuw scherm)", "Het scherm als je een schatkist opent"], ["beloning", "Beloning wacht op je", "De herinnering op de kaart"], ["ranglijst", "Ranglijst (land)", "Je plek tussen andere spelers, met verdiensten"], ["toets", "Toets (Het Gebed)", "Opent direct de toets van 10 vragen; verandert niets in je voortgang"]];
     let h = '<div class="bd"><header class="bd-top"><button class="bd-ib" data-act="bd-ideas-back" aria-label="Terug naar beheer">' + ic('<path d="M15 18l-6-6 6-6"/>') + '</button><div class="bd-tt"><b>Meldingen testen</b><small>Tik om een melding te tonen</small></div><span style="width:44px"></span></header><main class="bd-m">';
     items.forEach(function (x) { h += '<button class="bd-idbtn" data-act="bd-test" data-t="' + x[0] + '"><span>' + x[1] + "<small>" + x[2] + "</small></span></button>"; });
     h += '<p class="bd-note">De melding verschijnt bovenop deze pagina. Sluit hem en je bent weer terug bij de lijst. Dit verandert niets in je voortgang.</p><p class="bd-ft">NurSpark Beheer · alleen zichtbaar voor de beheerder</p></main></div>';
@@ -15386,6 +15417,7 @@ return exports;})();
         else if (t === "streak") remindBanner();
         else if (t === "nurplay") nurPlayNewsDialog();
         else if (t === "feedback") feedbackNewsDialog();
+        else if (t === "feedbackvraag") feedbackAskDialog();
         else if (t === "schatkist") chestGlansDemo();
         else if (t === "beloning") chestRemDemo();
         else if (t === "ranglijst") rankDemo();
