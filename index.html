@@ -8089,13 +8089,13 @@ return exports;})();
       feedbackNewsDialog();
     }, 1500);
   }
-  /* v322: elke week in het weekend (en de eerste keer op di 17 nov) 's avonds een vriendelijke vraag om feedback, in het boog-venster.
-     Slot = de avond waarop hij hoort te komen: di 17 nov 2026, daarna zaterdag en zondag (één keer per weekend, vanaf 19:00).
+  /* v322: elke week in het weekend (en de eerste keer op ma 16 nov) 's avonds een vriendelijke vraag om feedback, in het boog-venster.
+     Slot = de avond waarop hij hoort te komen: ma 16 nov 2026, daarna zaterdag en zondag (één keer per weekend, vanaf 19:00).
      Niet voor nieuwe spelers (minder dan 3 levels), niet als de speler de laatste 7 dagen al feedback stuurde. De pushmelding buiten de app loopt via de server (send-reminders). */
   function fbSlot() {
     const d = new Date(); if (d.getHours() < 19) return null;
-    const ds = dateStr(d); if (ds < "2026-11-17") return null;
-    if (ds === "2026-11-17" || d.getDay() === 6) return ds;
+    const ds = dateStr(d); if (ds < "2026-11-16") return null;
+    if (ds === "2026-11-16" || d.getDay() === 6) return ds;
     if (d.getDay() === 0) { const y = new Date(d); y.setDate(y.getDate() - 1); return dateStr(y); }
     return null;
   }
@@ -8814,6 +8814,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v323", t: "Feedback vragen: de eerste keer is vanavond (ma 16 nov), daarna elk weekend. Eerder stond dinsdag 17 nov." },
     { v: "v322", t: "Feedback vragen: op di 17 nov en daarna elk weekend 's avonds een vriendelijke vraag in de app, en een pushmelding buiten de app (voor spelers met een account en meldingen aan). Te testen bij Meldingen testen." },
     { v: "v321", t: "Kennistoets voor alle landen (Beginner, Gevorderd, Ervaren): 10 vragen verspreid over het hele land." },
     { v: "v320", t: "Kennistoets (Het Gebed, Beginner): de Toets-knop is nu voor alle spelers zichtbaar." },
