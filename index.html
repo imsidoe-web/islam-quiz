@@ -15001,11 +15001,11 @@ return exports;})();
   }
 
   /* ───────────── Dialoog ───────────── */
-  function confirmDialog(title, text, okLabel, onOk) {
+  function confirmDialog(title, text, okLabel, onOk, noLabel) {   /* noLabel: eigen tekst voor Annuleren (voor vensters die nog niet vertaald zijn) */
     const w = document.createElement("div");
     w.className = "dialog-wrap";
     w.innerHTML = '<div class="dialog" role="dialog" aria-modal="true"><h3>' + esc(title) + "</h3><p>" + esc(text) + '</p><div class="row">' +
-      '<button class="btn ghost" data-d="no">' + T("cancel") + '</button><button class="btn gold" data-d="yes">' + esc(okLabel) + "</button></div></div>";
+      '<button class="btn ghost" data-d="no">' + esc(noLabel || T("cancel")) + '</button><button class="btn gold" data-d="yes">' + esc(okLabel) + "</button></div></div>";
     w.addEventListener("click", function (e) {
       const d = e.target.closest("[data-d]");
       if (d || e.target === w) { w.remove(); if (d && d.dataset.d === "yes") onOk(); }
@@ -15965,7 +15965,7 @@ return exports;})();
     confirmDialog("NurSpark heeft een nieuw adres",
       (S.movedOut ? "Je bent al eerder verhuisd. Je kunt nurspark.app openen of je voortgang nog een keer meenemen. " : "De app woont nu op nurspark.app. ") +
       "Neem je voortgang in één tik mee: levels, sterren, edelstenen, album en avatars" + (n > 1 ? " van alle " + n + " spelers op dit toestel" : "") +
-      ". Daarna zet je het nieuwe icoon op je beginscherm.", "Verhuizen", moveOut);
+      ". Daarna zet je het nieuwe icoon op je beginscherm.", "Verhuizen", moveOut, "Annuleren");
   }
   function overlayOpen() {
     if (document.querySelector(".dialog-wrap")) return true;
