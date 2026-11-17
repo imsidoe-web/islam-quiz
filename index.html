@@ -11728,7 +11728,9 @@ return exports;})();
     }).join("") + "</div>";
   }
   /* het album is strikt per modus: Junior en Expert hebben elk hun eigen verzameling */
-  function albumMap(lv) { lv = lv || P.mode; if (!P.album) P.album = {}; MODES.forEach(function (m) { if (!P.album[m]) P.album[m] = {}; }); return P.album[lv]; }
+  /* ALLEEN op het testadres (proef-talen op Vercel): alle kwartetkaarten staan open om ze te bekijken. Op nurspark.app doet dit niets. */
+  const KW_TEST_ALL = /(^|[-.])proef-talen([-.]|$)/.test(location.hostname);
+  function albumMap(lv) { lv = lv || P.mode; if (!P.album) P.album = {}; MODES.forEach(function (m) { if (!P.album[m]) P.album[m] = {}; if (KW_TEST_ALL) kwIdsFor(m).forEach(function (id) { if (!(P.album[m][id] > 0)) P.album[m][id] = 1; }); }); return P.album[lv]; }
   function albumOwned(lv) { lv = lv || P.mode; const m = albumMap(lv), ids = kwIdsFor(lv); return Object.keys(m).filter(function (k) { return m[k] > 0 && KW_CARDS[k] && ids.indexOf(k) !== -1; }).length; }
   function albumTotal(lv) { return kwIdsFor(lv || P.mode).length; }
   function albumCountHtml(lv) { return albumTotal(lv) ? '<em class="jn-count" aria-hidden="true">' + albumOwned(lv) + "/" + albumTotal(lv) + "</em>" : ""; }
