@@ -213,6 +213,7 @@ footer.foot{border-top:1px solid var(--line);padding:22px 0 50px;color:var(--mut
   .meta-line>span:nth-child(even){display:none}
   .fld>.lbl,.judge .lbl{color:#000}
 }
+.welcome{background:#fff;border:1px solid var(--line,#e2dccb);border-radius:14px;padding:16px 18px;margin:0 0 16px}.welcome p{margin:0 0 12px;line-height:1.5}.welcome .btn{font-size:16px;padding:12px 20px}
 </style>
 </head>
 <body class="locked">
@@ -236,6 +237,7 @@ footer.foot{border-top:1px solid var(--line);padding:22px 0 50px;color:var(--mut
   <p class="sub">Voorbereidingsdossier voor de raad van Islamitische geleerden</p>
   <p class="meta">Versie 9 november 2026 · <span id="metaCount"></span> · Hanafi als basis, binnen Ahl as-Sunnah wal-Jama’ah</p>
   <hr class="rule">
+  <div id="welcome"></div>
   <div class="stats" id="stats"></div>
 
   <details class="help" id="help" open>
@@ -488,6 +490,8 @@ function progress(){
 function cover(){
   var c={G:0,O:0,R:0},ns=0;
   D.forEach(function(r){c[r.st]++;if(!r.src.length)ns++});
+  $('welcome').innerHTML=D.length?'':'<div class="welcome"><p><b>Welkom, '+esc(SES.naam)+'.</b> Lees gerust eerst hieronder hoe dit dossier werkt. Als u zover bent, kiest u zelf de thema’s die u wilt nakijken.</p><button class="btn primary" id="btnWelcome" type="button">Kies uw thema’s</button></div>';
+  var bw=$('btnWelcome');if(bw)bw.addEventListener('click',function(){openChooser();});
   $('metaCount').textContent=D.length+' vragen · '+THEMES.length+' thema’s · ingelogd als '+SES.naam;
   $('stats').innerHTML=
    '<button class="stat N" data-f="all"><b>'+D.length+'</b><span>Vragen in totaal</span></button>'+
@@ -742,7 +746,6 @@ try{pend=JSON.parse(localStorage.getItem(PK())||'{}')||{};}catch(e){pend={};}
 Object.keys(pend).forEach(function(id){var p=pend[id];if(!byId[id]){delete pend[id];return;}var j={};if(p.o)j.o=p.o;if(p.t)j.t=p.t;if(p.s)j.s=p.s;if(j.o||j.t||j.s){j.w=SES.naam;j.d=new Date().toISOString();S.j[id]=j;}else delete S.j[id];});
 setD();setSync(Object.keys(pend).length?'bezig':'ok');
 if(Object.keys(pend).length)flush();
-if(!D.length)setTimeout(function(){openChooser();},400);
 }
 /* ---------- Slot: persoonlijke code ---------- */
 var E=JSON.parse(document.getElementById('enc').textContent);
