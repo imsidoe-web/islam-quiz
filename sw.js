@@ -1,6 +1,6 @@
 /* Islam Quiz – service worker (netwerk eerst, cache als terugval)
    Verhoog CACHE_VERSION bij elke release. Zo zien bezoekers altijd meteen de nieuwste versie. */
-const CACHE_VERSION = "islam-quiz-v328";
+const CACHE_VERSION = "islam-quiz-v329";
 const QURAN_CACHE = "iq-quran-1";   // Koran-tekst en -lettertype: blijven bewaard tussen versies (offline lezen)
 const PRECACHE = [];
 
@@ -93,7 +93,10 @@ self.addEventListener("notificationclick", (event) => {
   event.waitUntil((async () => {
     if (OLD) { if (self.clients.openWindow) await self.clients.openWindow(url); return; }
     const wins = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
-    for (const c of wins) { if ("focus" in c) { await c.focus(); return; } }
+    // v329: alleen een tabblad focussen dat al op de juiste pagina staat (de app zelf), niet een ander tabblad van de site (bijv. het geleerden-portaal)
+    const norm = (u) => { const x = new URL(u, self.location.href); return x.pathname.replace(/index\.html$/, "").replace(/\/+$/, "") || "/"; };
+    const want = norm(url);
+    for (const c of wins) { if ("focus" in c && norm(c.url) === want) { await c.focus(); return; } }
     if (self.clients.openWindow) await self.clients.openWindow(url);
   })());
 });
