@@ -8833,6 +8833,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v330", t: "Nieuw bonuslevel op de kaart: Schatjacht. Kies een kaart, tik de schatkist open en pak in de bonusronde het plaatje uit de kist. Je vindt hem in De 5 Zuilen en bij Ramadan." },
     { v: "v329", t: "Meldingen: een klik op een melding brengt je nu altijd naar de app zelf, ook als er een ander tabblad van de site open staat." },
     { v: "v328", t: "Beheer: nakijkers voor de Turkse vertaling toevoegen (alleen voor jou zichtbaar)." },
     { v: "v327", t: "Mijn studio: nieuw onderdeel Kwartetkaarten, om alle 20 kaarten te bekijken zonder te spelen." },
@@ -14036,7 +14037,8 @@ return exports;})();
   }
 
   /* ───────────── Bonuslevels (v95): een los spel op de kaart, bij een plek die bij het verhaal hoort ───────────── */
-  const BONUS = { profeten: { id: "thawr", name: "Het web van Thawr", src: "spel/thawr.html", spots: [[326, 498], [326, 548], [326, 330], [34, 520]] } };
+  const SCHAT = { id: "schatjacht", name: "Schatjacht", src: "spel/schatjacht.html", icon: "ster", at: 0.7, how: "Je kiest kaarten, tikt schatkisten open en pakt het plaatje uit de schatkist in de bonusronde." };
+  const BONUS = { profeten: { id: "thawr", name: "Het web van Thawr", src: "spel/thawr.html", spots: [[326, 498], [326, 548], [326, 330], [34, 520]] }, zuilen: SCHAT, ramadan: SCHAT };
   const BONUS_STAR_GEMS = 10;                   /* edelstenen per nieuwe ster in een bonuslevel */
   let bonusCur = null;
   function bonusOf(catId) { return BONUS[catId] || null; }
@@ -14044,7 +14046,14 @@ return exports;})();
   /* het bonuslevel gaat open zodra je het level haalt dat er op de kaart het dichtst bij ligt */
   /* plek op de kaart: de eerste vaste plek bij de grot die vrij ligt van de levels (anders de ruimste) */
   function bonusPos(lv, catId, b) {
-    const pts = jLayout(jCount(lv, catId), catId, lv); let best = b.spots[0], bd = -1;
+    const pts = jLayout(jCount(lv, catId), catId, lv); let best, bd = -1;
+    if (b.at !== undefined && !b.spots) {   /* geen vaste plek: naast het level op ongeveer b.at van de route, links of rechts */
+      const ym = pts[Math.min(pts.length - 1, Math.max(0, Math.round((pts.length - 1) * b.at)))].y, cand = [[34, 0], [326, 0], [58, -22], [302, -22], [58, 22], [302, 22]];
+      let bb = { x: 34, y: ym }; bd = -1;
+      for (let k = 0; k < cand.length; k++) { const x = cand[k][0], y = ym + cand[k][1], d = Math.min.apply(null, pts.map(function (p) { return Math.hypot(p.x - x, p.y - y); })); if (d >= 62) return { x: x, y: y }; if (d > bd) { bd = d; bb = { x: x, y: y }; } }
+      return bb;
+    }
+    best = b.spots[0]; bd = -1;
     for (let k = 0; k < b.spots.length; k++) { const sp = b.spots[k], d = Math.min.apply(null, pts.map(function (p) { return Math.hypot(p.x - sp[0], p.y - sp[1]); })); if (d >= 62) return { x: sp[0], y: sp[1] }; if (d > bd) { bd = d; best = sp; } }
     return { x: best[0], y: best[1] };
   }
@@ -14053,13 +14062,17 @@ return exports;})();
   function bonusSvg(level, c) {
     const b = bonusOf(c.id); if (!b) return "";
     const bp = bonusPos(level, c.id, b), open = bonusOpen(level, c.id, b), rec = bonusRec(level, b.id), fresh = open && !(rec && rec.won), st = rec ? rec.stars : 0;
-    const label = "Bonuslevel " + b.name + (open ? (rec && rec.won ? ": gespeeld, " + st + " van 3 sterren" : ": nieuw, tik om te spelen") : ": vergrendeld, haal eerst level " + (bonusNeed(level, c.id, b) + 1)) + ". Je speelt dit spel door te slepen en te tikken.";
+    const label = "Bonuslevel " + b.name + (open ? (rec && rec.won ? ": gespeeld, " + st + " van 3 sterren" : ": nieuw, tik om te spelen") : ": vergrendeld, haal eerst level " + (bonusNeed(level, c.id, b) + 1)) + ". " + (b.how || "Je speelt dit spel door te slepen en te tikken.");
     let h = '<g class="j-stop j-bonus" data-act="bonus-game" data-cat="' + c.id + '" role="button" tabindex="0" aria-label="' + esc(label) + '" transform="translate(' + bp.x + " " + bp.y + ')"><circle r="34" fill="#000" fill-opacity="0"/>';
     if (fresh) h += '<circle r="31" fill="#fff3a0" opacity=".5"><animate attributeName="opacity" values=".2;.85;.2" dur="1.3s" repeatCount="indefinite"/></circle>';
-    h += '<circle r="23" fill="' + (open ? "#1d3b4f" : "#8a8478") + '" stroke="#ffd54f" stroke-width="3.5"/><g stroke="#fff" stroke-opacity=".85" stroke-width="1.1" fill="none">';
-    for (let k = 0; k < 8; k++) { const a = k * Math.PI / 4; h += '<line x1="0" y1="0" x2="' + (Math.cos(a) * 18).toFixed(1) + '" y2="' + (Math.sin(a) * 18).toFixed(1) + '"/>'; }
-    [6, 11.5, 17].forEach(function (r) { let pts = ""; for (let k = 0; k < 8; k++) { const a = k * Math.PI / 4; pts += (Math.cos(a) * r).toFixed(1) + "," + (Math.sin(a) * r).toFixed(1) + " "; } h += '<polygon points="' + pts + '"/>'; });
-    h += '</g><circle r="3.4" fill="#2a1f19" stroke="#fff" stroke-width="1"/>';
+    h += '<circle r="23" fill="' + (open ? (b.icon === "ster" ? "#4a1a8f" : "#1d3b4f") : "#8a8478") + '" stroke="#ffd54f" stroke-width="3.5"/>';
+    if (b.icon === "ster") h += '<polygon points="' + starPoly(0, 0, 16) + '" fill="' + (open ? "#ffc83a" : "#d8d2c4") + '" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/><circle r="4.2" fill="#4a1a8f" stroke="#fff" stroke-width="1.2"/>';
+    else {
+      h += '<g stroke="#fff" stroke-opacity=".85" stroke-width="1.1" fill="none">';
+      for (let k = 0; k < 8; k++) { const a = k * Math.PI / 4; h += '<line x1="0" y1="0" x2="' + (Math.cos(a) * 18).toFixed(1) + '" y2="' + (Math.sin(a) * 18).toFixed(1) + '"/>'; }
+      [6, 11.5, 17].forEach(function (r) { let pts = ""; for (let k = 0; k < 8; k++) { const a = k * Math.PI / 4; pts += (Math.cos(a) * r).toFixed(1) + "," + (Math.sin(a) * r).toFixed(1) + " "; } h += '<polygon points="' + pts + '"/>'; });
+      h += '</g><circle r="3.4" fill="#2a1f19" stroke="#fff" stroke-width="1"/>';
+    }
     if (!open) h += '<g transform="translate(-7 -9)"><rect x="0" y="7" width="14" height="11" rx="2.5" fill="#fff"/><path d="M3 7 V4 a4 4 0 0 1 8 0 V7" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/></g>';
     h += '<rect x="-25" y="25" width="50" height="16" rx="8" fill="#1b4332" stroke="#ffd54f" stroke-width="1.5"/><text y="37" text-anchor="middle" font-size="10.5" font-weight="900" fill="#ffe27a">BONUS</text>';
     if (rec && rec.won) for (let k = 0; k < 3; k++) h += (k < st ? '<g transform="translate(' + ((k - 1) * 14) + ' 50) scale(.6)">' + starInner() + "</g>" : '<polygon points="' + starPoly((k - 1) * 14, 50, 6.5) + '" fill="rgba(0,0,0,.35)" stroke="#fff" stroke-width="1.2" stroke-linejoin="round"/>');
