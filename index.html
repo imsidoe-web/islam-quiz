@@ -2504,6 +2504,7 @@ a.bd-idbtn { text-decoration: none; justify-content: center; font-weight: 600; }
 .qs-bm { text-align: center; border-bottom: 1px solid #e2d6b4; margin: 8px 0 4px; padding-bottom: 6px; }
 .qs-bm p { margin: 0 0 4px; font-size: .9rem; color: #5b5a45; }
 .qs-nl { background: #f1e8d0; border-radius: 12px; padding: 8px 12px; margin: 4px 0 8px; }
+.qs-l { margin: 4px 0 0; padding: 0 0 0 20px; color: #3a463f; line-height: 1.6; } .qs-l li { margin: 3px 0; }
 .qs-nl small { letter-spacing: .06em; color: #7a6a3a; font-size: .7rem; }
 .qs-nl p { margin: 2px 0; color: #1e2b24; }
 .mn-btn { appearance: none; display: block; width: 100%; margin: 12px 0 0; padding: 13px; border: 0; border-radius: 22px; background: #2c5a44; color: #fbf5e6; font: inherit; font-weight: 700; }
@@ -9346,6 +9347,7 @@ return exports;})();
     if (c) {
       h += "<h2>Uitleg</h2><p>" + esc(c.u || "") + "</p>";
       if (c.b && c.b.length) h += "<h2>Begrippen</h2>" + c.b.map(function (x) { return '<p class="qs-b"><b>' + esc(x[0]) + "</b> " + esc(x[1]) + "</p>"; }).join("");
+      if (c.l && c.l.length) h += "<h2>Leringen</h2><ul class=\"qs-l\">" + c.l.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>";
       h += '<div class="qs-quote"><svg class="qs-qm" width="46" height="38" viewBox="0 0 46 38" aria-hidden="true"><path d="M2 22 C2 10 9 3 19 2 L19 8 C13 9 10 13 10 17 L19 17 L19 36 L2 36 Z" fill="#b8a06a"/><path d="M26 22 C26 10 33 3 43 2 L43 8 C37 9 34 13 34 17 L43 17 L43 36 L26 36 Z" fill="#b8a06a"/></svg><div class="qs-qb"><p>' + esc(c.r || "") + '</p><small>Reflectie</small></div><div class="qs-qe"></div></div>';
     } else {
       h += "<p>" + (qjErr ? "Uitleg en reflectie konden niet geladen worden." : "Uitleg en reflectie voor dit vers volgen nog.") + "</p>";
