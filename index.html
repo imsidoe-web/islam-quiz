@@ -2559,6 +2559,35 @@ a.bd-idbtn { text-decoration: none; justify-content: center; font-weight: 600; }
 .kd-nm { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; } .kd-nm b { font-size: 1.05rem; } .kd-nm small { color: #6e7468; font-weight: 700; }
 .kd-bar { display: block; height: 4px; background: #ede5d1; border-radius: 4px; overflow: hidden; margin-top: 4px; } .kd-bar i { display: block; height: 100%; background: #a8893f; }
 .kd-ch { color: #a8893f; font-size: 1.6rem; line-height: 1; }
+/* v339: Mijn Qur’an dagboek: welkomscherm, zoekbalk en swipebare soera-tegels */
+.kdw { animation: kdwIn .7s ease both; } @keyframes kdwIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .kdw { animation: none; } }
+.kdw-h { font-size: 1.55rem !important; line-height: 1.3; margin: 0 0 8px !important; }
+.kdw-t { font-style: italic; margin: 0 0 6px !important; }
+.kds { margin: 8px 0; }
+.kds-sr { display: block; margin: 0 7px; }
+.kds-sr input { width: 100%; box-sizing: border-box; padding: 13px 20px; border-radius: 28px; border: 1.5px solid #d9caa0; background: #fffaf0; color: #1f3a2c; font: 1rem Georgia, serif; outline: none; -webkit-appearance: none; appearance: none; }
+.kds-sr input:focus { border-color: #b8a06a; box-shadow: 0 0 0 3px #b8a06a44; }
+.kds-sr input::placeholder { color: #9a8f70; }
+.kds-cnt { text-align: center; color: #d8cfa8; font-size: .85rem; letter-spacing: .08em; margin: 12px 0 2px; min-height: 1.2em; }
+.kdc { position: relative; display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; scrollbar-width: none; padding: 8px calc((100% - min(78vw, 320px)) / 2) 22px; }
+.kdc::-webkit-scrollbar { display: none; }
+.kdc:focus-visible { outline: 2px solid #b8a06a; outline-offset: -2px; border-radius: 20px; }
+.kdt { flex: 0 0 min(78vw, 320px); box-sizing: border-box; scroll-snap-align: center; scroll-snap-stop: always; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 26px 20px 22px; border-radius: 28px; background: radial-gradient(120% 70% at 50% 0%, #fffdf6 0%, #f6eedb 70%, #efe4c8 100%); border: 1px solid #e6d9b6; box-shadow: 0 12px 30px #00000040, inset 0 0 0 6px #fffaf0, inset 0 0 0 7px #e9dcb8; color: #44503f; }
+.kdt[hidden] { display: none; }
+.kdt-no { position: relative; width: 84px; height: 84px; }
+.kdt-no svg { position: absolute; inset: 0; width: 100%; height: 100%; fill: #fffaf0; stroke: #b8a06a; stroke-width: 1.6; }
+.kdt-no span { position: absolute; inset: 0; display: grid; place-items: center; font: 700 1.3rem Georgia, serif; color: #8a7440; }
+.kdt-ar { font-family: "Amiri", "Scheherazade New", serif; font-size: 2.2rem; line-height: 1.7; color: #2c5a44; margin-top: 8px; }
+.kdt-nm { font: 400 1.35rem Georgia, serif; color: #1f4d3a; }
+.kdt-meta { font-size: .9rem; letter-spacing: .08em; color: #9a8450; margin: 4px 0 16px !important; }
+.kdt .kd-bar { width: 100%; } .kdt-st { color: #6e7468; margin-top: 6px; font-weight: 700; }
+.kdt-go { margin-top: 18px; }
+.kds-none { text-align: center; color: #d8cfa8 !important; }
+.kds .mn-btn, .kds .kdi-about { margin-left: 7px; margin-right: 7px; width: calc(100% - 14px); }
+.kds .mn-btn { background: #2c5a44; border: 1px solid #b8a06a; color: #fbf5e6; }
+.kds .kdi-about { color: #d8cfa8; border-color: #6f6a4a; }
+
 /* ── v89: Kosmos-look (tieners) ── */
 body.kosmos { color: #eef4ff; background:
   radial-gradient(1.2px 1.2px at 12% 18%, #fff, transparent), radial-gradient(1px 1px at 78% 12%, #fff, transparent), radial-gradient(1.4px 1.4px at 44% 36%, #bff8ff, transparent), radial-gradient(1px 1px at 88% 44%, #fff, transparent), radial-gradient(1.2px 1.2px at 22% 62%, #fff, transparent), radial-gradient(1px 1px at 64% 70%, #e6b8ff, transparent), radial-gradient(1.3px 1.3px at 8% 86%, #fff, transparent), radial-gradient(1px 1px at 92% 90%, #fff, transparent), radial-gradient(1px 1px at 52% 94%, #bff8ff, transparent), radial-gradient(1.2px 1.2px at 34% 8%, #fff, transparent),
@@ -7971,7 +8000,7 @@ return exports;})();
     h += '<nav class="d-grid" aria-label="Onderdelen">' +
       '<button class="d-tile hub" data-act="hub"><span class="hb-ic">' + dIc("book", "#1b4332", 40) + '</span><span class="hb-t"><span class="d-k ar" lang="ar" dir="rtl">بيت العلم</span><b>Bayt al-‘Ilm</b><small>' + (nf ? "Mijn foutjes: " + nf + " · du’a-boekje" : "Foutjes en du’a-boekje") + '</small></span><span class="hb-ch" aria-hidden="true">›</span></button>' +
       '<button class="d-tile plt" data-act="play" aria-label="NurPlay, losse spellen voor tussendoor. Openen"><span class="plt-ic">' + dIc("pad", "#ffd54f", 36) + '</span><span class="plt-t"><b>NurPlay</b><small>Losse spellen voor tussendoor</small></span><span class="plt-ch" aria-hidden="true">›</span></button>' +
-      (!mkOwner() ? "" : '<button class="d-tile kd" data-act="kd" aria-label="Koran-dagboek. Vers voor vers lezen en reflecteren. Alleen voor jou zichtbaar. Openen"><img src="journaal/lezer.webp" alt="" width="1024" height="572" loading="lazy"><span class="kd-badge" aria-hidden="true">In ontwikkeling</span><span class="kd-tx"><b>Koran-dagboek</b><small>Vers voor vers lezen en reflecteren</small></span></button>') +
+      (!mkOwner() ? "" : '<button class="d-tile kd" data-act="kd" aria-label="Mijn Qur’an dagboek. Vers voor vers lezen en reflecteren. Alleen voor jou zichtbaar. Openen"><img src="journaal/lezer.webp" alt="" width="1024" height="572" loading="lazy"><span class="kd-badge" aria-hidden="true">In ontwikkeling</span><span class="kd-tx"><b>Mijn Qur’an dagboek</b><small>Vers voor vers lezen en reflecteren</small></span></button>') +
       '<button class="d-tile" data-act="klas">' + "<span class=\"d-top\">" + dIc("book", "#ffd54f", 30) + "<span class=\"d-k ar\" lang=\"ar\" dir=\"rtl\">حلقة سبارك</span></span><b>Halaqa Spark</b><small>Leer samen met je klas</small><small class=\"d-kahoot\">Kahoot-versie</small></button>" +
       '<button class="d-tile" data-act="rad">' + '<span class="d-top">' + dIc("wheel", "#ffd54f", 30) + '<span class="d-k ar" lang="ar" dir="rtl">عجلة العلم</span></span><b>Ajalat al-‘Ilm</b><small>Rad van Kennis</small></button>' +
       '<button class="d-tile" data-act="group">' + "<span class=\"d-top\">" + dIc("users", "#ffd54f", 30) + "<span class=\"d-k ar\" lang=\"ar\" dir=\"rtl\">مسابقة</span></span><b>Musabaqah</b><small>Groep / Duel</small></button>" +
@@ -8609,7 +8638,7 @@ return exports;})();
   /* ── Koran-dagboek (voorlopig alleen beheerder): uitleg, reflectie en journalvragen per vers. Eigen notities blijven alleen op dit toestel. ── */
   let QJ = null, qjLoading = false, qjErr = false, qjKey = "", qjFrom = "reader";
   /* v332: Koran-dagboek met de hele Koran: Arabisch (Tanzil, Uthmani) en Nederlands (S. S. Siregar), per soera geladen uit quran/tanzil-nl/ */
-  let KT = {}, ktBusy = {}, ktErr = {}, kdi = null, kdiDraft = null, kdiMsg = "";
+  let KT = {}, ktBusy = {}, ktErr = {}, kdi = null, kdiDraft = null, kdiMsg = "", kdw = false, kdwMsg = null, kdQ = "";
   const BISM_AR = "بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ", BISM_NL = "In de naam van Allah, de Erbarmer, de Meest Barmhartige.";
   function ktLoad(s) {
     if (KT[s] || ktBusy[s]) return;
@@ -8721,7 +8750,7 @@ return exports;})();
     } catch (e) {}
   }
   function kdGet() { try { return JSON.parse(localStorage.getItem("nspark_kd_v1") || "{}"); } catch (e) { return {}; } }
-  function kdSeen(s, a) { try { const o = kdGet(); o[s] = Math.max(o[s] || 0, a); localStorage.setItem("nspark_kd_v1", JSON.stringify(o)); } catch (e) {} }
+  function kdSeen(s, a) { try { const o = kdGet(); o[s] = Math.max(o[s] || 0, a); localStorage.setItem("nspark_kd_v1", JSON.stringify(o)); localStorage.setItem("nspark_kd_lasts", String(s)); } catch (e) {} }
   function kdComplete(s) { if (!QJ) return false; const n = Q_N[s - 1]; if (!n) return false; for (let a = 1; a <= n; a++) if (!QJ[s + ":" + a]) return false; return true; }
   function kdSoeras() { const out = []; for (let s = 1; s <= 114; s++) out.push(s); return out; }
   function qjAuto() { const t = document.getElementById("qjText"); if (t && qjKey) qjSet(qjKey, t.value); }
@@ -9294,7 +9323,7 @@ return exports;})();
     const pg = Math.max(0, Math.min(3, kdi || 0)), saved = kdiGet();
     let b = "";
     if (pg === 0) b = '<img class="kdi-pic" src="journaal/lezer.webp" alt="" width="1024" height="572">' + kdiOrn() +
-      '<div class="kdi-bm" lang="ar" dir="rtl">' + esc(BISM_AR) + '</div><p class="kdi-it">' + esc(BISM_NL) + '</p><h2 class="kdi-h1">Koran Dagboek</h2><p class="kdi-sub">Lees · Overdenk · Schrijf</p>';
+      '<div class="kdi-bm" lang="ar" dir="rtl">' + esc(BISM_AR) + '</div><p class="kdi-it">' + esc(BISM_NL) + '</p><h2 class="kdi-h1">Mijn Qur’an dagboek</h2><p class="kdi-sub">Lees · Overdenk · Schrijf</p>';
     else if (pg === 1) b = '<img class="kdi-pic" src="journaal/schrijver.webp" alt="" width="1024" height="572">' + kdiOrn() + '<h2 class="kdi-h2">Zo werkt het</h2>' +
       '<ul class="kdi-ul"><li><i>1</i><span>Kies een soera en lees het vers, in het Arabisch en in het Nederlands.</span></li><li><i>2</i><span>Lees de uitleg en de betekenis van de woorden. Neem er rustig de tijd voor.</span></li><li><i>3</i><span>Schrijf in je journal wat je raakt. Veeg naar links voor het volgende vers.</span></li></ul>';
     else if (pg === 2) b = '<img class="kdi-pic" src="journaal/hart.webp" alt="" width="1024" height="572">' + kdiOrn() + '<h2 class="kdi-h2">Over de tekst</h2>' +
@@ -9313,23 +9342,104 @@ return exports;})();
       : '<button class="kdi-btn" data-act="kdi-go">' + (saved && saved.t ? "Opslaan" : "Begin") + '</button><button class="kdi-back" data-act="kdi-nav" data-d="-1">Terug</button>';
     return h + '<section class="hub"><div class="kdi" aria-label="Beginpagina ' + (pg + 1) + ' van 4">' + b + dots + btns + "</div></section>";
   }
+  /* v339: "Mijn Qur’an dagboek": welkomscherm met de naam van de speler (elke keer bij openen), soera's als swipebare tegels, zoekbalk bovenaan */
+  function kdwPick() {
+    let nm = "", last = "", lm = -1;
+    try { nm = String((P && P.name) || "").trim(); } catch (e) {}
+    try { last = localStorage.getItem("nspark_kd_last") || ""; lm = parseInt(localStorage.getItem("nspark_kd_lastmsg") || "-1", 10); } catch (e) {}
+    const first = !last && !kdiGet(), hr = new Date().getHours();
+    const fill = function (t) { return t.replace(/\{n\}/g, nm ? ", " + nm : ""); };
+    let m, idx = -1;
+    if (first) m = ["Welkom{n}", "Dit is jouw eigen plek met de Qurân. Neem rustig de tijd."];
+    else {
+      const general = [
+        ["Welkom terug{n}", "Fijn dat je er weer bent. Jouw dagboek wacht op je."],
+        ["Ben je aan toe aan een moment met Allah?", "Neem de tijd{n}. Er is geen haast."],
+        ["As-salamu alaykum{n}", "Een rustig moment met de Qurân, alleen voor jou."],
+        ["Bismillah{n}", "Laten we samen een vers lezen en erover nadenken."],
+        ["Klaar voor een mooi moment{n}?", "Even stilstaan bij Allah’s woorden geeft rust."],
+        ["Fijn dat je er bent{n}", "Jouw plek om te lezen, te overdenken en te schrijven."]
+      ];
+      const tijd = hr >= 5 && hr < 12 ? ["Goedemorgen{n}", "Begin je dag met de woorden van Allah."]
+        : hr >= 12 && hr < 18 ? ["Even rust{n}?", "Een vers midden in je dag, om tot jezelf te komen."]
+        : hr >= 18 && hr < 23 ? ["Goedenavond{n}", "Sluit je dag af met een vers en een gedachte."]
+        : ["Het is stil{n}", "Een mooi moment om rustig bij de Qurân te zijn."];
+      const pool = general.concat([tijd, tijd]);
+      do { idx = Math.floor(Math.random() * pool.length); } while (pool.length > 1 && idx === lm);
+      m = pool[idx];
+    }
+    try { localStorage.setItem("nspark_kd_last", todayStr()); localStorage.setItem("nspark_kd_lastmsg", String(idx)); } catch (e) {}
+    kdwMsg = { h: fill(m[0]), t: fill(m[1]), first: first };
+    return kdwMsg;
+  }
+  function viewKdw(h) {
+    const m = kdwMsg || kdwPick();
+    return h + '<section class="hub"><div class="kdi kdw" aria-live="polite"><img class="kdi-pic" src="journaal/lezer.webp" alt="" width="1024" height="572">' + kdiOrn() +
+      '<div class="kdi-bm" lang="ar" dir="rtl">السَّلَامُ عَلَيْكُمْ</div><h2 class="kdi-h2 kdw-h">' + esc(m.h) + '</h2><p class="kdw-t">' + esc(m.t) + "</p>" + kdiOrn() +
+      '<button class="kdi-btn" data-act="kdw-go">' + (m.first ? "Begin" : "Naar mijn dagboek") + "</button></div></section>";
+  }
+  function kdNorm(x) { return mnNorm(x).replace(/[-_.]/g, " ").replace(/\s+/g, " ").trim(); }
+  function kdMatch(s, q) {
+    q = kdNorm(q); if (!q) return true;
+    const hay = kdNorm(Q_TR[s - 1]);
+    return String(s) === q || q.split(" ").every(function (w) { return hay.indexOf(w) !== -1; }) || hay.replace(/ /g, "").indexOf(q.replace(/ /g, "")) !== -1;
+  }
+  function kdTile(s, seen) {
+    const n = Q_N[s - 1], l = seen[s] || 0, done = l >= n, at = (l > 0 && !done) ? l : 1;
+    const st = done ? "Afgerond" : l > 0 ? "Verder bij vers " + l + " van " + n : "Nog niet begonnen";
+    const bt = done ? "Opnieuw lezen" : l > 0 ? "Verder lezen" : "Begin met lezen";
+    return '<article class="kdt" data-s="' + s + '"' + (kdMatch(s, kdQ) ? "" : " hidden") + ' aria-label="Soera ' + s + ", " + esc(Q_TR[s - 1]) + '">' +
+      '<div class="kdt-no"><svg viewBox="0 0 80 80" aria-hidden="true"><rect x="14" y="14" width="52" height="52" rx="4"/><rect x="14" y="14" width="52" height="52" rx="4" transform="rotate(45 40 40)"/></svg><span>' + s + "</span></div>" +
+      '<div class="kdt-ar" lang="ar" dir="rtl">' + Q_AR[s - 1] + '</div><div class="kdt-nm">' + esc(Q_TR[s - 1]) + '</div><p class="kdt-meta">' + n + (n === 1 ? " vers" : " verzen") + "</p>" +
+      '<span class="kd-bar" aria-hidden="true"><i style="width:' + Math.round(Math.min(l, n) / n * 100) + '%"></i></span><small class="kdt-st">' + st + "</small>" +
+      '<button class="kdi-btn kdt-go" data-act="kd-open" data-s="' + s + '" data-a="' + at + '" aria-label="' + bt + ": " + esc(Q_TR[s - 1]) + '">' + bt + "</button></article>";
+  }
+  function kdUpd() {
+    const c = document.getElementById("kdCar"), z = document.getElementById("kdCnt"); if (!c || !z) return;
+    const tl = c.querySelectorAll(".kdt:not([hidden])");
+    if (!tl.length) { z.textContent = ""; return; }
+    if (kdNorm(kdQ)) { z.textContent = tl.length + (tl.length === 1 ? " soera gevonden" : " soera’s gevonden"); return; }
+    const mid = c.scrollLeft + c.clientWidth / 2; let best = tl[0], bd = 1e9;
+    tl.forEach(function (t) { const d = Math.abs(t.offsetLeft + t.offsetWidth / 2 - mid); if (d < bd) { bd = d; best = t; } });
+    z.textContent = "Soera " + best.dataset.s + " van 114 · veeg voor meer";
+  }
+  function kdAfter() {
+    const c = document.getElementById("kdCar"); if (!c) return;
+    let ls = 0; try { ls = parseInt(localStorage.getItem("nspark_kd_lasts") || "0", 10); } catch (e) {}
+    const t = ls ? c.querySelector('.kdt[data-s="' + ls + '"]:not([hidden])') : null;
+    if (t) c.scrollLeft = t.offsetLeft - (c.clientWidth - t.offsetWidth) / 2;
+    kdUpd();
+    let busy = false;
+    c.addEventListener("scroll", function () { if (busy) return; busy = true; requestAnimationFrame(function () { busy = false; kdUpd(); }); }, { passive: true });
+  }
+  document.addEventListener("input", function (e) {
+    if (!e.target || e.target.id !== "kdSearch") return;
+    kdQ = e.target.value; let n = 0;
+    document.querySelectorAll("#kdCar .kdt").forEach(function (el) { const ok = kdMatch(parseInt(el.dataset.s, 10), kdQ); el.hidden = !ok; if (ok) n++; });
+    const c = document.getElementById("kdCar"), z = document.getElementById("kdNone"), r = document.getElementById("kdSr");
+    if (c) c.scrollLeft = 0; if (z) z.hidden = n > 0;
+    if (r) r.textContent = n ? n + (n === 1 ? " soera gevonden" : " soera’s gevonden") : "Geen soera gevonden";
+    kdUpd();
+  });
   function viewKd() {
-    let h = hubTop("Koran-dagboek", "kd-back", "", "Lees en reflecteer vers voor vers");
+    let h = hubTop("Mijn Qur’an dagboek", "kd-back", "", "Lees en reflecteer vers voor vers");
     if (!mkOwner()) return h + '<section class="hub"><p class="hub-intro">Dit onderdeel is er nog niet voor iedereen.</p></section>';
+    if (kdw) return viewKdw(h);
     if (kdi === null && !kdiGet()) kdi = 0;
     if (kdi !== null) return viewKdi(h);
-    const list = kdSoeras(), seen = kdGet();
-    h += '<section class="hub"><div class="qs"><img class="qs-img" src="journaal/lezer.webp" alt="" width="1024" height="572"><button class="mn-btn mn-top" data-act="mn-screen">Mijn notities' + (mnItems().length ? " (" + mnItems().length + ")" : "") + '</button><h2>Kies een soera</h2>';
-    list.forEach(function (s) {
-      const n = Q_N[s - 1], l = seen[s] || 0, done = l >= n, at = (l > 0 && !done) ? l : 1;
-      h += '<button class="kd-row" data-act="kd-open" data-s="' + s + '" data-a="' + at + '"><span class="kd-no">' + s + '</span><span class="kd-nm"><b>' + esc(Q_TR[s - 1]) + "</b><small>" + (done ? "Afgerond" : l > 0 ? "Verder bij vers " + l + " van " + n : n + " verzen") + '</small><span class="kd-bar"><i style="width:' + Math.round(Math.min(l, n) / n * 100) + '%"></i></span></span><span class="kd-ch" aria-hidden="true">›</span></button>';
-    });
-    h += '<button class="kdi-about" data-act="kdi-open">Over dit dagboek</button></div></section>';
+    const list = kdSoeras(), seen = kdGet(), mn = mnItems().length, none = !list.some(function (s) { return kdMatch(s, kdQ); });
+    h += '<section class="hub"><div class="kds"><label class="kds-sr"><span class="sr-only" style="position:absolute;left:-9999px">Zoek jouw soera</span>' +
+      '<input id="kdSearch" type="search" value="' + esc(kdQ) + '" placeholder="Zoek jouw soera…" autocomplete="off" enterkeyhint="search"></label>' +
+      '<p class="kds-cnt" id="kdCnt" aria-hidden="true"></p><p class="sr-only" id="kdSr" role="status" style="position:absolute;left:-9999px"></p>' +
+      '<div class="kdc" id="kdCar" role="region" aria-label="Soera’s. Veeg naar links of rechts om te bladeren." tabindex="0">' + list.map(function (s) { return kdTile(s, seen); }).join("") + "</div>" +
+      '<p class="mn-none kds-none" id="kdNone" role="status"' + (none ? "" : " hidden") + ">Geen soera gevonden. Probeer een andere naam of een nummer.</p>" +
+      '<button class="mn-btn" data-act="mn-screen">Mijn notities' + (mn ? " (" + mn + ")" : "") + '</button><button class="kdi-about" data-act="kdi-open">Over dit dagboek</button></div></section>';
+    setTimeout(kdAfter, 0);
     return h;
   }
   function viewQj() {
     const p = String(qjKey).split(":"), s = parseInt(p[0], 10) || 1, a = parseInt(p[1], 10) || 1, n = Q_N[s - 1];
-    let h = hubTop("Koran-dagboek", "qj-back", "", Q_TR[s - 1] + " · vers " + a);
+    let h = hubTop("Mijn Qur’an dagboek", "qj-back", "", Q_TR[s - 1] + " · vers " + a);
     if (!mkOwner()) return h + '<section class="hub"><p class="hub-intro">Dit onderdeel is er nog niet voor iedereen.</p></section>';
     if (!KT[s]) { ktLoad(s); return h + '<section class="hub"><p class="hub-intro">' + (ktErr[s] ? "De tekst kon niet geladen worden. Controleer je verbinding en ga terug en probeer het opnieuw." : "De Koran wordt geladen…") + "</p></section>"; }
     if (!QJ) { qjLoad(); return h + '<section class="hub"><p class="hub-intro">Het dagboek wordt geladen…</p></section>'; }
@@ -15604,7 +15714,8 @@ return exports;})();
       }
       case "q-journal": { const jb = document.getElementById("qSel"), jk = jb && jb.dataset.k; if (!jk || !mkOwner()) break; play("click"); qjKey = jk; qjFrom = "reader"; screen = "qj"; render(); window.scrollTo({ top: 0 }); break; }
       case "qj-back": { qjAuto(); play("click"); if (qjFrom === "list") { screen = "kd"; render(); window.scrollTo({ top: 0 }); break; } if (qjFrom === "notes") { screen = "mn"; render(); window.scrollTo({ top: 0 }); break; } const jp = String(qjKey).split(":"); qSurah = parseInt(jp[0], 10) || 1; qJump = parseInt(jp[1], 10) || 1; screen = "qread"; render(); break; }
-      case "kd": if (!mkOwner()) break; play("click"); screen = "kd"; render(); window.scrollTo({ top: 0 }); break;
+      case "kd": if (!mkOwner()) break; play("click"); kdw = true; kdwPick(); kdi = null; kdiDraft = null; kdQ = ""; screen = "kd"; render(); window.scrollTo({ top: 0 }); break;
+      case "kdw-go": play("click"); kdw = false; render(); window.scrollTo({ top: 0 }); break;
       case "kd-back": play("click"); screen = "dash"; render(); break;
       case "mn-screen": { if (!mkOwner()) break; play("click"); mnQ = ""; screen = "mn"; render(); window.scrollTo({ top: 0 }); break; }
       case "mn-back": play("click"); screen = "kd"; render(); window.scrollTo({ top: 0 }); break;
