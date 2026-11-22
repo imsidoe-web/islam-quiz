@@ -8833,6 +8833,7 @@ return exports;})();
     { id: "wo-geleerde", t: "Een geleerde", v: "Controle van de prompt en de testverzen van het Koran-dagboek.", d: "4 nov" }
   ];
   const LIVE = [
+    { v: "v331", t: "Ranglijst-venster: het venster aan het einde van een land verschijnt nu ook als je eerst een kist opent en doorvliegt naar het volgende land." },
     { v: "v330", t: "Nieuw spel-level: Schatjacht. In sommige levels krijg je geen quiz maar een spel: kies een kaart, tik de schatkist open en pak het plaatje uit de kist. Je vindt hem in De 5 Zuilen, Seerah, Koran, Akhlaaq en Ramadan." },
     { v: "v329", t: "Meldingen: een klik op een melding brengt je nu altijd naar de app zelf, ook als er een ander tabblad van de site open staat." },
     { v: "v328", t: "Beheer: nakijkers voor de Turkse vertaling toevoegen (alleen voor jou zichtbaar)." },
@@ -12988,11 +12989,14 @@ return exports;})();
       }, tm);
     }, 900);
   }
+  let rankTimer = null;
   function rankCheck() {
+    clearTimeout(rankTimer); rankTimer = null;
     if (!rankPending) return;
     if (Date.now() - rankPending.at > 10 * 60 * 1000) { rankPending = null; return; }
     if (screen !== "journey") return;
-    if (landFly || landFlyAfter || document.querySelector(".dialog-wrap, #bcel, #rankWin, .cg-stage, .bm-wrap")) { if (++rankTries < 10) setTimeout(rankCheck, 1500); return; }
+    /* v331: blijf wachten (tot 10 minuten) tot de kaart vrij is: kist openen en doorvliegen naar het volgende land duurt langer dan de oude 15 seconden */
+    if (landFly || landFlyAfter || document.querySelector(".dialog-wrap, #bcel, #rankWin, .cg-stage, .bm-wrap, .fly-shield")) { rankTimer = setTimeout(rankCheck, 1500); return; }
     const rp = rankPending; rankPending = null;
     rankFetch(rp.lv).then(function (rows) {
       if (!rows || !P || screen !== "journey" || document.querySelector(".dialog-wrap, #bcel, #rankWin, .cg-stage, .bm-wrap")) return;
