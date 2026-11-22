@@ -2500,6 +2500,34 @@ a.bd-idbtn { text-decoration: none; justify-content: center; font-weight: 600; }
 .qs-img-w { margin: 18px 0 0; }
 .qs-img { display: block; width: 100%; height: auto; aspect-ratio: 1024 / 572; object-fit: cover; border-radius: 16px; margin: 0 0 14px; }
 .qs-ar { text-align: center; padding: 4px 0 8px; }
+.q-uth { font-family: "Amiri", "Scheherazade New", "Noto Naskh Arabic", serif; }
+.qs-bm { text-align: center; border-bottom: 1px solid #e2d6b4; margin: 8px 0 4px; padding-bottom: 6px; }
+.qs-bm p { margin: 0 0 4px; font-size: .9rem; color: #5b5a45; }
+.qs-nl { background: #f1e8d0; border-radius: 12px; padding: 8px 12px; margin: 4px 0 8px; }
+.qs-nl small { letter-spacing: .06em; color: #7a6a3a; font-size: .7rem; }
+.qs-nl p { margin: 2px 0; color: #1e2b24; }
+.kdi-about { appearance: none; font: inherit; width: 100%; margin: 14px 0 0; padding: 12px; background: transparent; color: #2c5a44; border: 1px solid #d9caa0; border-radius: 18px; }
+.kdi { background: radial-gradient(120% 60% at 50% 0%, #fffdf6 0%, #f6eedb 70%, #efe4c8 100%); border-radius: 24px; padding: 22px 20px 18px; margin: 8px 7px; text-align: center; font-family: Georgia, "Times New Roman", serif; color: #1f3a2c; }
+.kdi-pic { display: block; width: 100%; height: auto; aspect-ratio: 1024 / 572; object-fit: cover; border-radius: 20px; box-shadow: 0 8px 28px #3a4a3a22; }
+.kdi-orn { width: 120px; margin: 16px auto 12px; display: block; }
+.kdi-bm { font-family: "Amiri", "Scheherazade New", serif; font-size: 2rem; line-height: 2; margin: 8px 0 0; }
+.kdi-it { font-style: italic; color: #6a6a52; margin: 0 0 6px; }
+.kdi-h1 { font-weight: 400; font-size: 1.7rem; letter-spacing: .02em; color: #2c5a44; margin: 12px 0 4px; }
+.kdi-h2 { font-weight: 400; font-size: 1.4rem; color: #2c5a44; margin: 0 0 10px; }
+.kdi-sub { font-size: .9rem; letter-spacing: .14em; text-transform: uppercase; color: #9a8450; margin: 0 0 8px; }
+.kdi p { margin: 0 0 10px; line-height: 1.65; color: #44503f; } .kdi small { color: #9a8450; }
+.kdi-ul { list-style: none; padding: 0; margin: 8px 0; text-align: left; }
+.kdi-ul li { display: flex; gap: 14px; align-items: flex-start; margin: 0 0 14px; color: #44503f; line-height: 1.6; }
+.kdi-ul i { flex: 0 0 30px; height: 30px; border-radius: 50%; border: 1px solid #b8a06a; color: #9a8450; font-style: normal; text-align: center; line-height: 28px; font-size: .95rem; }
+.kdi-card { background: #fffaf0; border: 1px solid #e6d9b6; border-radius: 16px; padding: 12px 16px; margin: 8px 0; text-align: left; font-size: .95rem; line-height: 1.6; color: #44503f; }
+.kdi-card b { color: #2c5a44; } .kdi-card a { color: #2c5a44; }
+.kdi-ta { width: 100%; box-sizing: border-box; border: 1px solid #d9caa0; border-radius: 16px; background: #fffaf0; padding: 14px; font: 1rem/1.6 Georgia, serif; color: #1f3a2c; resize: none; outline: none; }
+.kdi-ta:focus { border-color: #b8a06a; }
+.kdi-dt { color: #2c5a44 !important; font-style: italic; margin-top: 10px !important; } .kdi-sm { font-size: .85rem; color: #9a8450 !important; } .kdi-err { color: #9a3b2c !important; }
+.kdi-dots { display: flex; gap: 8px; justify-content: center; margin: 12px 0 14px; }
+.kdi-dots i { width: 8px; height: 8px; border-radius: 50%; background: #dccfa8; } .kdi-dots i.on { background: #b8a06a; width: 22px; border-radius: 4px; }
+.kdi-btn { appearance: none; display: block; width: 100%; padding: 14px; border: 0; border-radius: 28px; background: #2c5a44; color: #fbf5e6; font: 1rem Georgia, serif; letter-spacing: .06em; }
+.kdi-back { appearance: none; display: block; width: 100%; margin-top: 8px; padding: 10px; border: 0; background: transparent; color: #9a8450; font: .95rem Georgia, serif; }
 .qs h2 { font-size: 1.05rem; font-weight: 800; color: #1f4d3a; margin: 16px 0 4px; }
 .qs p { margin: 0; line-height: 1.65; color: #3a463f; } .qs p.qs-b { margin: 3px 0; }
 .qs-soon { margin-top: 10px !important; color: #6e7468 !important; font-size: .85rem; }
@@ -7640,7 +7668,7 @@ return exports;})();
       '<button class="btn ghost" data-act="group" data-d="x">' + icon("users", 18) + "Groep &amp; duel</button>" +
       '<button class="btn ghost" data-act="bazaar" data-d="x">' + gemSvg(18) + "Bazaar</button>" +
       '<button class="btn ghost" data-act="tour" data-d="x">Uitleg bekijken</button>' +
-      '<button class="btn ghost" data-act="age" data-d="x">Leeftijd: ' + ageLabel() + "</button>" + '<button class="btn ghost" data-act="feedback" data-d="x">Stuur feedback</button>' + (COLOFON_ON ? '<button class="btn ghost" data-act="colofon" data-d="x">Over de app (colofon)</button>' : "") + (isStandalone() ? "" : '<button class="btn ghost" data-act="install" data-d="x">Zet op beginscherm</button>') + "</div>" +
+      '<button class="btn ghost" data-act="age" data-d="x">Leeftijd: ' + ageLabel() + "</button>" + '<button class="btn ghost" data-act="feedback" data-d="x">Stuur feedback</button>' + '<button class="btn ghost" data-act="bronnen" data-d="x">Bronnen</button>' + (COLOFON_ON ? '<button class="btn ghost" data-act="colofon" data-d="x">Over de app (colofon)</button>' : "") + (isStandalone() ? "" : '<button class="btn ghost" data-act="install" data-d="x">Zet op beginscherm</button>') + "</div>" +
       '<button class="set-danger" data-act="reset" data-d="x">' + icon("trash", 16) + "Voortgang van " + esc(P.name) + " wissen</button>" +
       (sbUser && P.sbId === sbUser.id ? '<button class="set-danger" data-act="acct-delete" data-d="x">' + icon("trash", 16) + "Account verwijderen</button>" : "") +
       legalLinks() + '<button class="btn block" data-d="ok">Klaar</button></div></div>';
@@ -8566,6 +8594,20 @@ return exports;})();
   }
   /* ── Koran-dagboek (voorlopig alleen beheerder): uitleg, reflectie en journalvragen per vers. Eigen notities blijven alleen op dit toestel. ── */
   let QJ = null, qjLoading = false, qjErr = false, qjKey = "", qjFrom = "reader";
+  /* v332: Koran-dagboek met de hele Koran: Arabisch (Tanzil, Uthmani) en Nederlands (S. S. Siregar), per soera geladen uit quran/tanzil-nl/ */
+  let KT = {}, ktBusy = {}, ktErr = {}, kdi = null, kdiDraft = null, kdiMsg = "";
+  const BISM_AR = "بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ", BISM_NL = "In de naam van Allah, de Erbarmer, de Meest Barmhartige.";
+  function ktLoad(s) {
+    if (KT[s] || ktBusy[s]) return;
+    ktBusy[s] = 1; ktErr[s] = 0;
+    fetch("quran/tanzil-nl/s" + String(s).padStart(3, "0") + ".json").then(function (r) { if (!r.ok) throw 0; return r.json(); })
+      .then(function (d) { KT[s] = d.v; ktBusy[s] = 0; if (screen === "qj") render(); })
+      .catch(function () { ktBusy[s] = 0; ktErr[s] = 1; if (screen === "qj") render(); });
+  }
+  function kdiGet() { try { return JSON.parse(localStorage.getItem("nspark_kd_intro_v1") || "null"); } catch (e) { return null; } }
+  function kdiSave(t) { try { const o = kdiGet() || {}; o.t = String(t).trim(); if (!o.d) o.d = todayStr(); localStorage.setItem("nspark_kd_intro_v1", JSON.stringify(o)); return true; } catch (e) { return false; } }
+  function kdiDate(iso) { try { const p = String(iso).split("-"); return new Date(+p[0], +p[1] - 1, +p[2]).toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" }); } catch (e) { return String(iso || ""); } }
+  document.addEventListener("input", function (e) { if (e.target && e.target.id === "kdiText") kdiDraft = e.target.value; });
   /* Koran-dagboek: plaatjes. Boven: thema van het vers (veld "i"), anders afwisselend uit deze lijst. Onder (bij Mijn journal): schrijf-plaatjes */
   const QJ_BOVEN = ["lezer", "schrijver6", "samen", "schrijver7", "schrijver8"];
   const QJ_ONDER = ["schrijver5", "schrijver", "schrijver4", "schrijver2", "schrijver3"];
@@ -8574,7 +8616,7 @@ return exports;})();
     let sx = 0, sy = 0, st = 0, ok = false;
     document.addEventListener("touchstart", function (e) {
       ok = false;
-      if (screen !== "qj" || e.touches.length !== 1) return;
+      if ((screen !== "qj" && !(screen === "kd" && kdi !== null)) || e.touches.length !== 1) return;
       if (e.target.closest && e.target.closest("textarea, input, button, a")) return;
       sx = e.touches[0].clientX; sy = e.touches[0].clientY; st = Date.now(); ok = true;
     }, { passive: true });
@@ -8582,7 +8624,7 @@ return exports;})();
       if (!ok) return; ok = false;
       const t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
       if (Date.now() - st > 800 || Math.abs(dx) < 60 || Math.abs(dy) > Math.abs(dx) * 0.6) return;
-      const b = document.querySelector('[data-act="qj-nav"][data-d="' + (dx < 0 ? "1" : "-1") + '"]');
+      const b = document.querySelector('[data-act="' + (screen === "kd" ? "kdi-nav" : "qj-nav") + '"][data-d="' + (dx < 0 ? "1" : "-1") + '"]');
       if (b) b.click();
     }, { passive: true });
   })();
@@ -8604,7 +8646,7 @@ return exports;})();
   function kdGet() { try { return JSON.parse(localStorage.getItem("nspark_kd_v1") || "{}"); } catch (e) { return {}; } }
   function kdSeen(s, a) { try { const o = kdGet(); o[s] = Math.max(o[s] || 0, a); localStorage.setItem("nspark_kd_v1", JSON.stringify(o)); } catch (e) {} }
   function kdComplete(s) { if (!QJ) return false; const n = Q_N[s - 1]; if (!n) return false; for (let a = 1; a <= n; a++) if (!QJ[s + ":" + a]) return false; return true; }
-  function kdSoeras() { const out = []; if (!QJ) return out; for (let s = 1; s <= 114; s++) if (kdComplete(s)) out.push(s); return out; }
+  function kdSoeras() { const out = []; for (let s = 1; s <= 114; s++) out.push(s); return out; }
   function qjAuto() { const t = document.getElementById("qjText"); if (t && qjKey) qjSet(qjKey, t.value); }
   /* v233: beheerpagina (alleen beheerder): cijfers komen uit de Supabase-functie beheer_cijfers() */
   let BH = null, bhBusy = false, bhErr = "", bhAt = null, BN = null, BNerr = false, BK = null, BKerr = false;
@@ -9170,32 +9212,61 @@ return exports;})();
     }, { passive: true });
     document.addEventListener("keydown", function (e) { if (e.key === "Escape") bdClose(); });
   })();
+  function kdiOrn() { return '<svg class="kdi-orn" viewBox="0 0 120 14" aria-hidden="true"><path d="M2 7h44M74 7h44" stroke="#b8a06a" stroke-width="1" stroke-linecap="round"/><path d="M60 1l5 6-5 6-5-6z" fill="#b8a06a"/></svg>'; }
+  function viewKdi(h) {
+    const pg = Math.max(0, Math.min(3, kdi || 0)), saved = kdiGet();
+    let b = "";
+    if (pg === 0) b = '<img class="kdi-pic" src="journaal/lezer.webp" alt="" width="1024" height="572">' + kdiOrn() +
+      '<div class="kdi-bm" lang="ar" dir="rtl">' + esc(BISM_AR) + '</div><p class="kdi-it">' + esc(BISM_NL) + '</p><h2 class="kdi-h1">Koran Dagboek</h2><p class="kdi-sub">Lees · Overdenk · Schrijf</p>';
+    else if (pg === 1) b = '<img class="kdi-pic" src="journaal/schrijver.webp" alt="" width="1024" height="572">' + kdiOrn() + '<h2 class="kdi-h2">Zo werkt het</h2>' +
+      '<ul class="kdi-ul"><li><i>1</i><span>Kies een soera en lees het vers, in het Arabisch en in het Nederlands.</span></li><li><i>2</i><span>Lees de uitleg en de betekenis van de woorden. Neem er rustig de tijd voor.</span></li><li><i>3</i><span>Schrijf in je journal wat je raakt. Veeg naar links voor het volgende vers.</span></li></ul>';
+    else if (pg === 2) b = '<img class="kdi-pic" src="journaal/hart.webp" alt="" width="1024" height="572">' + kdiOrn() + '<h2 class="kdi-h2">Over de tekst</h2>' +
+      '<div class="kdi-card"><b>Bron.</b> Arabische tekst en Nederlandse vertaling (S. S. Siregar): Tanzil Project, <a href="https://tanzil.net" target="_blank" rel="noopener">tanzil.net</a></div>' +
+      '<div class="kdi-card"><b>Let op.</b> De Nederlandse tekst geeft de betekenis weer. Ze vervangt het Arabisch niet.</div>' +
+      '<div class="kdi-card"><b>Je notities.</b> Blijven alleen op dit toestel. Alleen jij leest ze.</div>';
+    else {
+      const val = kdiDraft !== null ? kdiDraft : (saved && saved.t) || "";
+      b = kdiOrn() + '<h2 class="kdi-h2">Jouw intentie</h2><p>Met welke intentie begin je aan dit dagboek?<br><small>Bijvoorbeeld: dichter bij de Qurân komen.</small></p>' +
+        '<textarea class="kdi-ta" id="kdiText" rows="6" aria-label="Jouw intentie" placeholder="Schrijf hier je intentie…">' + esc(val) + '</textarea>' +
+        (kdiMsg ? '<p class="kdi-err" role="alert">' + esc(kdiMsg) + "</p>" : "") +
+        '<p class="kdi-dt">Begonnen op ' + esc(kdiDate((saved && saved.d) || todayStr())) + '</p><p class="kdi-sm">Alleen jij ziet dit. Je kunt het later aanpassen.</p>';
+    }
+    const dots = '<div class="kdi-dots" aria-hidden="true">' + [0, 1, 2, 3].map(function (i) { return '<i' + (i === pg ? ' class="on"' : "") + "></i>"; }).join("") + "</div>";
+    const btns = pg < 3 ? '<button class="kdi-btn" data-act="kdi-nav" data-d="1">Volgende</button>' + (pg > 0 ? '<button class="kdi-back" data-act="kdi-nav" data-d="-1">Terug</button>' : "")
+      : '<button class="kdi-btn" data-act="kdi-go">' + (saved && saved.t ? "Opslaan" : "Begin") + '</button><button class="kdi-back" data-act="kdi-nav" data-d="-1">Terug</button>';
+    return h + '<section class="hub"><div class="kdi" aria-label="Beginpagina ' + (pg + 1) + ' van 4">' + b + dots + btns + "</div></section>";
+  }
   function viewKd() {
     let h = hubTop("Koran-dagboek", "kd-back", "", "Lees en reflecteer vers voor vers");
     if (!mkOwner()) return h + '<section class="hub"><p class="hub-intro">Dit onderdeel is er nog niet voor iedereen.</p></section>';
-    if (!QJ) { qjLoad(); return h + '<section class="hub"><p class="hub-intro">Het dagboek wordt geladen…</p></section>'; }
+    if (kdi === null && !kdiGet()) kdi = 0;
+    if (kdi !== null) return viewKdi(h);
     const list = kdSoeras(), seen = kdGet();
     h += '<section class="hub"><div class="qs"><img class="qs-img" src="journaal/lezer.webp" alt="" width="1024" height="572"><h2>Kies een soera</h2>';
-    if (!list.length) h += "<p>Er zijn nog geen soera’s klaar.</p>";
     list.forEach(function (s) {
       const n = Q_N[s - 1], l = seen[s] || 0, done = l >= n, at = (l > 0 && !done) ? l : 1;
       h += '<button class="kd-row" data-act="kd-open" data-s="' + s + '" data-a="' + at + '"><span class="kd-no">' + s + '</span><span class="kd-nm"><b>' + esc(Q_TR[s - 1]) + "</b><small>" + (done ? "Afgerond" : l > 0 ? "Verder bij vers " + l + " van " + n : n + " verzen") + '</small><span class="kd-bar"><i style="width:' + Math.round(Math.min(l, n) / n * 100) + '%"></i></span></span><span class="kd-ch" aria-hidden="true">›</span></button>';
     });
-    h += '<p class="qs-soon">Meer soera’s volgen, insha’Allah.</p></div></section>';
+    h += '<button class="kdi-about" data-act="kdi-open">Over dit dagboek</button></div></section>';
     return h;
   }
   function viewQj() {
     const p = String(qjKey).split(":"), s = parseInt(p[0], 10) || 1, a = parseInt(p[1], 10) || 1, n = Q_N[s - 1];
     let h = hubTop("Koran-dagboek", "qj-back", "", Q_TR[s - 1] + " · vers " + a);
     if (!mkOwner()) return h + '<section class="hub"><p class="hub-intro">Dit onderdeel is er nog niet voor iedereen.</p></section>';
-    if (!QDATA) { qLoad(); return h + '<section class="hub"><p class="hub-intro">De Koran wordt geladen…</p></section>'; }
+    if (!KT[s]) { ktLoad(s); return h + '<section class="hub"><p class="hub-intro">' + (ktErr[s] ? "De tekst kon niet geladen worden. Controleer je verbinding en ga terug en probeer het opnieuw." : "De Koran wordt geladen…") + "</p></section>"; }
     if (!QJ) { qjLoad(); return h + '<section class="hub"><p class="hub-intro">Het dagboek wordt geladen…</p></section>'; }
-    const c = QJ[qjKey], fav = qState().marks.indexOf(qjKey) !== -1, ar = (QDATA[s - 1] && QDATA[s - 1][a - 1]) || "", nav = kdComplete(s);
+    const c = QJ[qjKey], fav = qState().marks.indexOf(qjKey) !== -1, vs = KT[s][a - 1] || ["", ""];
+    let ar = vs[0];
+    const bm = a === 1 && s !== 1 && s !== 9;
+    if (bm) ar = ar.split(" ").slice(4).join(" ");
     h += '<section class="hub"><div class="qs"><div class="qs-top">' +
-      (nav ? '<span class="qs-bar" role="progressbar" aria-valuemin="0" aria-valuemax="' + n + '" aria-valuenow="' + a + '"><i style="width:' + Math.round(a / n * 100) + '%"></i></span><small>Vers ' + a + " van " + n + "</small>" : '<span class="qs-bar"></span>') +
+      '<span class="qs-bar" role="progressbar" aria-valuemin="0" aria-valuemax="' + n + '" aria-valuenow="' + a + '"><i style="width:' + Math.round(a / n * 100) + '%"></i></span><small>Vers ' + a + " van " + n + "</small>" +
       '<button class="qs-fav" data-act="qj-fav" aria-label="Favoriet">' + (fav ? "★" : "☆") + "</button></div>" +
       '<img class="qs-img" src="journaal/' + ((c && /^[a-z0-9-]+$/.test(c.i || "")) ? c.i : QJ_BOVEN[(a + s) % QJ_BOVEN.length]) + '.webp" alt="Rustige illustratie bij dit vers" width="1024" height="572" onerror="if(!this.dataset.f){this.dataset.f=1;this.src=\'journaal/lezer.webp\'}">' +
-      '<div class="qs-ar"><div class="q-text q-s' + (S.qSize || 3) + '" lang="ar" dir="rtl">' + ar + "</div></div>";
+      (bm ? '<div class="qs-bm"><div class="q-text q-uth" lang="ar" dir="rtl" style="font-size:1.6rem;line-height:2">' + esc(BISM_AR) + "</div><p>" + esc(BISM_NL) + "</p></div>" : "") +
+      '<div class="qs-ar"><div class="q-text q-uth q-s' + (S.qSize || 3) + '" lang="ar" dir="rtl">' + esc(ar) + "</div></div>" +
+      '<div class="qs-nl"><small>NEDERLANDS</small><p>' + esc(vs[1]) + "</p></div>";
     if (c) {
       h += "<h2>Uitleg</h2><p>" + esc(c.u || "") + "</p>";
       if (c.b && c.b.length) h += "<h2>Begrippen</h2>" + c.b.map(function (x) { return '<p class="qs-b"><b>' + esc(x[0]) + "</b> " + esc(x[1]) + "</p>"; }).join("");
@@ -9208,7 +9279,7 @@ return exports;})();
     if (c && c.v && c.v.length) h += c.v.map(function (q, i) { return '<p class="qj-q">' + (i + 1) + ". " + esc(q) + "</p>"; }).join("");
     h += '<textarea class="qj-ta" id="qjText" aria-label="Schrijf hier je gedachten" placeholder="Schrijf hier je gedachten…">' + esc(qjGet(qjKey)) + '</textarea>' +
       '<div class="qj-row"><span class="qj-note" id="qjMsg">Alleen voor jou, op dit toestel</span><button class="btn" data-act="qj-save">Bewaar</button></div></div>';
-    if (nav) h += '<div class="qs-nav">' + (a > 1 ? '<button class="qs-prev" data-act="qj-nav" data-d="-1">Vorig</button>' : "") + '<button class="qs-next" data-act="qj-nav" data-d="1">' + (a < n ? "Volgend vers" : "Soera afronden") + "</button></div>";
+    h += '<div class="qs-nav">' + (a > 1 ? '<button class="qs-prev" data-act="qj-nav" data-d="-1">Vorig</button>' : "") + '<button class="qs-next" data-act="qj-nav" data-d="1">' + (a < n ? "Volgend vers" : "Soera afronden") + "</button></div>";
     return h + "</div></section>";
   }
 
@@ -15456,6 +15527,10 @@ return exports;})();
       case "qj-back": { qjAuto(); play("click"); if (qjFrom === "list") { screen = "kd"; render(); window.scrollTo({ top: 0 }); break; } const jp = String(qjKey).split(":"); qSurah = parseInt(jp[0], 10) || 1; qJump = parseInt(jp[1], 10) || 1; screen = "qread"; render(); break; }
       case "kd": if (!mkOwner()) break; play("click"); screen = "kd"; render(); window.scrollTo({ top: 0 }); break;
       case "kd-back": play("click"); screen = "dash"; render(); break;
+      case "kdi-open": { play("click"); kdi = 0; kdiDraft = null; kdiMsg = ""; render(); window.scrollTo({ top: 0 }); break; }
+      case "kdi-nav": { play("click"); kdi = Math.max(0, Math.min(3, (kdi || 0) + (parseInt(el.dataset.d, 10) || 0))); kdiMsg = ""; render(); window.scrollTo({ top: 0 }); break; }
+      case "kdi-go": { const ta = document.getElementById("kdiText"), t = ta ? ta.value : (kdiDraft || ""); if (!String(t).trim()) { kdiMsg = "Schrijf eerst je intentie, al is het kort."; kdiDraft = t; render(); break; } play("click"); kdiSave(t); kdi = null; kdiDraft = null; kdiMsg = ""; render(); window.scrollTo({ top: 0 }); break; }
+      case "bronnen": play("click"); infoDialog("Bronnen", "<p>Korantekst in de Koran-lezer (IndoPak, Hafs) en lettertype: Ayman Siddiqui / Quranic Universal Library by Tarteel (qul.tarteel.ai). De tekst wordt ongewijzigd getoond.</p>" + (mkOwner() ? '<p>Arabische tekst en Nederlandse vertaling (S. S. Siregar): Tanzil Project, <a href="https://tanzil.net" target="_blank" rel="noopener">tanzil.net</a></p>' : "")); break;
       case "beheer-back": play("click"); bdClose(); break;
       case "beheer-refresh": if (!mkOwner()) break; play("click"); BH = null; bhErr = ""; bdDraw(); break;
       case "bd-fbk": { if (!mkOwner()) break; play("click"); bdMode = "feedback"; fbkAsk = false; bdDraw(); const bf = document.querySelector("#bdWrap .bd"); if (bf) bf.scrollTop = 0; break; }
