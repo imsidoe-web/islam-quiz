@@ -2506,6 +2506,19 @@ a.bd-idbtn { text-decoration: none; justify-content: center; font-weight: 600; }
 .qs-nl { background: #f1e8d0; border-radius: 12px; padding: 8px 12px; margin: 4px 0 8px; }
 .qs-nl small { letter-spacing: .06em; color: #7a6a3a; font-size: .7rem; }
 .qs-nl p { margin: 2px 0; color: #1e2b24; }
+.mn-btn { appearance: none; display: block; width: 100%; margin: 12px 0 0; padding: 13px; border: 0; border-radius: 22px; background: #2c5a44; color: #fbf5e6; font: inherit; font-weight: 700; }
+.mn-btn.mn-ghost { background: transparent; color: #2c5a44; border: 1px solid #d9caa0; }
+.mn-btn.mn-top { margin: 0 0 14px; background: #fff; color: #1f4d3a; border: 1.5px solid #d9a05b; }
+.mn-sr input { width: 100%; box-sizing: border-box; border: 1px solid #d9caa0; border-radius: 16px; background: #fffaf0; padding: 12px 14px; font: inherit; color: #1f3a2c; outline: none; }
+.mn-sr input:focus { border-color: #b8a06a; }
+.mn-count { margin: 10px 2px 8px !important; font-size: .85rem; color: #7a6a3a !important; }
+.mn-it { background: #fff; border: 1px solid #e4dcc8; border-radius: 16px; padding: 12px 14px; margin: 0 0 10px; }
+.mn-it[hidden], .mn-none[hidden] { display: none; }
+.mn-h { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; } .mn-h b { color: #1f4d3a; } .mn-h span { font-size: .8rem; color: #7a6a3a; white-space: nowrap; }
+.mn-d { color: #9a8450; font-size: .78rem; }
+.mn-t { margin: 6px 0 8px !important; white-space: pre-line; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.mn-go { appearance: none; font: inherit; font-size: .88rem; background: #f1e8d0; color: #2c5a44; border: 0; border-radius: 14px; padding: 7px 14px; }
+.mn-info, .mn-none { font-size: .85rem; color: #7a6a3a !important; margin-top: 10px !important; }
 .kdi-about { appearance: none; font: inherit; width: 100%; margin: 14px 0 0; padding: 12px; background: transparent; color: #2c5a44; border: 1px solid #d9caa0; border-radius: 18px; }
 .kdi { background: radial-gradient(120% 60% at 50% 0%, #fffdf6 0%, #f6eedb 70%, #efe4c8 100%); border-radius: 24px; padding: 22px 20px 18px; margin: 8px 7px; text-align: center; font-family: Georgia, "Times New Roman", serif; color: #1f3a2c; }
 .kdi-pic { display: block; width: 100%; height: auto; aspect-ratio: 1024 / 572; object-fit: cover; border-radius: 20px; box-shadow: 0 8px 28px #3a4a3a22; }
@@ -8604,6 +8617,69 @@ return exports;})();
       .then(function (d) { KT[s] = d.v; ktBusy[s] = 0; if (screen === "qj") render(); })
       .catch(function () { ktBusy[s] = 0; ktErr[s] = 1; if (screen === "qj") render(); });
   }
+  /* v333: Mijn notities. Eén lijst met alles wat de lezer schreef. Elke notitie heeft een "type": nu "vers" (opslag: nspark_journal_v1, sleutel "soera:vers"). Later komen "vrij" (vrije notities) en "dua" (eigen du'a's) met een eigen opslagsleutel erbij; ze worden in mnItems() toegevoegd en verschijnen vanzelf in dezelfde lijst, zoekfunctie en export. Veld "tags" is al voorzien. */
+  let mnQ = "";
+  function mnNorm(x) { return String(x || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[’‘'`]/g, ""); }
+  function mnItems() {
+    const out = [];
+    try {
+      const o = JSON.parse(localStorage.getItem("nspark_journal_v1") || "{}");
+      Object.keys(o).forEach(function (k) {
+        const p = k.split(":"), s = parseInt(p[0], 10), a = parseInt(p[1], 10), n = o[k];
+        if (!s || !a || !Q_N[s - 1] || !n || !String(n.t || "").trim()) return;
+        out.push({ type: "vers", key: k, s: s, a: a, t: String(n.t), d: n.d || "", ts: n.ts || 0, tags: n.tags || [] });
+      });
+    } catch (e) {}
+    out.sort(function (x, y) { return String(y.d).localeCompare(String(x.d)) || (y.ts || 0) - (x.ts || 0) || y.s - x.s || y.a - x.a; });
+    return out;
+  }
+  function mnTitle(it) { return it.type === "vers" ? Q_TR[it.s - 1] : ""; }
+  function mnSub(it) { return it.type === "vers" ? "Soera " + it.s + " · vers " + it.a : ""; }
+  function mnHay(it) { return mnNorm(mnTitle(it) + " " + mnSub(it) + " " + it.t + " " + (it.tags || []).join(" ")); }
+  function mnMatch(it, q) { q = mnNorm(q).trim(); return !q || q.split(/\s+/).every(function (w) { return mnHay(it).indexOf(w) !== -1; }); }
+  function mnCountTxt(n, all) { return (n === all ? n : n + " van " + all) + (all === 1 ? " notitie" : " notities"); }
+  function mnExport() {
+    const items = mnItems(); if (!items.length) return false;
+    const line = "----------------------------------------";
+    let t = "NurSpark · Mijn notities\nGeëxporteerd op " + kdiDate(todayStr()) + "\nAantal notities: " + items.length + "\n\n" + line + "\n\n";
+    items.forEach(function (it) {
+      t += mnTitle(it) + " (" + mnSub(it).replace(" · ", ", ").toLowerCase().replace(/^soera/, "soera") + ")\nDatum: " + kdiDate(it.d) + (it.tags && it.tags.length ? "\nTags: " + it.tags.join(", ") : "") + "\n\n" + it.t.replace(/\s+$/, "") + "\n\n" + line + "\n\n";
+    });
+    try {
+      const url = URL.createObjectURL(new Blob(["\uFEFF" + t], { type: "text/plain;charset=utf-8" }));
+      const a = document.createElement("a"); a.href = url; a.download = "NurSpark-notities-" + todayStr() + ".txt";
+      document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+      return true;
+    } catch (e) { return false; }
+  }
+  function viewMn() {
+    let h = hubTop("Mijn notities", "mn-back", "", "Alles wat je hebt geschreven");
+    if (!mkOwner()) return h + '<section class="hub"><p class="hub-intro">Dit onderdeel is er nog niet voor iedereen.</p></section>';
+    const items = mnItems(), shown = items.filter(function (it) { return mnMatch(it, mnQ); });
+    h += '<section class="hub"><div class="qs">';
+    if (!items.length) {
+      h += '<img class="qs-img" src="journaal/schrijver.webp" alt="" width="1024" height="572"><h2>Nog geen notities</h2><p>Alles wat je bij een vers schrijft, vind je hier terug. Open een vers en schrijf je eerste gedachte op.</p>' +
+        '<button class="mn-btn" data-act="quran">Naar de Koran-lezer</button><button class="mn-btn mn-ghost" data-act="mn-back">Naar het dagboek</button>';
+      return h + "</div></section>";
+    }
+    h += '<label class="mn-sr"><span class="sr-only" style="position:absolute;left:-9999px">Zoek in je notities</span><input id="mnSearch" type="search" value="' + esc(mnQ) + '" placeholder="Zoek in je notities of op soera…" autocomplete="off"></label>' +
+      '<p class="mn-count" id="mnCount" role="status">' + mnCountTxt(shown.length, items.length) + '</p><div id="mnList">';
+    items.forEach(function (it) {
+      h += '<article class="mn-it" data-k="' + esc(it.key) + '"' + (mnMatch(it, mnQ) ? "" : " hidden") + ' data-h="' + esc(mnHay(it)) + '"><div class="mn-h"><b>' + esc(mnTitle(it)) + "</b><span>" + esc(mnSub(it)) + "</span></div>" +
+        '<small class="mn-d">' + esc(kdiDate(it.d)) + '</small><p class="mn-t">' + esc(it.t) + '</p>' +
+        '<button class="mn-go" data-act="mn-open" data-s="' + it.s + '" data-a="' + it.a + '">Open vers</button></article>';
+    });
+    h += '</div><p class="mn-none" id="mnNone" role="status"' + (shown.length ? " hidden" : "") + ">Geen notities gevonden. Probeer een ander woord.</p>" +
+      '<button class="mn-btn" data-act="mn-export">Exporteer notities</button><p class="mn-info" id="mnInfo" role="status">Je notities staan alleen op dit toestel. Bewaar af en toe een kopie als tekstbestand.</p>';
+    return h + "</div></section>";
+  }
+  document.addEventListener("input", function (e) {
+    if (!e.target || e.target.id !== "mnSearch") return;
+    mnQ = e.target.value; let n = 0, all = 0;
+    document.querySelectorAll("#mnList .mn-it").forEach(function (el) { all++; const q = mnNorm(mnQ).trim(), ok = !q || q.split(/\s+/).every(function (w) { return (el.dataset.h || "").indexOf(w) !== -1; }); el.hidden = !ok; if (ok) n++; });
+    const c = document.getElementById("mnCount"), z = document.getElementById("mnNone");
+    if (c) c.textContent = mnCountTxt(n, all); if (z) z.hidden = n > 0;
+  });
   function kdiGet() { try { return JSON.parse(localStorage.getItem("nspark_kd_intro_v1") || "null"); } catch (e) { return null; } }
   function kdiSave(t) { try { const o = kdiGet() || {}; o.t = String(t).trim(); if (!o.d) o.d = todayStr(); localStorage.setItem("nspark_kd_intro_v1", JSON.stringify(o)); return true; } catch (e) { return false; } }
   function kdiDate(iso) { try { const p = String(iso).split("-"); return new Date(+p[0], +p[1] - 1, +p[2]).toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" }); } catch (e) { return String(iso || ""); } }
@@ -8639,7 +8715,7 @@ return exports;})();
   function qjSet(k, t) {
     try {
       const o = JSON.parse(localStorage.getItem("nspark_journal_v1") || "{}");
-      if (String(t).trim()) o[k] = { t: String(t), d: todayStr() }; else delete o[k];
+      if (String(t).trim()) { const old = o[k]; if (!old || old.t !== String(t)) o[k] = { t: String(t), d: todayStr(), ts: Date.now(), c: (old && (old.c || old.d)) || todayStr() }; } else delete o[k];
       localStorage.setItem("nspark_journal_v1", JSON.stringify(o));
     } catch (e) {}
   }
@@ -9242,7 +9318,7 @@ return exports;})();
     if (kdi === null && !kdiGet()) kdi = 0;
     if (kdi !== null) return viewKdi(h);
     const list = kdSoeras(), seen = kdGet();
-    h += '<section class="hub"><div class="qs"><img class="qs-img" src="journaal/lezer.webp" alt="" width="1024" height="572"><h2>Kies een soera</h2>';
+    h += '<section class="hub"><div class="qs"><img class="qs-img" src="journaal/lezer.webp" alt="" width="1024" height="572"><button class="mn-btn mn-top" data-act="mn-screen">Mijn notities' + (mnItems().length ? " (" + mnItems().length + ")" : "") + '</button><h2>Kies een soera</h2>';
     list.forEach(function (s) {
       const n = Q_N[s - 1], l = seen[s] || 0, done = l >= n, at = (l > 0 && !done) ? l : 1;
       h += '<button class="kd-row" data-act="kd-open" data-s="' + s + '" data-a="' + at + '"><span class="kd-no">' + s + '</span><span class="kd-nm"><b>' + esc(Q_TR[s - 1]) + "</b><small>" + (done ? "Afgerond" : l > 0 ? "Verder bij vers " + l + " van " + n : n + " verzen") + '</small><span class="kd-bar"><i style="width:' + Math.round(Math.min(l, n) / n * 100) + '%"></i></span></span><span class="kd-ch" aria-hidden="true">›</span></button>';
@@ -9494,12 +9570,13 @@ return exports;})();
     else if (screen === "qread") { app.innerHTML = viewQread(); afterQreadRender(); }
     else if (screen === "qj") { app.innerHTML = viewQj(); }
     else if (screen === "kd") { app.innerHTML = viewKd(); }
+    else if (screen === "mn") { app.innerHTML = viewMn(); }
     const bw = document.getElementById("badgesBtnWrap");
     if (bw) bw.style.display = (screen === "board" || screen === "scores") ? "" : "none";
     window.scrollTo({ top: 0 });
     if (screen === "journey") document.body.classList.add("jfull");
     if (screen === "rad" || screen === "bazaar") document.body.classList.add("radfull");
-    if (screen === "dash" || screen === "hub" || screen === "play" || screen === "lab" || screen === "labroom" || screen === "labquiz" || screen === "fout" || screen === "dua" || screen === "today" || screen === "prog" || screen === "quran" || screen === "qread" || screen === "qj" || screen === "kd") document.body.classList.add("dashfull");
+    if (screen === "dash" || screen === "hub" || screen === "play" || screen === "lab" || screen === "labroom" || screen === "labquiz" || screen === "fout" || screen === "dua" || screen === "today" || screen === "prog" || screen === "quran" || screen === "qread" || screen === "qj" || screen === "kd" || screen === "mn") document.body.classList.add("dashfull");
     if (screen === "rad" && rad && rad.phase !== "intro" && rad.phase !== "end") document.body.classList.add("radgame");
     if (kosmosOn() && KOS_SCREENS.indexOf(screen) !== -1) document.body.classList.add("kosmos");
     if (screen === "journey") afterJourneyRender(); else rgAmb.show(false);
@@ -15524,9 +15601,13 @@ return exports;})();
         break;
       }
       case "q-journal": { const jb = document.getElementById("qSel"), jk = jb && jb.dataset.k; if (!jk || !mkOwner()) break; play("click"); qjKey = jk; qjFrom = "reader"; screen = "qj"; render(); window.scrollTo({ top: 0 }); break; }
-      case "qj-back": { qjAuto(); play("click"); if (qjFrom === "list") { screen = "kd"; render(); window.scrollTo({ top: 0 }); break; } const jp = String(qjKey).split(":"); qSurah = parseInt(jp[0], 10) || 1; qJump = parseInt(jp[1], 10) || 1; screen = "qread"; render(); break; }
+      case "qj-back": { qjAuto(); play("click"); if (qjFrom === "list") { screen = "kd"; render(); window.scrollTo({ top: 0 }); break; } if (qjFrom === "notes") { screen = "mn"; render(); window.scrollTo({ top: 0 }); break; } const jp = String(qjKey).split(":"); qSurah = parseInt(jp[0], 10) || 1; qJump = parseInt(jp[1], 10) || 1; screen = "qread"; render(); break; }
       case "kd": if (!mkOwner()) break; play("click"); screen = "kd"; render(); window.scrollTo({ top: 0 }); break;
       case "kd-back": play("click"); screen = "dash"; render(); break;
+      case "mn-screen": { if (!mkOwner()) break; play("click"); mnQ = ""; screen = "mn"; render(); window.scrollTo({ top: 0 }); break; }
+      case "mn-back": play("click"); screen = "kd"; render(); window.scrollTo({ top: 0 }); break;
+      case "mn-open": { if (!mkOwner()) break; const ms = parseInt(el.dataset.s, 10) || 1, ma = parseInt(el.dataset.a, 10) || 1; play("click"); qjKey = ms + ":" + ma; qjFrom = "notes"; screen = "qj"; render(); window.scrollTo({ top: 0 }); break; }
+      case "mn-export": { const ok = mnExport(), inf = document.getElementById("mnInfo"); if (inf) inf.textContent = ok ? "Het bestand is opgeslagen op je toestel (map Downloads). Bewaar het op een veilige plek." : "Het exporteren is niet gelukt. Probeer het opnieuw."; break; }
       case "kdi-open": { play("click"); kdi = 0; kdiDraft = null; kdiMsg = ""; render(); window.scrollTo({ top: 0 }); break; }
       case "kdi-nav": { play("click"); kdi = Math.max(0, Math.min(3, (kdi || 0) + (parseInt(el.dataset.d, 10) || 0))); kdiMsg = ""; render(); window.scrollTo({ top: 0 }); break; }
       case "kdi-go": { const ta = document.getElementById("kdiText"), t = ta ? ta.value : (kdiDraft || ""); if (!String(t).trim()) { kdiMsg = "Schrijf eerst je intentie, al is het kort."; kdiDraft = t; render(); break; } play("click"); kdiSave(t); kdi = null; kdiDraft = null; kdiMsg = ""; render(); window.scrollTo({ top: 0 }); break; }
