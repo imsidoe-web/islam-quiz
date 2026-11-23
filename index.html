@@ -2480,6 +2480,7 @@ body.dashfull { background: #0f2e22; color: #f4efe2; }
 /* v354: sfeerbeelden */
 .kdo-pic { display: block; width: 100%; height: auto; aspect-ratio: 1376 / 768; object-fit: cover; border-radius: 18px 18px 0 0; }
 .kdi-pic { object-fit: cover; }
+.kdo-pic + .kdo-date { border-radius: 0 0 18px 18px; margin-bottom: 4px; }
 /* v235: beheerpagina in donkere analytics-stijl (los van de NurSpark-look, alle namen beginnen met bd-) */
 .bd { --bg0: #06060d; --bg1: #0d0b1f; --bg2: #171236; --tx: #e9e8f6; --mut: #8f8eb0; --line: rgba(160,150,255,.16); --blue: #6ea8ff; --indigo: #8b8cff; --violet: #b48cff; --pink: #f07ab8; --teal: #46d3c0; --green: #4fd98f; --amber: #f2b95a;
   position: absolute; inset: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; color: var(--tx); background: linear-gradient(180deg, var(--bg0) 0%, var(--bg1) 38%, var(--bg2) 100%); font-family: "Google Sans", Inter, Roboto, "Segoe UI", Arial, sans-serif; }
@@ -9018,7 +9019,7 @@ return exports;})();
     const h = hubTop("Mijn Qur’an dagboek", "kdo-back", "", "Jouw overzicht");
     if (!mkOwner()) return h + '<section class="hub"><p class="hub-intro">Dit onderdeel is er nog niet voor iedereen.</p></section>';
     const days = kdoDays();
-    return h + '<section class="hub"><div class="kdo">' + kdoDateHtml() + '<h2>Verder lezen</h2>' + kdoLastHtml() + '<h2>Reeks</h2><div class="kdo-box" id="kdoStreak">' + kdoStreakHtml(days) + '</div><h2>Hoe voel je je vandaag?</h2><div id="kdoTiles">' + kdoTilesHtml() + '</div><div id="kdoCard" class="kdo-wrap" aria-live="polite"><div class="kdo-wi"></div></div><h2>Kalender</h2><div class="kdo-box" id="kdoCal">' + kdoCalHtml(days) + '</div><h2>Deze week</h2><div id="kdoWeek">' + kdoWeekHtml() + '</div><button type="button" class="kdo-link kdo-nt" data-act="kdo-notes">Mijn notities</button></div></section>';
+    return h + '<section class="hub"><div class="kdo"><img class="kdo-pic" src="journaal/' + kdwPic() + '.webp" alt="" width="1376" height="768">' + kdoDateHtml() + '<h2>Verder lezen</h2>' + kdoLastHtml() + '<h2>Reeks</h2><div class="kdo-box" id="kdoStreak">' + kdoStreakHtml(days) + '</div><h2>Hoe voel je je vandaag?</h2><div id="kdoTiles">' + kdoTilesHtml() + '</div><div id="kdoCard" class="kdo-wrap" aria-live="polite"><div class="kdo-wi"></div></div><h2>Kalender</h2><div class="kdo-box" id="kdoCal">' + kdoCalHtml(days) + '</div><h2>Deze week</h2><div id="kdoWeek">' + kdoWeekHtml() + '</div><button type="button" class="kdo-link kdo-nt" data-act="kdo-notes">Mijn notities</button></div></section>';
   }
   function qjActSave() { const o = document.getElementById("qjOwn"); if (o && qjKey) qjActSet(qjKey, qjActGet(qjKey).a, o.value); }
   function qjActHtml() {
@@ -9716,7 +9717,7 @@ return exports;})();
   function kdwPic() { const hr = new Date().getHours(); return hr >= 5 && hr < 12 ? "kd-ochtend" : hr >= 12 && hr < 18 ? "kd-middag" : hr >= 18 && hr < 23 ? "kd-avond" : "kd-nacht"; }
   function viewKdw(h) {
     const m = kdwMsg || kdwPick();
-    return h + '<section class="hub"><div class="kdi kdw" aria-live="polite"><img class="kdi-pic" src="journaal/' + kdwPic() + '.webp" alt="" width="1376" height="768">' + kdiOrn() +
+    return h + '<section class="hub"><div class="kdi kdw" aria-live="polite"><img class="kdi-pic" src="journaal/kd-middag.webp" alt="" width="1376" height="768">' + kdiOrn() +
       '<div class="kdi-bm" lang="ar" dir="rtl">السَّلَامُ عَلَيْكُمْ</div><h2 class="kdi-h2 kdw-h">' + esc(m.h) + '</h2><p class="kdw-t">' + esc(m.t) + "</p>" + kdiOrn() +
       '<button class="kdi-btn" data-act="kdw-go">' + (m.first ? "Begin" : "Naar mijn dagboek") + "</button></div></section>";
   }
