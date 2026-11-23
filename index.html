@@ -2396,7 +2396,7 @@ body.dashfull { background: #0f2e22; color: #f4efe2; }
 .kdo-tiles { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
 .kdo-tile { position: relative; appearance: none; border: 0; border-radius: 20px; min-height: 96px; padding: 10px; color: #fff; font: inherit; font-weight: 700; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; cursor: pointer; box-shadow: 0 3px 0 rgba(0, 0, 0, .18); }
 .kdo-tile:nth-child(5) { grid-column: 1 / -1; }
-.kdo-tile.open { outline: 3px solid #1b4332; outline-offset: 2px; }
+.kdo-tile.open { transform: scale(.98); }
 .kdo-tile:focus-visible { outline: 3px solid #1b4332; outline-offset: 2px; }
 .kdo-e { font-size: 1.7rem; line-height: 1; }
 .kdo-n { font-size: 1.05rem; }
@@ -2465,6 +2465,15 @@ body.dashfull { background: #0f2e22; color: #f4efe2; }
 .kdo-leg { display: flex; gap: 16px; justify-content: center; margin: 4px 0 0; padding: 4px 10px 12px; font-size: .78rem; color: #5c5b48; }
 .kdo-leg u { text-decoration: none; color: #b8892f; }
 .kdo-leg em { font-style: normal; color: #8a6d2f; font-size: .7rem; }
+/* v351: vers-venster glijdt uit de tegel; tik overal om te sluiten */
+.kdo-wrap { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows .45s cubic-bezier(.22,.8,.2,1), opacity .35s ease; }
+.kdo-wrap.open { grid-template-rows: 1fr; opacity: 1; }
+.kdo-wi { overflow: hidden; min-height: 0; }
+.kdo-card { cursor: pointer; margin-top: 12px; padding-right: 16px; -webkit-tap-highlight-color: transparent; }
+.kdo-card h3 { margin-right: 0; }
+.kdo-card:focus-visible { outline: 3px solid #1b4332; outline-offset: 2px; }
+.kdo-tile { transition: transform .2s ease; }
+@media (prefers-reduced-motion: reduce) { .kdo-wrap, .kdo-tile { transition: none; } }
 /* v235: beheerpagina in donkere analytics-stijl (los van de NurSpark-look, alle namen beginnen met bd-) */
 .bd { --bg0: #06060d; --bg1: #0d0b1f; --bg2: #171236; --tx: #e9e8f6; --mut: #8f8eb0; --line: rgba(160,150,255,.16); --blue: #6ea8ff; --indigo: #8b8cff; --violet: #b48cff; --pink: #f07ab8; --teal: #46d3c0; --green: #4fd98f; --amber: #f2b95a;
   position: absolute; inset: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; color: var(--tx); background: linear-gradient(180deg, var(--bg0) 0%, var(--bg1) 38%, var(--bg2) 100%); font-family: "Google Sans", Inter, Roboto, "Segoe UI", Arial, sans-serif; }
@@ -8927,15 +8936,27 @@ return exports;})();
   function kdoTilesHtml() {
     const today = kdoFeel(todayStr());
     return '<div class="kdo-tiles" role="group" aria-label="Hoe voel je je vandaag?">' + KDO_F.map(function (f, i) {
-      return '<button type="button" class="kdo-tile' + (kdoF === i ? " open" : "") + '" style="background:' + f.g + '" data-act="kdo-feel" data-i="' + i + '" aria-pressed="' + (kdoF === i) + '"><span class="kdo-e" aria-hidden="true">' + f.e + '</span><span class="kdo-n">' + f.n + "</span>" + (today.indexOf(f.id) !== -1 ? '<span class="kdo-chk" role="img" aria-label="Bewaard voor vandaag">✓</span>' : "") + "</button>";
+      return '<button type="button" class="kdo-tile' + (kdoF === i ? " open" : "") + '" style="background:' + f.g + '" data-act="kdo-feel" data-i="' + i + '" aria-pressed="' + (kdoF === i) + '"><span class="kdo-e" aria-hidden="true">' + f.e + '</span><span class="kdo-n">' + f.n + "</span>" + + "</button>";
     }).join("") + "</div>";
   }
   function kdoCardHtml() {
     if (kdoF === null) return "";
     const f = KDO_F[kdoF], vv = f.v[kdoV % f.v.length], s = vv[0], a = vv[1];
     if (!KT[s]) { ktLoad(s); return '<div class="kdo-card" style="background:' + f.g + '"><p>' + (ktErr[s] ? "Het vers kon niet geladen worden. Controleer je verbinding en probeer het opnieuw." : "Het vers wordt geladen…") + "</p></div>"; }
-    const vs = KT[s][a - 1] || ["", ""], on = kdoFeel(todayStr()).indexOf(f.id) !== -1;
-    return '<div class="kdo-card" style="background:' + f.g + '" role="region" aria-label="Vers bij ' + f.n + '"><button type="button" class="kdo-x" data-act="kdo-close" aria-label="Sluiten">×</button><h3>' + f.e + " " + f.n + '</h3><p class="kdo-intro">' + f.t + '</p><div class="q-text q-uth q-s' + (S.qSize || 3) + '" lang="ar" dir="rtl">' + esc(vs[0]) + '</div><p class="kdo-nl">' + esc(vs[1]) + '</p><p class="kdo-ref">Soera ' + esc(Q_TR[s - 1]) + " · " + s + ":" + a + '</p><div class="kdo-row"><button type="button" class="kdo-b" data-act="kdo-next">Ander vers</button><button type="button" class="kdo-b" data-act="kdo-mark">' + (on ? "Haal uit vandaag" : "Bewaar voor vandaag") + "</button></div></div>";
+    const vs = KT[s][a - 1] || ["", ""];
+    return '<div class="kdo-card" style="background:' + f.g + '" role="button" tabindex="0" data-act="kdo-close" aria-label="Vers bij ' + f.n + '. Tik om te sluiten."><h3>' + f.e + " " + f.n + '</h3><p class="kdo-intro">' + f.t + '</p><div class="q-text q-uth q-s' + (S.qSize || 3) + '" lang="ar" dir="rtl">' + esc(vs[0]) + '</div><p class="kdo-nl">' + esc(vs[1]) + '</p><p class="kdo-ref">Soera ' + esc(Q_TR[s - 1]) + " · " + s + ":" + a + "</p></div>";
+  }
+  let kdoN = 0;
+  function kdoCardSync() {
+    const w = document.getElementById("kdoCard"); if (!w) return;
+    let wi = w.firstElementChild; if (!wi) { wi = document.createElement("div"); wi.className = "kdo-wi"; w.appendChild(wi); }
+    if (kdoF === null) {
+      w.classList.remove("open");
+      setTimeout(function () { if (kdoF === null) wi.innerHTML = ""; }, 450);
+      return;
+    }
+    wi.innerHTML = kdoCardHtml();
+    if (!w.classList.contains("open")) { void w.offsetHeight; requestAnimationFrame(function () { w.classList.add("open"); }); }
   }
   const KDO_HM = ["Muharram", "Safar", "Rabi’ al-awwal", "Rabi’ al-thani", "Jumada al-awwal", "Jumada al-thani", "Rajab", "Sha’ban", "Ramadan", "Shawwal", "Dhu al-Qa’dah", "Dhu al-Hijjah"];
   function kdoHij(d) {
@@ -8977,15 +8998,16 @@ return exports;})();
       return '<div class="kdo-pill" style="background:' + f.g + '"><span class="kdo-pe" aria-hidden="true">' + f.e + "</span>" + f.n + "<span>" + w.f[f.id] + "</span></div>";
     }).join("") + '</div><div class="kdo-st"><div><b>' + w.nn + "</b>notities bewaard</div><div><b>" + w.aa + "</b>acties gekozen</div></div></div>";
   }
+  document.addEventListener("keydown", function (e) { if ((e.key === "Enter" || e.key === " ") && e.target && e.target.classList && e.target.classList.contains("kdo-card") && e.target.getAttribute("data-act") === "kdo-close") { e.preventDefault(); e.target.click(); } });
   function kdoDraw() {
     const days = kdoDays(), g = function (id, h) { const e = document.getElementById(id); if (e) e.innerHTML = h; };
-    g("kdoStreak", kdoStreakHtml(days)); g("kdoTiles", kdoTilesHtml()); g("kdoCard", kdoCardHtml()); g("kdoCal", kdoCalHtml(days)); g("kdoWeek", kdoWeekHtml());
+    g("kdoStreak", kdoStreakHtml(days)); g("kdoTiles", kdoTilesHtml()); kdoCardSync(); g("kdoCal", kdoCalHtml(days)); g("kdoWeek", kdoWeekHtml());
   }
   function viewKdo() {
     const h = hubTop("Mijn Qur’an dagboek", "kdo-back", "", "Jouw overzicht");
     if (!mkOwner()) return h + '<section class="hub"><p class="hub-intro">Dit onderdeel is er nog niet voor iedereen.</p></section>';
     const days = kdoDays();
-    return h + '<section class="hub"><div class="kdo">' + kdoDateHtml() + '<h2>Verder lezen</h2>' + kdoLastHtml() + '<h2>Reeks</h2><div class="kdo-box" id="kdoStreak">' + kdoStreakHtml(days) + '</div><h2>Hoe voel je je vandaag?</h2><div id="kdoTiles">' + kdoTilesHtml() + '</div><div id="kdoCard" aria-live="polite">' + kdoCardHtml() + '</div><h2>Kalender</h2><div class="kdo-box" id="kdoCal">' + kdoCalHtml(days) + '</div><h2>Deze week</h2><div id="kdoWeek">' + kdoWeekHtml() + '</div><button type="button" class="kdo-link kdo-nt" data-act="kdo-notes">Mijn notities</button></div></section>';
+    return h + '<section class="hub"><div class="kdo">' + kdoDateHtml() + '<h2>Verder lezen</h2>' + kdoLastHtml() + '<h2>Reeks</h2><div class="kdo-box" id="kdoStreak">' + kdoStreakHtml(days) + '</div><h2>Hoe voel je je vandaag?</h2><div id="kdoTiles">' + kdoTilesHtml() + '</div><div id="kdoCard" class="kdo-wrap" aria-live="polite"><div class="kdo-wi"></div></div><h2>Kalender</h2><div class="kdo-box" id="kdoCal">' + kdoCalHtml(days) + '</div><h2>Deze week</h2><div id="kdoWeek">' + kdoWeekHtml() + '</div><button type="button" class="kdo-link kdo-nt" data-act="kdo-notes">Mijn notities</button></div></section>';
   }
   function qjActSave() { const o = document.getElementById("qjOwn"); if (o && qjKey) qjActSet(qjKey, qjActGet(qjKey).a, o.value); }
   function qjActHtml() {
@@ -16037,9 +16059,9 @@ return exports;})();
       case "kdo-feel": {
         const fi = parseInt(el.dataset.i, 10); if (!KDO_F[fi]) break; play("click");
         if (kdoF === fi) kdoF = null;
-        else { kdoF = fi; kdoV = (new Date().getDate() + fi) % KDO_F[fi].v.length; if (kdoFeel(todayStr()).indexOf(KDO_F[fi].id) === -1) { kdoToggleFeel(todayStr(), KDO_F[fi].id); announce(KDO_F[fi].n + " bewaard voor vandaag"); } }
+        else { kdoF = fi; kdoN++; kdoV = (new Date().getDate() + fi + kdoN) % KDO_F[fi].v.length; if (kdoFeel(todayStr()).indexOf(KDO_F[fi].id) === -1) { kdoToggleFeel(todayStr(), KDO_F[fi].id); announce(KDO_F[fi].n + " bewaard voor vandaag"); } }
         kdoDraw(); const kt = document.querySelector('.kdo-tile[data-i="' + fi + '"]'); if (kt) kt.focus({ preventScroll: true });
-        if (kdoF !== null) { const kc = document.getElementById("kdoCard"); if (kc && kc.scrollIntoView) kc.scrollIntoView({ block: "nearest" }); }
+        if (kdoF !== null) setTimeout(function () { const kc = document.getElementById("kdoCard"); if (kc && kc.scrollIntoView) kc.scrollIntoView({ block: "nearest", behavior: "smooth" }); }, 120);
         break;
       }
       case "kdo-close": play("click"); kdoF = null; kdoDraw(); break;
