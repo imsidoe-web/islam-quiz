@@ -2479,7 +2479,6 @@ body.dashfull { background: #0f2e22; color: #f4efe2; }
 .kdo-reset:focus-visible { outline: 3px solid #1b4332; outline-offset: 2px; }
 /* v354: sfeerbeelden */
 .kdo-pic { display: block; width: 100%; height: auto; aspect-ratio: 1376 / 768; object-fit: cover; border-radius: 18px 18px 0 0; }
-.kdo-pic + .kdo-date { border-radius: 0 0 18px 18px; margin-bottom: 4px; }
 .kdi-pic { object-fit: cover; }
 /* v235: beheerpagina in donkere analytics-stijl (los van de NurSpark-look, alle namen beginnen met bd-) */
 .bd { --bg0: #06060d; --bg1: #0d0b1f; --bg2: #171236; --tx: #e9e8f6; --mut: #8f8eb0; --line: rgba(160,150,255,.16); --blue: #6ea8ff; --indigo: #8b8cff; --violet: #b48cff; --pink: #f07ab8; --teal: #46d3c0; --green: #4fd98f; --amber: #f2b95a;
@@ -9019,7 +9018,7 @@ return exports;})();
     const h = hubTop("Mijn Qur’an dagboek", "kdo-back", "", "Jouw overzicht");
     if (!mkOwner()) return h + '<section class="hub"><p class="hub-intro">Dit onderdeel is er nog niet voor iedereen.</p></section>';
     const days = kdoDays();
-    return h + '<section class="hub"><div class="kdo"><img class="kdo-pic" src="journaal/kd-rehal.webp" alt="" width="1376" height="768">' + kdoDateHtml() + '<h2>Verder lezen</h2>' + kdoLastHtml() + '<h2>Reeks</h2><div class="kdo-box" id="kdoStreak">' + kdoStreakHtml(days) + '</div><h2>Hoe voel je je vandaag?</h2><div id="kdoTiles">' + kdoTilesHtml() + '</div><div id="kdoCard" class="kdo-wrap" aria-live="polite"><div class="kdo-wi"></div></div><h2>Kalender</h2><div class="kdo-box" id="kdoCal">' + kdoCalHtml(days) + '</div><h2>Deze week</h2><div id="kdoWeek">' + kdoWeekHtml() + '</div><button type="button" class="kdo-link kdo-nt" data-act="kdo-notes">Mijn notities</button></div></section>';
+    return h + '<section class="hub"><div class="kdo">' + kdoDateHtml() + '<h2>Verder lezen</h2>' + kdoLastHtml() + '<h2>Reeks</h2><div class="kdo-box" id="kdoStreak">' + kdoStreakHtml(days) + '</div><h2>Hoe voel je je vandaag?</h2><div id="kdoTiles">' + kdoTilesHtml() + '</div><div id="kdoCard" class="kdo-wrap" aria-live="polite"><div class="kdo-wi"></div></div><h2>Kalender</h2><div class="kdo-box" id="kdoCal">' + kdoCalHtml(days) + '</div><h2>Deze week</h2><div id="kdoWeek">' + kdoWeekHtml() + '</div><button type="button" class="kdo-link kdo-nt" data-act="kdo-notes">Mijn notities</button></div></section>';
   }
   function qjActSave() { const o = document.getElementById("qjOwn"); if (o && qjKey) qjActSet(qjKey, qjActGet(qjKey).a, o.value); }
   function qjActHtml() {
