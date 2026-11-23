@@ -2368,7 +2368,7 @@ body.dashfull { background: #0f2e22; color: #f4efe2; }
 .qj-help-b, .qj-chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .qj-chip { min-height: 44px; padding: 8px 14px; border: 1.5px solid #d9a05b; border-radius: 999px; background: #fbf6ea; color: #2a2a1f; font: inherit; font-size: .92rem; cursor: pointer; }
 .qj-chip.on { background: #f1dfb0; border-color: #b8892f; font-weight: 600; }
-.qj-chips .qj-chip-s { text-align: left; }
+.qj-chips .qj-chip-s { text-align: left; border-radius: 16px; }
 .qj-chip:focus-visible, .qj-go:focus-visible { outline: 3px solid #1b4332; outline-offset: 2px; }
 .qj-help-p { margin-top: 10px; padding: 10px 12px; border: 1px dashed #d9a05b; border-radius: 12px; background: #fffdf6; }
 .qj-help-p[hidden] { display: none; }
@@ -2376,6 +2376,11 @@ body.dashfull { background: #0f2e22; color: #f4efe2; }
 .qj-card .qj-priv { font-size: .78rem; color: #5c5b48; margin: 8px 0 0; }
 .qj-ex { margin: 0 0 10px; padding: 8px 12px; border-left: 4px solid #d9a05b; background: #fbf6ea; font-style: italic; line-height: 1.6; }
 .qj-go { margin-top: 10px; }
+.qj-card #qjMicMsg { margin: 10px 0 0; min-height: 1.4em; }
+/* v348: Vandaag ga ik… */
+.qj-act .qj-chips { flex-direction: column; align-items: stretch; }
+.qj-own-l { display: block; margin-top: 14px; font-size: .9rem; color: #3f5246; }
+.qj-own { width: 100%; box-sizing: border-box; min-height: 44px; border: 1px solid #d9a05b; border-radius: 10px; background: #fff; color: #2a2a1f; font: inherit; padding: 8px 10px; margin-top: 6px; }
 .d-tile.kd { grid-column: 1 / -1; padding: 0; gap: 0; min-height: 0; overflow: hidden; position: relative; background: #f6f1e6; color: #1e2b24; border: 2px solid #f2c94c; }   /* Koran-dagboek-tegel (alleen beheerder) */
 /* v235: beheerpagina in donkere analytics-stijl (los van de NurSpark-look, alle namen beginnen met bd-) */
 .bd { --bg0: #06060d; --bg1: #0d0b1f; --bg2: #171236; --tx: #e9e8f6; --mut: #8f8eb0; --line: rgba(160,150,255,.16); --blue: #6ea8ff; --indigo: #8b8cff; --violet: #b48cff; --pink: #f07ab8; --teal: #46d3c0; --green: #4fd98f; --amber: #f2b95a;
@@ -8767,7 +8772,25 @@ return exports;})();
   function kdSeen(s, a) { try { const o = kdGet(); o[s] = Math.max(o[s] || 0, a); localStorage.setItem("nspark_kd_v1", JSON.stringify(o)); localStorage.setItem("nspark_kd_lasts", String(s)); } catch (e) {} }
   function kdComplete(s) { if (!QJ) return false; const n = Q_N[s - 1]; if (!n) return false; for (let a = 1; a <= n; a++) if (!QJ[s + ":" + a]) return false; return true; }
   function kdSoeras() { const out = []; for (let s = 1; s <= 114; s++) out.push(s); return out; }
-  function qjAuto() { qjMicStop(); const t = document.getElementById("qjText"); if (t && qjKey) qjSet(qjKey, t.value); }
+  function qjAuto() { qjMicStop(); const t = document.getElementById("qjText"); if (t && qjKey) qjSet(qjKey, t.value); qjActSave(); }
+  /* v348: "Vandaag ga ik…" onder het journal: kleine acties om aan te vinken en een eigen actie. Opslag op dit toestel: nspark_actie_v1 (sleutel "soera:vers"). */
+  const QJ_ACT = ["Een du'a doen voor iemand", "Istighfar zeggen", "Iemand bellen of een berichtje sturen", "Een goede daad doen, hoe klein ook", "Drie dingen opnoemen waar ik dankbaar voor ben", "Iets goedmaken of sorry zeggen", "Mijn Salah op tijd bidden", "Een paar minuten stil zijn en nadenken", "Een beetje sadaqa geven", "Vriendelijk zijn tegen iemand thuis", "Dit vers nog eens rustig lezen", "Dit vers met iemand delen"];
+  function qjActPick(k) { const p = String(k).split(":"), s = parseInt(p[0], 10) || 1, a = parseInt(p[1], 10) || 1, b = (s * 7 + a * 3) % 12; return [b, (b + 4) % 12, (b + 8) % 12]; }
+  function qjActGet(k) { try { const x = JSON.parse(localStorage.getItem("nspark_actie_v1") || "{}")[k]; return { a: (x && x.a) || [], t: (x && x.t) || "" }; } catch (e) { return { a: [], t: "" }; } }
+  function qjActSet(k, a, t) {
+    try {
+      const o = JSON.parse(localStorage.getItem("nspark_actie_v1") || "{}"); t = String(t || "").trim();
+      if ((a && a.length) || t) o[k] = { a: a || [], t: t, d: todayStr(), ts: Date.now() }; else delete o[k];
+      localStorage.setItem("nspark_actie_v1", JSON.stringify(o));
+    } catch (e) {}
+  }
+  function qjActSave() { const o = document.getElementById("qjOwn"); if (o && qjKey) qjActSet(qjKey, qjActGet(qjKey).a, o.value); }
+  function qjActHtml() {
+    const g = qjActGet(qjKey), ids = qjActPick(qjKey);
+    return '<div class="qj-card qj-act"><h2>Vandaag ga ik…</h2><p class="qj-hp">Kies wat bij je past. Klein is ook goed.</p><div class="qj-chips" role="group" aria-label="Acties voor vandaag">' +
+      ids.map(function (i) { const on = g.a.indexOf(i) !== -1; return '<button type="button" class="qj-chip qj-chip-s' + (on ? " on" : "") + '" role="checkbox" aria-checked="' + on + '" data-act="qj-act" data-i="' + i + '">' + (on ? "✓ " : "") + esc(QJ_ACT[i]) + "</button>"; }).join("") +
+      '</div><label class="qj-own-l" for="qjOwn">Of schrijf je eigen actie:</label><input class="qj-own" id="qjOwn" type="text" maxlength="140" autocomplete="off" value="' + esc(g.t) + '" placeholder="Bijvoorbeeld: mijn moeder bellen"></div>';
+  }
   /* v347: schrijfhulp in Mijn Qur'an dagboek: begin van een zin, gevoelens aantikken, inspreken en een voorbeeld. Alles werkt op dit toestel; alleen inspreken gebruikt de spraakherkenning van de browser. */
   const QJ_START = ["Dit vers laat mij voelen dat", "Wat mij raakt in dit vers is", "Wat ik hieruit meeneem is", "Dit herinnert mij eraan dat", "Ik ben dankbaar voor", "Ik wil Allah vragen om", "Iets wat ik moeilijk vind, is", "Vandaag wil ik beginnen met"];
   const QJ_FEEL = ["dankbaar", "hoopvol", "rustig", "vastberaden", "ontroerd", "blij", "nederig", "bezorgd", "verdrietig", "dichtbij Allah"];
@@ -9550,6 +9573,7 @@ return exports;})();
     h += qjHelpBar();
     h += '<textarea class="qj-ta" id="qjText" aria-label="Schrijf hier je gedachten" placeholder="Schrijf hier je gedachten…">' + esc(qjGet(qjKey)) + '</textarea>' +
       '<div class="qj-row"><span class="qj-note" id="qjMsg">Alleen voor jou, op dit toestel</span><button class="btn" data-act="qj-save">Bewaar</button></div></div>';
+    h += qjActHtml();
     h += '<div class="qs-nav">' + (a > 1 ? '<button class="qs-prev" data-act="qj-nav" data-d="-1">Vorig</button>' : "") + '<button class="qs-next" data-act="qj-nav" data-d="1">' + (a < n ? "Volgend vers" : "Soera afronden") + "</button></div>";
     return h + "</div></section>";
   }
@@ -15905,7 +15929,8 @@ return exports;})();
       case "qj-feel-ins": { if (!qjFeelSel.length) { announce("Tik eerst aan wat je voelt"); break; } const fn = qjFeelSel.slice().sort(function (x, y) { return x - y; }).map(function (i) { return QJ_FEEL[i]; }); qjInsert("Bij dit vers voel ik mij " + qjJoin(fn) + ". Dat komt omdat "); qjFeelSel = []; document.querySelectorAll("#qjHelpP .qj-chip").forEach(function (fb) { fb.classList.remove("on"); fb.setAttribute("aria-pressed", "false"); }); play("correct"); break; }
       case "qj-ex-ins": { const ex = qjExample(); if (ex) { qjInsert(ex); play("correct"); } break; }
       case "qj-mic": qjMicToggle(); break;
-      case "qj-save": { const jt = document.getElementById("qjText"); if (!jt) break; qjSet(qjKey, jt.value); play("correct"); const jm = document.getElementById("qjMsg"); if (jm) jm.textContent = "Bewaard op dit toestel"; announce("Bewaard"); break; }
+      case "qj-act": { const ai = parseInt(el.dataset.i, 10); if (!QJ_ACT[ai]) break; const ag = qjActGet(qjKey), ax = ag.a.indexOf(ai); if (ax === -1) ag.a.push(ai); else ag.a.splice(ax, 1); const aw = document.getElementById("qjOwn"); qjActSet(qjKey, ag.a, aw ? aw.value : ag.t); const aon = ax === -1; el.classList.toggle("on", aon); el.setAttribute("aria-checked", aon ? "true" : "false"); el.textContent = (aon ? "✓ " : "") + QJ_ACT[ai]; play(aon ? "correct" : "click"); break; }
+      case "qj-save": { const jt = document.getElementById("qjText"); if (!jt) break; qjSet(qjKey, jt.value); qjActSave(); play("correct"); const jm = document.getElementById("qjMsg"); if (jm) jm.textContent = "Bewaard op dit toestel"; announce("Bewaard"); break; }
       case "qj-fav": { const jm2 = qState().marks, ji = jm2.indexOf(qjKey); if (ji === -1) { jm2.unshift(qjKey); jm2.splice(50); } else jm2.splice(ji, 1); saveState(); el.textContent = ji === -1 ? "★" : "☆"; announce(ji === -1 ? "Favoriet gezet" : "Favoriet verwijderd"); break; }
       case "q-size": { S.qSize = Math.max(1, Math.min(5, (S.qSize || 3) + (parseInt(el.dataset.d, 10) || 0))); saveState(); const qt = document.querySelector(".q-text"); if (qt) qt.className = "q-text q-s" + S.qSize; break; }
       case "prog": play("click"); screen = "prog"; render(); break;
