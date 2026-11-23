@@ -2431,6 +2431,40 @@ body.dashfull { background: #0f2e22; color: #f4efe2; }
 .kdo-st b { display: block; font-size: 1.6rem; color: #1b4332; }
 .qj-own { width: 100%; box-sizing: border-box; min-height: 44px; border: 1px solid #d9a05b; border-radius: 10px; background: #fff; color: #2a2a1f; font: inherit; padding: 8px 10px; margin-top: 6px; }
 .d-tile.kd { grid-column: 1 / -1; padding: 0; gap: 0; min-height: 0; overflow: hidden; position: relative; background: #f6f1e6; color: #1e2b24; border: 2px solid #f2c94c; }   /* Koran-dagboek-tegel (alleen beheerder) */
+/* v350: overzicht als startscherm, Hijri-datum, mooiere kalender */
+.kdo-date { display: flex; align-items: center; gap: 12px; background: linear-gradient(135deg, #1b4332, #2d6a4f); color: #fff; border-radius: 18px; padding: 12px 14px; border-bottom: 4px solid #d9a05b; }
+.kdo-date b { display: block; font-size: 1.05rem; }
+.kdo-date span { font-size: .95rem; color: #f2d98c; }
+.kdo-moon { font-size: 2rem; color: #f2c94c; line-height: 1; }
+.kdo-hn { margin: 6px 4px 0; font-size: .78rem; color: #5c5b48; }
+.kdo-last { background: #fff; border: 1.5px solid #d9a05b; border-radius: 18px; padding: 14px; text-align: center; }
+.kdo-lar { font-family: "Amiri", "Noto Naskh Arabic", serif; font-size: 2rem; color: #1b4332; }
+.kdo-lnm { margin: 2px 0 8px; font-weight: 700; color: #3f5246; }
+.kdo-last .kdi-btn { width: 100%; margin-top: 10px; }
+.kdo-link { appearance: none; display: block; width: 100%; min-height: 44px; margin-top: 8px; border: 1.5px solid #d9a05b; border-radius: 999px; background: #fbf6ea; color: #1b4332; font: inherit; font-weight: 700; cursor: pointer; }
+.kdo-link:focus-visible { outline: 3px solid #1b4332; outline-offset: 2px; }
+.kdo-nt { margin-top: 18px; }
+.kdo-box:has(.kdo-calh) { padding: 0; overflow: hidden; }
+.kdo-calh { background: linear-gradient(135deg, #1b4332, #2d6a4f); color: #fff; padding: 10px 10px; margin: 0 !important; }
+.kdo-calh h3 { color: #fff !important; }
+.kdo-cm { text-align: center; }
+.kdo-cm small { display: block; color: #f2d98c; font-size: .85rem; }
+.kdo-calh .kdo-nav { background: rgba(255,255,255,.16); border-color: #f2c94c; color: #fff; }
+.kdo-grid { padding: 10px 10px 4px; gap: 5px; }
+.kdo-grid b { text-transform: uppercase; font-size: .72rem; letter-spacing: .04em; color: #8a6d2f; }
+.kdo-d { position: relative; flex-direction: column; gap: 0; border: 0 !important; border-radius: 12px !important; background: #f6f1e6; line-height: 1.1; }
+.kdo-d i { font-style: normal; font-weight: 700; font-size: .95rem; }
+.kdo-d em { font-style: normal; font-size: .62rem; color: #8a6d2f; }
+.kdo-d u { position: absolute; top: 1px; right: 4px; font-size: .62rem; text-decoration: none; color: #1b4332; }
+.kdo-d.on { background: linear-gradient(135deg, #f2c94c, #d9a05b) !important; color: #2a2a1f; }
+.kdo-d.on em { color: #5a4310; }
+.kdo-d.now { background: #1b4332 !important; color: #fff; box-shadow: 0 0 0 2px #f2c94c !important; }
+.kdo-d.now em { color: #f2d98c; }
+.kdo-d.now.on { background: linear-gradient(135deg, #1b4332, #2d6a4f) !important; }
+.kdo-d.now.on u { color: #f2c94c; }
+.kdo-leg { display: flex; gap: 16px; justify-content: center; margin: 4px 0 0; padding: 4px 10px 12px; font-size: .78rem; color: #5c5b48; }
+.kdo-leg u { text-decoration: none; color: #b8892f; }
+.kdo-leg em { font-style: normal; color: #8a6d2f; font-size: .7rem; }
 /* v235: beheerpagina in donkere analytics-stijl (los van de NurSpark-look, alle namen beginnen met bd-) */
 .bd { --bg0: #06060d; --bg1: #0d0b1f; --bg2: #171236; --tx: #e9e8f6; --mut: #8f8eb0; --line: rgba(160,150,255,.16); --blue: #6ea8ff; --indigo: #8b8cff; --violet: #b48cff; --pink: #f07ab8; --teal: #46d3c0; --green: #4fd98f; --amber: #f2b95a;
   position: absolute; inset: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; color: var(--tx); background: linear-gradient(180deg, var(--bg0) 0%, var(--bg1) 38%, var(--bg2) 100%); font-family: "Google Sans", Inter, Roboto, "Segoe UI", Arial, sans-serif; }
@@ -8903,17 +8937,39 @@ return exports;})();
     const vs = KT[s][a - 1] || ["", ""], on = kdoFeel(todayStr()).indexOf(f.id) !== -1;
     return '<div class="kdo-card" style="background:' + f.g + '" role="region" aria-label="Vers bij ' + f.n + '"><button type="button" class="kdo-x" data-act="kdo-close" aria-label="Sluiten">×</button><h3>' + f.e + " " + f.n + '</h3><p class="kdo-intro">' + f.t + '</p><div class="q-text q-uth q-s' + (S.qSize || 3) + '" lang="ar" dir="rtl">' + esc(vs[0]) + '</div><p class="kdo-nl">' + esc(vs[1]) + '</p><p class="kdo-ref">Soera ' + esc(Q_TR[s - 1]) + " · " + s + ":" + a + '</p><div class="kdo-row"><button type="button" class="kdo-b" data-act="kdo-next">Ander vers</button><button type="button" class="kdo-b" data-act="kdo-mark">' + (on ? "Haal uit vandaag" : "Bewaar voor vandaag") + "</button></div></div>";
   }
+  const KDO_HM = ["Muharram", "Safar", "Rabi’ al-awwal", "Rabi’ al-thani", "Jumada al-awwal", "Jumada al-thani", "Rajab", "Sha’ban", "Ramadan", "Shawwal", "Dhu al-Qa’dah", "Dhu al-Hijjah"];
+  function kdoHij(d) {
+    try {
+      const o = {}; new Intl.DateTimeFormat("en-u-ca-islamic-umalqura-nu-latn", { day: "numeric", month: "numeric", year: "numeric" }).formatToParts(d).forEach(function (x) { o[x.type] = x.value; });
+      const r = { d: parseInt(o.day, 10), m: parseInt(o.month, 10), y: parseInt(o.year, 10) };
+      return r.d && r.m >= 1 && r.m <= 12 && r.y ? r : null;
+    } catch (e) { return null; }
+  }
+  function kdoHijTxt(d) { const h = kdoHij(d); return h ? h.d + " " + KDO_HM[h.m - 1] + " " + h.y : ""; }
+  function kdoDateHtml() {
+    const n = new Date(), nn = new Date(n.getFullYear(), n.getMonth(), n.getDate(), 12), w = nn.toLocaleDateString("nl-NL", { weekday: "long", day: "numeric", month: "long", year: "numeric" }), hj = kdoHijTxt(nn);
+    return '<div class="kdo-date"><span class="kdo-moon" aria-hidden="true">☪</span><div><b>' + esc(w.charAt(0).toUpperCase() + w.slice(1)) + "</b>" + (hj ? "<span>" + esc(hj) + " (Hijri)</span>" : "") + "</div></div>" + (hj ? '<p class="kdo-hn">De Islamitische datum kan een dag verschillen, omdat dit van de maanwaarneming afhangt.</p>' : "");
+  }
+  function kdoLastHtml() {
+    const seen = kdGet(); let ls = 0; try { ls = parseInt(localStorage.getItem("nspark_kd_lasts") || "0", 10); } catch (e) {}
+    let s = ls >= 1 && ls <= 114 ? ls : 1;
+    if (ls && (seen[s] || 0) >= Q_N[s - 1] && s < 114) s = s + 1;
+    const n = Q_N[s - 1], l = seen[s] || 0, done = l >= n, at = l > 0 && !done ? l : 1, bt = l > 0 && !done ? "Verder lezen" : "Begin met lezen";
+    return '<div class="kdo-last"><div class="kdo-lar" lang="ar" dir="rtl">' + Q_AR[s - 1] + '</div><p class="kdo-lnm">Soera ' + s + " · " + esc(Q_TR[s - 1]) + '</p><span class="kd-bar" aria-hidden="true"><i style="width:' + Math.round(Math.min(l, n) / n * 100) + '%"></i></span><p class="kdo-sm" style="text-align:center">' + (l > 0 && !done ? "Verder bij vers " + l + " van " + n : "Nog niet begonnen") + '</p><button type="button" class="kdi-btn" data-act="kd-open" data-s="' + s + '" data-a="' + at + '" data-from="kdo" aria-label="' + bt + ": " + esc(Q_TR[s - 1]) + '">' + bt + '</button><button type="button" class="kdo-link" data-act="kdo-list">Kies een andere soera</button></div>';
+  }
   function kdoCalHtml(days) {
     const now = new Date(), base = new Date(now.getFullYear(), now.getMonth() + kdoM, 1), y = base.getFullYear(), m = base.getMonth(), nd = new Date(y, m + 1, 0).getDate(), lead = (base.getDay() + 6) % 7, today = todayStr();
     const mname = base.toLocaleDateString("nl-NL", { month: "long", year: "numeric" });
-    let h = '<div class="kdo-calh"><button type="button" class="kdo-nav" data-act="kdo-month" data-d="-1" aria-label="Vorige maand"' + (kdoM <= -36 ? " disabled" : "") + '>‹</button><h3>' + esc(mname) + '</h3><button type="button" class="kdo-nav" data-act="kdo-month" data-d="1" aria-label="Volgende maand"' + (kdoM >= 0 ? " disabled" : "") + '>›</button></div><div class="kdo-grid">';
-    ["M", "D", "W", "D", "V", "Z", "Z"].forEach(function (x) { h += '<b aria-hidden="true">' + x + "</b>"; });
+    const h1 = kdoHij(new Date(y, m, 1, 12)), h2 = kdoHij(new Date(y, m, nd, 12));
+    const hr = h1 && h2 ? (h1.m === h2.m ? KDO_HM[h1.m - 1] : KDO_HM[h1.m - 1] + " – " + KDO_HM[h2.m - 1]) + " " + h2.y : "";
+    let h = '<div class="kdo-calh"><button type="button" class="kdo-nav" data-act="kdo-month" data-d="-1" aria-label="Vorige maand"' + (kdoM <= -36 ? " disabled" : "") + '>‹</button><div class="kdo-cm"><h3>' + esc(mname) + "</h3>" + (hr ? "<small>" + esc(hr) + "</small>" : "") + '</div><button type="button" class="kdo-nav" data-act="kdo-month" data-d="1" aria-label="Volgende maand"' + (kdoM >= 0 ? " disabled" : "") + '>›</button></div><div class="kdo-grid">';
+    ["ma", "di", "wo", "do", "vr", "za", "zo"].forEach(function (x) { h += '<b aria-hidden="true">' + x + "</b>"; });
     for (let i = 0; i < lead; i++) h += "<span></span>";
     for (let d = 1; d <= nd; d++) {
-      const ds = y + "-" + String(m + 1).padStart(2, "0") + "-" + String(d).padStart(2, "0"), on = !!days[ds];
-      h += '<span class="kdo-d' + (on ? " on" : "") + (ds === today ? " now" : "") + (ds > today ? " fut" : "") + '" aria-label="' + new Date(y, m, d).toLocaleDateString("nl-NL", { day: "numeric", month: "long" }) + (on ? ", iets gedaan" : "") + '">' + d + "</span>";
+      const ds = y + "-" + String(m + 1).padStart(2, "0") + "-" + String(d).padStart(2, "0"), on = !!days[ds], hh = kdoHij(new Date(y, m, d, 12));
+      h += '<span class="kdo-d' + (on ? " on" : "") + (ds === today ? " now" : "") + (ds > today ? " fut" : "") + '" aria-label="' + new Date(y, m, d).toLocaleDateString("nl-NL", { day: "numeric", month: "long" }) + (hh ? ", " + hh.d + " " + KDO_HM[hh.m - 1] : "") + (on ? ", iets gedaan" : "") + '"><i>' + d + "</i>" + (hh ? "<em>" + hh.d + "</em>" : "") + (on ? '<u aria-hidden="true">✦</u>' : "") + "</span>";
     }
-    return h + "</div>";
+    return h + '</div><p class="kdo-leg"><span><u aria-hidden="true">✦</u> Je deed iets</span><span><em aria-hidden="true">12</em> Islamitische dag</span></p>';
   }
   function kdoWeekHtml() {
     const w = kdoWeek();
@@ -8926,10 +8982,10 @@ return exports;})();
     g("kdoStreak", kdoStreakHtml(days)); g("kdoTiles", kdoTilesHtml()); g("kdoCard", kdoCardHtml()); g("kdoCal", kdoCalHtml(days)); g("kdoWeek", kdoWeekHtml());
   }
   function viewKdo() {
-    const h = hubTop("Mijn overzicht", "kdo-back", "", "Je gevoelens, reeks en week");
+    const h = hubTop("Mijn Qur’an dagboek", "kdo-back", "", "Jouw overzicht");
     if (!mkOwner()) return h + '<section class="hub"><p class="hub-intro">Dit onderdeel is er nog niet voor iedereen.</p></section>';
     const days = kdoDays();
-    return h + '<section class="hub"><div class="kdo"><h2>Reeks</h2><div class="kdo-box" id="kdoStreak">' + kdoStreakHtml(days) + '</div><h2>Hoe voel je je vandaag?</h2><div id="kdoTiles">' + kdoTilesHtml() + '</div><div id="kdoCard" aria-live="polite">' + kdoCardHtml() + '</div><h2>Kalender</h2><div class="kdo-box" id="kdoCal">' + kdoCalHtml(days) + '</div><h2>Deze week</h2><div id="kdoWeek">' + kdoWeekHtml() + "</div></div></section>";
+    return h + '<section class="hub"><div class="kdo">' + kdoDateHtml() + '<h2>Verder lezen</h2>' + kdoLastHtml() + '<h2>Reeks</h2><div class="kdo-box" id="kdoStreak">' + kdoStreakHtml(days) + '</div><h2>Hoe voel je je vandaag?</h2><div id="kdoTiles">' + kdoTilesHtml() + '</div><div id="kdoCard" aria-live="polite">' + kdoCardHtml() + '</div><h2>Kalender</h2><div class="kdo-box" id="kdoCal">' + kdoCalHtml(days) + '</div><h2>Deze week</h2><div id="kdoWeek">' + kdoWeekHtml() + '</div><button type="button" class="kdo-link kdo-nt" data-act="kdo-notes">Mijn notities</button></div></section>';
   }
   function qjActSave() { const o = document.getElementById("qjOwn"); if (o && qjKey) qjActSet(qjKey, qjActGet(qjKey).a, o.value); }
   function qjActHtml() {
@@ -9685,7 +9741,7 @@ return exports;})();
       '<p class="kds-cnt" id="kdCnt" aria-hidden="true"></p><p class="sr-only" id="kdSr" role="status" style="position:absolute;left:-9999px"></p>' +
       '<div class="kdc" id="kdCar" role="region" aria-label="Soera’s. Veeg naar links of rechts om te bladeren." tabindex="0">' + list.map(function (s) { return kdTile(s, seen); }).join("") + "</div>" +
       '<p class="mn-none kds-none" id="kdNone" role="status"' + (none ? "" : " hidden") + ">Geen soera gevonden. Probeer een andere naam of een nummer.</p>" +
-      '<button class="mn-btn" data-act="kdo-open">Mijn overzicht</button><button class="mn-btn" data-act="mn-screen">Mijn notities' + (mn ? " (" + mn + ")" : "") + '</button><button class="kdi-about" data-act="kdi-open">Over dit dagboek</button></div></section>';
+      '<button class="mn-btn" data-act="kdo-open">Terug naar mijn overzicht</button><button class="mn-btn" data-act="mn-screen">Mijn notities' + (mn ? " (" + mn + ")" : "") + '</button><button class="kdi-about" data-act="kdi-open">Over dit dagboek</button></div></section>';
     setTimeout(kdAfter, 0);
     return h;
   }
@@ -15968,14 +16024,16 @@ return exports;})();
         break;
       }
       case "q-journal": { const jb = document.getElementById("qSel"), jk = jb && jb.dataset.k; if (!jk || !mkOwner()) break; play("click"); qjKey = jk; qjFrom = "reader"; screen = "qj"; render(); window.scrollTo({ top: 0 }); break; }
-      case "qj-back": { qjAuto(); play("click"); if (qjFrom === "list") { screen = "kd"; render(); window.scrollTo({ top: 0 }); break; } if (qjFrom === "notes") { screen = "mn"; render(); window.scrollTo({ top: 0 }); break; } const jp = String(qjKey).split(":"); qSurah = parseInt(jp[0], 10) || 1; qJump = parseInt(jp[1], 10) || 1; screen = "qread"; render(); break; }
+      case "qj-back": { qjAuto(); play("click"); if (qjFrom === "kdo") { screen = "kdo"; render(); window.scrollTo({ top: 0 }); break; } if (qjFrom === "list") { screen = "kd"; render(); window.scrollTo({ top: 0 }); break; } if (qjFrom === "notes") { screen = "mn"; render(); window.scrollTo({ top: 0 }); break; } const jp = String(qjKey).split(":"); qSurah = parseInt(jp[0], 10) || 1; qJump = parseInt(jp[1], 10) || 1; screen = "qread"; render(); break; }
       case "kd": if (!mkOwner()) break; play("click"); kdw = true; kdwPick(); kdi = null; kdiDraft = null; kdQ = ""; screen = "kd"; render(); window.scrollTo({ top: 0 }); break;
-      case "kdw-go": play("click"); kdw = false; render(); window.scrollTo({ top: 0 }); break;
-      case "kd-back": play("click"); screen = "dash"; render(); break;
+      case "kdw-go": play("click"); kdw = false; screen = (kdwMsg && kdwMsg.first) ? "kd" : "kdo"; kdoF = null; kdoM = 0; render(); window.scrollTo({ top: 0 }); break;
+      case "kd-back": play("click"); screen = (kdi === null && kdiGet()) ? "kdo" : "dash"; render(); window.scrollTo({ top: 0 }); break;
       case "mn-screen": { if (!mkOwner()) break; play("click"); mnQ = ""; screen = "mn"; render(); window.scrollTo({ top: 0 }); break; }
       case "mn-back": play("click"); screen = "kd"; render(); window.scrollTo({ top: 0 }); break;
       case "kdo-open": { if (!mkOwner()) break; play("click"); kdoF = null; kdoM = 0; screen = "kdo"; render(); window.scrollTo({ top: 0 }); break; }
-      case "kdo-back": play("click"); screen = "kd"; render(); window.scrollTo({ top: 0 }); break;
+      case "kdo-back": play("click"); screen = "dash"; render(); window.scrollTo({ top: 0 }); break;
+      case "kdo-list": play("click"); screen = "kd"; render(); window.scrollTo({ top: 0 }); break;
+      case "kdo-notes": play("click"); screen = "mn"; render(); window.scrollTo({ top: 0 }); break;
       case "kdo-feel": {
         const fi = parseInt(el.dataset.i, 10); if (!KDO_F[fi]) break; play("click");
         if (kdoF === fi) kdoF = null;
@@ -16083,7 +16141,7 @@ return exports;})();
         bdDel = null; idCommit(IDS.filter(function (x) { return x.id !== did; }), function () { return sb.from("beheer_ideeen").delete().eq("id", did); }, function (ok) { if (ok) announce("Idee verwijderd"); });
         break;
       }
-      case "kd-open": { if (!mkOwner()) break; const ks = parseInt(el.dataset.s, 10) || 1, ka = parseInt(el.dataset.a, 10) || 1; play("click"); qjKey = ks + ":" + ka; qjFrom = "list"; kdSeen(ks, ka); screen = "qj"; render(); window.scrollTo({ top: 0 }); break; }
+      case "kd-open": { if (!mkOwner()) break; const ks = parseInt(el.dataset.s, 10) || 1, ka = parseInt(el.dataset.a, 10) || 1; play("click"); qjKey = ks + ":" + ka; qjFrom = el.dataset.from || "list"; kdSeen(ks, ka); screen = "qj"; render(); window.scrollTo({ top: 0 }); break; }
       case "qj-nav": { qjAuto(); const np = String(qjKey).split(":"), ns = parseInt(np[0], 10) || 1, na = (parseInt(np[1], 10) || 1) + (parseInt(el.dataset.d, 10) || 0), nn = Q_N[ns - 1]; play("click"); if (na > nn) { kdSeen(ns, nn); screen = "kd"; render(); window.scrollTo({ top: 0 }); break; } if (na < 1) break; qjKey = ns + ":" + na; kdSeen(ns, na); render(); window.scrollTo({ top: 0 }); break; }
       case "qj-help": { const hk = el.dataset.k, hp = document.getElementById("qjHelpP"); if (!hp) break; play("click"); qjMicStop(); const hopen = hp.dataset.k === hk && !hp.hidden; document.querySelectorAll(".qj-help-b .qj-chip").forEach(function (hb) { const on = !hopen && hb === el; hb.setAttribute("aria-expanded", on ? "true" : "false"); hb.classList.toggle("on", on); }); if (hopen) { hp.hidden = true; hp.innerHTML = ""; hp.dataset.k = ""; break; } qjFeelSel = []; hp.innerHTML = qjHelpPanel(hk); hp.dataset.k = hk; hp.hidden = false; break; }
       case "qj-starter": { const si = parseInt(el.dataset.i, 10); if (QJ_START[si]) { play("click"); qjInsert(QJ_START[si] + " "); } break; }
