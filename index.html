@@ -2362,6 +2362,20 @@ body.dashfull { background: #0f2e22; color: #f4efe2; }
 .qj-ta { width: 100%; box-sizing: border-box; min-height: 130px; border: 1px solid #d9a05b; border-radius: 10px; background: #fff; color: #2a2a1f; font: inherit; padding: 10px; margin-top: 8px; resize: vertical; }
 .qj-row { display: flex; gap: 8px; align-items: center; justify-content: space-between; margin-top: 10px; flex-wrap: wrap; }
 .qj-note { font-size: .8rem; color: #6b6a55; }
+/* v347: schrijfhulp in het dagboek */
+.qj-help { margin-top: 12px; }
+.qj-card .qj-help-t { font-size: .88rem; color: #5c5b48; margin: 0 0 6px; }
+.qj-help-b, .qj-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.qj-chip { min-height: 44px; padding: 8px 14px; border: 1.5px solid #d9a05b; border-radius: 999px; background: #fbf6ea; color: #2a2a1f; font: inherit; font-size: .92rem; cursor: pointer; }
+.qj-chip.on { background: #f1dfb0; border-color: #b8892f; font-weight: 600; }
+.qj-chips .qj-chip-s { text-align: left; }
+.qj-chip:focus-visible, .qj-go:focus-visible { outline: 3px solid #1b4332; outline-offset: 2px; }
+.qj-help-p { margin-top: 10px; padding: 10px 12px; border: 1px dashed #d9a05b; border-radius: 12px; background: #fffdf6; }
+.qj-help-p[hidden] { display: none; }
+.qj-card .qj-hp { font-size: .9rem; margin: 0 0 8px; color: #3f5246; }
+.qj-card .qj-priv { font-size: .78rem; color: #5c5b48; margin: 8px 0 0; }
+.qj-ex { margin: 0 0 10px; padding: 8px 12px; border-left: 4px solid #d9a05b; background: #fbf6ea; font-style: italic; line-height: 1.6; }
+.qj-go { margin-top: 10px; }
 .d-tile.kd { grid-column: 1 / -1; padding: 0; gap: 0; min-height: 0; overflow: hidden; position: relative; background: #f6f1e6; color: #1e2b24; border: 2px solid #f2c94c; }   /* Koran-dagboek-tegel (alleen beheerder) */
 /* v235: beheerpagina in donkere analytics-stijl (los van de NurSpark-look, alle namen beginnen met bd-) */
 .bd { --bg0: #06060d; --bg1: #0d0b1f; --bg2: #171236; --tx: #e9e8f6; --mut: #8f8eb0; --line: rgba(160,150,255,.16); --blue: #6ea8ff; --indigo: #8b8cff; --violet: #b48cff; --pink: #f07ab8; --teal: #46d3c0; --green: #4fd98f; --amber: #f2b95a;
@@ -8753,7 +8767,74 @@ return exports;})();
   function kdSeen(s, a) { try { const o = kdGet(); o[s] = Math.max(o[s] || 0, a); localStorage.setItem("nspark_kd_v1", JSON.stringify(o)); localStorage.setItem("nspark_kd_lasts", String(s)); } catch (e) {} }
   function kdComplete(s) { if (!QJ) return false; const n = Q_N[s - 1]; if (!n) return false; for (let a = 1; a <= n; a++) if (!QJ[s + ":" + a]) return false; return true; }
   function kdSoeras() { const out = []; for (let s = 1; s <= 114; s++) out.push(s); return out; }
-  function qjAuto() { const t = document.getElementById("qjText"); if (t && qjKey) qjSet(qjKey, t.value); }
+  function qjAuto() { qjMicStop(); const t = document.getElementById("qjText"); if (t && qjKey) qjSet(qjKey, t.value); }
+  /* v347: schrijfhulp in Mijn Qur'an dagboek: begin van een zin, gevoelens aantikken, inspreken en een voorbeeld. Alles werkt op dit toestel; alleen inspreken gebruikt de spraakherkenning van de browser. */
+  const QJ_START = ["Dit vers laat mij voelen dat", "Wat mij raakt in dit vers is", "Wat ik hieruit meeneem is", "Dit herinnert mij eraan dat", "Ik ben dankbaar voor", "Ik wil Allah vragen om", "Iets wat ik moeilijk vind, is", "Vandaag wil ik beginnen met"];
+  const QJ_FEEL = ["dankbaar", "hoopvol", "rustig", "vastberaden", "ontroerd", "blij", "nederig", "bezorgd", "verdrietig", "dichtbij Allah"];
+  let qjRec = null, qjFeelSel = [];
+  function qjMicOk() { return !!(window.SpeechRecognition || window.webkitSpeechRecognition); }
+  function qjJoin(a) { return a.length < 2 ? (a[0] || "") : a.slice(0, -1).join(", ") + " en " + a[a.length - 1]; }
+  function qjInsert(txt) {
+    const t = document.getElementById("qjText"); if (!t) return;
+    const v = t.value, sep = !v || /\s$/.test(v) ? "" : " ";
+    t.value = v + sep + txt; t.focus();
+    try { t.setSelectionRange(t.value.length, t.value.length); } catch (e) {}
+    t.scrollTop = t.scrollHeight; qjAuto();
+  }
+  function qjExample() {
+    const c = QJ && QJ[qjKey]; if (!c) return "";
+    const low = function (x) {
+      x = String(x || "").trim().replace(/[.!?]+$/, ""); if (!x) return "";
+      const w = x.split(/\s+/)[0];
+      if (/['’-]/.test(w) || /^(Allah|Hij|Hem|Zijn|Nuh|Ibrahim|Musa|Isa|Yusuf|Yunus|Muhammad|Maryam|Iblis|Shaytan|Salah|Wudhu|Adhaan|Jannah|Duhr|Sujud|Ramadan|Qur|Koran)[,.:;!?]?$/.test(w)) return x;
+      return x.charAt(0).toLowerCase() + x.slice(1);
+    };
+    if (c.l && c.l.length) return "Wat ik uit dit vers meeneem: " + low(c.l[0]) + ". Ik wil hier vandaag even bij stilstaan.";
+    if (c.b && c.b.length) return "Het woord “" + c.b[0][0] + "” (" + low(c.b[0][1]) + ") blijft bij mij hangen. Het laat mij nadenken over mijn eigen leven en mijn band met Allah.";
+    return "";
+  }
+  function qjHelpBar() {
+    const ex = qjExample();
+    return '<div class="qj-help"><p class="qj-help-t">Weet je niet goed wat je moet schrijven? Kies een hulpje:</p><div class="qj-help-b" role="group" aria-label="Hulp bij schrijven">' +
+      '<button type="button" class="qj-chip" data-act="qj-help" data-k="start" aria-expanded="false" aria-controls="qjHelpP">Begin van een zin</button>' +
+      '<button type="button" class="qj-chip" data-act="qj-help" data-k="feel" aria-expanded="false" aria-controls="qjHelpP">Hoe voel ik mij?</button>' +
+      (qjMicOk() ? '<button type="button" class="qj-chip" data-act="qj-help" data-k="mic" aria-expanded="false" aria-controls="qjHelpP">Inspreken</button>' : "") +
+      (ex ? '<button type="button" class="qj-chip" data-act="qj-help" data-k="ex" aria-expanded="false" aria-controls="qjHelpP">Voorbeeld</button>' : "") +
+      '</div><div class="qj-help-p" id="qjHelpP" role="region" aria-label="Hulp bij schrijven" hidden></div></div>';
+  }
+  function qjHelpPanel(k) {
+    if (k === "start") return '<p class="qj-hp">Tik op een begin en schrijf zelf verder.</p><div class="qj-chips">' + QJ_START.map(function (x, i) { return '<button type="button" class="qj-chip qj-chip-s" data-act="qj-starter" data-i="' + i + '">' + esc(x) + "…</button>"; }).join("") + "</div>";
+    if (k === "feel") return '<p class="qj-hp">Tik aan wat je voelt. Je mag er meer kiezen.</p><div class="qj-chips">' + QJ_FEEL.map(function (x, i) { return '<button type="button" class="qj-chip" data-act="qj-feel" data-i="' + i + '" aria-pressed="false">' + esc(x) + "</button>"; }).join("") + '</div><button type="button" class="btn qj-go" data-act="qj-feel-ins">Zet dit in mijn tekst</button>';
+    if (k === "mic") return '<p class="qj-hp">Tik op de knop en praat. Je woorden komen in het schrijfvak en je kunt ze daarna aanpassen. Bij een stilte stopt het vanzelf; tik dan nog eens om verder te gaan.</p><button type="button" class="btn qj-go" id="qjMicBtn" data-act="qj-mic" aria-pressed="false">Begin met inspreken</button><p class="qj-hp" id="qjMicMsg" role="status"></p><p class="qj-priv">Let op: je browser (bij Chrome is dat Google) zet je stem om in tekst en gebruikt daarvoor internet. Dat gebeurt alleen als je op de knop tikt.</p>';
+    if (k === "ex") return '<p class="qj-hp">Een voorbeeld bij dit vers. Pas het aan met je eigen woorden.</p><blockquote class="qj-ex">' + esc(qjExample()) + '</blockquote><button type="button" class="btn qj-go" data-act="qj-ex-ins">Overnemen</button>';
+    return "";
+  }
+  function qjMicUi(on, msg) {
+    const b = document.getElementById("qjMicBtn"), m = document.getElementById("qjMicMsg");
+    if (b) { b.textContent = on ? "Stop met inspreken" : "Begin met inspreken"; b.setAttribute("aria-pressed", on ? "true" : "false"); }
+    if (m && msg !== undefined) m.textContent = msg;
+  }
+  function qjMicStop() { if (qjRec) { const r = qjRec; qjRec = null; try { r.stop(); } catch (e) {} qjMicUi(false); } }
+  function qjMicToggle() {
+    if (qjRec) { qjMicStop(); qjMicUi(false, "Gestopt."); return; }
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition; if (!SR) return;
+    let r; try { r = new SR(); } catch (e) { qjMicUi(false, "Inspreken lukt hier niet."); return; }
+    r.lang = "nl-NL"; r.continuous = false; r.interimResults = false;
+    r.onresult = function (ev) {
+      let x = ""; for (let i = ev.resultIndex; i < ev.results.length; i++) if (ev.results[i].isFinal) x += ev.results[i][0].transcript;
+      x = x.trim(); if (!x) return;
+      const t = document.getElementById("qjText"), cur = t ? t.value.trim() : "";
+      if (!cur || /[.!?…]$/.test(cur)) x = x.charAt(0).toUpperCase() + x.slice(1);
+      qjInsert(x);
+    };
+    r.onerror = function (ev) {
+      const e = ev && ev.error; if (qjRec === r) qjRec = null;
+      qjMicUi(false, e === "not-allowed" || e === "service-not-allowed" ? "De microfoon staat uit. Zet hem aan in je browser en probeer het opnieuw." : e === "no-speech" ? "Ik hoorde niets. Probeer het nog eens." : e === "network" ? "Geen verbinding. Inspreken heeft internet nodig." : "Inspreken lukte niet. Probeer het nog eens.");
+    };
+    r.onend = function () { if (qjRec === r) { qjRec = null; qjMicUi(false, "Klaar. Tik nog eens om verder te praten."); } };
+    qjRec = r;
+    try { r.start(); qjMicUi(true, "Ik luister… praat rustig."); } catch (e) { qjRec = null; qjMicUi(false, "Inspreken lukt nu niet."); }
+  }
   /* v233: beheerpagina (alleen beheerder): cijfers komen uit de Supabase-functie beheer_cijfers() */
   let BH = null, bhBusy = false, bhErr = "", bhAt = null, BN = null, BNerr = false, BK = null, BKerr = false;
   /* v251: ideeënblok op de beheerpagina (alleen beheerder). De ideeën staan in Supabase (tabel beheer_ideeen) en dus op al je toestellen. Is de tabel er nog niet, dan werkt het blok op dit toestel. */
@@ -9466,6 +9547,7 @@ return exports;})();
     h += '<img class="qs-img qs-img-w" src="journaal/' + QJ_ONDER[(a + s) % QJ_ONDER.length] + '.webp" alt="Rustige illustratie van iemand die in een journal schrijft" width="1024" height="572" loading="lazy" onerror="this.remove()">';
     h += '<div class="qj-card"><h2>Mijn journal</h2>';
     if (c && c.v && c.v.length) h += c.v.map(function (q, i) { return '<p class="qj-q">' + (i + 1) + ". " + esc(q) + "</p>"; }).join("");
+    h += qjHelpBar();
     h += '<textarea class="qj-ta" id="qjText" aria-label="Schrijf hier je gedachten" placeholder="Schrijf hier je gedachten…">' + esc(qjGet(qjKey)) + '</textarea>' +
       '<div class="qj-row"><span class="qj-note" id="qjMsg">Alleen voor jou, op dit toestel</span><button class="btn" data-act="qj-save">Bewaar</button></div></div>';
     h += '<div class="qs-nav">' + (a > 1 ? '<button class="qs-prev" data-act="qj-nav" data-d="-1">Vorig</button>' : "") + '<button class="qs-next" data-act="qj-nav" data-d="1">' + (a < n ? "Volgend vers" : "Soera afronden") + "</button></div>";
@@ -15817,6 +15899,12 @@ return exports;})();
       }
       case "kd-open": { if (!mkOwner()) break; const ks = parseInt(el.dataset.s, 10) || 1, ka = parseInt(el.dataset.a, 10) || 1; play("click"); qjKey = ks + ":" + ka; qjFrom = "list"; kdSeen(ks, ka); screen = "qj"; render(); window.scrollTo({ top: 0 }); break; }
       case "qj-nav": { qjAuto(); const np = String(qjKey).split(":"), ns = parseInt(np[0], 10) || 1, na = (parseInt(np[1], 10) || 1) + (parseInt(el.dataset.d, 10) || 0), nn = Q_N[ns - 1]; play("click"); if (na > nn) { kdSeen(ns, nn); screen = "kd"; render(); window.scrollTo({ top: 0 }); break; } if (na < 1) break; qjKey = ns + ":" + na; kdSeen(ns, na); render(); window.scrollTo({ top: 0 }); break; }
+      case "qj-help": { const hk = el.dataset.k, hp = document.getElementById("qjHelpP"); if (!hp) break; play("click"); qjMicStop(); const hopen = hp.dataset.k === hk && !hp.hidden; document.querySelectorAll(".qj-help-b .qj-chip").forEach(function (hb) { const on = !hopen && hb === el; hb.setAttribute("aria-expanded", on ? "true" : "false"); hb.classList.toggle("on", on); }); if (hopen) { hp.hidden = true; hp.innerHTML = ""; hp.dataset.k = ""; break; } qjFeelSel = []; hp.innerHTML = qjHelpPanel(hk); hp.dataset.k = hk; hp.hidden = false; break; }
+      case "qj-starter": { const si = parseInt(el.dataset.i, 10); if (QJ_START[si]) { play("click"); qjInsert(QJ_START[si] + " "); } break; }
+      case "qj-feel": { const fi = parseInt(el.dataset.i, 10), fx = qjFeelSel.indexOf(fi); if (fx === -1) qjFeelSel.push(fi); else qjFeelSel.splice(fx, 1); el.classList.toggle("on", fx === -1); el.setAttribute("aria-pressed", fx === -1 ? "true" : "false"); break; }
+      case "qj-feel-ins": { if (!qjFeelSel.length) { announce("Tik eerst aan wat je voelt"); break; } const fn = qjFeelSel.slice().sort(function (x, y) { return x - y; }).map(function (i) { return QJ_FEEL[i]; }); qjInsert("Bij dit vers voel ik mij " + qjJoin(fn) + ". Dat komt omdat "); qjFeelSel = []; document.querySelectorAll("#qjHelpP .qj-chip").forEach(function (fb) { fb.classList.remove("on"); fb.setAttribute("aria-pressed", "false"); }); play("correct"); break; }
+      case "qj-ex-ins": { const ex = qjExample(); if (ex) { qjInsert(ex); play("correct"); } break; }
+      case "qj-mic": qjMicToggle(); break;
       case "qj-save": { const jt = document.getElementById("qjText"); if (!jt) break; qjSet(qjKey, jt.value); play("correct"); const jm = document.getElementById("qjMsg"); if (jm) jm.textContent = "Bewaard op dit toestel"; announce("Bewaard"); break; }
       case "qj-fav": { const jm2 = qState().marks, ji = jm2.indexOf(qjKey); if (ji === -1) { jm2.unshift(qjKey); jm2.splice(50); } else jm2.splice(ji, 1); saveState(); el.textContent = ji === -1 ? "★" : "☆"; announce(ji === -1 ? "Favoriet gezet" : "Favoriet verwijderd"); break; }
       case "q-size": { S.qSize = Math.max(1, Math.min(5, (S.qSize || 3) + (parseInt(el.dataset.d, 10) || 0))); saveState(); const qt = document.querySelector(".q-text"); if (qt) qt.className = "q-text q-s" + S.qSize; break; }
