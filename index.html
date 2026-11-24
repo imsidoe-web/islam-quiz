@@ -3118,6 +3118,192 @@ body.toets { background: radial-gradient(120% 80% at 50% 18%, #1f5039 0%, #15382
 .t-btn.alt { background: transparent; color: #f4dd96; border-color: #c9a24a; }
 .t-btn:active { filter: drop-shadow(0 0 8px #ffd45c); transform: scale(.98); }
 .jb-toets { appearance: none; border: 2px solid #7a1018; background: linear-gradient(#f6e0a0, #d0a343); color: #1d3a2a; font: 400 .85rem "Berkshire Swash", "Lilita One", "Nunito", sans-serif; padding: 3px 11px; border-radius: 999px; cursor: pointer; }
+/* ───── v367: Tadabbur Qur’an: rustige editorial stijl (albast, smaragd, champagne-goud) ───── */
+:root { --kd-serif: "Cormorant Garamond", Georgia, "Times New Roman", serif; --kd-sans: "Plus Jakarta Sans", "Nunito", system-ui, -apple-system, Roboto, sans-serif; }
+/* dashboard-tegel */
+.d-tile.kd { background: #0F291E; border: 1px solid #C5A675; border-radius: 16px; box-shadow: 0 10px 30px rgba(0, 0, 0, .28); color: #FAF7F2; text-align: left; padding: 0; overflow: hidden; }
+.d-tile.kd .kd-ph { position: relative; display: block; height: 190px; overflow: hidden; }
+.d-tile.kd .kd-ph img { display: block; width: 100%; height: 100%; aspect-ratio: auto; object-fit: cover; object-position: 50% 55%; }
+.d-tile.kd .kd-ph::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to bottom, transparent 40%, #0F291E 100%); }
+.d-tile.kd .kd-badge { top: 12px; right: 12px; z-index: 2; padding: 6px 12px; background: rgba(15, 41, 30, .75); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); border: .5px solid rgba(197, 166, 117, .6); color: #C5A675; font: 600 10px var(--kd-sans); letter-spacing: .16em; text-transform: uppercase; }
+.d-tile.kd .kd-tx { display: flex; flex-direction: row; align-items: center; gap: 12px; padding: 0 20px 20px; margin-top: -18px; position: relative; z-index: 2; }
+.d-tile.kd .kd-tc { flex: 1; min-width: 0; display: block; }
+.d-tile.kd .kd-ar { display: block; margin: 0 0 2px; font: 400 20px/1.7 "Amiri", "Scheherazade New", serif; color: #C5A675; direction: rtl; text-align: left; }
+.d-tile.kd .kd-tc b { display: block; background: none; font: 600 24px/1.15 var(--kd-serif); color: #FAF7F2; letter-spacing: .2px; }
+.d-tile.kd .kd-tc small { display: block; margin: 5px 0 0; font: 400 13px/1.5 var(--kd-sans); color: rgba(232, 222, 198, .78); }
+.d-tile.kd .kd-chev { flex: none; color: #C5A675; }
+/* pagina-achtergrond */
+html.kdskin-h, body.dashfull.kdskin { background: #FAF7F2 !important; background-image: none !important; color: #1C2420; }
+body.kdskin { font-family: var(--kd-sans); }
+body.kdskin #app { max-width: 520px; padding: 0 0 56px; }
+body.kdskin .hub { padding: 0; gap: 0; color: #1C2420; }
+body.kdskin .hub-intro { color: #5C6660; padding: 24px; }
+/* koptekst */
+.kdh { position: sticky; top: 0; z-index: 30; display: flex; align-items: center; gap: 8px; padding: max(env(safe-area-inset-top), 14px) 16px 12px; background: rgba(250, 247, 242, .8); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border-bottom: .5px solid rgba(197, 166, 117, .35); }
+.kdh-back { flex: none; appearance: none; width: 44px; height: 44px; border-radius: 12px; border: .5px solid rgba(197, 166, 117, .5); background: rgba(242, 236, 225, .85); color: #0F291E; display: grid; place-items: center; cursor: pointer; }
+.kdh-back:focus-visible { outline: 3px solid #0F291E; outline-offset: 2px; }
+.kdh-t { flex: 1; min-width: 0; text-align: center; padding-right: 44px; }
+.kdh-t h1 { font: 600 25px/1.05 var(--kd-serif); color: #0F291E; letter-spacing: .3px; }
+.kdh-app { margin-top: 4px; font: 600 11.5px var(--kd-sans); letter-spacing: .18em; text-transform: uppercase; color: #7A5F2E; }
+.kdh-t p { margin: 2px 0 0; font: italic 500 17px var(--kd-serif); color: #5C6660; }
+.kdh-dash { padding-bottom: 18px; }
+.kdh-dash h1 { font-size: 30px; white-space: nowrap; }
+.kdh-dash .kdh-app { margin-top: 6px; font: italic 500 21px var(--kd-serif); letter-spacing: .02em; text-transform: none; color: #7A5F2E; }
+/* knoppen en tekstlinks */
+body.kdskin .kdi-btn, body.kdskin .mn-btn, body.kdskin .kds .mn-btn { height: 48px; padding: 0 20px; border: 0; border-radius: 14px; background: #0F291E; color: #F3E9D2; font: 500 14px var(--kd-sans); letter-spacing: .06em; box-shadow: 0 8px 24px rgba(15, 41, 30, .22); }
+body.kdskin .mn-btn.mn-ghost, body.kdskin .mn-btn.mn-top { background: none; color: #0F291E; border: .5px solid #C5A675; box-shadow: none; }
+body.kdskin .kdo-link, body.kdskin .kdi-about, body.kdskin .kdi-back { background: none; border: 0; border-radius: 0; color: #0F291E; font: 500 14.5px var(--kd-sans); text-decoration: underline; text-decoration-color: #C5A675; text-underline-offset: 5px; min-height: 44px; }
+/* overzicht */
+body.kdskin .kdo { background: none; border-radius: 0; padding: 20px 24px 24px; color: #1C2420; }
+body.kdskin .kdo h2 { margin: 34px 0 14px; font: 500 26px/1.15 var(--kd-serif); color: #0F291E; }
+body.kdskin .kdo h2:first-child { margin-top: 4px; }
+body.kdskin .kdo-pic { display: block; width: 100%; height: 190px; object-fit: cover; border-radius: 22px 22px 0 0; box-shadow: 0 8px 30px rgba(15, 41, 30, .08); }
+body.kdskin .kdo-date { background: #0F291E; border: 0; border-radius: 0 0 22px 22px; padding: 14px 18px; justify-content: center; text-align: center; gap: 10px; }
+body.kdskin .kdo-date b { font: 500 15px var(--kd-sans); color: #FAF7F2; }
+body.kdskin .kdo-date span { color: #C5A675; font-size: 14px; }
+body.kdskin .kdo-moon { color: #C5A675; font-size: 1.4rem; }
+body.kdskin .kdo-hn { margin: 10px 4px 0; font-size: 13px; color: #5C6660; }
+body.kdskin .kdo-last { background: #F2ECE1; border: .5px solid rgba(197, 166, 117, .35); border-radius: 20px; box-shadow: 0 8px 30px rgba(15, 41, 30, .05); padding: 22px; }
+body.kdskin .kdo-lar { font-size: 38px; line-height: 1.6; color: #0F291E; }
+body.kdskin .kdo-lnm { font: 500 21px var(--kd-serif); color: #1C2420; }
+body.kdskin .kd-bar { height: 2px; background: rgba(197, 166, 117, .3); }
+body.kdskin .kd-bar i { background: #9A7A3E; }
+body.kdskin .kdo-sm { font-size: 14.5px; color: #5C6660; }
+body.kdskin .kdo-box { background: none; border: 0; border-radius: 0; padding: 0; }
+body.kdskin .kdo-big { font: 500 54px/1 var(--kd-serif); color: #0F291E; }
+body.kdskin .kdo-big small { font: italic 500 20px var(--kd-serif); color: #5C6660; }
+body.kdskin .kdo-ms li { font-size: 13.5px; color: #5C6660; }
+body.kdskin .kdo-ms li i { width: 30px; height: 30px; background: none; border: 1px solid #9A7A3E; opacity: .7; margin-bottom: 6px; }
+body.kdskin .kdo-ms li.on { color: #0F291E; font-weight: 700; }
+body.kdskin .kdo-ms li.on i { background: #C5A675; opacity: 1; box-shadow: 0 0 0 4px rgba(197, 166, 117, .2); }
+/* gevoelens */
+body.kdskin .kdo-tile { background: #F2ECE1 !important; border: .5px solid #C5A675; border-radius: 16px; min-height: 84px; color: #0F291E; font: 500 14.5px var(--kd-sans); gap: 8px; box-shadow: none; transition: background .3s, color .3s; }
+body.kdskin .kdo-e { display: grid; place-items: center; color: #9A7A3E; font-size: 0; }
+body.kdskin .kdo-n { font-size: 14.5px; }
+body.kdskin .kdo-tile.open { background: #0F291E !important; color: #C5A675; transform: none; }
+body.kdskin .kdo-tile.open .kdo-e { color: #C5A675; }
+body.kdskin .kdo-chk { display: none; }
+body.kdskin .kdo-card { background: #0F291E !important; border: .5px solid rgba(197, 166, 117, .5); color: #F3E9D2; }
+body.kdskin .kdo-card h3 { display: flex; align-items: center; gap: 8px; font: 500 22px var(--kd-serif); color: #FAF7F2; }
+body.kdskin .kdo-card h3 svg { color: #C5A675; }
+body.kdskin .kdo-card .kdo-nl { font-family: var(--kd-serif); font-size: 19px; }
+/* linkrijen */
+.kdo-links { margin-top: 34px; }
+.kdo-lr { appearance: none; display: flex; align-items: center; gap: 14px; width: 100%; background: none; border: 0; border-top: .5px solid rgba(197, 166, 117, .35); padding: 16px 0; cursor: pointer; text-align: left; color: #0F291E; font: inherit; }
+.kdo-lr:last-child { border-bottom: .5px solid rgba(197, 166, 117, .35); }
+.kdo-lr:focus-visible { outline: 3px solid #0F291E; outline-offset: 2px; }
+.kdo-lr > svg { flex: none; color: #9A7A3E; }
+.kdo-lr > span { flex: 1; }
+.kdo-lr b { display: block; font: 500 23px/1.1 var(--kd-serif); }
+.kdo-lr small { font: 13.5px var(--kd-sans); color: #5C6660; }
+.kdo-lr .ch { flex: none; display: flex; color: #9A7A3E; }
+/* kalender */
+body.kdskin .kdo-calh { margin-bottom: 0 !important; background: none; color: #0F291E; padding: 0 0 6px; }
+body.kdskin .kdo-calh h3 { color: #0F291E !important; }
+body.kdskin .kdo-calh .kdo-nav { background: rgba(242, 236, 225, .85); border: .5px solid rgba(197, 166, 117, .5); color: #0F291E; }
+body.kdskin .kdo-cm small { color: #7A5F2E; }
+body.kdskin .kdo-calh h3 { font: 500 30px/1.05 var(--kd-serif); }
+body.kdskin .kdo-cm small { color: #7A5F2E; font: italic 500 18px var(--kd-serif); }
+body.kdskin .kdo-nav { width: 44px; height: 44px; border-radius: 12px; border: .5px solid rgba(197, 166, 117, .5); background: rgba(242, 236, 225, .85); color: #0F291E; }
+body.kdskin .kdo-grid { grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px 0; margin-top: 14px; }
+body.kdskin .kdo-grid b { font: 600 12.5px var(--kd-sans); letter-spacing: .12em; text-transform: uppercase; color: #7A5F2E; padding: 10px 0 8px; border-bottom: .5px solid rgba(197, 166, 117, .35); }
+body.kdskin .kdo-d { position: relative; isolation: isolate; min-width: 0; aspect-ratio: auto; height: 68px; border: 0; border-radius: 0; background: none; flex-direction: column; justify-content: flex-start; color: #1C2420; box-shadow: none; }
+body.kdskin .kdo-d i { margin-top: 8px; font: 600 23px/1 var(--kd-serif); font-style: normal; }
+body.kdskin .kdo-d em { margin-top: 3px; font: 400 11.5px var(--kd-sans); font-style: normal; color: #5C6660; }
+body.kdskin .kdo-d u { display: none; }
+body.kdskin .kdo-d.on { background: none; border: 0; color: #1C2420; font-weight: 400; }
+body.kdskin .kdo-d.on::after { content: ""; position: absolute; bottom: 4px; left: 50%; width: 5px; height: 5px; margin-left: -2.5px; border-radius: 50%; background: #9A7A3E; }
+body.kdskin .kdo-d.fut { opacity: .55; }
+body.kdskin .kdo-d.now, body.kdskin .kdo-d.now.on { background: none !important; box-shadow: none !important; border: 0 !important; }
+body.kdskin .kdo-d.now u { display: none; }
+body.kdskin .kdo-d.now::before { content: ""; position: absolute; z-index: -1; top: 0; left: 50%; width: 52px; height: 52px; margin-left: -26px; border-radius: 50%; background: #0F291E; }
+body.kdskin .kdo-d.now i { color: #C5A675; }
+body.kdskin .kdo-d.now em { color: rgba(232, 213, 176, .95); }
+body.kdskin .kdo-leg { font-size: 13px; color: #5C6660; padding: 8px 10px 4px; }
+body.kdskin .kdo-leg u { color: #9A7A3E; }
+/* deze week */
+body.kdskin .kdo-wk { gap: 0; }
+body.kdskin .kdo-pill { background: none !important; color: #1C2420; border-radius: 0; border-top: .5px solid rgba(197, 166, 117, .35); padding: 12px 0; font: 500 15.5px var(--kd-sans); gap: 14px; }
+body.kdskin .kdo-pill:last-child { border-bottom: .5px solid rgba(197, 166, 117, .35); }
+body.kdskin .kdo-pill span { background: none; border-radius: 0; height: auto; min-width: 22px; justify-content: flex-end; font: 500 24px/1 var(--kd-serif); color: #0F291E; }
+body.kdskin .kdo-pill .kdo-pe { display: grid; min-width: 0; margin: 0; color: #9A7A3E; font-size: 0; }
+body.kdskin .kdo-st { grid-template-columns: 1fr 1fr; gap: 0; margin-top: 26px; align-items: center; }
+body.kdskin .kdo-st div { background: none; border: 0; border-radius: 0; padding: 6px 10px; color: #5C6660; font-size: 14px; }
+body.kdskin .kdo-st div + div { border-left: .5px solid rgba(197, 166, 117, .7); }
+body.kdskin .kdo-st b { font: 500 46px/1 var(--kd-serif); color: #0F291E; }
+body.kdskin .kdo-reset { color: #7A5F2E; }
+/* lezen en journal */
+body.kdskin .qs { padding: 18px 24px 8px; }
+body.kdskin .qs-bar { background: rgba(197, 166, 117, .3); }
+body.kdskin .qs-bar i { background: #9A7A3E; }
+body.kdskin .qs-top small { font-size: 13.5px; color: #5C6660; }
+body.kdskin .qs-fav { color: #9A7A3E; }
+body.kdskin .qs-img, body.kdskin .qs-img-w { border-radius: 22px; box-shadow: none; -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%); mask-image: linear-gradient(to bottom, #000 55%, transparent 100%); }
+body.kdskin .qs-ar .q-text { color: #0F291E; }
+body.kdskin .qs-bm p { color: #5C6660; }
+body.kdskin .qs-nl { background: #F2ECE1; border-radius: 18px; padding: 18px 20px; text-align: center; box-shadow: 0 8px 30px rgba(15, 41, 30, .04); }
+body.kdskin .qs-nl small { display: block; margin-bottom: 8px; font: 600 12.5px var(--kd-sans); letter-spacing: .2em; color: #7A5F2E; }
+body.kdskin .qs-nl p { font: 19.5px/1.5 var(--kd-serif); color: #1C2420; }
+body.kdskin .qs h2 { margin: 34px 0 12px; font: 500 26px/1.15 var(--kd-serif); color: #0F291E; }
+body.kdskin .qs p { color: #1C2420; font-size: 15.5px; }
+body.kdskin .qs p.qs-b { margin: 0; padding: 12px 0; border-top: .5px solid rgba(197, 166, 117, .35); color: #5C6660; }
+body.kdskin .qs p.qs-b b { margin-right: 10px; font: 600 21px var(--kd-serif); color: #0F291E; }
+body.kdskin .qs-l { list-style: none; margin: 0; padding: 0; }
+body.kdskin .qs-l li { display: flex; gap: 12px; padding: 12px 0; border-top: .5px solid rgba(197, 166, 117, .35); font-size: 15.5px; line-height: 1.65; color: #1C2420; }
+body.kdskin .qs-l li::before { content: "◆"; flex: none; margin-top: 8px; font-size: 8px; color: #9A7A3E; }
+body.kdskin .qs-quote { margin: 38px 0 0; padding-top: 30px; text-align: center; }
+body.kdskin .qs-qm { display: none; }
+body.kdskin .qs-quote::before { content: "\201C"; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); font: 84px/1 var(--kd-serif); color: #C5A675; opacity: .75; }
+body.kdskin .qs-qb { background: none; border-radius: 0; padding: 0; }
+body.kdskin .qs-qb p { font: italic 21px/1.5 var(--kd-serif); color: #0F291E; }
+body.kdskin .qs-qb small { display: block; margin-top: 12px; font: 600 12.5px var(--kd-sans); letter-spacing: .2em; color: #7A5F2E; }
+body.kdskin .qs-qe { display: none; }
+body.kdskin .qj-card, body.kdskin .qs .qj-card { background: none; border: 0; border-radius: 0; padding: 0; margin: 34px 0 0; color: #1C2420; }
+body.kdskin .qj-card h2 { margin: 0 0 12px; }
+body.kdskin .qj-q { margin: 0; padding: 11px 0; border-top: .5px solid rgba(197, 166, 117, .35); font: 19px/1.4 var(--kd-serif); color: #1C2420; }
+body.kdskin .qj-card .qj-help-t, body.kdskin .qj-card .qj-hp, body.kdskin .qj-own-l { font-size: 15px; color: #5C6660; }
+body.kdskin .qj-chip { min-height: 44px; padding: 4px 0; border: 0; border-radius: 0; background: none; color: #0F291E; font: 500 14.5px var(--kd-sans); text-decoration: underline; text-decoration-color: #C5A675; text-underline-offset: 5px; }
+body.kdskin .qj-chip.on { background: none; font-weight: 700; }
+body.kdskin .qj-help-b { gap: 4px 20px; }
+body.kdskin .qj-help-p { border: 0; border-radius: 14px; background: #F2ECE1; }
+body.kdskin .qj-ex { border-left: 2px solid #C5A675; background: none; font-family: var(--kd-serif); font-size: 18px; }
+body.kdskin .qj-ta { min-height: 160px; border: 0; border-top: .5px solid rgba(197, 166, 117, .35); border-radius: 0; padding: 0 2px; margin-top: 8px; background: repeating-linear-gradient(to bottom, transparent 0, transparent 31px, rgba(197, 166, 117, .45) 31px, rgba(197, 166, 117, .45) 32px); background-attachment: local; font: 19px/32px var(--kd-serif); color: #1C2420; resize: none; }
+body.kdskin .qj-note, body.kdskin .qj-card .qj-priv { font-size: 13px; color: #5C6660; }
+body.kdskin .qj-row .btn { height: 44px; padding: 0 26px; border: 0; border-radius: 12px; background: #0F291E; color: #F3E9D2; font: 500 14px var(--kd-sans); letter-spacing: .06em; box-shadow: 0 8px 24px rgba(15, 41, 30, .22); }
+body.kdskin .qj-act .qj-chip-s { position: relative; display: block; width: 100%; padding: 13px 0 13px 34px; border-top: .5px solid rgba(197, 166, 117, .35); text-align: left; text-decoration: none; font: 15.5px var(--kd-sans); color: #1C2420; }
+body.kdskin .qj-act .qj-chip-s::before { content: ""; position: absolute; left: 0; top: 50%; width: 20px; height: 20px; margin-top: -10px; border-radius: 50%; border: 1px solid #9A7A3E; box-sizing: border-box; }
+body.kdskin .qj-act .qj-chip-s.on::before { background: #C5A675; }
+body.kdskin .qj-act .qj-chip-s.on { color: #0F291E; font-weight: 600; }
+body.kdskin .qj-own { min-height: 48px; padding: 13px 0; border: 0; border-top: .5px solid rgba(197, 166, 117, .35); border-bottom: .5px solid rgba(197, 166, 117, .35); border-radius: 0; background: none; font: 15.5px var(--kd-sans); color: #1C2420; }
+body.kdskin .qs-nav { margin-top: 28px; }
+body.kdskin .qs-next { height: 48px; border-radius: 14px; background: #0F291E; color: #F3E9D2; font: 500 14px var(--kd-sans); letter-spacing: .06em; box-shadow: 0 8px 24px rgba(15, 41, 30, .22); }
+body.kdskin .qs-prev { height: 48px; border: .5px solid #C5A675; border-radius: 14px; color: #0F291E; font: 500 14px var(--kd-sans); }
+/* notities */
+body.kdskin .mn-sr input, body.kdskin .kds-sr input { padding: 10px 2px; border: 0; border-bottom: .5px solid #C5A675; border-radius: 0; background: none; box-shadow: none; font: 15.5px var(--kd-sans); color: #1C2420; }
+body.kdskin .kds-sr { margin: 8px 24px 0; }
+body.kdskin .mn-count, body.kdskin .kds-cnt, body.kdskin .kds-none, body.kdskin .mn-info, body.kdskin .mn-none { color: #5C6660 !important; font-size: 13.5px; }
+body.kdskin .mn-it { padding: 18px; border: 0; border-radius: 20px; background: #F2ECE1; box-shadow: 0 8px 30px rgba(15, 41, 30, .05); }
+body.kdskin .mn-h b { font: 600 22px var(--kd-serif); color: #0F291E; }
+body.kdskin .mn-h span, body.kdskin .mn-d { color: #5C6660; font-size: 12.5px; }
+body.kdskin .mn-t { font: italic 19px/1.45 var(--kd-serif); color: #1C2420; }
+body.kdskin .mn-go { background: none; border-radius: 0; padding: 4px 0; color: #0F291E; font: 500 14px var(--kd-sans); text-decoration: underline; text-decoration-color: #C5A675; text-underline-offset: 5px; }
+/* soera's en welkom */
+body.kdskin .kds .mn-btn, body.kdskin .kds .kdi-about { margin-left: 24px; margin-right: 24px; width: calc(100% - 48px); }
+body.kdskin .kdt { background: #F2ECE1; border: .5px solid rgba(197, 166, 117, .35); border-radius: 20px; box-shadow: 0 8px 30px rgba(15, 41, 30, .05); }
+body.kdskin .kdt-ar { color: #0F291E; }
+body.kdskin .kdt-nm { font: 500 22px var(--kd-serif); color: #0F291E; }
+body.kdskin .kdt-meta, body.kdskin .kdt-st { color: #7A5F2E; }
+body.kdskin .kdt-no svg { fill: #FAF7F2; stroke: #9A7A3E; }
+body.kdskin .kdt-no span { font-family: var(--kd-serif); color: #7A5F2E; }
+body.kdskin .kdi { background: none; border-radius: 0; padding: 22px 24px; color: #1C2420; font-family: var(--kd-sans); }
+body.kdskin .kdi-pic { border-radius: 22px; box-shadow: none; -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%); mask-image: linear-gradient(to bottom, #000 55%, transparent 100%); }
+body.kdskin .kdi-bm { color: #0F291E; }
+body.kdskin .kdi-it, body.kdskin .kdw-t { font: italic 19px/1.45 var(--kd-serif); color: #5C6660; }
+body.kdskin .kdi-h1, body.kdskin .kdi-h2 { font: 500 36px/1.1 var(--kd-serif); color: #0F291E; }
+body.kdskin .kdi-sub, body.kdskin .kdi small, body.kdskin .kdi-sm { color: #7A5F2E !important; }
+body.kdskin .kdi p, body.kdskin .kdi-ul li { color: #1C2420; }
+body.kdskin .kdi-card { border: 0; background: #F2ECE1; }
+body.kdskin .kdi-ta { border: 0; border-top: .5px solid rgba(197, 166, 117, .35); border-radius: 0; background: repeating-linear-gradient(to bottom, transparent 0, transparent 31px, rgba(197, 166, 117, .45) 31px, rgba(197, 166, 117, .45) 32px); background-attachment: local; font: 19px/32px var(--kd-serif); color: #1C2420; }
 </style>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=3">
@@ -8118,7 +8304,7 @@ return exports;})();
     h += '<nav class="d-grid" aria-label="Onderdelen">' +
       '<button class="d-tile hub" data-act="hub"><span class="hb-ic">' + dIc("book", "#1b4332", 40) + '</span><span class="hb-t"><span class="d-k ar" lang="ar" dir="rtl">بيت العلم</span><b>Bayt al-‘Ilm</b><small>' + (nf ? "Mijn foutjes: " + nf + " · du’a-boekje" : "Foutjes en du’a-boekje") + '</small></span><span class="hb-ch" aria-hidden="true">›</span></button>' +
       '<button class="d-tile plt" data-act="play" aria-label="NurPlay, losse spellen voor tussendoor. Openen"><span class="plt-ic">' + dIc("pad", "#ffd54f", 36) + '</span><span class="plt-t"><b>NurPlay</b><small>Losse spellen voor tussendoor</small></span><span class="plt-ch" aria-hidden="true">›</span></button>' +
-      (!mkOwner() ? "" : '<button class="d-tile kd" data-act="kd" aria-label="Mijn Qur’an dagboek. Vers voor vers lezen en reflecteren. Alleen voor jou zichtbaar. Openen"><img src="journaal/kd-ochtend.webp" alt="" width="1376" height="768" loading="lazy"><span class="kd-badge" aria-hidden="true">In ontwikkeling</span><span class="kd-tx"><b>Mijn Qur’an dagboek</b><small>Vers voor vers lezen en reflecteren</small></span></button>') +
+      (!mkOwner() ? "" : '<button class="d-tile kd" data-act="kd" aria-label="Tadabbur Qur’an. Mijn Qur’an Dagboek. Vers voor vers reflecteren. Alleen voor jou zichtbaar. Openen"><span class="kd-ph"><img src="journaal/kd-tegel.webp" alt="" width="800" height="427" loading="lazy"><span class="kd-badge" aria-hidden="true">In ontwikkeling</span></span><span class="kd-tx"><span class="kd-tc"><span class="kd-ar" lang="ar" dir="rtl" aria-hidden="true">تَدَبُّرُ القُرْآن</span><b>Tadabbur Qur’an</b><small>Mijn Qur’an Dagboek · Vers voor vers reflecteren</small></span>' + kdIc("chev", 20).replace("<svg ", '<svg class="kd-chev" ') + '</span></button>') +
       '<button class="d-tile" data-act="klas">' + "<span class=\"d-top\">" + dIc("book", "#ffd54f", 30) + "<span class=\"d-k ar\" lang=\"ar\" dir=\"rtl\">حلقة سبارك</span></span><b>Halaqa Spark</b><small>Leer samen met je klas</small><small class=\"d-kahoot\">Kahoot-versie</small></button>" +
       '<button class="d-tile" data-act="rad">' + '<span class="d-top">' + dIc("wheel", "#ffd54f", 30) + '<span class="d-k ar" lang="ar" dir="rtl">عجلة العلم</span></span><b>Ajalat al-‘Ilm</b><small>Rad van Kennis</small></button>' +
       '<button class="d-tile" data-act="group">' + "<span class=\"d-top\">" + dIc("users", "#ffd54f", 30) + "<span class=\"d-k ar\" lang=\"ar\" dir=\"rtl\">مسابقة</span></span><b>Musabaqah</b><small>Groep / Duel</small></button>" +
@@ -8169,6 +8355,21 @@ return exports;})();
 
   function hubTop(title, back, ar, sub) {
     return '<header class="hub-head"><button class="hub-back" data-act="' + back + '" aria-label="Terug">' + icon("left", 22) + "</button>" + (ar ? '<div class="hub-ar" lang="ar" dir="rtl">' + ar + "</div>" : "") + "<h1>" + title + "</h1>" + (sub ? "<p>" + sub + "</p>" : "") + "</header>";
+  }
+  /* v367: Tadabbur Qur’an: vaste koptekst in drie regels (op het welkomscherm twee) en lijn-icoontjes voor de gevoelens */
+  const KD_IC = {
+    dank: '<path d="M11 14h2a2 2 0 1 0 0-4h-3c-.6 0-1.1.2-1.4.6L3 16"/><path d="m7 20 1.6-1.4c.3-.4.8-.6 1.4-.6h4c1.1 0 2.1-.4 2.8-1.2l4.6-4.4a2 2 0 0 0-2.75-2.91l-4.2 3.9"/><path d="m2 15 6 6"/><path d="M19.5 8.5c.7-.7 1.5-1.6 1.5-2.7A2.73 2.73 0 0 0 16 4a2.78 2.78 0 0 0-5 1.8c0 1.2.8 2 1.5 2.8L16 12Z"/>',
+    geduld: '<path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/>',
+    berouw: '<path d="M12.67 19a2 2 0 0 0 1.416-.588l6.154-6.172a6 6 0 0 0-8.49-8.49L5.586 9.914A2 2 0 0 0 5 11.328V18a1 1 0 0 0 1 1z"/><path d="M16 8 2 22"/><path d="M17.5 15H9"/>',
+    hoop: '<path d="M12 2v8"/><path d="m4.93 10.93 1.41 1.41"/><path d="M2 18h2"/><path d="M20 18h2"/><path d="m19.07 10.93-1.41 1.41"/><path d="M22 22H2"/><path d="m8 6 4-4 4 4"/><path d="M16 18a4 4 0 0 0-8 0"/>',
+    zorgen: '<path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>',
+    kal: '<path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/>',
+    notes: '<path d="M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4"/><path d="M2 6h4"/><path d="M2 10h4"/><path d="M2 14h4"/><path d="M2 18h4"/><path d="M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/>',
+    chev: '<path d="m9 18 6-6-6-6"/>'
+  };
+  function kdIc(k, sz) { return '<svg width="' + (sz || 22) + '" height="' + (sz || 22) + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (KD_IC[k] || "") + "</svg>"; }
+  function kdTop(page, back, dash) {
+    return '<header class="kdh' + (dash ? " kdh-dash" : "") + '"><button class="kdh-back" data-act="' + back + '" aria-label="Terug">' + icon("left", 20) + '</button><div class="kdh-t"><h1>Tadabbur Qur’an</h1><div class="kdh-app">Mijn Qur’an Dagboek</div>' + (page && !dash ? "<p>" + page + "</p>" : "") + "</div></header>";
   }
   const HI = {
     les: '<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h8M8 17h5"/>',
@@ -8801,7 +9002,7 @@ return exports;})();
     } catch (e) { return false; }
   }
   function viewMn() {
-    let h = hubTop("Mijn notities", "mn-back", "", "Alles wat je hebt geschreven");
+    let h = kdTop("Mijn notities", "mn-back");
     if (!mkOwner()) return h + '<section class="hub"><p class="hub-intro">Dit onderdeel is er nog niet voor iedereen.</p></section>';
     const items = mnItems(), shown = items.filter(function (it) { return mnMatch(it, mnQ); });
     h += '<section class="hub"><div class="qs">';
@@ -8943,7 +9144,7 @@ return exports;})();
   function kdoTilesHtml() {
     const today = kdoFeel(todayStr());
     return '<div class="kdo-tiles" role="group" aria-label="Hoe voel je je vandaag?">' + KDO_F.map(function (f, i) {
-      return '<button type="button" class="kdo-tile' + (kdoF === i ? " open" : "") + '" style="background:' + f.g + '" data-act="kdo-feel" data-i="' + i + '" aria-pressed="' + (kdoF === i) + '"><span class="kdo-e" aria-hidden="true">' + f.e + '</span><span class="kdo-n">' + f.n + "</span></button>";
+      return '<button type="button" class="kdo-tile' + (kdoF === i ? " open" : "") + '" style="background:' + f.g + '" data-act="kdo-feel" data-i="' + i + '" aria-pressed="' + (kdoF === i) + '"><span class="kdo-e" aria-hidden="true">' + kdIc(f.id, 24) + '</span><span class="kdo-n">' + f.n + "</span></button>";
     }).join("") + "</div>";
   }
   function kdoCardHtml() {
@@ -8951,7 +9152,7 @@ return exports;})();
     const f = KDO_F[kdoF], vv = f.v[kdoV % f.v.length], s = vv[0], a = vv[1];
     if (!KT[s]) { ktLoad(s); return '<div class="kdo-card" style="background:' + f.g + '"><p>' + (ktErr[s] ? "Het vers kon niet geladen worden. Controleer je verbinding en probeer het opnieuw." : "Het vers wordt geladen…") + "</p></div>"; }
     const vs = KT[s][a - 1] || ["", ""];
-    return '<div class="kdo-card" style="background:' + f.g + '" role="button" tabindex="0" data-act="kdo-close" aria-label="Vers bij ' + f.n + '. Tik om te sluiten."><h3>' + f.e + " " + f.n + '</h3><p class="kdo-intro">' + f.t + '</p><div class="q-text q-uth q-s' + (S.qSize || 3) + '" lang="ar" dir="rtl">' + esc(vs[0]) + '</div><p class="kdo-nl">' + esc(vs[1]) + '</p><p class="kdo-ref">Soera ' + esc(Q_TR[s - 1]) + " · " + s + ":" + a + "</p></div>";
+    return '<div class="kdo-card" style="background:' + f.g + '" role="button" tabindex="0" data-act="kdo-close" aria-label="Vers bij ' + f.n + '. Tik om te sluiten."><h3>' + kdIc(f.id, 22) + " " + f.n + '</h3><p class="kdo-intro">' + f.t + '</p><div class="q-text q-uth q-s' + (S.qSize || 3) + '" lang="ar" dir="rtl">' + esc(vs[0]) + '</div><p class="kdo-nl">' + esc(vs[1]) + '</p><p class="kdo-ref">Soera ' + esc(Q_TR[s - 1]) + " · " + s + ":" + a + "</p></div>";
   }
   let kdoN = 0;
   function kdoCardSync() {
@@ -9007,7 +9208,7 @@ return exports;})();
   function kdoWeekHtml() {
     const w = kdoWeek();
     return '<div class="kdo-box"><p class="kdo-sm" style="margin:0 0 8px">Gevoelens die je deze week koos</p><div class="kdo-wk">' + KDO_F.map(function (f) {
-      return '<div class="kdo-pill" style="background:' + f.g + '"><span class="kdo-pe" aria-hidden="true">' + f.e + "</span>" + f.n + "<span>" + w.f[f.id] + "</span></div>";
+      return '<div class="kdo-pill" style="background:' + f.g + '"><span class="kdo-pe" aria-hidden="true">' + kdIc(f.id, 20) + "</span>" + f.n + "<span>" + w.f[f.id] + "</span></div>";
     }).join("") + '</div><div class="kdo-st"><div><b>' + w.nn + "</b>notities bewaard</div><div><b>" + w.aa + "</b>acties gekozen</div></div>" + (kdoFeel(todayStr()).length ? '<button type="button" class="kdo-reset" data-act="kdo-reset">Per ongeluk? Wis mijn gevoelens van vandaag</button>' : "") + "</div>";
   }
   document.addEventListener("keydown", function (e) { if ((e.key === "Enter" || e.key === " ") && e.target && e.target.classList && e.target.classList.contains("kdo-card") && e.target.getAttribute("data-act") === "kdo-close") { e.preventDefault(); e.target.click(); } });
@@ -9016,10 +9217,16 @@ return exports;})();
     g("kdoStreak", kdoStreakHtml(days)); g("kdoTiles", kdoTilesHtml()); kdoCardSync(); g("kdoCal", kdoCalHtml(days)); g("kdoWeek", kdoWeekHtml());
   }
   function viewKdo() {
-    const h = hubTop("Mijn Qur’an dagboek", "kdo-back", "", "Jouw overzicht");
+    const h = kdTop("Jouw overzicht", "kdo-back");
     if (!mkOwner()) return h + '<section class="hub"><p class="hub-intro">Dit onderdeel is er nog niet voor iedereen.</p></section>';
     const days = kdoDays();
-    return h + '<section class="hub"><div class="kdo"><img class="kdo-pic" src="journaal/' + kdwPic() + '.webp" alt="" width="1376" height="768">' + kdoDateHtml() + '<h2>Verder lezen</h2>' + kdoLastHtml() + '<h2>Reeks</h2><div class="kdo-box" id="kdoStreak">' + kdoStreakHtml(days) + '</div><h2>Hoe voel je je vandaag?</h2><div id="kdoTiles">' + kdoTilesHtml() + '</div><div id="kdoCard" class="kdo-wrap" aria-live="polite"><div class="kdo-wi"></div></div><h2>Kalender</h2><div class="kdo-box" id="kdoCal">' + kdoCalHtml(days) + '</div><h2>Deze week</h2><div id="kdoWeek">' + kdoWeekHtml() + '</div><button type="button" class="kdo-link kdo-nt" data-act="kdo-notes">Mijn notities</button></div></section>';
+    return h + '<section class="hub"><div class="kdo"><img class="kdo-pic" src="journaal/' + kdwPic() + '.webp" alt="" width="1376" height="768">' + kdoDateHtml() + '<h2>Verder lezen</h2>' + kdoLastHtml() + '<h2>Reeks</h2><div class="kdo-box" id="kdoStreak">' + kdoStreakHtml(days) + '</div><h2>Hoe voel je je vandaag?</h2><div id="kdoTiles">' + kdoTilesHtml() + '</div><div id="kdoCard" class="kdo-wrap" aria-live="polite"><div class="kdo-wi"></div></div><div class="kdo-links"><button type="button" class="kdo-lr" data-act="kdo-cal">' + kdIc("kal", 22) + '<span><b>Kalender</b><small>Je dagen en deze week</small></span><i class="ch">' + kdIc("chev", 18) + '</i></button><button type="button" class="kdo-lr kdo-nt" data-act="kdo-notes">' + kdIc("notes", 22) + '<span><b>Mijn notities</b><small>Alles wat je schreef</small></span><i class="ch">' + kdIc("chev", 18) + '</i></button></div></div></section>';
+  }
+  function viewKdc() {
+    const h = kdTop("Kalender", "kdc-back");
+    if (!mkOwner()) return h + '<section class="hub"><p class="hub-intro">Dit onderdeel is er nog niet voor iedereen.</p></section>';
+    const days = kdoDays();
+    return h + '<section class="hub"><div class="kdo kdcal"><div class="kdo-box" id="kdoCal">' + kdoCalHtml(days) + '</div><h2>Deze week</h2><div id="kdoWeek">' + kdoWeekHtml() + '</div><div class="kdo-links"><button type="button" class="kdo-lr kdo-nt" data-act="kdo-notes">' + kdIc("notes", 22) + '<span><b>Mijn notities</b><small>Alles wat je schreef</small></span><i class="ch">' + kdIc("chev", 18) + '</i></button></div></div></section>';
   }
   function qjActSave() { const o = document.getElementById("qjOwn"); if (o && qjKey) qjActSet(qjKey, qjActGet(qjKey).a, o.value); }
   function qjActHtml() {
@@ -9765,7 +9972,7 @@ return exports;})();
     kdUpd();
   });
   function viewKd() {
-    let h = hubTop("Mijn Qur’an dagboek", "kd-back", "", "Lees en reflecteer vers voor vers");
+    let h = kdTop("Kies een soera", "kd-back", kdw);
     if (!mkOwner()) return h + '<section class="hub"><p class="hub-intro">Dit onderdeel is er nog niet voor iedereen.</p></section>';
     if (kdw) return viewKdw(h);
     if (kdi === null && !kdiGet()) kdi = 0;
@@ -9782,7 +9989,7 @@ return exports;})();
   }
   function viewQj() {
     const p = String(qjKey).split(":"), s = parseInt(p[0], 10) || 1, a = parseInt(p[1], 10) || 1, n = Q_N[s - 1];
-    let h = hubTop("Mijn Qur’an dagboek", "qj-back", "", Q_TR[s - 1] + " · vers " + a);
+    let h = kdTop(Q_TR[s - 1] + " · vers " + a, "qj-back");
     if (!mkOwner()) return h + '<section class="hub"><p class="hub-intro">Dit onderdeel is er nog niet voor iedereen.</p></section>';
     if (!KT[s]) { ktLoad(s); return h + '<section class="hub"><p class="hub-intro">' + (ktErr[s] ? "De tekst kon niet geladen worden. Controleer je verbinding en ga terug en probeer het opnieuw." : "De Koran wordt geladen…") + "</p></section>"; }
     if (!QJ) { qjLoad(); return h + '<section class="hub"><p class="hub-intro">Het dagboek wordt geladen…</p></section>'; }
@@ -9974,6 +10181,7 @@ return exports;})();
     stopTimer(); mgClear(); idleStop();
     if (screen !== "rad") { clearTimeout(radCpuT); radCpuT = null; if (radNet || rad && rad.online) { radNetLeave(); rad = null; } }
     document.body.className = "";
+    { const kds = ["kd", "kdo", "qj", "mn", "kdc"].indexOf(screen) !== -1; if (kds) document.body.classList.add("kdskin"); document.documentElement.classList.toggle("kdskin-h", kds); }   /* v367 */
     if (screen !== "journey") { chestPopupDone = {}; const cr = document.getElementById("chestRem"); if (cr) cr.remove(); }
     if (screen !== "result" && screen !== "chestopen" && screen !== "minigame") { const cel = document.getElementById("celebrate"); if (cel) cel.remove(); }
     const inDuelQuiz = screen === "quiz" && quiz && quiz.kind === "duel";
@@ -10029,12 +10237,13 @@ return exports;})();
     else if (screen === "kd") { app.innerHTML = viewKd(); }
     else if (screen === "mn") { app.innerHTML = viewMn(); }
     else if (screen === "kdo") { app.innerHTML = viewKdo(); }
+    else if (screen === "kdc") { app.innerHTML = viewKdc(); }
     const bw = document.getElementById("badgesBtnWrap");
     if (bw) bw.style.display = (screen === "board" || screen === "scores") ? "" : "none";
     window.scrollTo({ top: 0 });
     if (screen === "journey") document.body.classList.add("jfull");
     if (screen === "rad" || screen === "bazaar") document.body.classList.add("radfull");
-    if (screen === "dash" || screen === "hub" || screen === "play" || screen === "lab" || screen === "labroom" || screen === "labquiz" || screen === "fout" || screen === "dua" || screen === "today" || screen === "prog" || screen === "quran" || screen === "qread" || screen === "qj" || screen === "kd" || screen === "mn" || screen === "kdo") document.body.classList.add("dashfull");
+    if (screen === "dash" || screen === "hub" || screen === "play" || screen === "lab" || screen === "labroom" || screen === "labquiz" || screen === "fout" || screen === "dua" || screen === "today" || screen === "prog" || screen === "quran" || screen === "qread" || screen === "qj" || screen === "kd" || screen === "mn" || screen === "kdo" || screen === "kdc") document.body.classList.add("dashfull");
     if (screen === "rad" && rad && rad.phase !== "intro" && rad.phase !== "end") document.body.classList.add("radgame");
     if (kosmosOn() && KOS_SCREENS.indexOf(screen) !== -1) document.body.classList.add("kosmos");
     if (screen === "journey") afterJourneyRender(); else rgAmb.show(false);
@@ -16069,6 +16278,8 @@ return exports;})();
       case "kdo-back": play("click"); screen = "dash"; render(); window.scrollTo({ top: 0 }); break;
       case "kdo-list": play("click"); screen = "kd"; render(); window.scrollTo({ top: 0 }); break;
       case "kdo-notes": play("click"); screen = "mn"; render(); window.scrollTo({ top: 0 }); break;
+      case "kdo-cal": play("click"); screen = "kdc"; render(); window.scrollTo({ top: 0 }); break;
+      case "kdc-back": play("click"); screen = "kdo"; render(); window.scrollTo({ top: 0 }); break;
       case "kdo-feel": {
         const fi = parseInt(el.dataset.i, 10); if (!KDO_F[fi]) break; play("click");
         if (kdoF === fi) kdoF = null;
