@@ -2476,6 +2476,8 @@ body.dashfull { background: #0f2e22; color: #f4efe2; }
 .dv-card .q-text, .dv-card .q-uth { color: #e8c766; text-align: center; margin: 4px 0 14px; }
 .dv-card .kdo-nl { font-family: Georgia, serif; color: #f5efe0; margin: 0 0 10px; }
 .dv-card .kdo-ref { color: #e3c36d; font-size: .9rem; margin: 0; }
+.dv-link { display: block; width: 100%; margin: 14px 0 0; padding: 12px 0 2px; border: 0; border-top: .5px solid rgba(197, 166, 117, .3); background: none; color: #C5A675; font: inherit; font-size: 13px; letter-spacing: .02em; text-align: left; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.dv-link:focus-visible { outline: 2px solid #C5A675; outline-offset: 2px; }
 .dv-tile:focus-visible, .dv-card:focus-visible { outline: 3px solid #e3c36d; outline-offset: 2px; }
 /* v352: vers-venster springt midden op het scherm uit de tegel, tik overal om te sluiten */
 .kdo-wrap { position: fixed; inset: 0; z-index: 3000; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(10, 25, 18, 0); opacity: 0; pointer-events: none; transition: background .4s ease, opacity .3s ease; cursor: pointer; -webkit-tap-highlight-color: transparent; }
@@ -8991,13 +8993,14 @@ return exports;})();
     const v = dvPick(), s = v[0], a = v[1]; if (!KT[s]) { ktLoad(s); return; }
     const vs = KT[s][a - 1] || ["", ""];
     const w = document.createElement("div"); w.className = "kdo-wrap"; w.setAttribute("role", "dialog"); w.setAttribute("aria-label", "Vers van de dag");
-    w.innerHTML = '<div class="kdo-wi"><div class="dv-card" role="button" tabindex="0" aria-label="Vers van de dag. Tik om te sluiten."><h3>Vers van de dag</h3><div class="q-text q-uth q-s' + (S.qSize || 3) + '" lang="ar" dir="rtl">' + esc(vs[0]) + '</div><p class="kdo-nl">' + esc(vs[1]) + '</p><p class="kdo-ref">Soera ' + esc(Q_TR[s - 1]) + " · " + s + ":" + a + "</p></div></div>";
+    w.innerHTML = '<div class="kdo-wi"><div class="dv-card" role="button" tabindex="0" aria-label="Vers van de dag. Tik om te sluiten."><h3>Vers van de dag</h3><div class="q-text q-uth q-s' + (S.qSize || 3) + '" lang="ar" dir="rtl">' + esc(vs[0]) + '</div><p class="kdo-nl">' + esc(vs[1]) + '</p><p class="kdo-ref">Soera ' + esc(Q_TR[s - 1]) + " · " + s + ":" + a + '</p><button type="button" class="dv-link" data-dvgo="1">Reflecteer hierover in Tadabbur →</button></div></div>';
     document.body.appendChild(w);
     if (btn) { const r = btn.getBoundingClientRect(); w.style.setProperty("--ox", Math.round(r.left + r.width / 2 - window.innerWidth / 2) + "px"); w.style.setProperty("--oy", Math.round(r.top + r.height / 2 - window.innerHeight / 2) + "px"); }
     void w.offsetHeight; requestAnimationFrame(function () { w.classList.add("open"); });
     const close = function () { w.classList.remove("open"); setTimeout(function () { w.remove(); }, 520); };
-    w.addEventListener("click", function (e) { e.stopPropagation(); play("click"); close(); });
-    w.addEventListener("keydown", function (e) { if (e.key === "Escape" || e.key === "Enter" || e.key === " ") { e.preventDefault(); close(); } });
+    const go = function () { close(); if (!mkOwner()) return; kdw = true; kdwPick(); kdi = null; kdiDraft = null; kdQ = ""; screen = "kd"; render(); window.scrollTo({ top: 0 }); };
+    w.addEventListener("click", function (e) { e.stopPropagation(); play("click"); if (e.target.closest && e.target.closest("[data-dvgo]")) go(); else close(); });
+    w.addEventListener("keydown", function (e) { if (e.target && e.target.hasAttribute && e.target.hasAttribute("data-dvgo")) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); play("click"); go(); } return; } if (e.key === "Escape" || e.key === "Enter" || e.key === " ") { e.preventDefault(); close(); } });
     const c = w.querySelector(".dv-card"); if (c) c.focus();
   }
   function ktLoad(s) {
