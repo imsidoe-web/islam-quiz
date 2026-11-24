@@ -3287,6 +3287,9 @@ body.kdskin .kds-sr { margin: 8px 24px 0; }
 body.kdskin .mn-count, body.kdskin .kds-cnt, body.kdskin .kds-none, body.kdskin .mn-info, body.kdskin .mn-none { color: #5C6660 !important; font-size: 13.5px; }
 body.kdskin .mn-it { padding: 18px; border: 0; border-radius: 20px; background: #F2ECE1; box-shadow: 0 8px 30px rgba(15, 41, 30, .05); }
 body.kdskin .mn-h b { font: 600 22px var(--kd-serif); color: #0F291E; }
+.mn-dr { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+body.kdskin .mn-fl { display: inline-block; font: 500 11px/1 var(--kd-sans); color: #7A5F2E; background: rgba(197, 166, 117, .12); border: .5px solid rgba(197, 166, 117, .4); border-radius: 999px; padding: 4px 9px; letter-spacing: .02em; }
+body.kdskin .mn-fl::first-letter { color: #C5A675; }
 body.kdskin .mn-h span, body.kdskin .mn-d { color: #5C6660; font-size: 12.5px; }
 body.kdskin .mn-t { font: italic 19px/1.45 var(--kd-serif); color: #1C2420; }
 body.kdskin .mn-go { background: none; border-radius: 0; padding: 4px 0; color: #0F291E; font: 500 14px var(--kd-sans); text-decoration: underline; text-decoration-color: #C5A675; text-underline-offset: 5px; }
@@ -8979,12 +8982,13 @@ return exports;})();
       Object.keys(o).forEach(function (k) {
         const p = k.split(":"), s = parseInt(p[0], 10), a = parseInt(p[1], 10), n = o[k];
         if (!s || !a || !Q_N[s - 1] || !n || !String(n.t || "").trim()) return;
-        out.push({ type: "vers", key: k, s: s, a: a, t: String(n.t), d: n.d || "", ts: n.ts || 0, tags: n.tags || [] });
+        out.push({ type: "vers", key: k, s: s, a: a, t: String(n.t), d: n.d || "", ts: n.ts || 0, tags: n.tags || [], f: (n.f && n.f.length ? n.f : kdoFeel(n.d || "")) });
       });
     } catch (e) {}
     out.sort(function (x, y) { return String(y.d).localeCompare(String(x.d)) || (y.ts || 0) - (x.ts || 0) || y.s - x.s || y.a - x.a; });
     return out;
   }
+  function mnFeelHtml(it) { return (it.f || []).map(function (id) { const f = KDO_F.filter(function (x) { return x.id === id; })[0]; return f ? '<span class="mn-fl">✦ ' + esc(f.n) + "</span>" : ""; }).join(""); }
   function mnTitle(it) { return it.type === "vers" ? Q_TR[it.s - 1] : ""; }
   function mnSub(it) { return it.type === "vers" ? "Soera " + it.s + " · vers " + it.a : ""; }
   function mnHay(it) { return mnNorm(mnTitle(it) + " " + mnSub(it) + " " + it.t + " " + (it.tags || []).join(" ")); }
@@ -9018,7 +9022,7 @@ return exports;})();
       '<p class="mn-count" id="mnCount" role="status">' + mnCountTxt(shown.length, items.length) + '</p><div id="mnList">';
     items.forEach(function (it) {
       h += '<article class="mn-it" data-k="' + esc(it.key) + '"' + (mnMatch(it, mnQ) ? "" : " hidden") + ' data-h="' + esc(mnHay(it)) + '"><div class="mn-h"><b>' + esc(mnTitle(it)) + "</b><span>" + esc(mnSub(it)) + "</span></div>" +
-        '<small class="mn-d">' + esc(kdiDate(it.d)) + '</small><p class="mn-t">' + esc(it.t) + '</p>' +
+        '<div class="mn-dr"><small class="mn-d">' + esc(kdiDate(it.d)) + '</small>' + mnFeelHtml(it) + '</div><p class="mn-t">' + esc(it.t) + '</p>' +
         '<button class="mn-go" data-act="mn-open" data-s="' + it.s + '" data-a="' + it.a + '">Open vers</button></article>';
     });
     h += '</div><p class="mn-none" id="mnNone" role="status"' + (shown.length ? " hidden" : "") + ">Geen notities gevonden. Probeer een ander woord.</p>" +
@@ -9067,7 +9071,7 @@ return exports;})();
   function qjSet(k, t) {
     try {
       const o = JSON.parse(localStorage.getItem("nspark_journal_v1") || "{}");
-      if (String(t).trim()) { const old = o[k]; if (!old || old.t !== String(t)) o[k] = { t: String(t), d: todayStr(), ts: Date.now(), c: (old && (old.c || old.d)) || todayStr() }; } else delete o[k];
+      if (String(t).trim()) { const old = o[k]; if (!old || old.t !== String(t)) { const nf = kdoFeel(todayStr()).slice(); o[k] = { t: String(t), d: todayStr(), ts: Date.now(), c: (old && (old.c || old.d)) || todayStr() }; if (nf.length) o[k].f = nf; else if (old && old.f) o[k].f = old.f; } } else delete o[k];
       localStorage.setItem("nspark_journal_v1", JSON.stringify(o));
     } catch (e) {}
   }
