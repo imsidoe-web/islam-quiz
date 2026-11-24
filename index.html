@@ -9928,7 +9928,15 @@ return exports;})();
     kdwMsg = { h: fill(m[0]), t: fill(m[1]), first: first };
     return kdwMsg;
   }
-  function kdwPic() { const hr = new Date().getHours(); return hr >= 5 && hr < 12 ? "kd-ochtend" : hr >= 12 && hr < 18 ? "kd-middag" : hr >= 18 && hr < 23 ? "kd-avond" : "kd-nacht"; }
+  /* v375: het maanplaatje (nacht) verschijnt vanaf Maghrib (zonsondergang) tot Fajr; zonder gekozen stad: 18:00 en 05:00 */
+  function kdwPic() {
+    const now = new Date(), cur = now.getHours() * 60 + now.getMinutes();
+    let t = null; try { t = salToday(now); } catch (e) { t = null; }
+    const fajr = t && t.fajr ? t.fajr : 300, mag = t && t.maghrib ? t.maghrib : 1080;
+    if (cur >= mag || cur < fajr) return "kd-nacht";
+    if (cur < 720) return "kd-ochtend";
+    return cur < mag - 120 ? "kd-middag" : "kd-avond";
+  }
   function viewKdw(h) {
     const m = kdwMsg || kdwPick();
     return h + '<section class="hub"><div class="kdi kdw" aria-live="polite"><img class="kdi-pic" src="journaal/kd-middag.webp" alt="" width="1376" height="768">' + kdiOrn() +
