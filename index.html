@@ -2465,6 +2465,16 @@ body.dashfull { background: #0f2e22; color: #f4efe2; }
 .kdo-leg { display: flex; gap: 16px; justify-content: center; margin: 4px 0 0; padding: 4px 10px 12px; font-size: .78rem; color: #5c5b48; }
 .kdo-leg u { text-decoration: none; color: #b8892f; }
 .kdo-leg em { font-style: normal; color: #8a6d2f; font-size: .7rem; }
+/* v376: Vers van de dag bovenaan het startscherm; tik opent het grote venster */
+.dv-tile { display: block; width: 100%; text-align: left; margin: 12px 0 4px; padding: 14px 16px 12px; border: 0; border-radius: 22px; color: #f5efe0; cursor: pointer; background: linear-gradient(150deg, #2c6b4f, #17382b); box-shadow: 0 4px 14px rgba(0, 0, 0, .3); -webkit-tap-highlight-color: transparent; }
+.dv-tile small { display: block; font-size: .72rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #e3c36d; }
+.dv-tile b { display: block; font-size: 1.02rem; margin: 2px 0 6px; font-weight: 800; }
+.dv-tile p { margin: 0; font-family: Georgia, serif; font-size: .98rem; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.dv-tile i { display: inline-block; margin-top: 8px; padding: 5px 14px; border-radius: 999px; background: #3f8f69; font-style: normal; font-weight: 800; font-size: .85rem; }
+.dv-card { background: linear-gradient(150deg, #2c6b4f, #17382b); color: #f5efe0; padding: 20px 18px 18px; cursor: pointer; }
+.dv-card h3 { margin: 0 0 10px; color: #e3c36d; font-size: 1.1rem; }
+.dv-card .kdo-nl { font-family: Georgia, serif; }
+.dv-tile:focus-visible, .dv-card:focus-visible { outline: 3px solid #e3c36d; outline-offset: 2px; }
 /* v352: vers-venster springt midden op het scherm uit de tegel, tik overal om te sluiten */
 .kdo-wrap { position: fixed; inset: 0; z-index: 3000; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(10, 25, 18, 0); opacity: 0; pointer-events: none; transition: background .4s ease, opacity .3s ease; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .kdo-wrap.open { background: rgba(10, 25, 18, .66); opacity: 1; pointer-events: auto; }
@@ -8301,6 +8311,7 @@ return exports;})();
     let h = '<h1 class="sr-only" tabindex="-1">Startscherm</h1>';
     /* v91: merkbalk met woordmerk + avatar (profiel & instellingen); reeks op Vandaag, levens en modus op de Rihlat-tegel */
     h += '<header class="d-brand"><span class="d-wm" role="img" aria-label="NurSpark">' + brandWordmark(true) + '</span><button class="d-av" data-act="profile-menu" aria-label="Profiel en instellingen">' + avatarHtml(P, 44) + "</button></header>";
+    h += dvTileHtml();
     h += '<div class="d-hello"><small>As-salamu ‘alaykum,</small><b>' + esc(P.name) + "</b></div>";
     h += '<div class="d-tw">' + todayCardHtml() + streakPillHtml() + "</div>";
     h += calBarHtml();
@@ -8965,11 +8976,33 @@ return exports;})();
   /* v332: Koran-dagboek met de hele Koran: Arabisch (Tanzil, Uthmani) en Nederlands (S. S. Siregar), per soera geladen uit quran/tanzil-nl/ */
   let KT = {}, ktBusy = {}, ktErr = {}, kdi = null, kdiDraft = null, kdiMsg = "", kdw = false, kdwMsg = null, kdQ = "";
   const BISM_AR = "بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ", BISM_NL = "In de naam van Allah, de Erbarmer, de Meest Barmhartige.";
+  /* v376: Vers van de dag. Per dag een vers uit een vaste lijst (Arabisch + Nederlands uit dezelfde bron als het dagboek). EN/TR volgt zodra de vertalingen er zijn. */
+  const DV_LIST = [[2, 152], [2, 153], [2, 186], [2, 255], [2, 286], [3, 139], [3, 159], [3, 173], [9, 51], [13, 28], [14, 7], [16, 18], [16, 97], [17, 80], [20, 25], [20, 114], [24, 35], [29, 69], [39, 53], [65, 2], [65, 3], [93, 3], [93, 5], [94, 5], [94, 6], [103, 3], [112, 1], [55, 13], [57, 4], [3, 200]];
+  function dvPick() { const d = new Date(), n = Math.floor((Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) - Date.UTC(d.getFullYear(), 0, 0)) / 864e5); return DV_LIST[(n + d.getFullYear()) % DV_LIST.length]; }
+  function dvTileHtml() {
+    const v = dvPick(), s = v[0], a = v[1], ref = "Soera " + Q_TR[s - 1] + " · " + s + ":" + a;
+    if (!KT[s]) { ktLoad(s); return '<button type="button" class="dv-tile" data-act="dv-open"><small>Vers van de dag</small><b>' + esc(ref) + '</b><p>Het vers wordt geladen…</p></button>'; }
+    const vs = KT[s][a - 1] || ["", ""];
+    return '<button type="button" class="dv-tile" data-act="dv-open" aria-label="Vers van de dag, ' + esc(ref) + '. Tik om het vers groot te lezen"><small>Vers van de dag</small><b>' + esc(ref) + '</b><p>' + esc(vs[1]) + '</p><i>Lees vers</i></button>';
+  }
+  function dvOpen(btn) {
+    const v = dvPick(), s = v[0], a = v[1]; if (!KT[s]) { ktLoad(s); return; }
+    const vs = KT[s][a - 1] || ["", ""];
+    const w = document.createElement("div"); w.className = "kdo-wrap"; w.setAttribute("role", "dialog"); w.setAttribute("aria-label", "Vers van de dag");
+    w.innerHTML = '<div class="kdo-wi"><div class="dv-card" role="button" tabindex="0" aria-label="Vers van de dag. Tik om te sluiten."><h3>Vers van de dag</h3><div class="q-text q-uth q-s' + (S.qSize || 3) + '" lang="ar" dir="rtl">' + esc(vs[0]) + '</div><p class="kdo-nl">' + esc(vs[1]) + '</p><p class="kdo-ref">Soera ' + esc(Q_TR[s - 1]) + " · " + s + ":" + a + "</p></div></div>";
+    document.body.appendChild(w);
+    if (btn) { const r = btn.getBoundingClientRect(); w.style.setProperty("--ox", Math.round(r.left + r.width / 2 - window.innerWidth / 2) + "px"); w.style.setProperty("--oy", Math.round(r.top + r.height / 2 - window.innerHeight / 2) + "px"); }
+    void w.offsetHeight; requestAnimationFrame(function () { w.classList.add("open"); });
+    const close = function () { w.classList.remove("open"); setTimeout(function () { w.remove(); }, 520); };
+    w.addEventListener("click", function (e) { e.stopPropagation(); play("click"); close(); });
+    w.addEventListener("keydown", function (e) { if (e.key === "Escape" || e.key === "Enter" || e.key === " ") { e.preventDefault(); close(); } });
+    const c = w.querySelector(".dv-card"); if (c) c.focus();
+  }
   function ktLoad(s) {
     if (KT[s] || ktBusy[s]) return;
     ktBusy[s] = 1; ktErr[s] = 0;
     fetch("quran/tanzil-nl/s" + String(s).padStart(3, "0") + ".json").then(function (r) { if (!r.ok) throw 0; return r.json(); })
-      .then(function (d) { KT[s] = d.v; ktBusy[s] = 0; if (screen === "qj") render(); else if (screen === "kdo") kdoDraw(); })
+      .then(function (d) { KT[s] = d.v; ktBusy[s] = 0; if (screen === "qj") render(); else if (screen === "kdo") kdoDraw(); else if (screen === "dash") render(); })
       .catch(function () { ktBusy[s] = 0; ktErr[s] = 1; if (screen === "qj") render(); else if (screen === "kdo") kdoDraw(); });
   }
   /* v333: Mijn notities. Eén lijst met alles wat de lezer schreef. Elke notitie heeft een "type": nu "vers" (opslag: nspark_journal_v1, sleutel "soera:vers"). Later komen "vrij" (vrije notities) en "dua" (eigen du'a's) met een eigen opslagsleutel erbij; ze worden in mnItems() toegevoegd en verschijnen vanzelf in dezelfde lijst, zoekfunctie en export. Veld "tags" is al voorzien. */
@@ -16303,6 +16336,7 @@ return exports;})();
         break;
       }
       case "kdo-reset": { const ro = kdoStore(), rd = todayStr(); if (ro[rd]) { delete ro[rd]; try { localStorage.setItem("nspark_dash_v1", JSON.stringify(ro)); } catch (e) {} } kdoF = null; play("click"); announce("Gevoelens van vandaag gewist"); kdoDraw(); break; }
+      case "dv-open": play("click"); dvOpen(el); break;
       case "kdo-close": play("click"); kdoF = null; kdoDraw(); break;
       case "kdo-next": { if (kdoF === null) break; play("click"); kdoV = (kdoV + 1) % KDO_F[kdoF].v.length; kdoDraw(); break; }
       case "kdo-mark": { if (kdoF === null) break; const km = kdoToggleFeel(todayStr(), KDO_F[kdoF].id); play(km ? "correct" : "click"); announce(km ? "Bewaard voor vandaag" : "Weggehaald voor vandaag"); kdoDraw(); break; }
