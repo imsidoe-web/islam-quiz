@@ -40,44 +40,45 @@
 <body>
 <div class="wrap">
   <div class="top">
-    <div><h1>🕸️ Het web van Thawr</h1><small>Bonuslevel · De Hijra</small></div>
-    <div class="pills"><button class="pill" id="close" aria-label="Sluiten en terug naar de kaart" hidden>✕</button><button class="pill" id="snd" aria-label="Geluid aan of uit">🔊</button><span class="pill" id="gems">💎 0</span></div>
+    <div><h1 data-i18n="h1">🕸️ Het web van Thawr</h1><small data-i18n="small">Bonuslevel · De Hijra</small></div>
+    <div class="pills"><button class="pill" id="close" data-i18n-aria="close" aria-label="Sluiten en terug naar de kaart" hidden>✕</button><button class="pill" id="snd" data-i18n-aria="snd" aria-label="Geluid aan of uit">🔊</button><span class="pill" id="gems">💎 0</span></div>
   </div>
   <div class="board" id="board">
-    <canvas id="c" width="840" height="1120" aria-label="Nacht bij de grot Thawr: span een web en help de duiven"></canvas>
-    <div class="bar"><span class="lab" id="lab">Web 0%</span><div class="meter"><i id="meter"></i></div></div>
+    <canvas id="c" width="840" height="1120" data-i18n-aria="cv" aria-label="Nacht bij de grot Thawr: span een web en help de duiven"></canvas>
+    <div class="bar"><span class="lab" id="lab" data-i18n="web0">Web 0%</span><div class="meter"><i id="meter"></i></div></div>
     <div class="task" id="task"></div>
     <div class="ov" id="start"><div class="card">
-      <h2>Het web van Thawr</h2>
-      <p>De Profeet ﷺ en Abu Bakr (ra) schuilen in de grot. <b>Sleep met je vinger</b> van punt naar punt om een web voor de ingang te spinnen. Daarna help je de <b>duiven</b> hun nest te bouwen: tik op de takjes. Zie je een <b>gouden takje</b>? Snel tikken voor extra edelstenen! Wees klaar voordat de fakkels boven zijn!</p>
-      <button class="btn" id="go">Bismillah, start</button>
+      <h2 data-i18n="h2">Het web van Thawr</h2>
+      <p data-i18n-h="intro">De Profeet ﷺ en Abu Bakr (ra) schuilen in de grot. <b>Sleep met je vinger</b> van punt naar punt om een web voor de ingang te spinnen. Daarna help je de <b>duiven</b> hun nest te bouwen: tik op de takjes. Zie je een <b>gouden takje</b>? Snel tikken voor extra edelstenen! Wees klaar voordat de fakkels boven zijn!</p>
+      <button class="btn" id="go" data-i18n="go">Bismillah, start</button>
     </div></div>
-    <div class="ov" id="quiz" hidden><div class="card"><h2 id="qT">⭐ Gouden vraag</h2><p id="qText"></p><div id="qOpts"></div></div></div>
+    <div class="ov" id="quiz" hidden><div class="card"><h2 id="qT" data-i18n="goldq">⭐ Gouden vraag</h2><p id="qText"></p><div id="qOpts"></div></div></div>
     <div class="ov" id="end" hidden><div class="card">
       <h2 id="endT"></h2><div class="stars" id="endStars"></div>
       <div class="ar" id="endAr"></div><p id="endText"></p>
-      <button class="btn" id="again">Opnieuw</button>
-      <button class="btn btn2" id="back" hidden>Terug naar de kaart</button>
+      <button class="btn" id="again" data-i18n="again">Opnieuw</button>
+      <button class="btn btn2" id="back" hidden data-i18n="back">Terug naar de kaart</button>
     </div></div>
   </div>
-  <p class="hint">Bonuslevel van NurSpark · 3 sterren als je ruim op tijd klaar bent</p>
+  <p class="hint" data-i18n="hint">Bonuslevel van NurSpark · 3 sterren als je ruim op tijd klaar bent</p>
 </div>
 <script>
 (function () {
   const C = document.getElementById("c"), X = C.getContext("2d"), W = C.width, H = C.height;
   const $ = (id) => document.getElementById(id);
   const CAVE = { x: 430, y: 610, rx: 150, ry: 175 };          // ingang van de grot
+  var LG = (function () { try { var l = (JSON.parse(localStorage.getItem("islam-quiz-v2")) || {}).lang; return l === "en" || l === "tr" ? l : "nl"; } catch (e) { return "nl"; } })();
+  var TX = {"nl": {"title": "Het web van Thawr – NurSpark", "h1": "🕸️ Het web van Thawr", "small": "Bonuslevel · De Hijra", "close": "Sluiten en terug naar de kaart", "snd": "Geluid aan of uit", "cv": "Nacht bij de grot Thawr: span een web en help de duiven", "web0": "Web 0%", "h2": "Het web van Thawr", "intro": "De Profeet ﷺ en Abu Bakr (ra) schuilen in de grot. <b>Sleep met je vinger</b> van punt naar punt om een web voor de ingang te spinnen. Daarna help je de <b>duiven</b> hun nest te bouwen: tik op de takjes. Zie je een <b>gouden takje</b>? Snel tikken voor extra edelstenen! Wees klaar voordat de fakkels boven zijn!", "go": "Bismillah, start", "goldq": "⭐ Gouden vraag", "again": "Opnieuw", "back": "Terug naar de kaart", "hint": "Bonuslevel van NurSpark · 3 sterren als je ruim op tijd klaar bent", "web": "Web {n}%", "nest": "Nest {a}/{b}", "t.web": "Span het web: sleep van punt naar punt", "t.nest": "Tik op de takjes voor het duivennest", "t.egg": "Tik op het gouden ei: bonusvraag +5 💎", "gold": "Snel! Een gouden takje: +{n} 💎", "egg": "🥚 Gouden ei", "win": "De grot is beschermd!", "lose": "De fakkels waren te snel", "verse": "“Wees niet bedroefd, voorwaar Allah is met ons.” (Surah at-Tawbah 9:40) · {n} edelstenen", "lose2": "Allah beschermde de Profeet ﷺ. Probeer het opnieuw: span je web sneller.", "Q": [["In welke grot schuilden de Profeet ﷺ en Abu Bakr (ra) tijdens de Hijra?", ["De grot Thawr", "De grot Hira", "Bij de berg Uhud"]], ["Wie reisde met de Profeet ﷺ mee tijdens de Hijra?", ["Abu Bakr (ra)", "Umar (ra)", "Uthman (ra)"]], ["Naar welke stad trokken zij tijdens de Hijra?", ["Madinah", "Taif", "Jeruzalem"]], ["Hoeveel dagen bleven zij ongeveer in de grot?", ["Drie dagen", "Tien dagen", "Eén dag"]]]}, "en": {"title": "The web of Thawr – NurSpark", "h1": "🕸️ The web of Thawr", "small": "Bonus level · The Hijra", "close": "Close and back to the map", "snd": "Sound on or off", "cv": "Night at the cave of Thawr: spin a web and help the doves", "web0": "Web 0%", "h2": "The web of Thawr", "intro": "The Prophet ﷺ and Abu Bakr (ra) are hiding in the cave. <b>Drag with your finger</b> from point to point to spin a web across the entrance. Then help the <b>doves</b> build their nest: tap the twigs. Do you see a <b>golden twig</b>? Tap fast for extra gems! Be done before the torches reach the top!", "go": "Bismillah, start", "goldq": "⭐ Golden question", "again": "Again", "back": "Back to the map", "hint": "Bonus level of NurSpark · 3 stars if you finish with plenty of time", "web": "Web {n}%", "nest": "Nest {a}/{b}", "t.web": "Spin the web: drag from point to point", "t.nest": "Tap the twigs for the doves’ nest", "t.egg": "Tap the golden egg: bonus question +5 💎", "gold": "Quick! A golden twig: +{n} 💎", "egg": "🥚 Golden egg", "win": "The cave is protected!", "lose": "The torches were too fast", "verse": "“Do not grieve; indeed Allah is with us.” (Surah at-Tawbah 9:40) · {n} gems", "lose2": "Allah protected the Prophet ﷺ. Try again: spin your web faster.", "Q": [["In which cave did the Prophet ﷺ and Abu Bakr (ra) take shelter during the Hijra?", ["The cave of Thawr", "The cave of Hira", "By Mount Uhud"]], ["Who travelled with the Prophet ﷺ during the Hijra?", ["Abu Bakr (ra)", "Umar (ra)", "Uthman (ra)"]], ["Which city did they travel to during the Hijra?", ["Madinah", "Taif", "Jerusalem"]], ["Roughly how many days did they stay in the cave?", ["Three days", "Ten days", "One day"]]]}, "tr": {"title": "Sevr’in Ağı – NurSpark", "h1": "🕸️ Sevr’in Ağı", "small": "Bonus seviye · Hicret", "close": "Kapat ve haritaya dön", "snd": "Sesi aç veya kapat", "cv": "Sevr Mağarası’nda gece: bir ağ ör ve güvercinlere yardım et", "web0": "Ağ %0", "h2": "Sevr’in Ağı", "intro": "Peygamberimiz ﷺ ile Ebu Bekir (ra) mağarada saklanıyor. Girişe bir ağ örmek için parmağınla noktadan noktaya <b>sürükle</b>. Sonra <b>güvercinlerin</b> yuva yapmasına yardım et: dallara dokun. <b>Altın bir dal</b> görüyor musun? Fazladan mücevher için hızlı dokun! Meşaleler yukarı çıkmadan hazır ol!", "go": "Bismillah, başla", "goldq": "⭐ Altın soru", "again": "Tekrar", "back": "Haritaya dön", "hint": "NurSpark bonus seviyesi · bolca zamanla bitirirsen 3 yıldız", "web": "Ağ %{n}", "nest": "Yuva {a}/{b}", "t.web": "Ağı ör: noktadan noktaya sürükle", "t.nest": "Güvercin yuvası için dallara dokun", "t.egg": "Altın yumurtaya dokun: bonus soru +5 💎", "gold": "Çabuk! Altın bir dal: +{n} 💎", "egg": "🥚 Altın yumurta", "win": "Mağara korundu!", "lose": "Meşaleler çok hızlıydı", "verse": "“Üzülme, şüphesiz Allah bizimle beraberdir.” (Tevbe Sûresi 9:40) · {n} mücevher", "lose2": "Allah Peygamberimizi ﷺ korudu. Tekrar dene: ağını daha hızlı ör.", "Q": [["Hicret sırasında Peygamberimiz ﷺ ile Hz. Ebu Bekir (ra) hangi mağaraya sığındı?", ["Sevr Mağarası", "Hira Mağarası", "Uhud Dağı’nın yanına"]], ["Hicret sırasında Peygamberimiz ﷺ ile kim yolculuk etti?", ["Ebu Bekir (ra)", "Ömer (ra)", "Osman (ra)"]], ["Hicret sırasında hangi şehre gittiler?", ["Medine", "Taif", "Kudüs"]], ["Mağarada yaklaşık kaç gün kaldılar?", ["Üç gün", "On gün", "Bir gün"]]]}};
+  function t(k, v) { var s = (TX[LG] && TX[LG][k] != null) ? TX[LG][k] : (TX.nl[k] != null ? TX.nl[k] : k); return v ? s.replace(/\{(\w+)\}/g, function (m, a) { return v[a] != null ? v[a] : m; }) : s; }
+  (function () { document.documentElement.lang = LG; var e = document.querySelectorAll("[data-i18n]"); for (var i = 0; i < e.length; i++) e[i].textContent = t(e[i].getAttribute("data-i18n")); var h = document.querySelectorAll("[data-i18n-h]"); for (var k = 0; k < h.length; k++) h[k].innerHTML = t(h[k].getAttribute("data-i18n-h")); var a = document.querySelectorAll("[data-i18n-aria]"); for (var j = 0; j < a.length; j++) a[j].setAttribute("aria-label", t(a[j].getAttribute("data-i18n-aria"))); if (TX.nl.title) document.title = t("title"); })();
+
   const NEST = { x: 250, y: 395 };                               // richel voor het duivennest
   const QS = new URLSearchParams(location.search), EMB = window.parent !== window, EXPERT = QS.get("lv") === "expert";
   const TIME = EXPERT ? 75 : 90, WEB_GOAL = EXPERT ? .9 : .85, TWIGS_GOAL = 6, GOLD_LIFE = 4200, GOLD_GEMS = 3;
   function tell(m) { if (EMB) try { parent.postMessage(Object.assign({ nurspark: 1 }, m), location.origin); } catch (e) {} }
   const PATH = [[90, 1110], [210, 1040], [140, 960], [300, 900], [200, 830], [330, 790], [300, 760]]; // bergpad (fakkels)
-  const Q = [
-    { q: "In welke grot schuilden de Profeet ﷺ en Abu Bakr (ra) tijdens de Hijra?", o: ["De grot Thawr", "De grot Hira", "Bij de berg Uhud"], a: 0 },
-    { q: "Wie reisde met de Profeet ﷺ mee tijdens de Hijra?", o: ["Abu Bakr (ra)", "Umar (ra)", "Uthman (ra)"], a: 0 },
-    { q: "Naar welke stad trokken zij tijdens de Hijra?", o: ["Madinah", "Taif", "Jeruzalem"], a: 0 },
-    { q: "Hoeveel dagen bleven zij ongeveer in de grot?", o: ["Drie dagen", "Tien dagen", "Eén dag"], a: 0 },
-  ];
+  const Q = (TX[LG].Q || TX.nl.Q).map(function (x) { return { q: x[0], o: x[1], a: 0 }; });
+
   let anchors, threads, drag, phase, t0, timeLeft, strength, twigs, twigN, goldN, floats, taskT, doves, star, starDone, egg, gems, running, paused, parts, glow, gust, qi = 0, mx = 0, finished;
 
   /* ── geluid ── */
@@ -98,12 +99,12 @@
     anchors.push({ x: CAVE.x - CAVE.rx * 1.1, y: CAVE.y + CAVE.ry * .75 }, { x: CAVE.x + CAVE.rx * 1.12, y: CAVE.y + CAVE.ry * .72 }, { x: CAVE.x - 40, y: CAVE.y + CAVE.ry * .98 }, { x: CAVE.x + 55, y: CAVE.y + CAVE.ry * .96 });
     threads = []; drag = null; phase = "web"; timeLeft = TIME; strength = 0; twigs = []; twigN = 0; goldN = 0; floats = []; taskT = 0; star = null; starDone = false; egg = null; gems = 0; parts = []; glow = 0; gust = 0; finished = false;
     doves = [{ x: -60, y: 260, tx: NEST.x - 34, ty: NEST.y - 26, f: 0 }, { x: W + 60, y: 300, tx: NEST.x + 36, ty: NEST.y - 22, f: 1 }];
-    $("gems").textContent = "💎 0"; setTask("Span het web: sleep van punt naar punt"); upd();
+    $("gems").textContent = "💎 0"; setTask(t("t.web")); upd();
   }
   function setTask(t) { $("task").textContent = t; }
   function upd() {
-    if (phase === "web") { $("lab").textContent = "Web " + Math.round(strength / WEB_GOAL * 100 > 100 ? 100 : strength / WEB_GOAL * 100) + "%"; $("meter").style.width = Math.min(100, strength / WEB_GOAL * 100) + "%"; }
-    else { $("lab").textContent = "Nest " + twigN + "/" + TWIGS_GOAL; $("meter").style.width = (twigN / TWIGS_GOAL * 100) + "%"; }
+    if (phase === "web") { $("lab").textContent = t("web", { n: Math.round(strength / WEB_GOAL * 100 > 100 ? 100 : strength / WEB_GOAL * 100) }); $("meter").style.width = Math.min(100, strength / WEB_GOAL * 100) + "%"; }
+    else { $("lab").textContent = t("nest", { a: twigN, b: TWIGS_GOAL }); $("meter").style.width = (twigN / TWIGS_GOAL * 100) + "%"; }
   }
   /* sterkte: hoeveel van de grotopening wordt bedekt door draden */
   const SAMPLES = (function () { const s = []; for (let y = -1; y <= 1; y += .12) for (let x = -1; x <= 1; x += .12) if (x * x + y * y <= .9) s.push({ x: CAVE.x + x * CAVE.rx, y: CAVE.y + y * CAVE.ry }); return s; })();
@@ -115,8 +116,8 @@
   function nearAnchor(p) { let best = -1, bd = 60; anchors.forEach((a, i) => { const d = Math.hypot(a.x - p.x, a.y - p.y); if (d < bd) { bd = d; best = i; } }); return best; }
   function down(e) {
     if (paused || (!running && !(finished && egg))) return; const p = pos(e); mx = p.x;
-    if (star && Math.hypot(p.x - star.x, p.y - star.y) < 55) { star = null; starDone = true; ask("⭐ Gouden vraag"); return; }
-    if (egg && egg.ready && Math.hypot(p.x - egg.x, p.y - egg.y) < 70) { egg = null; ask("🥚 Gouden ei"); return; }
+    if (star && Math.hypot(p.x - star.x, p.y - star.y) < 55) { star = null; starDone = true; ask(t("goldq")); return; }
+    if (egg && egg.ready && Math.hypot(p.x - egg.x, p.y - egg.y) < 70) { egg = null; ask(t("egg")); return; }
     if (phase === "nest") { for (let i = twigs.length - 1; i >= 0; i--) { const tw = twigs[i]; if (!tw.fly && !tw.gone && Math.hypot(p.x - tw.x, p.y - tw.y) < (tw.gold ? 70 : 55)) { tw.fly = true; if (tw.gold) goldHit(tw); else sfx.pop(); return; } } return; }
     const a = nearAnchor(p); if (a >= 0) drag = { from: a, x: p.x, y: p.y };
   }
@@ -136,12 +137,12 @@
   window.addEventListener("pointerup", up);
 
   function toNest() {
-    phase = "nest"; sfx.win(); flutter(); setTask("Tik op de takjes voor het duivennest");
+    phase = "nest"; sfx.win(); flutter(); setTask(t("t.nest"));
     for (let i = 0; i < 5; i++) spawnTwig(); upd();
   }
   function spawnTwig(gold) { twigs.push({ x: 120 + Math.random() * 600, y: 760 + Math.random() * 260, vx: (Math.random() - .5) * (gold ? 1.6 : .6), rot: Math.random() * 3, fly: false, t: 0, gold: !!gold, born: performance.now() }); }
   /* gouden takje: verschijnt even, wie snel tikt krijgt extra edelstenen */
-  function spawnGold() { goldN++; spawnTwig(true); flash("Snel! Een gouden takje: +" + GOLD_GEMS + " 💎", 2200); }
+  function spawnGold() { goldN++; spawnTwig(true); flash(t("gold", { n: GOLD_GEMS }), 2200); }
   function goldHit(tw) {
     gems += GOLD_GEMS; $("gems").textContent = "💎 " + gems; sfx.good();
     floats.push({ x: tw.x, y: tw.y - 30, t: 1, txt: "+" + GOLD_GEMS + " 💎" });
@@ -163,15 +164,15 @@
     finished = true; running = false; glow = .01; sfx.win(); setTask("");
     egg = { x: NEST.x, y: NEST.y - 14, ready: true };
     setTimeout(() => { if (egg && !paused) { egg = null; showEnd(true); } }, 10000);
-    setTask("Tik op het gouden ei: bonusvraag +5 💎");
+    setTask(t("t.egg"));
   }
   function showEnd(ok) {
     if (!$("end").hidden) return;
     const frac = timeLeft / TIME, s = !ok ? 0 : frac > .45 ? 3 : frac > .2 ? 2 : 1;
-    $("endT").textContent = ok ? "De grot is beschermd!" : "De fakkels waren te snel";
+    $("endT").textContent = ok ? t("win") : t("lose");
     $("endStars").textContent = "★".repeat(s) + "☆".repeat(3 - s);
     $("endAr").textContent = ok ? "لَا تَحْزَنْ إِنَّ ٱللَّهَ مَعَنَا" : "";
-    $("endText").textContent = ok ? "“Wees niet bedroefd, voorwaar Allah is met ons.” (Surah at-Tawbah 9:40) · " + gems + " edelstenen" : "Allah beschermde de Profeet ﷺ. Probeer het opnieuw: span je web sneller.";
+    $("endText").textContent = ok ? t("verse", { n: gems }) : t("lose2");
     setTask(""); $("end").hidden = false;
     tell({ type: "result", game: "thawr", ok: !!ok, stars: s, gems: ok ? gems : 0 });
   }
@@ -387,7 +388,7 @@
       timeLeft -= dt;
       if (Math.random() < .002 && !gust) { gust = 1; if (threads.length > 6 && Math.random() < .5) { const i = threads.length - 1 - Math.floor(Math.random() * 3); const t = threads.splice(i, 1)[0]; if (t) { sfx.snap(); calcStrength(); upd(); } } }
       if (phase === "nest" && goldN < 2 && !twigs.some((t) => t.gold && !t.gone && !t.fly) && twigN >= (goldN ? 3 : 0) && Math.random() < .01) spawnGold();
-      if (taskT && now > taskT) { taskT = 0; if (phase === "nest" && !finished) setTask("Tik op de takjes voor het duivennest"); }
+      if (taskT && now > taskT) { taskT = 0; if (phase === "nest" && !finished) setTask(t("t.nest")); }
       if (timeLeft <= 0) { timeLeft = 0; running = false; sfx.lose(); showEnd(false); }
     }
     gust *= .97; if (gust < .02) gust = 0;

@@ -39,13 +39,13 @@ button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
 <body>
 <div id="game">
   <div id="hud">
-    <div class="pill">Punten<b id="sc">0</b></div>
-    <div class="pill">Tijd<b id="tm">60</b></div>
-    <div class="pill">Kansen<div class="hearts" id="hearts" aria-hidden="true"></div></div>
-    <button id="pauseBtn" aria-label="Pauze">&#10074;&#10074;</button>
+    <div class="pill"><span data-i18n="pts">Punten</span><b id="sc">0</b></div>
+    <div class="pill"><span data-i18n="time">Tijd</span><b id="tm">60</b></div>
+    <div class="pill"><span data-i18n="chances">Kansen</span><div class="hearts" id="hearts" aria-hidden="true"></div></div>
+    <button id="pauseBtn" data-i18n-aria="pause" aria-label="Pauze">&#10074;&#10074;</button>
   </div>
   <div id="bar"><i id="barI"></i></div>
-  <div id="stage"><canvas id="cv" aria-label="Speelveld met vallend eten. Tik op het halal eten."></canvas></div>
+  <div id="stage"><canvas id="cv" data-i18n-aria="field" aria-label="Speelveld met vallend eten. Tik op het halal eten."></canvas></div>
 </div>
 <div id="ov"><div class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="ovT"></div></div>
 <div class="sr" id="live" role="status" aria-live="polite"></div>
@@ -53,6 +53,11 @@ button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
 <script>
 (function () {
   "use strict";
+  var LG = (function () { try { var l = (JSON.parse(localStorage.getItem("islam-quiz-v2")) || {}).lang; return l === "en" || l === "tr" ? l : "nl"; } catch (e) { return "nl"; } })();
+  var TX = {"nl": {"title": "Tayyibat", "pts": "Punten", "time": "Tijd", "chances": "Kansen", "pause": "Pauze", "field": "Speelveld met vallend eten. Tik op het halal eten.", "f.friet": "friet", "f.appel": "appel", "f.banaan": "banaan", "f.druiven": "druiven", "f.melk": "melk", "f.brood": "brood", "f.meloen": "meloen", "f.koekje": "koekje", "f.salade": "salade", "f.hamburger": "hamburger", "f.pizza": "pizza", "f.kip": "kip", "f.worstje": "worstje", "f.durum": "durum", "f.snoepjes": "snoepjes", "withhalal": " met halal-keurmerk", "comma_haram": ", haram", "haram_f": "Haram!", "tip.check": "Check altijd het halal-keurmerk", "s.haram": "Haram. Check altijd het halal-keurmerk. Je hebt nog {n} kansen.", "tip.fast": "Sneller! Goed bezig", "s.fast": "Het gaat sneller.", "s.combo": "Combo, punten maal {n}.", "tip.miss": "Mis geen halal eten!", "s.drop": "Je liet halal eten vallen. Nog {n} kansen.", "s.begin": "Het spel begint. Tik op het halal eten en laat haram liggen.", "sub": "Het goede eten", "intro": "Tik op het eten met het groene <b>HALAL</b>-label en op fruit, brood en melk. Laat eten met het rode <b>HARAM</b>-label liggen. Ook een burger kan haram zijn: let op het keurmerk! <b>Mis geen halal eten</b>: dat kost ook een kans. Het spel gaat sneller als je beter wordt. Elke 5 goede tikken achter elkaar geven meer punten.", "tempo": "Tempo", "slow": "Langzaam", "normal": "Normaal", "sound": "Geluid", "on": "Aan", "off": "Uit", "start": "Start", "back": "Terug naar NurPlay", "resume": "Verder spelen", "settings": "Instellingen", "good": "Mooi gedaan!", "tried": "Goed geprobeerd!", "score": "Punten:", "gems": "Je krijgt tot {n} edelstenen (maximaal 20 per dag uit NurPlay).", "nogems": "Nog geen edelstenen. Probeer het nog eens, je kunt het.", "tip": "Tip: een burger kan halal én haram zijn. Check altijd het halal-keurmerk.", "again": "Nog een keer"}, "en": {"title": "Tayyibat", "pts": "Points", "time": "Time", "chances": "Chances", "pause": "Pause", "field": "Playing field with falling food. Tap the halal food.", "f.friet": "fries", "f.appel": "apple", "f.banaan": "banana", "f.druiven": "grapes", "f.melk": "milk", "f.brood": "bread", "f.meloen": "melon", "f.koekje": "cookie", "f.salade": "salad", "f.hamburger": "hamburger", "f.pizza": "pizza", "f.kip": "chicken", "f.worstje": "sausage", "f.durum": "durum wrap", "f.snoepjes": "sweets", "withhalal": " with halal mark", "comma_haram": ", haram", "haram_f": "Haram!", "tip.check": "Always check the halal mark", "s.haram": "Haram. Always check the halal mark. You have {n} chances left.", "tip.fast": "Faster! Well done", "s.fast": "It gets faster.", "s.combo": "Combo, points times {n}.", "tip.miss": "Do not miss halal food!", "s.drop": "You let halal food fall. {n} chances left.", "s.begin": "The game begins. Tap the halal food and leave the haram.", "sub": "The good food", "intro": "Tap the food with the green <b>HALAL</b> label and fruit, bread and milk. Leave food with the red <b>HARAM</b> label alone. Even a burger can be haram: look at the mark! <b>Do not miss halal food</b>: that also costs a chance. The game gets faster as you get better. Every 5 good taps in a row give more points.", "tempo": "Speed", "slow": "Slow", "normal": "Normal", "sound": "Sound", "on": "On", "off": "Off", "start": "Start", "back": "Back to NurPlay", "resume": "Keep playing", "settings": "Settings", "good": "Well done!", "tried": "Good try!", "score": "Points:", "gems": "You get up to {n} gems (maximum 20 per day from NurPlay).", "nogems": "No gems yet. Try again, you can do it.", "tip": "Tip: a burger can be both halal and haram. Always check the halal mark.", "again": "Once more"}, "tr": {"title": "Tayyibat", "pts": "Puan", "time": "Süre", "chances": "Haklar", "pause": "Duraklat", "field": "Düşen yiyeceklerin olduğu oyun alanı. Helal yiyeceğe dokun.", "f.friet": "patates kızartması", "f.appel": "elma", "f.banaan": "muz", "f.druiven": "üzüm", "f.melk": "süt", "f.brood": "ekmek", "f.meloen": "kavun", "f.koekje": "kurabiye", "f.salade": "salata", "f.hamburger": "hamburger", "f.pizza": "pizza", "f.kip": "tavuk", "f.worstje": "sosis", "f.durum": "dürüm", "f.snoepjes": "şekerleme", "withhalal": " helal işaretli", "comma_haram": ", haram", "haram_f": "Haram!", "tip.check": "Helal işaretine her zaman bak", "s.haram": "Haram. Helal işaretine her zaman bak. {n} hakkın kaldı.", "tip.fast": "Daha hızlı! Aferin", "s.fast": "Oyun hızlanıyor.", "s.combo": "Kombo, puan çarpı {n}.", "tip.miss": "Helal yiyeceği kaçırma!", "s.drop": "Helal yiyeceği düşürdün. {n} hakkın kaldı.", "s.begin": "Oyun başlıyor. Helal yiyeceğe dokun, haramı bırak.", "sub": "Güzel yiyecekler", "intro": "Yeşil <b>HELAL</b> etiketli yiyeceklere, ayrıca meyve, ekmek ve süte dokun. Kırmızı <b>HARAM</b> etiketli yiyecekleri bırak. Bir hamburger bile haram olabilir: işarete bak! <b>Helal yiyeceği kaçırma</b>: bu da bir hakkını götürür. Oyun, iyileştikçe hızlanır. Art arda her 5 doğru dokunuş daha fazla puan verir.", "tempo": "Hız", "slow": "Yavaş", "normal": "Normal", "sound": "Ses", "on": "Açık", "off": "Kapalı", "start": "Başla", "back": "NurPlay’e dön", "resume": "Devam et", "settings": "Ayarlar", "good": "Aferin!", "tried": "İyi denedin!", "score": "Puan:", "gems": "En fazla {n} mücevher kazanırsın (NurPlay’den günde en çok 20).", "nogems": "Henüz mücevher yok. Tekrar dene, yapabilirsin.", "tip": "İpucu: bir hamburger hem helal hem haram olabilir. Helal işaretine her zaman bak.", "again": "Bir kez daha"}};
+  function t(k, v) { var s = (TX[LG] && TX[LG][k] != null) ? TX[LG][k] : (TX.nl[k] != null ? TX.nl[k] : k); return v ? s.replace(/\{(\w+)\}/g, function (m, a) { return v[a] != null ? v[a] : m; }) : s; }
+  (function () { document.documentElement.lang = LG; var e = document.querySelectorAll("[data-i18n]"); for (var i = 0; i < e.length; i++) e[i].textContent = t(e[i].getAttribute("data-i18n")); var h = document.querySelectorAll("[data-i18n-h]"); for (var k = 0; k < h.length; k++) h[k].innerHTML = t(h[k].getAttribute("data-i18n-h")); var a = document.querySelectorAll("[data-i18n-aria]"); for (var j = 0; j < a.length; j++) a[j].setAttribute("aria-label", t(a[j].getAttribute("data-i18n-aria"))); if (TX.nl.title) document.title = t("title"); })();
+
   var TOTAL = 60, MAXGEMS = 10;
   /* PLAIN: altijd halal, geen label. PROC: bewerkt eten (burger, pizza, ...) kan halal of haram zijn; het label laat het zien. Geen gezichten en geen varkensplaatjes. */
   var PLAIN = [["🍟", "friet"], ["🍎", "appel"], ["🍌", "banaan"], ["🍇", "druiven"], ["🥛", "melk"], ["🥖", "brood"], ["🍉", "meloen"], ["🍪", "koekje"], ["🥗", "salade"]];
@@ -91,7 +96,7 @@ button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
     else if (Math.random() < .5) { src = PROC[Math.floor(Math.random() * PROC.length)]; tag = "halal"; gold = (goodN + 1) % 8 === 0; }
     else { src = PLAIN[Math.floor(Math.random() * PLAIN.length)]; gold = (goodN + 1) % 8 === 0; }
     var base = opt.tempo === "langzaam" ? 120 : 165, ramp = 1 + Math.min(1, tapped / 70) * .95;
-    items.push({ x: R + Math.random() * (W - 2 * R), y: -R, vy: (base + Math.random() * 50) * ramp * (H / 700 > 1 ? 1 : Math.max(.8, H / 700)), e: src[0], n: src[1] + (tag === "halal" ? " met halal-keurmerk" : tag === "haram" ? ", haram" : ""), tag: tag, bad: bad, gold: gold, rot: (Math.random() - .5) * .6, ph: Math.random() * 6 });
+    items.push({ x: R + Math.random() * (W - 2 * R), y: -R, vy: (base + Math.random() * 50) * ramp * (H / 700 > 1 ? 1 : Math.max(.8, H / 700)), e: src[0], n: t("f." + src[1]) + (tag === "halal" ? t("withhalal") : tag === "haram" ? t("comma_haram") : ""), tag: tag, bad: bad, gold: gold, rot: (Math.random() - .5) * .6, ph: Math.random() * 6 });
     if (!bad) goodN++;
   }
   function pop(it, col) {
@@ -104,12 +109,12 @@ button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
     if (best === null) return;
     var it2 = items.splice(best, 1)[0];
     if (it2.bad) {
-      lives--; combo = 0; sfx.bad(); buzz(80); pop(it2, "230,110,100"); floats.push({ x: it2.x, y: it2.y, life: 1, txt: "Haram!", col: "255,150,130" }); tip = { t: "Check altijd het halal-keurmerk", l: 2.2, c: "192,57,43" }; say("Haram. Check altijd het halal-keurmerk. Je hebt nog " + lives + " kansen.");
+      lives--; combo = 0; sfx.bad(); buzz(80); pop(it2, "230,110,100"); floats.push({ x: it2.x, y: it2.y, life: 1, txt: t("haram_f"), col: "255,150,130" }); tip = { t: t("tip.check"), l: 2.2, c: "192,57,43" }; say(t("s.haram", { n: lives }));
       if (lives <= 0) { finish(); return; }
     } else {
-      combo++; tapped++; if (Math.floor(tapped / 10) > lvl) { lvl = Math.floor(tapped / 10); tip = { t: "Sneller! Goed bezig", l: 1.6, c: "31,138,87" }; say("Het gaat sneller."); } var pts = (it2.gold ? 30 : 10) * mult(); score += pts; goodN += 0; it2.gold ? sfx.gold() : sfx.pop(combo); buzz(15); pop(it2, it2.gold ? "255,226,122" : "255,244,200");
+      combo++; tapped++; if (Math.floor(tapped / 10) > lvl) { lvl = Math.floor(tapped / 10); tip = { t: t("tip.fast"), l: 1.6, c: "31,138,87" }; say(t("s.fast")); } var pts = (it2.gold ? 30 : 10) * mult(); score += pts; goodN += 0; it2.gold ? sfx.gold() : sfx.pop(combo); buzz(15); pop(it2, it2.gold ? "255,226,122" : "255,244,200");
       floats.push({ x: it2.x, y: it2.y, life: 1, txt: it2.gold ? "Bismillah! +" + pts : "+" + pts, col: "255,226,122" });
-      if (combo > 0 && combo % 5 === 0) say("Combo, punten maal " + mult() + ".");
+      if (combo > 0 && combo % 5 === 0) say(t("s.combo", { n: mult() }));
     }
     updHud();
   }
@@ -117,7 +122,7 @@ button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
     left -= dt; spawnT -= dt;
     var gap = (opt.tempo === "langzaam" ? .95 : .72) - Math.min(1, tapped / 70) * .3;
     if (spawnT <= 0) { spawn(); spawnT = gap * (.7 + Math.random() * .6); }
-    for (var i = items.length - 1; i >= 0; i--) { var it = items[i]; it.y += it.vy * dt; it.ph += dt; if (it.y > H + R) { items.splice(i, 1); if (!it.bad && state === "play") { lives--; combo = 0; sfx.bad(); buzz(80); tip = { t: "Mis geen halal eten!", l: 2, c: "192,57,43" }; say("Je liet halal eten vallen. Nog " + lives + " kansen."); if (lives <= 0) { finish(); return; } } } }
+    for (var i = items.length - 1; i >= 0; i--) { var it = items[i]; it.y += it.vy * dt; it.ph += dt; if (it.y > H + R) { items.splice(i, 1); if (!it.bad && state === "play") { lives--; combo = 0; sfx.bad(); buzz(80); tip = { t: t("tip.miss"), l: 2, c: "192,57,43" }; say(t("s.drop", { n: lives })); if (lives <= 0) { finish(); return; } } } }
     if (left <= 0) { left = 0; finish(); }
     updHud();
   }
@@ -174,20 +179,20 @@ button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
   function showOv(kind, gems) {
     var p = $("panel"), h = "";
     if (kind === "menu") {
-      h = '<div class="ar" lang="ar" dir="rtl">طَيِّبَات</div><h1 id="ovT">Tayyibat</h1><p><i>Het goede eten</i></p><p>Tik op het eten met het groene <b>HALAL</b>-label en op fruit, brood en melk. Laat eten met het rode <b>HARAM</b>-label liggen. Ook een burger kan haram zijn: let op het keurmerk! <b>Mis geen halal eten</b>: dat kost ook een kans. Het spel gaat sneller als je beter wordt. Elke 5 goede tikken achter elkaar geven meer punten.</p>' +
-        '<div class="opt">Tempo</div>' + segBtns("tempo", [["langzaam", "Langzaam"], ["normaal", "Normaal"]]) +
-        '<div class="opt">Geluid</div>' + segBtns("sound", [["true", "Aan"], ["false", "Uit"]]) +
-        '<button class="go" data-a="start">Start</button><button class="go ghost" data-a="exit">Terug naar NurPlay</button>';
+      h = '<div class="ar" lang="ar" dir="rtl">طَيِّبَات</div><h1 id="ovT">Tayyibat</h1><p><i>' + t("sub") + '</i></p><p>' + t("intro") + '</p>' +
+        '<div class="opt">' + t("tempo") + '</div>' + segBtns("tempo", [["langzaam", t("slow")], ["normaal", t("normal")]]) +
+        '<div class="opt">' + t("sound") + '</div>' + segBtns("sound", [["true", t("on")], ["false", t("off")]]) +
+        '<button class="go" data-a="start">' + t("start") + '</button><button class="go ghost" data-a="exit">' + t("back") + '</button>';
     } else if (kind === "pause") {
-      h = '<h1 id="ovT">Pauze</h1><button class="go" data-a="resume">Verder spelen</button><button class="go ghost" data-a="menu">Instellingen</button><button class="go ghost" data-a="exit">Terug naar NurPlay</button>';
+      h = '<h1 id="ovT">' + t("pause") + '</h1><button class="go" data-a="resume">' + t("resume") + '</button><button class="go ghost" data-a="menu">' + t("settings") + '</button><button class="go ghost" data-a="exit">' + t("back") + '</button>';
     } else {
-      h = '<div class="ar" lang="ar" dir="rtl">ما شاء الله</div><h1 id="ovT">' + (lives > 0 ? "Mooi gedaan!" : "Goed geprobeerd!") + '</h1><p>Punten: <b>' + score + '</b></p><p>' + (gems ? "Je krijgt tot " + gems + " edelstenen (maximaal 20 per dag uit NurPlay)." : "Nog geen edelstenen. Probeer het nog eens, je kunt het.") + '</p><p><small>Tip: een burger kan halal én haram zijn. Check altijd het halal-keurmerk.</small></p><button class="go" data-a="start">Nog een keer</button><button class="go ghost" data-a="exit">Terug naar NurPlay</button>';
+      h = '<div class="ar" lang="ar" dir="rtl">ما شاء الله</div><h1 id="ovT">' + (lives > 0 ? t("good") : t("tried")) + '</h1><p>' + t("score") + ' <b>' + score + '</b></p><p>' + (gems ? t("gems", { n: gems }) : t("nogems")) + '</p><p><small>' + t("tip") + '</small></p><button class="go" data-a="start">' + t("again") + '</button><button class="go ghost" data-a="exit">' + t("back") + '</button>';
     }
     p.innerHTML = h; $("ov").hidden = false;
     var b = p.querySelector(".go"); if (b) b.focus();
   }
   function hideOv() { $("ov").hidden = true; }
-  function startGame() { items = []; parts = []; floats = []; tip = null; tapped = 0; lvl = 0; score = 0; lives = 3; left = TOTAL; combo = 0; goodN = 0; spawnT = .3; resize(); updHud(); hideOv(); state = "play"; ac(); say("Het spel begint. Tik op het halal eten en laat haram liggen."); }
+  function startGame() { items = []; parts = []; floats = []; tip = null; tapped = 0; lvl = 0; score = 0; lives = 3; left = TOTAL; combo = 0; goodN = 0; spawnT = .3; resize(); updHud(); hideOv(); state = "play"; ac(); say(t("s.begin")); }
   function pause() { if (state !== "play") return; state = "pause"; showOv("pause"); }
 
   $("panel").addEventListener("click", function (e) {

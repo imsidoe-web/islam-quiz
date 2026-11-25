@@ -43,15 +43,15 @@ button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
 <body>
 <div id="game">
   <div id="hud">
-    <div class="pill">Punten<b id="sc">0</b></div>
-    <div class="pill">Lichtjes<b id="left">0</b></div>
-    <div class="pill">Levens<div class="lives" id="lives" aria-hidden="true"></div></div>
-    <button id="pauseBtn" aria-label="Pauze">&#10074;&#10074;</button>
+    <div class="pill"><span data-i18n="pts">Punten</span><b id="sc">0</b></div>
+    <div class="pill"><span data-i18n="lights">Lichtjes</span><b id="left">0</b></div>
+    <div class="pill"><span data-i18n="lives">Levens</span><div class="lives" id="lives" aria-hidden="true"></div></div>
+    <button id="pauseBtn" data-i18n-aria="pause" aria-label="Pauze">&#10074;&#10074;</button>
   </div>
-  <div id="stage"><canvas id="cv" aria-label="Het doolhof"></canvas></div>
+  <div id="stage"><canvas id="cv" data-i18n-aria="maze" aria-label="Het doolhof"></canvas></div>
   <div id="pad"><div class="padg">
-    <span></span><button data-d="u" aria-label="Omhoog">&#9650;</button><span></span>
-    <button data-d="l" aria-label="Links">&#9664;</button><button data-d="d" aria-label="Omlaag">&#9660;</button><button data-d="r" aria-label="Rechts">&#9654;</button>
+    <span></span><button data-d="u" data-i18n-aria="up" aria-label="Omhoog">&#9650;</button><span></span>
+    <button data-d="l" data-i18n-aria="left" aria-label="Links">&#9664;</button><button data-d="d" data-i18n-aria="down" aria-label="Omlaag">&#9660;</button><button data-d="r" data-i18n-aria="right" aria-label="Rechts">&#9654;</button>
   </div></div>
 </div>
 <div id="ov"><div class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="ovT"></div></div>
@@ -60,6 +60,11 @@ button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
 <script>
 (function () {
   "use strict";
+  var LG = (function () { try { var l = (JSON.parse(localStorage.getItem("islam-quiz-v2")) || {}).lang; return l === "en" || l === "tr" ? l : "nl"; } catch (e) { return "nl"; } })();
+  var TX = {"nl": {"title": "Darb an-Nur", "pts": "Punten", "lights": "Lichtjes", "lives": "Levens", "pause": "Pauze", "maze": "Het doolhof", "up": "Omhoog", "left": "Links", "down": "Omlaag", "right": "Rechts", "s.adhaan": "Adhaan-licht gepakt. De shayatin vluchten.", "s.shaytan": "Een shaytan is verdwenen.", "s.hit": "Je bent geraakt. Nog {n} levens.", "s.win": "Masha'Allah, alle lichtjes zijn verzameld.", "s.lose": "Geen levens meer.", "s.begin": "Het spel begint. Veeg om te lopen.", "sub": "Pad van het Licht", "intro": "Verzamel alle gouden lichtjes. Pak het <b>Adhaan-licht</b> en de shayatin verdwijnen in rook.", "swipe": "Veeg over het scherm om te lopen.", "size": "Grootte", "normal": "Normaal", "xl": "Extra groot", "tempo": "Tempo", "slow": "Langzaam", "ctrl": "Besturing", "swp": "Vegen", "btns": "Knoppen", "sound": "Geluid", "on": "Aan", "off": "Uit", "start": "Start", "back": "Terug naar NurPlay", "resume": "Verder spelen", "settings": "Instellingen", "allwin": "Alle lichtjes verzameld", "score": "Punten:", "again": "Nog een keer", "nolives": "Geen levens meer", "result": "Je hebt <b>{n}</b> punten. Probeer het nog eens, je kunt het.", "retry": "Opnieuw"}, "en": {"title": "Darb an-Nur", "pts": "Points", "lights": "Lights", "lives": "Lives", "pause": "Pause", "maze": "The maze", "up": "Up", "left": "Left", "down": "Down", "right": "Right", "s.adhaan": "Adhaan light collected. The shayatin run away.", "s.shaytan": "A shaytan has vanished.", "s.hit": "You were hit. {n} lives left.", "s.win": "Masha'Allah, all the lights are collected.", "s.lose": "No lives left.", "s.begin": "The game begins. Swipe to walk.", "sub": "Path of the Light", "intro": "Collect all the golden lights. Take the <b>Adhaan light</b> and the shayatin vanish in smoke.", "swipe": "Swipe across the screen to walk.", "size": "Size", "normal": "Normal", "xl": "Extra large", "tempo": "Speed", "slow": "Slow", "ctrl": "Controls", "swp": "Swipe", "btns": "Buttons", "sound": "Sound", "on": "On", "off": "Off", "start": "Start", "back": "Back to NurPlay", "resume": "Keep playing", "settings": "Settings", "allwin": "All lights collected", "score": "Points:", "again": "Once more", "nolives": "No lives left", "result": "You have <b>{n}</b> points. Try again, you can do it.", "retry": "Again"}, "tr": {"title": "Darb an-Nur", "pts": "Puan", "lights": "Işıklar", "lives": "Canlar", "pause": "Duraklat", "maze": "Labirent", "up": "Yukarı", "left": "Sol", "down": "Aşağı", "right": "Sağ", "s.adhaan": "Ezan ışığı alındı. Şeytanlar kaçıyor.", "s.shaytan": "Bir şeytan kayboldu.", "s.hit": "Vuruldun. {n} can kaldı.", "s.win": "Maşallah, tüm ışıklar toplandı.", "s.lose": "Can kalmadı.", "s.begin": "Oyun başlıyor. Yürümek için kaydır.", "sub": "Nur Yolu", "intro": "Tüm altın ışıkları topla. <b>Ezan ışığını</b> al, şeytanlar dumana karışsın.", "swipe": "Yürümek için ekranda kaydır.", "size": "Boyut", "normal": "Normal", "xl": "Çok büyük", "tempo": "Hız", "slow": "Yavaş", "ctrl": "Kontrol", "swp": "Kaydırma", "btns": "Düğmeler", "sound": "Ses", "on": "Açık", "off": "Kapalı", "start": "Başla", "back": "NurPlay’e dön", "resume": "Devam et", "settings": "Ayarlar", "allwin": "Tüm ışıklar toplandı", "score": "Puan:", "again": "Bir kez daha", "nolives": "Can kalmadı", "result": "<b>{n}</b> puanın var. Tekrar dene, yapabilirsin.", "retry": "Tekrar"}};
+  function t(k, v) { var s = (TX[LG] && TX[LG][k] != null) ? TX[LG][k] : (TX.nl[k] != null ? TX.nl[k] : k); return v ? s.replace(/\{(\w+)\}/g, function (m, a) { return v[a] != null ? v[a] : m; }) : s; }
+  (function () { document.documentElement.lang = LG; var e = document.querySelectorAll("[data-i18n]"); for (var i = 0; i < e.length; i++) e[i].textContent = t(e[i].getAttribute("data-i18n")); var h = document.querySelectorAll("[data-i18n-h]"); for (var k = 0; k < h.length; k++) h[k].innerHTML = t(h[k].getAttribute("data-i18n-h")); var a = document.querySelectorAll("[data-i18n-aria]"); for (var j = 0; j < a.length; j++) a[j].setAttribute("aria-label", t(a[j].getAttribute("data-i18n-aria"))); if (TX.nl.title) document.title = t("title"); })();
+
   /* ───── doolhoven: # muur, . lichtje, o Adhaan-licht, P start, G shayatin ───── */
   var MAZES = {
     normaal: ["###########", "#o...#...o#", "#.##.#.##.#", "#.........#", "#.##.#.##.#", "#....#....#", "####.#.####", "#....G....#", "####.#.####", "#....#....#", "#.##.#.##.#", "#o...P...o#", "###########"],
@@ -141,7 +146,7 @@ button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
   function pacArrive(e) {
     var ch = G.grid[e.r][e.c];
     if (ch === ".") { G.grid[e.r][e.c] = " "; G.pel--; G.score += 10; sfx.tick(); }
-    else if (ch === "o") { G.grid[e.r][e.c] = " "; G.pel--; G.score += 50; G.fright = 7; sfx.whoosh(); buzz(30); say("Adhaan-licht gepakt. De shayatin vluchten."); for (var i = 0; i < G.gh.length; i++) if (G.gh[i].state === "normal") { /* keer om */ var g = G.gh[i]; if (g.t > 0) { g.c += g.dx; g.r += g.dy; g.t = 1 - g.t; } g.dx = -g.dx; g.dy = -g.dy; } }
+    else if (ch === "o") { G.grid[e.r][e.c] = " "; G.pel--; G.score += 50; G.fright = 7; sfx.whoosh(); buzz(30); say(t("s.adhaan")); for (var i = 0; i < G.gh.length; i++) if (G.gh[i].state === "normal") { /* keer om */ var g = G.gh[i]; if (g.t > 0) { g.c += g.dx; g.r += g.dy; g.t = 1 - g.t; } g.dx = -g.dx; g.dy = -g.dy; } }
     updHud();
     if (G.pel <= 0) finish(true);
   }
@@ -188,16 +193,16 @@ button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
   function dissolve(g, q) {
     g.state = "gone"; g.timer = 3; G.score += 200; sfx.puff(); buzz(20);
     for (var i = 0; i < 12; i++) { var a = Math.random() * 6.283, v = .6 + Math.random() * 1.4; parts.push({ x: q.x + .5, y: q.y + .5, vx: Math.cos(a) * v, vy: Math.sin(a) * v - .4, life: .6 + Math.random() * .4, max: 1, col: i % 2 ? "255,236,160" : "190,215,255" }); }
-    floats.push({ x: q.x + .5, y: q.y + .3, life: 1, txt: "+200" }); updHud(); say("Een shaytan is verdwenen.");
+    floats.push({ x: q.x + .5, y: q.y + .3, life: 1, txt: "+200" }); updHud(); say(t("s.shaytan"));
   }
   function hit() {
     G.lives--; sfx.thud(); buzz(80); updHud();
     if (G.lives <= 0) { finish(false); return; }
-    say("Je bent geraakt. Nog " + G.lives + " levens.");
+    say(t("s.hit", { n: G.lives }));
     var lv = G.lives; resetActors(); G.inv = 2.2; G.lives = lv;
   }
   function finish(win) {
-    state = win ? "win" : "lose"; say(win ? "Masha'Allah, alle lichtjes zijn verzameld." : "Geen levens meer.");
+    state = win ? "win" : "lose"; say(win ? t("s.win") : t("s.lose"));
     setTimeout(function () { showOv(win ? "end-win" : "end-lose"); }, 500);
   }
 
@@ -294,25 +299,25 @@ button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
   function showOv(kind) {
     var p = $("panel"), h = "";
     if (kind === "menu") {
-      h = '<div class="ar" lang="ar" dir="rtl">دَرْب النُّور</div><h1 id="ovT">Darb an-Nur</h1><p><i>Pad van het Licht</i></p><p>Verzamel alle gouden lichtjes. Pak het <b>Adhaan-licht</b> en de shayatin verdwijnen in rook.</p><p>Veeg over het scherm om te lopen.</p>' +
-        '<div class="opt">Grootte</div>' + segBtns("size", [["normaal", "Normaal"], ["groot", "Extra groot"]]) +
-        '<div class="opt">Tempo</div>' + segBtns("tempo", [["langzaam", "Langzaam"], ["normaal", "Normaal"]]) +
-        '<div class="opt">Besturing</div>' + segBtns("ctrl", [["vegen", "Vegen"], ["knoppen", "Knoppen"]]) +
-        '<div class="opt">Geluid</div>' + segBtns("sound", [["true", "Aan"], ["false", "Uit"]]) +
-        '<button class="go" data-a="start">Start</button><button class="go ghost" data-a="exit">Terug naar NurPlay</button>';
+      h = '<div class="ar" lang="ar" dir="rtl">دَرْب النُّور</div><h1 id="ovT">Darb an-Nur</h1><p><i>' + t("sub") + '</i></p><p>' + t("intro") + '</p><p>' + t("swipe") + '</p>' +
+        '<div class="opt">' + t("size") + '</div>' + segBtns("size", [["normaal", t("normal")], ["groot", t("xl")]]) +
+        '<div class="opt">' + t("tempo") + '</div>' + segBtns("tempo", [["langzaam", t("slow")], ["normaal", t("normal")]]) +
+        '<div class="opt">' + t("ctrl") + '</div>' + segBtns("ctrl", [["vegen", t("swp")], ["knoppen", t("btns")]]) +
+        '<div class="opt">' + t("sound") + '</div>' + segBtns("sound", [["true", t("on")], ["false", t("off")]]) +
+        '<button class="go" data-a="start">' + t("start") + '</button><button class="go ghost" data-a="exit">' + t("back") + '</button>';
     } else if (kind === "pause") {
-      h = '<h1 id="ovT">Pauze</h1><button class="go" data-a="resume">Verder spelen</button><button class="go ghost" data-a="menu">Instellingen</button><button class="go ghost" data-a="exit">Terug naar NurPlay</button>';
+      h = '<h1 id="ovT">' + t("pause") + '</h1><button class="go" data-a="resume">' + t("resume") + '</button><button class="go ghost" data-a="menu">' + t("settings") + '</button><button class="go ghost" data-a="exit">' + t("back") + '</button>';
     } else if (kind === "end-win") {
-      h = '<div class="ar" lang="ar" dir="rtl">ما شاء الله</div><h1 id="ovT">Alle lichtjes verzameld</h1><p>Punten: <b>' + G.score + '</b></p><button class="go" data-a="start">Nog een keer</button><button class="go ghost" data-a="exit">Terug naar NurPlay</button>';
+      h = '<div class="ar" lang="ar" dir="rtl">ما شاء الله</div><h1 id="ovT">' + t("allwin") + '</h1><p>' + t("score") + ' <b>' + G.score + '</b></p><button class="go" data-a="start">' + t("again") + '</button><button class="go ghost" data-a="exit">' + t("back") + '</button>';
     } else {
-      h = '<h1 id="ovT">Geen levens meer</h1><p>Je hebt <b>' + G.score + '</b> punten. Probeer het nog eens, je kunt het.</p><button class="go" data-a="start">Opnieuw</button><button class="go ghost" data-a="exit">Terug naar NurPlay</button>';
+      h = '<h1 id="ovT">' + t("nolives") + '</h1><p>' + t("result", { n: G.score }) + '</p><button class="go" data-a="start">' + t("retry") + '</button><button class="go ghost" data-a="exit">' + t("back") + '</button>';
     }
     p.innerHTML = h; $("ov").hidden = false;
     var b = p.querySelector(".go"); if (b) b.focus();
   }
   function hideOv() { $("ov").hidden = true; }
   function applyCtrl() { $("pad").classList.toggle("on", opt.ctrl === "knoppen"); layout(); }
-  function startGame() { newGame(); applyCtrl(); hideOv(); state = "play"; clock = 0; ac(); say("Het spel begint. Veeg om te lopen."); }
+  function startGame() { newGame(); applyCtrl(); hideOv(); state = "play"; clock = 0; ac(); say(t("s.begin")); }
   function pause() { if (state !== "play") return; state = "pause"; showOv("pause"); }
 
   $("panel").addEventListener("click", function (e) {

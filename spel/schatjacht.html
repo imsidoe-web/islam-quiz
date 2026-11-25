@@ -97,25 +97,25 @@ canvas#m{width:100%;height:auto;display:block;touch-action:manipulation;will-cha
 <div id="app">
   <header>
     <span class="badge">NurPlay</span>
-    <button class="tiny" id="sound" aria-label="Geluid aan" aria-pressed="true">Geluid aan</button>
-    <button class="tiny" id="infoBtn">Info</button>
+    <button class="tiny" id="sound" aria-label="Geluid aan" aria-pressed="true" data-i18n="sound.on">Geluid aan</button>
+    <button class="tiny" id="infoBtn" data-i18n="info">Info</button>
   </header>
 
   <div id="stage">
-    <canvas id="m" width="420" height="470" role="img" aria-label="Schatjacht: kies een kaart, open de schatkist en pak de bonus"></canvas>
+    <canvas id="m" width="420" height="470" role="img" data-i18n-aria="cv" aria-label="Schatjacht: kies een kaart, open de schatkist en pak de bonus"></canvas>
     <canvas id="fx" width="420" height="470" aria-hidden="true"></canvas>
     <div id="banner" aria-hidden="true"></div>
     <!-- kaarten worden door het script gemaakt -->
     <button id="spin">START</button>
   </div>
 
-  <div id="status" aria-live="polite"><span id="statusTxt">Gratis • geen inzet • je verliest nooit iets</span><span id="fact"></span></div>
+  <div id="status" aria-live="polite"><span id="statusTxt" data-i18n="free">Gratis • geen inzet • je verliest nooit iets</span><span id="fact"></span></div>
 
   <div class="hud">
-    <div class="chip"><small>Munten</small><b><span class="ic coin"></span><span id="vCoins">0</span></b></div>
-    <div class="chip"><small>Edelstenen</small><b><span class="ic gem"></span><span id="vGems">0</span></b></div>
-    <div class="chip"><small>Sterren</small><b><span class="star">★</span><span id="vStars">0</span></b></div>
-    <div class="chip"><small>Beurten</small><b><span class="ic spinic"></span><span id="vSpins">3</span></b></div>
+    <div class="chip"><small data-i18n="hCoins">Munten</small><b><span class="ic coin"></span><span id="vCoins">0</span></b></div>
+    <div class="chip"><small data-i18n="hGems">Edelstenen</small><b><span class="ic gem"></span><span id="vGems">0</span></b></div>
+    <div class="chip"><small data-i18n="hStars">Sterren</small><b><span class="star">★</span><span id="vStars">0</span></b></div>
+    <div class="chip"><small data-i18n="hSpins">Beurten</small><b><span class="ic spinic"></span><span id="vSpins">3</span></b></div>
   </div>
 
   <div>
@@ -124,25 +124,25 @@ canvas#m{width:100%;height:auto;display:block;touch-action:manipulation;will-cha
   </div>
 
   <div class="row">
-    <button class="tiny" id="demo">Proef: level gehaald (+3 beurten)</button>
+    <button class="tiny" id="demo" data-i18n="demo">Proef: level gehaald (+3 beurten)</button>
   </div>
-  <p class="note">Proefversie. In de app krijg je beurten door levels te halen.</p>
+  <p class="note" data-i18n="note">Proefversie. In de app krijg je beurten door levels te halen.</p>
 </div>
 
-<div class="modal" id="info" hidden role="dialog" aria-modal="true" aria-label="Zo werkt het">
+<div class="modal" id="info" hidden role="dialog" aria-modal="true" data-i18n-aria="how" aria-label="Zo werkt het">
   <div class="card">
-    <h2>Zo werkt het</h2>
+    <h2 data-i18n="how">Zo werkt het</h2>
     <ul>
-      <li>Beurten verdien je door een level te halen.</li>
-      <li><b>Geen inzet.</b> Je betaalt niets en je verliest nooit iets.</li>
-      <li>1. Kies een kaart.</li>
-      <li>2. Tik op de schatkist tot hij opengaat.</li>
-      <li>3. Er komt een verrassing uit. Soms volgt een bonusronde: tik alleen op het plaatje dat je kreeg. Het gaat steeds sneller. Drie keer verkeerd? Dan stopt het.</li>
-      <li>Dit bonuslevel heeft 3 beurten. Hoe meer je vindt, hoe meer sterren en edelstenen je krijgt.</li>
-      <li>De Ontdek-meter vult bij elke beurt. Vol = 1 edelsteen en 1 gratis beurt.</li>
+      <li data-i18n="i1">Beurten verdien je door een level te halen.</li>
+      <li data-i18n-h="i2"><b>Geen inzet.</b> Je betaalt niets en je verliest nooit iets.</li>
+      <li data-i18n="i3">1. Kies een kaart.</li>
+      <li data-i18n="i4">2. Tik op de schatkist tot hij opengaat.</li>
+      <li data-i18n="i5">3. Er komt een verrassing uit. Soms volgt een bonusronde: tik alleen op het plaatje dat je kreeg. Het gaat steeds sneller. Drie keer verkeerd? Dan stopt het.</li>
+      <li data-i18n="i6">Dit bonuslevel heeft 3 beurten. Hoe meer je vindt, hoe meer sterren en edelstenen je krijgt.</li>
+      <li data-i18n="i7">De Ontdek-meter vult bij elke beurt. Vol = 1 edelsteen en 1 gratis beurt.</li>
     </ul>
     <div class="pay" id="pay"></div>
-    <button id="infoClose">Sluiten</button>
+    <button id="infoClose" data-i18n="close">Sluiten</button>
   </div>
 </div>
 
@@ -260,23 +260,28 @@ bgResize();addEventListener('resize',bgResize);
 
 
 /* ---------- toestand en beloningen ---------- */
+  var LG = (function () { try { var l = (JSON.parse(localStorage.getItem("islam-quiz-v2")) || {}).lang; return l === "en" || l === "tr" ? l : "nl"; } catch (e) { return "nl"; } })();
+  var TX = {"nl": {"title": "Schatjacht", "titleU": "SCHATJACHT", "sound.on": "Geluid aan", "sound.off": "Geluid uit", "info": "Info", "cv": "Schatjacht: kies een kaart, open de schatkist en pak de bonus", "free": "Gratis • geen inzet • je verliest nooit iets", "coins": "munten", "gem1": "edelsteen", "gemN": "edelstenen", "star1": "ster", "starN": "sterren", "hCoins": "Munten", "hGems": "Edelstenen", "hStars": "Sterren", "hSpins": "Beurten", "demo": "Proef: level gehaald (+3 beurten)", "note": "Proefversie. In de app krijg je beurten door levels te halen.", "how": "Zo werkt het", "i1": "Beurten verdien je door een level te halen.", "i2": "<b>Geen inzet.</b> Je betaalt niets en je verliest nooit iets.", "i3": "1. Kies een kaart.", "i4": "2. Tik op de schatkist tot hij opengaat.", "i5": "3. Er komt een verrassing uit. Soms volgt een bonusronde: tik alleen op het plaatje dat je kreeg. Het gaat steeds sneller. Drie keer verkeerd? Dan stopt het.", "i6": "Dit bonuslevel heeft 3 beurten. Hoe meer je vindt, hoe meer sterren en edelstenen je krijgt.", "i7": "De Ontdek-meter vult bij elke beurt. Vol = 1 edelsteen en 1 gratis beurt.", "close": "Sluiten", "n0": "Dadels", "f0": "Veel moslims breken hun vasten in Ramadan met dadels. Dat is Sunnah.", "n1": "Halve maan", "f1": "De islamitische kalender is gebaseerd op de maan.", "n2": "Ster", "f2": "Er zijn vijf zuilen van de Islam.", "n3": "Lantaarn", "f3": "In veel landen hangen mensen tijdens Ramadan lantaarns op.", "n4": "Moskee", "f4": "De moskee is de plek waar moslims samen Salah doen.", "n5": "Koran", "f5": "De Koran heeft 114 soera’s.", "n6": "Nur", "f6": "Nur betekent “licht”.", "tx0": "Alhamdulillah! Alles wiebelt van blijdschap!", "tx1": "Wat een spektakel! Alles danst!", "tx2": "Boing! Kijk eens wat je hebt gevonden!", "tx3": "Wiebel wiebel, wat een mooie beloning!", "meterfull": "Ontdek-meter vol: +1 edelsteen en +1 gratis beurt!", "big": "NUR-SCHAT! De hele machine gaat los!", "bigb": "NUR-SCHAT!", "didyou": "Wist je dat?", "meter1": "Ontdek-meter: nog {n} beurt tot een extra edelsteen en een gratis beurt", "meterN": "Ontdek-meter: nog {n} beurten tot een extra edelsteen en een gratis beurt", "lvl": "Level gehaald! +3 beurten.", "sp0": "Normaal", "sp1": "Snel", "sp2": "Supersnel", "card": "Kaart {n}. Kies deze kaart.", "pick": "Kies een kaart!", "chestin": "Er zit een schatkist in!", "tapchest": "Tik op de schatkist om hem open te maken!", "left1": "Nog 1 keer!", "leftN": "Nog {n} keer tikken!", "almost": "Bijna!", "opening": "Hij gaat open...", "bonusdone": "Bonuslevel klaar: {n} {u}!", "stopmsg": "Stop! Drie keer het verkeerde. Je pakte {a} goed en {b} munten extra.", "stop": "Stop!", "faster": "Sneller!", "bonusstart": "BONUSRONDE! Tik alleen op: {x}. Het gaat steeds sneller, en bij een fout nog veel sneller. Drie keer fout? Dan stopt het.", "again": "NOG EEN KEER!", "start": "START", "getlvl": "Haal een level!", "tap": "TIK!", "grab": "Pak de {x}", "look": "Kijk!", "doneback": "Klaar! Terug", "backb": "Terug", "grabonly": "Pak alleen", "good": "Goed:", "tempo": "Tempo:", "tapchest2": "Tik op de schatkist!", "again2": "Nog een keer?", "pressstart": "Druk op START"}, "en": {"title": "Treasure Hunt", "titleU": "TREASURE HUNT", "sound.on": "Sound on", "sound.off": "Sound off", "info": "Info", "cv": "Treasure Hunt: choose a card, open the treasure chest and grab the bonus", "free": "Free • no stake • you never lose anything", "coins": "coins", "gem1": "gem", "gemN": "gems", "star1": "star", "starN": "stars", "hCoins": "Coins", "hGems": "Gems", "hStars": "Stars", "hSpins": "Turns", "demo": "Test: level completed (+3 turns)", "note": "Test version. In the app you get turns by completing levels.", "how": "How it works", "i1": "You earn turns by completing a level.", "i2": "<b>No stake.</b> You pay nothing and you never lose anything.", "i3": "1. Choose a card.", "i4": "2. Tap the treasure chest until it opens.", "i5": "3. A surprise comes out. Sometimes a bonus round follows: tap only the picture you got. It keeps getting faster. Three wrong taps? Then it stops.", "i6": "This bonus level has 3 turns. The more you find, the more stars and gems you get.", "i7": "The Discovery meter fills with every turn. Full = 1 gem and 1 free turn.", "close": "Close", "n0": "Dates", "f0": "Many Muslims break their fast in Ramadan with dates. That is Sunnah.", "n1": "Crescent moon", "f1": "The Islamic calendar is based on the moon.", "n2": "Star", "f2": "There are five pillars of Islam.", "n3": "Lantern", "f3": "In many countries people hang lanterns during Ramadan.", "n4": "Mosque", "f4": "The mosque is the place where Muslims do Salah together.", "n5": "Qur’an", "f5": "The Qur’an has 114 surahs.", "n6": "Nur", "f6": "Nur means “light”.", "tx0": "Alhamdulillah! Everything wobbles with joy!", "tx1": "What a spectacle! Everything is dancing!", "tx2": "Boing! Look what you found!", "tx3": "Wobble wobble, what a lovely reward!", "meterfull": "Discovery meter full: +1 gem and +1 free turn!", "big": "NUR TREASURE! The whole machine goes wild!", "bigb": "NUR TREASURE!", "didyou": "Did you know?", "meter1": "Discovery meter: {n} turn left until an extra gem and a free turn", "meterN": "Discovery meter: {n} turns left until an extra gem and a free turn", "lvl": "Level completed! +3 turns.", "sp0": "Normal", "sp1": "Fast", "sp2": "Super fast", "card": "Card {n}. Choose this card.", "pick": "Choose a card!", "chestin": "There is a treasure chest inside!", "tapchest": "Tap the treasure chest to open it!", "left1": "1 more!", "leftN": "Tap {n} more times!", "almost": "Almost!", "opening": "It is opening...", "bonusdone": "Bonus level done: {n} {u}!", "stopmsg": "Stop! Three wrong ones. You grabbed {a} right and {b} extra coins.", "stop": "Stop!", "faster": "Faster!", "bonusstart": "BONUS ROUND! Tap only: {x}. It keeps getting faster, and much faster after a mistake. Three mistakes? Then it stops.", "again": "ONCE MORE!", "start": "START", "getlvl": "Complete a level!", "tap": "TAP!", "grab": "Grab the {x}", "look": "Look!", "doneback": "Done! Back", "backb": "Back", "grabonly": "Grab only", "good": "Right:", "tempo": "Speed:", "tapchest2": "Tap the treasure chest!", "again2": "Once more?", "pressstart": "Press START"}, "tr": {"title": "Hazine Avı", "titleU": "HAZİNE AVI", "sound.on": "Ses açık", "sound.off": "Ses kapalı", "info": "Bilgi", "cv": "Hazine Avı: bir kart seç, hazine sandığını aç ve bonusu kap", "free": "Ücretsiz • bahis yok • hiçbir şey kaybetmezsin", "coins": "jeton", "gem1": "mücevher", "gemN": "mücevher", "star1": "yıldız", "starN": "yıldız", "hCoins": "Jetonlar", "hGems": "Mücevherler", "hStars": "Yıldızlar", "hSpins": "Haklar", "demo": "Deneme: seviye geçildi (+3 hak)", "note": "Deneme sürümü. Uygulamada seviyeleri geçerek hak kazanırsın.", "how": "Nasıl çalışır", "i1": "Haklar bir seviyeyi geçerek kazanılır.", "i2": "<b>Bahis yok.</b> Hiçbir şey ödemezsin ve hiçbir şey kaybetmezsin.", "i3": "1. Bir kart seç.", "i4": "2. Hazine sandığı açılana kadar dokun.", "i5": "3. Bir sürpriz çıkar. Bazen bir bonus tur gelir: yalnızca aldığın resme dokun. Giderek hızlanır. Üç kez yanlış mı? O zaman durur.", "i6": "Bu bonus seviyenin 3 hakkı var. Ne kadar çok bulursan o kadar çok yıldız ve mücevher kazanırsın.", "i7": "Keşif ölçer her hakta dolar. Dolunca = 1 mücevher ve 1 bedava hak.", "close": "Kapat", "n0": "Hurma", "f0": "Birçok Müslüman Ramazan’da orucunu hurmayla açar. Bu sünnettir.", "n1": "Hilal", "f1": "İslami takvim aya dayanır.", "n2": "Yıldız", "f2": "İslam’ın beş şartı vardır.", "n3": "Fener", "f3": "Birçok ülkede insanlar Ramazan’da fener asar.", "n4": "Cami", "f4": "Cami, Müslümanların birlikte namaz kıldığı yerdir.", "n5": "Kur’an", "f5": "Kur’an’da 114 sûre vardır.", "n6": "Nur", "f6": "Nur “ışık” demektir.", "tx0": "Elhamdülillah! Her şey sevinçten sallanıyor!", "tx1": "Ne gösteri! Her şey dans ediyor!", "tx2": "Boing! Bak neler buldun!", "tx3": "Sallan sallan, ne güzel bir ödül!", "meterfull": "Keşif ölçer doldu: +1 mücevher ve +1 bedava hak!", "big": "NUR HAZİNESİ! Bütün makine coşuyor!", "bigb": "NUR HAZİNESİ!", "didyou": "Biliyor muydun?", "meter1": "Keşif ölçer: ekstra mücevher ve bedava hak için {n} hak kaldı", "meterN": "Keşif ölçer: ekstra mücevher ve bedava hak için {n} hak kaldı", "lvl": "Seviye geçildi! +3 hak.", "sp0": "Normal", "sp1": "Hızlı", "sp2": "Süper hızlı", "card": "Kart {n}. Bu kartı seç.", "pick": "Bir kart seç!", "chestin": "İçinde bir hazine sandığı var!", "tapchest": "Açmak için hazine sandığına dokun!", "left1": "1 kez daha!", "leftN": "{n} kez daha dokun!", "almost": "Az kaldı!", "opening": "Açılıyor...", "bonusdone": "Bonus seviye bitti: {n} {u}!", "stopmsg": "Dur! Üç yanlış. {a} doğru ve {b} fazladan jeton aldın.", "stop": "Dur!", "faster": "Daha hızlı!", "bonusstart": "BONUS TUR! Yalnızca şuna dokun: {x}. Giderek hızlanır, hata yapınca çok daha hızlı. Üç hata mı? O zaman durur.", "again": "BİR KEZ DAHA!", "start": "BAŞLA", "getlvl": "Bir seviye geç!", "tap": "DOKUN!", "grab": "{x} kap", "look": "Bak!", "doneback": "Bitti! Geri", "backb": "Geri", "grabonly": "Yalnızca kap", "good": "Doğru:", "tempo": "Hız:", "tapchest2": "Hazine sandığına dokun!", "again2": "Bir kez daha?", "pressstart": "BAŞLA’ya bas"}};
+  function Z(k, v) { var s = (TX[LG] && TX[LG][k] != null) ? TX[LG][k] : (TX.nl[k] != null ? TX.nl[k] : k); return v ? s.replace(/\{(\w+)\}/g, function (m, a) { return v[a] != null ? v[a] : m; }) : s; }
+  (function () { document.documentElement.lang = LG; var e = document.querySelectorAll("[data-i18n]"); for (var i = 0; i < e.length; i++) e[i].textContent = Z(e[i].getAttribute("data-i18n")); var h = document.querySelectorAll("[data-i18n-h]"); for (var k = 0; k < h.length; k++) h[k].innerHTML = Z(h[k].getAttribute("data-i18n-h")); var a = document.querySelectorAll("[data-i18n-aria]"); for (var j = 0; j < a.length; j++) a[j].setAttribute("aria-label", Z(a[j].getAttribute("data-i18n-aria"))); if (TX.nl.title) document.title = Z("title"); })();
+
 const S={coins:0,gems:0,stars:0,spins:3,meter:0},D={coins:0,gems:0,stars:0};
 const el={c:$('vCoins'),g:$('vGems'),s:$('vStars'),sp:$('vSpins')};
 let winT=-9,shake=0,muted=(QS.get('snd')==='0'),meterFull=false;
 const SYM=[
- {n:'Dadels',coins:20,fact:'Veel moslims breken hun vasten in Ramadan met dadels. Dat is Sunnah.'},
- {n:'Halve maan',coins:25,fact:'De islamitische kalender is gebaseerd op de maan.'},
- {n:'Ster',coins:15,stars:1,fact:'Er zijn vijf zuilen van de Islam.'},
- {n:'Lantaarn',coins:40,fact:'In veel landen hangen mensen tijdens Ramadan lantaarns op.'},
- {n:'Moskee',coins:60,fact:'De moskee is de plek waar moslims samen Salah doen.'},
- {n:'Koran',coins:30,gems:1,fact:'De Koran heeft 114 soera’s.'},
- {n:'Nur',coins:200,gems:5,stars:3,fact:'Nur betekent “licht”.'}
+ {n:Z('n0'),coins:20,fact:Z('f0')},
+ {n:Z('n1'),coins:25,fact:Z('f1')},
+ {n:Z('n2'),coins:15,stars:1,fact:Z('f2')},
+ {n:Z('n3'),coins:40,fact:Z('f3')},
+ {n:Z('n4'),coins:60,fact:Z('f4')},
+ {n:Z('n5'),coins:30,gems:1,fact:Z('f5')},
+ {n:Z('n6'),coins:200,gems:5,stars:3,fact:Z('f6')}
 ];
 const WEIGHTS=[22,20,16,16,10,10,3];
-function rewardLines(s){const a=['+'+s.coins+' munten'];if(s.gems)a.push('+'+s.gems+(s.gems>1?' edelstenen':' edelsteen'));if(s.stars)a.push('+'+s.stars+(s.stars>1?' sterren':' ster'));return a}
+function rewardLines(s){const a=['+'+s.coins+' '+Z('coins')];if(s.gems)a.push('+'+s.gems+' '+Z(s.gems>1?'gemN':'gem1'));if(s.stars)a.push('+'+s.stars+' '+Z(s.stars>1?'starN':'star1'));return a}
 function pickWeighted(excl){let tot=0;WEIGHTS.forEach((w,i)=>{if(!excl.includes(i))tot+=w});let x=Math.random()*tot;
   for(let i=0;i<WEIGHTS.length;i++){if(excl.includes(i))continue;if(x<WEIGHTS[i])return i;x-=WEIGHTS[i]}return 0}
-const TXT=['Alhamdulillah! Alles wiebelt van blijdschap!','Wat een spektakel! Alles danst!','Boing! Kijk eens wat je hebt gevonden!','Wiebel wiebel, wat een mooie beloning!'];
+const TXT=[Z('tx0'),Z('tx1'),Z('tx2'),Z('tx3')];
 const spinBtn=$('spin'),statusEl=$('statusTxt'),factEl=$('fact'),banner=$('banner');
 {const P=[];for(let i=0;i<24;i++){const a=i*Math.PI/12-Math.PI/2,r=i%2?38:50;P.push((50+Math.cos(a)*r).toFixed(1)+'% '+(50+Math.sin(a)*r).toFixed(1)+'%')}banner.style.clipPath='polygon('+P.join(',')+')'}
 
@@ -352,21 +357,21 @@ function drawTable(t){
 function giveReward(id,ox,oy){
   const s=SYM[id];S.coins+=s.coins;S.gems+=s.gems||0;S.stars+=s.stars||0;
   S.meter+=10;let bonus='';
-  if(S.meter>=100){S.meter=0;S.gems+=1;S.spins+=1;meterFull=true;bonus=' Ontdek-meter vol: +1 edelsteen en +1 gratis beurt!';setTimeout(()=>sfx.chime(5),500)}
+  if(S.meter>=100){S.meter=0;S.gems+=1;S.spins+=1;meterFull=true;bonus=' '+Z('meterfull');setTimeout(()=>sfx.chime(5),500)}
   const big=id===6;
-  statusEl.textContent=(big?'NUR-SCHAT! De hele machine gaat los!':pick(TXT))+' ('+rewardLines(s).join(', ')+')'+bonus;
-  factEl.textContent='Wist je dat? '+s.fact;
+  statusEl.textContent=(big?Z('big'):pick(TXT))+' ('+rewardLines(s).join(', ')+')'+bonus;
+  factEl.textContent=Z('didyou')+' '+s.fact;
   winT=performance.now()/1000;shake=big?1:.6;
   burst(big?220:100,true,ox,oy);sfx.chime(big?5:4);
   floatText('+'+s.coins,ox,oy-10,'#fff3a8');
-  banner.textContent=big?'NUR-SCHAT!':'Alhamdulillah!';banner.classList.remove('show');void banner.offsetWidth;banner.classList.add('show');
+  banner.textContent=big?Z('bigb'):'Alhamdulillah!';banner.classList.remove('show');void banner.offsetWidth;banner.classList.add('show');
   updateUI();
 }
 function setBtn(txt,dis){spinBtn.textContent=txt;spinBtn.disabled=dis}
 function updateUI(){
   $('meter').style.width=S.meter+'%';
   const left=Math.round((100-S.meter)/10);
-  $('meterlbl').textContent='Ontdek-meter: nog '+left+(left===1?' beurt':' beurten')+' tot een extra edelsteen en een gratis beurt';
+  $('meterlbl').textContent=Z(left===1?'meter1':'meterN',{n:left});
   if(GAME.refresh)GAME.refresh();
 }
 function jelly(b){b.classList.remove('jelly');void b.offsetWidth;b.classList.add('jelly')}
@@ -392,8 +397,8 @@ function frame(){
 
 /* ---------- knoppen ---------- */
 spinBtn.addEventListener('click',()=>{jelly(spinBtn);GAME.onButton()});
-$('demo').addEventListener('click',e=>{jelly(e.target);audio();S.spins+=3;sfx.pop();statusEl.textContent='Level gehaald! +3 beurten.';updateUI()});
-$('sound').addEventListener('click',e=>{muted=!muted;e.target.textContent=muted?'Geluid uit':'Geluid aan';e.target.setAttribute('aria-label',muted?'Geluid uit':'Geluid aan');e.target.setAttribute('aria-pressed',String(!muted));jelly(e.target)});
+$('demo').addEventListener('click',e=>{jelly(e.target);audio();S.spins+=3;sfx.pop();statusEl.textContent=Z('lvl');updateUI()});
+$('sound').addEventListener('click',e=>{muted=!muted;e.target.textContent=muted?Z('sound.off'):Z('sound.on');e.target.setAttribute('aria-label',muted?Z('sound.off'):Z('sound.on'));e.target.setAttribute('aria-pressed',String(!muted));jelly(e.target)});
 const info=$('info');
 $('infoBtn').addEventListener('click',e=>{jelly(e.target);info.hidden=false;$('infoClose').focus()});
 $('infoClose').addEventListener('click',()=>{info.hidden=true;$('infoBtn').focus()});
@@ -404,7 +409,7 @@ SYM.forEach((s,i)=>{const im=document.createElement('img');im.src=IMGS[i];im.alt
 
 
 /* ---------- schatjacht ---------- */
-const GAME={title:'SCHATJACHT'};
+const GAME={title:Z('titleU')};
 let phase='idle',rounds=0,pendingBonus=false;
 const stage=$('stage'),CARDS=[],CARD_X=[46,164,282];
 const backBg=(()=>{const pts=[];for(let i=0;i<16;i++){const a=i*Math.PI/8-Math.PI/8,r=i%2?29:44;pts.push((50+Math.cos(a)*r).toFixed(1)+','+(50+Math.sin(a)*r).toFixed(1))}
@@ -417,7 +422,7 @@ for(let i=0;i<3;i++){
 }
 const chest={taps:0,sq:0,sqV:0,app:0,lid:0,openT:0,revealT:0,sym:0,revealed:false};
 const bonus={end:0,items:[],total:0,next:0,start:0,target:0,speed:1,hit:0,wrong:0,missed:0};
-const MAXW=3,WM=[1,1.3,1.7],SPN=['Normaal','Snel','Supersnel'],PTS=[5,8,12];
+const MAXW=3,WM=[1,1.3,1.7],SPN=[Z('sp0'),Z('sp1'),Z('sp2')],PTS=[5,8,12];
 function spdNow(){return Math.min(2.8,(1+.02*bonus.hit+.03*bonus.missed)*WM[Math.min(bonus.wrong,2)])}
 function tier(){const v=spdNow();return v<1.4?0:v<2?1:2}
 const NEED=5;
@@ -426,24 +431,24 @@ function startRound(){
   if(phase==='bonus'){grabLowest();return}
   if(phase!=='idle'||S.spins<=0)return;
   audio();S.spins--;meterFull=false;rounds++;phase='pick';
-  CARDS.forEach((c,i)=>{c.className='card k';void c.offsetWidth;c.classList.add('on','deal');c.style.animationDelay=(i*.14)+'s';c.setAttribute('aria-label','Kaart '+(i+1)+'. Kies deze kaart.')});
-  sfx.pop();statusEl.textContent='Kies een kaart!';factEl.textContent='';banner.classList.remove('show');
+  CARDS.forEach((c,i)=>{c.className='card k';void c.offsetWidth;c.classList.add('on','deal');c.style.animationDelay=(i*.14)+'s';c.setAttribute('aria-label',Z('card',{n:i+1}))});
+  sfx.pop();statusEl.textContent=Z('pick');factEl.textContent='';banner.classList.remove('show');
   const r=rounds;setTimeout(()=>{if(phase!=='pick'||r!==rounds)return;CARDS.forEach((c,i)=>{c.classList.remove('deal');c.style.animationDelay=(i*.25)+'s';c.classList.add('wob')})},1100);
   updateUI();
 }
 function pickCard(i){
   if(phase!=='pick')return;phase='anim';audio();sfx.boing();
   CARDS.forEach((c,j)=>{c.classList.remove('wob','deal');c.style.animationDelay='';c.classList.add(j===i?'pop':'gone')});
-  statusEl.textContent='Er zit een schatkist in!';updateUI();
+  statusEl.textContent=Z('chestin');updateUI();
   setTimeout(()=>{CARDS.forEach(c=>c.className='card k');phase='chest';chest.taps=0;chest.sq=0;chest.sqV=0;chest.app=0;chest.lid=0;chest.revealed=false;
-    statusEl.textContent='Tik op de schatkist om hem open te maken!';sfx.chime(3);updateUI()},750);
+    statusEl.textContent=Z('tapchest');sfx.chime(3);updateUI()},750);
 }
 function tapChest(){
   if(phase!=='chest'||chest.app<.6)return;audio();
   chest.taps++;chest.sqV=2.4;sfx.tick();burst(8,true,210,300);shake=Math.max(shake,.25);
   const left=NEED-chest.taps;
-  if(left>0){statusEl.textContent=left===1?'Nog 1 keer!':'Nog '+left+' keer tikken!';floatText(left===1?'Bijna!':String(left),210,200,'#fff3a8')}
-  else{phase='opening';chest.openT=performance.now()/1000;sfx.boing();statusEl.textContent='Hij gaat open...';updateUI()}
+  if(left>0){statusEl.textContent=Z(left===1?'left1':'leftN',{n:left});floatText(left===1?Z('almost'):String(left),210,200,'#fff3a8')}
+  else{phase='opening';chest.openT=performance.now()/1000;sfx.boing();statusEl.textContent=Z('opening');updateUI()}
 }
 cv.addEventListener('pointerdown',e=>{
   const r=cv.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*W,y=(e.clientY-r.top)/r.height*H;
@@ -456,31 +461,31 @@ function finishRound(hits){
   meterFull=false;sessionGems+=g;
   if(EMB&&S.spins<=0&&!sent){sent=true;const st=sessionGems>=10?3:sessionGems>=6?2:1;
     tell({type:'result',game:'schatjacht',ok:true,stars:st,gems:Math.min(10,sessionGems)});
-    statusEl.textContent+=' Bonuslevel klaar: '+st+(st===1?' ster':' sterren')+'!'}
+    statusEl.textContent+=' '+Z('bonusdone',{n:st,u:Z(st===1?'star1':'starN')})}
 }
 function endBonus(ok){
   phase='idle';bonus.items=[];
-  statusEl.textContent='Stop! Drie keer het verkeerde. Je pakte '+bonus.hit+' goed en '+bonus.total+' munten extra.';
+  statusEl.textContent=Z('stopmsg',{a:bonus.hit,b:bonus.total});
   factEl.textContent='';sfx.chime(ok?5:3);if(ok)burst(120,true,210,230);updateUI();finishRound(bonus.hit)}
 function collect(it){it.dead=true;
   if(it.id===bonus.target){const pt=PTS[tier()];bonus.total+=pt;bonus.hit++;S.coins+=pt;burst(10,true,it.x,it.y);floatText('+'+pt,it.x,it.y-10);sfx.pop();updateUI()}
   else{bonus.wrong++;burst(6,false,it.x,it.y);sfx.boing();shake=Math.max(shake,.4);
-    if(bonus.wrong>=MAXW){floatText('Stop!',it.x,it.y-10,'#ff9aa8');phase='bonusend';setTimeout(()=>endBonus(false),700)}
-    else{floatText('Sneller!',it.x,it.y-10,'#ff9aa8')}
+    if(bonus.wrong>=MAXW){floatText(Z('stop'),it.x,it.y-10,'#ff9aa8');phase='bonusend';setTimeout(()=>endBonus(false),700)}
+    else{floatText(Z('faster'),it.x,it.y-10,'#ff9aa8')}
     updateUI()}}
 function grabAt(x,y){audio();let best=null,bd=46;bonus.items.forEach(it=>{if(it.dead)return;const d=Math.hypot(it.x-x,it.y-y);if(d<bd){bd=d;best=it}});if(best)collect(best)}
 function grabLowest(){let best=null;bonus.items.forEach(it=>{if(!it.dead&&it.id===bonus.target&&(!best||it.y>best.y))best=it});if(best)collect(best)}
 function startBonus(t){
   phase='bonus';bonus.start=t;bonus.items=[];bonus.total=0;bonus.next=t;bonus.target=chest.sym;bonus.speed=1;bonus.hit=0;bonus.wrong=0;bonus.missed=0;
-  statusEl.textContent='BONUSRONDE! Tik alleen op: '+SYM[bonus.target].n+'. Het gaat steeds sneller, en bij een fout nog veel sneller. Drie keer fout? Dan stopt het.';factEl.textContent='';sfx.chime(5);updateUI();
+  statusEl.textContent=Z('bonusstart',{x:SYM[bonus.target].n});factEl.textContent='';sfx.chime(5);updateUI();
 }
 GAME.onButton=startRound;
 GAME.refresh=()=>{spinBtn.classList.toggle('sr',phase==='bonus'||phase==='bonusend');
-  if(phase==='idle'){if(S.spins>0)setBtn(rounds?'NOG EEN KEER!':'START',false);else setBtn('Haal een level!',true)}
-  else if(phase==='chest')setBtn('TIK!',false);
-  else if(phase==='bonus')setBtn('Pak de '+SYM[bonus.target].n,false);
-  else if(phase==='pick')setBtn('Kies een kaart!',true);
-  else setBtn('Kijk!',true)};
+  if(phase==='idle'){if(S.spins>0)setBtn(rounds?Z('again'):Z('start'),false);else setBtn(Z('getlvl'),true)}
+  else if(phase==='chest')setBtn(Z('tap'),false);
+  else if(phase==='bonus')setBtn(Z('grab',{x:SYM[bonus.target].n}),false);
+  else if(phase==='pick')setBtn(Z('pick'),true);
+  else setBtn(Z('look'),true)};
 GAME.update=(t,dt)=>{
   chest.sqV+=(-170*chest.sq-9*chest.sqV)*dt;chest.sq+=chest.sqV*dt;
   if(phase==='chest'||phase==='opening'||phase==='reveal')chest.app=Math.min(1,chest.app+dt*2.2);
@@ -546,12 +551,12 @@ function drawBonus(t){
   ctx.restore();
   ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='900 16px "Trebuchet MS",sans-serif';ctx.lineWidth=4;ctx.strokeStyle='#2a0a5e';
   rr(52,100,316,34,10);ctx.fillStyle='rgba(30,8,70,.85)';ctx.fill();
-  ctx.strokeText('Pak alleen',130,118);ctx.fillStyle='#ffe58a';ctx.fillText('Pak alleen',130,118);
+  ctx.strokeText(Z('grabonly'),130,118);ctx.fillStyle='#ffe58a';ctx.fillText(Z('grabonly'),130,118);
   if(SPR[bonus.target])ctx.drawImage(SPR[bonus.target],182,100,32,32);
-  const tx='Goed: '+bonus.hit;ctx.strokeText(tx,300,118);ctx.fillStyle='#ffe58a';ctx.fillText(tx,300,118);
+  const tx=Z('good')+' '+bonus.hit;ctx.strokeText(tx,300,118);ctx.fillStyle='#ffe58a';ctx.fillText(tx,300,118);
   const sp=SPN[tier()],hearts=[0,1,2].map(i=>i<MAXW-bonus.wrong?'\u2665':'\u2661').join(' ');
   ctx.font='900 17px "Trebuchet MS",sans-serif';ctx.lineWidth=4;
-  const ft='Tempo: '+sp+'    '+hearts;ctx.strokeText(ft,210,425);ctx.fillStyle=bonus.wrong?'#ff9aa8':'#fff3a8';ctx.fillText(ft,210,425);
+  const ft=Z('tempo')+' '+sp+'    '+hearts;ctx.strokeText(ft,210,425);ctx.fillStyle=bonus.wrong?'#ff9aa8':'#fff3a8';ctx.fillText(ft,210,425);
 }
 GAME.draw=t=>{
   ctx.textAlign='center';ctx.textBaseline='middle';
@@ -559,10 +564,10 @@ GAME.draw=t=>{
   if(phase==='chest'||phase==='opening'||phase==='reveal'){
     drawChest(t);if(phase==='reveal')drawReveal(t);
     if(phase==='chest'){const b=1+.04*Math.sin(t*4);ctx.save();ctx.translate(210,114);ctx.scale(b,1/b);ctx.font='900 17px "Trebuchet MS",sans-serif';ctx.lineWidth=4;ctx.strokeStyle='#2a0a5e';
-      const txt='Tik op de schatkist! ('+chest.taps+'/'+NEED+')';ctx.strokeText(txt,0,0);ctx.fillStyle='#ffe58a';ctx.fillText(txt,0,0);ctx.restore()}
+      const txt=Z('tapchest2')+' ('+chest.taps+'/'+NEED+')';ctx.strokeText(txt,0,0);ctx.fillStyle='#ffe58a';ctx.fillText(txt,0,0);ctx.restore()}
     return}
   if(phase==='pick'||phase==='anim'){return}
-  const txt=rounds?'Nog een keer?':'Druk op START';
+  const txt=rounds?Z('again2'):Z('pressstart');
   const b=1+.04*Math.sin(t*4);ctx.save();ctx.translate(210,112);ctx.scale(b,1/b);
   ctx.font='900 17px "Trebuchet MS",sans-serif';ctx.lineWidth=4;ctx.strokeStyle='#2a0a5e';ctx.strokeText(txt,0,0);ctx.fillStyle='#ffe58a';ctx.fillText(txt,0,0);ctx.restore();
   CARD_X.forEach((x,i)=>{const bob=Math.sin(t*2+i)*4;ctx.save();ctx.translate(x+52,248+bob);ctx.rotate(Math.sin(t*1.5+i)*.04);
@@ -572,12 +577,12 @@ GAME.draw=t=>{
     ctx.fillStyle='rgba(255,255,255,.28)';ctx.beginPath();ctx.ellipse(0,-92,38,22,0,0,TAU);ctx.fill();ctx.restore()});
 };
 
-if(muted){$('sound').textContent='Geluid uit';$('sound').setAttribute('aria-pressed','false')}
+if(muted){$('sound').textContent=Z('sound.off');$('sound').setAttribute('aria-pressed','false')}
 if(EMB){$('demo').style.display='none';const nt=document.querySelector('.note');if(nt)nt.style.display='none';
-  const bd=document.querySelector('.badge');bd.outerHTML='<button class="tiny" id="back">Terug</button>';$('back').onclick=()=>tell({type:'close'});
+  const bd=document.querySelector('.badge');bd.outerHTML='<button class="tiny" id="back">'+Z('backb')+'</button>';$('back').onclick=()=>tell({type:'close'});
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&info.hidden)tell({type:'close'})})}
 GAME.onButton=(function(o){return function(){if(EMB&&phase==='idle'&&S.spins<=0){tell({type:'close'});return}o()}})(GAME.onButton);
-const _r=GAME.refresh;GAME.refresh=function(){_r();if(EMB&&phase==='idle'&&S.spins<=0)setBtn('Klaar! Terug',false)};
+const _r=GAME.refresh;GAME.refresh=function(){_r();if(EMB&&phase==='idle'&&S.spins<=0)setBtn(Z('doneback'),false)};
 updateUI();requestAnimationFrame(frame);
 </script>
 </body>
