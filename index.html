@@ -2342,36 +2342,54 @@ body.dashfull { background: #0f2e22; color: #f4efe2; }
 .q-list button:focus-visible, .q-cont:focus-visible, .q-bar button:focus-visible { outline: 3px solid #ffb703; outline-offset: 2px; }
 .q-src { margin: 4px 0 0; font-size: .74rem; color: #9fc4b0; }
 
-/* nieuwe Koran-lezer: overzicht met tegels, vers voor vers, Mushaf */
-.qv-search { display: flex; align-items: center; gap: 10px; background: #fbf7ec; border: 1.5px solid #d9a05b; border-radius: 16px; padding: 4px 14px; box-shadow: 0 6px 18px rgba(0,0,0,.18); }
-.qv-search input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font: inherit; font-size: 1rem; color: #1b2a20; min-height: 44px; }
-.qv-search:focus-within { box-shadow: 0 0 0 3px #ffb703; }
-.qv-stats { display: flex; gap: 8px; overflow-x: auto; padding: 2px 0 4px; scrollbar-width: none; }
-.qv-stats span { flex: none; background: #fbf7ec; border: 1px solid #d9a05b; color: #1b2a20; border-radius: 999px; padding: 7px 14px; font-size: .82rem; white-space: nowrap; } .qv-stats b { color: #1b4332; }
-.qv-sec { display: flex; justify-content: space-between; align-items: center; font-size: .72rem; letter-spacing: .12em; font-weight: 900; color: #ffd54f; }
-.qv-sec button { appearance: none; font: inherit; font-weight: 800; cursor: pointer; background: transparent; border: 0; color: #f2c78a; min-height: 40px; padding: 0 6px; }
-.qv-recent { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: none; }
-.qv-rc { appearance: none; font: inherit; cursor: pointer; flex: none; width: 150px; text-align: left; display: flex; flex-direction: column; gap: 2px; padding: 14px; border-radius: 20px; background: linear-gradient(135deg, #fbf7ec, #e8efe6); border: 1px solid #d9a05b; color: #1b2a20; box-shadow: 0 6px 16px rgba(0,0,0,.18); }
-.qv-rc small { color: #a47a3a; font-weight: 800; } .qv-rc b { font-size: 1rem; } .qv-rc span { font-family: "Amiri", serif; font-size: 1.4rem; color: #1b4332; text-align: right; margin-top: 6px; }
-.qv-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; } .qv-list li[hidden] { display: none; }
-.qv-item { appearance: none; font: inherit; cursor: pointer; width: 100%; text-align: left; display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 20px; background: #fbf7ec; border: 1px solid #d9a05b; color: #1b2a20; box-shadow: 0 6px 16px rgba(0,0,0,.16); }
-.qv-item:hover { border-color: #b8842f; } .qv-item:focus-visible, .qv-rc:focus-visible, .qv-tog button:focus-visible, .qv-bm:focus-visible { outline: 3px solid #ffb703; outline-offset: 2px; }
-.qv-no { flex: none; width: 38px; height: 38px; display: grid; place-items: center; background: #e8efe6; border: 1px solid #d9a05b; border-radius: 11px; transform: rotate(45deg); } .qv-no i { transform: rotate(-45deg); font-style: normal; font-weight: 800; font-size: .85rem; color: #1b4332; }
-.qv-nm { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; } .qv-nm b { font-size: 1.02rem; } .qv-nm small { color: #5d6b63; font-size: .78rem; } .qv-nm em { font-style: normal; background: #e8efe6; color: #1b4332; border-radius: 8px; padding: 1px 8px; margin-right: 6px; font-weight: 700; }
-.qv-ar { font-family: "Amiri", serif; font-size: 1.45rem; color: #1b4332; }
-.qv-tog { display: flex; background: #fbf7ec; border: 1px solid #d9a05b; border-radius: 26px; padding: 4px; margin: 12px 0 0; }
-.qv-tog button { appearance: none; font: inherit; font-weight: 800; flex: 1; min-height: 44px; border: 0; border-radius: 22px; background: transparent; color: #5d6b63; cursor: pointer; }
-.qv-tog button[aria-pressed="true"] { background: #1b4332; color: #fbf7ec; }
-.qv-ayahs { display: flex; flex-direction: column; gap: 14px; margin-top: 12px; }
-.qv-card { background: #fbf7ec; border: 1px solid #d9a05b; border-radius: 20px; padding: 16px 18px 18px; box-shadow: 0 6px 16px rgba(0,0,0,.16); color: #1b2a20; }
-.qv-card.qa { cursor: default; } .qv-card.qa.hl { background: #f3e7c4; }
-.qv-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-.qv-n { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; background: #e8efe6; color: #1b4332; font-weight: 800; font-size: .8rem; }
-.qv-bm { appearance: none; font: inherit; cursor: pointer; min-width: 44px; min-height: 40px; border-radius: 12px; border: 1px solid #d9a05b; background: transparent; opacity: .55; font-size: 1.05rem; } .qv-bm.on { opacity: 1; background: #f3e7c4; }
-.qv-ar.q-text { text-align: right; color: #1b2a20; font-size: inherit; line-height: inherit; }
-.qv-ayahs.q-s1 { font-size: 1.45rem; line-height: 2.2; } .qv-ayahs.q-s2 { font-size: 1.7rem; line-height: 2.2; } .qv-ayahs.q-s3 { font-size: 1.95rem; line-height: 2.15; } .qv-ayahs.q-s4 { font-size: 2.25rem; line-height: 2.1; } .qv-ayahs.q-s5 { font-size: 2.6rem; line-height: 2.05; }
-.qv-nl { margin: 10px 0 0; font-size: 1rem; line-height: 1.6; color: #4a5a50; }
-.qv-bsm .qv-ar { text-align: center; }
+/* nieuwe Koran-lezer: rustig, luxe, smaragd en mat goud (donker) of Warm Perkament (licht) */
+body.qvx-dark { background: #081F1C !important; } body.qvx-light { background: #FAF8F5 !important; }
+.qvx { --qbg: #081F1C; --qcard: #0E2F2B; --qline: rgba(197,168,128,.25); --qtx: #F4F1EA; --qmut: #9AB0AA; --qgold: #C5A880; --qsoft: rgba(197,168,128,.12); --qui: "Plus Jakarta Sans", "Nunito", system-ui, sans-serif; --qser: "Playfair Display", Georgia, "Times New Roman", serif; font-family: var(--qui); color: var(--qtx); }
+.qvx-light { --qbg: #FAF8F5; --qcard: #FFFFFF; --qline: rgba(197,168,128,.4); --qtx: #0F3D3E; --qmut: #5f726d; --qgold: #9a7a45; --qsoft: rgba(15,61,62,.07); }
+.qvx .hub-head { position: relative; margin: -4px -4px 0; padding: 18px 56px 14px; border-radius: 0; background: var(--qbg); border-bottom: 1px solid var(--qline); color: var(--qtx); }
+.qvx .hub-head h1 { font-family: var(--qser); font-weight: 700; color: var(--qgold); font-size: 1.45rem; } .qvx .hub-head p { color: var(--qmut); } .qvx .hub-ar { color: var(--qgold); }
+.qvx .hub-back { background: var(--qcard); color: var(--qgold); border: 1px solid var(--qline); }
+.qvx-theme { position: absolute; right: 12px; top: 14px; appearance: none; cursor: pointer; width: 44px; height: 44px; border-radius: 14px; border: 1px solid var(--qline); background: var(--qcard); color: var(--qgold); display: grid; place-items: center; }
+.qvx-theme svg, .qv-ic svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.qvx :focus-visible { outline: 3px solid #ffb703; outline-offset: 2px; }
+.qvx .qv-search { display: flex; align-items: center; gap: 10px; background: var(--qcard); border: 1px solid var(--qline); border-radius: 16px; padding: 4px 14px; color: var(--qmut); }
+.qvx .qv-search input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font: inherit; font-size: 1rem; color: var(--qtx); min-height: 46px; } .qvx .qv-search input::placeholder { color: var(--qmut); }
+.qvx .qv-search:focus-within { box-shadow: 0 0 0 3px #ffb703; }
+.qvx .qv-stats { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; } .qvx .qv-stats span { flex: none; background: var(--qcard); border: 1px solid var(--qline); color: var(--qmut); border-radius: 999px; padding: 7px 14px; font-size: .82rem; white-space: nowrap; } .qvx .qv-stats b { color: var(--qgold); font-weight: 700; }
+.qvx .q-goal { color: var(--qgold); font-weight: 600; font-size: .9rem; }
+.qvx .q-cont { background: var(--qcard); border: 1px solid var(--qline); color: var(--qtx); } .qvx .q-cont small { color: var(--qgold); } .qvx .q-cont span { color: var(--qgold); }
+.qvx .q-juz { background: var(--qcard); border: 1px solid var(--qline); border-radius: 16px; } .qvx .q-juz summary { color: var(--qgold); font-weight: 600; }
+.qvx .q-juz button, .qvx .q-marks button { background: transparent; border: 1px solid var(--qline); color: var(--qtx); }
+.qvx .q-marks small, .qvx .qv-sec { color: var(--qgold); } .qvx .qv-sec { display: flex; justify-content: space-between; align-items: center; font-size: .72rem; letter-spacing: .14em; font-weight: 700; }
+.qvx .qv-sec button { appearance: none; font: inherit; font-weight: 600; cursor: pointer; background: transparent; border: 0; color: var(--qmut); min-height: 40px; padding: 0 6px; }
+.qvx .qv-recent { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: none; }
+.qvx .qv-rc { appearance: none; font: inherit; cursor: pointer; flex: none; width: 150px; text-align: left; display: flex; flex-direction: column; gap: 2px; padding: 14px; border-radius: 18px; background: var(--qcard); border: 1px solid var(--qline); color: var(--qtx); }
+.qvx .qv-rc small { color: var(--qgold); font-weight: 700; } .qvx .qv-rc b { font-family: var(--qser); font-weight: 600; } .qvx .qv-rc span { font-family: "Amiri", serif; font-size: 1.5rem; color: var(--qgold); text-align: right; margin-top: 6px; }
+.qvx .qv-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; } .qvx .qv-list li[hidden] { display: none; }
+.qvx .qv-item { appearance: none; font: inherit; cursor: pointer; width: 100%; text-align: left; display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 18px; background: var(--qcard); border: 1px solid var(--qline); color: var(--qtx); }
+.qvx .qv-item:hover { border-color: var(--qgold); }
+.qvx .qv-no { position: relative; flex: none; width: 46px; height: 46px; display: grid; place-items: center; } .qvx .qv-no svg { position: absolute; inset: 0; width: 100%; height: 100%; fill: var(--qsoft); stroke: var(--qgold); stroke-width: 1.3; stroke-linejoin: round; } .qvx .qv-no i { position: relative; font-style: normal; font-weight: 700; font-size: .82rem; color: var(--qgold); }
+.qvx .qv-nm { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; } .qvx .qv-nm b { font-family: var(--qser); font-weight: 600; font-size: 1.08rem; color: var(--qtx); } .qvx .qv-nm small { color: var(--qmut); font-size: .78rem; } .qvx .qv-nm em { font-style: normal; color: var(--qgold); margin-right: 6px; }
+.qvx .qv-ar { font-family: "Amiri", serif; font-size: 1.55rem; color: var(--qgold); }
+.qvx .qv-tog { display: flex; background: var(--qcard); border: 1px solid var(--qline); border-radius: 26px; padding: 4px; margin: 12px 0 0; }
+.qvx .qv-tog button { appearance: none; font: inherit; font-weight: 600; flex: 1; min-height: 44px; border: 0; border-radius: 22px; background: transparent; color: var(--qmut); cursor: pointer; } .qvx .qv-tog button[aria-pressed="true"] { background: var(--qgold); color: #081F1C; }
+.qvx .q-bar { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 10px -4px 0; padding: 8px 14px; border-radius: 0; background: var(--qbg); border: 0; border-bottom: 1px solid var(--qline); }
+.qvx .q-bar span { color: var(--qmut); font-weight: 600; font-size: .85rem; } .qvx .q-bar button { background: var(--qcard); color: var(--qgold); border: 1px solid var(--qline); border-radius: 12px; font-weight: 700; }
+.qvx .qv-ayahs { display: flex; flex-direction: column; gap: 14px; margin-top: 12px; }
+.qvx .qv-card { background: var(--qcard); border: 1px solid var(--qline); border-radius: 20px; padding: 12px 18px 20px; color: var(--qtx); } .qvx .qv-card.qa { cursor: default; box-shadow: none; } .qvx .qv-card.qa.hl { background: var(--qsoft); }
+.qvx .qv-top { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; margin-bottom: 8px; border-bottom: 1px solid var(--qline); }
+.qvx .qv-n { font-size: .78rem; font-weight: 600; letter-spacing: .06em; color: var(--qgold); border: 1px solid var(--qline); border-radius: 999px; padding: 4px 12px; }
+.qvx .qv-acts { display: flex; gap: 4px; }
+.qvx .qv-ic { appearance: none; cursor: pointer; width: 44px; height: 44px; border-radius: 12px; border: 0; background: transparent; color: var(--qgold); display: grid; place-items: center; } .qvx .qv-ic:hover { background: var(--qsoft); } .qvx .qv-ic.on svg { fill: var(--qgold); }
+.qvx .qv-ar.q-text { text-align: right; direction: rtl; color: var(--qtx); font-family: "IndoPakQ", "Amiri", serif; font-size: inherit; line-height: inherit; margin: 6px 0 12px; }
+.qvx .qv-end { color: var(--qgold); font-family: "Amiri", serif; font-size: .7em; margin-right: .3em; white-space: nowrap; }
+.qvx .qv-ayahs.q-s1 { font-size: 1.75rem; line-height: 2.1; } .qvx .qv-ayahs.q-s2 { font-size: 2rem; line-height: 2.1; } .qvx .qv-ayahs.q-s3 { font-size: 2.25rem; line-height: 2.05; } .qvx .qv-ayahs.q-s4 { font-size: 2.6rem; line-height: 2; } .qvx .qv-ayahs.q-s5 { font-size: 3rem; line-height: 2; }
+.qvx .qv-nl { margin: 0; font-family: var(--qui); font-size: 1rem; line-height: 1.65; color: var(--qmut); }
+.qvx .qv-bsm .qv-ar { text-align: center; }
+.qvx .q-page { background: var(--qcard); border: 1px solid var(--qline); box-shadow: none; border-radius: 22px; } .qvx .q-text { color: var(--qtx); }
+.qvx .q-head { background: transparent; border: 1px solid var(--qgold); } .qvx .q-head span { color: var(--qgold); } .qvx .q-bsm { color: var(--qtx); } .qvx .q-jz { color: var(--qgold); }
+.qvx .q-selbar { background: var(--qcard); border: 1px solid var(--qline); color: var(--qtx); } .qvx .q-selbar .tg-btn { color: var(--qgold); }
+.qvx .q-src, .qvx .hub-intro { color: var(--qmut); } .qvx .btn { background: var(--qgold); color: #081F1C; border: 0; } .qvx .btn.ghost { background: transparent; color: var(--qgold); border: 1px solid var(--qline); }
 .q-bar { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 10px 0 0; padding: 8px 10px; border-radius: 14px; background: rgba(15,46,34,.94); border: 1.5px solid #2d6a4f; color: #cfe8d8; font-weight: 800; font-size: .85rem; }
 .q-bar button { appearance: none; font: inherit; font-weight: 900; cursor: pointer; border: 0; border-radius: 10px; background: #1b4332; color: #ffd54f; min-width: 44px; min-height: 40px; }
 .q-page { position: relative; padding: 18px 14px 22px; border-radius: 10px; background: #fbf6ea; border: 3px solid #d9a05b; box-shadow: 0 0 0 5px #1b4332, 0 0 0 7px #4f8f70, inset 0 0 0 5px #fbf6ea, inset 0 0 0 7px rgba(217,160,91,.55); margin: 8px 7px; }   /* v117: crème pagina */
@@ -9080,6 +9098,14 @@ return exports;})();
   function qMinToday() { return Math.floor((qState().sec[todayStr()] || 0) / 60); }
   function qGoalTxt() { const m = Math.min(qMinToday(), Q_GOAL_MIN); return "Leesdoel: " + m + "/" + Q_GOAL_MIN + " min" + (m >= Q_GOAL_MIN ? " ✓" : ""); }
   const Q_MED = [2, 3, 4, 5, 8, 9, 13, 22, 24, 33, 47, 48, 49, 55, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 76, 98, 99, 110];
+  const QV_ICO = { bm: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 3.5h11v17L12 16.8 6.5 20.5z"/></svg>', sh: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5.5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="18.5" r="2.6"/><path d="M8.3 10.7l7.4-3.9M8.3 13.3l7.4 3.9"/></svg>', th: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z"/></svg>', thl: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6"/></svg>' };
+  const QV_STAR = '<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 1.5l4.6 7.4 8.3-2.5-2.2 8.4 8 4.2-8 4.2 2.2 8.4-8.3-2.5-4.6 7.4-4.6-7.4-8.3 2.5 2.2-8.4-8-4.2 8-4.2-2.2-8.4 8.3 2.5z"/></svg>';
+  function qTheme() { return S.qTheme === "light" ? "light" : "dark"; }
+  function qvWrap(h) {
+    const th = qTheme();
+    h = h.replace("</header>", '<button type="button" class="qvx-theme" data-act="q-theme" aria-label="' + (th === "dark" ? "Wissel naar licht thema (Warm Perkament)" : "Wissel naar donker thema") + '">' + (th === "dark" ? QV_ICO.thl : QV_ICO.th) + "</button></header>");
+    return '<div class="qvx qvx-' + th + '">' + h + "</div>";
+  }
   function qPlace(n) { return Q_MED.indexOf(n) !== -1 ? "Medinaans" : "Mekkaans"; }
   function qNote(s) { const q = qState(); if (!q.recent) q.recent = []; const i = q.recent.indexOf(s); if (i !== -1) q.recent.splice(i, 1); q.recent.unshift(s); q.recent.splice(8); }
   function viewQuran() {
@@ -9093,10 +9119,10 @@ return exports;})();
     if (q.marks.length) h += '<div class="q-marks"><small>BLADWIJZERS</small>' + q.marks.map(function (k) { const p = k.split(":"); return '<button data-act="q-open" data-s="' + p[0] + '" data-a="' + p[1] + '">🔖 ' + Q_TR[p[0] - 1] + " " + k + "</button>"; }).join("") + "</div>";
     h += '<details class="q-juz"><summary>Ga naar een juz’</summary><div>' + Q_JUZ.map(function (k, i) { const p = k.split(":"); return '<button data-act="q-open" data-s="' + p[0] + '" data-a="' + p[1] + '" aria-label="Juz ' + (i + 1) + '">' + (i + 1) + "</button>"; }).join("") + "</div></details>";
     h += '<ol class="qv-list" id="qvList">' + Q_AR.map(function (n, i) {
-      return '<li data-n="' + (i + 1) + '" data-name="' + esc(qNorm(Q_TR[i])) + '"><button type="button" class="qv-item" data-act="q-open" data-s="' + (i + 1) + '" data-a="1"><span class="qv-no"><i>' + (i + 1) + '</i></span><span class="qv-nm"><b>' + Q_TR[i] + '</b><small><em>' + qPlace(i + 1) + "</em> " + Q_N[i] + ' verzen</small></span><span class="qv-ar" lang="ar" dir="rtl" translate="no">' + n + "</span></button></li>";
+      return '<li data-n="' + (i + 1) + '" data-name="' + esc(qNorm(Q_TR[i])) + '"><button type="button" class="qv-item" data-act="q-open" data-s="' + (i + 1) + '" data-a="1"><span class="qv-no">' + QV_STAR + '<i>' + (i + 1) + '</i></span><span class="qv-nm"><b>' + Q_TR[i] + '</b><small><em>' + qPlace(i + 1) + "</em> " + Q_N[i] + ' verzen</small></span><span class="qv-ar" lang="ar" dir="rtl" translate="no">' + n + "</span></button></li>";
     }).join("") + '</ol><p class="hub-intro" id="qvNone" hidden>Geen soera gevonden.</p>';
     h += '<p class="q-src">Korantekst (IndoPak, Hafs) en lettertype: Ayman Siddiqui / Quranic Universal Library by Tarteel (qul.tarteel.ai). De tekst wordt ongewijzigd getoond.</p></section>';
-    return h;
+    return qvWrap(h);
   }
   function qNorm(t) { return String(t || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[’‘'`\-\s]/g, ""); }
   function afterQuranRender() {
@@ -9117,7 +9143,7 @@ return exports;})();
     let h = hubTop(Q_TR[s - 1], "quran", "", "Soera " + s + " · " + Q_N[s - 1] + " verzen · " + qPlace(s)) +
       '<div class="qv-tog" role="group" aria-label="Weergave"><button type="button" data-act="q-mode" data-m="ayah" aria-pressed="' + (mode === "ayah") + '">Vers voor vers</button><button type="button" data-act="q-mode" data-m="mushaf" aria-pressed="' + (mode === "mushaf") + '">Mushaf</button></div>' +
       '<div class="q-bar"><button data-act="q-size" data-d="-1" aria-label="Kleinere letters">A−</button><span id="qGoal">' + qGoalTxt() + '</span><button data-act="q-size" data-d="1" aria-label="Grotere letters">A+</button></div>';
-    if (!QDATA) { qLoad(); return h + '<section class="hub"><p class="hub-intro">' + (qErr ? "De Koran kon niet geladen worden. Controleer je verbinding en probeer het opnieuw." : "De Koran wordt geladen…") + "</p>" + (qErr ? '<button class="btn block" data-act="q-open" data-s="' + s + '" data-a="1">Opnieuw proberen</button>' : "") + "</section>"; }
+    if (!QDATA) { qLoad(); return qvWrap(h + '<section class="hub"><p class="hub-intro">' + (qErr ? "De Koran kon niet geladen worden. Controleer je verbinding en probeer het opnieuw." : "De Koran wordt geladen…") + "</p>" + (qErr ? '<button class="btn block" data-act="q-open" data-s="' + s + '" data-a="1">Opnieuw proberen</button>' : "") + "</section>"); }
     const ay = QDATA[s - 1], marks = qState().marks;
     if (mode === "ayah") {
       if (!KT[s]) ktLoad(s);
@@ -9126,12 +9152,15 @@ return exports;})();
       if (s !== 1 && s !== 9) v += '<article class="qv-card qv-bsm"><div class="qv-ar q-text" lang="ar" dir="rtl" translate="no">' + QDATA[0][0].replace(/[\uE000-\uF8FF]/g, "").replace(/\s*\u06DF\s*$/, "") + '</div><p class="qv-nl">' + BISM_NL + "</p></article>";
       ay.forEach(function (txt, i) {
         const a = i + 1, k = s + ":" + a, bm = marks.indexOf(k) !== -1;
-        v += '<article class="qv-card qa" id="qa-' + a + '" data-k="' + k + '"><div class="qv-top"><span class="qv-n">' + a + '</span><button type="button" class="qv-bm' + (bm ? " on" : "") + '" data-act="q-bm" data-k="' + k + '" aria-pressed="' + bm + '" aria-label="Bladwijzer bij vers ' + a + '">🔖</button></div>' +
-          '<div class="qv-ar q-text" lang="ar" dir="rtl" translate="no">' + txt + '</div><p class="qv-nl">' + (tr && tr[i] ? esc(tr[i][1]) : (ktErr[s] ? "De vertaling kon niet geladen worden." : "Vertaling wordt geladen…")) + "</p></article>";
+        const clean = txt.replace(/\s*[۟ۙ]*[-]\s*$/, "").trim();
+        v += '<article class="qv-card qa" id="qa-' + a + '" data-k="' + k + '"><div class="qv-top"><span class="qv-n">' + k + '</span><div class="qv-acts">' +
+          '<button type="button" class="qv-ic qv-bm' + (bm ? " on" : "") + '" data-act="q-bm" data-k="' + k + '" aria-pressed="' + bm + '" aria-label="Bladwijzer bij vers ' + k + '">' + QV_ICO.bm + '</button>' +
+          '<button type="button" class="qv-ic" data-act="q-share" data-k="' + k + '" aria-label="Deel vers ' + k + '">' + QV_ICO.sh + '</button></div></div>' +
+          '<div class="qv-ar q-text" lang="ar" dir="rtl" translate="no">' + clean + ' <span class="qv-end" aria-hidden="true">۝</span></div><p class="qv-nl">' + (tr && tr[i] ? esc(tr[i][1]) : (ktErr[s] ? "De vertaling kon niet geladen worden." : "Vertaling wordt geladen…")) + "</p></article>";
       });
       v += "</div>";
-      return h + '<section class="hub">' + v + '<div class="q-nav">' + (s < 114 ? '<button class="btn" data-act="q-open" data-s="' + (s + 1) + '" data-a="1">Volgende: ' + Q_TR[s] + "</button>" : "") + (s > 1 ? '<button class="btn ghost" data-act="q-open" data-s="' + (s - 1) + '" data-a="1">Vorige: ' + Q_TR[s - 2] + "</button>" : "") + "</div>" +
-        '<p class="q-src">Arabisch (IndoPak, Hafs): Ayman Siddiqui / Quranic Universal Library by Tarteel. Nederlandse vertaling: S. S. Siregar, via Tanzil Project (tanzil.net).</p></section>';
+      return qvWrap(h + '<section class="hub">' + v + '<div class="q-nav">' + (s < 114 ? '<button class="btn" data-act="q-open" data-s="' + (s + 1) + '" data-a="1">Volgende: ' + Q_TR[s] + "</button>" : "") + (s > 1 ? '<button class="btn ghost" data-act="q-open" data-s="' + (s - 1) + '" data-a="1">Vorige: ' + Q_TR[s - 2] + "</button>" : "") + "</div>" +
+        '<p class="q-src">Arabisch (IndoPak, Hafs): Ayman Siddiqui / Quranic Universal Library by Tarteel. Nederlandse vertaling: S. S. Siregar, via Tanzil Project (tanzil.net).</p></section>');
     }
     let t = '<div class="q-page"><div class="q-head"><span lang="ar" dir="rtl">' + Q_AR[s - 1] + "</span></div>";
     if (s !== 1 && s !== 9) t += '<p class="q-bsm" lang="ar" dir="rtl">' + QDATA[0][0].replace(/[\uE000-\uF8FF]/g, "").replace(/\s*\u06DF\s*$/, "") + "</p>";
@@ -9146,7 +9175,7 @@ return exports;})();
     h += '<section class="hub">' + t + '<div class="q-nav">' + (s < 114 ? '<button class="btn" data-act="q-open" data-s="' + (s + 1) + '" data-a="1">Volgende: ' + Q_TR[s] + "</button>" : "") + (s > 1 ? '<button class="btn ghost" data-act="q-open" data-s="' + (s - 1) + '" data-a="1">Vorige: ' + Q_TR[s - 2] + "</button>" : "") + "</div>" +
       '<p class="q-src">Tekst en lettertype: Ayman Siddiqui / Quranic Universal Library by Tarteel. Tik op een ayah voor een bladwijzer. De ayah-nummers staan in de rondjes, zoals in een IndoPak-mushaf.</p></section>' +
       '<div class="q-selbar" id="qSel" hidden><span id="qSelT"></span><button class="tg-btn" data-act="q-mark" id="qSelB">🔖 Bladwijzer</button>' + (mkOwner() ? '<button class="tg-btn" data-act="q-journal">📓 Journal</button>' : "") + '<button class="tg-btn" data-act="q-unsel" aria-label="Sluiten">✕</button></div>';
-    return h;
+    return qvWrap(h);
   }
   /* ── Koran-dagboek (voorlopig alleen beheerder): uitleg, reflectie en journalvragen per vers. Eigen notities blijven alleen op dit toestel. ── */
   let QJ = null, qjLoading = false, qjErr = false, qjKey = "", qjFrom = "reader";
@@ -10426,6 +10455,7 @@ return exports;})();
     stopTimer(); mgClear(); idleStop();
     if (screen !== "rad") { clearTimeout(radCpuT); radCpuT = null; if (radNet || rad && rad.online) { radNetLeave(); rad = null; } }
     document.body.className = "";
+    if (screen === "quran" || screen === "qread") { document.body.classList.add("qvx-" + qTheme()); document.documentElement.style.background = qTheme() === "dark" ? "#081F1C" : "#FAF8F5"; } else document.documentElement.style.background = "";
     { const kds = ["kd", "kdo", "qj", "mn", "kdc"].indexOf(screen) !== -1; if (kds) document.body.classList.add("kdskin"); document.documentElement.classList.toggle("kdskin-h", kds); }   /* v367 */
     if (screen !== "journey") { chestPopupDone = {}; const cr = document.getElementById("chestRem"); if (cr) cr.remove(); }
     if (screen !== "result" && screen !== "chestopen" && screen !== "minigame") { const cel = document.getElementById("celebrate"); if (cel) cel.remove(); }
@@ -16513,6 +16543,13 @@ return exports;})();
         el.classList.add("sel");
         const qk = el.dataset.k, on = qState().marks.indexOf(qk) !== -1, bar = document.getElementById("qSel");
         if (bar) { bar.hidden = false; bar.dataset.k = qk; document.getElementById("qSelT").textContent = Q_TR[qk.split(":")[0] - 1] + " " + qk; document.getElementById("qSelB").textContent = on ? "🔖 Weghalen" : "🔖 Bladwijzer"; }
+        break;
+      }
+      case "q-theme": { S.qTheme = qTheme() === "dark" ? "light" : "dark"; saveState(); play("click"); render(); break; }
+      case "q-share": {
+        const qk = el.dataset.k, qp = qk.split(":"), qs = +qp[0], qa = +qp[1], ar = QDATA ? QDATA[qs - 1][qa - 1].replace(/\s*\u06DF?[\uE000-\uF8FF]\s*$/, "").trim() + " \u06DD" : "", nl = KT[qs] && KT[qs][qa - 1] ? KT[qs][qa - 1][1] : "";
+        const txt = ar + (nl ? "\n\n" + nl : "") + "\n\n— " + Q_TR[qs - 1] + " " + qk + " · nurspark.app";
+        if (navigator.share) { navigator.share({ text: txt }).catch(function () {}); } else { window.open("https://wa.me/?text=" + encodeURIComponent(txt), "_blank", "noopener"); }
         break;
       }
       case "q-mode": { S.qMode = el.dataset.m === "mushaf" ? "mushaf" : "ayah"; saveState(); play("click"); render(); window.scrollTo({ top: 0 }); break; }
