@@ -2494,6 +2494,15 @@ body.dashfull { background: #0f2e22; color: #f4efe2; }
 /* v354: sfeerbeelden */
 .kdo-pic { display: block; width: 100%; height: auto; aspect-ratio: 1376 / 768; object-fit: cover; border-radius: 18px 18px 0 0; }
 .kdi-pic { object-fit: cover; }
+.mem { background: #FBF6E9; border: 1px solid #D9C48A; border-radius: 20px; padding: 26px 20px 22px; text-align: center; color: #1F4D3A; margin: 10px 0 24px; }
+.mem-ic { display: block; margin: 0 auto 4px; } .mem-k { margin: 0 0 4px; font-size: .8rem; letter-spacing: .1em; color: #8A6D24; text-transform: uppercase; }
+.mem-h { font-weight: 400; font-size: 1.5rem; margin: 0 0 14px; color: #1F4D3A; } .mem-ln { display: block; height: 1px; width: 56px; background: #D9C48A; margin: 14px auto; }
+.mem-ar { font-family: "Amiri", "Scheherazade New", serif; font-size: 1.7rem; line-height: 1.9; margin: 0 0 4px; } .mem-it { font-style: italic; margin: 0 0 4px; line-height: 1.6; }
+.mem-tr { color: #4A5F55; margin: 0 0 18px; line-height: 1.6; } .mem-p { text-align: left; line-height: 1.7; margin: 0 0 16px; color: #1F4D3A; }
+.mem-c { background: #F3EAD0; border-radius: 12px; padding: 14px 16px; margin: 0 0 10px; text-align: left; } .mem-c b { color: #1F4D3A; font-weight: 500; } .mem-c p { margin: 4px 0 0; line-height: 1.6; color: #3B5448; }
+.mem-so { font-size: .8rem; color: #8A6D24; margin: 0 0 14px; } .mem-am { font-size: 1.3rem; color: #B8923A; margin: 0 0 14px; }
+.qs-fn { background: #fffaf0; border: 1px solid #e6d9b6; border-radius: 14px; padding: 10px 14px; margin: 10px 0; } .qs-fn small { color: #9a8450; letter-spacing: .1em; } .qs-fn p { margin: 4px 0 0; font-size: .93rem; }
+
 .kdo-pic + .kdo-date { border-radius: 0 0 18px 18px; margin-bottom: 4px; }
 /* v235: beheerpagina in donkere analytics-stijl (los van de NurSpark-look, alle namen beginnen met bd-) */
 .bd { --bg0: #06060d; --bg1: #0d0b1f; --bg2: #171236; --tx: #e9e8f6; --mut: #8f8eb0; --line: rgba(160,150,255,.16); --blue: #6ea8ff; --indigo: #8b8cff; --violet: #b48cff; --pink: #f07ab8; --teal: #46d3c0; --green: #4fd98f; --amber: #f2b95a;
@@ -9913,6 +9922,20 @@ return exports;})();
     document.addEventListener("keydown", function (e) { if (e.key === "Escape") bdClose(); });
   })();
   function kdiOrn() { return '<svg class="kdi-orn" viewBox="0 0 120 14" aria-hidden="true"><path d="M2 7h44M74 7h44" stroke="#b8a06a" stroke-width="1" stroke-linecap="round"/><path d="M60 1l5 6-5 6-5-6z" fill="#b8a06a"/></svg>'; }
+  /* v384: Ter nagedachtenis (Isaal-e-Sawaab) */
+  function viewMem() {
+    return '<section class="hub"><div class="mem" role="region" aria-label="Ter nagedachtenis">' +
+      '<svg class="mem-ic" width="64" height="64" viewBox="0 0 64 64" aria-hidden="true"><path d="M42 10a24 24 0 1 0 0 44a19 19 0 1 1 0-44z" fill="#b8923a"/><path d="M46 22l2.2 5 5.4.5-4.1 3.6 1.2 5.3-4.7-2.8-4.7 2.8 1.2-5.3-4.1-3.6 5.4-.5z" fill="#b8923a"/></svg>' +
+      '<p class="mem-k">Ter nagedachtenis</p><h2 class="mem-h">Isaal-e-Sawaab</h2><i class="mem-ln"></i>' +
+      '<p class="mem-ar" lang="ar" dir="rtl">إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ</p>' +
+      '<p class="mem-it">Inna lillahi wa inna ilayhi raji’un</p><p class="mem-tr">Voorwaar, aan Allah behoren wij toe en tot Hem zullen wij terugkeren.</p>' +
+      '<p class="mem-p">Dit dagboek is tot stand gekomen met de intentie om rust, reflectie en verbondenheid te brengen. De maker van deze app draagt dit werk, de moeite en alle zegeningen (barakah) die hieruit voortvloeien als Isaal-e-Sawaab op aan:</p>' +
+      '<div class="mem-c"><b>Mijn geliefde wijlen ouders</b><p>Moge Allah hun graven verruimen, hen omringen met Zijn oneindige barmhartigheid en hen Jannah al-Firdaus schenken.</p></div>' +
+      '<div class="mem-c"><b>Alle overledenen die met Imān zijn heengegaan</b><p>Moge Allah hun zonden vergeven, hun goede daden accepteren en hen verenigen met de rechtvaardigen.</p></div>' +
+      '<p class="mem-p">Moge elke letter in dit dagboek, elke reflectie en elk moment van bezinning een bron van noor en blijvende beloning voor hen zijn in het Hiernamaals.</p><i class="mem-ln"></i>' +
+      '<p class="mem-it">“O Allah, vergeef onze levenden en onze doden, onze aanwezigen en onze afwezigen, onze jongeren en onze ouderen...”</p><p class="mem-so">Sunan Abi Dawud</p><p class="mem-am">Āmīn</p>' +
+      '<button class="mn-btn" data-act="mem-back">Terug</button></div></section>';
+  }
   function viewKdi(h) {
     const pg = Math.max(0, Math.min(3, kdi || 0)), saved = kdiGet();
     let b = "";
@@ -10036,7 +10059,7 @@ return exports;})();
       '<p class="kds-cnt" id="kdCnt" aria-hidden="true"></p><p class="sr-only" id="kdSr" role="status" style="position:absolute;left:-9999px"></p>' +
       '<div class="kdc" id="kdCar" role="region" aria-label="Soera’s. Veeg naar links of rechts om te bladeren." tabindex="0">' + list.map(function (s) { return kdTile(s, seen); }).join("") + "</div>" +
       '<p class="mn-none kds-none" id="kdNone" role="status"' + (none ? "" : " hidden") + ">Geen soera gevonden. Probeer een andere naam of een nummer.</p>" +
-      '<button class="mn-btn" data-act="kdo-open">Terug naar mijn overzicht</button><button class="mn-btn" data-act="mn-screen">Mijn notities' + (mn ? " (" + mn + ")" : "") + '</button><button class="kdi-about" data-act="kdi-open">Over dit dagboek</button></div></section>';
+      '<button class="mn-btn" data-act="kdo-open">Terug naar mijn overzicht</button><button class="mn-btn" data-act="mn-screen">Mijn notities' + (mn ? " (" + mn + ")" : "") + '</button><button class="kdi-about" data-act="kdi-open">Over dit dagboek</button><button class="kdi-about" data-act="mem-open">Ter nagedachtenis</button></div></section>';
     setTimeout(kdAfter, 0);
     return h;
   }
@@ -10058,6 +10081,7 @@ return exports;})();
       '<div class="qs-ar"><div class="q-text q-uth q-s' + (S.qSize || 3) + '" lang="ar" dir="rtl">' + esc(ar) + "</div></div>" +
       '<div class="qs-nl"><small>NEDERLANDS</small><p>' + esc(vs[1]) + "</p></div>";
     if (c) {
+      if (c.n && c.n.length) h += c.n.map(function (x) { return '<div class="qs-fn"><small>VOETNOOT</small><p><b>“' + esc(x[0]) + '”</b> ' + esc(x[1]) + "</p></div>"; }).join("");
       h += "<h2>Uitleg</h2><p>" + esc(c.u || "") + "</p>";
       if (c.b && c.b.length) h += "<h2>Begrippen</h2>" + c.b.map(function (x) { return '<p class="qs-b"><b>' + esc(x[0]) + "</b> " + esc(x[1]) + "</p>"; }).join("");
       if (c.l && c.l.length) h += "<h2>Leringen</h2><ul class=\"qs-l\">" + c.l.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>";
@@ -10290,13 +10314,14 @@ return exports;})();
     else if (screen === "kd") { app.innerHTML = viewKd(); }
     else if (screen === "mn") { app.innerHTML = viewMn(); }
     else if (screen === "kdo") { app.innerHTML = viewKdo(); }
+    else if (screen === "mem") { app.innerHTML = viewMem(); }
     else if (screen === "kdc") { app.innerHTML = viewKdc(); }
     const bw = document.getElementById("badgesBtnWrap");
     if (bw) bw.style.display = (screen === "board" || screen === "scores") ? "" : "none";
     window.scrollTo({ top: 0 });
     if (screen === "journey") document.body.classList.add("jfull");
     if (screen === "rad" || screen === "bazaar") document.body.classList.add("radfull");
-    if (screen === "dash" || screen === "hub" || screen === "play" || screen === "lab" || screen === "labroom" || screen === "labquiz" || screen === "fout" || screen === "dua" || screen === "today" || screen === "prog" || screen === "quran" || screen === "qread" || screen === "qj" || screen === "kd" || screen === "mn" || screen === "kdo" || screen === "kdc") document.body.classList.add("dashfull");
+    if (screen === "dash" || screen === "hub" || screen === "play" || screen === "lab" || screen === "labroom" || screen === "labquiz" || screen === "fout" || screen === "dua" || screen === "today" || screen === "prog" || screen === "quran" || screen === "qread" || screen === "qj" || screen === "kd" || screen === "mn" || screen === "kdo" || screen === "mem" || screen === "kdc") document.body.classList.add("dashfull");
     if (screen === "rad" && rad && rad.phase !== "intro" && rad.phase !== "end") document.body.classList.add("radgame");
     if (kosmosOn() && KOS_SCREENS.indexOf(screen) !== -1) document.body.classList.add("kosmos");
     if (screen === "journey") afterJourneyRender(); else rgAmb.show(false);
@@ -16327,6 +16352,8 @@ return exports;})();
       case "kd-back": play("click"); screen = (kdi === null && kdiGet()) ? "kdo" : "dash"; render(); window.scrollTo({ top: 0 }); break;
       case "mn-screen": { if (!mkOwner()) break; play("click"); mnQ = ""; screen = "mn"; render(); window.scrollTo({ top: 0 }); break; }
       case "mn-back": play("click"); screen = "kd"; render(); window.scrollTo({ top: 0 }); break;
+      case "mem-open": { if (!mkOwner()) break; play("click"); screen = "mem"; render(); window.scrollTo({ top: 0 }); break; }
+      case "mem-back": { play("click"); screen = "kd"; render(); window.scrollTo({ top: 0 }); break; }
       case "kdo-open": { if (!mkOwner()) break; play("click"); kdoF = null; kdoM = 0; screen = "kdo"; render(); window.scrollTo({ top: 0 }); break; }
       case "kdo-back": play("click"); screen = "dash"; render(); window.scrollTo({ top: 0 }); break;
       case "kdo-list": play("click"); screen = "kd"; render(); window.scrollTo({ top: 0 }); break;
