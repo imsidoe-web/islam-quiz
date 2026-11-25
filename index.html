@@ -3410,6 +3410,7 @@ body.kdskin .kdi-ta { border: 0; border-top: .5px solid rgba(197, 166, 117, .35)
 .d-bnav { position: fixed; z-index: 30; left: 0; right: 0; bottom: 0; display: flex; justify-content: space-around; max-width: 720px; margin: 0 auto; padding: 8px 6px calc(8px + env(safe-area-inset-bottom, 0px)); background: rgba(8,31,28,.78); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); border-top: 1px solid rgba(197,168,128,.35); }
 .d-bnav button { appearance: none; font: inherit; cursor: pointer; flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; min-height: 52px; padding: 4px 2px; background: transparent; border: 0; color: #C5A880; font-size: .72rem; font-weight: 700; }
 .d-bnav button[aria-current] span { color: #F4F1EA; }
+.dv-tile i { background: #C5A880; color: #081F1C; } .dv-tile { border: 1px solid rgba(197,168,128,.4); }
 .d-bnav button:focus-visible { outline: 3px solid #ffb703; outline-offset: -3px; border-radius: 12px; }
 
 /* ───── homescherm schoner: rustige tegels, kleine Bayt al-‘Ilm ───── */
@@ -8340,7 +8341,7 @@ return exports;})();
     const t = salToday(), nx = salNext();
     h += '<p class="d-next" id="dSalNext" aria-live="off">' + T("sal.next", { naam: salLabel(nx.k), tijd: hm(nx.at), rest: leftTxt(nx.left) }) + "</p>";
     h += '<ul class="d-times">' + SAL_NAMES.map(function (n) {
-      return '<li class="' + (n[0] === nx.k ? "on" : "") + (n[0] === "shuruq" ? " sub" : "") + '"><span>' + salLabel(n[0]) + "</span><b>" + hm(t[n[0]]) + "</b></li>";
+      return '<li class="' + (n[0] === nx.k ? "on" : "") + (n[0] === "shuruq" ? " sub" : "") + '"><span>' + salLabel(n[0]) + "</span><b>" + hm(n[0] === nx.k ? nx.at : t[n[0]]) + "</b></li>";
     }).join("") + "</ul>";
     return h + '<p class="d-fine">' + T("sal.fine") + "</p></section>";
   }
