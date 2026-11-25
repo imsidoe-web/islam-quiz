@@ -16318,7 +16318,7 @@ return exports;})();
   window.addEventListener("appinstalled", function () { deferredInstall = null; if (screen === "journey") render(); });
 
   /* v92: links naar de vaste pagina's (ook nodig voor Google) */
-  function legalLinks() { return '<p class="legal-links"><a href="/over/">' + T("legal.about") + '</a> · <a href="/privacy/">' + T("legal.privacy") + "</a></p>"; }
+  function legalLinks() { const lp = LANG() === "nl" ? "" : LANG() + "/"; return '<p class="legal-links"><a href="/over/' + lp + '">' + T("legal.about") + '</a> · <a href="/privacy/' + lp + '">' + T("legal.privacy") + "</a></p>"; }
   /* v91: tik op je avatar op het startscherm → avatar kiezen of instellingen */
   function profileMenu() {
     const w = document.createElement("div");
