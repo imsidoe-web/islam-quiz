@@ -8520,7 +8520,6 @@ return exports;})();
       '<span class="d-rb"><span class="d-rt"><small>' + T("dash.world") + '</small><b>Rihlat al-‘Ilm <span lang="ar" dir="rtl">رحلة العلم</span></b><span class="d-rl">' + T("dash.land", { n: li + 1, title: esc(landT(c)) }) + '</span><span class="d-rx"><b>' + T("dash.lvl", { n: cur }) + '</b><span class="d-bar"><i style="width:' + pct + '%"></i></span></span></span><span class="d-go">' + T("dash.go") + '</span></span></button>' +
       '<div class="d-rov"><button class="d-mode" data-act="switch-mode" aria-label="' + T("dash.mode.aria", { mode: modeName(P.mode) }) + '">' + icon(MODE_ICON[P.mode], 13) + " " + modeName(P.mode) + ' <i aria-hidden="true">▾</i></button>' + lifeBtnHtml() + "</div></div>";
     h += '<nav class="d-grid" aria-label="' + T("dash.nav") + '">' +
-      '<button class="d-tile hub" data-act="hub"><span class="hb-ic">' + dIc("book", "#1b4332", 28) + '</span><span class="hb-t"><span class="d-k ar" lang="ar" dir="rtl">بيت العلم</span><b>Bayt al-‘Ilm</b><small>' + (nf ? T("dash.hub.n", { n: nf }) : T("dash.hub.0")) + '</small></span><span class="hb-ch" aria-hidden="true">›</span></button>' +
       '<button class="d-tile plt" data-act="play" aria-label="' + T("dash.play.aria") + '"><span class="plt-ic">' + dIc("pad", "#ffd54f", 36) + '</span><span class="plt-t"><b>NurPlay</b><small>' + T("dash.play.sub") + '</small></span><span class="plt-ch" aria-hidden="true">›</span></button>' +
       quranTileHtml() +
       (false ? "" : '<button class="d-tile kd" data-act="kd" aria-label="' + T("kd.aria") + '"><span class="kd-ph"><img src="journaal/kd-tegel.webp" alt="" width="800" height="427" loading="lazy"><span class="kd-badge" aria-hidden="true">' + T("kd.badge") + '</span></span><span class="kd-tx"><span class="kd-tc"><span class="kd-ar" lang="ar" dir="rtl" aria-hidden="true">تَدَبُّرُ القُرْآن</span><b>Tadabbur Qur’an</b><small>' + T("kd.sub") + '</small></span>' + kdIc("chev", 20).replace("<svg ", '<svg class="kd-chev" ') + '</span></button>') +
@@ -9155,7 +9154,7 @@ return exports;})();
   function qNote(s) { const q = qState(); if (!q.recent) q.recent = []; const i = q.recent.indexOf(s); if (i !== -1) q.recent.splice(i, 1); q.recent.unshift(s); q.recent.splice(8); }
   function viewQuran() {
     const q = qState(), rec = q.recent || [];
-    let h = hubTop("Al-Qur’an", "hub", "القرآن الكريم", "114 soera’s · IndoPak-schrift · Hafs") + '<section class="hub qv">';
+    let h = hubTop("Al-Qur’an", "dash", "القرآن الكريم", "114 soera’s · IndoPak-schrift · Hafs") + '<section class="hub qv">';
     h += '<label class="qv-search"><span aria-hidden="true">🔍</span><input type="search" id="qvSearch" placeholder="Zoek soera op naam of nummer…" aria-label="Zoek soera op naam of nummer" autocomplete="off"></label>';
     h += '<div class="qv-stats" aria-hidden="true"><span>📖 <b>Mushaf</b></span><span><b>114</b> soera’s</span><span><b>6.236</b> verzen</span><span><b>30</b> juz’</span></div>';
     if (q.last) { const p = q.last.split(":"); h += '<button class="q-cont" data-act="q-open" data-s="' + p[0] + '" data-a="' + p[1] + '"><small>VERDER LEZEN</small><b>' + Q_TR[p[0] - 1] + " · " + q.last + '</b><span lang="ar" dir="rtl">' + Q_AR[p[0] - 1] + "</span></button>"; }
