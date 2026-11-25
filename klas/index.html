@@ -1112,7 +1112,7 @@ body.ms-lite.ms-on .ms-wrap.ms-more .ms-hint { animation: none; }
     if (m.type === "hw") return renderHw();
     if (m.state === "lobby") {
       L.vragen = null; L.shown = -1; L.picked = null; L.gave = null;
-      app.innerHTML = '<div class="center"><div class="ar" lang="ar" dir="rtl">بِسْمِ اللَّهِ</div><h1>' + KT("l.bis", { naam: esc(L.name) }) + '</h1><p>' + KT("l.in", { titel: esc(m.titel || KT("l.quiz")) }) + '</p>' +
+      app.innerHTML = '<div class="center"><div class="ar"  lang="ar" translate="no" dir="rtl">بِسْمِ اللَّهِ</div><h1>' + KT("l.bis", { naam: esc(L.name) }) + '</h1><p>' + KT("l.in", { titel: esc(m.titel || KT("l.quiz")) }) + '</p>' +
         '<p class="muted"><b>' + KT("l.vorm", { v: esc(vormT(m.vorm, 0)) }) + '</b> ' + esc(vormT(m.vorm, 1)) + '</p><p class="wait">' + KT("l.wait") + '</p><details class="qrd"><summary>' + KT("l.qr") + '</summary><div class="qrbox">' + QR.svg("https://nurspark.app/klas/?c=" + L.code, 260) + '</div><p class="muted">' + KT("l.qr.p", { code: esc(L.code) }) + '</p></details><p class="muted">' + KT(rk.length === 1 ? "l.n1" : "l.n", { n: rk.length }) + '</p>' + back + '</div>'; wire(); return;
     }
     if (m.state === "vraag") {
@@ -1149,7 +1149,7 @@ body.ms-lite.ms-on .ms-wrap.ms-more .ms-hint { animation: none; }
     var h = L.h, n = m.n, closed = m.deadline && Date.now() > m.deadline;
     if (h.i >= n) {
       var okn = h.res.filter(function (r) { return r && r.ok; }).length;
-      app.innerHTML = '<div class="center"><div class="ar" lang="ar" dir="rtl">الحمد لله</div><h1>' + KT("hw.done.h") + '</h1><p class="rank">' + KT("hw.score", { p: ptsH(h.score, true, false, "me"), n: okn }) + '</p><p class="muted">' + KT("hw.seen") + '</p>' + back + '</div>'; wire(); return;
+      app.innerHTML = '<div class="center"><div class="ar"  lang="ar" translate="no" dir="rtl">الحمد لله</div><h1>' + KT("hw.done.h") + '</h1><p class="rank">' + KT("hw.score", { p: ptsH(h.score, true, false, "me"), n: okn }) + '</p><p class="muted">' + KT("hw.seen") + '</p>' + back + '</div>'; wire(); return;
     }
     if (h.res[h.i]) fb = true;
     if (closed && !fb) { app.innerHTML = '<div class="center"><h1>' + KT("hw.closed.h") + '</h1><p>' + KT("hw.closed.p") + '</p>' + back + '</div>'; wire(); return; }
@@ -1540,7 +1540,7 @@ body.ms-lite.ms-on .ms-wrap.ms-more .ms-hint { animation: none; }
     var q = G.quiz.vragen[G.qi], rk = ranking(G.players), np = rk.length, st = G.state;
     var link = "https://nurspark.app/klas/?c=" + G.code;
     if (st === "lobby") {
-      var h = '<div class="center"><div class="ar" lang="ar" dir="rtl">بِسْمِ اللَّهِ</div><h1>' + esc(G.quiz.titel) + '</h1>' +
+      var h = '<div class="center"><div class="ar"  lang="ar" translate="no" dir="rtl">بِسْمِ اللَّهِ</div><h1>' + esc(G.quiz.titel) + '</h1>' +
         '<p>Leerlingen: ga naar <b>nurspark.app/klas</b> en vul deze code in:</p><div class="codeqr"><div><div class="bigcode" aria-label="Code ' + G.code.split("").join(" ") + '">' + G.code + '</div></div>' +
         '<div class="qrwrap"><p><b>Of scan de QR-code met de camera</b></p><div class="qrbox groot">' + QR.svg(link, 360) + '</div></div></div>' +
         '<p><a class="btn small light" target="_blank" rel="noopener" href="https://wa.me/?text=' + encodeURIComponent("Doe mee met onze quiz op NurSpark: " + link) + '">Deel via WhatsApp</a></p>' +
@@ -1675,7 +1675,7 @@ body.ms-lite.ms-on .ms-wrap.ms-more .ms-hint { animation: none; }
     if (live !== on) document.body.classList.toggle("ms-on", live);
     if (!live) { var t0 = app.querySelector(".ms-top"); if (t0) t0.remove(); return; }
     if (!app.firstElementChild || !app.firstElementChild.classList.contains("ms-top")) {
-      app.insertAdjacentHTML("afterbegin", '<div class="ms-top">' + msSeal.replace("Het zegel van de Profeet Muhammad, vrede en zegeningen zij met hem", KT("ms.seal")) + '<div class="basm" lang="ar" dir="rtl">بسم الله الرحمن الرحيم</div></div>');
+      app.insertAdjacentHTML("afterbegin", '<div class="ms-top">' + msSeal.replace("Het zegel van de Profeet Muhammad, vrede en zegeningen zij met hem", KT("ms.seal")) + '<div class="basm"  lang="ar" translate="no" dir="rtl">بسم الله الرحمن الرحيم</div></div>');
     }
     var st = G ? G.state + ":" + G.qi : (L.meta ? L.meta.state + ":" + L.meta.qi : ""), key = (G ? "g" : "l") + st;
     if (key !== msKey) {
