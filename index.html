@@ -10309,7 +10309,7 @@ return exports;})();
   function afterQreadRender() {
     clearInterval(qTick); if (qObs) { qObs.disconnect(); qObs = null; }
     if (!QDATA) return;
-    if (qJump && qJump > 1) { const el = document.getElementById("qa-" + qJump); if (el) setTimeout(function () { el.scrollIntoView({ block: "center" }); el.classList.add("hl"); }, 60); }
+    if (qJump && qJump > 1) { const el = document.getElementById("qa-" + qJump); if (el) setTimeout(function () { el.scrollIntoView({ block: "center" }); el.classList.add("hl"); setTimeout(function () { el.classList.remove("hl"); }, 1800); }, 60); }
     qJump = null;
     let lastSave = 0;
     if ("IntersectionObserver" in window) {
@@ -16548,7 +16548,7 @@ return exports;})();
       case "q-recent-clear": { qState().recent = []; saveState(); render(); break; }
       case "q-open": { const qs = parseInt(el.dataset.s, 10) || 1, qa = parseInt(el.dataset.a, 10) || 1; qSurah = Math.max(1, Math.min(114, qs)); qNote(qSurah); qJump = qa; if (qa === 1) qState().last = qSurah + ":1"; saveState(); screen = "qread"; render(); if (qa === 1) window.scrollTo({ top: 0 }); break; }
       case "q-sel": {
-        document.querySelectorAll(".qa.sel").forEach(function (x) { x.classList.remove("sel"); });
+        document.querySelectorAll(".qa.sel, .qa.hl").forEach(function (x) { x.classList.remove("sel", "hl"); });
         el.classList.add("sel");
         const qk = el.dataset.k, on = qState().marks.indexOf(qk) !== -1, bar = document.getElementById("qSel");
         if (bar) { bar.hidden = false; bar.dataset.k = qk; document.getElementById("qSelT").textContent = Q_TR[qk.split(":")[0] - 1] + " " + qk; document.getElementById("qSelB").innerHTML = QV_ICO.bm + (on ? "Weghalen" : "Bladwijzer"); const qn = document.getElementById("qSelN"); if (qn) { qn.hidden = true; const qq = qk.split(":"); qn.textContent = KT[+qq[0]] && KT[+qq[0]][+qq[1] - 1] ? KT[+qq[0]][+qq[1] - 1][1] : "De vertaling wordt geladen…"; } }
