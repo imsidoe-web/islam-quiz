@@ -2382,12 +2382,12 @@ body.qvx-dark { background: #081F1C !important; } body.qvx-light { background: #
 .qvx .qv-acts { display: flex; gap: 4px; }
 .qvx .qv-ic { appearance: none; cursor: pointer; width: 44px; height: 44px; border-radius: 12px; border: 0; background: transparent; color: var(--qgold); display: grid; place-items: center; } .qvx .qv-ic:hover { background: var(--qsoft); } .qvx .qv-ic.on svg { fill: var(--qgold); }
 .qvx .qv-ar.q-text { text-align: right; direction: rtl; color: var(--qtx); font-family: "IndoPakQ", "Amiri", serif; font-size: inherit; line-height: inherit; margin: 6px 0 12px; }
-.qvx .qv-end { color: var(--qgold); font-family: "Amiri", serif; font-size: 1em; margin-right: .3em; white-space: nowrap; }
+.qvx .q-page .qv-end { display: inline-block; margin: 0 8px; } .qvx .qv-end { color: #C5A880; font-family: "Amiri", serif; font-size: 1em; margin-right: .3em; white-space: nowrap; }
 .qvx .qv-ayahs.q-s1 { font-size: 1.35rem; line-height: 2.1; } .qvx .qv-ayahs.q-s2 { font-size: 1.55rem; line-height: 2.1; } .qvx .qv-ayahs.q-s3 { font-size: 1.8rem; line-height: 2.05; } .qvx .qv-ayahs.q-s4 { font-size: 2.1rem; line-height: 2; } .qvx .qv-ayahs.q-s5 { font-size: 2.5rem; line-height: 2; }
 .qvx .qv-nl { margin: 0; font-family: var(--qui); font-size: 1rem; line-height: 1.65; color: var(--qmut); }
 .qvx .qv-bsm .qv-ar { text-align: center; white-space: nowrap; font-size: clamp(1.1rem, 6.2vw, 1.7rem); }
-.qvx .q-page { background: transparent; border: 0; box-shadow: none; border-radius: 0; margin: 8px -4px; padding: 12px 4px; } .qvx .q-page .q-text { text-align: justify; text-align-last: center; direction: rtl; line-height: 2.3; } .qvx .q-text { color: var(--qtx); }
-.qvx .q-head { background: transparent; border: 1px solid var(--qgold); } .qvx .q-head span { color: var(--qgold); } .qvx .q-bsm { color: var(--qtx); } .qvx .q-jz { color: var(--qgold); }
+.qvx .q-page { background: transparent; border: 0; box-shadow: none; border-radius: 0; margin: 8px -4px; padding: 12px 4px; } .qvx .q-page .q-text { text-align: right; direction: rtl; word-spacing: normal; line-height: 2.3; } .qvx .q-text { color: var(--qtx); }
+.qvx .q-head { background: transparent; border: 1px solid #C5A880; box-shadow: none; max-width: none; border-radius: 14px; } .qvx .q-jz { background: #133A34; color: #C5A880; border: 1px solid #C5A880; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 12px; } .qvx .q-head span { color: var(--qgold); } .qvx .q-bsm { color: var(--qtx); } .qvx .q-jz { color: var(--qgold); }
 .qvx .q-selbar { background: var(--qcard); border: 1px solid var(--qline); color: var(--qtx); } .qvx .q-selbar .tg-btn { color: var(--qgold); }
 .qvx .q-src, .qvx .hub-intro { color: var(--qmut); } .qvx .btn { background: var(--qgold); color: #081F1C; border: 0; } .qvx .btn.ghost { background: transparent; color: var(--qgold); border: 1px solid var(--qline); }
 .q-bar { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 10px 0 0; padding: 8px 10px; border-radius: 14px; background: rgba(15,46,34,.94); border: 1.5px solid #2d6a4f; color: #cfe8d8; font-weight: 800; font-size: .85rem; }
@@ -9173,7 +9173,7 @@ return exports;})();
       const a = i + 1, k = s + ":" + a, jz = Q_JUZ.indexOf(k);
       if (jz > 0) t += '<span class="q-jz" dir="ltr">Juz’ ' + (jz + 1) + "</span> ";
       const bm = marks.indexOf(k) !== -1;
-      t += '<span class="qa' + (bm ? " bm" : "") + '" id="qa-' + a + '" data-k="' + k + '" data-act="q-sel" role="button" tabindex="0" aria-label="Ayah ' + a + (bm ? ", met bladwijzer" : "") + '">' + txt + "</span> ";
+      t += '<span class="qa' + (bm ? " bm" : "") + '" id="qa-' + a + '" data-k="' + k + '" data-act="q-sel" role="button" tabindex="0" aria-label="Ayah ' + a + (bm ? ", met bladwijzer" : "") + '">' + qvEnd(txt.replace(/\s*[\u06DF\u06D9]*[\uE000-\uF8FF]\s*$/, "").trim(), a) + "</span> ";
     });
     t += "</div></div>";
     h += '<section class="hub">' + t + '<div class="q-nav">' + (s < 114 ? '<button class="btn" data-act="q-open" data-s="' + (s + 1) + '" data-a="1">Volgende: ' + Q_TR[s] + "</button>" : "") + (s > 1 ? '<button class="btn ghost" data-act="q-open" data-s="' + (s - 1) + '" data-a="1">Vorige: ' + Q_TR[s - 2] + "</button>" : "") + "</div>" +
