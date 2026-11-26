@@ -17286,7 +17286,7 @@ return exports;})();
   function onBackPress() {
     if (backNav.skip) { backNav.skip = false; clearTimeout(backNav.skipT); return; }
     if (backNav.exiting) return;
-    if (backCloseTop() || backScreen()) { backNav.armed = false; backRestore(); return; }
+    if (backCloseTop() || backScreen()) { backNav.armed = false; backRestore(); [0, 60, 250].forEach(function (d) { setTimeout(function () { window.scrollTo(0, 0); }, d); }); return; }
     const disc = document.getElementById("disclaimerModal");
     const bsmM = document.getElementById("bismillahModal");
     if ((disc && !disc.classList.contains("hidden")) || (bsmM && !bsmM.classList.contains("hidden"))) { backRestore(); return; }
@@ -17298,6 +17298,7 @@ return exports;})();
   function initBackGuard() {
     try {
       const st = history.state && history.state.iq;
+      try { history.scrollRestoration = "manual"; } catch (e) {}   /* v414: na Terug niet de oude scrollplek terugzetten, maar bovenaan beginnen */
       if (st !== "guard") { history.replaceState({ iq: "base" }, ""); history.pushState({ iq: "guard", n: 1 }, ""); }
       window.addEventListener("popstate", onBackPress);
       ["click", "keydown"].forEach(function (ev) { document.addEventListener(ev, backFill, { capture: true, passive: true }); });
