@@ -3383,6 +3383,21 @@ body.kdskin .mn-h span, body.kdskin .mn-d { color: #5C6660; font-size: 12.5px; }
 body.kdskin .mn-t { font: italic 19px/1.45 var(--kd-serif); color: #1C2420; }
 body.kdskin .mn-go { background: none; border-radius: 0; padding: 4px 0; color: #0F291E; font: 500 14px var(--kd-sans); text-decoration: underline; text-decoration-color: #C5A675; text-underline-offset: 5px; }
 /* soera's en welkom */
+/* v418: melddialoog in de Tadabbur-stijl (crème, inkt, goud) */
+.kdf-dlg .dialog { background: #F9F6EE; border: .5px solid rgba(197, 166, 117, .6); border-radius: 22px; box-shadow: 0 20px 60px rgba(15, 41, 30, .3); color: #1C2420; font-family: var(--kd-sans); overflow: hidden; }
+.kdf-dlg .set-top { background: none; color: #0F291E; border-bottom: .5px solid rgba(197, 166, 117, .45); padding: 14px 10px 12px 22px; }
+.kdf-dlg .set-top h3 { font: 500 25px/1.2 var(--kd-serif); color: #0F291E; }
+.kdf-dlg .set-top .set-x { background: none; border: 0; box-shadow: none; color: #0F291E; font-size: 28px; width: 44px; height: 44px; }
+.kdf-dlg .set-body { padding: 14px 22px 22px; }
+.kdf-dlg .set-info { font: 400 14.5px/1.6 var(--kd-sans); color: #44503f; margin: 0 0 8px; }
+.kdf-dlg .fbk-chips { flex-direction: column; gap: 8px; margin: 12px 0; }
+.kdf-dlg .fbk-chips .btn { flex: none; width: 100%; min-height: 46px; padding: 0 16px; border-radius: 14px; border: .5px solid rgba(197, 166, 117, .8); background: transparent; box-shadow: none; color: #0F291E; font: 500 14px var(--kd-sans); letter-spacing: .04em; text-align: left; }
+.kdf-dlg .fbk-chips .btn.gold { background: #0F291E; border-color: #0F291E; color: #F3E9D2; }
+.kdf-dlg .set-h { display: block; margin: 4px 0 6px; font: 500 11px var(--kd-sans); letter-spacing: .14em; text-transform: uppercase; color: #9a8450; }
+.kdf-dlg .fbk-ta { min-height: 140px; border: .5px solid rgba(197, 166, 117, .8); border-radius: 14px; background: #fffdf8; color: #1C2420; font: 19px/1.5 var(--kd-serif); }
+.kdf-dlg .fbk-ta:focus-visible { outline: 2px solid #C5A675; outline-offset: 2px; }
+.kdf-dlg .fbk-st { margin: 8px 2px; font: 500 13px var(--kd-sans); color: #8a3a2a; }
+.kdf-dlg .btn.gold.block { height: 48px; padding: 0 20px; border: 0; border-radius: 14px; background: #0F291E; color: #F3E9D2; box-shadow: 0 8px 24px rgba(15, 41, 30, .22); font: 500 14px var(--kd-sans); letter-spacing: .06em; }
 .kdq-note, .kdq-rem { background: #fffaf0; border: 1px solid #e6d9b6; border-radius: 14px; padding: 12px 16px; margin: 18px 0; text-align: left; color: #44503f; font-size: .93rem; line-height: 1.55; }
 .kdq-note p, .kdq-rem p { margin: 0 0 8px; } .kdq-rem b { color: #2c5a44; } .kdq-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 .kdq-link, .kdq-x { appearance: none; font: inherit; background: none; border: 0; padding: 10px 2px; min-height: 44px; color: #2c5a44; text-decoration: underline; text-decoration-color: #C5A675; text-underline-offset: 5px; cursor: pointer; }
@@ -8369,7 +8384,7 @@ return exports;})();
   /* ── v288: spelers sturen feedback (fout, idee of anders); komt bij de beheerder in Mijn studio › Feedback ── */
   function feedbackDialog(o) {
     o = o || {};
-    const w = document.createElement("div"); w.className = "dialog-wrap set-wrap";
+    const w = document.createElement("div"); w.className = "dialog-wrap set-wrap" + (o.ctx ? " kdf-dlg" : "");
     const TY = o.types || [["fout", T("fbk.fout")], ["idee", T("fbk.idee")], ["anders", T("fbk.anders")]]; let type = TY[0][0], busy = false;
     w.innerHTML = '<div class="dialog a11y-dlg compact" role="dialog" aria-modal="true" aria-labelledby="fbT">' +
       '<div class="set-top"><h3 id="fbT">' + (o.title || T("set.feedback")) + '</h3><button class="set-x" data-d="x" aria-label="' + T("close") + '">×</button></div><div class="set-body" id="fbBody">' +
