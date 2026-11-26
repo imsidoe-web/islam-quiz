@@ -10502,7 +10502,7 @@ return exports;})();
       '<p class="kds-cnt" id="kdCnt" aria-hidden="true"></p><p class="sr-only" id="kdSr" role="status" style="position:absolute;left:-9999px"></p>' +
       '<div class="kdc" id="kdCar" role="region" aria-label="Soera’s. Veeg naar links of rechts om te bladeren." tabindex="0">' + list.map(function (s) { return kdTile(s, seen); }).join("") + "</div>" +
       '<p class="mn-none kds-none" id="kdNone" role="status"' + (none ? "" : " hidden") + ">Geen soera gevonden. Probeer een andere naam of een nummer.</p>" +
-      '<button class="mn-btn" data-act="kdo-open">Terug naar mijn overzicht</button><button class="mn-btn" data-act="mn-screen">Mijn notities' + (mn ? " (" + mn + ")" : "") + '</button><button class="kdi-about" data-act="kdi-open">Over dit dagboek</button><button class="kdi-about" data-act="kdf-open">Over de uitleg en feedback</button>' + (mkOwner() ? '<button class="kdi-about" data-act="mem-open">Ter nagedachtenis</button>' : "") + '</div></section>';
+      '<button class="mn-btn" data-act="kdo-open">Terug naar mijn overzicht</button><button class="mn-btn" data-act="mn-screen">Mijn notities' + (mn ? " (" + mn + ")" : "") + '</button><button class="kdi-about" data-act="kdi-open">Over dit dagboek</button><button class="kdi-about" data-act="kdf-open">Over de uitleg en feedback</button>' + '<button class="kdi-about" data-act="mem-open">Ter nagedachtenis</button>' + '</div></section>';
     setTimeout(kdAfter, 0);
     return h;
   }
@@ -16826,7 +16826,7 @@ return exports;})();
       case "kd-back": play("click"); if (kdw) screen = "dash"; else if (kdi !== null) { if (kdiGet()) { kdi = null; kdiDraft = null; screen = "kd"; } else screen = "dash"; } else if (kdiGet()) { kdoF = null; kdoM = 0; screen = "kdo"; } else screen = "dash"; render(); window.scrollTo({ top: 0 }); break;
       case "mn-screen": { if (!tdOK()) break; play("click"); mnQ = ""; screen = "mn"; render(); window.scrollTo({ top: 0 }); break; }
       case "mn-back": play("click"); kdoF = null; kdoM = 0; screen = "kdo"; render(); window.scrollTo({ top: 0 }); break;
-      case "mem-open": { if (!mkOwner()) break; play("click"); screen = "mem"; render(); window.scrollTo({ top: 0 }); break; }
+      case "mem-open": { if (!tdOK()) break; play("click"); screen = "mem"; render(); window.scrollTo({ top: 0 }); break; }
       case "mem-back": { play("click"); screen = "kd"; render(); window.scrollTo({ top: 0 }); break; }
       case "kdo-open": { if (!tdOK()) break; play("click"); kdoF = null; kdoM = 0; screen = "kdo"; render(); window.scrollTo({ top: 0 }); break; }
       case "kdo-back": play("click"); screen = "dash"; render(); window.scrollTo({ top: 0 }); break;
