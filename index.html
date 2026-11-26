@@ -16741,7 +16741,7 @@ return exports;})();
     if (!el || el.tagName === "INPUT") return;
     const act = el.dataset.act;
     switch (act) {
-      case "pick-mode": chooseMode(el.dataset.mode, function () { screen = pendingCode ? "group" : "journey"; flyerPending = true; render(); }); break;
+      case "pick-mode": chooseMode(el.dataset.mode, function () { screen = pendingCode ? "group" : "dash"; flyerPending = true; render(); }); break;
       case "switch-mode": modePickerDialog(); break;
       case "toggle-sound": S.sound = !S.sound; if (!S.sound) voiceStop(); saveState(); rgAmb.sync(); if (S.sound) play("click"); render(); break;
       case "go-next-tier": play("click"); stopTimer(); startQuiz("category", result.catId, result.next); break;
