@@ -17269,22 +17269,31 @@ return exports;})();
      Testlab → klas opent, heeft zo genoeg stappen om met de toestelknop helemaal terug te gaan naar het dashboard. */
   const BACK_DEPTH = 30;
   function backDepth() { const s = history.state; return s && s.iq === "guard" ? (s.n || 1) : 0; }
-  function backFill() {
+  function backFill(ev) {
     if (backNav.exiting) return;
+    if (ev && ev.isTrusted === false) return;   /* v413: een nagebootste tik (bv. van de Terug-afhandeling zelf) voegt geen stap toe */
     try { const n = backDepth(); if (n < BACK_DEPTH) history.pushState({ iq: "guard", n: n + 1 }, ""); } catch (e) {}
   }
   /* binnen de Terug-afhandeling zelf: alleen bijvullen als de buffer helemaal op is */
   function backKeep() { if (!backDepth()) { try { history.pushState({ iq: "guard", n: 1 }, ""); } catch (e) {} } }
+  /* v413: na elke Terug gaan we meteen één stap vooruit naar dezelfde plek. Zo blijft de stapel gelijk en hoeven we geen nieuwe
+     stap te maken zonder aanraking (die Chrome op Android bij de volgende Terug kan overslaan, waardoor de app te vroeg sloot). */
+  function backRestore() {
+    backNav.skip = true;
+    try { history.go(1); } catch (e) { backNav.skip = false; backKeep(); return; }
+    clearTimeout(backNav.skipT); backNav.skipT = setTimeout(function () { if (backNav.skip) { backNav.skip = false; backKeep(); } }, 500);
+  }
   function onBackPress() {
+    if (backNav.skip) { backNav.skip = false; clearTimeout(backNav.skipT); return; }
     if (backNav.exiting) return;
-    if (backCloseTop() || backScreen()) { backNav.armed = false; backKeep(); return; }
+    if (backCloseTop() || backScreen()) { backNav.armed = false; backRestore(); return; }
     const disc = document.getElementById("disclaimerModal");
     const bsmM = document.getElementById("bismillahModal");
-    if ((disc && !disc.classList.contains("hidden")) || (bsmM && !bsmM.classList.contains("hidden"))) { backKeep(); return; }
+    if ((disc && !disc.classList.contains("hidden")) || (bsmM && !bsmM.classList.contains("hidden"))) { backRestore(); return; }
     if (backNav.armed) { backNav.exiting = true; clearTimeout(backNav.timer); try { history.go(-(backDepth() + 1)); } catch (e) {} return; }
     backNav.armed = true; clearTimeout(backNav.timer); backNav.timer = setTimeout(function () { backNav.armed = false; }, 2000);
     backToast("Tik nogmaals op Terug om af te sluiten");
-    backKeep();
+    backRestore();
   }
   function initBackGuard() {
     try {
