@@ -3451,7 +3451,7 @@ body.kdskin .kdi-ta { border: 0; border-top: .5px solid rgba(197, 166, 117, .35)
 body.dashfull:has(.dash.nd) { background: #0f2e22; color: #F4EFE2; }
 html[data-nur-theme="light"] body.dashfull:has(.dash.nd) { background: #FAF8F5; color: #0F3D3E; }
 html[data-nur-theme="light"]:has(.dash.nd) { background: #FAF8F5; }
-.dash.nd { --card: #1b4332; --line: rgba(212, 168, 83, 0.35); --gold: #D4A853; --gold-text: #D4A853; --ink: #0f2e22; --text: #F4EFE2; --muted: #b9d6c6; --soft: rgba(212, 168, 83, 0.12); --track: rgba(212, 168, 83, 0.20); --logo-ink: #FFFFFF; --logo-gold: #F6D25A; --logo-cres: url(#ndGoldT); --nd-nav: rgba(15, 46, 34, .90);
+.dash.nd { --card: #1b4332; --line: rgba(226, 190, 91, 0.35); --gold: #E2BE5B; --gold-text: #E2BE5B; --ink: #0f2e22; --text: #F4EFE2; --muted: #b9d6c6; --soft: rgba(226, 190, 91, 0.12); --track: rgba(226, 190, 91, 0.20); --logo-ink: #FFFFFF; --logo-gold: #F6D25A; --logo-cres: url(#ndGoldT); --nd-nav: rgba(15, 46, 34, .90);
   --f-d: 'Cormorant Garamond', Georgia, 'Times New Roman', serif; --f-b: 'Manrope', 'Nunito', system-ui, -apple-system, 'Segoe UI', sans-serif; --f-ar: 'Amiri', 'Scheherazade New', 'Traditional Arabic', serif;
   gap: 10px; padding: 2px 0 110px; color: var(--text); font-family: var(--f-b); font-size: 14px; line-height: 1.45; }
 html[data-nur-theme="light"] .dash.nd { --card: #FFFFFF; --line: rgba(184, 151, 104, 0.32); --gold: #B89768; --gold-text: #8A6B3C; --ink: #0F3D3E; --text: #0F3D3E; --muted: #55726F; --soft: rgba(184, 151, 104, 0.12); --track: rgba(184, 151, 104, 0.22); --logo-ink: #0F3D3E; --logo-gold: #A9854A; --logo-cres: #B89768; --nd-nav: rgba(255, 255, 255, .88); }
@@ -3459,7 +3459,7 @@ html[data-nur-theme="light"] .dash.nd { --card: #FFFFFF; --line: rgba(184, 151, 
 .dash.nd :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 .dash.nd .nd-tile { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 14px; min-width: 0; box-shadow: none; color: var(--text); }
 .dash.nd .nd-eye { display: block; font-size: 10.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--gold-text); }
-.dash.nd .nd-btn { appearance: none; cursor: pointer; border: 0; background: var(--gold); color: var(--ink); font-weight: 700; font-size: 14px; border-radius: 14px; padding: 11px 16px; text-align: center; line-height: 1.45; white-space: nowrap; transition: transform .15s ease, filter .15s ease; }
+.dash.nd .nd-btn { appearance: none; cursor: pointer; border: 0; border-top: 1px solid rgba(255, 248, 220, 0.6); background: linear-gradient(135deg, #F5DC93 0%, #D4AF37 52%, #B38728 100%); color: #0A241E; box-shadow: 0 4px 16px rgba(212, 175, 55, 0.28); font-weight: 700; font-size: 14px; border-radius: 14px; padding: 11px 16px; text-align: center; line-height: 1.45; white-space: nowrap; transition: transform .15s ease, filter .15s ease; }
 .dash.nd .nd-btn:active { transform: scale(.98); }
 .dash.nd .nd-btn.sm { padding: 9px 12px; font-size: 12.5px; border-radius: 12px; }
 .dash.nd .nd-brandrow { display: flex; align-items: center; justify-content: space-between; padding: 0 2px; }
@@ -3491,7 +3491,7 @@ html[data-nur-theme="light"] .dash.nd .nd-theme .moon { display: block; }
 .dash.nd .nd-goalrow { display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; margin-bottom: 6px; font-variant-numeric: tabular-nums; }
 .dash.nd .nd-goalrow span:last-child { color: var(--muted); font-weight: 500; }
 .dash.nd .nd-track { height: 5px; border-radius: 99px; background: var(--track); overflow: hidden; }
-.dash.nd .nd-fill { height: 100%; border-radius: 99px; background: var(--gold); transition: width .5s ease; }
+.dash.nd .nd-fill { height: 100%; border-radius: 99px; background: linear-gradient(135deg, #F5DC93 0%, #D4AF37 52%, #B38728 100%); transition: width .5s ease; }
 .dash.nd .nd-hijri { text-align: right; font-size: 12px; color: var(--muted); line-height: 1.3; padding-left: 14px; border-left: 1px solid var(--line); flex: none; max-width: 56%; }
 .dash.nd .nd-hj { appearance: none; background: none; border: 0; padding: 0; cursor: pointer; text-align: right; display: block; width: 100%; color: var(--text); font-weight: 600; font-size: 12px; line-height: 1.3; white-space: nowrap; }
 .dash.nd .nd-hijri .d-tick { position: relative; height: 16px; margin-top: 1px; border: 0; background: none; overflow: hidden; }
@@ -8637,7 +8637,7 @@ return exports;})();
     return '<button class="d-tile qur" data-act="quran" aria-label="Al-Qur’an. ' + (has ? T("qt.cont", { s: Q_TR[sn - 1], a: an }) : T("qt.first")) + '"><span class="qur-ar" lang="ar" dir="rtl" aria-hidden="true">الْقُرْآنُ الْكَرِيمُ</span><b>Al-Qur’an</b><small>' + (has ? T("qt.cont", { s: esc(Q_TR[sn - 1]), a: an }) : T("qt.first")) + '</small><span class="qur-btn" aria-hidden="true">' + T("qt.btn") + "</span></button>";
   }
   function quranNavHtml() {
-    const I = function (p) { return '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#C5A880" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p + "</svg>"; };
+    const I = function (p) { return '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#E2BE5B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p + "</svg>"; };
     return '<nav class="d-bnav" aria-label="' + T("qt.nav") + '">' +
       '<button data-act="dash" aria-current="page">' + I('<path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/>') + "<span>" + T("qt.home") + "</span></button>" +
       '<button data-act="quran">' + I('<path d="M12 6.5C10 5 7 4.5 4 5v13c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5V5c-3-.5-6 0-8 1.5zM12 6.5v13"/>') + "<span>Qur’an</span></button>" +
@@ -8708,13 +8708,13 @@ return exports;})();
     h += ndStripHtml();
     h += '<div class="nd-row2">';
     h += '<section class="nd-tile nd-hero" aria-labelledby="ndHeroT">' + ndScene(cur > 1 ? cur - 1 : 0, cur) + '<span class="nd-eye">Rihlat al-‘Ilm</span><h2 class="nd-h2" id="ndHeroT">' + T("dash.land", { n: li + 1, title: esc(landT(c)) }) + '</h2><p class="nd-sub">' + T("nd.quiz", { n: cur }) + '</p><div class="nd-progress"><div class="nd-goalrow"><span>' + T("nd.prog") + "</span><span>" + st.passed + "/" + st.n + '</span></div><div class="nd-track"><div class="nd-fill" style="width:' + pct + '%"></div></div></div><button type="button" class="nd-btn" data-act="journey" aria-label="' + T("dash.rihla.aria", { mode: modeName(P.mode), n: li + 1, title: esc(landT(c)), cur: cur, tot: st.n }) + '">' + T("nd.play", { n: cur }) + "</button></section>";
-    h += '<section class="nd-tile nd-tad" aria-labelledby="ndTadT"><span class="nd-eye">Tadabbur Qur’an</span><h2 class="nd-h2" id="ndTadT">' + T("nd.tad.t") + '</h2><p class="nd-sub">' + T("nd.tad.s") + '</p><span class="nd-dev">' + T("nd.dev") + '</span><div class="nd-photo"><img src="journaal/tadabbur-tegel.jpg" alt="' + esc(T("nd.tad.alt")) + '" width="760" height="307"></div><button type="button" class="nd-btn" data-act="kd">' + T("nd.tad.btn") + "</button></section>";
+    h += '<section class="nd-tile nd-tad" aria-labelledby="ndTadT"><span class="nd-eye">Tadabbur Qur’an</span><h2 class="nd-h2" id="ndTadT">' + T("nd.tad.t") + '</h2><p class="nd-sub">' + T("nd.tad.s") + '</p><div class="nd-photo"><img src="journaal/tadabbur-tegel.jpg" alt="' + esc(T("nd.tad.alt")) + '" width="760" height="307"></div><button type="button" class="nd-btn" data-act="kd">' + T("nd.tad.btn") + "</button></section>";
     h += "</div>";
     h += ndVerseHtml();
     h += ndPrayersHtml();
     h += '<div class="nd-row2"><section class="nd-tile nd-quran" aria-labelledby="ndQT"><span class="nd-eye">Al-Qur’an</span><h3 id="ndQT" lang="ar" dir="rtl">الْقُرْآنُ الْكَرِيمُ</h3><span class="nd-lbl">' + (hasQ ? T("nd.q.more") : T("qt.first")) + '</span><span class="nd-ref">' + (hasQ ? esc(T("dv.surah") + " " + Q_TR[sn - 1] + " • " + sn + ":" + an) : "&nbsp;") + '</span><button type="button" class="nd-btn sm" data-act="quran">' + T("nd.q.open") + "</button></section>" +
       '<section class="nd-tile nd-small" aria-labelledby="ndMT"><svg class="nd-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5z"/></svg><h3 id="ndMT">' + T("nd.mk") + '</h3><p class="nd-quote">' + T("nd.mk.q") + '</p><p class="nd-src">' + T("nd.mk.s") + '</p><button type="button" class="nd-link" data-act="nd-mk">' + T("nd.mk.open") + "</button></section></div>";
-    h += '<button type="button" class="nd-tile nd-play" data-act="play" aria-label="' + T("dash.play.aria") + '"><span aria-hidden="true">' + dIc("pad", "#C5A880", 28) + "</span><span><b>NurPlay</b><small>" + T("dash.play.sub") + '</small></span><span class="nd-chev" aria-hidden="true">›</span></button>';
+    h += '<button type="button" class="nd-tile nd-play" data-act="play" aria-label="' + T("dash.play.aria") + '"><span aria-hidden="true">' + dIc("pad", "#E2BE5B", 28) + "</span><span><b>NurPlay</b><small>" + T("dash.play.sub") + '</small></span><span class="nd-chev" aria-hidden="true">›</span></button>';
     h += ndNavHtml();
     return '<section class="dash nd">' + h + "</section>";
   }
