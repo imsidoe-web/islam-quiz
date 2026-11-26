@@ -9407,7 +9407,7 @@ return exports;})();
   /* ── Koran-dagboek (voorlopig alleen beheerder): uitleg, reflectie en journalvragen per vers. Eigen notities blijven alleen op dit toestel. ── */
   let QJ = null, qjLoading = false, qjErr = false, qjKey = "", qjFrom = "reader";
   /* v332: Koran-dagboek met de hele Koran: Arabisch (Tanzil, Uthmani) en Nederlands (S. S. Siregar), per soera geladen uit quran/tanzil-nl/ */
-  let KT = {}, ktBusy = {}, ktErr = {}, kdi = null, kdiDraft = null, kdiMsg = "", kdw = false, kdwMsg = null, kdQ = "";
+  let KT = {}, ktBusy = {}, ktErr = {}, kdi = null, kdiDraft = null, kdiMsg = "", kdw = false, memFirst = false, kdwMsg = null, kdQ = "";
   const BISM_AR = "بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ", BISM_NL = "In de naam van Allah, de Erbarmer, de Meest Barmhartige.";
   /* v376: Vers van de dag. Per dag een vers uit een vaste lijst (Arabisch + Nederlands uit dezelfde bron als het dagboek). EN/TR volgt zodra de vertalingen er zijn. */
   const DV_LIST = [[2,255], [9,51], [13,28], [14,7], [16,18], [16,97], [17,80], [20,25], [20,114], [24,35], [29,69], [39,53], [65,2], [65,3], [93,3], [93,5], [94,5], [94,6], [103,3], [112,1], [55,13], [57,4]];
@@ -10377,7 +10377,7 @@ return exports;})();
       '<div class="mem-c"><b>Alle overledenen die met Imān zijn heengegaan</b><p>Moge Allah hun zonden vergeven, hun goede daden accepteren en hen verenigen met de rechtvaardigen.</p></div>' +
       '<p class="mem-p">Moge elke letter in dit dagboek, elke reflectie en elk moment van bezinning een bron van noor en blijvende beloning voor hen zijn in het Hiernamaals.</p><i class="mem-ln"></i>' +
       '<p class="mem-it">“O Allah, vergeef onze levenden en onze doden, onze aanwezigen en onze afwezigen, onze jongeren en onze ouderen...”</p><p class="mem-so">Sunan Abi Dawud</p><p class="mem-am">Āmīn</p>' +
-      '<button class="mn-btn" data-act="mem-back">Terug</button></div></section>';
+      '<button class="mn-btn" data-act="mem-back">' + (memFirst ? "Verder" : "Terug") + '</button></div></section>';
   }
   function viewKdi(h) {
     const pg = Math.max(0, Math.min(3, kdi || 0)), saved = kdiGet();
@@ -16822,12 +16822,12 @@ return exports;})();
       case "q-journal": { const jb = document.getElementById("qSel"), jk = jb && jb.dataset.k; if (!jk || !tdOK()) break; play("click"); qjKey = jk; qjFrom = "reader"; screen = "qj"; render(); window.scrollTo({ top: 0 }); break; }
       case "qj-back": { qjAuto(); play("click"); if (qjFrom === "kdo") { screen = "kdo"; render(); window.scrollTo({ top: 0 }); break; } if (qjFrom === "dash") { screen = "dash"; render(); window.scrollTo({ top: 0 }); break; } if (qjFrom === "list") { screen = "kd"; render(); window.scrollTo({ top: 0 }); break; } if (qjFrom === "notes") { screen = "mn"; render(); window.scrollTo({ top: 0 }); break; } const jp = String(qjKey).split(":"); qSurah = parseInt(jp[0], 10) || 1; qJump = parseInt(jp[1], 10) || 1; screen = "qread"; render(); break; }
       case "kd": if (!tdOK()) break; play("click"); kdw = true; kdwPick(); kdi = null; kdiDraft = null; kdQ = ""; screen = "kd"; render(); window.scrollTo({ top: 0 }); break;
-      case "kdw-go": play("click"); kdw = false; screen = (kdwMsg && kdwMsg.first) ? "kd" : "kdo"; kdoF = null; kdoM = 0; render(); window.scrollTo({ top: 0 }); break;
+      case "kdw-go": play("click"); kdw = false; memFirst = !!(kdwMsg && kdwMsg.first); screen = memFirst ? "mem" : "kdo"; kdoF = null; kdoM = 0; render(); window.scrollTo({ top: 0 }); break;
       case "kd-back": play("click"); if (kdw) screen = "dash"; else if (kdi !== null) { if (kdiGet()) { kdi = null; kdiDraft = null; screen = "kd"; } else screen = "dash"; } else if (kdiGet()) { kdoF = null; kdoM = 0; screen = "kdo"; } else screen = "dash"; render(); window.scrollTo({ top: 0 }); break;
       case "mn-screen": { if (!tdOK()) break; play("click"); mnQ = ""; screen = "mn"; render(); window.scrollTo({ top: 0 }); break; }
       case "mn-back": play("click"); kdoF = null; kdoM = 0; screen = "kdo"; render(); window.scrollTo({ top: 0 }); break;
       case "mem-open": { if (!tdOK()) break; play("click"); screen = "mem"; render(); window.scrollTo({ top: 0 }); break; }
-      case "mem-back": { play("click"); screen = "kd"; render(); window.scrollTo({ top: 0 }); break; }
+      case "mem-back": { play("click"); memFirst = false; screen = "kd"; render(); window.scrollTo({ top: 0 }); break; }
       case "kdo-open": { if (!tdOK()) break; play("click"); kdoF = null; kdoM = 0; screen = "kdo"; render(); window.scrollTo({ top: 0 }); break; }
       case "kdo-back": play("click"); screen = "dash"; render(); window.scrollTo({ top: 0 }); break;
       case "kdo-list": play("click"); screen = "kd"; render(); window.scrollTo({ top: 0 }); break;
@@ -17307,6 +17307,7 @@ return exports;})();
   function backScreen() {
     if (ROOT_SCREENS.indexOf(screen) !== -1) return false;
     if (screen === "newplayer" && !S.players.length) return false;
+    if (screen === "mem") { memFirst = false; screen = "kd"; render(); window.scrollTo(0, 0); return true; }
     const btn = app.querySelector('.quiz-top .icon-btn[data-act], .topbar .icon-btn[data-act], .hub-back[data-act], .kdh-back[data-act]');
     if (btn) { btn.click(); return true; }
     if (P && P.mode) { screen = screen === "journey" ? "dash" : (lastRoot || "journey"); render(); return true; }
