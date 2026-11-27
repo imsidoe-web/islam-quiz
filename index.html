@@ -8683,8 +8683,9 @@ return exports;})();
           if (!(S.imamVoice && "speechSynthesis" in window) || skip) return res();
           try {
             speechSynthesis.cancel();
-            const u = new SpeechSynthesisUtterance(speechClean(text)); u.lang = LANG_LOCALE[LANG()] || "nl-NL"; u.rate = 0.92; u.pitch = 0.9;
-            const v = (speechSynthesis.getVoices() || []).filter(function (x) { return String(x.lang).toLowerCase().replace("_", "-").indexOf(LANG()) === 0; })[0]; if (v) u.voice = v;
+            const u = new SpeechSynthesisUtterance(speechClean(text)); u.lang = LANG_LOCALE[LANG()] || "nl-NL"; u.rate = 0.9; u.pitch = 0.6;
+            const vs = (speechSynthesis.getVoices() || []).filter(function (x) { return String(x.lang).toLowerCase().replace("_", "-").indexOf(LANG()) === 0; });
+            const v = vs.filter(function (x) { return /(^|[^a-z])(male|man|mannelijk|erkek)([^a-z]|$)/i.test(x.name) && !/female|vrouw|kadın/i.test(x.name); })[0] || vs[0]; if (v) u.voice = v;
             u.onend = u.onerror = function () { res(); };
             setTimeout(res, 30000);
             speechSynthesis.speak(u);
