@@ -8646,15 +8646,16 @@ return exports;})();
     P.fout[level] = l.slice(-FOUT_MAX);
   }
   /* v426: Virtuele Imam (figuur zonder gezicht): vriendelijke hulp bij foutjes, geen eigen uitspraken */
-  function imamHtml(kind) {
-    const n = foutList().length, nm = esc(P && P.name || "");
+  const IMAM_LIVE = false;   /* v427: voor spelers nog verborgen; alleen te testen in Mijn studio › Meldingen testen */
+  function imamHtml(kind, demo) {
+    const n = demo ? 4 : foutList().length, nm = esc(P && P.name || "");
     let steps, btns = "";
     if (kind === "fail") {
       steps = [["welkom", T("im.fail.a", { naam: nm })], ["wijs", T("im.fail.b")]];
-      if (n) btns = '<button type="button" data-act="fout">' + T("im.fail.btn") + "</button>";
+      if (n) btns = '<button type="button"' + (demo ? "" : ' data-act="fout"') + ">" + T("im.fail.btn") + "</button>";
     } else {
       steps = [["welkom", T("im.hi", { naam: nm })], ["wijs", n === 1 ? T("im.dash.1") : T("im.dash.n", { n: n })]];
-      btns = '<button type="button" data-act="imam-fout">' + T("im.btn") + '</button><button type="button" class="im-l" data-act="imam-later">' + T("im.later") + "</button>";
+      btns = '<button type="button"' + (demo ? "" : ' data-act="imam-fout"') + ">" + T("im.btn") + '</button><button type="button" class="im-l"' + (demo ? "" : ' data-act="imam-later"') + ">" + T("im.later") + "</button>";
     }
     const full = steps.map(function (x) { return x[1]; }).join(" ");
     return '<aside class="imam' + (kind === "dash" ? " im-dash" : "") + '" aria-label="' + T("im.name") + '" data-imam=\'' + esc(JSON.stringify(steps)).replace(/'/g, "&#39;") + '\'><div class="im-scene"><div class="im-fig" aria-hidden="true">' +
@@ -8709,9 +8710,17 @@ return exports;})();
       })();
     });
   }
-  function imamDashHtml() {
-    if (!P || foutList().length < 3 || S.imamDay === new Date().toDateString()) return "";
-    return imamHtml("dash");
+  /* Mijn studio › Meldingen testen: de Imam laten zien (verzonnen 4 foutjes, verandert niets in je voortgang) */
+  function imamDemo(kind) {
+    const old = document.getElementById("imamDemo"); if (old) old.remove();
+    try { speechSynthesis.cancel(); } catch (e) {}
+    const w = document.createElement("div"); w.id = "imamDemo"; w.dataset.kind = kind;
+    w.setAttribute("role", "dialog"); w.setAttribute("aria-label", T("im.name"));
+    w.style.cssText = "position:fixed;inset:0;z-index:6000;background:rgba(10,30,22,.95);display:flex;flex-direction:column;justify-content:center;gap:18px;padding:16px;color:#fff;overflow:auto";
+    w.innerHTML = '<div style="max-width:440px;width:100%;margin:0 auto">' + imamHtml(kind, true) +
+      '<div style="display:flex;gap:10px;margin-top:18px"><button type="button" class="btn gold" data-act="imam-demo-again" style="flex:1">▶ Opnieuw</button><button type="button" class="btn ghost" data-act="imam-demo-close" style="flex:1">' + T("close") + "</button></div>" +
+      '<p style="font-size:12.5px;opacity:.75;margin:12px 0 0">Alleen een voorbeeld, verzonnen foutjes. Stem hoor je als Instellingen › Spreek vragen uit aan staat.</p></div>';
+    document.body.appendChild(w); imamStart();
   }
   function foutList() { return (P && P.fout && P.fout[P.mode]) || []; }
   let qById = null;
@@ -8830,7 +8839,6 @@ return exports;})();
     h += '<div class="nd-brandrow"><span role="img" aria-label="NurSpark" style="display:block;line-height:0">' + ND_WM + '</span><span class="nd-br"><button type="button" class="nd-lang" data-act="lang" aria-label="' + T("lang.btn", { taal: T("lang.name") }) + '">' + langFlag(LANG()) + '</button><button type="button" class="nd-av" data-act="profile-menu" aria-label="' + T("dash.profile") + '">' + avatarHtml(P, 44) + "</button></span></div>";
     h += '<header class="nd-top"><div class="nd-greet"><small>' + T("dash.salam") + '</small><div class="nd-name">' + esc(P.name) + '</div></div><ul class="nd-badges" aria-label="' + T("dash.h1") + '"><li>' + streakPillHtml() + "</li><li>" + lifeBtnHtml() + '</li><li><button type="button" class="nd-theme" data-act="nd-theme" aria-label="' + T("nd.theme") + '">' + SUN + '</button></li><li><button type="button" class="nd-level" data-act="switch-mode" aria-label="' + T("dash.mode.aria", { mode: modeName(P.mode) }) + '">' + T("nd.level", { mode: modeName(P.mode) }) + "</button></li></ul></header>";
     h += ndStripHtml();
-    h += imamDashHtml();
     h += '<div class="nd-row2">';
     h += '<section class="nd-tile nd-hero" aria-labelledby="ndHeroT">' + ndScene(cur > 1 ? cur - 1 : 0, cur) + '<span class="nd-eye">Rihlat al-‘Ilm</span><h2 class="nd-h2" id="ndHeroT">' + T("dash.land", { n: li + 1, title: esc(landT(c)) }) + '</h2><p class="nd-sub">' + T("nd.quiz", { n: cur }) + '</p><div class="nd-progress"><div class="nd-goalrow"><span>' + T("nd.prog") + "</span><span>" + st.passed + "/" + st.n + '</span></div><div class="nd-track"><div class="nd-fill" style="width:' + pct + '%"></div></div></div><button type="button" class="nd-btn" data-act="journey" aria-label="' + T("dash.rihla.aria", { mode: modeName(P.mode), n: li + 1, title: esc(landT(c)), cur: cur, tot: st.n }) + '">' + T("nd.play", { n: cur }) + "</button></section>";
     h += '<section class="nd-tile nd-tad" aria-labelledby="ndTadT"><span class="nd-eye">Tadabbur Qur’an</span><h2 class="nd-h2" id="ndTadT">' + T("nd.tad.t") + '</h2><p class="nd-sub">' + T("nd.tad.s") + '</p><div class="nd-photo"><img src="journaal/tadabbur-tegel.jpg" alt="' + esc(T("nd.tad.alt")) + '" width="760" height="307"></div><button type="button" class="nd-btn" data-act="kd">' + T("nd.tad.btn") + "</button></section>";
@@ -10435,7 +10443,7 @@ return exports;})();
   }
   function viewTests() {
     const ic = function (d) { return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + "</svg>"; };
-    const items = [["welkom", "Welkom (elke dag)", "De groet de eerste keer per dag"], ["welkomlang", "Welkom na lange tijd", "Warm welkom na 3 dagen of langer"], ["gebed", "Gebedstijd", "Het eerstvolgende gebed, zoals de app het toont"], ["jummah", "Jummah Mubarak", "Alleen kijken: er wordt geen cadeau gegeven"], ["streak", "Streak in gevaar", "De herinnering aan je reeks"], ["nurplay", "Nieuw spel (NurPlay)", "Nieuws over Darb an-Nur"], ["feedback", "Nieuw: feedback", "Nieuws over de feedbackknop"], ["meldingvraag", "Meldingen aanzetten (vraag)", "Eenmalige vraag aan ingelogde spelers om meldingen aan te zetten"], ["feedbackvraag", "Feedback vragen (weekend)", "De vraag om feedback die in het weekend 's avonds komt"], ["schatkist", "Schatkist (nieuw scherm)", "Het scherm als je een schatkist opent"], ["beloning", "Beloning wacht op je", "De herinnering op de kaart"], ["ranglijst", "Ranglijst (land)", "Je plek tussen andere spelers, met verdiensten"], ["toets", "Toets (Het Gebed)", "Opent direct de toets van 10 vragen; verandert niets in je voortgang"]];
+    const items = [["welkom", "Welkom (elke dag)", "De groet de eerste keer per dag"], ["welkomlang", "Welkom na lange tijd", "Warm welkom na 3 dagen of langer"], ["gebed", "Gebedstijd", "Het eerstvolgende gebed, zoals de app het toont"], ["jummah", "Jummah Mubarak", "Alleen kijken: er wordt geen cadeau gegeven"], ["streak", "Streak in gevaar", "De herinnering aan je reeks"], ["nurplay", "Nieuw spel (NurPlay)", "Nieuws over Darb an-Nur"], ["feedback", "Nieuw: feedback", "Nieuws over de feedbackknop"], ["meldingvraag", "Meldingen aanzetten (vraag)", "Eenmalige vraag aan ingelogde spelers om meldingen aan te zetten"], ["feedbackvraag", "Feedback vragen (weekend)", "De vraag om feedback die in het weekend 's avonds komt"], ["schatkist", "Schatkist (nieuw scherm)", "Het scherm als je een schatkist opent"], ["beloning", "Beloning wacht op je", "De herinnering op de kaart"], ["ranglijst", "Ranglijst (land)", "Je plek tussen andere spelers, met verdiensten"], ["toets", "Toets (Het Gebed)", "Opent direct de toets van 10 vragen; verandert niets in je voortgang"], ["imam", "Virtuele Imam (herinnering aan foutjes)", "Imam met digibord en stem; verzonnen foutjes. Staat niet op het startscherm"], ["imamfout", "Virtuele Imam (na mislukt level)", "Zoals hij na een level verschijnt dat niet gehaald is"]];
     let h = '<div class="bd"><header class="bd-top"><button class="bd-ib" data-act="bd-ideas-back" aria-label="Terug naar beheer">' + ic('<path d="M15 18l-6-6 6-6"/>') + '</button><div class="bd-tt"><b>Meldingen testen</b><small>Tik om een melding te tonen</small></div><span style="width:44px"></span></header><main class="bd-m">';
     items.forEach(function (x) { h += '<button class="bd-idbtn" data-act="bd-test" data-t="' + x[0] + '"><span>' + x[1] + "<small>" + x[2] + "</small></span></button>"; });
     h += '<p class="bd-note">De melding verschijnt bovenop deze pagina. Sluit hem en je bent weer terug bij de lijst. Dit verandert niets in je voortgang.</p><p class="bd-ft">NurSpark Beheer · alleen zichtbaar voor de beheerder</p></main></div>';
@@ -12991,7 +12999,7 @@ return exports;})();
       "<span><b>" + T("jr.chest.b") + "</b>" + T("jr.chest.s") + "</span></div>";
     if (r.newBon) h += '<div class="bon-win" role="status"><span class="bw-art">' + bonSvg(r.newBon.kind, 78, "bn-bob", r.newBon.gold, true) + "</span><span><b>" + T("jr.bon.new", { naam: T("bon." + r.newBon.kind) }) + "</b><small>" + T("jr.bon.slot", { a: r.newBon.slot, b: r.newBon.n }) + (r.newBon.full ? T("jr.bon.full", { n: BON_FULL_GEMS }) : "") + '</small><button class="bw-btn" data-act="bon-box" data-cat="' + r.catId + '">' + T("jr.bon.btn") + "</button></span></div>";
     if (r.landDone) h += '<div class="land-win"><span class="lw-flag">' + FLAG_SVG + "</span><span><b>" + T("jr.land.t") + "</b>" + T("jr.land.m", { n: r.jCount, title: esc(landT(catById(r.catId))) }) + "</span></div>";
-    if (!r.passed) h += imamHtml("fail");
+    if (!r.passed && IMAM_LIVE) h += imamHtml("fail");
     h += '<div class="result-actions">';
     if (r.passed) {
       /* Candy Crush-stijl: na de viering terug naar de kaart; geen 'volgende'-knop. De speler tikt zelf het volgende icoon aan. */
@@ -17160,6 +17168,8 @@ return exports;})();
         else if (t === "beloning") chestRemDemo();
         else if (t === "ranglijst") rankDemo();
         else if (t === "toets") { bdClose(); startToets("gebed", null, true); break; }
+        else if (t === "imam") { imamDemo("dash"); break; }
+        else if (t === "imamfout") { imamDemo("fail"); break; }
         document.querySelectorAll(".bm-wrap").forEach(function (w) { w.style.zIndex = 6000; });
         break;
       }
@@ -17204,6 +17214,8 @@ return exports;})();
       case "q-size": { S.qSize = Math.max(1, Math.min(5, (S.qSize || 3) + (parseInt(el.dataset.d, 10) || 0))); saveState(); const qa2 = document.querySelector(".qv-ayahs"); if (qa2) { qa2.className = "qv-ayahs q-s" + S.qSize; break; } const qt = document.querySelector(".q-text"); if (qt) qt.className = "q-text q-s" + S.qSize; break; }
       case "prog": play("click"); screen = "prog"; render(); break;
       case "goal-tog": { const gk = el.dataset.g, gd = goalsDay(); if (gd.done[gk]) delete gd.done[gk]; else { gd.done[gk] = 1; play("correct"); } goalSync(); saveState(); render(); break; }
+      case "imam-demo-close": { play("click"); const d = document.getElementById("imamDemo"); if (d) d.remove(); try { speechSynthesis.cancel(); } catch (e) {} break; }
+      case "imam-demo-again": { const d = document.getElementById("imamDemo"); imamDemo(d ? d.dataset.kind : "dash"); break; }
       case "imam-later": play("click"); S.imamDay = new Date().toDateString(); saveState(); render(); break;
       case "imam-fout": play("click"); S.imamDay = new Date().toDateString(); saveState(); screen = "fout"; render(); break;
       case "fout-ok": play("correct"); foutMark(P.mode, el.dataset.id, true); saveState(); render(); break;
