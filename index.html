@@ -8658,7 +8658,7 @@ return exports;})();
       steps = [["welkom", T("im.fail.a", { naam: nm }), 2], ["wijs", T("im.fail.b"), 3]];
       if (n) btns = '<button type="button"' + (demo ? "" : ' data-act="fout"') + ">" + T("im.fail.btn") + "</button>";
     } else {
-      steps = [["welkom", T("im.hi", { naam: nm }), 1], ["wijs", n === 1 ? T("im.dash.1") : T("im.dash.n", { n: n })]];
+      steps = [["welkom", T("im.hi", { naam: nm }), 1], ["wijs", T("im.back.q"), 5]];
       btns = '<button type="button"' + (demo ? "" : ' data-act="imam-fout"') + ">" + T("im.btn") + '</button><button type="button" class="im-l"' + (demo ? "" : ' data-act="imam-later"') + ">" + T("im.later") + "</button>";
     }
     const full = steps.map(function (x) { return x[1]; }).join(" ");
