@@ -8655,10 +8655,10 @@ return exports;})();
     let steps, btns = "";
     if (custom) { steps = custom.steps; btns = custom.btns || ""; }
     else if (kind === "fail") {
-      steps = [["welkom", T("im.fail.a", { naam: nm })], ["wijs", T("im.fail.b")]];
+      steps = [["welkom", T("im.fail.a", { naam: nm }), 2], ["wijs", T("im.fail.b"), 3]];
       if (n) btns = '<button type="button"' + (demo ? "" : ' data-act="fout"') + ">" + T("im.fail.btn") + "</button>";
     } else {
-      steps = [["welkom", T("im.hi", { naam: nm })], ["wijs", n === 1 ? T("im.dash.1") : T("im.dash.n", { n: n })]];
+      steps = [["welkom", T("im.hi", { naam: nm }), 1], ["wijs", n === 1 ? T("im.dash.1") : T("im.dash.n", { n: n })]];
       btns = '<button type="button"' + (demo ? "" : ' data-act="imam-fout"') + ">" + T("im.btn") + '</button><button type="button" class="im-l"' + (demo ? "" : ' data-act="imam-later"') + ">" + T("im.later") + "</button>";
     }
     const full = steps.map(function (x) { return x[1]; }).join(" ");
@@ -8678,9 +8678,21 @@ return exports;})();
       const pose = function (k) { imgs.forEach(function (i) { i.classList.toggle("on", i.dataset.p === k); }); };
       const wait = function (ms) { return new Promise(function (r) { setTimeout(r, skip || reduce ? 0 : ms); }); };
       /* stem van de telefoon (alleen als "Spreek vragen uit" aan staat); iets lager en rustiger dan gewoon voorlezen */
-      const say = function (text) {
+      let clip = null;
+      const say = function (text, key) {
         return new Promise(function (res) {
-          if (!(S.imamVoice && "speechSynthesis" in window) || skip) return res();
+          if (!S.imamVoice || skip) return res();
+          if (key && LANG() === "nl") {   /* v431: opgenomen stem van de Imam (alleen Nederlands) */
+            try {
+              clip = new Audio("imam/" + key + ".mp3");
+              clip.onended = function () { res(); };
+              clip.onerror = function () { res(); };
+              const pr = clip.play(); if (pr && pr.catch) pr.catch(function () { res(); });
+              setTimeout(res, 20000);
+              return;
+            } catch (e) { return res(); }
+          }
+          if (!("speechSynthesis" in window)) return res();
           try {
             speechSynthesis.cancel();
             const u = new SpeechSynthesisUtterance(speechClean(text)); u.lang = LANG_LOCALE[LANG()] || "nl-NL"; u.rate = 0.9; u.pitch = 0.6;
@@ -8692,6 +8704,7 @@ return exports;})();
           } catch (e) { res(); }
         });
       };
+      const guard = setInterval(function () { if (!root.isConnected) { clearInterval(guard); try { if (clip) clip.pause(); } catch (e) {} try { speechSynthesis.cancel(); } catch (e) {} } }, 400);
       const down = function () { sc.scrollTop = sc.scrollHeight; };
       board.addEventListener("click", function () { skip = true; });
       (async function () {
@@ -8700,10 +8713,10 @@ return exports;})();
         for (let k = 0; k < steps.length; k++) {
           if (!root.isConnected) return;
           pose(steps[k][0]);
-          const line = steps[k][1], pre = done ? done + " " : "", spoken = say(line);
+          const line = steps[k][1], pre = done ? done + " " : "", spoken = say(line, steps[k][2]);
           if (skip || reduce) tx.textContent = pre + line;
           else for (let i = 1; i <= line.length; i++) {
-            if (!root.isConnected) { try { speechSynthesis.cancel(); } catch (e) {} return; }
+            if (!root.isConnected) { try { speechSynthesis.cancel(); } catch (e) {} try { if (clip) clip.pause(); } catch (e) {} return; }
             if (skip) { tx.textContent = pre + line; break; }
             tx.textContent = pre + line.slice(0, i); tx.appendChild(Object.assign(document.createElement("i"), { className: "im-cur" })); down();
             await wait(48);
@@ -8730,14 +8743,14 @@ return exports;})();
   function imamWelcomeBack() {
     const n = foutList().length, nm = esc(P && P.name || "");
     if (!imamOK() || !n) return false;
-    imamOverlay([["welkom", T("im.back.hi", { naam: nm })], ["wijs", T("im.back.q")]],
+    imamOverlay([["welkom", T("im.back.hi", { naam: nm }), 4], ["wijs", T("im.back.q"), 5]],
       '<button type="button" data-act="imam-go">' + T("im.btn") + '</button><button type="button" class="im-l" data-act="imam-demo-close">' + T("im.later") + "</button>");
     return true;
   }
   function imamExplain(id) {
     const q = qFind(id); if (!q) return;
     const ans = Array.isArray(q.answer) ? q.answer.map(function (a) { return q.options[a]; }).join(" + ") : q.options[q.answer];
-    const steps = [["welkom", T("im.ex.ans") + " " + ans]]; if (q.explanation) steps.push(["wijs", q.explanation]);
+    const steps = [["welkom", T("im.ex.ans"), 6], ["welkom", ans]]; if (q.explanation) steps.push(["wijs", q.explanation]);
     imamOverlay(steps, "");
   }
   function imamDemo(kind) {
